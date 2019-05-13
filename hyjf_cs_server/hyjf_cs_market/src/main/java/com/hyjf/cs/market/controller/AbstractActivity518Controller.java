@@ -12,6 +12,7 @@ import com.hyjf.cs.market.dto.activity518.RewardTimesDTO;
 import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.Activity518Service;
+import com.hyjf.cs.market.service.AsyncService;
 import com.hyjf.cs.market.util.Activity518Prize;
 import com.hyjf.cs.market.util.LotteryUtil;
 import com.hyjf.cs.market.vo.activity518.Activity518DrawVO;
@@ -21,9 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,8 +48,10 @@ public abstract class AbstractActivity518Controller extends AbstractController{
 
     @Autowired
     private Activity518Service activity518Service;
-    @Autowired
-    private CommonProducer producer;
+
+
+    @Resource
+    private AsyncService asyncService;
 
     /**
      * 共有查询活动信息接口
@@ -153,34 +158,9 @@ public abstract class AbstractActivity518Controller extends AbstractController{
                 // 代号详情   0：18元代金券 1：58元代金券  2：518元代金券 3：0.8%加息券 4：1.0%加息券  5：iPhone XS（256G） 6： 华为P30（256G）
                 //用户进行抽奖活动
                 int luckNum = luckDraw(userId);
-                String rewardType = luckNum + "";
 
-                //保存用户中奖记录
-
-                ActivityUserRewardVO vo = new ActivityUserRewardVO();
-                vo.setActivityId(activityId);
-                vo.setRewardName(Activity518Prize.getValue(luckNum));
-                vo.setRewardType(rewardType);
-                vo.setUserId(userId);
-                vo.setSendType("系统发放");
-                vo.setSendStatus(1);
-                vo.setGrade(0);
-                Integer rewardId = activity518Service.saveActivity518UserReward(vo);
-                // 自动发送用户奖品
-                // 根据配置获取配置文件中配置的活动优惠券，把所有优惠券按照上述优惠券代码依次排列，分割为数组，根据中奖编号获取优惠券编号
-                String [] st1 = couponCodes.split(",");
-                logger.info("活动配置优惠券编号：{}",couponCodes);
-                String couponCode = st1[luckNum];
-                //系统通过MQ自动发放用户中奖的优惠券
-                try {
-                    logger.info("用户:{}发放优惠券:{}, 活动:{}", userId, couponCode, activityId);
-                    UserCouponBean couponBean = new UserCouponBean(userId, CouponUtil.NUM_12, couponCode, activityId);
-                    producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC, userId + "," + "", couponBean));
-                } catch (MQException e) {
-                    logger.error("用户:{}发放优惠券:{}, 活动:{}，发放失败！", userId, couponCode, activityId);
-                    logger.error("活动发券失败...", e);
-                }
-
+                //保存用户抽奖信息
+                asyncService.saveUserDraw(luckNum,userId,activityId,couponCodes);
                 activity518DrawVO.setCurrentAward(luckNum);
                 resultBean.setData(activity518DrawVO);
                 logger.info("用户：{},抽奖完成，奖品：{}",userId,Activity518Prize.getValue(luckNum));

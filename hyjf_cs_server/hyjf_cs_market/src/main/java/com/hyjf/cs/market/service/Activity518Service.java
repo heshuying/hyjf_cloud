@@ -83,4 +83,14 @@ public interface Activity518Service {
      * @return Integer 主键ID
      **/
     Integer saveActivity518UserReward(ActivityUserRewardVO vo);
+
+    /**
+     * @Author walter.limeng
+     * @Description //保存518活动抽奖信息
+     * @Date 19:22 2019-05-13
+     * @Param [luckNum, userId, activityId, couponCodes]
+     * @return void
+     **/
+
+    void saveUserDraw(int luckNum, Integer userId, Integer activityId, String couponCodes);
 }

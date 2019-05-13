@@ -2,13 +2,20 @@ package com.hyjf.cs.market.service.impl;
 
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.activity.UserTenderVO;
+import com.hyjf.am.vo.coupon.UserCouponBean;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.common.util.CouponUtil;
 import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.dto.activity518.RewardTimesDTO;
+import com.hyjf.cs.market.mq.base.CommonProducer;
+import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.Activity518Service;
+import com.hyjf.cs.market.util.Activity518Prize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +40,8 @@ public class Activity518ServiceImpl implements Activity518Service {
     private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
+    @Autowired
+    private CommonProducer producer;
 
     @Override
     public ActivityListVO getActivityById(Integer activityId) {
@@ -133,6 +142,36 @@ public class Activity518ServiceImpl implements Activity518Service {
     @Override
     public Integer saveActivity518UserReward(ActivityUserRewardVO vo) {
         return amMarketClient.saveActivity518UserReward(vo);
+    }
+
+    @Override
+    public void saveUserDraw(int luckNum, Integer userId, Integer activityId, String couponCodes) {
+        String rewardType = luckNum + "";
+        //保存用户中奖记录
+
+        ActivityUserRewardVO vo = new ActivityUserRewardVO();
+        vo.setActivityId(activityId);
+        vo.setRewardName(Activity518Prize.getValue(luckNum));
+        vo.setRewardType(rewardType);
+        vo.setUserId(userId);
+        vo.setSendType("系统发放");
+        vo.setSendStatus(1);
+        vo.setGrade(0);
+        Integer rewardId = this.saveActivity518UserReward(vo);
+        // 自动发送用户奖品
+        // 根据配置获取配置文件中配置的活动优惠券，把所有优惠券按照上述优惠券代码依次排列，分割为数组，根据中奖编号获取优惠券编号
+        String [] st1 = couponCodes.split(",");
+        logger.info("活动配置优惠券编号：{}",couponCodes);
+        String couponCode = st1[luckNum];
+        //系统通过MQ自动发放用户中奖的优惠券
+        try {
+            logger.info("用户:{}发放优惠券:{}, 活动:{}", userId, couponCode, activityId);
+            UserCouponBean couponBean = new UserCouponBean(userId, CouponUtil.NUM_12, couponCode, activityId);
+            producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC, userId + "," + "", couponBean));
+        } catch (MQException e) {
+            logger.error("用户:{}发放优惠券:{}, 活动:{}，发放失败！", userId, couponCode, activityId);
+            logger.error("活动发券失败...", e);
+        }
     }
 
     private BigDecimal getTenderAmountInActivity(int userId, Date activityStartDate, Date activityEndDate, Integer client) {
