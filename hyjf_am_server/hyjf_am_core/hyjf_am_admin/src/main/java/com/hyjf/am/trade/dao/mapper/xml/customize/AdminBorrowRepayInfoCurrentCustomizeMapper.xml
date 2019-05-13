@@ -1257,9 +1257,9 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        IF(cr.`status`=0?cr.assign_capital,0) AS recoverCapitalWait,
-        IF(cr.`status`=0?cr.assign_interest,0) AS recoverInterestWait,
-        IF(cr.`status`=0?cr.assign_account,0) AS recoverAccountWait,
+        IF(cr.`status`=0,cr.assign_capital,0) AS recoverCapitalWait,
+        IF(cr.`status`=0,cr.assign_interest,0) AS recoverInterestWait,
+        IF(cr.`status`=0,cr.assign_account,0) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
@@ -1438,9 +1438,9 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        IF(hcr.repay_status=0?hcr.repay_capital,0) AS recoverCapitalWait,
-        IF(hcr.repay_status=0?hcr.repay_interest,0) AS recoverInterestWait,
-        IF(hcr.repay_status=0?hcr.repay_account,0) AS recoverAccountWait,
+        IF(hcr.repay_status=0,hcr.repay_capital,0) AS recoverCapitalWait,
+        IF(hcr.repay_status=0,hcr.repay_interest,0) AS recoverInterestWait,
+        IF(hcr.repay_status=0,hcr.repay_account,0) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
