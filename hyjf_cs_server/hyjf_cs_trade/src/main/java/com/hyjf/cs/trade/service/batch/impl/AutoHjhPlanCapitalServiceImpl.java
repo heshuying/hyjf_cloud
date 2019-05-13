@@ -189,7 +189,6 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         hjhPlanCapitalActualRequest.setDateFromSrch(mogoActual);
         hjhPlanCapitalActualRequest.setDateToSrch(mogoActual);
         HjhPlanCapitalActualResponse hjhPlanCapitalActualResponse = csMessageClient.getPlanCapitalActualInfo(hjhPlanCapitalActualRequest);
-        logger.info("测试日志打印：1列表条数 " + HjhPlanCapitalActualVOList.size());
         for(HjhPlanCapitalActualVO actualVO: HjhPlanCapitalActualVOList){
             BigDecimal sumReinvestAccount = BigDecimal.ZERO;
             // 当日可复投额
@@ -220,7 +219,6 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             // 将当日可复投额set到list的bean中
             actualVO.setSumReinvestAccount(sumReinvestAccount);
         }
-        logger.info("测试日志打印：2列表条数 " + HjhPlanCapitalActualVOList.size());
         // 调用cs_massage 存储mongodb
         boolean flag = csMessageClient.insertCapitalActualInfo(HjhPlanCapitalActualVOList);
         if(flag){

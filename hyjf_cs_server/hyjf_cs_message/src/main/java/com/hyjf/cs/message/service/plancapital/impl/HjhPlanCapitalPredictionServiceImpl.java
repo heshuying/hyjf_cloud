@@ -50,7 +50,6 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
         this.planCapitalPredictionDao.updateAll(query, update);
         // 插入新增数据
         List<HjhPlanCapitalPrediction> inList = CommonUtils.convertBeanList(list, HjhPlanCapitalPrediction.class);
-        logger.info("测试日志打印：列表条数 " + inList.size());
         this.planCapitalPredictionDao.insertAll(inList);
         return true;
     }
