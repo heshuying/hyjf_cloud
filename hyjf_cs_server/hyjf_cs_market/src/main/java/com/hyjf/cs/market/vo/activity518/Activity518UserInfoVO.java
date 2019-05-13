@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Activity518UserInfoVO {
     @ApiModelProperty("累计年化出借金额")
     private String amount;
     @ApiModelProperty("抽奖记录")
-    private List<RewardRecord> record;
+    private List<RewardRecord> record = new ArrayList<>();
 
     @ApiModel(value = "抽奖记录")
     public static class RewardRecord{

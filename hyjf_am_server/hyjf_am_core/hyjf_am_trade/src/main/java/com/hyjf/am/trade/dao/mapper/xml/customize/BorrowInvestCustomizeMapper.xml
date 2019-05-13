@@ -592,7 +592,7 @@
 						AND hha.create_time <![CDATA[<=]]> #{endTime}
 			) AS t
 			 left join ht_r_user r on r.user_id = t.user_id
-			 GROUP BY user_id	ORDER BY SUM(t.account) DESC LIMIT 5
+			 GROUP BY user_id having SUM(t.account)>=200000	ORDER BY SUM(t.account) DESC LIMIT 5
 	</select>
 
 
