@@ -78,33 +78,17 @@ public class BorrowCommonController extends BaseController {
 
 
         // 还款方式
-  //      List<BorrowProjectRepay> borrowStyleList = this.borrowCommonService.borrowProjectRepayList();
         bcr.setBorrowStyleList(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectRepayList(),BorrowProjectRepayVO.class));
-//        //房屋类型 放在admin层取
-//        modelAndView.addObject("housesTypeList", this.borrowCommonService.getParamNameList(CustomConstants.HOUSES_TYPE));
-//
-//        // 公司规模
-//        modelAndView.addObject("companySizeList", this.borrowCommonService.getParamNameList(CustomConstants.COMPANY_SIZE));
-//
-//        // 借款人评级
-//        modelAndView.addObject("levelList", this.borrowCommonService.getParamNameList(CustomConstants.BORROW_LEVEL));
+
 
         // 资产机构
-//        modelAndView.addObject("instList", this.borrowCommonService.getInstList());
         bcr.setInstList(CommonUtils.convertBeanList(this.borrowCommonService.getInstList(),HjhInstConfigVO.class));
-        //合作机构 放在admin层数
-       // modelAndView.addObject("links", this.borrowCommonService.getLinks());
-        //货币种类
-//        List<ParamName> list = this.couponBackMoneyHztService.getParamNameList(CustomConstants.CURRENCY_STATUS);
-//        modelAndView.addObject("currencyList", list);
-        // add by xiashuqing 20171129 begin
-        //货币种类
-       // List<ParamName> list = this.borrowCommonService.getParamNameList(CustomConstants.CURRENCY_STATUS);
-        //定向发标
-      //  modelAndView.addObject("instConfigList", this.instConfigService.getInstConfigByType(TENDER_INST_TYPE));
-        bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE),HjhInstConfigVO.class));
-        // add by xiashuqing 20171129 end
 
+		// add by xiashuqing 20171129 begin
+		// 定向发标
+		//  modelAndView.addObject("instConfigList", this.instConfigService.getInstConfigByType(TENDER_INST_TYPE));
+		bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE), HjhInstConfigVO.class));
+		// add by xiashuqing 20171129 end
 
 		// 借款预编码
         form.setBorrowPreNid(this.borrowCommonService.getBorrowPreNid());
@@ -116,7 +100,6 @@ public class BorrowCommonController extends BaseController {
         int engineFlag = 0;
         if (StringUtils.isNotEmpty(borrowNid)) {
         	engineFlag = this.borrowCommonService.isEngineUsed(borrowNid); // 0 未使用引擎 ; 1使用引擎
-        //	modelAndView.addObject("engineFlag", engineFlag);
         }
          if ("BORROW_FIRST".equals(form.getMoveFlag())) {
         	 form.setIsEngineUsed(String.valueOf(engineFlag));
@@ -195,8 +178,7 @@ public class BorrowCommonController extends BaseController {
 		String borrowNid = form.getBorrowNid();
 
 		// 借款编码是否存在
-		boolean isExistsRecord = StringUtils.isNotEmpty(borrowNid)
-				&& this.borrowCommonService.isExistsRecord(borrowNid, StringUtils.EMPTY);
+		boolean isExistsRecord = StringUtils.isNotEmpty(borrowNid) && this.borrowCommonService.isExistsRecord(borrowNid, StringUtils.EMPTY);
 
 		// 画面的值放到Bean中
 		this.borrowCommonService.setPageListInfo( form, isExistsRecord);
@@ -204,58 +186,16 @@ public class BorrowCommonController extends BaseController {
         bcr.setBorrowProjectType(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectTypeList(CustomConstants.HZT),BorrowProjectTypeVO.class));
         // 还款方式
         bcr.setBorrowStyleList(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectRepayList(),BorrowProjectRepayVO.class));
-		// 货币种类 配置表
-		// List<ParamName> list =
-		// this.borrowCommonService.getParamNameList(CustomConstants.CURRENCY_STATUS);
-		// 暂时屏蔽 画面验证(信批需求新增字段无需校验)
-		//this.borrowCommonService.validatorFieldCheck( form, isExistsRecord, CustomConstants.HZT);
-		/*
-		 * HttpSession session = request.getSession(); String sessionToken
-		 * =String.valueOf(session.getAttribute(TokenInterceptor.RESUBMIT_TOKEN));//
-		 * 生成的令牌 String pageToken = form.getPageToken();//页面令牌
-		 */
 
-//		if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)/*
-//																	 * || sessionToken == null || pageToken == null ||
-//																	 * !sessionToken.equals(pageToken)
-//																	 */) {
-
-			// 项目类型
-//			List<BorrowProjectType> borrowProjectTypeList = this.borrowCommonService
-//					.borrowProjectTypeList(CustomConstants.HZT);
-//			modelAndView.addObject("borrowProjectTypeList", borrowProjectTypeList);
-//
-//			// 还款方式
-//			List<BorrowProjectRepay> borrowStyleList = this.borrowCommonService.borrowProjectRepayList();
-//			modelAndView.addObject("borrowStyleList", borrowStyleList);
-
-//放在配置里			// 房屋类型
-//			modelAndView.addObject("housesTypeList",
-//					this.borrowCommonService.getParamNameList(CustomConstants.HOUSES_TYPE));
-//
-//			// 公司规模
-//			modelAndView.addObject("companySizeList",
-//					this.borrowCommonService.getParamNameList(CustomConstants.COMPANY_SIZE));
-//
-//			// 借款人validatorFieldCheck评级
-//			modelAndView.addObject("levelList",
-//					this.borrowCommonService.getParamNameList(CustomConstants.BORROW_LEVEL));
-//			// 合作机构
-//			modelAndView.addObject("links", this.borrowCommonService.getLinks());
-			// 资产机构
-	        bcr.setInstList(CommonUtils.convertBeanList(this.borrowCommonService.getInstList(),HjhInstConfigVO.class));
-			//modelAndView.addObject("instList", this.borrowCommonService.getInstList());
+		// 资产机构
+		bcr.setInstList(CommonUtils.convertBeanList(this.borrowCommonService.getInstList(),HjhInstConfigVO.class));
 
 
-			// add by xiashuqing 20171129 begin
-			// 定向发标 只获取出借端机构
-	        bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE),HjhInstConfigVO.class));
+		// add by xiashuqing 20171129 begin
+		// 定向发标 只获取出借端机构
+		bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE),HjhInstConfigVO.class));
 		//	modelAndView.addObject("instConfigList", this.instConfigService.getInstConfigByType(TENDER_INST_TYPE));
-			// add by xiashuqing 20171129 end
-//
-//			modelAndView.addObject(BorrowCommonDefine.BORROW_FORM, form);
-//			return modelAndView;
-		//}
+		// add by xiashuqing 20171129 end
 
 		/*--------upd by liushouyi HJH3 Start---------------*/
 		// 新建标的使用引擎的时候验证是否有匹配的到的标签
@@ -388,84 +328,12 @@ public class BorrowCommonController extends BaseController {
             this.borrowCommonService.isAutoRecord(form.getBorrowPreNid());
 		}
 		// 列表迁移
+		//
  
         bcr.setResult(form);
         return bcr;
 	}
 
-	/**
-	 * 返回列表
-	 *
-	 * @param request
-	 * @param form
-	 * @return
-	 */
-//	@RequestMapping(value = BorrowCommonDefine.BACK_ACTION, method = RequestMethod.POST)
-//	public ModelAndView backAction(HttpServletRequest request, RedirectAttributes attr, BorrowCommonBean form) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.BACK_ACTION);
-//		ModelAndView modelAndView = new ModelAndView("redirect:/manager/borrow/borrow/init");
-//		// 列表迁移
-//		modelAndView = this.backActionModelAndView(request, modelAndView, attr, form);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.BACK_ACTION);
-//		return modelAndView;
-//	}
-
-//	/**
-//	 * 返回列表
-//	 *
-//	 * @param request
-//	 * @param form
-//	 * @return
-//	 */
-//	public ModelAndView backActionModelAndView(HttpServletRequest request, ModelAndView modelAndView,
-//			RedirectAttributes attr, BorrowCommonBean form) {
-//		// 全部借款列表迁移
-//		String backparm = "";
-//		if (!StringUtils.isEmpty(form.getPageUrl()) && form.getPageUrl().split("\\?").length > 1) {
-//			backparm = "?" + form.getPageUrl().split("\\?")[1];
-//		}
-//
-//		if ("BORROW_LIST".equals(form.getMoveFlag())) {
-//
-//			BorrowBean borrowBean = new BorrowBean();
-//			// 借款编码
-//			borrowBean.setBorrowNidSrch(form.getBorrowNidSrch());
-//			// 借款标题
-//			borrowBean.setBorrowNameSrch(form.getBorrowNameSrch());
-//			// 借 款 人
-//			borrowBean.setUsernameSrch(form.getUsernameSrch());
-//			// 项目状态
-//			borrowBean.setStatusSrch(form.getStatusSrch());
-//			// 项目类型
-//			borrowBean.setProjectTypeSrch(form.getProjectTypeSrch());
-//			// 还款方式
-//			borrowBean.setBorrowStyleSrch(form.getBorrowStyleSrch());
-//			// 添加时间
-//			borrowBean.setTimeStartSrch(form.getTimeStartSrch());
-//			// 添加时间
-//			borrowBean.setTimeEndSrch(form.getTimeEndSrch());
-//			attr.addFlashAttribute("borrowBean", borrowBean);
-//			modelAndView = new ModelAndView("redirect:/manager/borrow/borrow/init" + backparm);
-//			// 借款初审列表迁移
-//		} else if ("BORROW_FIRST".equals(form.getMoveFlag())) {
-//			BorrowFirstBean borrowFirstBean = new BorrowFirstBean();
-//			// 借款编码
-//			borrowFirstBean.setBorrowNidSrch(form.getBorrowNidSrch());
-//			// 借款标题
-//			borrowFirstBean.setBorrowNameSrch(form.getBorrowNameSrch());
-//			// 是否交保证金
-//			borrowFirstBean.setIsBailSrch(form.getIsBailSrch());
-//			// 借 款 人
-//			borrowFirstBean.setUsernameSrch(form.getUsernameSrch());
-//			// 添加时间
-//			borrowFirstBean.setTimeStartSrch(form.getTimeStartSrch());
-//			// 添加时间
-//			borrowFirstBean.setTimeEndSrch(form.getTimeEndSrch());
-//			attr.addFlashAttribute("borrowfirstForm", borrowFirstBean);
-//			modelAndView = new ModelAndView("redirect:/manager/borrow/borrowfirst/init" + backparm);
-//		}
-//		return modelAndView;
-//	}
 
 	/**
 	 * 用户是否存在
@@ -479,66 +347,6 @@ public class BorrowCommonController extends BaseController {
 
 		return this.borrowCommonService.isExistsUser(userId);
 	}
-
-//	/**放在配置
-//	 * 项目申请人是否存在
-//	 *
-//	 * @param request
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.ISEXISTSAPPLICANT_ACTION, method = RequestMethod.POST)
-//	public String isExistsApplicant(HttpServletRequest request) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSAPPLICANT_ACTION);
-//		String message = this.borrowCommonService.isExistsApplicant(request);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSAPPLICANT_ACTION);
-//		return message;
-//	}
-
-//	/**TODO放在admin
-//	 * 项目申请人是否存在
-//	 *
-//	 * @param request
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.IS_ACCOUNT_LEGAL_ACTION, method = RequestMethod.POST)
-//	public String isAccountLegal(HttpServletRequest request) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_ACCOUNT_LEGAL_ACTION);
-//		String message = this.borrowCommonService.isAccountLegal(request);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_ACCOUNT_LEGAL_ACTION);
-//		return message;
-//	}
-
-//	/**TODO放在前置
-//	 * 判断借款期限是否为0
-//	 *
-//	 * @param request
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.IS_BORROW_PERIOD_CHECK_ACTION, method = RequestMethod.POST)
-//	public String isBorrowPeriodCheck(HttpServletRequest request) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_BORROW_PERIOD_CHECK_ACTION);
-//		String message = this.borrowCommonService.isBorrowPeriodCheck(request);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_BORROW_PERIOD_CHECK_ACTION);
-//		return message;
-//	}
-
-//	/**TODO放在用户里
-//	 * 担保机构用户名是否存在
-//	 *
-//	 * @param request
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.ISREPAYORGUSER_ACTION, method = RequestMethod.POST)
-//	public String isRepayOrgUser(HttpServletRequest request) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISREPAYORGUSER_ACTION);
-//		String message = this.borrowCommonService.isRepayOrgUser(request);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISREPAYORGUSER_ACTION);
-//		return message;
-//	}
 
 	/**
 	 * 获取最新的借款预编码
@@ -573,9 +381,6 @@ public class BorrowCommonController extends BaseController {
 	@ApiOperation(value = " 借款预编码是否存在")
 	@RequestMapping("/isExistsBorrowPreNidRecord/{borrowPreNid}")
 	public boolean isExistsBorrowPreNidRecord(@PathVariable  String borrowPreNid) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
-//		String message = this.borrowCommonService.isExistsBorrowPreNidRecord(request);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
 		boolean borrowPreNidFlag = borrowCommonService.isExistsRecord(StringUtils.EMPTY, borrowPreNid);
 		return borrowPreNidFlag;
 	}
@@ -592,147 +397,6 @@ public class BorrowCommonController extends BaseController {
 		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);
 		return scale;
 	}
-
-//	/**
-//	 * 资料上传
-//	 *
-//	 * @param request
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value = BorrowCommonDefine.UPLOAD_FILE, method = RequestMethod.POST)
-//	public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_FILE);
-//		String files = this.borrowCommonService.uploadFile(request, response);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_FILE);
-//		return files;
-//	}
-
-//	/**
-//	 * 导出功能
-//	 * 
-//	 * @param request
-//	 * @param response
-//	 * @param form
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value = BorrowCommonDefine.DOWNLOAD_CAR_ACTION, method = RequestMethod.POST)
-//	public void downloadCarAction(HttpServletRequest request, HttpServletResponse response, BorrowBean form)
-//			throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_CAR_ACTION);
-//		this.borrowCommonService.downloadCar(request, response, form);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_CAR_ACTION);
-//	}
-
-//	/**
-//	 * 资料上传
-//	 *
-//	 * @param request
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.UPLOAD_CAR_ACTION, method = RequestMethod.POST)
-//	public String uploadCarAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_CAR_ACTION);
-//		String result = this.borrowCommonService.uploadCar(request, response);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_CAR_ACTION);
-//		return result;
-//	}
-
-//	/**
-//	 * 导出功能
-//	 *
-//	 * @param request
-//	 * @param response
-//	 * @param form
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value = BorrowCommonDefine.DOWNLOAD_HOUSE_ACTION, method = RequestMethod.POST)
-//	public void downloadHouseAction(HttpServletRequest request, HttpServletResponse response, BorrowBean form)
-//			throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_HOUSE_ACTION);
-//		this.borrowCommonService.downloadHouse(request, response, form);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_HOUSE_ACTION);
-//	}
-
-//	/**
-//	 * 资料上传
-//	 *
-//	 * @param request
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.UPLOAD_HOUSE_ACTION, method = RequestMethod.POST)
-//	public String uploadHouseAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_HOUSE_ACTION);
-//		String result = this.borrowCommonService.uploadHouse(request, response);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_HOUSE_ACTION);
-//		return result;
-//	}
-
-//	/**
-//	 * 导出功能
-//	 *
-//	 * @param request
-//	 * @param response
-//	 * @param form
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value = BorrowCommonDefine.DOWNLOAD_AUTHEN_ACTION, method = RequestMethod.POST)
-//	public void downloadAuthenAction(HttpServletRequest request, HttpServletResponse response, BorrowBean form)
-//			throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_AUTHEN_ACTION);
-//		this.borrowCommonService.downloadAuthen(request, response, form);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_AUTHEN_ACTION);
-//	}
-
-//	/**
-//	 * 资料上传
-//	 *
-//	 * @param request
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.UPLOAD_AUTHEN_ACTION, method = RequestMethod.POST)
-//	public String uploadAuthenAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_AUTHEN_ACTION);
-//		String result = this.borrowCommonService.uploadAuthen(request, response);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.UPLOAD_AUTHEN_ACTION);
-//		return result;
-//	}
-
-//	/**
-//	 * 借款内容填充
-//	 *
-//	 * @param request
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.CONTENT_FILL_ACTION, method = RequestMethod.POST)
-//	public String contentFillAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.CONTENT_FILL_ACTION);
-//		String result = this.borrowCommonService.contentFill(request, response);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.CONTENT_FILL_ACTION);
-//		return result;
-//	}
-
-//	/**
-//	 * 下载借款内容模板
-//	 *
-//	 * @param request
-//	 * @param response
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value = BorrowCommonDefine.DOWNLOAD_CONTENT_ACTION, method = RequestMethod.POST)
-//	public void downloadContentFillAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_CONTENT_ACTION);
-//		this.borrowCommonService.downloadContentFill(request, response);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.DOWNLOAD_CONTENT_ACTION);
-//	}
 
 	/**
 	 * 根据资产编号查询该资产下面的产品类型
@@ -759,42 +423,6 @@ public class BorrowCommonController extends BaseController {
 	public int isEntrustedExistsUser(@PathVariable  String userName) {
 		return this.borrowCommonService.isEntrustedExistsUser(userName);
 	}
-
-//	/**
-//	 * 借款主体CA认证check
-//	 * 
-//	 * @param request
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.IS_BORROWUSER_CA_CHECK_ACTION, method = RequestMethod.POST)
-//	public String isBorrowUserCACheck(HttpServletRequest request) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_BORROWUSER_CA_CHECK_ACTION);
-//		// 借款主体
-//		String value = request.getParameter("param");
-//		String name = request.getParameter("name");
-//		String ret = this.borrowCommonService.isBorrowUserCACheck(value, name);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_BORROWUSER_CA_CHECK_ACTION);
-//		return ret;
-//	}
-//
-//	/**
-//	 * 社会信用代码或身份证号CA认证check
-//	 * 
-//	 * @param request
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = BorrowCommonDefine.IS_CA_IDNO_CHECK_ACTION, method = RequestMethod.POST)
-//	public String isCAIdNoCheck(HttpServletRequest request) {
-//		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_CA_IDNO_CHECK_ACTION);
-//		// 借款主体
-//		String value = request.getParameter("param");
-//		String name = request.getParameter("name");
-//		String ret = this.borrowCommonService.isCAIdNoCheck(value, name);
-//		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_CA_IDNO_CHECK_ACTION);
-//		return ret;
-//	}
 
 	/**
 	 * 获取标的投资等级
