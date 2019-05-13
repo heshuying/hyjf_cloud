@@ -1053,6 +1053,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 			}
 			logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+			if (password.equals(passwordDb)){
+				// 是否禁用
+				if (userVO.getStatus() == 1) {
+					r.put("info","该用户已被禁用");
+				}
+			}
 			if (!password.equals(passwordDb)) {
 				long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ALL+ userVO.getUserId());//以用户手机号为key
 				for (int i=1;i<4;i++){

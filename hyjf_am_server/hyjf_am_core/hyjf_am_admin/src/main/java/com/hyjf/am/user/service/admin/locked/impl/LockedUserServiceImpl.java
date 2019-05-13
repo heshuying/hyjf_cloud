@@ -129,6 +129,12 @@ public class LockedUserServiceImpl implements LockedUserService {
 		// 页面传来的密码
 		String password = MD5.toMD5Code(loginPassword);
 		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		if (password.equals(passwordDb)){
+			// 是否禁用
+			if (admin.getStatus() == 1) {
+				r.put("info","该用户已被禁用");
+			}
+		}
 		if (!password.equals(passwordDb)) {
 			long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ userName);//以用户手机号为key
 			for (int i=1;i<4;i++){
