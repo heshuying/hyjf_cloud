@@ -5,15 +5,20 @@ package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.borrow.BorrowDeleteService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 标的删除
@@ -90,6 +95,75 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
         borrowLog.setCreateUserName(requestBean.getCurrUserName());
         borrowLogMapper.insert(borrowLog);
 
+        // 更新保证金相关
+        if(StringUtils.isNotBlank(borrowInfo.getInstCode())){
+            // 获取该机构保证金配置
+            HjhBailConfig hjhBailConfig = selectHjhBailConfigByInstCode(borrowInfo.getInstCode());
+            if (null != hjhBailConfig) {
+                // 插入异常标的
+                // 异常标的信息
+                BorrowDelete borrowDelete = new BorrowDelete();
+                borrowDelete.setInstCode(borrowInfo.getInstCode());
+                borrowDelete.setBorrowNid(borrow.getBorrowNid());
+                borrowDelete.setAccount(borrow.getAccount());
+                borrowDelete.setExceptionType(1);
+                borrowDelete.setExceptionRemark("");
+                borrowDelete.setStatus(borrow.getStatus());
+                borrowDelete.setExceptionTime(GetDate.formatTime(new Date()));
+                borrowDelete.setCreateUserId(Integer.parseInt(requestBean.getCurrUserId()));
+                borrowDelete.setCreateTime(new Date());
+                borrowDeleteMapper.insertSelective(borrowDelete);
+
+                // 发标已发额度
+                hjhBailConfig.setLoanMarkLine(hjhBailConfig.getLoanMarkLine().subtract(borrow.getAccount()));
+                // loan_balance在贷余额
+                hjhBailConfig.setLoanBalance(hjhBailConfig.getLoanBalance().subtract(borrow.getAccount()));
+                // 发标额度余额remain_mark_line
+                hjhBailConfig.setRemainMarkLine(hjhBailConfig.getRemainMarkLine().add(borrow.getAccount()));
+
+                // 周期内发标已发额度
+                BigDecimal sendedAccountByCycBD = BigDecimal.ZERO;
+                String sendedAccountByCyc = this.selectSendedAccountByCyc(borrowInfo.getInstCode(), hjhBailConfig.getTimestart(), hjhBailConfig.getTimeend());
+                if (StringUtils.isNotBlank(sendedAccountByCyc)) {
+                    sendedAccountByCycBD = new BigDecimal(sendedAccountByCyc);
+                }
+                hjhBailConfig.setCycLoanTotal(sendedAccountByCycBD);
+
+                this.hjhBailConfigMapper.updateByPrimaryKey(hjhBailConfig);
+            }
+
+        }
+
         return new Response();
+    }
+
+    /**
+     * 根据资产来源获取保证金详情
+     *
+     * @param instCode
+     * @return
+     */
+    private HjhBailConfig selectHjhBailConfigByInstCode(String instCode) {
+        HjhBailConfigExample example = new HjhBailConfigExample();
+        example.createCriteria().andInstCodeEqualTo(instCode).andDelFlgEqualTo(0);
+        List<HjhBailConfig> hjhBailConfigList = this.hjhBailConfigMapper.selectByExample(example);
+        if (null != hjhBailConfigList && hjhBailConfigList.size() > 0) {
+            return hjhBailConfigList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取周期内发标已发额度
+     *
+     * @param instCode
+     * @return
+     */
+    private String selectSendedAccountByCyc(String instCode, String timeStart, String timeEnd) {
+        BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
+        bailConfigAddRequest.setInstCode(instCode);
+        bailConfigAddRequest.setTimestart(timeStart);
+        bailConfigAddRequest.setTimeend(timeEnd);
+        return this.hjhBailConfigCustomizeMapper.selectSendedAccountByCyc(bailConfigAddRequest);
     }
 }
