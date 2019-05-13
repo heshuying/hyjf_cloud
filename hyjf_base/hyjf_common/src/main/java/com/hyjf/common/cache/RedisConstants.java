@@ -566,4 +566,9 @@ public class RedisConstants {
      *
      */
     public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
+
+    /**
+     * redis配置是否可修改手机号
+     */
+    public static final String BANK_MOBILE_MODIFY_FLAG = "BANK_MOBILE_MODIFY_FLAG:";
 }

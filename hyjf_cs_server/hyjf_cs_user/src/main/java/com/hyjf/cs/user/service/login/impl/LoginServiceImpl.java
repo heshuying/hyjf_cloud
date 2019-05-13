@@ -357,6 +357,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 			result.setUsername(user.getUsername());
 			result.setMobile(user.getMobile());
+			// 返回银行预留手机号 add by Liushouyi
+			result.setBankMobile(user.getBankMobile());
 			result.setReffer(user.getUserId() + "");
 			result.setSetupPassword(String.valueOf(user.getIsSetPassword()));
 			result.setUserType(String.valueOf(user.getUserType()));
@@ -882,6 +884,20 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		result.setExitLabelShowFlag(systemConfig.getExitLabelShowFlag());
 		// add by pcc app3.1.1追加 20180823 end
 		result.setInvitationCode(userId);
+		// add by liushouyi 修改银行预留手机号
+		result.setBankMobileModifyUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_MOBILE_MODIFY + packageStrForm(request));
+		// 从redis获取是否可修改银行预留手机号
+		String isBankMobileModify = "";
+		result.setBankMobileModifyFlag("0");
+		try{
+			String flag = RedisUtils.get(isBankMobileModify);
+			if(StringUtils.isNotBlank(flag)) {
+				result.setBankMobileModifyFlag(flag);
+			}
+		} catch(Exception e) {
+			logger.error("获取银行预留手机号修改按钮展示flag失败！");
+		}
+
 		return result;
 	}
 
