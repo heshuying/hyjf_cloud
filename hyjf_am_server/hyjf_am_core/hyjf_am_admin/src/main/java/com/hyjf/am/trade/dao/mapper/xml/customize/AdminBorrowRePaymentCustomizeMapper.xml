@@ -168,7 +168,7 @@
 		if(br.repay_time='' OR br.repay_time='0' OR br.repay_time='null','',FROM_UNIXTIME(
 		br.repay_time, '%Y-%m-%d' )) AS repayNextTime,
 		IF ( br.repay_status=1 AND br.repay_action_time <![CDATA[ > ]]> 0 ,
-		CASE br.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ,
+		CASE br.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ,
 		''
 		) AS repayMoneySource,
 		CASE WHEN br.repay_action_time  <![CDATA[ > ]]>  0 AND br.repay_status=1 THEN FROM_UNIXTIME(br.repay_action_time,'%Y-%m-%d %H:%i:%s') ELSE '' END as repayActionTime,
@@ -418,14 +418,14 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				'' AS yanqilixi,
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
@@ -438,7 +438,7 @@
 				if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
 				'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
 				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
-				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
@@ -494,14 +494,14 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				'' AS yanqilixi,
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
@@ -514,7 +514,7 @@
 				if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
 				'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
 				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
-				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
@@ -663,7 +663,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -750,7 +750,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -982,7 +982,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -1068,7 +1068,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
