@@ -19,10 +19,10 @@
             AND br.recover_period = #{repayPeriod}
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
-            AND b.`status` = 8
+            AND br.recover_status = 0 AND br.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
-            AND br.recover_status = #{repayStatus}
+            AND br.recover_status = #{repayStatus} AND br.advance_status != 3
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -252,12 +252,7 @@
                     END,
                     ''
                     ) AS repayMoneySource,
-                    br.recover_account_yes +
-                    IF (
-                    br.recover_status = 1,
-                    br.recover_fee,
-                    0
-                    ) AS recoverAmountTotal,
+                    IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAmountTotal,
                     FROM_UNIXTIME(br.recover_time, '%Y-%m-%d') AS recoverTime,
 
                     IF (
@@ -269,6 +264,12 @@
                     '%Y-%m-%d %H:%i:%s'
                     )
                     ) AS repayActionTime,
+                    b.borrow_style AS borrowStyle,
+                    b.borrow_period AS borrowPeriod,
+                    b.manage_fee_rate AS feeRate,
+                    b.differential_rate AS differentialRate,
+                    b.verify_time AS verifyTime,
+                    b.account AS borrowAccount,
                     '1' AS recordType
         FROM
             ht_borrow_recover br
@@ -405,12 +406,7 @@
                 END,
                 ''
                 ) AS repayMoneySource,
-                rp.recover_account_yes +
-                IF (
-                rp.recover_status = 1,
-                rp.recover_fee,
-                0
-                ) AS recoverAmountTotal,
+                IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAmountTotal,
                 FROM_UNIXTIME(rp.recover_time, '%Y-%m-%d') AS recoverTime,
 
                 IF (
@@ -422,6 +418,12 @@
                 '%Y-%m-%d %H:%i:%s'
                 )
                 ) AS repayActionTime,
+                b.borrow_style AS borrowStyle,
+                b.borrow_period AS borrowPeriod,
+                b.manage_fee_rate AS feeRate,
+                b.differential_rate AS differentialRate,
+                b.verify_time AS verifyTime,
+                b.account AS borrowAccount,
                 '2' AS recordType
         FROM
             ht_borrow_recover_plan rp
@@ -504,6 +506,12 @@
                 '%Y-%m-%d %H:%i:%s'
             )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriod,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        b.account AS borrowAccount,
          '3' AS recordType
         FROM
             ht_credit_repay cr
@@ -567,7 +575,7 @@
             END,
             ''
             ) AS repayMoneySource,
-            hcr.repay_account_yes +
+            hcr.receive_account_yes +
         IF (
             hcr.repay_status = 1,
             hcr.manage_fee,
@@ -593,6 +601,12 @@
                 '%Y-%m-%d %H:%i:%s'
             )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriod,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        b.account AS borrowAccount,
          '4' AS recordType
         FROM
             ht_hjh_debt_credit_repay hcr
@@ -1015,6 +1029,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriodInt,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        t.account,
+        1 AS recoverPeriod,
         '1' AS recordType
         FROM
         ht_borrow_recover br
@@ -1145,9 +1166,9 @@
         rp.recover_interest_yes AS recoverInterestYesPeriod,
         rp.recover_Account_yes AS recoverAccountYesPeriod,
         rp.recover_fee_yes AS recoverFeeYesPeriod,
-        rp.recover_capital_wait AS recoverCapitalWait,
-        rp.recover_interest_wait AS recoverInterestWait,
-        rp.recover_account_wait AS recoverAccountWait,
+        br.recover_capital_wait AS recoverCapitalWait,
+        br.recover_interest_wait AS recoverInterestWait,
+        br.recover_account_wait AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
@@ -1183,6 +1204,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriodInt,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        t.account,
+        rp.recover_period AS recoverPeriod,
         '2' AS recordType
         FROM
         ht_borrow_recover_plan rp
@@ -1266,9 +1294,9 @@
         `od4`.`name` AS `referrerDepartmentName`,
         ct.assign_capital AS recoverTotal,
         ct.assign_capital - ct.assign_repay_capital AS amountHold,
-        cr.assign_capital AS recoverCapital,
-        cr.assign_interest AS recoverInterest,
-        cr.assign_account AS recoverAccount,
+        ct.assign_capital AS recoverCapital,
+        ct.assign_interest AS recoverInterest,
+        ct.assign_account AS recoverAccount,
         cr.manage_fee AS recoverFee,
 
         IF (
@@ -1315,9 +1343,9 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        cr.assign_capital - cr.assign_repay_capital AS recoverCapitalWait,
-        cr.assign_interest - cr.assign_repay_interest AS recoverInterestWait,
-        cr.assign_account - cr.assign_repay_account AS recoverAccountWait,
+        ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
+        ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
+        ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
         bry.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
@@ -1356,6 +1384,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriodInt,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        ct.assign_capital AS account,
+        cr.recover_period AS recoverPeriod,
         '3' AS recordType
         FROM
         ht_credit_repay cr
@@ -1440,9 +1475,9 @@
         `od4`.`name` AS `referrerDepartmentName`,
         hct.assign_capital AS recoverTotal,
         hct.assign_capital - hct.repay_capital_yes  AS amountHold,
-        hcr.repay_capital AS recoverCapital,
-        hcr.repay_interest AS recoverInterest,
-        hcr.repay_account AS recoverAccount,
+        hct.assign_capital AS recoverCapital,
+        hct.assign_interest AS recoverInterest,
+        hct.assign_account AS recoverAccount,
         hcr.manage_fee AS recoverFee,
 
         IF (
@@ -1489,9 +1524,9 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        hcr.repay_capital_wait AS recoverCapitalWait,
-        hcr.repay_interest_wait AS recoverInterestWait,
-        hcr.repay_interest_wait AS recoverAccountWait,
+        hct.repay_capital_wait AS recoverCapitalWait,
+        hct.repay_interest_wait AS recoverInterestWait,
+        hct.repay_interest_wait AS recoverAccountWait,
         bry.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
@@ -1530,6 +1565,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriodInt,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        hct.assign_capital AS account,
+        hcr.repay_period AS recoverPeriod,
         '4' AS recordType
         FROM
         ht_hjh_debt_credit_repay hcr

@@ -1145,13 +1145,14 @@
             b.repay_account_interest_wait+repay_account_capital_wait as  interestCapitalWait,
             binfo.repay_org_name,
             b.recover_last_time as recoverLastTime,
-            b.repay_account_all+b.borrow_service repayAccountAll,
+            b.repay_account_all+br.repay_fee repayAccountAll,
              b.repay_account_all as principalInterest
 		FROM
 		    ht_borrow b
 			INNER JOIN ht_borrow_info binfo ON b.borrow_nid = binfo.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
+			Left join ht_borrow_repay br on br.borrow_nid=b.borrow_nid 
 		WHERE
 			b.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>

@@ -356,6 +356,8 @@
 		'13'
 		WHEN hydb.`status` = 5 THEN
 		'14'
+		WHEN hydb.`status` = 8 THEN
+		'16'
 		ELSE
 		''
 		END AS borrow_status

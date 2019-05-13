@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.home.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
@@ -1261,6 +1262,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
         //WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
 
         List<WechatHomeProjectListVO> tempList  = amTradeClient.getWechatProjectList(projectMap);
+        logger.info("微信端首页数据 tempList：{}", JSON.toJSONString(tempList));
         List<WechatHomeProjectListVO> list = new ArrayList<>();
         WechatHomeProjectListVO temp ;
         for (WechatHomeProjectListVO vo1 : tempList){
@@ -1359,6 +1361,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
         // 字段为null时，转为""
         CommonUtils.convertNullToEmptyString(list);
         vo.setHomeProjectList(list);
+        logger.info("微信端散标列表接口 VO:{}", JSON.toJSONString(vo));
         return vo;
     }
 
