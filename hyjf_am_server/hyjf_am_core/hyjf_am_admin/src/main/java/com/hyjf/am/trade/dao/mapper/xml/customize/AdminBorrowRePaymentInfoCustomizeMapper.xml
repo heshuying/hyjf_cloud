@@ -392,11 +392,12 @@
 					br.charge_penalty_interest as chargeInterest,
 					br.late_days as lateDays,
 					br.late_interest as lateInterest,
-					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '' END  as repayMoneySource,
 					brr.repay_username as repayUsername,
 					CASE brr.auto_repay when 0
 					then '主动还款'
-					else '系统自动' end as autoRepay,
+					WHEN 1 THEN '系统自动'
+					else '' end as autoRepay,
 					ba.submitter as submitter,
 						br.id
 					FROM
@@ -424,7 +425,7 @@
 					LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
 					LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 					Left join ht_borrow_apicron ba on br.borrow_nid=ba.borrow_nid and br.recover_period=ba.period_now and ba.api_type='1'
-					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period
+					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid 
 					<include refid="Where_Clause" />
 			UNION ALL
 			SELECT
@@ -485,11 +486,12 @@
 					br.charge_penalty_interest as chargeInterest,
 					br.late_days as lateDays,
 					br.late_interest as lateInterest,
-					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '' END  as repayMoneySource,
 					brr.repay_username as repayUsername,
 					CASE brr.auto_repay when 0
 					then '主动还款'
-					else '系统自动' end as autoRepay,
+					WHEN 1 THEN '系统自动'
+					else '' end as autoRepay,
 					ba.submitter as submitter,
 						br.id
 					FROM
@@ -517,7 +519,7 @@
 					LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
 					LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 					Left join ht_borrow_apicron ba on br.borrow_nid=ba.borrow_nid and br.recover_period=ba.period_now and ba.api_type='1'
-					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period 
+					left join ht_borrow_repay_plan brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period 
 					<include refid="Where_Clause" />
 		) t
 		ORDER BY
