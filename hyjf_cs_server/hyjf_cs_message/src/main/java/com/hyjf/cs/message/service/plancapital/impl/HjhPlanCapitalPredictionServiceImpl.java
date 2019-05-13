@@ -44,10 +44,10 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
         Query query = new Query();
         Criteria criteria = new Criteria();
-        criteria.and("delFlg").is("0");
+        criteria.and("delFlg").is(0);
         query.addCriteria(criteria);
         Update update = new Update();
-        update.set("delFlg", "1");
+        update.set("delFlg", 1);
         this.planCapitalPredictionDao.updateAll(query, update);
         // 插入新增数据
         List<HjhPlanCapitalPrediction> inList = CommonUtils.convertBeanList(list, HjhPlanCapitalPrediction.class);

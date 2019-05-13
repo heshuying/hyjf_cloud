@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,6 +38,15 @@ public class HjhPlanCapitalActualServiceImpl extends BaseServiceImpl implements 
      */
     @Override
     public Boolean insertPlanCaptialActual(List<HjhPlanCapitalActualVO> list) {
+        // 历史数据delflg为0的更新成1
+        HjhPlanCapitalActualVO vo = new HjhPlanCapitalActualVO();
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("delFlg").is(0);
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("delFlg", 1);
+        this.planCapitalActualDao.updateAll(query, update);
         // 插入新增数据
         List<HjhPlanCapitalActual> inList = CommonUtils.convertBeanList(list, HjhPlanCapitalActual.class);
         this.planCapitalActualDao.insertAll(inList);
