@@ -98,7 +98,7 @@ public class HjhPlanCapitalActualServiceImpl extends BaseServiceImpl implements 
 
         Criteria criteria;
         if (null != request) {
-            criteria = Criteria.where("id").ne("").ne(null);
+            criteria = Criteria.where("id").ne("").ne(null).and("delFlg").is(0);
 
             // 日期区间查询
             if (StringUtils.isNotBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())) {
