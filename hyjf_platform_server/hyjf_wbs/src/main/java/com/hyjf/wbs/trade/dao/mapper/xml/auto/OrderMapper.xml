@@ -47,9 +47,6 @@
         END	AS DeadlineUnit,
         ta.contract_number AS contractNumber
         FROM ht_borrow_recover br
-        LEFT JOIN ht_borrow_apicron ba ON br.borrow_nid = ba.borrow_nid AND ba.api_type = 0
-        LEFT JOIN ht_borrow_info bi ON br.borrow_nid = bi.borrow_nid
-        LEFT JOIN ht_hjh_accede ha ON br.accede_order_id = ha.accede_order_id
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
         INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
@@ -61,7 +58,7 @@
                 #{item}
             </foreach>
         </if>
-        <!-- 放款时间 -->
+        <!-- 放款时间 -->；；
         <if test="startTime != null and startTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
             AND b.recover_last_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
@@ -84,15 +81,14 @@
         ha.plan_nid AS productNo,
         '智投' AS productName,
         ha.accede_account	AS transAmount,
-        FROM_UNIXTIME(b.recover_last_time,'%Y-%m-%d %H:%i:%s') AS transTime,
-        b.borrow_period	AS deadlineNum,
-        CASE WHEN b.is_month=0 THEN 1
-        WHEN b.is_month=1 THEN 2
+        FROM_UNIXTIME(hp.update_time,'%Y-%m-%d %H:%i:%s') AS transTime,
+        hp.lock_period	AS deadlineNum,
+        CASE WHEN hp.is_month=0 THEN 1
+        WHEN hp.is_month=1 THEN 2
         END	AS DeadlineUnit,
         ta.contract_number AS contractNumber
         FROM ht_hjh_accede ha
-        LEFT JOIN ht_borrow_apicron ba ON ha.plan_nid = ba.plan_nid AND ba.api_type = 0
-        LEFT JOIN ht_borrow b ON ha.plan_nid =b.plan_nid
+        LEFT JOIN ht_hjh_plan hp ON ha.plan_nid=hp.plan_nid
         LEFT JOIN ht_borrow_tender bt ON bt.accede_order_id =ha.accede_order_id
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = bt.nid
         INNER JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
