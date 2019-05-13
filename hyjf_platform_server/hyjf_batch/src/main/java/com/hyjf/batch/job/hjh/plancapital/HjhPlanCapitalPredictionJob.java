@@ -23,7 +23,7 @@ public class HjhPlanCapitalPredictionJob extends BaseJob implements Job {
         logger.info("HjhPlanCapitalPredictionJob: {} execute...", context.getJobDetail().getKey().getName());
 
         BooleanResponse result = restTemplate.getForEntity(
-                "http://cs-trade/hjhPlanAutoCapital/autoCapitalPrediction", BooleanResponse.class).getBody();
+                "http://CS-TRADE/cs-trade/hjhPlanAutoCapital/autoCapitalPrediction", BooleanResponse.class).getBody();
 
         logger.info("HjhPlanCapitalPredictionJob execute end...");
     }
