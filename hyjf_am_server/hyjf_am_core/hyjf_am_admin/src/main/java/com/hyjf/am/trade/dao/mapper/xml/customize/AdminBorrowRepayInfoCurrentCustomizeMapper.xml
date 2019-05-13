@@ -5,7 +5,7 @@
                type="com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO">
     </resultMap>
     <sql id="where-type-1">
-        AND br.credit_status != 2 AND  (br.recover_capital > br.credit_amount OR br.recover_interest > br.credit_interest_amount)
+        AND br.credit_status != 2 AND  br.recover_capital > br.credit_amount
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
@@ -39,7 +39,7 @@
     </sql>
 
     <sql id="where-type-2">
-        AND rp.credit_status != 2 AND (rp.recover_capital > rp.credit_amount OR rp.recover_interest > rp.credit_interest_amount)
+        AND rp.credit_status != 2 AND rp.recover_capital > rp.credit_amount
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
@@ -162,9 +162,57 @@
                     0,
                     br.recover_capital - br.credit_amount
                     ) AS amountHold,
-                    br.recover_capital - br.credit_amount AS recoverCapital,
-                    br.recover_interest - br.credit_interest_amount AS recoverInterest,
-                    br.recover_account - br.credit_amount - br.credit_interest_amount AS recoverAccount,
+                    br.recover_capital - (
+                    SELECT
+                    IFNULL(SUM(cr1.assign_capital), 0)
+                    FROM
+                    ht_credit_repay cr1
+                    WHERE
+                    cr1.credit_tender_nid = br.nid
+                    AND cr1.recover_period = br.recover_period
+                    ) - (
+                    SELECT
+                    IFNULL(SUM(cr1.repay_capital), 0)
+                    FROM
+                    ht_hjh_debt_credit_repay cr1
+                    WHERE
+                    cr1.invest_order_id = br.nid
+                    AND cr1.repay_period = br.recover_period
+                    ) AS recoverCapital,
+                    br.recover_interest - (
+                    SELECT
+                    IFNULL(SUM(cr1.assign_interest), 0)
+                    FROM
+                    ht_credit_repay cr1
+                    WHERE
+                    cr1.credit_tender_nid = br.nid
+                    AND cr1.recover_period = br.recover_period
+                    ) - (
+                    SELECT
+                    IFNULL(SUM(cr1.repay_interest), 0)
+                    FROM
+                    ht_hjh_debt_credit_repay cr1
+                    WHERE
+                    cr1.invest_order_id = br.nid
+                    AND cr1.repay_period = br.recover_period
+                    ) AS recoverInterest,
+                    br.recover_account - (
+                    SELECT
+                    IFNULL(SUM(cr1.assign_account), 0)
+                    FROM
+                    ht_credit_repay cr1
+                    WHERE
+                    cr1.credit_tender_nid = br.nid
+                    AND cr1.recover_period = br.recover_period
+                    ) - (
+                    SELECT
+                    IFNULL(SUM(cr1.repay_account), 0)
+                    FROM
+                    ht_hjh_debt_credit_repay cr1
+                    WHERE
+                    cr1.invest_order_id = br.nid
+                    AND cr1.repay_period = br.recover_period
+                    ) AS recoverAccount,
                     br.recover_fee - (
                     SELECT
                     IFNULL(SUM(cr1.manage_fee), 0)
@@ -272,9 +320,57 @@
                 - (select IFNULL(SUM(t.repay_capital_yes),0) from ht_hjh_debt_credit_tender t where t.invest_order_id = br.nid)
                 - (select IFNULL(SUM(t.assign_repay_capital),0) from ht_credit_tender t where t.credit_tender_nid = br.nid)
                 )AS amountHold,
-                rp.recover_capital - rp.credit_amount AS recoverCapital,
-                rp.recover_interest - rp.credit_interest_amount AS recoverInterest,
-                rp.recover_account - rp.credit_amount - rp.credit_interest_amount AS recoverAccount,
+                rp.recover_capital - (
+                SELECT
+                IFNULL(SUM(cr1.assign_capital), 0)
+                FROM
+                ht_credit_repay cr1
+                WHERE
+                cr1.credit_tender_nid = rp.nid
+                AND cr1.recover_period = rp.recover_period
+                ) - (
+                SELECT
+                IFNULL(SUM(cr1.repay_capital), 0)
+                FROM
+                ht_hjh_debt_credit_repay cr1
+                WHERE
+                cr1.invest_order_id = rp.nid
+                AND cr1.repay_period = rp.recover_period
+                ) AS recoverCapital,
+                rp.recover_interest - (
+                SELECT
+                IFNULL(SUM(cr1.assign_interest), 0)
+                FROM
+                ht_credit_repay cr1
+                WHERE
+                cr1.credit_tender_nid = rp.nid
+                AND cr1.recover_period = rp.recover_period
+                ) - (
+                SELECT
+                IFNULL(SUM(cr1.repay_interest), 0)
+                FROM
+                ht_hjh_debt_credit_repay cr1
+                WHERE
+                cr1.invest_order_id = rp.nid
+                AND cr1.repay_period = rp.recover_period
+                )AS recoverInterest,
+                rp.recover_account - (
+                SELECT
+                IFNULL(SUM(cr1.assign_account), 0)
+                FROM
+                ht_credit_repay cr1
+                WHERE
+                cr1.credit_tender_nid = rp.nid
+                AND cr1.recover_period = rp.recover_period
+                ) - (
+                SELECT
+                IFNULL(SUM(cr1.repay_account), 0)
+                FROM
+                ht_hjh_debt_credit_repay cr1
+                WHERE
+                cr1.invest_order_id = rp.nid
+                AND cr1.repay_period = rp.recover_period
+                )AS recoverAccount,
                 rp.recover_fee - (
                 SELECT
                 IFNULL(SUM(cr1.manage_fee), 0)
@@ -802,7 +898,7 @@
         br.late_interest AS lateInterest,
         br.recover_capital_yes AS recoverCapitalYesPeriod,
         br.recover_interest_yes AS recoverInterestYesPeriod,
-        br.recover_Account_yes AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAccountYesPeriod,
         br.recover_fee_yes AS recoverFeeYesPeriod,
         br.recover_capital_wait AS recoverCapitalWait,
         br.recover_interest_wait AS recoverInterestWait,
@@ -982,7 +1078,7 @@
         rp.late_interest AS lateInterest,
         rp.recover_capital_yes AS recoverCapitalYesPeriod,
         rp.recover_interest_yes AS recoverInterestYesPeriod,
-        rp.recover_Account_yes AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
         rp.recover_fee_yes AS recoverFeeYesPeriod,
         br.recover_capital_wait AS recoverCapitalWait,
         br.recover_interest_wait AS recoverInterestWait,
