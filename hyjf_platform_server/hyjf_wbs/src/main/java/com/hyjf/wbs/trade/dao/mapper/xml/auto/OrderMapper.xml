@@ -58,7 +58,7 @@
                 #{item}
             </foreach>
         </if>
-        <!-- 放款时间 -->；；
+        <!-- 放款时间 -->
         <if test="startTime != null and startTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
             AND b.recover_last_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
