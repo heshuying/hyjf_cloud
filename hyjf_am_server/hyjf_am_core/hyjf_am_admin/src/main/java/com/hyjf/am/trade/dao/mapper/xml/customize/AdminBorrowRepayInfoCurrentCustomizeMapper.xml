@@ -196,7 +196,7 @@
                     WHEN 1 THEN
                     '借款人还款'
                     WHEN 2 THEN
-                    '机构垫付'
+                    '第三方保障'
                     WHEN 3 THEN
                     '保证金垫付'
                     ELSE
@@ -307,7 +307,7 @@
                 WHEN 1 THEN
                 '借款人还款'
                 WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
                 WHEN 3 THEN
                 '保证金垫付'
                 ELSE
@@ -387,7 +387,7 @@
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
             WHEN 3 THEN
                 '保证金垫付'
             ELSE
@@ -476,7 +476,7 @@
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
             WHEN 3 THEN
                 '保证金垫付'
             ELSE
@@ -822,7 +822,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1002,7 +1002,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1179,7 +1179,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1360,7 +1360,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
