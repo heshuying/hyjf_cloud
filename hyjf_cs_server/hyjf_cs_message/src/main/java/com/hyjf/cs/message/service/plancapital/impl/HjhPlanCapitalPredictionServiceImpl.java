@@ -41,7 +41,6 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
     @Override
     public boolean insertPlanCaptialPrediction(List<HjhPlanCapitalPredictionVO> list) {
         // 历史数据delflg为0的更新成1
-        HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("delFlg").is(0);
@@ -51,6 +50,7 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
         this.planCapitalPredictionDao.updateAll(query, update);
         // 插入新增数据
         List<HjhPlanCapitalPrediction> inList = CommonUtils.convertBeanList(list, HjhPlanCapitalPrediction.class);
+        logger.info("测试日志打印：列表条数 " + inList.size());
         this.planCapitalPredictionDao.insertAll(inList);
         return true;
     }

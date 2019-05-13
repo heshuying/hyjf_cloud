@@ -39,7 +39,6 @@ public class HjhPlanCapitalActualServiceImpl extends BaseServiceImpl implements 
     @Override
     public Boolean insertPlanCaptialActual(List<HjhPlanCapitalActualVO> list) {
         // 历史数据delflg为0的更新成1
-        HjhPlanCapitalActualVO vo = new HjhPlanCapitalActualVO();
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("delFlg").is(0);
