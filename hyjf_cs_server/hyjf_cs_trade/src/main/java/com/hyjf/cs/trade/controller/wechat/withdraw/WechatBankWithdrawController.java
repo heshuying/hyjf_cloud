@@ -185,7 +185,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     public WeChatResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         // 交易金额
         String withdrawMoney = request.getParameter("withdrawMoney");
-        logger.info("提现金额:"+withdrawMoney);
+        withdrawMoney = StringUtils.isBlank(withdrawMoney) ? "0" : withdrawMoney;
+        logger.info("提现金额:" + withdrawMoney);
         WebResult<Object> webResult =  bankWithdrawService.userBankWithdrawCheck(userId, withdrawMoney);
         WeChatResult<Object> objectWebResult = new WeChatResult<Object>();
         objectWebResult.setData(webResult.getData());
