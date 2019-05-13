@@ -165,6 +165,42 @@ public class SystemConfig {
     /*角色验证是否开启 add by cwyang 合规角色验证需求 */
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
+    /**
+     * wjt前端地址
+     */
+    @Value("${hyjf.front.wjt.host}")
+    public String wjtFrontHost;
+
+    /**
+     * wjt 微信前端地址
+     */
+    @Value("${hyjf.front.wjt.wei.host}")
+    public String wjtWeiFrontHost;
+
+    public String getWjtFrontHost() {
+        return wjtFrontHost;
+    }
+
+    public void setWjtFrontHost(String wjtFrontHost) {
+        this.wjtFrontHost = wjtFrontHost;
+    }
+
+    public String getWjtWeiFrontHost() {
+        return wjtWeiFrontHost;
+    }
+
+    public void setWjtWeiFrontHost(String wjtWeiFrontHost) {
+        this.wjtWeiFrontHost = wjtWeiFrontHost;
+    }
+
+
+    /* 个人用户提现最大限额**/
+    @Value("${hyjf.personal.withdraw.limit}")
+    private String personalWithdrawLimit;
+
+    /* 企业用户提现最大限额**/
+    @Value("${hyjf.company.withdraw.limit}")
+    private String companyWithdrawLimit;
 
     public String getAppRegistAgreementUrl() {
         return appRegistAgreementUrl;
@@ -917,5 +953,21 @@ public class SystemConfig {
 
     public void setCertWebYibu(String certWebYibu) {
         this.certWebYibu = certWebYibu;
+    }
+
+    public String getPersonalWithdrawLimit() {
+        return personalWithdrawLimit;
+    }
+
+    public void setPersonalWithdrawLimit(String personalWithdrawLimit) {
+        this.personalWithdrawLimit = personalWithdrawLimit;
+    }
+
+    public String getCompanyWithdrawLimit() {
+        return companyWithdrawLimit;
+    }
+
+    public void setCompanyWithdrawLimit(String companyWithdrawLimit) {
+        this.companyWithdrawLimit = companyWithdrawLimit;
     }
 }

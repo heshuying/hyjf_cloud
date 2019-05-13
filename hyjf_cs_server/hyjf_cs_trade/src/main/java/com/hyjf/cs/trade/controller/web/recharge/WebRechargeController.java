@@ -7,7 +7,6 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
@@ -23,6 +22,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,23 +78,32 @@ public class WebRechargeController extends BaseTradeController{
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
 	@RequestLimit(seconds=3)
-	public WebResult<Object> recharge(@RequestHeader(value = "userId") int userId,
+	public WebResult<Object> recharge(@RequestHeader(value = "wjtHost",required = false) String wjtHost,@RequestHeader(value = "userId") int userId,
 									  HttpServletRequest request,
 									  @RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
-		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeError?token=1";
-		String bgRetUrl = "http://CS-TRADE/hyjf-web/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
-		String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
-		directRechargeBean.setRetUrl(retUrl);
-		directRechargeBean.setNotifyUrl(bgRetUrl);
-		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
 		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig));
+
+		logger.info("wjtHost:"+wjtHost);
+		if(StringUtils.isNotBlank(wjtHost)){
+			directRechargeBean.setPlatform(CommonConstant.WJT_PC_CLIENT);
+		}else {
+			directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
+		}
+		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig));
+		// 拼装参数 调用江西银行
+		String host = super.getFrontHost(systemConfig,directRechargeBean.getPlatform());
+		String retUrl = host+"/user/rechargeError?token=1";
+		String bgRetUrl = "http://CS-TRADE/hyjf-web/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
+		String successfulUrl = host+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		if (null == bean) {
 			throw new CheckException(MsgEnum.ERR_BANK_CALL);

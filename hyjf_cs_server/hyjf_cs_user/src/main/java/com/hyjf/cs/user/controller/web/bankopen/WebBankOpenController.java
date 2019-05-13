@@ -29,6 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,7 @@ public class WebBankOpenController extends BaseUserController {
     @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public WebResult<Object> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WebResult<Object> openBankAccount(@RequestHeader(value = "wjtHost",required = false) String wjtHost,@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.bankOpenService.getUsersById(userId);
@@ -131,7 +132,12 @@ public class WebBankOpenController extends BaseUserController {
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
-        openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
+        logger.info("wjtHost:"+wjtHost);
+        if(StringUtils.isNotBlank(wjtHost)){
+            openBean.setPlatform(ClientConstants.WJT_PC_CLIENT+"");
+        }else {
+            openBean.setPlatform(ClientConstants.WEB_CLIENT + "");
+        }
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
         // 开户角色
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
