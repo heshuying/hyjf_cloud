@@ -189,15 +189,16 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 成功页面
         String successPath = "/user/openSuccess";
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
-        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
+        String host = super.getFrontHost(systemConfig,openBean.getPlatform());
+        String retUrl = host+ errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+        String successUrl = host + successPath;
         // 如果是移动端  返回别的url
         if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())||(ClientConstants.WECHAT_CLIENT+"").equals(openBean.getPlatform())){
             errorPath = "/user/open/result/failed";
             successPath = "/user/open/result/success";
             // 同步地址  是否跳转到前端页面
-            retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?status=99&statusDesc=&logOrdId="+openAccoutBean.getLogOrderId();
-            successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath+"?status=000&statusDesc=";
+            retUrl = host + errorPath +"?status=99&statusDesc=&logOrdId="+openAccoutBean.getLogOrderId();
+            successUrl = host + successPath+"?status=000&statusDesc=";
             retUrl += "&token=1&sign=" +sign;
             successUrl += "&token=1&sign=" +sign;
         }

@@ -18,6 +18,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class WechatRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/recharge")
-	public WeChatResult recharge(@RequestHeader(value = "sign") String sign, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
+	public WeChatResult recharge(@RequestHeader(value = "wjtHost",required = false) String wjtHost,@RequestHeader(value = "sign") String sign, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
 		logger.info("wechat充值服务");
 		WeChatResult result = new WeChatResult();
 		String ipAddr = CustomUtil.getIpAddr(request);
@@ -69,15 +70,21 @@ public class WechatRechargeController extends BaseTradeController{
 			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&money="+money;
-		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&money="+money;
 		String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
-		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
+		logger.info("wjtHost:"+wjtHost);
+		if(StringUtils.isNotBlank(wjtHost)){
+			directRechargeBean.setPlatform(CommonConstant.WJT_WEI_CLIENT);
+		}else {
+			directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
+		}
+		// 拼装参数 调用江西银行
+		String host = super.getFrontHost(systemConfig,directRechargeBean.getPlatform());
+		String retUrl = host+"/user/bank/recharge/result/failed/?sign="+sign+"&money="+money;
+		String successfulUrl = host+"/user/bank/recharge/result/success/?sign="+sign+"&money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
-		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
-        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
+        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(directRechargeBean.getPlatform(),request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		if (null == bean) {
 			throw new CheckException(MsgEnum.ERR_BANK_CALL);

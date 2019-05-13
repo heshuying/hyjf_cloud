@@ -540,12 +540,14 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		Integer client = Integer.parseInt(platform);
 		if (ClientConstants.WEB_CLIENT == client) {
 			return sysConfig.getFrontHost();
-		}
-		if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+		}else if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
 			return sysConfig.getAppFrontHost();
-		}
-		if (ClientConstants.WECHAT_CLIENT == client) {
+		}else if (ClientConstants.WECHAT_CLIENT == client) {
 			return sysConfig.getWeiFrontHost();
+		}else if (ClientConstants.WJT_PC_CLIENT == client) {
+			return sysConfig.getWjtFrontHost();
+		}else if (ClientConstants.WJT_WEI_CLIENT == client) {
+			return sysConfig.getWjtWeiFrontHost();
 		}
 		return null;
 	}

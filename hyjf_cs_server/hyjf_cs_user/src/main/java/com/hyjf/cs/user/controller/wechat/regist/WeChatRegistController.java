@@ -130,6 +130,10 @@ public class WeChatRegistController extends BaseUserController {
         password = RSAJSPUtil.rsaToPassword(password);
         // 推荐人
         String reffer = request.getParameter("reffer");
+
+        // 温金投注册  新增字段  是否温金投注册
+        String isWjt = request.getParameter("isWjt");
+
         logger.info("当前注册手机号: {}", mobile);
         RegisterRequest register = new RegisterRequest();
         register.setMobile(mobile);
@@ -142,7 +146,7 @@ public class WeChatRegistController extends BaseUserController {
         }
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
-                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType);
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType,isWjt);
         //注册成功重新登录
         UserVO user = loginService.getUser(webViewUserVO.getUsername());
         WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
@@ -372,7 +376,7 @@ public class WeChatRegistController extends BaseUserController {
 
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
-        WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
+        WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType,null);
         UserVO user = loginService.getUser(webViewUserVO.getUsername());
         WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
         if(null!=userVO){
