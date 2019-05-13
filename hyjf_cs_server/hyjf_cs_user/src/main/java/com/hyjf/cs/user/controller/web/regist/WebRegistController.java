@@ -104,7 +104,7 @@ public class WebRegistController extends BaseUserController {
         registService.checkParam(registerRequest);
         WebViewUserVO webViewUserVO = registService.register(registerRequest.getMobile(),
                 registerRequest.getVerificationCode(), registerRequest.getPassword(),
-                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request), registerRequest.getUserType());
+                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request), registerRequest.getUserType(),registerRequest.getIsWjt());
 
         if (webViewUserVO != null) {
             // add by liuyang 神策数据统计追加 20181029 start

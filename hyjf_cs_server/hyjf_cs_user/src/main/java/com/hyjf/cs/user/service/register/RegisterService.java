@@ -59,7 +59,7 @@ public interface RegisterService extends BaseUserService {
      * @return
      * @throws ReturnMessageException
      */
-    WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType)
+    WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType,String isWjt)
             throws ReturnMessageException;
 
     /**

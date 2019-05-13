@@ -173,13 +173,13 @@ public class SystemConfig {
      * 温金投机构编号
      */
     @Value("${wjt.instCode}")
-    public String wJtInstCode;
+    public String wjtInstCode;
 
     /**
      * 温金投渠道编号
      */
     @Value("${wjt.channel}")
-    public String wJtChannel;
+    public String wjtChannel;
 
 
     public String getAppFileUpload() {
@@ -486,19 +486,19 @@ public class SystemConfig {
         this.appUpdateAndroidJsp = appUpdateAndroidJsp;
     }
 
-    public String getwJtInstCode() {
-        return wJtInstCode;
+    public String getWjtInstCode() {
+        return wjtInstCode;
     }
 
-    public void setwJtInstCode(String wJtInstCode) {
-        this.wJtInstCode = wJtInstCode;
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
     }
 
-    public String getwJtChannel() {
-        return wJtChannel;
+    public String getWjtChannel() {
+        return wjtChannel;
     }
 
-    public void setwJtChannel(String wJtChannel) {
-        this.wJtChannel = wJtChannel;
+    public void setWjtChannel(String wjtChannel) {
+        this.wjtChannel = wjtChannel;
     }
 }
