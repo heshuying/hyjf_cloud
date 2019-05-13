@@ -418,14 +418,14 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS yanqilixi,
+				rp.repay_account+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
@@ -494,14 +494,14 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS yanqilixi,
+				rp.repay_account+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
