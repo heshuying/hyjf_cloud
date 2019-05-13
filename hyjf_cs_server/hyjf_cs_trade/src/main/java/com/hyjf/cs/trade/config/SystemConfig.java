@@ -165,6 +165,33 @@ public class SystemConfig {
     /*角色验证是否开启 add by cwyang 合规角色验证需求 */
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
+    /**
+     * wjt前端地址
+     */
+    @Value("${hyjf.front.wjt.host}")
+    public String wjtFrontHost;
+
+    /**
+     * wjt 微信前端地址
+     */
+    @Value("${hyjf.front.wjt.wei.host}")
+    public String wjtWeiFrontHost;
+
+    public String getWjtFrontHost() {
+        return wjtFrontHost;
+    }
+
+    public void setWjtFrontHost(String wjtFrontHost) {
+        this.wjtFrontHost = wjtFrontHost;
+    }
+
+    public String getWjtWeiFrontHost() {
+        return wjtWeiFrontHost;
+    }
+
+    public void setWjtWeiFrontHost(String wjtWeiFrontHost) {
+        this.wjtWeiFrontHost = wjtWeiFrontHost;
+    }
 
     public String getAppRegistAgreementUrl() {
         return appRegistAgreementUrl;

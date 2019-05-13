@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.controller.wechat.bankopen;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -115,7 +114,7 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/open")
     @ResponseBody
-    public WeChatResult openBankAccount(@RequestHeader(value = "userId") Integer userId,  @RequestHeader(value = "sign") String sign,@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WeChatResult openBankAccount(@RequestHeader(value = "wjtHost",required = false) String wjtHost,@RequestHeader(value = "userId") Integer userId,  @RequestHeader(value = "sign") String sign,@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WeChatResult reuslt = new WeChatResult();
         bankOpenVO.setUserId(userId);
@@ -140,7 +139,12 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_WX);
         // 开户角色
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
-        openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
+        logger.info("wjtHost:"+wjtHost);
+        if(StringUtils.isNotBlank(wjtHost)){
+            openBean.setPlatform(ClientConstants.WJT_WEI_CLIENT+"");
+        }else {
+            openBean.setPlatform(ClientConstants.WECHAT_CLIENT + "");
+        }
         // 组装调用江西银行的MV
         logger.info("组装调用江西银行的MV");
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);
