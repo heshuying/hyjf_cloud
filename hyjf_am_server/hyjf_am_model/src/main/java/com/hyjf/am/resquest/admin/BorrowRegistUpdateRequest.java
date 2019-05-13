@@ -63,6 +63,13 @@ public class BorrowRegistUpdateRequest implements Serializable {
      */
     private int type;
 
+    /** 银行返回码*/
+    String retCode = "";
+    /** 标的状态*/
+    String state = "";
+    /** 银行返回描述信息*/
+    String bankRetmsg = "";
+
     public BorrowAndInfoVO getBorrowVO() {
         return borrowVO;
     }
@@ -141,5 +148,29 @@ public class BorrowRegistUpdateRequest implements Serializable {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
+    }
+
+    public String getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(String retCode) {
+        this.retCode = retCode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getBankRetmsg() {
+        return bankRetmsg;
+    }
+
+    public void setBankRetmsg(String bankRetmsg) {
+        this.bankRetmsg = bankRetmsg;
     }
 }

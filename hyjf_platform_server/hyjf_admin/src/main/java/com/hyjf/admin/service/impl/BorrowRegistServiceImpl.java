@@ -195,22 +195,28 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         String retCode = "";
         // 标的状态
         String state = "";
+        // 银行返回描述信息
+        String bankRetmsg = "";
         if(borrowCancelResult != null){
             retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
             // state为空的时赋一个负数
             state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
         }
 
+        // 请求实体赋值
+        request.setBorrowNid(borrowNid);
+        request.setBorrowInfoVO(borrowInfo);
+        request.setCurrUserId(currUserId);
+        request.setCurrUserName(currUserName);
+        request.setRetCode(retCode);
+        request.setState(state);
+        request.setBankRetmsg(bankRetmsg);
         // 成功撤销或者标的已经撤销，则删除标的数据
         if(BankCallConstant.RESPCODE_SUCCESS.equals(retCode) && 9 == Integer.valueOf(state)){
-            // 请求实体赋值
-            request.setBorrowNid(borrowNid);
-            request.setBorrowInfoVO(borrowInfo);
-            request.setCurrUserId(currUserId);
-            request.setCurrUserName(currUserName);
             return amTradeClient.updateForRegistCancel(request);
         } else {
             logger.error("备案撤销失败，标的号：{}，银行返回码：{}", borrowNid, retCode);
+            amTradeClient.updateForRegistCancel(request);
             return new AdminResult(BaseResult.FAIL, "调用银行撤销接口失败");
         }
     }
