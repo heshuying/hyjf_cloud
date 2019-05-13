@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper">
+
+    <sql id="Where_Clause">
+        <where>
+            1=1
+            <!-- 业务id -->
+            <if test="id != null ">
+                AND w.id <![CDATA[ != ]]> #{id}
+            </if>
+            <!-- 业务名称id -->
+            <if test="businessId != null ">
+                AND w.workname_id =#{businessId}
+            </if>
+            <!-- 业务名称 -->
+            <if test="businessName != null and businessName != ''">
+                AND n.work_name LIKE CONCAT( #{businessName}, '%')
+            </if>
+            <!-- 是否需要审核 -->
+            <if test="auditFlag != null ">
+                AND w.check_status = #{auditFlag}
+            </if>
+            <!-- 流程状态 -->
+            <if test="processStatus != null ">
+                AND w.flow_status = #{processStatus}
+            </if>
+            <!-- 创建开始时间 -->
+            <if test="createStartTime != null and createStartTime != ''">
+                AND w.create_time <![CDATA[>=]]> str_to_date(CONCAT(#{createStartTime},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <!-- 创建结束时间 -->
+            <if test="createEndTime != null and createEndTime != ''">
+                AND w.create_time <![CDATA[<=]]>str_to_date(CONCAT(#{createEndTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+            </if>
+
+        </where>
+    </sql>
+
+    <!-- 根据条件 查询意见反馈信息  -->
+    <select id="countWorkFlowConfigList" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.WorkFlowConfigRequest">
+       select count(w.id)
+        from ht_workflow w
+        inner join ht_workname n on w.workname_id=n.id
+        left join ht_admin a on a.id =w.update_user
+        <include refid="Where_Clause" />
+    </select>
+
+    <!-- 根据条件 查询意见反馈信息  -->
+    <select id="selectWorkFlowConfigList" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="com.hyjf.am.resquest.admin.WorkFlowConfigRequest">
+        select w.id,w.workname_id businessId,n.work_name businessName,
+        case
+        when w.check_status=1 then '是'
+        else '否' end auditFlagString,
+        (select count(DISTINCT n.flow_order) from ht_workflow_node n where n.workflow_id=w.id) flowNode,
+        w.mail_notifier mailWarningUser,
+        date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,
+        w.update_user updateUser,
+        case
+        when w.flow_status=1 then '正常'
+        else '异常' end processStatusString,
+        date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime
+        from ht_workflow w
+        inner join ht_workname n on w.workname_id=n.id
+        <include refid="Where_Clause" />
+        order by w.update_time desc
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <insert id="insertWorkFlow"  parameterType="com.hyjf.am.vo.admin.WorkFlowVO" useGeneratedKeys="true" keyProperty="id">
+        <!--<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >-->
+            <!--SELECT LAST_INSERT_ID()-->
+        <!--</selectKey>-->
+        insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
+        VALUES (#{businessId,jdbcType=VARCHAR},1, #{auditFlag,jdbcType=INTEGER},#{mailWarningUser,jdbcType=VARCHAR},#{updateUser},#{updateUser})
+    </insert>
+
+    <update id="updateWorkFlow" parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
+        UPDATE ht_workflow w
+        SET w.workname_id = #{businessId},w.flow_status=1,w.check_status=#{auditFlag},w.mail_notifier=#{mailWarningUser},w.update_user=#{updateUser}
+        WHERE  w.id = #{id}
+    </update>
+
+    <insert id="insertWorkFlowNode" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO" >
+        insert into ht_workflow_node (role,workflow_id,flow_order,admin_id)
+        VALUES
+        <foreach collection="flowNodes" item="pojo" index="index" separator=",">
+            (
+            #{pojo.role},
+            #{workFlowId},
+            #{pojo.flowNodeNum},
+            #{pojo.adminId}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectWorkFlowConfigInfo" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="java.lang.Integer">
+        select w.id,w.workname_id businessId,n.work_name businessName,w.mail_notifier mailWarningUser,
+        date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,w.create_user createUser,w.update_user updateUser,
+        w.create_user createUserName,
+        date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime,
+        w.update_user updateUserName,
+        w.flow_status processStatus,w.check_status auditFlag,
+        case
+        when w.flow_status=1 then '正常'
+        else '异常' end processStatusString,
+        case
+        when w.check_status=1 then '是'
+        else '否' end auditFlagString
+        from ht_workflow w
+        inner join ht_workname n on w.workname_id=n.id
+        where w.id=#{id}
+    </select>
+
+    <select id="selectWorkFlowConfigNode" resultType="com.hyjf.am.vo.admin.WorkFlowNodeVO" parameterType="java.lang.Integer">
+       select n.role role,n.workflow_id businessId,n.flow_order flowNodeNum ,group_concat(n.admin_id) adminId,
+       case when n.role=1 then group_concat(r.role_name) when n.role=2 then group_concat(a.truename) end auditUserName
+       from ht_workflow_node n
+      left join ht_admin a on a.id =n.admin_id
+      left join ht_admin_role r on r.id =n.admin_id
+      where n.workflow_id=#{businessId}
+      group by n.flow_order
+    </select>
+
+    <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
+        select a.id,a.truename,a.username,ar.role_name roleName,a.mobile,a.email,dep.name AS departmentname,
+        DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s')addTime,CONCAT(a.username,',',a.email)mailWarningUser
+        from ht_admin a
+        left join ht_admin_and_role r on a.id=r.user_id
+        left join ht_admin_role ar on r.role_id=ar.id
+        left join hyjf_user.ht_r_oa_department dep ON a.department_id = dep.id
+        where a.del_flag = 0 and a.state=0
+        <if test="username != null and username !=''">
+            and a.username like CONCAT(#{username},'%')
+        </if>
+        <if test="roleIds != null ">
+            and r.role_id  in
+            <foreach collection="roleIds" item="role" index="index" open="(" separator="," close=")">
+                #{role}
+            </foreach>
+        </if>
+        <if test="creatUser != null and creatUser != ''">
+         and a.email <![CDATA[ != ]]> #{creatUser}
+        </if>
+        order by a.email desc
+    </select>
+
+    <select id="selectWorkFlowUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">
+        select id,truename,email from ht_admin
+        WHERE del_flag = 0 and state=0 and id  in
+        <foreach collection="flowNodes" item="pojo" index="index" open="(" separator="," close=")">
+            #{pojo.adminId}
+        </foreach>
+    </select>
+
+
+    <select id="selectWorkFlowUserRole" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">
+        select a.id,a.truename,a.email from ht_admin a inner join ht_admin_and_role r on a.id=r.user_id
+        where a.del_flag=0 and a.state=0 and r.role_id in
+        <foreach collection="flowNodes" item="pojo" index="index" open="(" separator="," close=")">
+            #{pojo.adminId}
+        </foreach>
+        GROUP BY r.role_id
+    </select>
+    <select id="findWorkFlowAll" resultType="com.hyjf.am.vo.admin.WorkFlowVO">
+        SELECT
+        w.id,
+        w.workname_id as  businessId,
+        n.work_name as businessName,
+        w.mail_notifier as mailWarningUser
+        FROM
+        ht_workflow w
+        INNER JOIN ht_workname n ON w.workname_id = n.id
+        WHERE
+        w.flow_status = 1
+        AND w.check_status = 1;
+    </select>
+
+    <select id="findWorkFlowNodeUserEmailAll" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO">
+        select t.workflowid,t.mailWarningUser,t.workname,t.userid,t.truename from (
+
+        select wn.workflow_id as workflowid, wf.mail_notifier as mailWarningUser,wk.work_name as workname,am.id as userid,am.truename as truename from ht_workflow_node wn
+        LEFT JOIN ht_admin_and_role ar on ar.role_id = wn.admin_id
+        LEFT JOIN ht_admin am  on  ar.user_id = am.id
+        LEFT JOIN ht_workflow wf on wf.id = wn.workflow_id
+        LEFT JOIN ht_workname wk on wk.id = wf.workname_id
+        where wn.role=1 and am.id !='' and am.truename !=''
+
+        UNION ALL
+
+        select wn.workflow_id as workflowid, wf.mail_notifier as mailWarningUser,wk.work_name as workname,am.id as userid,am.truename as truename from ht_workflow_node wn
+        LEFT JOIN ht_admin am on am.id = wn.admin_id
+        LEFT JOIN ht_workflow wf on wf.id = wn.workflow_id
+        LEFT JOIN ht_workname wk on wk.id = wf.workname_id
+        where wn.role=2 and am.id !='' and am.truename !=''
+        ) t
+    </select>
+
+</mapper>
+

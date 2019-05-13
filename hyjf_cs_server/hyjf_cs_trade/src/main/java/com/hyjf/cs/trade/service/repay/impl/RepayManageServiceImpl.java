@@ -14,9 +14,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -91,6 +89,28 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
+     * 普通用户逾期利息总待还
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserLateInterestWaitTotal(Integer userId) {
+        return amTradeClient.getUserLateInterestWaitTotal(userId);
+    }
+
+    /**
+     * 借款人总借款金额
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserBorrowAccountTotal(Integer userId) {
+        return amTradeClient.getUserBorrowAccountTotal(userId);
+    }
+
+    /**
      * 担保机构管理费总待还
      *
      * @param userId
@@ -102,13 +122,24 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
+     * 担保机构逾期利息总待还
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgLateInterestWaitTotal(Integer userId) {
+        return amTradeClient.getOrgLateInterestWaitTotal(userId);
+    }
+
+    /**
      * 担保机构待还
      *
      * @param userId
      * @return
      */
     @Override
-    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
+    public RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId) {
         return amTradeClient.getOrgRepayWaitTotal(userId);
     }
 
@@ -139,6 +170,18 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         List<RepayListCustomizeVO> resultList = amTradeClient.repayList(requestBean);
         if (resultList == null) {
             return new ArrayList<RepayListCustomizeVO>();
+        }
+        return resultList;
+    }
+
+    /**
+     * 用户还款计划列表
+     */
+    @Override
+    public List<RepayPlanListVO> selectRepayPlanList(String borrowNid) {
+        List<RepayPlanListVO> resultList = amTradeClient.repayPlanList(borrowNid);
+        if (resultList == null) {
+            return new ArrayList<RepayPlanListVO>();
         }
         return resultList;
     }
@@ -235,9 +278,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
         JSONObject result = amTradeClient.getRepayDetailData(requestBean);
-        if (result == null) {
-            result = new JSONObject();
-        }
         return result;
     }
 
@@ -311,22 +351,25 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             } else {
                 // 银行账户余额不足
                 logger.error("【还款申请校验】银行账户余额不足！还款人用户名：{}", user.getUsername());
+                RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + repayBean.getBorrowNid());
                 throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
         } else {
             // 用户平台账户余额不足
             logger.error("【还款申请校验】平台账户余额不足！还款人用户名：{}", user.getUsername());
+            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + repayBean.getBorrowNid());
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
     }
 
     @Override
-    public RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay) {
+    public RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay, int latePeriod) {
         Map<String, String> paraMap = new HashMap<>();
         paraMap.put("userId", String.valueOf(userId));
         paraMap.put("roleId", roleId);
         paraMap.put("borrowNid", borrowNid);
         paraMap.put("isAllRepay", String.valueOf(isAllRepay));
+        paraMap.put("latePeriod", String.valueOf(latePeriod));
 
         return amTradeClient.getRepayBean(paraMap);
     }
@@ -338,11 +381,12 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/7/10
      */
     @Override
-    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay) {
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay, int latePeriod) {
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
         requestBean.setAllRepay(isAllRepay);
+        requestBean.setLatePeriod(latePeriod);
         return amTradeClient.repayRequestUpdate(requestBean);
     }
 
@@ -722,7 +766,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date 2018/10/11
      */
     @Override
-    public Integer insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+    public Integer insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay, int latePeriod) {
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         BankRepayOrgFreezeLogRequest requestBean = new BankRepayOrgFreezeLogRequest();
@@ -755,6 +799,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setCurrentPeriod(repayPeriod);// 当前期数
         requestBean.setAllRepayFlag(isAllRepay ? 1 : 0);// 是否全部还款 0 否 1 是
         requestBean.setDelFlag(0);// 0 有效 1 无效
+        requestBean.setLatePeriod(latePeriod);// 提交的逾期期数
         return amTradeClient.addOrgFreezeLog(requestBean);
     }
 
@@ -819,20 +864,23 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             String respCode = callBackBean.getRetCode();
             // 单笔还款申请冻结查询失败
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
-                logger.error("【冻结查询】调用单笔还款申请冻结查询接口失败:{},订单号:{}", callBackBean.getRetMsg(), callBackBean.getOrderId());
+                String retMsg = callBackBean == null || StringUtils.isBlank(callBackBean.getRetMsg()) ? "无返回" : callBackBean.getRetMsg();
+                String bankOrderId = callBackBean == null || StringUtils.isBlank(callBackBean.getOrderId()) ? "无返回" : callBackBean.getOrderId();
+                logger.error("【冻结查询】调用单笔还款申请冻结查询接口失败：{},订单号：{}", retMsg, bankOrderId);
                 return false;
             } else {
                 // 单笔还款申请冻结查询非正常
                 if (!BankCallConstant.STATUS_SUCCESS.equals(callBackBean.getState())) {
                     deleteOrgFreezeTempLogs(orderId, null);
                     RedisUtils.del(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
-                    logger.error("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
+                    String bankOrderId = callBackBean == null || StringUtils.isBlank(callBackBean.getOrderId()) ? "无返回" : callBackBean.getOrderId();
+                    logger.error("【冻结查询】单笔还款申请冻结未成功，订单号:{}", bankOrderId);
                     return false;
                 }
             }
             return true;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("【冻结查询】冻结查询时发生异常！", e);
             return false;
         }
     }
@@ -844,7 +892,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/10/16
      */
     @Override
-    public WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult, boolean isAllRepay) {
+    public WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult, boolean isAllRepay, int latePeriod) {
         Integer userId = userVO.getUserId();
         String userName = userVO.getUsername();
         String ip = repayBean.getIp();
@@ -870,13 +918,15 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             if (!"".equals(respCode)) {
                 this.deleteFreezeLogByOrderId(orderId);
             }
-            logger.error("调用还款申请冻结资金接口失败:" + callBackBean==null?"":callBackBean.getRetMsg() + "订单号:" + callBackBean==null?"":callBackBean.getOrderId());
+            String retMsg = callBackBean == null || StringUtils.isBlank(callBackBean.getRetMsg()) ? "无返回" : callBackBean.getRetMsg();
+            String bankOrderId = callBackBean == null || StringUtils.isBlank(callBackBean.getOrderId()) ? "无返回" : callBackBean.getOrderId();
+            logger.error("调用还款申请冻结资金接口失败：{},订单号：{}", retMsg, bankOrderId);
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("还款失败，请稍后再试...");
             return webResult;
         }
         //还款后变更数据
-        boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
+        boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay, latePeriod);
         if (updateResult) {
             updateResult = this.updateBorrowCreditStautus(borrowNid);
             if (!updateResult) {

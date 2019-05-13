@@ -54,7 +54,7 @@ public interface BorrowCreditTenderService extends BaseTradeService {
      * @param assignCapital
      * @return
      */
-    JSONObject getInterestInfo(int userId, String creditNid, String assignCapital);
+    JSONObject getInterestInfo(Integer userId, String creditNid, String assignCapital);
 
     /**
      * App页面出借可债转输入出借金额后获取收益
