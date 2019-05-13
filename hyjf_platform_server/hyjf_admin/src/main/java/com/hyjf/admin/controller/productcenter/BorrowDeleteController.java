@@ -60,10 +60,10 @@ public class BorrowDeleteController extends BaseController {
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/delete/{borrowNid}")
     public AdminResult borrowCancel(HttpServletRequest request, @PathVariable String borrowNid){
-//        AdminSystemVO currUser = getUser(request);
-//        if(currUser == null){
-//            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
-//        }
-        return borrowDeleteService.borrowDelete(borrowNid, "1", "");
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        return borrowDeleteService.borrowDelete(borrowNid, currUser.getId(), currUser.getUsername());
     }
 }
