@@ -479,7 +479,7 @@
             IF (
                 cr.`status` = 1
                 AND cr.assign_repay_yes_time > 0,
-                CASE bry.repay_money_source
+                CASE brp.repay_money_source
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
@@ -568,7 +568,7 @@
             IF (
                 hcr.repay_status = 1
                 AND hcr.assign_repay_yes_time > 0,
-                CASE bry.repay_money_source
+                CASE brp.repay_money_source
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
@@ -1260,7 +1260,7 @@
         ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
         ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
         ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
-        bry.repay_username AS repayUserName,
+        brp.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
         IF (cr.advance_status = 3, 8, 0),
@@ -1269,9 +1269,9 @@
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
         IF (
-        bry.repay_status = 1
-        AND bry.repay_action_time > 0,
-        CASE bry.repay_money_source
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
@@ -1441,7 +1441,7 @@
         hct.repay_capital_wait AS recoverCapitalWait,
         hct.repay_interest_wait AS recoverInterestWait,
         hct.repay_interest_wait AS recoverAccountWait,
-        bry.repay_username AS repayUserName,
+        brp.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
         IF (hcr.advance_status = 3, 8, 0),
@@ -1450,9 +1450,9 @@
         AS recoverStatus,
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
         IF (
-        bry.repay_status = 1
-        AND bry.repay_action_time > 0,
-        CASE bry.repay_money_source
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
