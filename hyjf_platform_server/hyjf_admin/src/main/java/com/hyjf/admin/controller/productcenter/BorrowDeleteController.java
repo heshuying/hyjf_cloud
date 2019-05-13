@@ -40,7 +40,7 @@ public class BorrowDeleteController extends BaseController {
     AdminCommonService adminCommonService;
 
     /** 权限 */
-    public static final String PERMISSIONS = "borrowDelete";
+    public static final String PERMISSIONS = "borrow";
 
     /**
      * 标的删除确认页面
@@ -48,7 +48,7 @@ public class BorrowDeleteController extends BaseController {
     @ApiOperation(value = "标的删除确认页面", notes = "标的删除确认页面")
     @GetMapping("/delete_confirm/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<BorrowRegistCancelConfirmCustomizeVO> registCancelConfirm(HttpServletRequest request, @PathVariable String borrowNid) {
+    public AdminResult<BorrowRegistCancelConfirmCustomizeVO> deleteConfirm(HttpServletRequest request, @PathVariable String borrowNid) {
         BorrowDeleteConfirmCustomizeVO responseBean = borrowDeleteService.selectDeleteConfirm(borrowNid);
         if(responseBean == null){
             return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
@@ -59,7 +59,8 @@ public class BorrowDeleteController extends BaseController {
     @ApiOperation(value = "标的删除", notes = "标的删除")
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/delete/{borrowNid}")
-    public AdminResult borrowCancel(HttpServletRequest request, @PathVariable String borrowNid){
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
+    public AdminResult delete(HttpServletRequest request, @PathVariable String borrowNid){
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
