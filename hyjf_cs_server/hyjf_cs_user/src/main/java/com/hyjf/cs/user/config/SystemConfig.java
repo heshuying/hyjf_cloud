@@ -197,6 +197,19 @@ public class SystemConfig {
         this.wjtWeiFrontHost = wjtWeiFrontHost;
     }
 
+    /**
+     * 温金投机构编号
+     */
+    @Value("${wjt.instCode}")
+    public String wJtInstCode;
+
+    /**
+     * 温金投渠道编号
+     */
+    @Value("${wjt.channel}")
+    public String wJtChannel;
+
+
     public String getAppFileUpload() {
         return appFileUpload;
     }
@@ -499,5 +512,21 @@ public class SystemConfig {
 
     public void setAppUpdateAndroidJsp(String appUpdateAndroidJsp) {
         this.appUpdateAndroidJsp = appUpdateAndroidJsp;
+    }
+
+    public String getwJtInstCode() {
+        return wJtInstCode;
+    }
+
+    public void setwJtInstCode(String wJtInstCode) {
+        this.wJtInstCode = wJtInstCode;
+    }
+
+    public String getwJtChannel() {
+        return wJtChannel;
+    }
+
+    public void setwJtChannel(String wJtChannel) {
+        this.wJtChannel = wJtChannel;
     }
 }
