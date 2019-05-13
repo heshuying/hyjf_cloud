@@ -93,6 +93,7 @@ public class ReturnFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
+        //只处理PC端返回
         if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
             return true;
         }else{
