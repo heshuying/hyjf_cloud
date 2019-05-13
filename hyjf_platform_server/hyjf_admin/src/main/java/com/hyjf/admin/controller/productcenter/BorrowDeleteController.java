@@ -12,7 +12,9 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowDeleteService;
 import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,5 +54,16 @@ public class BorrowDeleteController extends BaseController {
             return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
         }
         return new AdminResult(responseBean);
+    }
+
+    @ApiOperation(value = "标的删除", notes = "标的删除")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
+    @GetMapping("/delete/{borrowNid}")
+    public AdminResult borrowCancel(HttpServletRequest request, @PathVariable String borrowNid){
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        return borrowDeleteService.borrowDelete(borrowNid, currUser.getId(), currUser.getUsername());
     }
 }

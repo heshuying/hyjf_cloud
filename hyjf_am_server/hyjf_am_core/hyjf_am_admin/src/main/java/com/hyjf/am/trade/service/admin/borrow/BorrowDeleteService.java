@@ -22,4 +22,6 @@ import java.util.List;
 public interface BorrowDeleteService extends BaseService {
 
     BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid);
+
+    Response deleteBorrow(BorrowRegistUpdateRequest requestBean);
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
 
 /**
@@ -12,4 +13,6 @@ import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
 public interface BorrowDeleteService {
 
     BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid);
+
+    AdminResult borrowDelete(String borrowNid, String currUserId, String currUserName);
 }

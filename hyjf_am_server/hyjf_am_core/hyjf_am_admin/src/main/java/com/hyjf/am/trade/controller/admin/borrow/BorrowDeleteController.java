@@ -3,15 +3,16 @@
  */
 package com.hyjf.am.trade.controller.admin.borrow;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowDeleteConfirmCustomizeResponse;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.borrow.BorrowDeleteService;
 import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 标的删除
@@ -43,5 +44,13 @@ public class BorrowDeleteController extends BaseController {
         BorrowDeleteConfirmCustomizeVO borrowDeleteConfirmCustomizeVO = borrowDeleteService.selectDeleteConfirm(borrowNid);
         response.setResult(borrowDeleteConfirmCustomizeVO);
         return response;
+    }
+
+    /**
+     * 标的撤销成功后删除对应标的数据
+     */
+    @RequestMapping("/delete")
+    public Response borrowCancel(@RequestBody @Valid BorrowRegistUpdateRequest requestBean){
+        return borrowDeleteService.deleteBorrow(requestBean);
     }
 }

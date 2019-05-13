@@ -3126,6 +3126,7 @@ public interface AmTradeClient {
 
     BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid);
 
+    AdminResult deleteBorrow(BorrowRegistUpdateRequest request);
 
     /** 加息接口开始*/
     /** 枚举类型 */

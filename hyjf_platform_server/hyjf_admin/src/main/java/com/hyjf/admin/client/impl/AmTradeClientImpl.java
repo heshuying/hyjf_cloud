@@ -6981,6 +6981,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 标的删除成功后更新数据库
+     */
+    @Override
+    public AdminResult deleteBorrow(BorrowRegistUpdateRequest request) {
+        String url = "http://AM-ADMIN/am-trade/borrow_delete/delete";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "标的删除成功");
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
+    }
+
 
 
 }
