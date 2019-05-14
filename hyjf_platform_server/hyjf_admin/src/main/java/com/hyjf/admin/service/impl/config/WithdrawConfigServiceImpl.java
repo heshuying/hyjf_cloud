@@ -3,12 +3,12 @@ package com.hyjf.admin.service.impl.config;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.config.WithdrawConfigService;
-import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
-import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
-import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
-import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
-import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
-import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
+import com.hyjf.am.response.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.config.WithdrawTimeConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class WithdrawConfigServiceImpl extends BaseServiceImpl implements Withdr
      * @param request
      */
     @Override
-    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request) {
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request) {
         return amConfigClient.getWithdrawTimeConfigList(request);
     }
 
@@ -39,7 +39,7 @@ public class WithdrawConfigServiceImpl extends BaseServiceImpl implements Withdr
      * @param request
      */
     @Override
-    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request) {
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request) {
         return amConfigClient.getWithdrawRuleConfigList(request);
     }
 

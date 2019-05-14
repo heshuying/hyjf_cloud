@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author jun
  * @version WithdrawTimeConfigRequest, v0.1 2019/4/23 15:02
  */
-public class WithdrawTimeConfigRequest extends BasePage implements Serializable {
+public class AdminWithdrawTimeConfigRequest extends BasePage implements Serializable {
 
     /**
      * 分页查询开始条件

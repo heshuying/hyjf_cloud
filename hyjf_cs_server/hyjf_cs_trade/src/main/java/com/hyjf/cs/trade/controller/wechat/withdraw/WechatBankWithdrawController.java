@@ -185,7 +185,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     public WeChatResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         // 交易金额
         String withdrawMoney = request.getParameter("withdrawMoney");
-        logger.info("提现金额:"+withdrawMoney);
+        withdrawMoney = StringUtils.isBlank(withdrawMoney) ? "0" : withdrawMoney;
+        logger.info("提现金额:" + withdrawMoney);
         WebResult<Object> webResult =  bankWithdrawService.userBankWithdrawCheck(userId, withdrawMoney);
         WeChatResult<Object> objectWebResult = new WeChatResult<Object>();
         objectWebResult.setData(webResult.getData());
@@ -219,7 +220,19 @@ public class WechatBankWithdrawController extends BaseTradeController {
         // 获取提现规则配置
         WithdrawRuleConfigVO withdrawRuleConfigVO = bankWithdrawService.getWithdrawRuleConfig(userId, transAmt);
         if (withdrawRuleConfigVO == null) {
-            throw new CheckException(MsgEnum.ERR_GET_WITHDRAW_CONFIG);
+            String statusDesc = "";
+            // 个人用户
+            if (user.getUserType() == 0 &&
+                    new BigDecimal(transAmt).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+                // 提现金额> 个人最大提现金额
+                logger.info("个人提现金额超限");
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else if (user.getUserType() == 1 && new BigDecimal(transAmt).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else {
+                statusDesc = "获取提现配置失败";
+            }
+            throw new CheckException(statusDesc);
         }
         // add by liuyang 20190422 节假日提现修改 end
         logger.info("user is :{}", JSONObject.toJSONString(user));

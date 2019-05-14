@@ -1,11 +1,11 @@
 package com.hyjf.admin.service.config;
 
-import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
-import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
-import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
-import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
-import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
-import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
+import com.hyjf.am.response.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.config.WithdrawTimeConfigVO;
 
 /**
  * 提现配置
@@ -17,14 +17,14 @@ public interface WithdrawConfigService {
      * @return
      * @param request
      */
-    WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request);
+    WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request);
 
     /**
      * 提现规则配置
      * @return
      * @param request
      */
-    WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request);
+    WithdrawRuleConfigResponse getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request);
 
     /**
      * 提现规则配置详情

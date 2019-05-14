@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,6 +23,7 @@ public class WithdrawTimeConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "主键id")
     private Integer id;
 
     /**
@@ -29,6 +31,7 @@ public class WithdrawTimeConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "年份，格式：yyyy")
     private String year;
 
     /**
@@ -36,6 +39,7 @@ public class WithdrawTimeConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "假日名称")
     private String holidayName;
 
     /**
@@ -43,6 +47,7 @@ public class WithdrawTimeConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "假期开始时间")
     private Date startDate;
 
     /**
@@ -50,6 +55,7 @@ public class WithdrawTimeConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "假期结束时间")
     private Date endDate;
 
     /**
@@ -57,6 +63,7 @@ public class WithdrawTimeConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "假期类型 1补休 2假期")
     private Integer holidayType;
 
     /**

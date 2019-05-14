@@ -201,6 +201,13 @@ public class BankRepayOrgFreezeLog implements Serializable {
      */
     private String updateUserName;
 
+    /**
+     * 逾期还款期数(单笔或者多笔的最后一期)
+     *
+     * @mbggenerated
+     */
+    private Integer latePeriod;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -425,5 +432,13 @@ public class BankRepayOrgFreezeLog implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Integer getLatePeriod() {
+        return latePeriod;
+    }
+
+    public void setLatePeriod(Integer latePeriod) {
+        this.latePeriod = latePeriod;
     }
 }

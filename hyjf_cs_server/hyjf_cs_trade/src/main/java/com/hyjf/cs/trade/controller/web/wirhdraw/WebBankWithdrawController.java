@@ -33,6 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,7 +81,6 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现校验", notes = "用户银行提现校验")
     @PostMapping("/userBankWithdrawCheck")
-    @RequestLimit(seconds = 3)
     public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId, @RequestBody WithdrawRuleConfigRequest withdrawRuleConfigRequest, HttpServletRequest request) {
         WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
         String withdrawMoney = withdrawRuleConfigRequest.getWithdrawMoney();
@@ -121,7 +121,18 @@ public class WebBankWithdrawController extends BaseTradeController {
         // 获取提现规则配置
         WithdrawRuleConfigVO withdrawRuleConfigVO =  bankWithdrawService.getWithdrawRuleConfig(userId, bankWithdrawVO.getWithdrawmoney());
         if (withdrawRuleConfigVO == null) {
-            throw new CheckException(MsgEnum.ERR_GET_WITHDRAW_CONFIG);
+            String statusDesc = "";
+            // 个人用户
+            if (user.getUserType() == 0 && new BigDecimal(bankWithdrawVO.getWithdrawmoney()).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+                // 提现金额> 个人最大提现金额
+                logger.info("个人提现金额超限");
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else if (user.getUserType() == 1 && new BigDecimal(bankWithdrawVO.getWithdrawmoney()).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else {
+                statusDesc = "获取提现配置失败";
+            }
+            throw new CheckException(statusDesc);
         }
         // add by liuyang 20190422 节假日提现修改 end
         //                 http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn

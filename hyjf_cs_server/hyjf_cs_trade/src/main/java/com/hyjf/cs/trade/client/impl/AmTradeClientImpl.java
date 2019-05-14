@@ -91,6 +91,8 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -3394,6 +3396,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 用户待还款/已还款列表
+     */
+    @Override
+    public List<RepayPlanListVO> repayPlanList(String borrowNid) {
+        RepayPlanListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/repay_plan_list/" + borrowNid,
+                RepayPlanListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 垫付机构待还款列表
      * @param requestBean
      * @return
@@ -3975,6 +3991,34 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 普通用户逾期利息总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserLateInterestWaitTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/lateinterest_total_user/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 借款人总借款金额
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserBorrowAccountTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/borrowaccount_total_user/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 担保机构管理费总待还
      * @param userId
      * @return
@@ -3989,17 +4033,31 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 担保机构逾期利息总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgLateInterestWaitTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/lateinterest_total_org/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 担保机构总待还
      * @param userId
      * @return
      */
     @Override
-    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
-        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, BigDecimalResponse.class).getBody();
+    public RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId) {
+        RepayWaitOrgResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, RepayWaitOrgResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResultDec();
+            return response.getResult();
         }
-        return BigDecimal.ZERO;
+        return null;
     }
 
 
@@ -4246,6 +4304,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         BigDecimalResponse response =restTemplate.postForEntity(url,requestBean,BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultDec();
+        } else if (response.getResult() != null && StringUtils.isNotBlank(response.getResult().toString())) {
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_BATCH, response.getResult().toString());
         }
         return BigDecimal.ZERO;
     }
@@ -7002,6 +7062,15 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 更新还款逾期标的信息
+     */
+    @Override
+    public void updateBorrowRepayLateInfo() {
+        String url = "http://AM-TRADE/am-trade/batch/repaylate";
+        restTemplate.getForEntity(url, String.class).getBody();
+    }
+
+    /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313
      * PC 1.1.2
@@ -7191,9 +7260,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds) {
+    public UserLargeScreenTwoVO getMonthDataStatistics() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
-        UserLargeScreenTwoResponse response = restTemplate.postForEntity(url, currentOwnersAndUserIds, UserLargeScreenTwoResponse.class).getBody();
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
         // 查到数据为空,显示初始化
         List<MonthDataStatisticsVO> list = new ArrayList<>();
         MonthDataStatisticsVO vo = new MonthDataStatisticsVO();

@@ -89,9 +89,10 @@
     </select>
     <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
 
-        select  user_name userName,current_owner currentOwner,operating operating,IFNULL(money,0) money,IFNULL(year_money,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
-        from  ht_user_operate_list where operating &lt;&gt; 3 and current_owner is not null
-        ORDER  BY create_time DESC
+      select  user_name userName,current_owner currentOwner,operating operating,IFNULL(money,0) money,IFNULL(year_money,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
+      from  ht_user_operate_list where operating &lt;&gt; 3 and current_owner is not null
+      and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 DAY),'%Y-%m-%d 00:00:00')
+      ORDER  BY create_time DESC
     </select>
 
     <!-- 坐席日规模业绩 -->
@@ -310,45 +311,116 @@
 
     <!-- 本月数据统计 坐席、充值 -->
     <select id="getMonthDataStatisticsO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-        SELECT
-            ROUND(IFNULL(SUM(money), 0), 0) AS recharge,
-            current_owner AS currentOwner,
-            customer_group AS customerGroup
+               SELECT
+            ROUND(SUM(recharge), 0) AS recharge,
+            currentOwner,
+            customerGroup
         FROM
-            ht_user_operate_list
-        WHERE
-            operating = 2
-        AND customer_group = 1
-        AND create_time BETWEEN DATE_FORMAT(
-            CURDATE(),
-            '%Y-%m-01 00:00:00'
-        )
-        AND DATE_FORMAT(
-            LAST_DAY(CURDATE()),
-            '%Y-%m-%d 23:59:59'
-        )
+            (
+                SELECT
+                    IFNULL(SUM(money), 0) AS recharge,
+                    current_owner AS currentOwner,
+                    customer_group AS customerGroup
+                FROM
+                    ht_user_operate_list
+                WHERE
+                    operating = 2
+                AND customer_group = 1
+                AND create_time BETWEEN DATE_FORMAT(
+                    CURDATE(),
+                    '%Y-%m-01 00:00:00'
+                )
+                AND DATE_FORMAT(
+                    LAST_DAY(CURDATE()),
+                    '%Y-%m-%d 23:59:59'
+                )
+                GROUP BY
+                    current_owner
+                UNION ALL
+                SELECT  IFNULL(SUM(t1.money), 0) AS recharge,
+                        t2.current_owner AS currentOwner,
+                        t2.customer_group AS customerGroup
+										from (
+									select DISTINCT user_id,current_owner,customer_group FROM ht_user_operate_list WHERE  operating = 2
+                    AND customer_group = 1
+                    AND create_time BETWEEN DATE_FORMAT(
+                        CURDATE(),
+                        '%Y-%m-01 00:00:00'
+                    )
+                    AND DATE_FORMAT(
+                        LAST_DAY(CURDATE()),
+                        '%Y-%m-%d 23:59:59'
+                    ))t2,ht_account_recharge t1 where t1.user_id = t2.user_id
+												AND t1.TYPE = 0
+									AND t1.create_time BETWEEN DATE_FORMAT(
+										CURDATE(),
+										'%Y-%m-01 00:00:00'
+									)
+									AND DATE_FORMAT(
+										LAST_DAY(CURDATE()),
+										'%Y-%m-%d 23:59:59'
+									)GROUP BY
+                        current_owner
+            ) t1
         GROUP BY
-            current_owner
-        UNION ALL
-            SELECT
-                ROUND(IFNULL(SUM(money), 0), 0) AS recharge,
-                current_owner AS currentOwner,
-                customer_group AS customerGroup
-            FROM
-                ht_user_operate_list
-            WHERE
-                operating = 2
-            AND customer_group = 2
-            AND create_time BETWEEN DATE_FORMAT(
-                CURDATE(),
-                '%Y-%m-01 00:00:00'
-            )
-            AND DATE_FORMAT(
-                LAST_DAY(CURDATE()),
-                '%Y-%m-%d 23:59:59'
-            )
-            GROUP BY
-                current_owner
+            currentOwner
+
+            UNION ALL
+
+
+        SELECT
+            ROUND(SUM(recharge), 0) AS recharge,
+            currentOwner,
+            customerGroup
+        FROM
+            (
+                SELECT
+                    IFNULL(SUM(money), 0) AS recharge,
+                    current_owner AS currentOwner,
+                    customer_group AS customerGroup
+                FROM
+                    ht_user_operate_list
+                WHERE
+                    operating = 2
+                AND customer_group = 2
+                AND create_time BETWEEN DATE_FORMAT(
+                    CURDATE(),
+                    '%Y-%m-01 00:00:00'
+                )
+                AND DATE_FORMAT(
+                    LAST_DAY(CURDATE()),
+                    '%Y-%m-%d 23:59:59'
+                )
+                GROUP BY
+                    current_owner
+                UNION ALL
+                     SELECT  IFNULL(SUM(t1.money), 0) AS recharge,
+                        t2.current_owner AS currentOwner,
+                        t2.customer_group AS customerGroup
+										from (
+									select DISTINCT user_id,current_owner,customer_group FROM ht_user_operate_list WHERE  operating = 2
+                    AND customer_group = 2
+                    AND create_time BETWEEN DATE_FORMAT(
+                        CURDATE(),
+                        '%Y-%m-01 00:00:00'
+                    )
+                    AND DATE_FORMAT(
+                        LAST_DAY(CURDATE()),
+                        '%Y-%m-%d 23:59:59'
+                    ))t2,ht_account_recharge t1 where t1.user_id = t2.user_id
+												AND t1.TYPE = 0
+									AND t1.create_time BETWEEN DATE_FORMAT(
+										CURDATE(),
+										'%Y-%m-01 00:00:00'
+									)
+									AND DATE_FORMAT(
+										LAST_DAY(CURDATE()),
+										'%Y-%m-%d 23:59:59'
+									)GROUP BY
+                        current_owner
+            ) t1
+        GROUP BY
+            currentOwner
     </select>
 
     <!-- 本月数据统计 坐席、提现 -->
@@ -437,66 +509,47 @@
                 current_owner
     </select>
 
-    <!-- 本月数据统计 坐席、回款 -->
-    <select id="getMonthDataStatisticsFi" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-        SELECT
-            ROUND(IFNULL(SUM(money), 0), 0) AS received,
-            current_owner AS currentOwner,
-            customer_group AS customerGroup
-        FROM
-            ht_user_operate_list
-        WHERE
-            operating = 3
-        AND customer_group = 1
-        AND create_time BETWEEN DATE_FORMAT(
-            CURDATE(),
-            '%Y-%m-01 00:00:00'
-        )
-        AND DATE_FORMAT(
-            LAST_DAY(CURDATE()),
-            '%Y-%m-%d 23:59:59'
-        )
-        GROUP BY
-            current_owner
-        UNION ALL
-            SELECT
-                ROUND(IFNULL(SUM(money), 0), 0) AS received,
-                current_owner AS currentOwner,
-                customer_group AS customerGroup
-            FROM
-                ht_user_operate_list
-            WHERE
-                operating = 3
-            AND customer_group = 2
-            AND create_time BETWEEN DATE_FORMAT(
-                CURDATE(),
-                '%Y-%m-01 00:00:00'
-            )
-            AND DATE_FORMAT(
-                LAST_DAY(CURDATE()),
-                '%Y-%m-%d 23:59:59'
-            )
-            GROUP BY
-                current_owner
-    </select>
-
     <!-- 运营部-充值 -->
     <select id="getOperMonthPerformanceDataO" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
         SELECT
-            IFNULL(SUM(year_money), 0) AS yearAmount,
-            IFNULL(SUM(money), 0) AS recharge
-        FROM
-            ht_user_operate_list
-        WHERE
-            operating = 2
-        AND create_time BETWEEN DATE_FORMAT(
-            CURDATE(),
-            '%Y-%m-01 00:00:00'
-        )
-        AND DATE_FORMAT(
-            LAST_DAY(CURDATE()),
-            '%Y-%m-%d 23:59:59'
-        )
+	ROUND(SUM(recharge), 0) AS recharge
+    FROM
+	(
+		SELECT
+			IFNULL(SUM(money), 0) AS recharge
+		FROM
+			ht_user_operate_list
+		WHERE
+			operating = 2
+		AND create_time BETWEEN DATE_FORMAT(
+			CURDATE(),
+			'%Y-%m-01 00:00:00'
+		)
+		AND DATE_FORMAT(
+			LAST_DAY(CURDATE()),
+			'%Y-%m-%d 23:59:59'
+		)
+		UNION ALL
+	    SELECT  IFNULL(SUM(t1.money), 0) AS recharge
+        from (
+			select DISTINCT user_id FROM ht_user_operate_list WHERE operating = 2 and create_time BETWEEN DATE_FORMAT(
+				CURDATE(),
+				'%Y-%m-01 00:00:00'
+			)
+			AND DATE_FORMAT(
+				LAST_DAY(CURDATE()),
+				'%Y-%m-%d 23:59:59'
+			) )t2,ht_account_recharge t1 where t1.user_id = t2.user_id
+            AND t1.TYPE = 0
+			AND t1.create_time BETWEEN DATE_FORMAT(
+				CURDATE(),
+				'%Y-%m-01 00:00:00'
+			)
+			AND DATE_FORMAT(
+				LAST_DAY(CURDATE()),
+				'%Y-%m-%d 23:59:59'
+			)
+	) t1
     </select>
 
     <!-- 运营部-提现 -->
