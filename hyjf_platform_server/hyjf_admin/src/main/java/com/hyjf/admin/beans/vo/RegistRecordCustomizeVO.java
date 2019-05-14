@@ -42,6 +42,9 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     // 注册平台
     @ApiModelProperty(value = "注册平台")
     public String registPlat;
+    // 注册平台ID
+    @ApiModelProperty(value = "注册平台ID")
+    public String registPlatCode;
     // 注册时间
     @ApiModelProperty(value = "注册时间")
     public String regTime;
@@ -51,9 +54,6 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     // 注册渠道ListAll
     @ApiModelProperty(value = "所有有效注册渠道")
     private List<UtmPlatVO> utmPlatList;
-    // 注册平台ID
-    @ApiModelProperty(value = "注册平台ID")
-    public String registPlatCode;
 
     /**
      * 获取用户id userId
