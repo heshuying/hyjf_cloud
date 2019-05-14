@@ -544,7 +544,19 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			return sysConfig.getAppFrontHost();
 		}else if (ClientConstants.WECHAT_CLIENT == client) {
 			return sysConfig.getWeiFrontHost();
-		}else if (ClientConstants.WJT_PC_CLIENT == client) {
+		}
+		return null;
+	}
+
+	/**
+	 * 获取温金投前端的地址
+	 * @param sysConfig
+	 * @param platform
+	 * @return
+	 */
+	public String getWjtFrontHost(SystemConfig sysConfig, String platform) {
+		Integer client = Integer.parseInt(platform);
+		if (ClientConstants.WJT_PC_CLIENT == client) {
 			return sysConfig.getWjtFrontHost();
 		}else if (ClientConstants.WJT_WEI_CLIENT == client) {
 			return sysConfig.getWjtWeiFrontHost();
