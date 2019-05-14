@@ -51,6 +51,9 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     // 注册渠道ListAll
     @ApiModelProperty(value = "所有有效注册渠道")
     private List<UtmPlatVO> utmPlatList;
+    // 注册平台ID
+    @ApiModelProperty(value = "注册平台ID")
+    public String registPlatCode;
 
     /**
      * 获取用户id userId
@@ -210,5 +213,13 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public String getRegistPlatCode() {
+        return registPlatCode;
+    }
+
+    public void setRegistPlatCode(String registPlatCode) {
+        this.registPlatCode = registPlatCode;
     }
 }
