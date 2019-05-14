@@ -1987,6 +1987,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_BIND_PLAN_ERROR);
             }
         }
+
         borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
         borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
         borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
@@ -1998,6 +1999,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserVO user = amUserClient.findUserById(request.getUserId());
         request.setUser(user);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+
+        // 检查温金投的标的只能温金投用户投资
+        if(StringUtils.isNotBlank(borrowInfoVO.getPublishInstCode())&&!borrowInfoVO.getPublishInstCode().equals("0")){
+            // 是定向标
+            if(!borrowInfoVO.getPublishInstCode().equals(user.getInstCode())){
+                // 机构编号不相等 不让投资
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BIND_PLAN_ERROR);
+            }
+        }
         // 检查用户状态  角色  授权状态等  是否允许出借
         checkUser(user, userInfo);
         //校验用户测评
