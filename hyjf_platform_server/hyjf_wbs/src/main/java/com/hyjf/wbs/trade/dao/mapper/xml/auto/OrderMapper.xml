@@ -62,11 +62,11 @@
         <!-- 放款时间 -->
         <if test="startTime != null and startTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND b.recover_last_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+            AND b.recover_last_time >= unix_timestamp(#{startTime})
         </if>
         <if test="endTime != null and endTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND b.recover_last_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+            AND b.recover_last_time <![CDATA[<=]]> unix_timestamp(#{endTime})
         </if>
         <if test="assetCustomerId != null and assetCustomerId != ''">
             AND br.user_id = #{assetCustomerId}
