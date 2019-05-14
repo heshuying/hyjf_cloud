@@ -40,7 +40,7 @@
         br.borrow_nid AS productNo,
         '散标' AS productName,
         br.recover_capital	AS transAmount,
-        FROM_UNIXTIME(b.recover_last_time,'%Y-%m-%d %H:%i:%s') AS transTime,
+        FROM_UNIXTIME(bt.create_time,'%Y-%m-%d %H:%i:%s') AS transTime,
         b.borrow_period	AS deadlineNum,
         CASE WHEN b.is_month=0 THEN 1
         WHEN b.is_month=1 THEN 2
@@ -48,6 +48,7 @@
         ta.contract_number AS contractNumber
         FROM ht_borrow_recover br
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
+        left join ht_borrow_tender bt ON br.nid = bt.nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
         LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
         WHERE br.status=1 and br.accede_order_id is null
@@ -81,7 +82,7 @@
         ha.plan_nid AS productNo,
         '智投' AS productName,
         ha.accede_account	AS transAmount,
-        date_format(hp.update_time,'%Y-%m-%d %H:%i:%s') AS transTime,
+        date_format(ha.create_time,'%Y-%m-%d %H:%i:%s') AS transTime,
         hp.lock_period	AS deadlineNum,
         CASE WHEN hp.is_month=0 THEN 1
         WHEN hp.is_month=1 THEN 2
@@ -89,10 +90,9 @@
         ta.contract_number AS contractNumber
         FROM ht_hjh_accede ha
         LEFT JOIN ht_hjh_plan hp ON ha.plan_nid=hp.plan_nid
-        LEFT JOIN ht_borrow_tender bt ON bt.accede_order_id =ha.accede_order_id
-        LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = bt.nid
+        LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = ha.accede_order_id
         LEFT JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
-        WHERE ha.order_status in (2,3)
+        WHERE ha.order_status in (0,2,3)
         <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
         <if test="utmIds != null">
             AND ur.utm_id in
@@ -103,11 +103,11 @@
         <!-- 放款时间 -->
         <if test="startTime != null and startTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND hp.update_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+            AND ha.create_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
         </if>
         <if test="endTime != null and endTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND hp.update_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+            AND  ha.create_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
         </if>
         <if test="assetCustomerId != null and assetCustomerId != ''">
             AND ha.user_id = #{assetCustomerId}

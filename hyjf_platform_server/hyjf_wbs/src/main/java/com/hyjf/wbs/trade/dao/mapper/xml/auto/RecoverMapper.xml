@@ -38,11 +38,12 @@
     br.recover_account AS expectedExitAmount,
     br.recover_account_yes AS actualExitAmount,
     br.recover_period AS period,
-    br.recover_status AS status
+    2 AS status
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
-    INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-    WHERE br.recover_status=1 AND b.is_installment=0
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
+    WHERE br.recover_status=1 and br.accede_order_id is null
+    and b.borrow_style in ('principal','month','endmonth','endday','end')
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -56,9 +57,9 @@
     UNION ALL
     SELECT
     brp.user_id AS assetCustomerId,
-    brp.borrow_nid AS refundOrderNumber,
+    brp.repay_order_id AS refundOrderNumber,
     brp.nid AS orderNo,
-    brp.repay_order_id AS productNo,
+    brp.borrow_nid  AS productNo,
     #{entId} AS entId,
     1 AS assetId,
       FROM_UNIXTIME(brp.recover_time,'%Y-%m-%d') AS expectedExitTime,
@@ -70,11 +71,12 @@
     brp.recover_account AS expectedExitAmount,
     brp.recover_account_yes AS actualExitAmount,
     brp.recover_period AS period,
-    brp.recover_status AS status
+    2 AS status
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    INNER JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    LEFT  JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
     WHERE brp.recover_status=1
+    and brp.accede_order_id is null
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -84,7 +86,41 @@
       <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
         #{item}
       </foreach>
-    </if>) as recover
+    </if>
+union all
+    SELECT
+    ha.user_id AS assetCustomerId,
+    ha.accede_order_id AS refundOrderNumber,
+    '' AS orderNo,
+    ha.plan_nid  AS productNo,
+    #{entId} AS entId,
+    1 AS assetId,
+    FROM_UNIXTIME(ha.last_payment_time,'%Y-%m-%d') AS expectedExitTime,
+    FROM_UNIXTIME(ha.acctual_payment_time,'%Y-%m-%d') AS actualExitTime,
+    ha.wait_interest AS expectedRepay,
+    ha.received_interest AS actualRepay,
+    ha.wait_captical AS expectedExitCapital,
+    ha.received_capital AS actualExitCapital,
+    ha.wait_total AS expectedExitAmount,
+    ha.received_total AS actualExitAmount,
+    ha.lock_period AS period,
+    2 AS status
+    FROM ht_hjh_accede ha
+    LEFT JOIN ht_hjh_repay hr ON ha.accede_order_id=hr.accede_order_id
+    AND hr.repay_status=2
+    LEFT  JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
+    WHERE ha.order_status=7
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    ) as recover
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
     </if>
@@ -96,8 +132,9 @@
     br.user_id AS assetCustomerId
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
-    INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-    WHERE br.recover_status=1 AND b.is_installment=0
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
+    WHERE br.recover_status=1 and br.accede_order_id is null
+    and b.borrow_style in ('principal','month','endmonth','endday','end')
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -113,8 +150,26 @@
     brp.user_id AS assetCustomerId
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    INNER JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
-    WHERE brp.recover_status=1
+    LEFT  JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    WHERE brp.recover_status=1  and brp.accede_order_id is null
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    union all
+    SELECT
+    ha.user_id AS assetCustomerId
+    FROM ht_hjh_accede ha
+    LEFT JOIN ht_hjh_repay hr ON ha.accede_order_id=hr.accede_order_id
+    AND hr.repay_status=2
+    LEFT  JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
+    WHERE ha.order_status=7
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
