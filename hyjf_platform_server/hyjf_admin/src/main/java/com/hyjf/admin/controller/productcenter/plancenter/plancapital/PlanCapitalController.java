@@ -330,7 +330,7 @@ public class PlanCapitalController extends BaseController {
         map.put("date", "日期");
         map.put("planNid", "智投编号");
         map.put("planName", "智投名称");
-        map.put("lockPeriod", "锁定期");
+        map.put("lockPeriodView", "锁定期");
         map.put("creditAccount", "预计当日新增债转额（元）");
         map.put("reinvestAccount", "预计当日新增复投额（元）");
         map.put("capitalAccount", "预计当日所需资金量（元）");
@@ -494,7 +494,7 @@ public class PlanCapitalController extends BaseController {
         map.put("date", "日期");
         map.put("planNid", "智投编号");
         map.put("planName", "智投名称");
-        map.put("lockPeriod", "锁定期");
+        map.put("lockPeriodView", "锁定期");
         map.put("addCreditAccount", "当日新增债转额（元）");
         map.put("createCreditAccount", "当日发起债转额:当日已承接+当日未承接（元）");
         map.put("usedCreditAccount", "当日已承接债转额（元）");
