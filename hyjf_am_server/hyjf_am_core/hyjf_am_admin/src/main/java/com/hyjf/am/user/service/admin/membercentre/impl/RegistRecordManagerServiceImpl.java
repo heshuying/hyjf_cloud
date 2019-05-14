@@ -76,9 +76,9 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
         if (listRegistRecord!=null) {
             Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            listRegistRecord.setRegistPlatCode(listRegistRecord.getRegistPlat());
             listRegistRecord.setUserProperty(userProperty.getOrDefault(listRegistRecord.getUserProperty(), null));
             listRegistRecord.setRegistPlat(client.getOrDefault(listRegistRecord.getRegistPlat(), null));
-            listRegistRecord.setRegistPlatCode(listRegistRecord.getRegistPlat());
         }
         return listRegistRecord;
     }
