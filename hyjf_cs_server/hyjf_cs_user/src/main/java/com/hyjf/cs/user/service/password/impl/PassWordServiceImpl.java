@@ -144,7 +144,8 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         }
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
-        bean.setMobile(user.getMobile());
+        // 调用银行传送手机号改为银行预留手机号 update by liushouyi
+        bean.setMobile(user.getBankMobile());
         logger.info("交易密码回调参数:" + bean.getLogOrderId());
         //channel=0：设置交易密码/1：重置交易密码
         String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult" + "?channel=0&logOrdId=" + bean.getLogOrderId();
@@ -191,7 +192,8 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         }
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
-        bean.setMobile(user.getMobile());
+        // 调用银行传送手机号改为银行预留手机号 update by liushouyi
+        bean.setMobile(user.getBankMobile());
         //channel=0：设置交易密码/1：重置交易密码
         String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult" + "?channel=1&logOrdId=" + bean.getLogOrderId();
         // 异步调用路
