@@ -83,6 +83,7 @@ public class ReturnFilter extends ZuulFilter {
             result.put("islogined", "0");
             body = result.toString();
         }catch (Exception e){
+            logger.info("body:{}",body);
             logger.error("业务端返回为boolean或者其他无法识别类型，不进行处理");
         }
         logger.info("body:{}",body);
