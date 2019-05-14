@@ -79,7 +79,7 @@ public class CertStatisticalController extends BaseController {
     @PostMapping("/getNotSendAccountList")
     public CertReportEntityResponse getNotSendAccountList() {
         CertReportEntityResponse response = new CertReportEntityResponse();
-        List<CertReportEntity> recordList = certStatisticalService.getNotSendAccountList();
+        List<CertAccountList> recordList = certStatisticalService.getNotSendAccountList();
         if(CollectionUtils.isNotEmpty(recordList)){
             response.setResultList(CommonUtils.convertBeanList(recordList, CertReportEntityVO.class));
         }

@@ -35,7 +35,7 @@ public interface CertStatisticalService extends BaseService {
 
     void insertOldMessage(CertAccountList certAccountList);
 
-    List<CertReportEntity> getNotSendAccountList();
+    List<CertAccountList> getNotSendAccountList();
 
     void updateAccountSuccess(CertAccountList certAccountList);
 }

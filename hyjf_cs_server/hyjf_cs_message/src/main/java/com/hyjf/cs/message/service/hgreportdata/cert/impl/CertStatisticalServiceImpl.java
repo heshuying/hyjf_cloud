@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.service.hgreportdata.cert.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertAccountList;
@@ -69,28 +70,17 @@ public class CertStatisticalServiceImpl extends BaseServiceImpl implements CertS
     @Override
     public void insertOldMessage(CertAccountList certAccountList) {
         certAccountList.setIsSend(0);
+        logger.info("certAccountList:"+JSONObject.toJSONString(certAccountList));
         certAccountListDao.insert(certAccountList);
     }
 
     @Override
-    public List<CertReportEntity> getNotSendAccountList() {
-        Query query = new Query();
-        Criteria criteria = new Criteria();
-        // 查询未上报的是0
-        criteria.and("isSend").is(0);
-        query.addCriteria(criteria);
-        query.limit(1000);
-        return certReportDao.find(query);
+    public List<CertAccountList> getNotSendAccountList() {
+        return certAccountListDao.getNotSendAccountList();
     }
 
     @Override
     public void updateAccountSuccess(CertAccountList certAccountList) {
-        Query query = new Query();
-        Criteria criteria = new Criteria();
-        criteria.and("logOrdId").is(certAccountList.getLogOrdId());
-        query.addCriteria(criteria);
-        Update update = new Update();
-        update.set("isSend",1);
-        certAccountListDao.update(query,update);
+        certAccountListDao.updateAccountSuccess(certAccountList);
     }
 }
