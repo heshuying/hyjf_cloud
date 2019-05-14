@@ -2988,5 +2988,17 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+    /**
+     * 温金投web端首页列表数量
+     * @return
+     */
+    Integer countWjtWebProjectList(ProjectListRequest request);
+    /**
+     * 温金投web端首页列表
+     * @return
+     */
+    List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request);
+
+    List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
 }
 

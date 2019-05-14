@@ -131,6 +131,11 @@ public class TenderRequest extends BaseVO {
      */
     private String tenderFrom;
 
+    /**
+     * 温金投平台  ClientConstants.WJT_PC_CLIENT   ClientConstants.WJT_WEI_CLIENT
+     */
+    private String wjtClient;
+
     public String getIsConfirm() {
         return isConfirm;
     }
@@ -393,5 +398,13 @@ public class TenderRequest extends BaseVO {
 
     public void setPresetProps(String presetProps) {
         this.presetProps = presetProps;
+    }
+
+    public String getWjtClient() {
+        return wjtClient;
+    }
+
+    public void setWjtClient(String wjtClient) {
+        this.wjtClient = wjtClient;
     }
 }
