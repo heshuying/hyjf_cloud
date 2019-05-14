@@ -19,6 +19,8 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="borrower_type" property="borrowerType" jdbcType="VARCHAR" />
     <result column="idcard" property="idCard" jdbcType="VARCHAR" />
+	<result column="utm_type" property="utmType" jdbcType="VARCHAR" />
+	<result column="utm_source_id" property="utmSourceId" jdbcType="VARCHAR" />
   </resultMap>
 
 	<sql id="where-all-page-condition">
@@ -58,6 +60,12 @@
 		<if test="email != null and email != ''">
 			AND l.email =#{email}
 		</if>
+		<if test="utmType != null and utmType != ''">
+			AND l.utm_type =#{utmType}
+		</if>
+		<if test="utmSourceId != null and utmSourceId != ''">
+			AND l.utm_source_id =#{utmSourceId}
+		</if>
 	</sql>
 	<select id="queryChangeLogCount" resultType="java.lang.Integer"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
@@ -67,7 +75,15 @@
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 	</select>
-
+	<select id="queryChangeLogByUserIdCount" resultType="java.lang.Integer"
+			parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
+		SELECT COUNT(1)
+		from ht_user_change_log l
+		WHERE
+		l.user_id = #{userId}
+		AND utm_source_id is not null
+		<include refid="where-all-page-condition"/>
+	</select>
 	<select id="queryChangeLogList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
 		SELECT
@@ -169,6 +185,12 @@
 			<if test="utmName != null" >
 				utm_name,
 			</if>
+			<if test="utmType != null" >
+				utm_type,
+			</if>
+			<if test="utmSourceId != null" >
+				utm_source_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			<if test="userId != null" >
@@ -224,6 +246,12 @@
 			</if>
 			<if test="utmName != null" >
 				#{utmName,jdbcType=VARCHAR},
+			</if>
+			<if test="utmType != null" >
+				#{utmType,jdbcType=VARCHAR},
+			</if>
+			<if test="utmSourceId != null" >
+				#{utmSourceId,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>

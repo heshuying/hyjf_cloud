@@ -97,6 +97,8 @@ public class RegistRecordServiceImpl implements RegistRecordService {
         String sourceName = "";
         // 修改注册渠道名称
         String utmNameLog = "";
+        // 注册渠道数据来源
+        String utmType = "";
         // 判断客户端类型 （registPlat  账户开通平台 0pc 1微信 2安卓 3IOS 4其他）
         if(registRcordRequestBean.getRegistPlat()!=null&&registRcordRequestBean.getRegistPlat().equals("0")){
             // pc: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_utm ，再用utm_id查询 ht_utm_reg）
@@ -136,6 +138,7 @@ public class RegistRecordServiceImpl implements RegistRecordService {
                     registRecordClient.insertPcUtmReg(utmRegVOIns);
                     logger.error("没有渠道记录插入一条新数据 （ht_utm_reg）UtmRegVO:" + utmRegVOIns.toString());
                 }
+                utmType = "0";
                 utmNameLog = utmVO.getUtmSource();
                 flagIns = true;
             }else{
@@ -195,6 +198,7 @@ public class RegistRecordServiceImpl implements RegistRecordService {
                     registRecordClient.insertAppUtmReg(appUtmRegVOIns);
                     logger.error("没有渠道记录插入一条新数据 （ht_app_utm_reg）AppUtmRegVO:" + appUtmRegVOIns.toString());
                 }
+                utmType = "1";
                 utmNameLog = utmPlatResponse.get(0).getSourceName();
                 flagIns = true;
             }else{
@@ -210,6 +214,8 @@ public class RegistRecordServiceImpl implements RegistRecordService {
             changeLogVO.setUtmName(utmNameLog);
             changeLogVO.setSourceIdWasName(sourceName);
             changeLogVO.setRemark(registRcordRequestBean.getEditUtmCause());
+            changeLogVO.setUtmType(utmType);
+            changeLogVO.setUtmSourceId(sourceId);
             registRecordClient.insertChangeLogList(changeLogVO);
         }
         return true;

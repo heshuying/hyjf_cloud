@@ -84,6 +84,10 @@ public class ChangeLogCustomize {
 
     private String updateUserid;
 
+    private String utmType;
+
+    private String utmSourceId;
+
     public String getStartTime() {
 		return startTime;
 	}
@@ -335,6 +339,22 @@ public class ChangeLogCustomize {
 
     public void setUpdateUserid(String updateUserid) {
         this.updateUserid = updateUserid;
+    }
+
+    public String getUtmType() {
+        return utmType;
+    }
+
+    public void setUtmType(String utmType) {
+        this.utmType = utmType;
+    }
+
+    public String getUtmSourceId() {
+        return utmSourceId;
+    }
+
+    public void setUtmSourceId(String utmSourceId) {
+        this.utmSourceId = utmSourceId;
     }
 }
 

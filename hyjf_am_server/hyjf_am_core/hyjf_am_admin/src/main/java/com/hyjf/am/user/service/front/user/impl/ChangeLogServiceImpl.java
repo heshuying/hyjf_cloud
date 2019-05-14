@@ -122,17 +122,30 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
             changeLog.setIdcard(logRecord.getIdCard());
             changeLog.setUtmName(userChangeLog.getUtmName());
             changeLog.setRemark(userChangeLog.getRemark());
+            changeLog.setUtmType(userChangeLog.getUtmType());
+            changeLog.setUtmSourceId(userChangeLog.getUtmSourceId());
             if (users != null && !users.isEmpty()) {
                 changeLog.setRemark("渠道修改");
                 changeLog.setUpdateUser("system");
                 changeLog.setUpdateTime(new Date());
+                ChangeLogCustomize changeLogByUser = new ChangeLogCustomize();
+                changeLogByUser.setUserId(logRecord.getUserId());
+                // 判断是否为第一次修改
+                int userLogCount =  changeLogCustomizeMapper.queryChangeLogByUserIdCount(changeLogByUser);
+                if(userLogCount < 1){
+                    // 原渠道记录
+                    int userLogFlgWas =  changeLogCustomizeMapper.insertSelective(changeLog);
+                    if (userLogFlgWas > 0) {
+                        logger.info("==================用户信息修改日志保存成功!（原渠道信息新增）======");
+                    } else {
+                        throw new RuntimeException("============用户信息修改日志保存失败!========");
+                    }
+                }
                 // 修改渠道
                 int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
                 changeLog.setUtmName(userChangeLog.getSourceIdWasName());
                 changeLog.setRemark("该记录为用户原渠道记录");
-                // 原渠道记录
-                int userLogFlgWas =  changeLogCustomizeMapper.insertSelective(changeLog);
-                if (userLogFlg > 0&&userLogFlgWas>0) {
+                if (userLogFlg > 0) {
                     logger.info("==================用户信息修改日志保存成功!======");
                 } else {
                     throw new RuntimeException("============用户信息修改日志保存失败!========");

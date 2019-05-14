@@ -26,6 +26,13 @@ public interface ChangeLogCustomizeMapper {
 	 * @return
 	 */
 	int insertSelective(ChangeLogCustomize changeLogCustomize);
+
+	/**
+	 * 根据userId查询log返回修改渠道日志数量
+	 * @param
+	 * @return
+	 */
+	int queryChangeLogByUserIdCount(ChangeLogCustomize changeLogCustomize);
 }
 
 	
