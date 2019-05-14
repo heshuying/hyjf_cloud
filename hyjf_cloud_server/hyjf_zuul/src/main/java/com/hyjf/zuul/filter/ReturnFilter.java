@@ -46,6 +46,9 @@ public class ReturnFilter extends ZuulFilter {
                     String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
                     logger.warn("user is not exist, token is : {}...，Redis上未查询到该用户登陆信息", token);
                     body = setResult(body);
+                    if(StringUtils.isBlank(body)){
+                        body = ctx.getResponseBody();
+                    }
                     ctx.setResponseBody(body);// 输出最终结果
                 }
             }
