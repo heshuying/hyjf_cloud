@@ -549,8 +549,7 @@
 		SELECT dc.plan_nid, SUM(dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned) AS addCreditAccount
 		FROM ht_hjh_debt_credit dc
 		INNER JOIN ht_hjh_accede ha ON ha.accede_order_id = dc.plan_order_id
-		WHERE ha.acctual_payment_time <![CDATA[>]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 00:00:00'))
-		AND ha.acctual_payment_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 23:59:59'))
+		WHERE ha.end_date = #{date}
 		GROUP BY dc.plan_nid
 		) aca
 		ON aca.plan_nid = hp.plan_nid
