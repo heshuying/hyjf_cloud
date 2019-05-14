@@ -11,6 +11,7 @@ import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
+import com.hyjf.cs.market.service.DailyAutoSendService;
 import com.hyjf.cs.market.service.DailyGeneratorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,8 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     /** 不需要显示的网点 */
     private static final List NMZX_IGNORE_TWODIVISION_LIST = Arrays.asList("胶州分部");
     private static final List DTHJ_IGNORE_TWODIVISION_LIST = Arrays.asList("樟树分部", "东莞分部", "西安分部");
-
+    @Autowired
+    private DailyAutoSendService dailyAutoSendService;
 
     @Override
     public void generatorSellDaily() {
@@ -173,39 +175,64 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
      * @param currentDate
      */
     private void generatorSellDaily(Date currentDate) {
-        // 昨日结束日期
-        Date yesterdayEndTime = GetDate.getYesterdayEndTime(currentDate);
-
-        // 本月累计开始时间
-        Date totalMonthStartTime = GetDate.getFirstDayOnMonth(yesterdayEndTime);
-
-        Date previousMonth = getPreviousMonth(yesterdayEndTime);
+        // 昨日结束日期（昨日统计数据的结束日期）
+        Date yesterdayEndTime;
+        // 本月累计列计算的开始时间
+        Date totalMonthStartTime;
+        // 本月累计列计算的结束时间
+        Date totalMonthEndTime;
+        // 上月累计结束日期
+        Date totalPreviousMonthEndTime;
         // 上月累计开始时间
-        Date totalPreviousMonthStartTime = GetDate.getFirstDayOnMonth(previousMonth);
+        Date totalPreviousMonthStartTime;
+        // 昨日开始日期 节假日向前退推移
+        Date yesterdayStartTime;
+        // 第十七列: 查询当日待还（工作日计算当天， 如果工作日次日是节假日，那么计算当天到节假日过后第一个工作日）
+        Date todayEndTime;
+
+        // 当月第一个工作日，查询上个月数据
+        if (dailyAutoSendService.isTodayFirstWorkdayOnMonth()) {
+            logger.info("当月第一个工作日，查询上个月数据...");
+            yesterdayEndTime = GetDate.getYesterdayEndTime(currentDate);
+            totalMonthStartTime = GetDate.getFirstDayOnMonth(GetDate.getYesterdayEndTime(getFirstDayOnMonth(currentDate)));
+            totalMonthEndTime = GetDate.getLastDayOnMonth(totalMonthStartTime);
+            totalPreviousMonthEndTime = getPreviousMonth(totalMonthEndTime);
+            totalPreviousMonthStartTime = GetDate.getFirstDayOnMonth(totalPreviousMonthEndTime);
+            yesterdayStartTime = this.getYesterdayStartTime(currentDate);
+            todayEndTime = getNextWorkDate(currentDate);
+
+        } else {
+            yesterdayEndTime = GetDate.getYesterdayEndTime(currentDate);
+            totalMonthStartTime = GetDate.getFirstDayOnMonth(yesterdayEndTime);
+            totalMonthEndTime = yesterdayEndTime;
+            totalPreviousMonthEndTime = getPreviousMonth(yesterdayEndTime);
+            totalPreviousMonthStartTime = GetDate.getFirstDayOnMonth(totalPreviousMonthEndTime);
+            yesterdayStartTime = this.getYesterdayStartTime(currentDate);
+            todayEndTime = getNextWorkDate(currentDate);
+        }
+
 
         // 第一列: 查询本月累计规模业绩
-        this.insertSomeColumn(totalMonthStartTime, yesterdayEndTime, 1);
+        this.insertSomeColumn(totalMonthStartTime, totalMonthEndTime, 1);
 
         // 第三列: 查询上月累计规模业绩
 
-        this.insertSomeColumn(totalPreviousMonthStartTime, previousMonth, 3);
+        this.insertSomeColumn(totalPreviousMonthStartTime, totalPreviousMonthEndTime, 3);
 
         // 第二列: 查询本月累计已还款
-        this.insertSomeColumn(totalMonthStartTime, yesterdayEndTime, 2);
+        this.insertSomeColumn(totalMonthStartTime, totalMonthEndTime, 2);
 
         // 第五列: 查询本月累计提现
-        this.insertSomeColumn(totalMonthStartTime, yesterdayEndTime, 5);
+        this.insertSomeColumn(totalMonthStartTime, totalMonthEndTime, 5);
 
         // 第七列: 查询本月累计充值
-        this.insertSomeColumn(totalMonthStartTime, yesterdayEndTime, 7);
+        this.insertSomeColumn(totalMonthStartTime, totalMonthEndTime, 7);
 
         // 第八列: 计算本月累计年化业绩
-        this.insertSomeColumn(totalMonthStartTime, yesterdayEndTime, 8);
+        this.insertSomeColumn(totalMonthStartTime, totalMonthEndTime, 8);
         // 第九列: 计算上月累计年化业绩
-        this.insertSomeColumn(totalPreviousMonthStartTime, previousMonth, 9);
+        this.insertSomeColumn(totalPreviousMonthStartTime, totalPreviousMonthEndTime, 9);
 
-        // 昨日开始日期 节假日向前退推移
-        Date yesterdayStartTime = this.getYesterdayStartTime(currentDate);
         // 第十一列: 查询昨日规模业绩
         this.insertSomeColumn(yesterdayStartTime, yesterdayEndTime, 11);
         // 第十二列: 查询昨日还款
@@ -225,8 +252,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         //amMarketClient.calculateRate();
 
         // 第十七列: 查询当日待还（工作日计算当天， 如果工作日次日是节假日，那么计算当天到节假日过后第一个工作日）
-        Date endDate = getNextWorkDate(currentDate) ;
-        this.insertSomeColumn(GetDate.getSomeDayStart(currentDate), GetDate.getSomeDayEnd(endDate), 17);
+        this.insertSomeColumn(GetDate.getSomeDayStart(currentDate), GetDate.getSomeDayEnd(todayEndTime), 17);
 
         // 第十八列: 查询昨日注册数
         this.insertSomeColumn(yesterdayStartTime, yesterdayEndTime, 18);
@@ -364,5 +390,18 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         }
         logger.info("统计昨日待还金额结束时间：" + currentDate);
         return currentDate;
+    }
+
+    /**
+     * 获取某日期的月第一天
+     *
+     * @param currentDate
+     * @return
+     */
+    private Date getFirstDayOnMonth(Date currentDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
     }
 }
