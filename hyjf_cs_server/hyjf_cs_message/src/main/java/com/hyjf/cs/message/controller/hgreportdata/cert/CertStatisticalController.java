@@ -99,6 +99,7 @@ public class CertStatisticalController extends BaseController {
             CertAccountList certAccountList = new CertAccountList();
             BeanUtils.copyProperties(certReportEntityVO,certAccountList);
             logger.info("certAccountList:"+JSONObject.toJSONString(certAccountList));
+            logger.info("certReportEntityVO:"+JSONObject.toJSONString(certReportEntityVO));
             certStatisticalService.updateAccountSuccess(certAccountList);
             return new BooleanResponse(true);
         }

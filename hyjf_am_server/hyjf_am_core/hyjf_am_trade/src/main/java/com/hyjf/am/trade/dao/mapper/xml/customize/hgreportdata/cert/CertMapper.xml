@@ -109,6 +109,7 @@
         LEFT JOIN ht_r_user hru ON hal.user_id = hru.user_id
         WHERE
         hb.`status` IN (2, 3, 4, 7)
+        AND hal.id <![CDATA[<=]]> #{maxId}
         AND  hal.trade = "creditassign"
         LIMIT #{limitStart} , #{limitEnd}
     </select>
@@ -124,6 +125,7 @@
         LEFT JOIN ht_r_user hru ON hal.user_id = hru.user_id
         WHERE
             hb.`status` IN (2, 3, 4, 7)
+        AND hal.id <![CDATA[<=]]> #{maxId}
         AND  hal.trade = "accede_assign"
         LIMIT #{limitStart} , #{limitEnd}
     </select>
