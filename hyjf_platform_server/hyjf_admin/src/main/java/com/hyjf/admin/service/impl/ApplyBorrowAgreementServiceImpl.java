@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.ApplyBorrowAgreementRequestBean;
-import com.hyjf.admin.beans.request.BorrowRepayAgreementRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -11,21 +10,18 @@ import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.service.ApplyBorrowAgreementService;
 import com.hyjf.admin.service.AutoTenderExceptionService;
-import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.trade.ApplyBorrowAgreementResponse;
-import com.hyjf.am.response.trade.ApplyBorrowInfoResponse;
-import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
-import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.resquest.admin.ApplyBorrowAgreementRequest;
+import com.hyjf.am.resquest.admin.ApplyBorrowInfoRequest;
+import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.borrow.ApplyBorrowAgreementVO;
+import com.hyjf.am.vo.trade.borrow.ApplyBorrowInfoVO;
 import com.hyjf.common.file.FavFTPUtil;
 import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.file.SFTPParameter;
 import com.hyjf.common.file.ZIPGenerator;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -140,6 +135,18 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
         if (borrowVO == null) {
             return new AdminResult(BaseResult.FAIL, "未找到对应的编号的标");
         }else{
+            //判断是否已还款
+            if(borrowVO.getReverifyStatus()!=6){
+                return new AdminResult(BaseResult.FAIL, "未方放款状态，不能能申请！");
+            }
+            //判断是否已经申请
+            ApplyBorrowAgreementRequest applyBorrowAgreementRequest =  new ApplyBorrowAgreementRequest();
+            applyBorrowAgreementRequest.setBorrowNid(borrowId);
+            ApplyBorrowAgreementResponse response = baseClient.postExe(BORROW_AGREEMENT_COUNT_URL, applyBorrowAgreementRequest, ApplyBorrowAgreementResponse.class);
+            Integer count = response.getCount();
+            if (count > 0 ) {
+                return new AdminResult(BaseResult.FAIL, "相同的编号的标不能重复申请！");
+            }
             //需要保存的协议下载申请
             ApplyBorrowAgreementVO applyBorrowAgreementVO =  new ApplyBorrowAgreementVO();
             applyBorrowAgreementVO.setBorrowNid(borrowVO.getBorrowNid());

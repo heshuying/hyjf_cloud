@@ -18,8 +18,8 @@ public class ApplyBorrowAgreementSaveRequest {
     @ApiModelProperty(value = "资产来源")
     private String borrowProjectSource;
 
-    @ApiModelProperty(value = "申请期数")
-    private Integer repayPeriod;
+    @ApiModelProperty(value = "申请期限")
+    private String repayPeriod;
 
     @ApiModelProperty(value = "申请人id")
     private Integer applyUserId;
@@ -69,11 +69,11 @@ public class ApplyBorrowAgreementSaveRequest {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public Integer getRepayPeriod() {
+    public String getRepayPeriod() {
         return repayPeriod;
     }
 
-    public void setRepayPeriod(Integer repayPeriod) {
+    public void setRepayPeriod(String repayPeriod) {
         this.repayPeriod = repayPeriod;
     }
 
