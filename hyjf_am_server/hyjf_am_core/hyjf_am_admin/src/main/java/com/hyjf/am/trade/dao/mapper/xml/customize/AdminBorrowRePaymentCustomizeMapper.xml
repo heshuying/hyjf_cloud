@@ -176,7 +176,7 @@
 
 		hic.inst_name as instName,
 
-		binfo.borrow_measures_instit as webName,
+		binfo.repay_org_name as webName,
 		rflg.order_id AS freezeOrderId,
 		br.repay_fee-b.repay_fee_normal as repayFeeWait,
 		b.repay_fee_normal as repayFeeYes,
