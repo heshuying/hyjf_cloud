@@ -67,6 +67,8 @@ public class GetDate extends PropertyEditorSupport {
 
 	public static final String yyyyMM_key = "yyyy-MM";
 
+	public static final String short_time_sdf_hms = "HH:mm:ss";
+
 
 
 
@@ -84,6 +86,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat(datetimeFormathhmm_key);
 	public static final SimpleDateFormat datesdf = new SimpleDateFormat(datesdf_key);
 	public static final SimpleDateFormat yyyyMMdf = new SimpleDateFormat(yyyyMM_key);
+	public static final SimpleDateFormat short_time_sdf_hhmmss = new SimpleDateFormat(short_time_sdf_hms);
 
 	// 以毫秒表示的时间
 	private static final long DAY_IN_MILLIS = (long) 24 * 3600 * 1000;
@@ -2320,4 +2323,19 @@ public class GetDate extends PropertyEditorSupport {
 		c.set(Calendar.DAY_OF_MONTH,1);
 		return c.getTime();
 	}
+
+	// ////////////////////////////////////////////////////////////////////////////
+	// formatShortTimehhmmss
+	// 将日期按照一定的格式转化为字符串
+	// ////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：时：分:秒
+	 *
+	 * @return 默认日期按“时：分:秒“格式显示
+	 */
+	public static String formatShortTimehhmmss() {
+		return getDateFormat(short_time_sdf_hms).format(getCalendar().getTime());
+	}
+
 }

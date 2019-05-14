@@ -1723,20 +1723,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					repayYesTime = nowTime;
 					status = 5;
 				}
-				// 非一次性还款或一次性还款其他期都更新完毕才更新
-				if(!isAllRepay || isLastUpdate){
-					// 更新Borrow
-					newBorrow.setRepayFullStatus(repayStatus);
-					if (lastPeriod == 0 || isAllRepay) {// 逾期还款且未全部还完不更新标的状态
-						newBorrow.setStatus(status);
-					}
-					BorrowExample borrowExample2 = new BorrowExample();
-					borrowExample2.createCriteria().andIdEqualTo(borrowId);
-					boolean borrowFlag2 = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample2) > 0 ? true : false;
-					if (!borrowFlag2) {
-						throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
-					}
-				}
 				// 更新还款总表状态
 				BorrowRepay newBorrowRepay = new BorrowRepay();
 				newBorrowRepay.setRepayType(repayType);
@@ -1762,6 +1748,20 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				} else {
 					// 还款成功最后时间
 					newBorrowRepay.setRepayYestime(repayYesTime);
+				}
+				// 非一次性还款或一次性还款其他期都更新完毕才更新
+				if(!isAllRepay || isLastUpdate){
+					// 更新Borrow
+					newBorrow.setRepayFullStatus(repayStatus);
+					if (lastPeriod == 0 || isAllRepay) {// 逾期还款且未全部还完不更新标的状态
+						newBorrow.setStatus(status);
+					}
+					BorrowExample borrowExample2 = new BorrowExample();
+					borrowExample2.createCriteria().andIdEqualTo(borrowId);
+					boolean borrowFlag2 = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample2) > 0 ? true : false;
+					if (!borrowFlag2) {
+						throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
+					}
 				}
 				// 更新BorrowRepay
 				BorrowRepayExample repayExample = new BorrowRepayExample();
