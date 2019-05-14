@@ -43,7 +43,7 @@ public class ToolsController {
     private  static  WbsConfig wbsConfig;
     @ResponseBody
     @RequestMapping(value = "/createsign", method = RequestMethod.GET)
-    public Object searchAction(HttpServletRequest request, HttpServletResponse response) {
+    public Object repayAction(HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         jsonMap.put("entId", "8001");
@@ -85,6 +85,49 @@ public class ToolsController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/createorder", method = RequestMethod.GET)
+    public Object orderAction(HttpServletRequest request, HttpServletResponse response) {
+
+        Map<String, Object> jsonMap = new HashMap<String, Object>();
+        jsonMap.put("entId", "8001");
+        jsonMap.put("startTime", request.getParameter("start"));
+        jsonMap.put("endTime", request.getParameter("end"));
+
+        this.interfaceName = interfaceName;
+        this.parameter = jsonMap;
+        this.wbsConfig = SpringUtils.getBean(WbsConfig.class);
+
+        WbsCommonQO wbsCommonQO = new WbsCommonQO();
+        wbsCommonQO.setApp_key(wbsConfig.getAppKey());
+        wbsCommonQO.setName(interfaceName);
+
+        String dataJson = JSON.toJSONString(parameter);
+        logger.info("【{}】原始数据【{}】",interfaceName,dataJson);
+        try {
+            wbsCommonQO.setData(URLEncoder.encode(dataJson, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("为数据【{}】UTF-8编码出错", dataJson);
+            throw new CheckException("999", "编码出错！" + e.getMessage());
+        }
+        wbsCommonQO.setAccess_token("");
+        wbsCommonQO.setVersion("");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(new Date());
+
+        wbsCommonQO.setTimestamp(nowTime);
+
+        WbsCommonExQO commonExQO = new WbsCommonExQO();
+        BeanUtils.copyProperties(wbsCommonQO, commonExQO);
+        commonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO, wbsConfig.getAppSecret()));
+
+        String jsonRequest = JSONObject.toJSONString(commonExQO);
+
+        return jsonRequest;
+
+
+    }
 
 
 }
