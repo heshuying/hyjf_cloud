@@ -150,7 +150,12 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     private Map<String,Object> getQueryParamMap(BorrowRepayInfoCurrentRequest requestBean){
         Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
+        if(StringUtils.isNotBlank(requestBean.getBorrowNid())){
+            paraMap.put("borrowNid", requestBean.getBorrowNid());
+        }
+        if(StringUtils.isNotBlank(requestBean.getTenderUserName())){
+            paraMap.put("borrowNid", requestBean.getTenderUserName());
+        }
         if(StringUtils.isNotBlank(requestBean.getAssignOrderId())){
             paraMap.put("assignOrderId",requestBean.getAssignOrderId());
         }

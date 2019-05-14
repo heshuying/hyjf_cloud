@@ -105,7 +105,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
 
         // 不加条件不能导出
         if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getAssignOrderId())
-                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
+                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart()) && StringUtils.isBlank(requestBean.getTenderUserName())){
             return;
         }
 

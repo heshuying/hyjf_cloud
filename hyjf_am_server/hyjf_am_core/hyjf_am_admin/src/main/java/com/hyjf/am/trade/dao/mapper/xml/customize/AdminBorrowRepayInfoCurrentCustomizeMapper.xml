@@ -9,6 +9,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND t.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND br.nid = #{tenderOrderId}
         </if>
@@ -43,6 +46,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND t.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND rp.nid = #{tenderOrderId}
         </if>
@@ -75,6 +81,9 @@
     <sql id="where-type-3">
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND cr.user_name = #{tenderUserName}
         </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND cr.credit_tender_nid = #{tenderOrderId}
@@ -109,6 +118,9 @@
         AND hcr.del_flag = 0
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND hcr.user_name = #{tenderUserName}
         </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND hcr.invest_order_id = #{tenderOrderId}
