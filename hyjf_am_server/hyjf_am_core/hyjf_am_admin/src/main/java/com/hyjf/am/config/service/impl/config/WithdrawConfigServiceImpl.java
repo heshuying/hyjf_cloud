@@ -2,7 +2,6 @@ package com.hyjf.am.config.service.impl.config;
 
 import com.hyjf.am.config.dao.mapper.auto.WithdrawRuleConfigMapper;
 import com.hyjf.am.config.dao.mapper.auto.WithdrawTimeConfigMapper;
-import com.hyjf.am.config.dao.mapper.customize.WithdrawRuleConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
@@ -10,6 +9,7 @@ import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfigExample;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
 import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,8 +28,6 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
     @Resource
     protected WithdrawTimeConfigMapper withdrawTimeConfigMapper;
 
-    @Resource
-    protected WithdrawRuleConfigCustomizeMapper withdrawRuleConfigCustomizeMapper;
     /**
      * 提现规则配置总数
      * @return
@@ -50,7 +48,8 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
         example.setLimitStart(request.getLimitStart());
         example.setLimitEnd(request.getLimitEnd());
-        List<WithdrawRuleConfig> recordList = withdrawRuleConfigCustomizeMapper.selectByExample(example);
+        example.setOrderByClause("customer_type asc");
+        List<WithdrawRuleConfig> recordList = withdrawRuleConfigMapper.selectByExample(example);
         return recordList;
     }
 
