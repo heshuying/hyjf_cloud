@@ -183,7 +183,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         // 计算日期减一天
         String mogoActual = GetDate.dateToString2(GetDate.countDate(beginDate, 5, -1));
         // 预计新增复投额
-        List<HjhPlanCapitalActualVO> HjhPlanCapitalActualVOList = amTradeClient.getCapitalActualInfo(GetDate.dateToString(beginDate));
+        List<HjhPlanCapitalActualVO> HjhPlanCapitalActualVOList = amTradeClient.getCapitalActualInfo(GetDate.dateToString2(beginDate));
         // 获取mongo中计算日期-1天的历史数据
         HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest = new HjhPlanCapitalActualRequest();
         hjhPlanCapitalActualRequest.setDateFromSrch(mogoActual);
