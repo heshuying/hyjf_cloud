@@ -1590,9 +1590,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public UtmVO getUtmBySourceId(String sourceId) {
-		UtmVOResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getUtmBySourceId/"+sourceId, UtmVOResponse.class).getBody();
+	public UtmChannelVO getUtmBySourceId(String sourceId) {
+		UtmChannelResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getUtmBySourceId/"+sourceId, UtmChannelResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}

@@ -114,10 +114,10 @@ public class RegistRecordController extends BaseController {
      * @param userId
      *
      */
-    @ApiOperation(value = "渠道修改详细信息", notes = "渠道修改详细信息")
-    @PostMapping(value = "/registRecordUtmEditStr")
+    @ApiOperation(value = "渠道详细信息", notes = "渠道详细信息")
+    @GetMapping(value = "/registRecordUtmEditStr/{userId}" , produces = "application/json; charset=utf-8")
     @ResponseBody
-    public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(HttpServletRequest request ,@RequestBody String userId) {
+    public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(@PathVariable String userId) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         registerRcordeRequest.setUserId(userId);
         RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordOne(registerRcordeRequest);
@@ -147,12 +147,12 @@ public class RegistRecordController extends BaseController {
      *     1）校验渠道值是否正确，校验成功后，修改用户注册渠道，更新为修改值，并且新增一条操作记录。
      *  @param registRcordRequestBean
      */
-    @ApiOperation(value = "渠道修改详细信息", notes = "渠道修改详细信息")
+    @ApiOperation(value = "渠道修改确认", notes = "渠道修改确认")
     @PostMapping(value = "/registRecordUtmEdit")
     @ResponseBody
     public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
         boolean registRecordResponse = registRecordService.editRegistRecordOne(registRcordRequestBean);
-        if (registRecordResponse) {
+        if (!registRecordResponse) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();

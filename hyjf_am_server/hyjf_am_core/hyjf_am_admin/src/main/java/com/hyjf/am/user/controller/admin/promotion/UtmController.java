@@ -1,10 +1,10 @@
 package com.hyjf.am.user.controller.admin.promotion;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmChannelResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
-import com.hyjf.am.response.user.UtmVOResponse;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.resquest.admin.ChannelRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -126,9 +126,9 @@ public class UtmController extends BaseController {
      * @return
      */
     @RequestMapping("/getUtmBySourceId/{sourceId}")
-    public UtmVOResponse getUtmBySourceId(@PathVariable String sourceId) {
-        UtmVOResponse response = new UtmVOResponse();
-        UtmVO utmVO = utmService.getUtmBySourceId(sourceId);
+    public UtmChannelResponse getUtmBySourceId(@PathVariable String sourceId) {
+        UtmChannelResponse response = new UtmChannelResponse();
+        UtmChannelVO utmVO = utmService.getUtmBySourceId(sourceId);
         response.setResult(utmVO);
         return response;
     }

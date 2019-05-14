@@ -23,10 +23,10 @@ public interface RegistRecordCustomizeMapper {
 
     /**
      *  根据筛选条件查找会员信息
-     * @param userRequest 筛选条件
+     * @param userId 筛选条件
      * @return
      */
-    RegistRecordCustomize selectRegistOne(Map<String, Object> userRequest);
+    RegistRecordCustomize selectRegistOne(Integer userId);
 
     /**
      * 根据条件获取用户列表总数

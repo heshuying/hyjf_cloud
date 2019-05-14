@@ -82,6 +82,8 @@ public class ChangeLogCustomize {
     //原注册渠道NAME
     private String sourceIdWasName;
 
+    private String updateUserid;
+
     public String getStartTime() {
 		return startTime;
 	}
@@ -325,6 +327,14 @@ public class ChangeLogCustomize {
 
     public void setSourceIdWasName(String sourceIdWasName) {
         this.sourceIdWasName = sourceIdWasName;
+    }
+
+    public String getUpdateUserid() {
+        return updateUserid;
+    }
+
+    public void setUpdateUserid(String updateUserid) {
+        this.updateUserid = updateUserid;
     }
 }
 

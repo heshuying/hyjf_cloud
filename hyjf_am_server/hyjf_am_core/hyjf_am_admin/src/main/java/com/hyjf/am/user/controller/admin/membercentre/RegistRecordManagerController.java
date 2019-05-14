@@ -82,9 +82,8 @@ public class RegistRecordManagerController extends BaseController {
     @RequestMapping("/registRecordOne")
     public RegistRecordResponse findRegistRecordOne(@RequestBody @Valid RegistRcordRequest request) {
         logger.info("---findRegistRecordOne by param---  " + JSONObject.toJSON(request));
-        Map<String, Object> mapParam = paramSet(request);
         RegistRecordResponse response = new RegistRecordResponse();
-        RegistRecordCustomize registRecordCustomize = registRecordService.selectRegistOne(mapParam);
+        RegistRecordCustomize registRecordCustomize = registRecordService.selectRegistOne(Integer.valueOf(request.getUserId()));
         if (registRecordCustomize!=null) {
             RegistRecordVO userVoList = CommonUtils.convertBean(registRecordCustomize, RegistRecordVO.class);
             response.setResult(userVoList);
@@ -130,6 +129,7 @@ public class RegistRecordManagerController extends BaseController {
         mapParam.put("mobile", userRequest.getMobile());
         mapParam.put("recommendName", userRequest.getRecommendName());
         mapParam.put("registPlat",userRequest.getRegistPlat());
+        mapParam.put("userId",userRequest.getUserId());
         return mapParam;
     }
 

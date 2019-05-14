@@ -154,7 +154,7 @@
 			<if test="updateType != null" >
 				update_type,
 			</if>
-			<if test="updateUserId != null" >
+			<if test="updateUserid != null" >
 				update_user_id,
 			</if>
 			<if test="updateUser != null" >
@@ -210,8 +210,8 @@
 			<if test="updateType != null" >
 				#{updateType,jdbcType=TINYINT},
 			</if>
-			<if test="updateUserId != null" >
-				#{updateUserId,jdbcType=INTEGER},
+			<if test="updateUserid != null" >
+				#{updateUserid,jdbcType=INTEGER},
 			</if>
 			<if test="updateUser != null" >
 				#{updateUser,jdbcType=VARCHAR},

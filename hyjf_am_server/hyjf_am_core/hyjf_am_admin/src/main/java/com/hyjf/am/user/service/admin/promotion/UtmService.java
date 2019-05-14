@@ -60,7 +60,7 @@ public interface UtmService extends BaseService {
      * @Param utmId
      * @return
      */
-    UtmVO getUtmBySourceId(String sourceId);
+    UtmChannelVO getUtmBySourceId(String sourceId);
 
     /**
      * @Author walter.limeng

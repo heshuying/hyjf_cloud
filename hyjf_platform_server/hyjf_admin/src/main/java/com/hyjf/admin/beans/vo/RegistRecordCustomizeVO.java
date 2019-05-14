@@ -203,4 +203,12 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     public void setUtmPlatList(List<UtmPlatVO> utmPlatList) {
         this.utmPlatList = utmPlatList;
     }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
 }

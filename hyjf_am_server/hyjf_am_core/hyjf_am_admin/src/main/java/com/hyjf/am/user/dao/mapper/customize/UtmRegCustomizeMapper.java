@@ -68,7 +68,7 @@ public interface UtmRegCustomizeMapper {
 	 * @Param utmId
 	 * @return
 	 */
-	UtmVO getUtmBySourceId(@Param("sourceId") String sourceId);
+	UtmChannelVO getUtmBySourceId(@Param("sourceId") String sourceId);
 
 	/**
 	 * 查询访问数

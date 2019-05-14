@@ -800,7 +800,7 @@ public interface AmUserClient {
      * @Date 15:14 2019/5/9
      * @Param utmId
      */
-    UtmVO getUtmBySourceId(String sourceId);
+    UtmChannelVO getUtmBySourceId(String sourceId);
 
     /**
      * @return

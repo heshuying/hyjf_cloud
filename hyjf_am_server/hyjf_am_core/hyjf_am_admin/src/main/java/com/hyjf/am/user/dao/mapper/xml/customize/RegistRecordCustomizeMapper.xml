@@ -20,8 +20,8 @@
         hydu.mobile,
         hydui.attribute AS user_property,
         hydur.username AS recommend_name,
-        IF(plat.source_type=0,hydutm.source_id, plat.source_id) AS source_id,
-        IF(plat.source_type=0,hydutm.utm_source, plat.source_name) AS source_name,
+        IF(plat.source_type <![CDATA[<>]]> 0,plat.source_id, hydutm.source_id) AS source_id,
+        IF(plat.source_type <![CDATA[<>]]> 0,plat.source_name, hydutm.utm_source) AS source_name,
         hydu.reg_esb AS regist_plat, DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
@@ -48,15 +48,15 @@
         LEFT  JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
         <include refid="Where_Clause" />
     </select>
-    <select id="selectRegistOne" resultMap="RegistListPOMap" parameterType="Map">
+    <select id="selectRegistOne" resultMap="RegistListPOMap" parameterType="java.lang.Integer" >
         SELECT
         hydu.user_id AS user_id,
         hydu.username,
         hydu.mobile,
         hydui.attribute AS user_property,
         hydur.username AS recommend_name,
-        IF(plat.source_type=0,hydutm.source_id, plat.source_id) AS source_id,
-        IF(plat.source_type=0,hydutm.utm_source, plat.source_name) AS source_name,
+        IF(plat.source_type <![CDATA[<>]]> 0,plat.source_id, hydutm.source_id) AS source_id,
+        IF(plat.source_type <![CDATA[<>]]> 0,plat.source_name, hydutm.utm_source) AS source_name,
         hydu.reg_esb AS regist_plat, DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
@@ -68,7 +68,8 @@
         LEFT JOIN ht_utm hydutm ON hydur1.utm_id = hydutm.utm_id
         LEFT JOIN ht_app_utm_reg appdurl ON appdurl.user_id = hydu.user_id
         LEFT JOIN ht_utm_plat plat ON plat.source_id = appdurl.source_id
-        <include refid="Where_Clause" />
+        WHERE hydu.user_id = #{userId}
+        LIMIT 1
     </select>
     <sql id="Where_Clause">
         <where>

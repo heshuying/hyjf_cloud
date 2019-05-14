@@ -25,6 +25,8 @@ public class RegistRecordCustomize implements Serializable {
     public String sourceName;
     // 注册平台
     public String registPlat;
+    // 注册平台
+    public String registPlatCode;
     // 注册时间
     public String regTime;
     // 注册ip
@@ -181,5 +183,13 @@ public class RegistRecordCustomize implements Serializable {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public String getRegistPlatCode() {
+        return registPlatCode;
+    }
+
+    public void setRegistPlatCode(String registPlatCode) {
+        this.registPlatCode = registPlatCode;
     }
 }
