@@ -68,6 +68,7 @@ public class CertStatisticalServiceImpl extends BaseServiceImpl implements CertS
 
     @Override
     public void insertOldMessage(CertAccountList certAccountList) {
+        certAccountList.setIsSend(0);
         certAccountListDao.insert(certAccountList);
     }
 
