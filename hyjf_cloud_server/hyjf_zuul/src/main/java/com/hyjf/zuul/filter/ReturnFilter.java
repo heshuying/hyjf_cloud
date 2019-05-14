@@ -85,6 +85,7 @@ public class ReturnFilter extends ZuulFilter {
         }catch (Exception e){
             logger.error("业务端返回为boolean或者其他无法识别类型，不进行处理");
         }
+        logger.info("body:{}",body);
 
         return body;
     }
