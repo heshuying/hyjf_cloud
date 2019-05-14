@@ -587,7 +587,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?-1:borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param.put("transType", "2");
 		//交易金额
