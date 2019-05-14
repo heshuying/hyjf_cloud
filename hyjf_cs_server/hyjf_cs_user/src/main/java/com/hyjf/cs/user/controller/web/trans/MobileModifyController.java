@@ -10,7 +10,6 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
@@ -71,7 +70,7 @@ public class MobileModifyController extends BaseUserController {
             CheckUtil.check(false, MsgEnum.ERR_OBJECT_GET, "用户信息");
         }
         // 目前只有个人用户可修改
-        if(null == user.getUserType() || user.getUserType() ==  1) {
+        if (null == user.getUserType() || user.getUserType() == 1) {
             // 只针对个人用户修改手机号
             throw new CheckException(MsgEnum.ERR_USER_PERSON_ONLY);
         }
@@ -111,10 +110,10 @@ public class MobileModifyController extends BaseUserController {
     @ApiOperation(value = "修改银行预留手机号异步处理", notes = "修改银行预留手机号异步处理")
     @PostMapping("/bankMobileModifyBgReturn")
     @ResponseBody
-    public BankCallResult bankMobileModifyBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String oldMobile) {
+    public BankCallResult bankMobileModifyBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String oldMobile, @RequestParam("modifyclient") String modifyClient, @RequestParam("logIp") String ip) {
         logger.info("web端修改银行预留手机号异步处理start,userId:{}", bean.getLogUserId());
         // 通过查询接口重新获取用户当前最新手机号
-        BankCallResult result = mobileModifyService.updateNewBankMobile(bean, oldMobile);
+        BankCallResult result = mobileModifyService.updateNewBankMobile(bean, oldMobile, modifyClient, ip);
         logger.info("异步处理结束。");
         return result;
     }
@@ -131,7 +130,7 @@ public class MobileModifyController extends BaseUserController {
     public String getNewBankMobile(@RequestHeader(value = "userId") int userId) {
         // 调用银行接口获取最新银行预留手机号
         String newBankMobile = mobileModifyService.getNewBankMobile(userId);
-        if(StringUtils.isBlank(newBankMobile)) {
+        if (StringUtils.isBlank(newBankMobile)) {
             throw new CheckException(MsgEnum.STATUS_CE000004);
         }
         return newBankMobile;

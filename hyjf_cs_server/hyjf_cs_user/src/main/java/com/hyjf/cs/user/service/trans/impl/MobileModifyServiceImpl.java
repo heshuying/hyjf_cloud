@@ -4,12 +4,14 @@
 package com.hyjf.cs.user.service.trans.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -194,7 +196,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign;
         }
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/bankMobileModifyBgReturn?phone=" + bean.getBankMobile();
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/bankMobileModifyBgReturn?phone=" + bean.getBankMobile()+"&modifyclient="+bean.getPlatform()+"&logIp=" + bean.getIp();
         // 接口只给了一个返回地址
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -240,16 +242,30 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
      * @return
      */
     @Override
-    public BankCallResult updateNewBankMobile(BankCallBean bean, String oldMobile) {
+    public BankCallResult updateNewBankMobile(BankCallBean bean, String oldMobile, String modifyClient, String ip) {
         String newBankMobile = "";
         BankCallResult result = new BankCallResult();
         int userId = Integer.parseInt(bean.getLogUserId());
+        // 获取用户信息
+        UserVO user = getUsersById(userId);
+        if (null == user) {
+            result.setStatus(false);
+            result.setMessage("根据用户ID获取用户信息失败。");
+            return result;
+        }
+        UserInfoVO userInfo = getUserInfo(userId);
+        if (null == userInfo) {
+            result.setStatus(false);
+            result.setMessage("根据用户ID获取用户详细信息失败。");
+            return result;
+        }
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         logger.info("更新银行预留手机号异步处理start,UserId:{} 更新平台为：{} 银行返回响应代码为：{}", bean.getLogUserId(), bean.getLogClient(), retCode);
         // State为0时候为0：交易失败 1：交易成功
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             logger.info("银行预留手机号修改失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
+            result.setMessage("银行预留手机号修改失败。");
             result.setStatus(false);
             return result;
         }
@@ -277,6 +293,26 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         this.amUserClient.updateBankMobileModify(vo);
         result.setStatus(true);
         result.setMessage("更新银行预留手机号处理成功");
+        // 会员操作日志表更新
+        // 插入用户操作明细
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setIp(ip);
+        try {
+            userOperationLogEntity.setPlatform(Integer.parseInt(modifyClient));
+        } catch (NumberFormatException e) {
+            userOperationLogEntity.setPlatform(0);
+            logger.info("格式化操作平台失败,平台编号：{}", modifyClient);
+        }
+        userOperationLogEntity.setRemark("原手机号:" + oldMobile);
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
+        try {
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         logger.info("页面更新银行预留手机号处理end,UserId:{} 更新平台为：{}", bean.getLogUserId(), bean.getLogClient());
         return result;
     }

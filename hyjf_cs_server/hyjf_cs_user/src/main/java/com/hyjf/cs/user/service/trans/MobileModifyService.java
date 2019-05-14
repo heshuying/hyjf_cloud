@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.trans;
 
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.bean.BankMobileModifyBean;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
@@ -21,6 +20,7 @@ import java.util.Map;
 public interface MobileModifyService extends BaseUserService {
     /**
      * 更换手机号条件校验
+     *
      * @param newMobile
      * @param smsCode
      * @return
@@ -29,6 +29,7 @@ public interface MobileModifyService extends BaseUserService {
 
     /**
      * 用户手机号修改信息查询
+     *
      * @param userId
      * @return
      */
@@ -36,25 +37,28 @@ public interface MobileModifyService extends BaseUserService {
 
     /**
      * 更换手机号码验证（已开户）
+     *
      * @param newMobile
      * @param smsCode
      * @param srvAuthCode
      * @return
      */
-	boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode);
+    boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode);
 
     /**
      * 调用电子账号手机号修改增强
+     *
      * @param userId
      * @param newMobile
      * @param smsCode
      * @param srvAuthCode
      * @return
      */
-	BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode);
+    BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode);
 
     /**
      * 发送同步CA认证信息修改MQ
+     *
      * @param userId
      * @throws ParseException
      * @throws MQException
@@ -68,7 +72,7 @@ public interface MobileModifyService extends BaseUserService {
      * @param sign
      * @return
      */
-    Map<String,Object> getBankMobileModify(BankMobileModifyBean bean, String sign);
+    Map<String, Object> getBankMobileModify(BankMobileModifyBean bean, String sign);
 
     /**
      * 用户修改预留手机号插入一条记录
@@ -85,9 +89,11 @@ public interface MobileModifyService extends BaseUserService {
      *
      * @param bean
      * @param oldMobile
+     * @param modifyClient
+     * @param ip
      * @return
      */
-    BankCallResult updateNewBankMobile(BankCallBean bean, String oldMobile);
+    BankCallResult updateNewBankMobile(BankCallBean bean, String oldMobile, String modifyClient, String ip);
 
     /**
      * 查询最新银行预留手机号
