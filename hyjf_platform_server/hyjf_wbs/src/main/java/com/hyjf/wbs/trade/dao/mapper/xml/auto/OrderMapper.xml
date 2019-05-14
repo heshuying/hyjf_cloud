@@ -40,7 +40,7 @@
         br.borrow_nid AS productNo,
         '散标' AS productName,
         br.recover_capital	AS transAmount,
-        FROM_UNIXTIME(bt.create_time,'%Y-%m-%d %H:%i:%s') AS transTime,
+        date_format(bt.create_time,'%Y-%m-%d %H:%i:%s') AS transTime,
         b.borrow_period	AS deadlineNum,
         CASE WHEN b.is_month=0 THEN 1
         WHEN b.is_month=1 THEN 2
