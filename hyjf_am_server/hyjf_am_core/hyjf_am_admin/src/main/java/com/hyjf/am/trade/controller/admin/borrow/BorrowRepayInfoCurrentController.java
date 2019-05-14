@@ -154,7 +154,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             paraMap.put("borrowNid", requestBean.getBorrowNid());
         }
         if(StringUtils.isNotBlank(requestBean.getTenderUserName())){
-            paraMap.put("borrowNid", requestBean.getTenderUserName());
+            paraMap.put("tenderUserName", requestBean.getTenderUserName());
         }
         if(StringUtils.isNotBlank(requestBean.getAssignOrderId())){
             paraMap.put("assignOrderId",requestBean.getAssignOrderId());
