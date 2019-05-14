@@ -42,12 +42,12 @@ public class ToolsController {
 
     private  static  WbsConfig wbsConfig;
     @ResponseBody
-    @RequestMapping(value = "/createsign", method = RequestMethod.GET)
-    public Object repayAction(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/createsign/{page}", method = RequestMethod.GET)
+    public Object repayAction(@PathVariable String page) {
 
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         jsonMap.put("entId", "8001");
-        jsonMap.put("currentPage", request.getParameter("page"));
+        jsonMap.put("currentPage", page);
 
 
         this.interfaceName = interfaceName;
@@ -86,7 +86,7 @@ public class ToolsController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/createorder", method = RequestMethod.GET)
+    @RequestMapping(value = "/createorder", method = RequestMethod.POST)
     public Object orderAction(HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> jsonMap = new HashMap<String, Object>();
