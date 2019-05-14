@@ -284,6 +284,12 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         }
         // 更新用户信息表
         this.amUserClient.updateBankMobileByUserId(userId, newBankMobile);
+        // 更新redis里面的值
+        WebViewUserVO redisUser = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if (redisUser != null) {
+            redisUser.setBankMobile(newBankMobile);
+            RedisUtils.setObjEx(RedisConstants.USERID_KEY + userId, redisUser, 7 * 24 * 60 * 60);
+        }
         // 更新用户修改银行预留手机号日志表
         BankMobileModifyVO vo = new BankMobileModifyVO();
         vo.setUserId(userId);
@@ -359,8 +365,12 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             throw new CheckException(MsgEnum.STATUS_CE000004);
         }
         user.setBankMobile(newBankMobile);
-        // 更新redis
-        RedisUtils.setObj(RedisConstants.USERID_KEY + user.getUserId(), user);
+        // 更新redis里面的值
+        WebViewUserVO redisUser = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if (redisUser != null) {
+            redisUser.setBankMobile(newBankMobile);
+            RedisUtils.setObjEx(RedisConstants.USERID_KEY + userId, redisUser, 7 * 24 * 60 * 60);
+        }
         // 更新用户信息表
         this.amUserClient.updateBankMobileByUserId(userId, newBankMobile);
         // 更新用户修改银行预留手机号日志表
