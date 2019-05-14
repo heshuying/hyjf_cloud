@@ -10,6 +10,8 @@ import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
@@ -24,8 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
-
-
 /**
  * @author zhangqingqing
  * @version AmConfigClient, v0.1 2018/4/23 20:00
@@ -1562,6 +1562,34 @@ public interface AmConfigClient {
 	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
 
 	/**
+	 * 提现规则配置详情
+	 * @param id
+	 * @return
+	 */
+    WithdrawRuleConfigResponse getWithdrawRuleConfigById(Integer id);
+
+	/**
+	 * 提现规则配置修改
+	 * @param form
+	 * @return
+	 */
+	int updateWithdrawRuleConfig(WithdrawRuleConfigVO form);
+
+	/**
+	 * 保存提现时间配置
+	 * @param form
+	 * @return
+	 */
+    int saveWithdrawTimeConfig(WithdrawTimeConfigVO form);
+
+	/**
+	 * 提现时间配置详情
+	 * @param id
+	 * @return
+	 */
+	WithdrawTimeConfigResponse getWithdrawTimeConfigById(Integer id);
+
+	/**
 	 * 添加业务名称管理
 	 * @param request
 	 * @return
@@ -1610,4 +1638,19 @@ public interface AmConfigClient {
 	BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request);
 
 	List<AdminVO> getAdminUser(AdminUserWorkFlowRequest request);
+
+	/**
+	 * 提现规则配置列表
+	 * @return
+	 * @param request
+	 */
+    WithdrawRuleConfigResponse getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request);
+
+	/**
+	 * 假期时间配置列表
+	 * @return
+     * @param request
+	 */
+	WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request);
+
 }

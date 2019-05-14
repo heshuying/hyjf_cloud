@@ -79,7 +79,8 @@ public class AccessFilter extends ZuulFilter {
             // app 共同参数
             String version = request.getParameter(GatewayConstant.VERSION);
             String sign = request.getParameter(GatewayConstant.SIGN);
-
+            String platform = request.getParameter(GatewayConstant.PLATFORM);
+            logger.info("原始请求地址originalRequestPath is {}:, remoteHost is :{}，version is {}，platform is {}", originalRequestPath, remoteHost,version,platform);
             Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
             logger.debug("appKeyIgnoreUrls: {}", appKeyIgnoreUrls);
             if (!appKeyIgnoreUrls.contains(originalRequestPath)) {
@@ -103,6 +104,7 @@ public class AccessFilter extends ZuulFilter {
                 this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
 
             } else {
+                logger.info("原始请求地址originalRequestPath is {}:, appKeyIgnoreUrls is :{},该请求不需要验证sign", originalRequestPath,appKeyIgnoreUrls);
                 // app打开初始化操作
                 this.initServer(request, ctx);
             }
@@ -245,14 +247,13 @@ public class AccessFilter extends ZuulFilter {
         if (GatewayConstant.APP_CHANNEL.equals(channel)) {
             result.put("status", "708");
             result.put("statusDesc", "need login");
-        } else if (GatewayConstant.WEB_CHANNEL.equals(channel)) {
-            result.put("status", "999");
-            result.put("statusDesc", "登录过期，请重新登录");
-        } else if (ctx.get(TOKEN_IS_NULL) != null) {
+        } else if (GatewayConstant.WECHAT_CHANNEL.equals(channel) && ctx.get(TOKEN_IS_NULL) != null) {
             result.put("status", "999");
             result.put("statusDesc", "请先登录！");
         } else {
             result.put("status", "999");
+            //create by walter.li 修复token登陆超时，页面显示用户名bug，默认不返回此字段，登陆超时则返回0。
+            result.put("islogined", "0");
             result.put("statusDesc", "登录过期，请重新登录");
         }
 
@@ -397,24 +398,42 @@ public class AccessFilter extends ZuulFilter {
      */
     private boolean isSecureVisit(Map<String, Object> map, String originalRequestPath) {
         boolean secureVisitFlag = false;
-        for (String key : map.keySet()) {
-            if (key.contains("?")) {
-                key = key.substring(0, key.indexOf("?") - 1);
-            }
-            if (key.contains("*")) {
-                key = key.substring(0, key.indexOf("*") - 1);
-            }
-            // 路径匹配
-            if (originalRequestPath.startsWith(key)) {
-                // 判断是否是安全访问
-                GatewayApiConfigVO vo = JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class);
-                logger.debug("vo: {}", vo);
-                if (vo.getSecureVisitFlag() != null && vo.getSecureVisitFlag().intValue() == 1) {
-                    secureVisitFlag = true;
+        if(null != map.get(originalRequestPath)){
+            secureVisitFlag = isSecureAllow(secureVisitFlag,map,originalRequestPath);
+        }else{
+            for (String key : map.keySet()) {
+                if (key.contains("?")) {
+                    key = key.substring(0, key.indexOf("?") - 1);
+                }
+                if (key.contains("*")) {
+                    key = key.substring(0, key.indexOf("*") - 1);
+                }
+                // 路径匹配
+                if (originalRequestPath.startsWith(key)) {
+                    secureVisitFlag = isSecureAllow(secureVisitFlag,map,key);
                 }
             }
         }
+
         logger.debug(originalRequestPath + " : secureVisitFlag: " + secureVisitFlag);
+        return secureVisitFlag;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description //判断请求是否需要登陆访问
+     * @Date 11:48 2019-03-29
+     * @Param [secureVisitFlag, map, key]
+     * @return boolean
+     **/
+
+    private boolean isSecureAllow(boolean secureVisitFlag,Map<String, Object> map, String key){
+        // 判断是否是安全访问
+        GatewayApiConfigVO vo = JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class);
+        logger.debug("vo: {}", vo);
+        if (vo.getSecureVisitFlag() != null && vo.getSecureVisitFlag().intValue() == 1) {
+            secureVisitFlag = true;
+        }
         return secureVisitFlag;
     }
 

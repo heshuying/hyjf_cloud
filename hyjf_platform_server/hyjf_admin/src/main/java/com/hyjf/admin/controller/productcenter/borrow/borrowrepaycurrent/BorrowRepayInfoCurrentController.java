@@ -105,7 +105,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
 
         // 不加条件不能导出
         if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getAssignOrderId())
-                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
+                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart()) && StringUtils.isBlank(requestBean.getTenderUserName())){
             return;
         }
 
@@ -126,7 +126,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         requestBean.setCurrPage(1);
         // 查询
 
-        Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean.getBorrowNid());
+        Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean);
         requestBean.setCount(totalCount);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
