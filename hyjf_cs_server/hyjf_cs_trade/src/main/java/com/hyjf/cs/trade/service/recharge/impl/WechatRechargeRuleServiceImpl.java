@@ -81,6 +81,11 @@ public class WechatRechargeRuleServiceImpl extends BaseTradeServiceImpl implemen
             }else{
                 bean.setMonth(String.valueOf(config.getMonthCardQuota().divide(new BigDecimal(10000)))+"万");
             }
+
+            // AB测试添加银行ICON  Add by huanghui
+            if (config.getBankIcon() != null){
+                bean.setBankIcon(config.getBankIcon());
+            }
             list.add(bean);
         }
     }

@@ -132,8 +132,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             // 发放优惠券（1张加息券）
             try {
                 JSONObject params = new JSONObject();
-                params.put("mqMsgId", GetCode.getRandomCode(10));
-                params.put("userId", String.valueOf(userId));
+                params.put("userId", userId);
                 params.put("sendFlg", "11");
                 commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                         UUID.randomUUID().toString(), params));

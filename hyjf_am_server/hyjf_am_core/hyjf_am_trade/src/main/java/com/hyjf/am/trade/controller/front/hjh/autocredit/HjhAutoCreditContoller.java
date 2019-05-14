@@ -10,6 +10,8 @@ import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ public class HjhAutoCreditContoller extends BaseController {
     @RequestMapping("/hjhAutoCredit")
     public void hjhAutoCredit() {
         logger.info("汇计划自动清算");
+        // 清算,计算公允价值与自动投资设置5分钟并发锁,
+        RedisUtils.set(RedisConstants.HJH_TENDER_LOCK, "hjh_tender_lock", 5 * 60);
         try {
             List<String> accedeOrderList = new ArrayList<String>();
             // 检索到期的计划加入订单,用于清算

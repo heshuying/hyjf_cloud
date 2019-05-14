@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.mq.base;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -48,7 +49,7 @@ public class CommonProducer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("通用发消息异常", e);
+            logger.error("通用发消息异常。message:{}", JSON.toJSONString(messageContent), e);
             throw new MQException("mq send error", e);
         }
     }
@@ -74,7 +75,7 @@ public class CommonProducer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("通用发消息异常" + "。 Topic:" +messageContent.topic+ "，Tag:" +messageContent.tag+ "，Message:" + messageContent.body, e);
+            logger.error("通用发消息异常。message:{}", JSON.toJSONString(messageContent), e);
             return false;
         }
     }
@@ -98,7 +99,7 @@ public class CommonProducer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("通用延时消息发送异常", e);
+            logger.error("通用延时消息发送异常。message:{}", JSON.toJSONString(messageContent), e);
             throw new MQException("mq send error", e);
         }
     }
@@ -120,7 +121,7 @@ public class CommonProducer {
                 return false;
             }
         } catch (Exception e) {
-            logger.error("通用延时消息发送异常" + "。 Topic:" +messageContent.topic+ "，Tag:" +messageContent.tag+ "，Message:" + messageContent.body, e);
+            logger.error("通用延时消息发送异常。message:{}", JSON.toJSONString(messageContent), e);
             return false;
         }
     }
