@@ -165,6 +165,20 @@ public class SystemConfig {
     /*角色验证是否开启 add by cwyang 合规角色验证需求 */
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
+
+
+
+    /**
+     * 温金投机构编号
+     */
+    @Value("${wjt.instCode}")
+    public String wjtInstCode;
+
+    /**
+     * 温金投渠道编号
+     */
+    @Value("${wjt.channel}")
+    public String wjtChannel;
     /**
      * wjt前端地址
      */
@@ -969,5 +983,21 @@ public class SystemConfig {
 
     public void setCompanyWithdrawLimit(String companyWithdrawLimit) {
         this.companyWithdrawLimit = companyWithdrawLimit;
+    }
+
+    public String getWjtInstCode() {
+        return wjtInstCode;
+    }
+
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
+    }
+
+    public String getWjtChannel() {
+        return wjtChannel;
+    }
+
+    public void setWjtChannel(String wjtChannel) {
+        this.wjtChannel = wjtChannel;
     }
 }
