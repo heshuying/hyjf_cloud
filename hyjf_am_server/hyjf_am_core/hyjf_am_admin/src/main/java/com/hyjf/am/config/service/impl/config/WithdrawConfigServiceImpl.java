@@ -2,6 +2,7 @@ package com.hyjf.am.config.service.impl.config;
 
 import com.hyjf.am.config.dao.mapper.auto.WithdrawRuleConfigMapper;
 import com.hyjf.am.config.dao.mapper.auto.WithdrawTimeConfigMapper;
+import com.hyjf.am.config.dao.mapper.customize.WithdrawRuleConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
@@ -27,6 +28,8 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
     @Resource
     protected WithdrawTimeConfigMapper withdrawTimeConfigMapper;
 
+    @Resource
+    protected WithdrawRuleConfigCustomizeMapper withdrawRuleConfigCustomizeMapper;
     /**
      * 提现规则配置总数
      * @return
@@ -47,7 +50,7 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
         example.setLimitStart(request.getLimitStart());
         example.setLimitEnd(request.getLimitEnd());
-        List<WithdrawRuleConfig> recordList = withdrawRuleConfigMapper.selectByExample(example);
+        List<WithdrawRuleConfig> recordList = withdrawRuleConfigCustomizeMapper.selectByExample(example);
         return recordList;
     }
 
