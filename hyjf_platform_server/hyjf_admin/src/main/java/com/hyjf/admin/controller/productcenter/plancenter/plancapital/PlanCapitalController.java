@@ -460,10 +460,10 @@ public class PlanCapitalController extends BaseController {
         hjhPlanCapitalActualRequest.setPageSize(defaultRowMaxCount);
         hjhPlanCapitalActualRequest.setCurrPage(1);
         // 需要输出的结果列表
-        List<HjhPlanCapitalPredictionVO> resultList = null;
+        List<HjhPlanCapitalActualVO> resultList = null;
         HjhPlanCapitalActualResponse hjhPlanCapitalPredictionResponse = planCapitalService.getPlanCapitalActualList(hjhPlanCapitalActualRequest);
         if (hjhPlanCapitalPredictionResponse.getCount() > 0){
-            resultList = CommonUtils.convertBeanList(hjhPlanCapitalPredictionResponse.getResultList(), HjhPlanCapitalPredictionVO.class);
+            resultList = CommonUtils.convertBeanList(hjhPlanCapitalPredictionResponse.getResultList(), HjhPlanCapitalActualVO.class);
         }
         Integer totalCount = hjhPlanCapitalPredictionResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
