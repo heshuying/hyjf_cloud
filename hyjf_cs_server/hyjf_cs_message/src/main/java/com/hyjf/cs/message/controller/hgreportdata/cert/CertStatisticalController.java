@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.controller.hgreportdata.cert;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
@@ -97,6 +98,7 @@ public class CertStatisticalController extends BaseController {
         if(null!=certReportEntityVO){
             CertAccountList certAccountList = new CertAccountList();
             BeanUtils.copyProperties(certReportEntityVO,certAccountList);
+            logger.info("certAccountList:"+JSONObject.toJSONString(certAccountList));
             certStatisticalService.updateAccountSuccess(certAccountList);
             return new BooleanResponse(true);
         }
