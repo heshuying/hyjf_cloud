@@ -38,14 +38,15 @@ public class HjhPlanCapitalActualServiceImpl extends BaseServiceImpl implements 
      */
     @Override
     public Boolean insertPlanCaptialActual(List<HjhPlanCapitalActualVO> list) {
+        // 实际的金额计算每天计算一次累加显示
         // 历史数据delflg为0的更新成1
-        Query query = new Query();
-        Criteria criteria = new Criteria();
-        criteria.and("delFlg").is(0);
-        query.addCriteria(criteria);
-        Update update = new Update();
-        update.set("delFlg", 1);
-        this.planCapitalActualDao.updateAll(query, update);
+//        Query query = new Query();
+//        Criteria criteria = new Criteria();
+//        criteria.and("delFlg").is(0);
+//        query.addCriteria(criteria);
+//        Update update = new Update();
+//        update.set("delFlg", 1);
+//        this.planCapitalActualDao.updateAll(query, update);
         // 插入新增数据
         List<HjhPlanCapitalActual> inList = CommonUtils.convertBeanList(list, HjhPlanCapitalActual.class);
         this.planCapitalActualDao.insertAll(inList);
