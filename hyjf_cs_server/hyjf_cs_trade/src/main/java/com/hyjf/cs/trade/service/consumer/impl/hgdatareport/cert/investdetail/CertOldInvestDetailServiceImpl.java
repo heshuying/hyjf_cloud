@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
@@ -105,6 +106,20 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		certTransactRequest.setMaxId(RedisUtils.get("CERT_OLD_INVEST_DETAIL_MAX_ID"));
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.getCertAccountListCustomizeVO(certTransactRequest);
 		return accountLists;
+	}
+
+	@Override
+	public List<CertReportEntityVO> getNotSendAccountList() {
+		String url = baseUrl + "getNotSendAccountList";
+		CertReportEntityResponse response = this.baseClient.postExe(url,null,CertReportEntityResponse.class);
+		List<CertReportEntityVO> certReportEntityVOList=response.getResultList();
+		return certReportEntityVOList;
+	}
+
+	@Override
+	public void updateAccountSuccess(CertReportEntityVO bean) {
+		String url = baseUrl + "updateAccountSuccess";
+		BooleanResponse response = this.baseClient.postExe(url, bean, BooleanResponse.class);
 	}
 
 

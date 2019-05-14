@@ -16,6 +16,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author nxl
  * @version CertStatisticalServiceImpl, v0.1 2019/1/19 10:07
@@ -67,5 +69,27 @@ public class CertStatisticalServiceImpl extends BaseServiceImpl implements CertS
     @Override
     public void insertOldMessage(CertAccountList certAccountList) {
         certAccountListDao.insert(certAccountList);
+    }
+
+    @Override
+    public List<CertReportEntity> getNotSendAccountList() {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        // 查询未上报的是0
+        criteria.and("isSend").is(0);
+        query.addCriteria(criteria);
+        query.limit(1000);
+        return certReportDao.find(query);
+    }
+
+    @Override
+    public void updateAccountSuccess(CertAccountList certAccountList) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("logOrdId").is(certAccountList.getLogOrdId());
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("isSend",1);
+        certAccountListDao.update(query,update);
     }
 }

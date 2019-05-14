@@ -8,6 +8,8 @@ import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertAccountList;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertReportEntity;
 
+import java.util.List;
+
 /**
  * @author nxl
  * @version CertStatisticalService, v0.1 2019/1/19 10:07
@@ -32,4 +34,8 @@ public interface CertStatisticalService extends BaseService {
     CertReportEntity getCertSendLogByLogOrdId(String logOrdId);
 
     void insertOldMessage(CertAccountList certAccountList);
+
+    List<CertReportEntity> getNotSendAccountList();
+
+    void updateAccountSuccess(CertAccountList certAccountList);
 }
