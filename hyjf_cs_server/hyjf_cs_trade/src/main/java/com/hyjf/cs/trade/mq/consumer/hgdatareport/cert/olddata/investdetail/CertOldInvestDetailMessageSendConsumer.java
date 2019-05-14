@@ -81,7 +81,7 @@ public class CertOldInvestDetailMessageSendConsumer implements RocketMQListener<
                 PropertyUtils.copyProperties(entity, accountList);
                 // 上送数据
                 try {
-                    entity = certOldInvestDetailService.insertAndSendPost(accountList);
+                    entity = certOldInvestDetailService.insertAndSendPost(entity);
                 } catch (Exception e) {
                     throw e;
                 }
