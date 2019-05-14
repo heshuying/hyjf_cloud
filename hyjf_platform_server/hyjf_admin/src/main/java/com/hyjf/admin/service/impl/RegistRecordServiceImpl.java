@@ -112,7 +112,7 @@ public class RegistRecordServiceImpl implements RegistRecordService {
                     sourceName = utmVOWas.getUtmSource();
                 }
             }else{
-                sourceName = "原数据无渠道信息";
+                sourceName = "NoChannelInformation";
             }
             if(utmVO!=null){
                 // 根据userId查询是否有渠道记录
@@ -167,7 +167,7 @@ public class RegistRecordServiceImpl implements RegistRecordService {
                     sourceName = utmPlatResponseWas.get(0).getSourceName();
                 }
             }else{
-                sourceName = "原数据无渠道信息";
+                sourceName = "NoChannelInformation";
             }
             // 存在渠道
             if(utmPlatResponse!=null&&utmPlatResponse.size()>0){

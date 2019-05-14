@@ -132,7 +132,7 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
                 changeLogByUser.setUserId(logRecord.getUserId());
                 // 判断是否为第一次修改
                 int userLogCount =  changeLogCustomizeMapper.queryChangeLogByUserIdCount(changeLogByUser);
-                if(userLogCount < 1){
+                if(userLogCount < 1 && !("NoChannelInformation").equals(userChangeLog.getSourceIdWasName())){
                     // 原渠道记录
                     int userLogFlgWas =  changeLogCustomizeMapper.insertSelective(changeLog);
                     if (userLogFlgWas > 0) {
