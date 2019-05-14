@@ -55,7 +55,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 //		} catch (NullPointerException e) {
 //			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 		}catch(Exception e) {
-			logger.error("AdminInterceptor发生异常:", e);
+			logger.info("AdminInterceptor发生异常:登陆失效");
 			response.setContentType("application/json; charset=utf-8");
 			JSONObject res = new JSONObject();
 			res.put("status", "EUS000010");

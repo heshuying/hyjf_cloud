@@ -9,6 +9,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND t.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND br.nid = #{tenderOrderId}
         </if>
@@ -21,8 +24,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND br.recover_status = 0 AND br.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND br.recover_status = #{repayStatus} AND br.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND br.recover_status = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -39,9 +45,12 @@
     </sql>
 
     <sql id="where-type-2">
-        AND rp.credit_status != 2 AND  br.recover_capital > br.credit_amount
+        AND rp.credit_status != 2 AND rp.recover_capital > rp.credit_amount
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND t.user_name = #{tenderUserName}
         </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND rp.nid = #{tenderOrderId}
@@ -55,8 +64,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND rp.recover_status = 0 AND rp.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND rp.recover_status = #{repayStatus} AND rp.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND rp.recover_status = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND rp.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -76,6 +88,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND cr.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND cr.credit_tender_nid = #{tenderOrderId}
         </if>
@@ -88,8 +103,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND cr.`status` = 0 AND cr.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND cr.`status` = #{repayStatus} AND cr.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND cr.`status` = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND cr.assign_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -110,6 +128,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND hcr.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND hcr.invest_order_id = #{tenderOrderId}
         </if>
@@ -122,8 +143,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND hcr.repay_status = 0 AND hcr.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND hcr.repay_status = #{repayStatus} AND hcr.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND hcr.repay_status = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND hcr.assign_repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -244,7 +268,7 @@
                     WHEN 1 THEN
                     '借款人还款'
                     WHEN 2 THEN
-                    '机构垫付'
+                    '第三方保障'
                     WHEN 3 THEN
                     '保证金垫付'
                     ELSE
@@ -303,7 +327,9 @@
                 ) AS period,
                 rp.recover_period AS recoverPeriod,
                 t.account,
-                br.recover_capital - br.credit_amount - (
+                <!-- 当前持有=投资额-债转金额-（已还本金-已还债转）-->
+                br.recover_capital - br.credit_amount -
+                ((
                 SELECT
                 IFNULL(
                 SUM(p.recover_capital_yes),
@@ -314,6 +340,9 @@
                 WHERE
                 br.nid = p.nid
                 AND p.recover_status = 1
+                )
+                - (select IFNULL(SUM(t.repay_capital_yes),0) from ht_hjh_debt_credit_tender t where t.invest_order_id = br.nid)
+                - (select IFNULL(SUM(t.assign_repay_capital),0) from ht_credit_tender t where t.credit_tender_nid = br.nid)
                 )AS amountHold,
                 rp.recover_capital - (
                 SELECT
@@ -398,7 +427,7 @@
                 WHEN 1 THEN
                 '借款人还款'
                 WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
                 WHEN 3 THEN
                 '保证金垫付'
                 ELSE
@@ -474,11 +503,11 @@
             IF (
                 cr.`status` = 1
                 AND cr.assign_repay_yes_time > 0,
-                CASE bry.repay_money_source
+                CASE brp.repay_money_source
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
             WHEN 3 THEN
                 '保证金垫付'
             ELSE
@@ -563,11 +592,11 @@
             IF (
                 hcr.repay_status = 1
                 AND hcr.assign_repay_yes_time > 0,
-                CASE bry.repay_money_source
+                CASE brp.repay_money_source
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
             WHEN 3 THEN
                 '保证金垫付'
             ELSE
@@ -701,57 +730,9 @@
         (
         <!-- 1、未分期原始出借订单查询-->
         SELECT
-        br.recover_capital - (
-        SELECT
-        IFNULL(SUM(cr1.assign_capital), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = br.nid
-        AND cr1.recover_period = br.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_capital), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
-        ) AS recoverCapital,
-        br.recover_interest - (
-        SELECT
-        IFNULL(SUM(cr1.assign_interest), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = br.nid
-        AND cr1.recover_period = br.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_interest), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
-        ) AS recoverInterest,
-        br.recover_account - (
-        SELECT
-        IFNULL(SUM(cr1.assign_account), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = br.nid
-        AND cr1.recover_period = br.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_account), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
-        ) AS recoverAccount,
+        br.recover_capital - br.credit_amount AS recoverCapital,
+        br.recover_interest - br.credit_interest_amount AS recoverInterest,
+        br.recover_account - br.credit_amount - br.credit_interest_amount AS recoverAccount,
         br.recover_fee - (
         SELECT
         IFNULL(SUM(cr1.manage_fee), 0)
@@ -786,57 +767,9 @@
         UNION ALL
         <!-- 2、分期原始出借订单查询-->
         SELECT
-        rp.recover_capital - (
-        SELECT
-        IFNULL(SUM(cr1.assign_capital), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_capital), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        ) AS recoverCapital,
-        rp.recover_interest - (
-        SELECT
-        IFNULL(SUM(cr1.assign_interest), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_interest), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverInterest,
-        rp.recover_account - (
-        SELECT
-        IFNULL(SUM(cr1.assign_account), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_account), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverAccount,
+        rp.recover_capital - rp.credit_amount AS recoverCapital,
+        rp.recover_interest - rp.credit_interest_amount AS recoverInterest,
+        rp.recover_account - rp.credit_amount - rp.credit_interest_amount AS recoverAccount,
         rp.recover_fee - (
         SELECT
         IFNULL(SUM(cr1.manage_fee), 0)
@@ -961,9 +894,9 @@
         0,
         br.recover_capital - br.credit_amount
         ) AS amountHold,
-        br.recover_capital AS recoverCapital,
-        br.recover_interest AS recoverInterest,
-        br.recover_Account AS recoverAccount,
+        br.recover_capital - br.credit_amount AS recoverCapital,
+        br.recover_interest - br.credit_interest_amount AS recoverInterest,
+        br.recover_account - br.credit_amount - br.credit_interest_amount AS recoverAccount,
         br.recover_fee AS recoverFee,
 
         IF (
@@ -978,9 +911,9 @@
         ) AS recoverLastTime,
         '1' AS period,
         '1' AS periodTotal,
-        br.recover_capital AS recoverCapitalPeriod,
-        br.recover_interest AS recoverInterestPeriod,
-        br.recover_Account AS recoverAccountPeriod,
+        br.recover_capital - br.credit_amount AS recoverCapitalPeriod,
+        br.recover_interest - br.credit_interest_amount AS recoverInterestPeriod,
+        br.recover_account - br.credit_amount - br.credit_interest_amount AS recoverAccountPeriod,
         br.recover_fee AS recoverFeePeriod,
         br.charge_days AS chargeDays,
         br.charge_interest - br.charge_penalty_interest AS chargeInterestReduce,
@@ -989,7 +922,7 @@
         br.late_interest AS lateInterest,
         br.recover_capital_yes AS recoverCapitalYesPeriod,
         br.recover_interest_yes AS recoverInterestYesPeriod,
-        br.recover_Account_yes AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAccountYesPeriod,
         br.recover_fee_yes AS recoverFeeYesPeriod,
         br.recover_capital_wait AS recoverCapitalWait,
         br.recover_interest_wait AS recoverInterestWait,
@@ -1009,7 +942,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1120,7 +1053,9 @@
         `od5`.`name` AS `referrerBranchName`,
         `od4`.`name` AS `referrerDepartmentName`,
         t.account AS recoverTotal,
-        br.recover_capital - br.credit_amount - (
+        <!-- 当前持有=投资额-债转金额-（已还本金-已还债转）-->
+        br.recover_capital - br.credit_amount -
+        ((
         SELECT
         IFNULL(
         SUM(p.recover_capital_yes),
@@ -1131,10 +1066,13 @@
         WHERE
         br.nid = p.nid
         AND p.recover_status = 1
+        )
+        - (select IFNULL(SUM(t.repay_capital_yes),0) from ht_hjh_debt_credit_tender t where t.invest_order_id = br.nid)
+        - (select IFNULL(SUM(t.assign_repay_capital),0) from ht_credit_tender t where t.credit_tender_nid = br.nid)
         )AS amountHold,
-        br.recover_capital AS recoverCapital,
-        br.recover_interest AS recoverInterest,
-        br.recover_Account AS recoverAccount,
+        br.recover_capital - br.credit_amount AS recoverCapital,
+        br.recover_interest - br.credit_interest_amount AS recoverInterest,
+        br.recover_account - br.credit_amount - br.credit_interest_amount AS recoverAccount,
         br.recover_fee AS recoverFee,
 
         IF (
@@ -1153,9 +1091,9 @@
         b.borrow_period
         ) AS period,
         b.borrow_period AS periodTotal,
-        rp.recover_capital AS recoverCapitalPeriod,
-        rp.recover_interest AS recoverInterestPeriod,
-        rp.recover_Account AS recoverAccountPeriod,
+        rp.recover_capital - rp.credit_amount AS recoverCapitalPeriod,
+        rp.recover_interest - rp.credit_interest_amount AS recoverInterestPeriod,
+        rp.recover_account - rp.credit_amount - rp.credit_interest_amount AS recoverAccountPeriod,
         rp.recover_fee AS recoverFeePeriod,
         rp.charge_days AS chargeDays,
         rp.charge_interest - rp.charge_penalty_interest AS chargeInterestReduce,
@@ -1164,11 +1102,11 @@
         rp.late_interest AS lateInterest,
         rp.recover_capital_yes AS recoverCapitalYesPeriod,
         rp.recover_interest_yes AS recoverInterestYesPeriod,
-        rp.recover_Account_yes AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
         rp.recover_fee_yes AS recoverFeeYesPeriod,
-        br.recover_capital_wait AS recoverCapitalWait,
-        br.recover_interest_wait AS recoverInterestWait,
-        br.recover_account_wait AS recoverAccountWait,
+        rp.recover_capital_wait AS recoverCapitalWait,
+        rp.recover_interest_wait AS recoverInterestWait,
+        rp.recover_account_wait AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
@@ -1184,7 +1122,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1343,10 +1281,10 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
-        ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
-        ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
-        bry.repay_username AS repayUserName,
+        IF(cr.`status`=0,cr.assign_capital,0) AS recoverCapitalWait,
+        IF(cr.`status`=0,cr.assign_interest,0) AS recoverInterestWait,
+        IF(cr.`status`=0,cr.assign_account,0) AS recoverAccountWait,
+        brp.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
         IF (cr.advance_status = 3, 8, 0),
@@ -1355,13 +1293,13 @@
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
         IF (
-        bry.repay_status = 1
-        AND bry.repay_action_time > 0,
-        CASE bry.repay_money_source
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1524,10 +1462,10 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        hct.repay_capital_wait AS recoverCapitalWait,
-        hct.repay_interest_wait AS recoverInterestWait,
-        hct.repay_interest_wait AS recoverAccountWait,
-        bry.repay_username AS repayUserName,
+        IF(hcr.repay_status=0,hcr.repay_capital,0) AS recoverCapitalWait,
+        IF(hcr.repay_status=0,hcr.repay_interest,0) AS recoverInterestWait,
+        IF(hcr.repay_status=0,hcr.repay_account,0) AS recoverAccountWait,
+        brp.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
         IF (hcr.advance_status = 3, 8, 0),
@@ -1536,13 +1474,13 @@
         AS recoverStatus,
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
         IF (
-        bry.repay_status = 1
-        AND bry.repay_action_time > 0,
-        CASE bry.repay_money_source
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
