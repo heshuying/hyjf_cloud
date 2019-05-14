@@ -35,7 +35,7 @@
 					 and br.repay_status=1
 				</if>
 				<if test="statusSrch ==2">
-					br.repay_status=0 and br.advance_status=3
+					and br.repay_status=0 and br.advance_status=3
 				</if>
 			</if>
 			<!-- 最后还款日 -->
