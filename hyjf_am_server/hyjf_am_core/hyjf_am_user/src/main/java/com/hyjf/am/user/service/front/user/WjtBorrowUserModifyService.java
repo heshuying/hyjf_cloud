@@ -27,4 +27,11 @@ public interface WjtBorrowUserModifyService extends BaseService {
      * @return
      */
     boolean findUtmReg(String userId);
+
+    /**
+     * ch'ru
+     * @param userId
+     * @param wjtChannel
+     */
+    void insertBorrowUserUtmReg(String userId, String wjtChannel);
 }
