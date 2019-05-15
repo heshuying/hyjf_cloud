@@ -330,7 +330,7 @@ public class PlanCapitalController extends BaseController {
         map.put("date", "日期");
         map.put("planNid", "智投编号");
         map.put("planName", "智投名称");
-        map.put("lockPeriod", "锁定期");
+        map.put("lockPeriodView", "锁定期");
         map.put("creditAccount", "预计当日新增债转额（元）");
         map.put("reinvestAccount", "预计当日新增复投额（元）");
         map.put("capitalAccount", "预计当日所需资金量（元）");
@@ -460,10 +460,10 @@ public class PlanCapitalController extends BaseController {
         hjhPlanCapitalActualRequest.setPageSize(defaultRowMaxCount);
         hjhPlanCapitalActualRequest.setCurrPage(1);
         // 需要输出的结果列表
-        List<HjhPlanCapitalPredictionVO> resultList = null;
+        List<HjhPlanCapitalActualVO> resultList = null;
         HjhPlanCapitalActualResponse hjhPlanCapitalPredictionResponse = planCapitalService.getPlanCapitalActualList(hjhPlanCapitalActualRequest);
         if (hjhPlanCapitalPredictionResponse.getCount() > 0){
-            resultList = CommonUtils.convertBeanList(hjhPlanCapitalPredictionResponse.getResultList(), HjhPlanCapitalPredictionVO.class);
+            resultList = CommonUtils.convertBeanList(hjhPlanCapitalPredictionResponse.getResultList(), HjhPlanCapitalActualVO.class);
         }
         Integer totalCount = hjhPlanCapitalPredictionResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -494,7 +494,7 @@ public class PlanCapitalController extends BaseController {
         map.put("date", "日期");
         map.put("planNid", "智投编号");
         map.put("planName", "智投名称");
-        map.put("lockPeriod", "锁定期");
+        map.put("lockPeriodView", "锁定期");
         map.put("addCreditAccount", "当日新增债转额（元）");
         map.put("createCreditAccount", "当日发起债转额:当日已承接+当日未承接（元）");
         map.put("usedCreditAccount", "当日已承接债转额（元）");
