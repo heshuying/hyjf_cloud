@@ -222,7 +222,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         for(BorrowRepayInfoCurrentExportCustomizeVO repayInfo : resultList){
             if(repayInfo.getRecordType().equals("3") || repayInfo.getRecordType().equals("4")){
                 BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户还款管理费
-                BigDecimal assignCapital = new BigDecimal(repayInfo.getRecoverCapital());
+                BigDecimal assignCapital = new BigDecimal(repayInfo.getRecoverCapitalPeriod());
                 BigDecimal feeRate = repayInfo.getFeeRate();
                 BigDecimal differentialRate = repayInfo.getDifferentialRate();
                 BigDecimal borrowAccount = new BigDecimal(repayInfo.getBorrowAccount());

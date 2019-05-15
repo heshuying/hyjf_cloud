@@ -576,6 +576,7 @@
                 ) AS period,
                 hcr.repay_period AS recoverPeriod,
                 hct.assign_capital AS account,
+                (SELECT IFNULL(SUM(cr1.repay_capital),0) FROM ht_hjh_debt_credit_repay cr1 WHERE cr1.repay_status != 1 AND cr1.del_flag = 0 AND cr1.assign_order_id = hct.assign_order_id) AS amountHold,
                 hct.assign_capital - hct.repay_capital_yes  AS amountHold,
                 hcr.repay_capital AS recoverCapital,
                 hcr.repay_interest AS recoverInterest,
@@ -1362,7 +1363,7 @@
         `od5`.`name` AS `referrerBranchNameNow`,
         `od4`.`name` AS `referrerDepartmentNameNow`,
         hct.assign_capital AS recoverTotal,
-        hct.assign_capital - hct.repay_capital_yes  AS amountHold,
+        (SELECT IFNULL(SUM(cr1.repay_capital),0) FROM ht_hjh_debt_credit_repay cr1 WHERE cr1.repay_status != 1 AND cr1.del_flag = 0 AND cr1.assign_order_id = hct.assign_order_id) AS amountHold,
         hct.assign_capital AS recoverCapital,
         hct.assign_interest AS recoverInterest,
         hct.assign_account AS recoverAccount,
@@ -1403,9 +1404,9 @@
         hcr.repay_advance_penalty_interest AS chargePenaltyInterest,
         hcr.late_days AS lateDays,
         hcr.repay_late_interest AS lateInterest,
-        hcr.repay_capital_yes AS recoverCapitalYesPeriod,
-        hcr.repay_interest_yes AS recoverInterestYesPeriod,
-        hcr.repay_account_yes AS recoverAccountYesPeriod,
+        hcr.receive_capital_yes AS recoverCapitalYesPeriod,
+        hcr.receive_interest_yes AS recoverInterestYesPeriod,
+        hcr.receive_account_yes AS recoverAccountYesPeriod,
 
         IF (
         hcr.repay_status = 1,
@@ -1439,10 +1440,16 @@
         ''
         ) AS repayMoneySource,
         api.submitter,
+        IF (
+        hcr.assign_repay_next_time IS NULL
+        OR hcr.assign_repay_time = '',
+        '',
         FROM_UNIXTIME(
-        hcr.assign_repay_next_time,
+        hcr.assign_repay_time,
         '%Y-%m-%d'
-        ) AS recoverTime,
+        )
+        )
+        AS recoverTime,
 
         IF (
         hcr.assign_repay_yes_time IS NULL
