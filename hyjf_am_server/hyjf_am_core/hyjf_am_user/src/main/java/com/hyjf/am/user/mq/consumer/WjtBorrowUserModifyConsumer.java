@@ -37,6 +37,9 @@ public class WjtBorrowUserModifyConsumer implements RocketMQListener<MessageExt>
     @Value("${wjt.instCode}")
     private String wjtInstCode;
 
+    @Value("${wjt.channel}")
+    private String wjtChannel;
+
     @Override
     public void onMessage(MessageExt message) {
         logger.info("WjtBorrowUserModifyConsumer 收到消息，开始处理....");
@@ -55,15 +58,16 @@ public class WjtBorrowUserModifyConsumer implements RocketMQListener<MessageExt>
             return;
         }
         // 如果机构编号已经修改
-        if (wjtInstCode.equals(borrowUser.getInstCode())){
-            logger.info("温金投发标借款人修改机构编号,用户已为温金投用户,用户ID:["+userId+"].");
+        if (wjtInstCode.equals(borrowUser.getInstCode())) {
+            logger.info("温金投发标借款人修改机构编号,用户已为温金投用户,用户ID:[" + userId + "].");
             return;
         }
         borrowUser.setInstCode(wjtInstCode);
         // 更新用户机构编号
         this.wjtBorrowUserModifyService.modifyUserInstCode(borrowUser);
-        if (wjtBorrowUserModifyService.findUtmReg(userId)){
-
+        // 如果渠道不存在,插入将借款人插入渠道
+        if (!wjtBorrowUserModifyService.findUtmReg(userId)) {
+            this.wjtBorrowUserModifyService.insertBorrowUserUtmReg(userId, wjtChannel);
         }
         return;
     }
