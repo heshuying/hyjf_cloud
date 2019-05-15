@@ -223,6 +223,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     private WebResult<Map<String, Object>> tender(TenderRequest request, BorrowAndInfoVO borrow, BankOpenAccountVO account, CouponUserVO cuc, Map<String, Object> resultEval) {
+        String wjtClient = request.getWjtClient();
         // 生成订单id
         Integer userId = request.getUser().getUserId();
         String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
@@ -260,10 +261,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             pageFailedName = "fal";
 
         }
+        // 同步地址  是否跳转到前端页面
+        String host = super.getFrontHost(systemConfig,request.getPlatform());
+        if(StringUtils.isNotBlank(request.getWjtClient())){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,request.getWjtClient());
+        }
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = host + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+        String successUrl = host + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
@@ -276,11 +283,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         //忘记密码url
-        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
+        String forgotPwdUrl = super.getForgotPwdUrl(request.getPlatform(),request.getToken(),request.getSign(), systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, systemConfig);
+        }
         callBean.setRetUrl(retUrl);
         callBean.setSuccessfulUrl(successUrl);
         callBean.setNotifyUrl(bgRetUrl);
-        callBean.setForgotPwdUrl(forgetPassWoredUrl);
+        callBean.setForgotPwdUrl(forgotPwdUrl);
         // 插入记录 tmp表
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
