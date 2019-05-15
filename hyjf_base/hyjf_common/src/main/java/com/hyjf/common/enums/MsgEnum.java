@@ -96,6 +96,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
 	ERR_USER_AUTH("EUS000013","用户认证失败"),
 	ERR_USER_AUTHORITY("EUS000014","没有权限使用此接口"),
+	ERR_USER_WJT_LOGIN_ERR("EUS000015","请在汇盈官网登录!"),
 
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),
