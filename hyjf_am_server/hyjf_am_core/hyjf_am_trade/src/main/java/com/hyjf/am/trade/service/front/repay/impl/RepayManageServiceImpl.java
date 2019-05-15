@@ -3886,6 +3886,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
                                 if(hjhDebtCreditRepayBean.getAdvanceStatus() == 3){
                                     oldCreditRepay.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
                                 }
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
@@ -3917,6 +3919,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
                                 if(creditRepay.getAdvanceStatus() == 3){
                                     creditRepayOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
                                 }
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
@@ -4002,6 +4006,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowRecoverOld.setRecoverFee(manageFee);
                         if(repayRecover.getAdvanceStatus() == 3){
                             borrowRecoverOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                        } else {// 提前还款更新状态
+                            borrowRecoverOld.setAdvanceStatus(borrowRecoverOld.getAdvanceStatus());
                         }
                         boolean flag = borrowRecoverMapper.updateByPrimaryKey(borrowRecoverOld) > 0 ? true : false;
                         if (!flag) {
@@ -4314,6 +4320,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
                                 if(creditRepay.getAdvanceStatus() == 3){
                                     creditRepayOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
                                 }
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
@@ -4346,6 +4354,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
                                 if(hjhDebtCreditRepayBean.getAdvanceStatus() == 3){
                                     oldCreditRepay.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
                                 }
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
@@ -4428,6 +4438,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowRecoverPlanOld.setRecoverFee(manageFee);
                         if(repayRecoverPlan.getAdvanceStatus() == 3){
                             borrowRecoverPlanOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                        } else {// 提前还款更新状态
+                            borrowRecoverPlanOld.setAdvanceStatus(borrowRecoverPlanOld.getAdvanceStatus());
                         }
                         boolean flag = borrowRecoverPlanMapper.updateByPrimaryKey(borrowRecoverPlanOld) > 0 ? true : false;
                         if (!flag) {

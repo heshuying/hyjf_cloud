@@ -93,7 +93,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				log.setStatus(status);
 				log.setUpdateTime(null);
 				borrowApicronLogMapper.insert(log);
-			} else {
+			} else if (CustomConstants.BANK_BATCH_STATUS_SENDING != status) {// 还款请求中不修改日志表 update by wgx 2019/05/10
 				this.updateBorrowApicronLog(apicron, status);
 			}
 		} catch (Exception e) {
