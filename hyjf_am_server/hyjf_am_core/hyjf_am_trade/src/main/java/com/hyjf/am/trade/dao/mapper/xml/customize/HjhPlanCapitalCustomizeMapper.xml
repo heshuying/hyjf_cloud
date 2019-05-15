@@ -514,7 +514,8 @@
 		, IFNULL(lca.leaveCreditAccount, 0) + IFNULL(uca.usedCreditAccount, 0) as createCreditAccount -- 当日发起债转额 = 当日已承接+当日未承接
 		-- , IFNULL(acat.addCreditAccount, 0) -- 当日新增债转额的当日已承接
 		-- , IFNULL(aca.addCreditAccount, 0) -- 当日新增债转额的当日未承接
-		, IFNULL(acat.addCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) as addCreditAccount -- 当日新增债转额
+		<!-- , IFNULL(acat.addCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) as addCreditAccount  当日新增债转额 -->
+		, IFNULL(aca.addCreditAccount, 0) as addCreditAccount
 		, IFNULL(invest.notDoubleThrowtAccount, 0) as leaveReinvestAccount -- 当日未复投额
 		, IFNULL(assign.yesDoubleThrowtAccount, 0) as usedReinvestAccount -- 当日已复投额
 		FROM ht_hjh_plan hp
@@ -535,7 +536,12 @@
 		) uca
 		ON uca.assign_plan_nid = hp.plan_nid
 		LEFT JOIN (
-		SELECT dct.assign_plan_nid, SUM(dct.assign_pay) AS addCreditAccount
+		SELECT dc.plan_nid, SUM(dc.liquidation_fair_value) AS addCreditAccount
+		FROM ht_hjh_debt_credit dc
+		INNER JOIN ht_hjh_accede ha ON ha.accede_order_id = dc.plan_order_id
+		WHERE ha.end_date = #{date}
+		GROUP BY dc.plan_nid
+		<!-- SELECT dct.assign_plan_nid, SUM(dct.assign_pay) AS addCreditAccount
 		FROM ht_hjh_debt_credit_tender dct
 		INNER JOIN ht_hjh_debt_credit dc ON dct.credit_nid = dc.credit_nid
 		INNER JOIN ht_hjh_accede ha
@@ -550,7 +556,7 @@
 		FROM ht_hjh_debt_credit dc
 		INNER JOIN ht_hjh_accede ha ON ha.accede_order_id = dc.plan_order_id
 		WHERE ha.end_date = #{date}
-		GROUP BY dc.plan_nid
+		GROUP BY dc.plan_nid-->
 		) aca
 		ON aca.plan_nid = hp.plan_nid
 		LEFT JOIN (
@@ -593,6 +599,6 @@
 		ON p.plan_nid = tender.assign_plan_nid
 		) assign
 		ON assign.plan_nid = hp.plan_nid
-		WHERE IFNULL(lca.leaveCreditAccount, 0) + IFNULL(uca.usedCreditAccount, 0) + IFNULL(acat.addCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) + IFNULL(invest.notDoubleThrowtAccount, 0) + IFNULL(assign.yesDoubleThrowtAccount, 0) <![CDATA[<>]]> 0
+		WHERE IFNULL(lca.leaveCreditAccount, 0) + IFNULL(uca.usedCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) + IFNULL(invest.notDoubleThrowtAccount, 0) + IFNULL(assign.yesDoubleThrowtAccount, 0) <![CDATA[<>]]> 0
 	</select>
 </mapper>
