@@ -17,6 +17,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.BankCardUtil;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
@@ -202,7 +203,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/withdraw.do")
-    public WeChatResult userBankWithdraw(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,
+    public WeChatResult userBankWithdraw(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,
                                          HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
         logger.info("weChat端提现接口, userId is :{}", userId);
@@ -237,10 +238,22 @@ public class WechatBankWithdrawController extends BaseTradeController {
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
-        String retUrl = super.getFrontHost(systemConfig, CommonConstant.CLIENT_WECHAT) + "/user/withdraw/result/handing?token=1";
-        String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
-        String successfulUrl = super.getFrontHost(systemConfig, CommonConstant.CLIENT_WECHAT) + "/user/withdraw/result/handing?token=1";
+        String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getFrontHost(systemConfig,wjtClient);
+        }
         String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, request, systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, request, systemConfig);
+        }
+        String retUrl = host + "/user/withdraw/result/handing?token=1";
+        String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
+        String successfulUrl = host + "/user/withdraw/result/handing?token=1";
+
+
+
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, transAmt, cardNo, payAllianceCode, CommonConstant.CLIENT_WECHAT, BankCallConstant.CHANNEL_WEI, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl, withdrawRuleConfigVO);
         if (null == bean) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);

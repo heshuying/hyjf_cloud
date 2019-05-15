@@ -7,6 +7,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
@@ -78,7 +79,7 @@ public class WebRechargeController extends BaseTradeController{
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
 	@RequestLimit(seconds=3)
-	public WebResult<Object> recharge(@RequestHeader(value = "wjtHost",required = false) String wjtHost,@RequestHeader(value = "userId") int userId,
+	public WebResult<Object> recharge(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "userId") int userId,
 									  HttpServletRequest request,
 									  @RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
 		logger.info("web充值服务");
@@ -86,18 +87,18 @@ public class WebRechargeController extends BaseTradeController{
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
-		directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
-		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig));
-
-		logger.info("wjtHost:"+wjtHost);
-		if(StringUtils.isNotBlank(wjtHost)){
-			directRechargeBean.setPlatform(CommonConstant.WJT_PC_CLIENT);
-		}else {
-			directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
+		String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+		if(StringUtils.isNotBlank(wjtClient)){
+			// 如果是温金投的  则跳转到温金投那边
+			host = super.getFrontHost(systemConfig,wjtClient);
 		}
-		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig));
+		String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
+		if(StringUtils.isNotBlank(wjtClient)){
+			// 如果是温金投的  则跳转到温金投那边
+			forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, request, systemConfig);
+		}
+		directRechargeBean.setForgotPwdUrl(forgotPwdUrl);
 		// 拼装参数 调用江西银行
-		String host = super.getFrontHost(systemConfig,directRechargeBean.getPlatform());
 		String retUrl = host+"/user/rechargeError?token=1";
 		String bgRetUrl = "http://CS-TRADE/hyjf-web/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
 		String successfulUrl = host+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
