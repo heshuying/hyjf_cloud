@@ -70,6 +70,10 @@ public abstract class AbstractActivity518Controller extends AbstractController{
         logger.debug("当前活动状态started: {}", started);
         activity518InfoVO.setStarted(started);
 
+        // 无论活动状态如何，返回用户信息
+        String username = userId != null ? activity518Service.getUsernameByUserId(userId) : "";
+        activity518InfoVO.setUsername(username);
+
         //活动未开始不查询排行榜信息和用户信息
         if (started != -1) {
             // 查询排行榜
@@ -84,7 +88,6 @@ public abstract class AbstractActivity518Controller extends AbstractController{
 
             // 查询登陆用户信息，未登陆返回空
             if (userId != null) {
-                activity518InfoVO.setUsername(activity518Service.getUsernameByUserId(userId));
                 BigDecimal amount = activity518Service.getUserTenderAmount(userId, activityStartDate, activityEndDate);
                 activity518InfoVO.setAmount(String.valueOf(amount == null ? BigDecimal.ZERO : amount));
             }

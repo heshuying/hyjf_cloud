@@ -24,7 +24,7 @@ public class Activity518InfoVO {
     private String username = "";
 
     @ApiModelProperty("累计年化出借金额")
-    private String amount = "";
+    private String amount = "0.00";
 
     /**
      * 出借排行榜
