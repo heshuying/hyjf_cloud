@@ -514,19 +514,18 @@
 		, IFNULL(lca.leaveCreditAccount, 0) + IFNULL(uca.usedCreditAccount, 0) as createCreditAccount -- 当日发起债转额 = 当日已承接+当日未承接
 		-- , IFNULL(acat.addCreditAccount, 0) -- 当日新增债转额的当日已承接
 		-- , IFNULL(aca.addCreditAccount, 0) -- 当日新增债转额的当日未承接
-		<!-- , IFNULL(acat.addCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) as addCreditAccount  当日新增债转额 -->
 		, IFNULL(aca.addCreditAccount, 0) as addCreditAccount
 		, IFNULL(invest.notDoubleThrowtAccount, 0) as leaveReinvestAccount -- 当日未复投额
 		, IFNULL(assign.yesDoubleThrowtAccount, 0) as usedReinvestAccount -- 当日已复投额
 		FROM ht_hjh_plan hp
 		LEFT JOIN (
-		SELECT dc.plan_nid, SUM(dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned) AS leaveCreditAccount
+		SELECT dc.plan_nid_new, SUM(dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned) AS leaveCreditAccount
 		FROM ht_hjh_debt_credit dc
 		WHERE dc.create_time <![CDATA[>]]> STR_TO_DATE(CONCAT(#{date}, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')
 		AND dc.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
-		GROUP BY dc.plan_nid
+		GROUP BY dc.plan_nid_new
 		) lca
-		ON hp.plan_nid = lca.plan_nid
+		ON hp.plan_nid = lca.plan_nid_new
 		LEFT JOIN (
 		SELECT dct.assign_plan_nid, SUM(dct.assign_pay) AS usedCreditAccount
 		FROM ht_hjh_debt_credit_tender dct
@@ -541,22 +540,6 @@
 		INNER JOIN ht_hjh_accede ha ON ha.accede_order_id = dc.plan_order_id
 		WHERE ha.end_date = #{date}
 		GROUP BY dc.plan_nid_new
-		<!-- SELECT dct.assign_plan_nid, SUM(dct.assign_pay) AS addCreditAccount
-		FROM ht_hjh_debt_credit_tender dct
-		INNER JOIN ht_hjh_debt_credit dc ON dct.credit_nid = dc.credit_nid
-		INNER JOIN ht_hjh_accede ha
-		ON ha.accede_order_id = dc.plan_order_id
-		AND ha.acctual_payment_time <![CDATA[>]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 00:00:00'))
-		AND ha.acctual_payment_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 23:59:59'))
-		GROUP BY dct.assign_plan_nid
-		) acat
-		ON acat.assign_plan_nid = hp.plan_nid
-		LEFT JOIN (
-		SELECT dc.plan_nid, SUM(dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned) AS addCreditAccount
-		FROM ht_hjh_debt_credit dc
-		INNER JOIN ht_hjh_accede ha ON ha.accede_order_id = dc.plan_order_id
-		WHERE ha.end_date = #{date}
-		GROUP BY dc.plan_nid-->
 		) aca
 		ON aca.plan_nid_new = hp.plan_nid
 		LEFT JOIN (
