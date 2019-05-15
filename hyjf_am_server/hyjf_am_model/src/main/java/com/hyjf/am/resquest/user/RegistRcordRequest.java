@@ -23,6 +23,26 @@ public class RegistRcordRequest extends BasePage{
 	private String regTimeEnd;
 	//默认为true ,获取全部数据，为false时，获取部分数据
 	private boolean limitFlg = false;
+	//渠道ID
+	private String sourceId;
+	//渠道名称
+	private String sourceName;
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+	}
 
 	public String getUserName() {
 		return userName;

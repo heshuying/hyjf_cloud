@@ -38,6 +38,16 @@ public class RegistRcordRequestBean extends BasePage {
     //列表渠道Id
     @ApiModelProperty(value = "列表渠道Id")
     private String sourceIdWasId;
+	@ApiModelProperty(value = "渠道名称")
+	private String sourceName;
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+	}
 
 	public String getUserName() {
 		return userName;

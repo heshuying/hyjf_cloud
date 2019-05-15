@@ -80,10 +80,10 @@
                 AND hydur.username LIKE CONCAT(#{recommendName}, '%')
             </if>
             <if test="sourceId != null and sourceId !='' ">
-                AND IF(plat.source_type=0,hydutm.source_id, plat.source_id) = #{sourceId}
+                AND IF(plat.source_type <![CDATA[<>]]> 0,plat.source_id, hydutm.source_id) = #{sourceId}
             </if>
             <if test="sourceName != null and sourceName !='' ">
-                AND IF(plat.source_type=0,hydutm.utm_source, plat.source_name) LIKE CONCAT(#{sourceName}, '%')
+                AND IF(plat.source_type <![CDATA[<>]]> 0,plat.source_name, hydutm.utm_source) LIKE CONCAT(#{sourceName}, '%')
             </if>
             <if test="userName != null and userName !='' ">
                 AND hydu.username LIKE CONCAT(#{userName}, '%')

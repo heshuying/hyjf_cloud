@@ -130,6 +130,8 @@ public class RegistRecordManagerController extends BaseController {
         mapParam.put("recommendName", userRequest.getRecommendName());
         mapParam.put("registPlat",userRequest.getRegistPlat());
         mapParam.put("userId",userRequest.getUserId());
+        mapParam.put("sourceId",userRequest.getSourceId());
+        mapParam.put("sourceName",userRequest.getSourceName());
         return mapParam;
     }
 
