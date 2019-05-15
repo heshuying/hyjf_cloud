@@ -198,6 +198,15 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                     borrowLog.setCreateUserName(adminUsername);
 
                     borrowLogMapper.insert(borrowLog);
+
+					// 发送MQ 更改借款人机构编号
+					if (wjtInstCode.equals(borrow.getPublishInstCode())){
+						try {
+							this.sendBorrowUserMQ(borrow.getUserId());
+						}catch (Exception e){
+							logger.error("发送修改标的借款人机构编号MQ失败...");
+						}
+					}
 				}
 			}
 		}
@@ -1320,7 +1329,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 发送MQ 更改借款人机构编号
 		if (wjtInstCode.equals(borrow.getPublishInstCode())){
 			try {
-				this.sendBorrowUserMQ(borrow.getBorrowNid());
+				this.sendBorrowUserMQ(borrow.getUserId());
 			}catch (Exception e){
 				logger.error("发送修改标的借款人机构编号MQ失败...");
 			}
@@ -6178,12 +6187,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 *
 	 * 如果是温金投定向发标标的的话,发送更新借款人机构编号的MQ
 	 *
-	 * @param borrowNid
+	 * @param borrowUserId
 	 */
-	private void sendBorrowUserMQ(String borrowNid) throws MQException {
+	private void sendBorrowUserMQ(Integer borrowUserId) throws MQException {
 		JSONObject params = new JSONObject();
-		params.put("borrowNid", borrowNid);
+		params.put("userId", borrowUserId);
 		// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-		commonProducer.messageSendDelay(new MessageContent(MQConstant.WJT_BORROW_USER_MODIFY_TOPIC, MQConstant.WJT_BORROW_USER_MODIFY_GROUP, borrowNid, params), 2);
+		commonProducer.messageSendDelay(new MessageContent(MQConstant.WJT_BORROW_USER_MODIFY_TOPIC, MQConstant.WJT_BORROW_USER_MODIFY_GROUP, params), 2);
 	}
 }

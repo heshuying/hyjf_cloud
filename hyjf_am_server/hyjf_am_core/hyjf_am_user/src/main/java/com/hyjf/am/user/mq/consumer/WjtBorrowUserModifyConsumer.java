@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.mq.consumer;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.service.front.user.WjtBorrowUserModifyService;
 import com.hyjf.common.constants.MQConstant;
@@ -50,7 +51,10 @@ public class WjtBorrowUserModifyConsumer implements RocketMQListener<MessageExt>
             return;
         }
         // --> 消息转换
-        String userId = new String(msg.getBody());
+        String msgBody = new String(msg.getBody());
+        JSONObject json = JSONObject.parseObject(msgBody);
+        // 用户ID
+        String userId = json.getString("userId");
         // 根据用户ID查询用户信息
         User borrowUser = this.wjtBorrowUserModifyService.findUserByUserId(Integer.parseInt(userId));
         if (borrowUser == null) {
