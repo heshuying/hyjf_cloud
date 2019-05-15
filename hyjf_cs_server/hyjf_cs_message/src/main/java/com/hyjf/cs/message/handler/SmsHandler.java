@@ -348,6 +348,11 @@ public class SmsHandler {
 					return 0;
 				}
 			}
+			if (tplCode != null && tplCode.equals(CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN)) {
+				if (user.getRecieveSms() != null && user.getRecieveSms() != 0) {
+					return 0;
+				}
+			}
 			String mobile = user.getMobile();
 			if (StringUtils.isEmpty(mobile)) {
 				logger.error("手机号不能为空， userId is : {}", userId);
