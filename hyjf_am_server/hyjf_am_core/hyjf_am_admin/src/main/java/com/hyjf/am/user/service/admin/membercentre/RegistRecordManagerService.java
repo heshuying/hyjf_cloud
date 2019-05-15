@@ -39,4 +39,11 @@ public interface RegistRecordManagerService extends BaseService {
      */
     RegistRecordCustomize selectRegistOne(Integer userId) ;
 
+    /**
+     * 根据用户id查询渠道类型
+     *
+     * @param userId 筛选条件
+     * @return
+     */
+    RegistRecordCustomize selectByUserType(Integer userId);
 }

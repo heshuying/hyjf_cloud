@@ -37,4 +37,10 @@ public interface RegistRecordService {
      *
      */
     boolean editRegistRecordOne(RegistRcordRequestBean registRcordRequestBean);
+
+    /**
+     * 获取所有渠道（只查询有效数据且为pc的数据）
+     *
+     */
+    RegistRecordResponse findUtmAllSourcePc(RegistRcordRequest request);
 }

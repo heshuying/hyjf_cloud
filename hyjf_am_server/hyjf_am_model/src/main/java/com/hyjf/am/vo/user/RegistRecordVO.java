@@ -37,6 +37,9 @@ public class RegistRecordVO extends BaseVO implements Serializable {
     public String regIP;
     // 注册渠道Id
     public String sourceId;
+    // 注册渠道类型（pc,app,all,no）
+    public String sourceType;
+
     /**
      * 获取用户id userId
      *
@@ -195,5 +198,13 @@ public class RegistRecordVO extends BaseVO implements Serializable {
 
     public void setRegistPlatCode(String registPlatCode) {
         this.registPlatCode = registPlatCode;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 }

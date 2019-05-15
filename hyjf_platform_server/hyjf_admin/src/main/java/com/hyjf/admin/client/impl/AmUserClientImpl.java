@@ -1038,6 +1038,23 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 根据用户id查询渠道类型
+	 *
+	 * @author wx
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public RegistRecordResponse selectByUserType(RegistRcordRequest request) {
+		RegistRecordResponse response = restTemplate.postForEntity(
+				"http://AM-ADMIN/am-user/registRecord/selectByUserType", request, RegistRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
 
 	/**
 	 * 查找借款盖章用户信息
@@ -2999,5 +3016,17 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-ADMIN/am-user/changelog/insertChangeLogList",changeLogVO, Boolean.class)
 				.getBody();
 		return response;
+	}
+
+	/**
+	 * 根据Id删除app渠道信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteAppUtmReg(Long id) {
+		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteAppUtmReg/" + id;
+		return restTemplate.getForEntity(url, boolean.class).getBody();
 	}
 }

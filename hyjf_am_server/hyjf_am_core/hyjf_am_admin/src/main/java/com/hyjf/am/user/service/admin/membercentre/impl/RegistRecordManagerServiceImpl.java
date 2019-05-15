@@ -82,4 +82,17 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
         }
         return listRegistRecord;
     }
+
+    /**
+     * 根据用户id查询渠道类型
+     *
+     * @param userId 筛选条件
+     * @return
+     */
+    @Override
+    public RegistRecordCustomize selectByUserType(Integer userId) {
+        RegistRecordCustomize listRegistRecord = registRecordCustomizeMapper.selectByUserType(userId);
+        return listRegistRecord;
+    }
+
 }

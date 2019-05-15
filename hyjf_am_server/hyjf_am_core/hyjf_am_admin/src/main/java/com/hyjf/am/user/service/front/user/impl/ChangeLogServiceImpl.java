@@ -130,10 +130,14 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
                 changeLog.setUpdateTime(new Date());
                 ChangeLogCustomize changeLogByUser = new ChangeLogCustomize();
                 changeLogByUser.setUserId(logRecord.getUserId());
+                // 修改渠道
+                int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
                 // 判断是否为第一次修改
                 int userLogCount =  changeLogCustomizeMapper.queryChangeLogByUserIdCount(changeLogByUser);
                 if(userLogCount < 1 && !("NoChannelInformation").equals(userChangeLog.getSourceIdWasName())){
                     // 原渠道记录
+                    changeLog.setRemark("该记录为用户原渠道记录");
+                    changeLog.setUtmName(userChangeLog.getSourceIdWasName());
                     int userLogFlgWas =  changeLogCustomizeMapper.insertSelective(changeLog);
                     if (userLogFlgWas > 0) {
                         logger.info("==================用户信息修改日志保存成功!（原渠道信息新增）======");
@@ -141,10 +145,6 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
                         throw new RuntimeException("============用户信息修改日志保存失败!========");
                     }
                 }
-                // 修改渠道
-                int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
-                changeLog.setUtmName(userChangeLog.getSourceIdWasName());
-                changeLog.setRemark("该记录为用户原渠道记录");
                 if (userLogFlg > 0) {
                     logger.info("==================用户信息修改日志保存成功!======");
                 } else {

@@ -1497,4 +1497,20 @@ public interface AmUserClient {
      * @return
      */
     boolean insertChangeLogList(ChangeLogVO changeLogVO);
+
+    /**
+     * 根据用户id查询渠道类型
+     *
+     * @param request
+     * @return
+     */
+    RegistRecordResponse selectByUserType(RegistRcordRequest request);
+
+    /**
+     * 根据渠道id删除渠道记录
+     *
+     * @param id
+     * @return
+     */
+    boolean deleteAppUtmReg(Long id);
 }

@@ -93,6 +93,26 @@ public class RegistRecordManagerController extends BaseController {
     }
 
     /**
+     * 根据用户id查询用户渠道类型
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/selectByUserType")
+    public RegistRecordResponse selectByUserType(@RequestBody @Valid RegistRcordRequest request) {
+        logger.info("---findRegistRecordOne by param---  " + JSONObject.toJSON(request));
+        RegistRecordResponse response = new RegistRecordResponse();
+        RegistRecordCustomize registRecordCustomize = registRecordService.selectByUserType(Integer.valueOf(request.getUserId()));
+        if (registRecordCustomize!=null) {
+            RegistRecordVO userVoList = CommonUtils.convertBean(registRecordCustomize, RegistRecordVO.class);
+            response.setResult(userVoList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+
+    /**
      * 获取列表总数
      *
      * @param request

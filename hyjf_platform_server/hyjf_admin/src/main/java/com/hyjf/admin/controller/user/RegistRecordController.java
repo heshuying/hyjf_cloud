@@ -135,7 +135,7 @@ public class RegistRecordController extends BaseController {
             registRecordCustomizeVO = CommonUtils.convertBean(registRecordResponse.getResult(),RegistRecordCustomizeVO.class);
         }
         // 注册渠道（source_id）
-        RegistRecordResponse registRecordResponseUtmAll = registRecordService.findUtmAll(registerRcordeRequest);
+        RegistRecordResponse registRecordResponseUtmAll = registRecordService.findUtmAllSourcePc(registerRcordeRequest);
         registRecordCustomizeVO.setUtmPlatList(registRecordResponseUtmAll.getUtmPlatVOList());
         return new AdminResult<RegistRecordCustomizeVO>(registRecordCustomizeVO);
     }

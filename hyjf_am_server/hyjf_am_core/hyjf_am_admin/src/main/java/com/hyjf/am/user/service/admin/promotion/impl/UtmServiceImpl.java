@@ -379,6 +379,9 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             if(map.get("sourceId") != null){
                 cra.andSourceIdEqualTo(Integer.valueOf(map.get("sourceId").toString()));
             }
+            if(map.get("sourceType") != null){
+                cra.andSourceTypeEqualTo(Integer.valueOf(map.get("sourceType").toString()));
+            }
         }
         List<UtmPlat> list = utmPlatMapper.selectByExample(utmPlat);
         if(list == null){
