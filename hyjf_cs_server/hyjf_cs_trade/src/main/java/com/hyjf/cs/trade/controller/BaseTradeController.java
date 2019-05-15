@@ -32,7 +32,19 @@ public class BaseTradeController extends BaseController {
             return sysConfig.getAppFrontHost();
         }else if (ClientConstants.WECHAT_CLIENT == client) {
             return sysConfig.getWeiFrontHost();
-        }else if (ClientConstants.WJT_PC_CLIENT == client) {
+        }
+        return null;
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtFrontHost(SystemConfig sysConfig, String platform) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
             return sysConfig.getWjtFrontHost();
         }else if (ClientConstants.WJT_WEI_CLIENT == client) {
             return sysConfig.getWjtWeiFrontHost();
@@ -41,8 +53,6 @@ public class BaseTradeController extends BaseController {
     }
 
     public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
-
-
         Integer client = Integer.parseInt(platform);
         if (ClientConstants.WEB_CLIENT == client) {
             String token=request.getHeader("token");
@@ -55,7 +65,19 @@ public class BaseTradeController extends BaseController {
         }else if (ClientConstants.WECHAT_CLIENT == client) {
             String sign=request.getParameter("sign");
             return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
-        }else if (ClientConstants.WJT_PC_CLIENT == client) {
+        }
+        return "";
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
             return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
         }else if (ClientConstants.WJT_WEI_CLIENT == client) {
             return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
