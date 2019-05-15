@@ -313,7 +313,7 @@ public class AdminSystemController extends BaseConfigController {
 			AdminSystemVO asv = new AdminSystemVO();
 			// 如果状态不可用
 			if ("1".equals(adminSystemr.getState())) {
-				asr.setMessage("该用户已禁用");
+				asr.setMessage("该用户已被禁用");
 				asr.setRtn(Response.ERROR);
 				return asr;
 			}
@@ -323,7 +323,7 @@ public class AdminSystemController extends BaseConfigController {
 			return asr;
 		}
 		asr.setRtn(Response.ERROR);
-		asr.setMessage("用户名或者密码无效");
+		asr.setMessage("用户不存在");
 		return asr;
 	}
 }
