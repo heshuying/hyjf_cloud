@@ -166,6 +166,15 @@ public class SystemConfig {
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
 
+
+    /* 个人用户提现最大限额**/
+    @Value("${hyjf.personal.withdraw.limit}")
+    private String personalWithdrawLimit;
+
+    /* 企业用户提现最大限额**/
+    @Value("${hyjf.company.withdraw.limit}")
+    private String companyWithdrawLimit;
+
     public String getAppRegistAgreementUrl() {
         return appRegistAgreementUrl;
     }
@@ -917,5 +926,21 @@ public class SystemConfig {
 
     public void setCertWebYibu(String certWebYibu) {
         this.certWebYibu = certWebYibu;
+    }
+
+    public String getPersonalWithdrawLimit() {
+        return personalWithdrawLimit;
+    }
+
+    public void setPersonalWithdrawLimit(String personalWithdrawLimit) {
+        this.personalWithdrawLimit = personalWithdrawLimit;
+    }
+
+    public String getCompanyWithdrawLimit() {
+        return companyWithdrawLimit;
+    }
+
+    public void setCompanyWithdrawLimit(String companyWithdrawLimit) {
+        this.companyWithdrawLimit = companyWithdrawLimit;
     }
 }

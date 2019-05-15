@@ -3,8 +3,10 @@
  */
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
+import com.hyjf.admin.beans.request.BankCancellationAccountRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.beans.vo.BankOpenAccountRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -18,15 +20,20 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
+import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
+import com.hyjf.am.resquest.user.BankCancellationAccountRequest;
+import com.hyjf.am.vo.user.BankCancellationAccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -597,5 +604,24 @@ public class BankOpenRecordController extends BaseController {
         return String.valueOf(age);
     }
 
+    /**
+     * 销户记录查询
+     * @param requestBean
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "销户记录列表 ", notes = "销户记录列表查询")
+    @PostMapping(value = "/bankCancellationAccountList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
+    public AdminResult<ListResult<BankCancellationAccountVO>> getBankCancellationAccountList(@RequestBody BankCancellationAccountRequestBean requestBean, HttpServletRequest request) {
+        BankCancellationAccountRequest  bankCancellationAccountRequest = new  BankCancellationAccountRequest();
+        BeanUtils.copyProperties(requestBean,bankCancellationAccountRequest);
+        BankCancellationAccountResponse response = this.userCenterService.getBankCancellationAccountList(bankCancellationAccountRequest);
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<ListResult<BankCancellationAccountVO>>(ListResult.build(response.getResultList(),response.getCount())) ;
+    }
 
 }

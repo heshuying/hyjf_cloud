@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.account.impl;
 
 import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailCustomize;
@@ -141,5 +142,19 @@ public class AccountDetailServiceImpl extends BaseServiceImpl implements Account
         }
 
         return 0;
+    }
+
+    /**
+     * 未开户用户销户成功后,更新删除用户账户表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public int deleteUserAccountAction(String userId) {
+        AccountExample example = new AccountExample();
+        AccountExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(Integer.parseInt(userId));
+        return this.accountMapper.deleteByExample(example);
     }
 }

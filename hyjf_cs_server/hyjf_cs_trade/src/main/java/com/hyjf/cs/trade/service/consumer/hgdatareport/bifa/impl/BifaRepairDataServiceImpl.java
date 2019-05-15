@@ -219,7 +219,7 @@ public class BifaRepairDataServiceImpl extends BaseHgDateReportServiceImpl imple
 
                 boolean result = this.convertBifaBorrowInfo(borrow, borrowUserInfo,borrowRepay,borrowCarsinfo,borrowHouses,bifaBorrowInfoEntity);
                 if (!result){
-                    logger.error(logHeader + "数据变换失败！！"+JSONObject.toJSONString(bifaBorrowInfoEntity));
+                    logger.error(logHeader + "新增的散标数据变换失败！！"+JSONObject.toJSONString(bifaBorrowInfoEntity));
                     return;
                 }
 

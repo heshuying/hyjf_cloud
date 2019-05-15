@@ -10,6 +10,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.batch.AutoTenderService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,11 @@ public class AutoTenderController extends BaseTradeController {
         }
         // add 汇计划三期 0点前后停止自动出借设定 liubin 20180515 end
 
+        // 清算,计算公允价值与自动投资设置5分钟并发锁,
+        if (StringUtils.isNotBlank(RedisUtils.get(RedisConstants.HJH_TENDER_LOCK))) {
+            logger.info(logHeader + "自动投资与清算,计算公允价值并发进行,不予投资");
+            return new BooleanResponse(true);
+        }
         // ********变量定义
         logger.info(logHeader + "start...");
         Integer result = 0; // 投资结果是否成功(0:未出借，1：出借成功，2：出借失败)

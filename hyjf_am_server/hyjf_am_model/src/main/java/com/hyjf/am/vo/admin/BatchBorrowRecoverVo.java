@@ -189,7 +189,30 @@ public class BatchBorrowRecoverVo extends BaseVO implements Serializable {
      */
     private String extraYieldRepayStatus;
 
+    /**
+     * 交易流水号
+     */
+    private String seqNo;
+    /**
+     * 银行交易流水号
+     */
+    private String bankSeqNo;
+    
+    public String getSeqNo() {
+		return seqNo;
+	}
 
+	public void setSeqNo(String seqNo) {
+		this.seqNo = seqNo;
+	}
+
+	public String getBankSeqNo() {
+		return bankSeqNo;
+	}
+
+	public void setBankSeqNo(String bankSeqNo) {
+		this.bankSeqNo = bankSeqNo;
+	}
     public Integer getId() {
         return id;
     }
