@@ -880,7 +880,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
         bean.setIdNo(usersInfo.getIdcard());// 证件号
         bean.setName(usersInfo.getTruename());// 姓名
-        bean.setMobile(user.getMobile());// 手机号s
+        // 该手机号字段设值改为银行预留手机号 update by liushouyi
+        bean.setMobile(user.getBankMobile());// 手机号s
         bean.setCardNo(bankCard.getCardNo());// 银行卡号
         bean.setTxAmount(CommonUtils.formatNumber(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
         bean.setTxFee(fee);
