@@ -49,6 +49,8 @@ public class WithdrawBeanRequest extends BasePage implements Serializable{
     protected int limitStart = -1;
     /** 翻页结束 */
     protected int limitEnd = -1;
+    //机构编码(温金投）
+    private String instCode;
 
     public int getLimitStart() {
         return limitStart;
@@ -184,5 +186,13 @@ public class WithdrawBeanRequest extends BasePage implements Serializable{
 
     public void setStatusExceptionSrch(String statusExceptionSrch) {
         this.statusExceptionSrch = statusExceptionSrch;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
     }
 }

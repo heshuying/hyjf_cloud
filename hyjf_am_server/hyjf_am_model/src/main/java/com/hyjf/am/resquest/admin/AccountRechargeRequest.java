@@ -106,6 +106,9 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
     private int limitStart = -1;
     private int limitEnd = -1;
 
+    //机构编码(温金投机构）
+    private String instCode;
+
     public String getStartDate() {
         return startDate;
     }
@@ -280,5 +283,13 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
     }
 }
