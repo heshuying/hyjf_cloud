@@ -2317,7 +2317,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminAuthConfigCustomizeResponse getAuthConfigList() {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigList";
         AdminAuthConfigCustomizeResponse response = restTemplate.getForEntity(url,AdminAuthConfigCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
@@ -2331,7 +2331,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request) {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigLogList";
         AdminAuthConfigLogResponse response = restTemplate.postForEntity(url,request,AdminAuthConfigLogResponse.class).getBody();
-        if (Validator.isNotNull(response)){
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
@@ -2456,7 +2456,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
 
     }
-
     @Override
     public Integer insertBusinessName(BusinessNameMgRequest request) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/insert";
@@ -2479,7 +2478,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
-
     @Override
     public BusinessNameMgResponse findNameUq(BusinessNameMgRequest request) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/findNameUq";
@@ -2490,7 +2488,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
-
     @Override
     public WorkNameVO findBusinessNameById(int id) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/info/"+id;
@@ -2501,7 +2498,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
-
     @Override
     public Integer updateBusinessName(BusinessNameMgRequest request) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/update";
@@ -2626,6 +2622,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
 
 
 }
