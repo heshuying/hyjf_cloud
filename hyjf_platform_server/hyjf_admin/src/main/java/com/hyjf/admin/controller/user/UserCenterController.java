@@ -1141,7 +1141,8 @@ public class UserCenterController extends BaseController {
 
         //非共同参数封装start
         selectbean.setTxCode(BankCallMethodConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
-        selectbean.setMobile(user.getMobile());
+        // 调用银行接口传递银行预留手机号字段 update by liushouyi
+        selectbean.setMobile(user.getBankMobile());
         //非共同参数封装end
 
         BankCallBean retBean;
