@@ -857,37 +857,29 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        CASE u2.attribute
+        CASE t.tender_user_attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
         END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttributeNow,
+        t.invite_region_name AS recoverRegionName,
+        t.invite_branch_name AS recoverBranchName,
+        t.invite_department_name AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         t.account AS recoverTotal,
         IF (
         br.recover_status = 1,
@@ -982,12 +974,6 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON br.borrow_userid = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON br.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = br.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
         LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
         LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -1021,37 +1007,29 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        CASE u2.attribute
+        CASE t.tender_user_attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
         END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttributeNow,
+        t.invite_region_name AS recoverRegionName,
+        t.invite_branch_name AS recoverBranchName,
+        t.invite_department_name AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         t.account AS recoverTotal,
         <!-- 当前持有=投资额-债转金额-（已还本金-已还债转）-->
         br.recover_capital - br.credit_amount -
@@ -1164,12 +1142,6 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON rp.borrow_userid = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON rp.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = rp.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
         LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
         LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -1199,37 +1171,29 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
+        CASE ct.invite_user_attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END  AS recoverUserAttribute,
         CASE u2.attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
-        END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        END recoverUserAttributeNow,
+        ct.invite_region_name AS recoverRegionName,
+        ct.invite_branch_name AS recoverBranchName,
+        ct.invite_department_name AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         ct.assign_capital AS recoverTotal,
         ct.assign_capital - ct.assign_repay_capital AS amountHold,
         ct.assign_capital AS recoverCapital,
@@ -1345,14 +1309,8 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON cr.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = cr.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
+        LEFT JOIN ht_r_user AS u3 ON ct.invite_user_name = u3.username
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u3.user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid`
         AND `od4`.id IS NOT NULL
@@ -1387,30 +1345,22 @@
         WHEN 3 THEN '线上员工'
         ELSE ''
         END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        CASE acc.user_attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttributeNow,
+        acc.invite_user_regionname AS recoverRegionName,
+        acc.invite_user_branchname AS recoverBranchName,
+        acc.invite_user_departmentname AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         hct.assign_capital AS recoverTotal,
         hct.assign_capital - hct.repay_capital_yes  AS amountHold,
         hct.assign_capital AS recoverCapital,
@@ -1514,6 +1464,7 @@
         FROM
         ht_hjh_debt_credit_repay hcr
         INNER JOIN ht_hjh_debt_credit_tender hct ON hct.assign_order_id = hcr.assign_order_id
+        INNER JOIN ht_hjh_accede acc ON acc.accede_order_id = hct.assign_plan_order_id
         INNER JOIN ht_borrow b ON hcr.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
@@ -1526,14 +1477,8 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON hcr.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = hcr.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
+        LEFT JOIN ht_r_user AS u3 ON acc.invite_user_id = u3.user_id
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = acc.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid`
         AND `od4`.id IS NOT NULL
