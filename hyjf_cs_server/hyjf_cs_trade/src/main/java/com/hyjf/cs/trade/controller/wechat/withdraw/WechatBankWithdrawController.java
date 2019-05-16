@@ -230,7 +230,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
             } else if (user.getUserType() == 1 && new BigDecimal(transAmt).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
                 statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
             } else {
-                statusDesc = "获取提现配置失败";
+                statusDesc = "提现金额超限，请参考提现温馨提示。";
             }
             throw new CheckException(statusDesc);
         }
