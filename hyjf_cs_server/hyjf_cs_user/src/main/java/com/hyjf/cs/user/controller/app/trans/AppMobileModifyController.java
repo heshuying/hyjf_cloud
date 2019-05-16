@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.controller.app.trans;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.UserConstant;
@@ -58,6 +59,8 @@ public class AppMobileModifyController extends BaseUserController {
     public AppResult<Object> bankMobileModify(@RequestHeader(value = "userId") int userId, @RequestHeader(value = "sign") String sign, @RequestParam("platform") String platForm, HttpServletRequest request) {
         logger.info("app银行预留手机号修改,userId:" + userId);
         AppResult<Object> result = new AppResult<Object>();
+        // 跳转给原生页状态用000
+        result.setStatusInfo(BaseResult.SUCCESS, BaseResult.SUCCESS_DESC);
         // 获取用户信息
         UserVO user = this.mobileModifyService.getUsersById(userId);
         if (user == null) {
