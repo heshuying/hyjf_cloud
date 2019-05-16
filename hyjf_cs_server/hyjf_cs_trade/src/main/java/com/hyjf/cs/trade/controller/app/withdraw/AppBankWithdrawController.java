@@ -175,17 +175,17 @@ public class AppBankWithdrawController extends BaseTradeController {
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, withdrawMoney);
         if (withdrawRuleConfigVO == null){
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
-            String statusDesc = "";
-            // 个人用户
-            if (user.getUserType() == 0 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
-                // 提现金额> 个人最大提现金额
-                logger.info("个人提现金额超限");
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else if (user.getUserType() == 1 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else {
-                statusDesc = "提现金额超限，请参考提现温馨提示。";
-            }
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
 
             result.setStatusDesc(statusDesc);
             return result;
@@ -360,18 +360,18 @@ public class AppBankWithdrawController extends BaseTradeController {
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, total);
         if (withdrawRuleConfigVO == null){
             ret.put("status", CustomConstants.APP_STATUS_FAIL);
-            String statusDesc = "";
-            // 个人用户
-            if (user.getUserType() == 0 &&
-                    new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
-                // 提现金额> 个人最大提现金额
-                logger.info("个人提现金额超限");
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else if (user.getUserType() == 1 && new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else {
-                statusDesc = "提现金额超限，请参考提现温馨提示。";
-            }
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 &&
+//                    new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
             ret.put("statusDesc",statusDesc);
             ret.put("request", requestStr);
             return ret;
