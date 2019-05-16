@@ -125,7 +125,7 @@ public class AppMobileModifyController extends BaseUserController {
     @ApiOperation(value = "修改预留手机号异步回调结果查询", notes = "修改预留手机号异步回调结果查询")
     @PostMapping(value = "/searchMobileModifyMess", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public AppResult<Object> getMobileModifyMessage(@RequestHeader(value = "logOrdId") String logOrdId) {
+    public AppResult<Object> getMobileModifyMessage(@RequestParam(value = "logOrdId") String logOrdId, HttpServletRequest request) {
         logger.info("修改预留手机号异步回调结果start,logOrdId:{}", logOrdId);
         AppResult<Object> result = new AppResult<Object>();
         // 跳转给原生页状态用000
