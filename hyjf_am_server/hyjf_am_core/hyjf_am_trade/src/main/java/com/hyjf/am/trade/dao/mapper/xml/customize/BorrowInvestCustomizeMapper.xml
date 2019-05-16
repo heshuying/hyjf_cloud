@@ -570,7 +570,7 @@
 
 	<select id="getSumAnnualInvestAmountTop5" resultMap="sumAnnualInvestAmountTop5Map">
 		SELECT t.user_id, r.mobile, SUM(t.account) AS amount FROM (
-			SELECT hbt.user_id, IFNULL(CASE WHEN hb.borrow_style = 'endday' THEN ROUND( IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,2) END,0)
+			SELECT hbt.user_id, hbt.create_time, IFNULL(CASE WHEN hb.borrow_style = 'endday' THEN ROUND( IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,2) END,0)
 						   + IFNULL(CASE WHEN hb.borrow_style <![CDATA[<>]]>  'endday' THEN ROUND(IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 12,2) END,0) AS account
 					FROM
 					 ht_borrow_tender hbt
@@ -581,7 +581,7 @@
 
 			 UNION ALL
 
-			SELECT hha.user_id,  IFNULL(CASE WHEN hhp.is_month = '0' THEN
+			SELECT hha.user_id, hhp.create_time, IFNULL(CASE WHEN hhp.is_month = '0' THEN
 						IFNULL(ROUND(IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 360,2), 0) END, 0 ) + IFNULL(
 						CASE WHEN hhp.is_month = '1' THEN
 						ROUND(IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 12,2) END,0)  AS account
@@ -592,7 +592,7 @@
 						AND hha.create_time <![CDATA[<=]]> #{endTime}
 			) AS t
 			 left join ht_r_user r on r.user_id = t.user_id
-			 GROUP BY user_id having SUM(t.account)>=200000	ORDER BY SUM(t.account) DESC LIMIT 5
+			 GROUP BY user_id having SUM(t.account)>=200000	ORDER BY SUM(t.account) DESC,max(t.create_time) ASC LIMIT 5
 	</select>
 
 
