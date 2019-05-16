@@ -46,6 +46,9 @@ public class ReturnFilter extends ZuulFilter {
                     String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
                     logger.warn("user is not exist, token is : {}...，Redis上未查询到该用户登陆信息", token);
                     body = setResult(body);
+                    if(StringUtils.isBlank(body)){
+                        body = ctx.getResponseBody();
+                    }
                     ctx.setResponseBody(body);// 输出最终结果
                 }
             }
@@ -83,8 +86,10 @@ public class ReturnFilter extends ZuulFilter {
             result.put("islogined", "0");
             body = result.toString();
         }catch (Exception e){
+            logger.info("body:{}",body);
             logger.error("业务端返回为boolean或者其他无法识别类型，不进行处理");
         }
+        logger.info("body:{}",body);
 
         return body;
     }

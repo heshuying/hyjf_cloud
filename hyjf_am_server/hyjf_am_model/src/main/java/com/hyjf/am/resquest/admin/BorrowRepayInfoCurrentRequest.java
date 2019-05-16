@@ -44,6 +44,9 @@ public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializa
     private String repayedTimeEnd;
     @ApiModelProperty(value = "是否具有组织架构查看权限")
     private String isOrganizationView;
+    /** 出借人用户名*/
+    @ApiModelProperty(value = "出借人用户名")
+    private String tenderUserName;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -131,5 +134,13 @@ public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializa
 
     public void setIsOrganizationView(String isOrganizationView) {
         this.isOrganizationView = isOrganizationView;
+    }
+
+    public String getTenderUserName() {
+        return tenderUserName;
+    }
+
+    public void setTenderUserName(String tenderUserName) {
+        this.tenderUserName = tenderUserName;
     }
 }

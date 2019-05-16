@@ -3,11 +3,10 @@ package com.hyjf.cs.market.controller;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import com.hyjf.cs.market.service.Activity51Service;
-import com.hyjf.cs.market.vo.Activity51VO;
-import com.hyjf.cs.market.vo.ActivityTimeVO;
-import com.hyjf.cs.market.vo.GuessVO;
-import com.hyjf.cs.market.vo.RewardReceiveVO;
-import io.swagger.models.auth.In;
+import com.hyjf.cs.market.vo.activity51.Activity51VO;
+import com.hyjf.cs.market.vo.activity51.ActivityTimeVO;
+import com.hyjf.cs.market.vo.activity51.GuessVO;
+import com.hyjf.cs.market.vo.activity51.RewardReceiveVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.ToIntBiFunction;
 
 /**
  * @author xiasq
  * @version AbstractActivity51Controller, v0.1 2019/4/22 14:10
  */
-public class AbstractActivity51Controller {
+public abstract class AbstractActivity51Controller extends AbstractController{
     private Logger logger = LoggerFactory.getLogger(AbstractActivity51Controller.class);
 
     /**
@@ -56,8 +54,8 @@ public class AbstractActivity51Controller {
     @Autowired
     protected Activity51Service activity51Service;
 
-    protected BaseResult<ActivityTimeVO> isActivityTime(String successStatus, String failStatus) {
-        BaseResult<ActivityTimeVO> result = new BaseResult(successStatus, "成功");
+    protected BaseResult<ActivityTimeVO> isActivityTime() {
+        BaseResult<ActivityTimeVO> result = new BaseResult(getSuccessStatus(), "成功");
 
         ActivityTimeVO vo = null;
         switch (activity51Service.isActivityTime()) {
@@ -77,14 +75,14 @@ public class AbstractActivity51Controller {
         return result;
     }
 
-    protected BaseResult<Activity51VO> getSumAmount(String successStatus, String failStatus) {
-        BaseResult<Activity51VO> result = new BaseResult(successStatus, "查询成功");
+    protected BaseResult<Activity51VO> getSumAmount() {
+        BaseResult<Activity51VO> result = new BaseResult(getSuccessStatus(), "查询成功");
         Integer flag = activity51Service.isActivityTime();
         if (flag == -1) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            return buildResult(getFailStatus(), ACTIVITY_NOT_START);
         }
         if (flag == 1) {
-            return buildResult(failStatus, ACTIVITY_IS_END);
+            return buildResult(getFailStatus(), ACTIVITY_IS_END);
         }
 
 
@@ -99,19 +97,19 @@ public class AbstractActivity51Controller {
         return result;
     }
 
-    protected BaseResult sendCoupon(int userId, int grade, String successStatus, String failStatus) {
+    protected BaseResult sendCoupon(int userId, int grade) {
         logger.info("领取优惠券, userId is: {}", userId);
         Integer flag = activity51Service.isActivityTime();
         if (flag == -1) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            return buildResult(getFailStatus(), ACTIVITY_NOT_START);
         }
         if (flag == 1) {
-            return buildResult(failStatus, ACTIVITY_IS_END);
+            return buildResult(getFailStatus(), ACTIVITY_IS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
             logger.debug("sendCoupon: {}", ACTIVITY_TENDER_NOT_ENOUGH);
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            return buildResult(getFailStatus(), ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
         //档位奖励
@@ -119,38 +117,38 @@ public class AbstractActivity51Controller {
         BigDecimal sumAmount = activity51Service.getSumAmount();
         //未达到领取奖励最低标准，返回失败
         if (sumAmount == null || sumAmount.compareTo(SUM_AMOUNT_GRADE_1) < 0) {
-            return buildResult(failStatus, ACTIVITY_SUM_TENDER_NOT_ENOUGH);
+            return buildResult(getFailStatus(), ACTIVITY_SUM_TENDER_NOT_ENOUGH);
         }
 
         // 判断是否已领取奖励
         if (activity51Service.isRepeatReceive(userId, grade)) {
-            return buildResult(failStatus, "重复领取");
+            return buildResult(getFailStatus(), "重复领取");
         }
 
         boolean sendFlag = activity51Service.sendCoupon(userId, grade);
         if (sendFlag == false) {
-            return buildResult(failStatus, "优惠券领取异常");
+            return buildResult(getFailStatus(), "优惠券领取异常");
         }
-        return buildResult(successStatus, "优惠券领取成功");
+        return buildResult(getSuccessStatus(), "优惠券领取成功");
     }
 
 
-    protected BaseResult<RewardReceiveVO> isReceiveCoupon(int userId, int grade, String successStatus, String failStatus) {
+    protected BaseResult<RewardReceiveVO> isReceiveCoupon(int userId, int grade) {
         logger.info("单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
         Integer flag = activity51Service.isActivityTime();
         if (flag == -1) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            return buildResult(getFailStatus(), ACTIVITY_NOT_START);
         }
         if (flag == 1) {
-            return buildResult(failStatus, ACTIVITY_IS_END);
+            return buildResult(getFailStatus(), ACTIVITY_IS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
             logger.debug("isReceiveCoupon: {}", ACTIVITY_TENDER_NOT_ENOUGH);
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            return buildResult(getFailStatus(), ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
-        BaseResult result = new BaseResult(successStatus, "查询成功");
+        BaseResult result = new BaseResult(getSuccessStatus(), "查询成功");
         // 判断是否已领取奖励
         boolean receiveFlag = activity51Service.isRepeatReceive(userId, grade);
         if (receiveFlag) {
@@ -162,22 +160,22 @@ public class AbstractActivity51Controller {
     }
 
 
-    protected BaseResult<List<RewardReceiveVO>> getReceiveStatusList(int userId, String successStatus, String failStatus) {
+    protected BaseResult<List<RewardReceiveVO>> getReceiveStatusList(int userId) {
         logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
         Integer flag = activity51Service.isActivityTime();
         if (flag == -1) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            return buildResult(getFailStatus(), ACTIVITY_NOT_START);
         }
         if (flag == 1) {
-            return buildResult(failStatus, ACTIVITY_IS_END);
+            return buildResult(getFailStatus(), ACTIVITY_IS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
             logger.debug("getReceiveStatusList: {}", ACTIVITY_TENDER_NOT_ENOUGH);
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            return buildResult(getFailStatus(), ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
-        BaseResult result = new BaseResult(successStatus, "查询成功");
+        BaseResult result = new BaseResult(getSuccessStatus(), "查询成功");
         List<RewardReceiveVO> list = new ArrayList<>();
         for (int i = 1; i < 5; i++) {
             // 判断是否已领取奖励
@@ -193,58 +191,58 @@ public class AbstractActivity51Controller {
     }
 
 
-    protected BaseResult guess(int userId, int grade, String successStatus, String failStatus) {
+    protected BaseResult guess(int userId, int grade) {
         logger.info("guess 用户竞猜, userId is: {}, grade is: {}", userId, grade);
         Integer flag = activity51Service.isActivityTime();
         if (flag == -1) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            return buildResult(getFailStatus(), ACTIVITY_NOT_START);
         }
         if (flag == 1) {
-            return buildResult(failStatus, ACTIVITY_IS_END);
+            return buildResult(getFailStatus(), ACTIVITY_IS_END);
         }
 
         if (isGuessEnd()) {
             logger.debug("isGuess: {}", ACTIVITY_GUESS_END);
-            return buildResult(failStatus, ACTIVITY_GUESS_END);
+            return buildResult(getFailStatus(), ACTIVITY_GUESS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
             logger.debug("guess: {}", ACTIVITY_TENDER_NOT_ENOUGH);
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            return buildResult(getFailStatus(), ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
         // 判断是否重复竞猜
         if (activity51Service.isRepeatGuess(userId)) {
-            return buildResult(failStatus, "重复竞猜");
+            return buildResult(getFailStatus(), "重复竞猜");
         }
 
         activity51Service.guess(userId, grade);
-        return buildResult(successStatus, "竞猜成功");
+        return buildResult(getSuccessStatus(), "竞猜成功");
     }
 
 
-    public BaseResult<GuessVO> isGuess(int userId, String successStatus, String failStatus) {
+    public BaseResult<GuessVO> isGuess(int userId) {
         logger.info("isGuess 用户竞猜, userId is: {}", userId);
         Integer flag = activity51Service.isActivityTime();
         if (flag == -1) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            return buildResult(getFailStatus(), ACTIVITY_NOT_START);
         }
         if (flag == 1) {
-            return buildResult(failStatus, ACTIVITY_IS_END);
+            return buildResult(getFailStatus(), ACTIVITY_IS_END);
         }
 
         if (isGuessEnd()) {
             logger.debug("isGuess: {}", ACTIVITY_GUESS_END);
-            return buildResult(failStatus, ACTIVITY_GUESS_END);
+            return buildResult(getFailStatus(), ACTIVITY_GUESS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            return buildResult(getFailStatus(), ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
 
         // 判断是否已经竞猜
-        BaseResult result = new BaseResult(successStatus, "查询成功");
+        BaseResult result = new BaseResult(getSuccessStatus(), "查询成功");
         ActivityUserGuessVO vo = activity51Service.getUserGuess(userId);
         if (vo != null) {
             result.setData(new GuessVO("Y", "已竞猜", vo.getGrade()));

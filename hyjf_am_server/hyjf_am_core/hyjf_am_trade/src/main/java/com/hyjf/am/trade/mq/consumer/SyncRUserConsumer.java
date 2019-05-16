@@ -37,29 +37,39 @@ public class SyncRUserConsumer implements RocketMQListener<MessageExt>, RocketMQ
     @Override
     public void onMessage(MessageExt messageExt) {
         logger.info("Ruser 用户信息同步....");
+        // RUser根据userId更新时，同步失败抛出异常，重新消费 update by wgx 2019/05/05
+        MessageExt msg = messageExt;
+        String tagName = null;
+        String jsonMsg = null;
+        JSONObject jsonObj = null;
         try {
-            MessageExt msg = messageExt;
-            String tagName = msg.getTags();
-            String jsonMsg = new String(msg.getBody());
-            JSONObject jsonObj = JSON.parseObject(jsonMsg);
-            logger.info("【{}】Ruser:{}", tagName, jsonMsg);
-            if ("ht_user_info".equals(tagName)) {
-                syncRUserService.updateUserInfo(jsonObj);
-            } else if ("ht_user".equals(tagName)) {
-                syncRUserService.insertUser(jsonObj);
-            } else if ("up_ht_user".equals(tagName)) {
-                syncRUserService.updateUser(jsonObj);
-            } else if ("ht_spreads_user".equals(tagName)) {
-                syncRUserService.updateSpreadUser(jsonObj);
-            }else if ("ht_user_info_referrer".equals(tagName)) {
-                syncRUserService.updateUserInfoByReferrer(jsonObj);
-            }
-            logger.info("【{}】Ruser同步OK",tagName);
-        } catch (Exception e1) {
-            logger.error("【Ruser同步】消费失败，{}", e1);
+            tagName = msg.getTags();
+            jsonMsg = new String(msg.getBody());
+            jsonObj = JSON.parseObject(jsonMsg);
+        } catch (Exception e) {
+            logger.error("【RUser同步】解析失败!", e);
             return;
         }
-        // 如果没有return success ，consumer会重新消费该消息，直到return success
+        logger.info("【{}】Ruser:{}", tagName, jsonMsg);
+        if ("ht_user_info".equals(tagName)) {
+            syncRUserService.updateUserInfo(jsonObj);
+        } else if ("up_ht_user".equals(tagName)) {
+            syncRUserService.updateUser(jsonObj);
+        } else if ("ht_spreads_user".equals(tagName)) {
+            syncRUserService.updateSpreadUser(jsonObj);
+        } else {
+            try {
+                if ("ht_user".equals(tagName)) {
+                    syncRUserService.insertUser(jsonObj);
+                } else if ("ht_user_info_referrer".equals(tagName)) {
+                    syncRUserService.updateUserInfoByReferrer(jsonObj);
+                }
+            } catch (Exception e) {
+                logger.error("【RUser同步】消费失败!", e);
+                return;
+            }
+        }
+        logger.info("【{}】Ruser同步OK",tagName);
         return;
     }
 
