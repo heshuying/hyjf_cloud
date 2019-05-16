@@ -208,7 +208,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
                 for(HjhPlanCapitalActualVO actualVOLs: hjhPlanCapitalActualResponse.getResultList()){
                     if(actualVO.getPlanNid().equals(actualVOLs.getPlanNid())){
                         // 当日新增复投额 （初始化 等于当日可复投额）
-                        BigDecimal addReinvestAccount = leaveReinvestAccount;
+                        BigDecimal addReinvestAccount = sumReinvestAccount;
                         // 当日新增复投额 实际值：当日可复投额-昨日未复投额
                         addReinvestAccount = addReinvestAccount.subtract(actualVOLs.getLeaveReinvestAccount());
                         // 将当日新增复投额set到list的bean中
