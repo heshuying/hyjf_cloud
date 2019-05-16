@@ -91,7 +91,7 @@ union all
     SELECT
     ha.user_id AS assetCustomerId,
     ha.accede_order_id AS refundOrderNumber,
-    '' AS orderNo,
+    ha.accede_order_id AS orderNo,
     ha.plan_nid  AS productNo,
     #{entId} AS entId,
     1 AS assetId,
