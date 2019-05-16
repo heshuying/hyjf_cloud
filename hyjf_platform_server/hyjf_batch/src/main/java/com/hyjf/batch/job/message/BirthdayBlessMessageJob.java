@@ -17,7 +17,7 @@ public class BirthdayBlessMessageJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("BirthdayBlessMessageJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/smsOntime/send", Object.class);
+		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/birthdayBless/send", Object.class);
 		logger.info("BirthdayBlessMessageJob execute end...");
 	}
 }
