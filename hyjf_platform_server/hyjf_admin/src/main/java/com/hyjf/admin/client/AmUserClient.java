@@ -1398,6 +1398,23 @@ public interface AmUserClient {
      */
     int updateBatch(UserPortraitCustomizeRequest request);
 
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     *
+     * @param updCompanyRequest
+     * @auther: nxl
+     * @return
+     */
+    BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest);
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId, Integer bankOpenAccount);
 
     int saveSmsCode(String mobile, String checkCode, String verificationType, Integer ckcodeNew, int clientPc);
 
@@ -1412,4 +1429,19 @@ public interface AmUserClient {
      * @return
      */
     int checkMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
+    /**
+     * 用户销户成功后,保存销户记录表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     * 查询用户销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

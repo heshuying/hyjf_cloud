@@ -91,9 +91,8 @@
 		END account
 		FROM
 		hyjf_user.ht_utm_reg reg
-		INNER JOIN hyjf_trade.ht_debt_plan_accede hdpa ON hdpa.user_id = reg.user_id
+		INNER JOIN hyjf_trade.ht_hjh_accede hdpa ON hdpa.user_id = reg.user_id
 		WHERE reg.user_id = t.user_id ) AS htj_invest,
-
 		(SELECT
 		CASE
 		WHEN SUM(hct.assign_capital) IS NULL THEN
@@ -113,7 +112,7 @@
 		LEFT JOIN hyjf_user.ht_user_info ui ON t.user_id = ui.user_id
 		LEFT JOIN hyjf_user.ht_user u ON t.user_id = u.user_id
 		LEFT JOIN hyjf_user.ht_utm utm ON t.utm_id = utm.utm_id
-		LEFT JOIN hyjf_user.ht_account_chinapnr c ON t.user_id = c.user_id
+		LEFT JOIN hyjf_user.ht_bank_open_account c ON t.user_id = c.user_id
 		<include refid="Where_Clause" />
 		ORDER BY t.id DESC
 		<if test="limitStart >= 0" >
@@ -129,7 +128,7 @@
 		LEFT JOIN hyjf_user.ht_user_info ui ON t.user_id = ui.user_id
 		LEFT JOIN hyjf_user.ht_user u ON t.user_id = u.user_id
 		LEFT JOIN hyjf_user.ht_utm utm ON t.utm_id = utm.utm_id
-		LEFT JOIN hyjf_user.ht_account_chinapnr c ON t.user_id = c.user_id
+		LEFT JOIN hyjf_user.ht_bank_open_account c ON t.user_id = c.user_id
 		<include refid="Where_Clause" />
 	</select>
 </mapper>

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
@@ -60,6 +61,7 @@ public class ProjectListController extends BaseController {
      */
     @PostMapping("/web/searchProjectList")
     public ProjectListResponse searchProjectList(@RequestBody @Valid ProjectListRequest request){
+        logger.info("web端散标列表 requestBean:{}", JSON.toJSONString(request));
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
         // add by nxl 判断是否为产品加息 start
@@ -287,6 +289,7 @@ public class ProjectListController extends BaseController {
      */
     @RequestMapping("/app/searchAppProjectList")
     public AppProjectListResponse searchAppProjectList(@RequestBody @Valid AppProjectListRequest request){
+        logger.info("app端散标列表 requestBean：{}" + JSON.toJSONString(request));
         AppProjectListResponse projectListResponse = new AppProjectListResponse();
         ProjectListRequest req = CommonUtils.convertBean(request,ProjectListRequest.class);
         List<AppProjectListCustomize> list = projectListService.searchAppProjectList(req);

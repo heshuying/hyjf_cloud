@@ -364,6 +364,13 @@ public class ProjectConstant {
                                         break;
                                     case "comRegTime":
                                         detailBean.setKey("注册时间");
+                                        // 处理企业注册时间（数据库存放格式YYYY-MM-DD）
+                                        String comRegTime = detailBean.getVal();
+                                        if (StringUtils.isNotBlank(comRegTime) && comRegTime.length() >= 4){
+                                            comRegTime = comRegTime.substring(0,4).concat("年");
+                                            detailBean.setVal(comRegTime );
+                                        }
+                                        // add by liushouyi nifa2 20181206 end
                                         detailBeanList.add(detailBean);
                                         break;
                                     case "socialCreditCode":

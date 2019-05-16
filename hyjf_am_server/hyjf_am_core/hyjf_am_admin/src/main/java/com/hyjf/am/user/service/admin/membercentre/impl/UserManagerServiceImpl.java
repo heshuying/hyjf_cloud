@@ -7,10 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
-import com.hyjf.am.resquest.user.UpdCompanyRequest;
-import com.hyjf.am.resquest.user.UserInfosUpdCustomizeRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -21,6 +18,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -34,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -60,8 +59,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserInfoByUserInfoSelective(UserInfo userInfo) {
         int userFlag = this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
         if (userFlag > 0) {
-            System.out.println("=============用户详细信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
+            logger.error("=============用户详细信息保存异常!=============");
             throw new RuntimeException("用户详细信息保存异常!");
         }
         return userFlag;
@@ -76,8 +76,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserSelective(User user) {
         int userFlag = this.userMapper.updateByPrimaryKeySelective(user);
         if (userFlag > 0) {
-            System.out.println("=============用户表信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
+            logger.error("=============用户表信息保存异常!!=============");
             throw new RuntimeException("用户表信息保存异常!");
         }
         return userFlag;
@@ -968,7 +969,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId) {
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user,String bankId) {
         Response response = new Response();
         response.setRtn(Response.FAIL);
         String accountId = updCompanyRequest.getAccountId();
@@ -1076,7 +1077,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         //
         if(null!=bankCard){
-            bankCard = getBankCardValue(updCompanyRequest, bankName, payAllianceCode, user, bankId,bankCard);
+            bankCard = getBankCardValue(updCompanyRequest, user, bankId,bankCard);
             int updateflag = bankCardMapper.updateByPrimaryKeySelective(bankCard);
             if (updateflag > 0) {
                 logger.info("=============银行卡信息更新成功==================");
@@ -1085,7 +1086,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             }
         }else{
             bankCard = new BankCard();
-            bankCard = getBankCardValue(updCompanyRequest, bankName, payAllianceCode, user, bankId,bankCard);
+            bankCard = getBankCardValue(updCompanyRequest, user, bankId,bankCard);
             int insertcard = bankCardMapper.insertSelective(bankCard);
             if (insertcard > 0) {
                 logger.info("=============银行卡信息保存成功==================");
@@ -1582,14 +1583,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     /**
      * 设置银行卡信息
      * @param updCompanyRequest
-     * @param bankName
-     * @param payAllianceCode
      * @param user
      * @param bankId
      * @param bankCard
      * @return
      */
-    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId,BankCard bankCard){
+    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,User user,String bankId,BankCard bankCard){
         if(StringUtils.isNotBlank(bankId)){
             bankCard.setBankId(Integer.parseInt(bankId));
         }else{
@@ -1600,8 +1599,148 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         bankCard.setCardNo(updCompanyRequest.getAccount());
         bankCard.setCreateTime(GetDate.getDate());
         bankCard.setCreateUserId(user.getUserId());
-        bankCard.setBank(bankName);
-        bankCard.setPayAllianceCode(payAllianceCode);
+        bankCard.setBank(updCompanyRequest.getBankName());
+        bankCard.setPayAllianceCode(updCompanyRequest.getPayAllianceCode());
         return bankCard;
+    }
+
+
+    /**
+     * 用户销户
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    @Override
+    public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+        if (bankOpenAccount == 1) {
+            // 已开户
+            // 更新user表
+            User user = this.userMapper.selectByPrimaryKey(Integer.parseInt(userId));
+            // 手机号
+            user.setMobile("");
+            // 用户状态
+            user.setStatus(1);
+            // 用户状态:已销户
+            user.setBankOpenAccount(2);
+            this.userMapper.updateByPrimaryKey(user);
+            // 更新 user_info 表
+            UserInfo userInfo = this.userInfoMapper.selectByPrimaryKey(Integer.parseInt(userId));
+            // 姓名
+            userInfo.setTruename("");
+            // 身份证号
+            userInfo.setIdcard("");
+            this.userInfoMapper.updateByPrimaryKey(userInfo);
+            // 删除银行卡记录
+            BankCardExample bankCardExample = new BankCardExample();
+            BankCardExample.Criteria cra = bankCardExample.createCriteria();
+            cra.andUserIdEqualTo(Integer.parseInt(userId));
+            this.bankCardMapper.deleteByExample(bankCardExample);
+            // 删除电子账户表
+            BankOpenAccountExample bankOpenAccountExample = new BankOpenAccountExample();
+            BankOpenAccountExample.Criteria bankOpenAccountCra = bankOpenAccountExample.createCriteria();
+            bankOpenAccountCra.andUserIdEqualTo(Integer.parseInt(userId));
+            this.bankOpenAccountMapper.deleteByExample(bankOpenAccountExample);
+        } else {
+            // 未开户
+            // 删除 ht_users
+            this.userMapper.deleteByPrimaryKey(Integer.parseInt(userId));
+            // 删除 ht_users_info
+            this.userInfoMapper.deleteByPrimaryKey(Integer.parseInt(userId));
+            // 删除 ht_account TODO
+            // 删除 ht_spreads_users
+            SpreadsUserExample example = new SpreadsUserExample();
+            SpreadsUserExample.Criteria cra = example.createCriteria();
+            cra.andUserIdEqualTo(Integer.parseInt(userId));
+            this.spreadsUserMapper.deleteByExample(example);
+            // 删除 ht_utm_reg
+            UtmRegExample utmRegExample = new UtmRegExample();
+            UtmRegExample.Criteria utmcra = utmRegExample.createCriteria();
+            utmcra.andUserIdEqualTo(Integer.parseInt(userId));
+            utmRegMapper.deleteByExample(utmRegExample);
+            // 删除 ht_users_log
+            UserLogExample userLogExample = new UserLogExample();
+            UserLogExample.Criteria userlogcra = userLogExample.createCriteria();
+            userlogcra.andUserIdEqualTo(Integer.parseInt(userId));
+            userLogMapper.deleteByExample(userLogExample);
+            // 删除登陆记录
+            userLoginLogMapper.deleteByPrimaryKey(Integer.parseInt(userId));
+        }
+        return 1;
+    }
+
+    /**
+     *
+     * 用户销户成功后,插入销户记录
+     *
+     * @param bankCancellationAccount
+     * @return
+     */
+    @Override
+    public int saveCancellationAccountRecordAction(BankCancellationAccount bankCancellationAccount) {
+        return this.bankCancellationAccountMapper.insertSelective(bankCancellationAccount);
+    }
+
+    @Override
+    public int countBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+        BankCancellationAccountExample example = new BankCancellationAccountExample();
+        BankCancellationAccountExample.Criteria cra = example.createCriteria();
+        // 用户名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getUsername())){
+            cra.andUsernameEqualTo(bankCancellationAccountRequest.getUsername());
+        }
+        // 手机号
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getMobile())){
+            cra.andMobileEqualTo(bankCancellationAccountRequest.getMobile());
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getTruename())){
+            cra.andTruenameEqualTo(bankCancellationAccountRequest.getTruename());
+        }
+        // 销户开始时间
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())) {
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeStart() + " 00:00:00"));
+        }
+        // 销户结束时间
+
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())) {
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeEnd() + " 23:59:59"));
+        }
+        return this.bankCancellationAccountMapper.countByExample(example);
+    }
+
+
+    @Override
+    public List<BankCancellationAccount> getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest, int limitStart, int limitEnd) {
+        BankCancellationAccountExample example = new BankCancellationAccountExample();
+        BankCancellationAccountExample.Criteria cra = example.createCriteria();
+        // 用户名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getUsername())){
+            cra.andUsernameEqualTo(bankCancellationAccountRequest.getUsername());
+        }
+        // 手机号
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getMobile())){
+            cra.andMobileEqualTo(bankCancellationAccountRequest.getMobile());
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getTruename())){
+            cra.andTruenameEqualTo(bankCancellationAccountRequest.getTruename());
+        }
+        // 销户开始时间
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())) {
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeStart() + " 00:00:00"));
+        }
+        // 销户结束时间
+
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())) {
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeEnd() + " 23:59:59"));
+        }
+        if (limitEnd > 0){
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        example.setOrderByClause("create_time desc");
+        return this.bankCancellationAccountMapper.selectByExample(example);
     }
 }

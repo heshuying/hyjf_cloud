@@ -199,7 +199,7 @@ public class WebsiteController extends BaseController {
         }
         map.put("username", "用户名");
         map.put("truename", "姓名");
-        map.put("trade", "收支类型");
+        map.put("type", "收支类型");
         map.put("amount", "交易金额");
         map.put("tradeType", "交易类型");
         map.put("remark", "说明");
@@ -208,11 +208,11 @@ public class WebsiteController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter tradeAdapter = new IValueFormatter() {
+        IValueFormatter typeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String trade = (String) object;
-                return "1".equals(trade) ?"收入":"支出";
+                Integer type = (Integer) object;
+                return type==1 ?"收入":"支出";
             }
         };
         IValueFormatter amountAdapter = new IValueFormatter() {
@@ -235,7 +235,7 @@ public class WebsiteController extends BaseController {
                 }
             }
         };
-        mapAdapter.put("trade", tradeAdapter);
+        mapAdapter.put("type", typeAdapter);
         mapAdapter.put("amount", amountAdapter);
         mapAdapter.put("createTime", createTimeAdapter);
         return mapAdapter;

@@ -15,10 +15,10 @@ import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -2317,7 +2317,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminAuthConfigCustomizeResponse getAuthConfigList() {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigList";
         AdminAuthConfigCustomizeResponse response = restTemplate.getForEntity(url,AdminAuthConfigCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
@@ -2331,7 +2331,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request) {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigLogList";
         AdminAuthConfigLogResponse response = restTemplate.postForEntity(url,request,AdminAuthConfigLogResponse.class).getBody();
-        if (Validator.isNotNull(response)){
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
@@ -2474,4 +2474,173 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    @Override
+    public Integer insertBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/insert";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+
+    }
+
+    @Override
+    public BusinessNameMgResponse findBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/find";
+        BusinessNameMgResponse response = restTemplate
+                .postForEntity(url, request, BusinessNameMgResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public BusinessNameMgResponse findNameUq(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/findNameUq";
+        BusinessNameMgResponse response = restTemplate
+                .postForEntity(url, request, BusinessNameMgResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public WorkNameVO findBusinessNameById(int id) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/info/"+id;
+        BusinessNameMgResponse response = restTemplate
+                .getForObject(url, BusinessNameMgResponse.class);
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+    @Override
+    public Integer updateBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/update";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer updateStatusBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/updateStatus";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+    /**
+     * 查询业务名称
+     * @param request
+     * @return
+     */
+    @Override
+    public BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request){
+        return  restTemplate.postForEntity("http://AM-ADMIN/am-config/businessNameMg/searchbusinessname",request, BusinessNameMgResponse.class).getBody();
+    }
+
+    @Override
+    public List<AdminVO> getAdminUser(AdminUserWorkFlowRequest request) {
+        String url = "http://AM-ADMIN/am-config/admin/getAdminUser";
+        AdminResponse response = restTemplate
+                .postForEntity(url, request, AdminResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getAdminVOList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 提现规则配置列表
+     * @return
+     * @param request
+     */
+    @Override
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawRuleConfigList";
+        WithdrawRuleConfigResponse response = restTemplate.postForEntity(url,request,WithdrawRuleConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 假期时间配置
+     * @return
+     * @param request
+     */
+    @Override
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawTimeConfigList";
+        WithdrawTimeConfigResponse response = restTemplate.postForEntity(url,request,WithdrawTimeConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 提现规则配置详情
+     * @param id
+     * @return
+     */
+    @Override
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigById(Integer id) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawRuleConfigById/"+id;
+        WithdrawRuleConfigResponse response = restTemplate.getForEntity(url,WithdrawRuleConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 提现规则配置修改
+     * @param form
+     * @return
+     */
+    @Override
+    public int updateWithdrawRuleConfig(WithdrawRuleConfigVO form) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/updateWithdrawRuleConfig";
+        return restTemplate.postForEntity(url,form,Integer.class).getBody();
+    }
+
+    /**
+     * 保存提现时间配置
+     * @param form
+     * @return
+     */
+    @Override
+    public int saveWithdrawTimeConfig(WithdrawTimeConfigVO form) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/saveWithdrawTimeConfig";
+        return restTemplate.postForEntity(url,form,Integer.class).getBody();
+    }
+
+    /**
+     * 提现时间配置
+     * @param id
+     * @return
+     */
+    @Override
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigById(Integer id){
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawTimeConfigById/"+id;
+        WithdrawTimeConfigResponse response = restTemplate.getForEntity(url,WithdrawTimeConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+
+
 }

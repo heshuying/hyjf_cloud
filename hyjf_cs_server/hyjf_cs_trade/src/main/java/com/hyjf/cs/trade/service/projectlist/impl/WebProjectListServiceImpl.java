@@ -305,6 +305,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
         if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
+            logger.info("进入老标逻辑detailCsVO.getType()：{}   isnew:{}",detailCsVO.getIsNew(),detailCsVO.getType());
+            getProjectDetailNew(other, projectCustomeDetail, userVO);
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }

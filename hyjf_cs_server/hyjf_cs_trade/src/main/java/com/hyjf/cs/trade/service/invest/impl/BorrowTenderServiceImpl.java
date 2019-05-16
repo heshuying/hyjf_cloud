@@ -6,10 +6,12 @@ package com.hyjf.cs.trade.service.invest.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -284,12 +286,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
         try {
-            Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-            map.putAll(resultEval);
-            map.put("investLevel",borrow.getInvestLevel());
-            result.setData(map);
-            return result;
+            if(insertResult){
+                Map<String, Object> map = BankCallUtils.callApiMap(callBean);
+                WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+                map.putAll(resultEval);
+                map.put("investLevel",borrow.getInvestLevel());
+                result.setData(map);
+                return result;
+            }else{
+                logger.error("保存投资tmp表失败，信息:{}",JSONObject.toJSONString(request));
+                throw new CheckException(MsgEnum.STATUS_CE999999);
+            }
         } catch (Exception e) {
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
@@ -2549,6 +2556,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
         logger.info("操作原子层主表结束 结果 {} ",insertFlag);
         if (insertFlag) {
+            // 投资成功后往redis里面放一个值
+            RedisUtils.set(RedisConstants.BORROW_TENDER_ORDER_CHECK+bean.getLogOrderId(),bean.getLogOrderId(),12 * 60 * 60);
+
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             // 网站累计出借追加
             // 出借、收益统计表
@@ -2582,6 +2592,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             try {
                 // 投标成功后,参与纳觅返现
                 sendReturnCashActivity(Integer.parseInt(bean.getLogUserId()),bean.getLogOrderId(),accountDecimal,borrow.getProjectType());
+                // 投标成功后,发送大屏数据统计MQ
+                sendScreenDataMQ(user.getUsername(), Integer.parseInt(bean.getLogUserId()), bean.getLogOrderId(), accountDecimal, borrow.getProjectType());
                 // 投标成功后,发送神策数据统计MQ
                 SensorsDataBean sensorsDataBean = new SensorsDataBean();
                 sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
@@ -2591,6 +2603,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
+
             // add by liuyang 神策数据统计 20180823 end
         }else{
             logger.error("出借失败  对象:{}",JSONObject.toJSONString(tenderBg));
@@ -2678,11 +2691,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 出借时间
         params.put("investTime", nowTime);
         // 项目类型
-        if (borrow.getProjectType() == 13) {
-            params.put("projectType", "汇金理财");
-        } else {
-            params.put("projectType", "汇直投");
-        }
+        params.put("projectType", "散标");
         // 首次投标项目期限
         String investProjectPeriod = "";
         String borrowStyle = borrow.getBorrowStyle();
@@ -2693,12 +2702,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("investProjectPeriod", investProjectPeriod);
         params.put("investFlag", checkAppUtmInvestFlag(userId));
-        //压入消息队列
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error("渠道统计用户累计出借推送消息队列失败！！！", e);
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+        if (utmRegVO != null ){
+            // PC渠道用户
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+                logger.error("PC渠道统计用户累计出借推送消息队列失败！！！");
+            }
+        }
+        // 获取app渠道
+        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appUtmRegVO != null){
+            //压入消息队列
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error("APP渠道统计用户累计出借推送消息队列失败！！！", e);
+            }
         }
 
         /*(6)更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 结束*/
@@ -2732,5 +2756,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("productType", productType);
         commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
+    }
+
+    /**
+     * 散标投资成功后,发送大屏数据统计MQ
+     *
+     */
+    private void sendScreenDataMQ(String username,Integer userId,String orderId,BigDecimal investMoney,Integer projectType) throws MQException {
+        ScreenDataBean screenDataBean = new ScreenDataBean();
+        screenDataBean.setUserId(userId);
+        screenDataBean.setMoney(investMoney);
+        screenDataBean.setUserName(username);
+        screenDataBean.setOperating(1);
+        screenDataBean.setOrderId(orderId);
+        screenDataBean.setProductType(projectType);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
 }

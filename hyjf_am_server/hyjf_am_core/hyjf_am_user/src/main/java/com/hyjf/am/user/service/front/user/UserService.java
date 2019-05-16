@@ -14,6 +14,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -350,4 +351,11 @@ public interface UserService extends BaseService {
 	 * @param user
 	 */
     void updateUnlockUser(User user);
+
+	/**
+	 * 查询用户属于的分组
+	 * @param userId
+	 * @return
+	 */
+	HashMap<String, String> findUserGroup(Integer userId);
 }

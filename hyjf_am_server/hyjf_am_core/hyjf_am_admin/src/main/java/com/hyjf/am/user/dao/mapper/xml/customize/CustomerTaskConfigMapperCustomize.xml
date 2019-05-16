@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.CustomerTaskConfigMapperCustomize" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.vo.user.CustomerTaskConfigVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="task_time" property="taskTime" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_group" property="customerGroup" jdbcType="TINYINT" />
+    <result column="month_goal" property="monthGoal" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    task.id, task_time, customer_name, customer_group, month_goal, task.status, task.del_flag, task.create_user_id,
+    task.update_user_id, task.create_time, task.update_time, admin.username update_user_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.resquest.admin.CustomerTaskConfigRequest" >
+    select
+    <include refid="Base_Column_List" />
+    from hyjf_user.ht_customer_task_config task
+    LEFT JOIN hyjf_config.ht_admin admin
+    ON task.update_user_id = admin.id
+    <if test="_parameter != null" >
+      <where>
+        <if test="taskTime != null" >
+          AND task_time = #{taskTime}
+        </if>
+        <if test="customerGroup != null" >
+          AND customer_group = #{customerGroup}
+        </if>
+        <if test="customerName != null" >
+          AND customer_name like CONCAT(#{customerName},"%")
+        </if>
+        <if test="status != null" >
+          AND task.status = #{status}
+        </if>
+      </where>
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{pageSize}
+    </if>
+  </select>
+</mapper>

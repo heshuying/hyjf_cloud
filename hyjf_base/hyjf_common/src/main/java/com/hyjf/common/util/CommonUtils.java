@@ -272,8 +272,8 @@ public class CommonUtils {
 			try {
 				amount = new BigDecimal(money);
 			} catch (Exception e) {
-				logger.info("money is : {}", money);
-				logger.error("金额转换失败...", e);
+				//logger.info("money is : {}", money);
+				//logger.error("金额转换失败...", e);
 				return money;
 			}
 			return formatAmount(version, amount);
