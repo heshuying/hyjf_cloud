@@ -224,18 +224,23 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 * @date: 2018/6/22
 	 */
 	@Override
-	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
+	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus, String wjtClient) throws Exception {
         // 页面调用必须传的
         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
-
+		// 同步地址  是否跳转到前端页面
+		String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+		if(StringUtils.isNotBlank(wjtClient)){
+			// 如果是温金投的  则跳转到温金投那边
+			host = super.getWjtFrontHost(systemConfig,wjtClient);
+		}
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardError?logOrdId=" + orderId + "&bind=true&unbind=false&msg=";
+        String retUrl = host + "/user/bindCardError?logOrdId=" + orderId + "&bind=true&unbind=false&msg=";
         // 交易成功跳转链接
-        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardSuccess?bind=true&unbind=false&msg=";
+        String successfulUrl = host + "/user/bindCardSuccess?bind=true&unbind=false&msg=";
 		// 商户后台应答地址(必须)
 		String notifyUrl = "http://CS-USER/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
-        String forgotPwdUrl = systemConfig.getFrontHost()+systemConfig.getForgetpassword();
+        String forgotPwdUrl = host+systemConfig.getForgetpassword();
 		UserInfoVO userInfoVO = amUserClient.findUserInfoById(user.getUserId());
 		BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(user.getUserId());
 
