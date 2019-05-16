@@ -13,6 +13,10 @@ import com.google.common.base.MoreObjects;
  */
 public class CustomerSyncQO {
 
+	//客户真实姓名
+	private String name;
+	//客户证件号
+	private String documentNoMd5;
 	// 资产端客户编号
 	private String assetCustomerId;
 	// 财富端客户id
@@ -37,6 +41,22 @@ public class CustomerSyncQO {
 	private Double precipitatedCapital;
 	// 待收资金
 	private Double fundsToBeCollected;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDocumentNoMd5() {
+		return documentNoMd5;
+	}
+
+	public void setDocumentNoMd5(String documentNoMd5) {
+		this.documentNoMd5 = documentNoMd5;
+	}
 
 	public String getAssetCustomerId() {
 		return assetCustomerId;

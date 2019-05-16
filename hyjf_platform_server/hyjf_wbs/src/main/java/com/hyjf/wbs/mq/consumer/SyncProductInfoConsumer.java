@@ -92,7 +92,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 }
                 //查询标的信息
                 BorrowCustomize borrowCustomize = borrowInfoService.selectByNid(productNo);
-
+                productInfoQO.setProductName("散标");
                 if (borrowCustomize != null) {
                     /**
                      * 散标判断是否加入计划，如果加入计划，则不推送
@@ -132,7 +132,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                     productInfoQO.setDeadlineUnit(isMonth);
                     productInfoQO.setInvestAmount(hjhPlan.getMinInvestment().doubleValue());
                     productInfoQO.setReferenceIncome(String.valueOf(hjhPlan.getExpectApr()));
-
+                    productInfoQO.setProductName(hjhPlan.getPlanName());
                 }
             } else {
                 logger.info("====" + CONSUMER_NAME + "产品类型传值不符合要求，消息内容[{}]=====", jsonObj);
@@ -146,7 +146,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             productInfoQO.setLinkUrl(linkUrl);
             //productInfoQO.setProductName(productName);
             //TODO:方便测试使用，将产品编号用作产品名称，方便测试传数据区分
-            productInfoQO.setProductName(productNo);
+
             productInfoQO.setProductNo(productNo);
             productInfoQO.setProductStatus(Integer.valueOf(productStatus));
 
