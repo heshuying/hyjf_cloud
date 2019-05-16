@@ -887,7 +887,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		// add by liushouyi 修改银行预留手机号
 		result.setBankMobileModifyUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_MOBILE_MODIFY + packageStrForm(request));
 		// 从redis获取是否可修改银行预留手机号
-		String isBankMobileModify = "";
+		String isBankMobileModify = RedisConstants.BANK_MOBILE_MODIFY_FLAG;
 		result.setBankMobileModifyFlag("0");
 		try{
 			String flag = RedisUtils.get(isBankMobileModify);

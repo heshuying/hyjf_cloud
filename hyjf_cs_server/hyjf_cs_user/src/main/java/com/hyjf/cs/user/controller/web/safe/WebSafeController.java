@@ -9,6 +9,7 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
@@ -91,7 +92,7 @@ public class WebSafeController extends BaseUserController {
         result.put("inviteLink", inviteLink);
 
         // 从redis获取是否可修改银行预留手机号
-        String isBankMobileModify = "";
+        String isBankMobileModify = RedisConstants.BANK_MOBILE_MODIFY_FLAG;
         try{
             String flag = RedisUtils.get(isBankMobileModify);
             if(StringUtils.isNotBlank(flag)) {
