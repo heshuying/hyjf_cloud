@@ -191,7 +191,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         String retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
         // 如果是移动端  返回别的url
         if ((ClientConstants.APP_CLIENT + "").equals(bean.getPlatform()) || (ClientConstants.APP_CLIENT_IOS + "").equals(bean.getPlatform()) || (ClientConstants.WECHAT_CLIENT + "").equals(bean.getPlatform())) {
-            successPath = "/user/bankMobileModify/result/success";
+            successPath = "/user/setting/mobile/jump";
             // 同步地址  是否跳转到前端页面
             retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign + "&logOrdId=" + mobileModifyBean.getLogOrderId();
