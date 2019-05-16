@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.config.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.controller.admin.bank.BankSettingController;
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
@@ -10,6 +12,8 @@ import com.hyjf.am.config.service.BankSettingService;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +26,7 @@ import java.util.List;
  */
 @Service
 public class BankSettingServiceImpl implements BankSettingService {
-
+    private static final Logger logger = LoggerFactory.getLogger(BankSettingServiceImpl.class);
     @Resource
     JxBankConfigMapper jxBankConfigMapper;
 
@@ -76,8 +80,17 @@ public class BankSettingServiceImpl implements BankSettingService {
         adminRequest.setCreateTime(GetDate.getNowTime10());
         adminRequest.setUpdateTime(GetDate.getNowTime10());
         BeanUtils.copyProperties(adminRequest, jxBankConfig);
-        jxBankConfig.setSortId(adminRequest.getSortId().shortValue());
-        return jxBankConfigMapper.insertSelective(jxBankConfig);
+        if(adminRequest.getSortId()!=null) {
+            jxBankConfig.setSortId(adminRequest.getSortId().shortValue());
+        }
+        int result = jxBankConfigMapper.insertSelective(jxBankConfig);
+        logger.info("插入返回结果result="+result);
+        if(result>0){
+            logger.info("插入返回结果jxBankConfig"+ JSONObject.toJSONString(jxBankConfig));
+            jxBankConfig.setBankId(jxBankConfig.getId());
+            jxBankConfigMapper.updateByPrimaryKey(jxBankConfig);
+        }
+        return result;
     }
 
     /**
@@ -114,7 +127,7 @@ public class BankSettingServiceImpl implements BankSettingService {
 
         example.setOrderByClause("sort_id ASC");
         JxBankConfigExample.Criteria criteria = example.createCriteria();
-        //删除标识
+        //删除标识insertBankSetting
         criteria.andDelFlagEqualTo(0);
         //银行名称
         if(StringUtils.isNotBlank(jxBankConfig.getBankName())){

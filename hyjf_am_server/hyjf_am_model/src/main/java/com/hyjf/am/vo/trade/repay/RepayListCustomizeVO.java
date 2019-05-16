@@ -109,6 +109,21 @@ public class RepayListCustomizeVO extends BaseVO {
      */
     private String serviceFee;
 
+    /**
+     * 当前还款期数
+     */
+    private String currentPeriod;
+
+    /**
+     * 当前还款期数页面展示“1/2期”
+     */
+    private String currentPeriodView;
+
+    /**
+     * 项目期数int类型
+     */
+    private Integer borrowPeriodInt;
+
     public String getServiceFee() {
         return serviceFee;
     }
@@ -356,5 +371,29 @@ public class RepayListCustomizeVO extends BaseVO {
 
     public void setListCount(Integer listCount) {
         this.listCount = listCount;
+    }
+
+    public String getCurrentPeriod() {
+        return currentPeriod;
+    }
+
+    public void setCurrentPeriod(String currentPeriod) {
+        this.currentPeriod = currentPeriod;
+    }
+
+    public String getCurrentPeriodView() {
+        return currentPeriodView;
+    }
+
+    public void setCurrentPeriodView(String currentPeriodView) {
+        this.currentPeriodView = currentPeriodView;
+    }
+
+    public Integer getBorrowPeriodInt() {
+        return borrowPeriodInt;
+    }
+
+    public void setBorrowPeriodInt(Integer borrowPeriodInt) {
+        this.borrowPeriodInt = borrowPeriodInt;
     }
 }

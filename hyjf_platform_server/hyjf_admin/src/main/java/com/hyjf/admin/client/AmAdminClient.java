@@ -11,10 +11,7 @@ import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
 import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
-import com.hyjf.am.response.config.SmsConfigResponse;
-import com.hyjf.am.response.config.SubmissionsResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
@@ -23,12 +20,10 @@ import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
-import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -399,6 +394,10 @@ public interface AmAdminClient {
      */
     int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
 
+
+    int getBatchBorrowRecoverLogCount(BatchBorrowRecoverRequest request);
+
+    BatchBorrowRecoverLogReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request);
 
     /**
      * 查询批次中心-批次放款列表
@@ -1281,4 +1280,147 @@ public interface AmAdminClient {
      * @return
      */
     IntegerResponse countRepayUserList();
+    /**
+     * 查询工作流配置
+     * @param adminRequest
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest);
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO);
+
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigInfo(int id);
+    /**
+     * 校验业务id是否存在
+     * @param request
+     * @return
+     */
+    BooleanResponse selectWorkFlowConfigByBussinessId(WorkFlowConfigRequest request);
+    /**
+     * 修改工作流配置业务流程
+     * @param workFlowVO
+     * @return
+     */
+    BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO);
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    BooleanResponse deleteWorkFlowConfigById(int id);
+    /**
+     *  查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
+
+    List<WorkFlowVO> updateStatusBusinessName();
+
+    boolean updateFlowStatus(Integer businessId);
+
+    /**
+     * 查询所有业务流程节点的用户
+     * @return
+     */
+    List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll();
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    AdminRoleResponse selectWorkFlowRoleList();
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的充值数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex);
+    /**
+     * @Author walter.tyy
+     * @Description //投屏数据修复，获取2019年4月1号，2号，3号的计划退出回款
+     * @Date 10:12 2019-04-11
+     * @Param [paramMap]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex);
+    /**
+     * @Author walter.tyy
+     * @Description //投屏数据修复，获取2019年4月1号，2号，3号的散标承接
+     * @Date 10:12 2019-04-11
+     * @Param [paramMap]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex);
+    /**
+     * @Author walter.tyy
+     * @Description //投屏数据修复，获取2019年4月1号，2号，3号的计划投资
+     * @Date 10:12 2019-04-11
+     * @Param [paramMap]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex);
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的提现数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的还款成功数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getBorrowRecoverList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的散标投资数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
+
+    /**
+     * 五一活动获取竞猜列表
+     * @param request
+     * @return
+     */
+    ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request);
+
+    /**
+     * 五一活动获取奖励领取列表
+     * @param rewardRequest
+     * @return
+     */
+    ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest);
+    /**
+     * 查询累计年华投资
+     * @param newYearNineteenRequestBean
+     * @return
+     */
+    NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean);
+
+    BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean);
+
+    BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean);
+
+    Integer getRepayInfoCurrentExportCount(BorrowRepayInfoCurrentRequest requestBean);
 }

@@ -1,9 +1,12 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -21,6 +24,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
@@ -65,6 +69,9 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
 
     @Autowired
     public CsMessageClient csMessageClient;
+
+    @Autowired
+    private SystemConfig systemConfig;
 
     /**
      * @Description 根据token查询user
@@ -613,6 +620,113 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 }
             }
         }
+    }
+
+
+
+    /**
+     * 用户提现校验
+     *
+     * @param userId
+     * @param withdrawMoney
+     * @return
+     */
+    @Override
+    public WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawMoney) {
+        WebResult<Object> result = new WebResult<Object>();
+        JSONObject ret = new JSONObject();
+        // 判断当前日期是否为工作日
+        boolean isWorkDay =  amConfigClient.checkSomedayIsWorkDateForWithdraw();
+        // 获取用户信息
+        UserVO userVO = this.amUserClient.findUserById(userId);
+        if (userVO == null) {
+            logger.error("根据用户ID查询用户信息失败,用户ID:[" + userId + "].");
+            result.setStatus(MsgEnum.ERR_USER_INFO_GET.getCode());
+            result.setStatusDesc(MsgEnum.ERR_USER_INFO_GET.getMsg());
+            return result;
+        }
+        // 用户类型
+        Integer userType = userVO.getUserType();
+        WithdrawRuleConfigRequest request = new WithdrawRuleConfigRequest();
+        // 用户类型
+        request.setUserType(userType);
+        // 提现金额
+        request.setWithdrawMoney(withdrawMoney);
+        if (isWorkDay){
+            // 是工作日
+            request.setIsHoliday(0);
+        }else{
+            // 是节假日
+            request.setIsHoliday(1);
+        }
+        // 根据提现金额,用户类型,提现时间获取提现规则.获取不到,不能提现
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(request);
+        if (withdrawRuleConfigVO == null){
+            // 获取不到提现规则配置,不能提现
+            String statusDesc ="";
+            // 个人用户
+            if (userType == 0 &&
+                    new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+                // 提现金额> 个人最大提现金额
+                logger.info("个人提现金额超限");
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else if (userType == 1 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else {
+                statusDesc = "获取提现配置失败";
+            }
+            // 是否能提现
+            ret.put("isWithdrawFlag", false);
+            // 是否显示联行号
+            ret.put("payAllianceCodeDisplayFlag", true);
+            ret.put("statusDesc",statusDesc);
+        }else {
+            // 能够查询到提现规则配置
+            ret.put("isWithdrawFlag", true);
+            // 是否显示联行号
+            ret.put("payAllianceCodeDisplayFlag", withdrawRuleConfigVO.getPayAllianceCode() == 1 ? true : false);
+            ret.put("statusDesc", "");
+        }
+        result.setData(ret);
+        return result;
+    }
+
+    /**
+     *
+     * 获取提现规则配置
+     *
+     * @param userId
+     * @param withdrawMoney
+     * @return
+     */
+    @Override
+    public WithdrawRuleConfigVO getWithdrawRuleConfig(int userId, String withdrawMoney) {
+        // 判断当前日期是否为工作日
+        boolean isWorkDay =  amConfigClient.checkSomedayIsWorkDateForWithdraw();
+        // 获取用户信息
+        UserVO userVO = this.amUserClient.findUserById(userId);
+        if (userVO == null) {
+            logger.error("根据用户ID查询用户信息失败,用户ID:[" + userId + "].");
+            return null;
+        }
+        // 用户类型
+        Integer userType = userVO.getUserType();
+        WithdrawRuleConfigRequest request = new WithdrawRuleConfigRequest();
+        // 用户类型
+        request.setUserType(userType);
+        // 提现金额
+        request.setWithdrawMoney(withdrawMoney);
+        if (isWorkDay){
+            // 是工作日
+            request.setIsHoliday(0);
+        }else{
+            // 是节假日
+            request.setIsHoliday(1);
+        }
+        // 根据提现金额,用户类型,提现时间获取提现规则.获取不到,不能提现
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(request);
+
+        return withdrawRuleConfigVO;
     }
 
     /**

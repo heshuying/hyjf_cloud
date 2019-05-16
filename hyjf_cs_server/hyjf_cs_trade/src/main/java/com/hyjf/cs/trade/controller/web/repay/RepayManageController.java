@@ -15,6 +15,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
+import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -102,6 +104,7 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "userId") Integer userId){
         WebResult<Map<String,Object>> result = new WebResult<>();
+        logger.info("用户还款页面统计数据repay_page_data开始，userId：" + userId);
         Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         if ("2".equals(userVO.getRoleId())) {
@@ -109,16 +112,25 @@ public class RepayManageController extends BaseTradeController {
             // 1.待还款总额
             BigDecimal repay = account.getBankWaitCapital().add(account.getBankWaitInterest());
             BigDecimal repayMangeFee = repayManageService.getUserRepayFeeWaitTotal(userVO.getUserId());
-            repay = repay.add(repayMangeFee);
+            BigDecimal lateInterest = repayManageService.getUserLateInterestWaitTotal(userVO.getUserId());
+            BigDecimal borrowAccountTotal = repayManageService.getUserBorrowAccountTotal(userVO.getUserId());
+            repay = repay.add(repayMangeFee).add(lateInterest);
+            resultMap.put("capitalTotal", CustomConstants.DF_FOR_VIEW.format(borrowAccountTotal));
+            resultMap.put("capitalWaitTotal",CustomConstants.DF_FOR_VIEW.format(account.getBankWaitCapital()));
+            resultMap.put("interestWaitTotal",CustomConstants.DF_FOR_VIEW.format(account.getBankWaitInterest().add(lateInterest)));
+            resultMap.put("feeWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayMangeFee));
             resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
         }
         // 根据RoleId 判断用户为担保机构
         else if ("3".equals(userVO.getRoleId())) {
             // 1.待垫付总额
-            BigDecimal repay = repayManageService.getOrgRepayWaitTotal(userVO.getUserId());
+            RepayWaitOrgVO repayWaitOrgVO = repayManageService.getOrgRepayWaitTotal(userVO.getUserId());
             BigDecimal repayMangeFee = repayManageService.getOrgRepayFeeWaitTotal(userVO.getUserId());
-            repay = repay.add(repayMangeFee);
-            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
+            BigDecimal lateInterest = repayManageService.getOrgLateInterestWaitTotal(userVO.getUserId());
+            resultMap.put("capitalWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getCapitalWaitTotal()));
+            resultMap.put("interestWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getInterestWaitTotal().add(lateInterest)));
+            resultMap.put("feeWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayMangeFee));
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getWaitTotal().add(repayMangeFee).add(lateInterest)));
         }
         resultMap.put("roleId", userVO.getRoleId());
         resultMap.put("userId", userVO.getUserId());
@@ -130,6 +142,7 @@ public class RepayManageController extends BaseTradeController {
         // 是否开启服务费授权 0未开启  1已开启
         resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         result.setData(resultMap);
+        logger.info("用户还款页面统计数据repay_page_data结束，返回数据：" + result);
         return result;
     }
 
@@ -225,6 +238,34 @@ public class RepayManageController extends BaseTradeController {
             result.setStatusDesc(WebResult.ERROR_DESC);
         }
         result.setPage(page);
+        return result;
+    }
+
+    /**
+     * 用户还款计划列表
+     */
+    @ApiOperation(value = "用户还款计划列表", notes = "用户还款计划列表")
+    @PostMapping(value = "/repay_plan_list", produces = "application/json; charset=utf-8")
+    public WebResult<List<RepayPlanListVO>> selectRepayPlanList(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean){
+        WebResult<List<RepayPlanListVO>> result = new WebResult<>();
+        result.setData(Collections.emptyList());
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        logger.info("用户还款计划列表开始，userId:{}, requestBean:{}", userVO.getUserId(), requestBean);
+        // 请求参数校验
+        if(requestBean == null || StringUtils.isBlank(requestBean.getBorrowNid())){
+            logger.error("borrowNid为空");
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc("borrowNid为空");
+        }
+
+        try {
+            List<RepayPlanListVO> resultList = repayManageService.selectRepayPlanList(requestBean.getBorrowNid());
+            result.setData(resultList);
+        } catch (Exception e) {
+            logger.error("获取用户还款计划列表异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
+        }
         return result;
     }
 
@@ -419,11 +460,19 @@ public class RepayManageController extends BaseTradeController {
         }
         // 是否一次性还款
         boolean isAllRepay = false;
-        detailRequestBean.setAllRepay(false);
         if(requestBean.getIsAllRepay() != null && "1".equals(requestBean.getIsAllRepay())) {
             isAllRepay = true;
-            detailRequestBean.setAllRepay(true);
         }
+        // 提交的逾期还款期数
+        int latePeriod = 0;
+        if(requestBean.getLatePeriod() != null) {
+            if(requestBean.getLatePeriod() == -1){// -1为全部还款
+                isAllRepay = true;
+            }
+            latePeriod = requestBean.getLatePeriod();
+        }
+        detailRequestBean.setAllRepay(isAllRepay);
+        detailRequestBean.setLatePeriod(latePeriod);
         detailRequestBean.setBorrowNid(requestBean.getBorrowNid());
         if(userVO != null){
             detailRequestBean.setUserId(userVO.getUserId());
@@ -439,7 +488,10 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
-        if(detaiResult!= null && "1".equals(detaiResult.getString("onlyAllRepay"))) {
+        if(detaiResult == null) {// 未查询到数据抛出异常
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_QUERY);
+        }
+        if("1".equals(detaiResult.getString("onlyAllRepay"))) {
             isAllRepay = true;
         }
         resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
@@ -467,6 +519,7 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "还款申请", notes = "还款申请")
     @PostMapping(value = "/repay_request", produces = "application/json; charset=utf-8")
     public WebResult repayRequest(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayRequest requestBean, HttpServletRequest request){
+        logger.info("【还款申请】传入参数：{}", JSONObject.toJSONString(requestBean));
         WebResult webResult = new WebResult();
         Map<String,String> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
@@ -496,9 +549,16 @@ public class RepayManageController extends BaseTradeController {
         if(pAllRepay != null && "1".equals(pAllRepay)) {
             isAllRepay = true;
         }
+        int latePeriod = 0;// 提交的逾期还款期数
+        if(requestBean.getLatePeriod() != null){
+            if(requestBean.getLatePeriod() == -1){// -1为全部还款
+                isAllRepay = true;
+            }
+            latePeriod = requestBean.getLatePeriod();// 用户选择的逾期期数
+        }
         String roleId = userVO.getRoleId();
         repayManageService.checkForSingleRepayRequest(borrowNid,requestBean.getPassword(),userVO);// 校验基本信息
-        RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, isAllRepay);
+        RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, isAllRepay, latePeriod);
         repayManageService.checkForBankBalance(userVO,repayBean);// 校验银行余额
         String ip = GetCilentIP.getIpAddr(request);
         repayBean.setIp(ip);
@@ -519,7 +579,7 @@ public class RepayManageController extends BaseTradeController {
                     return webResult;
                 }
                 //插入担保机构冻结信息日志表 add by wgx 2018-09-11
-                repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), isAllRepay);
+                repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), isAllRepay, latePeriod);
                 Map<String, Object> map = repayManageService.getBankRefinanceFreezePage(userId, userVO.getUsername(), ip, orderId, borrowNid, repayTotal, account);
                 webResult.setData(map);
                 return webResult;
@@ -536,7 +596,7 @@ public class RepayManageController extends BaseTradeController {
                 repayManageService.addFreezeLog(userVO.getUserId(), orderId, account, borrowNid, repayTotal, userVO.getUsername());
                 // 申请还款冻结资金
                 // 调用江西银行还款申请冻结资金
-                return repayManageService.getBalanceFreeze(userVO, borrowNid, repayBean, orderId, account, webResult, isAllRepay);
+                return repayManageService.getBalanceFreeze(userVO, borrowNid, repayBean, orderId, account, webResult, isAllRepay, latePeriod);
             }
         } catch (Exception e) {
             logger.error("还款申请冻结资金异常", e);
@@ -801,7 +861,7 @@ public class RepayManageController extends BaseTradeController {
         String bankSeqNo = txDate + txTime + seqNo;
         BorrowApicronVO apicron = this.repayManageService.selectBorrowApicron(bankSeqNo);
         if (Validator.isNull(apicron)) {
-            logger.error("【还款合法性检查异步通知】未查询到放款请求记录！银行唯一订单号：{}", bankSeqNo);
+            logger.error("【还款合法性检查异步通知】未查询到还款请求记录！银行唯一订单号：{}", bankSeqNo);
             // 更新相应的还款请求校验失败
             return JSONObject.toJSONString(result, true);
         }
@@ -857,10 +917,10 @@ public class RepayManageController extends BaseTradeController {
         String bankSeqNo = txDate + txTime + seqNo;
         BorrowApicronVO apicron = this.repayManageService.selectBorrowApicron(bankSeqNo);
         if (Validator.isNull(apicron)) {
-            logger.error("【还款业务处理结果异步通知】未查询到放款请求记录！银行唯一订单号：{}", bankSeqNo);
+            logger.error("【还款业务处理结果异步通知】未查询到还款请求记录！银行唯一订单号：{}", bankSeqNo);
             return JSONObject.toJSONString(result, true);
         }
-        // 当前批次放款状态
+        // 当前批次还款状态
         int repayStatus = apicron.getStatus();
         String borrowNid = apicron.getBorrowNid();// 借款编号
         if (repayStatus == CustomConstants.BANK_BATCH_STATUS_SENDED // 还款请求成功状态可能是未收到银行回调 update by wgx 2019/02/12
@@ -870,12 +930,12 @@ public class RepayManageController extends BaseTradeController {
                 logger.error("【还款业务处理结果异步通知】借款编号：{}，还款失败！银行返回信息：{}", retMsg, borrowNid);
                 apicron.setData(retMsg);
                 apicron.setFailTimes((apicron.getFailTimes() + 1));
-                // 更新任务API状态为放款校验失败
+                // 更新任务API状态为还款校验失败
                 boolean apicronResultFlag = repayManageService.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
                 if (!apicronResultFlag) {
                     throw new Exception("批次还款任务表(ht_borrow_apicron)更新状态(还款失败)失败！[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
                 }
-                // 更新相应的放款请求校验失败
+                // 更新相应的还款请求校验失败
                 return JSONObject.toJSONString(result, true);
             } else {
                 // update 2018/10/17   wgx  银行异步回调成功认为还款成功, 直接发送消息处理还款
@@ -1076,6 +1136,7 @@ public class RepayManageController extends BaseTradeController {
             for (BankRepayOrgFreezeLogVO orgFreezeLog : orgLogList) {
                 String borrowNid = orgFreezeLog.getBorrowNid();
                 boolean isAllRepay = orgFreezeLog.getAllRepayFlag() == 1;
+                int latePeriod = orgFreezeLog.getLatePeriod() == null ? 0 : orgFreezeLog.getLatePeriod();
                 try {
                     // 必须在计算还款明细前加锁，防止智投自动投资债转,垫付机构锁放到异步回调中
                     boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 300);
@@ -1086,7 +1147,7 @@ public class RepayManageController extends BaseTradeController {
                         throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
                     }
                     // 担保机构的还款
-                    RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay);
+                    RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay, latePeriod);
                     if (repay != null) {
                         BigDecimal repayTotal = repay.getRepayAccountAll();
                         if (repayTotal.compareTo(orgFreezeLog.getAmountFreeze()) != 0) {
@@ -1100,9 +1161,8 @@ public class RepayManageController extends BaseTradeController {
                         // 还款后变更数据
                         callBackBean.setOrderId(orderId);
                         //还款后变更数据
-                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay);
+                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay,latePeriod);
                         if (updateResult) {
-                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);
                             RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
