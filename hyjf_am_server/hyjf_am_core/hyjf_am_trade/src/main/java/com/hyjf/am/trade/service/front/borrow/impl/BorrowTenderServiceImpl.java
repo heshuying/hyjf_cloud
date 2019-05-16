@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.customize.BorrowInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
@@ -323,4 +324,21 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         return investSum.add(planSum);
     }
 
+    @Override
+    public BigDecimal getUserInvestAmount(int userId, Date startDate, Date endDate, Integer client) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("startTime", startDate);
+        map.put("endTime", endDate);
+        map.put("client", client);
+        return borrowInvestCustomizeMapper.getUserInvestAmount(map);
+    }
+
+    @Override
+    public List<UserTenderVO> getSumAnnualInvestAmountTop5(Date startDate, Date endDate) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("startTime", startDate);
+        map.put("endTime", endDate);
+        return borrowInvestCustomizeMapper.getSumAnnualInvestAmountTop5(map);
+    }
 }
