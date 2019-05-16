@@ -55,7 +55,7 @@ public class AppMobileModifyController extends BaseUserController {
     @ApiOperation(value = "app银行预留手机号码修改", notes = "app银行预留手机号码修改")
     @PostMapping(value = "/bankMobileModify", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public AppResult<Object> bankMobileModify(@RequestHeader(value = "userId") int userId, @RequestHeader(value = "sign") String sign, @RequestParam("platForm") String platForm, HttpServletRequest request) {
+    public AppResult<Object> bankMobileModify(@RequestHeader(value = "userId") int userId, @RequestHeader(value = "sign") String sign, @RequestParam("platform") String platForm, HttpServletRequest request) {
         logger.info("app银行预留手机号修改,userId:" + userId);
         AppResult<Object> result = new AppResult<Object>();
         // 获取用户信息
