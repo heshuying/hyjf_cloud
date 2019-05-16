@@ -45,7 +45,7 @@
     </sql>
 
     <sql id="where-type-2">
-        AND rp.credit_status != 2 AND rp.recover_capital > rp.credit_amount
+        AND rp.credit_status != 2 AND (rp.recover_capital > rp.credit_amount || (b.borrow_style = 'endmonth' AND br.recover_capital > br.credit_amount))
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
