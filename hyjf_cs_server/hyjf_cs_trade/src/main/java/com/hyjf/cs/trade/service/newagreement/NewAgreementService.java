@@ -135,4 +135,11 @@ public interface NewAgreementService extends BaseTradeService{
 	 * @return
 	 */
 	JSONObject getdisplayNameDynamicMethod();
+	/**
+	 * 获取所有在帮助中心显示的模板列表
+	 * add by nxl 20190313
+	 * PC 1.1.2
+	 * @return
+	 */
+	List<ProtocolTemplateVO> selectAllShowProtocolTemplate();
 }

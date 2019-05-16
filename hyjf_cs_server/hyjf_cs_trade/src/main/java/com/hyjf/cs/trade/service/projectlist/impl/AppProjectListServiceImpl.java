@@ -290,7 +290,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setOnAccrual((borrow.getReverifyTime() == null ? "放款成功立即计息" : borrow.getReverifyTime()));
             borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
-            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
+            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权 8:逾期中
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
@@ -1155,7 +1155,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     public JSONObject searchAppCreditList(ProjectListRequest request) {
         // 初始化分页参数，并组合到请求参数
         JSONObject info = new JSONObject();
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        Page page = Page.initPage(request.getPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         request.setCreditStatus("0");
@@ -1179,12 +1179,14 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         int count = res.getCount();
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         if (count > 0) {
+            ProjectListRequest request2 = CommonUtils.convertBean(request,ProjectListRequest.class);
             info.put(ProjectConstant.APP_PROJECT_TOTAL, count);
-            ProjectListResponse dataResponse = amTradeClient.searchAppCreditList(request);
-            if (!Response.isSuccess(dataResponse)) {
+            ProjectListResponse dataResponseCache = amTradeClient.searchAppCreditList(request2);
+            if (!Response.isSuccess(dataResponseCache)) {
                 logger.error("查询债权转让原子层list数据异常");
                 throw new RuntimeException("查询债权转让原子层list数据异常");
             }
+            ProjectListResponse dataResponse = CommonUtils.convertBean(dataResponseCache,ProjectListResponse.class);
             if (!CollectionUtils.isEmpty(dataResponse.getResultList())) {
                 List<AppProjectListCsVO> result = convertToAppProjectHZRType(dataResponse.getResultList());
                 info.put(ProjectConstant.APP_PROJECT_LIST, result);
@@ -1801,8 +1803,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(planNid);
-        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
-
+        // mod by nxl 修改统计数量
+        // 统计最后三天的服务记录
+//        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+        int recordTotal = this.amTradeClient.countPlanAccedeRecord(request);
         // 加入总人次
         result.setUserCount(recordTotal);
         // 加入总金额

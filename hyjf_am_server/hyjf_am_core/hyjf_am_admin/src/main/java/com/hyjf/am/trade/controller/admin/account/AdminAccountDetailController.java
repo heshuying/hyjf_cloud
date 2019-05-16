@@ -87,11 +87,10 @@ public class AdminAccountDetailController {
      */
     private Map<String, Object> paramSet(AccountDetailRequest userRequest) {
         Map<String, Object> mapParam = new HashMap<String, Object>();
-        
-        if(userRequest.getUsername()==null&&userRequest.getReferrerName()==null&&userRequest.getTradeTypeSearch()==null) {
-        	mapParam.put("whereFlag",0);
-        }else {
+        if( userRequest.getUsername()!=null || userRequest.getReferrerName()!=null||userRequest.getTradeTypeSearch()!=null) {
         	mapParam.put("whereFlag",1);
+        }else {
+        	mapParam.put("whereFlag",0);
         }
         mapParam.put("userId", userRequest.getUserId());
         mapParam.put("userName", userRequest.getUsername());
@@ -224,4 +223,16 @@ public class AdminAccountDetailController {
         return response;
     }
 
+    /**
+     * 未开户用户销户成功后,删除用户账户表
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/deleteUserAccountAction/{userId}")
+    public IntegerResponse deleteUserAccountAction(@PathVariable String userId) {
+        logger.info("用户销户成功后,删除用户账户表:用户ID:[" + userId + "].");
+        int userCounts = accountDetailService.deleteUserAccountAction(userId);
+        return new IntegerResponse(userCounts);
+    }
 }

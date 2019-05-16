@@ -587,6 +587,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         return vo;
     }
 
+    @Override
+    public void checkReffer(String reffer) {
+        if (StringUtils.isNotEmpty(reffer)) {
+            //无效推荐人
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID, "推荐人");
+        }
+    }
+
     /**
      * 登录操作
      *
@@ -747,8 +755,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         int userId = userVO.getUserId();
         try {
             JSONObject params = new JSONObject();
-            params.put("mqMsgId", GetCode.getRandomCode(10));
-            params.put("userId", String.valueOf(userId));
+            params.put("userId", userId);
             params.put("sendFlg", "11");
             commonProducer.messageSendDelay(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                     UUID.randomUUID().toString(), params),1);

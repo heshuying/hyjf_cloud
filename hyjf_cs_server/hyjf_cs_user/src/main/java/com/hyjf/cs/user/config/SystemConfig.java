@@ -59,6 +59,10 @@ public class SystemConfig {
 
     @Value("${file.upload.real.path.api}")
     public String apiFileUpload;
+
+    @Value("${hyjf.app.update.android.jsp}")
+    public String appUpdateAndroidJsp;
+
     /**
      * 获取文件url前缀
      *
@@ -459,5 +463,13 @@ public class SystemConfig {
 
     public void setWebQrcodeUrl(String webQrcodeUrl) {
         this.webQrcodeUrl = webQrcodeUrl;
+    }
+
+    public String getAppUpdateAndroidJsp() {
+        return appUpdateAndroidJsp;
+    }
+
+    public void setAppUpdateAndroidJsp(String appUpdateAndroidJsp) {
+        this.appUpdateAndroidJsp = appUpdateAndroidJsp;
     }
 }

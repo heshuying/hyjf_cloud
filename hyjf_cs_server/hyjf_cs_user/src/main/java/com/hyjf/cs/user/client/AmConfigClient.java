@@ -43,6 +43,9 @@ public interface AmConfigClient {
      * @return
      */
     int countScore(AnswerRequest answerList);
+
+    SiteSettingsVO selectSiteSetting();
+
     /**
      * 根据返回码获取返回信息
      * @param retCode

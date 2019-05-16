@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
@@ -80,6 +81,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 		}else{
 			String borrowNid=(String) map.get("borrowNid");
 			//Borrow borrow=this.getBorrowByBorrowNid(borrowNid);
+			logger.info(logHeader +"borrowNid :"+ borrowNid);
 			try {
 				if("1".equals(flag)){
 					BorrowCreditRequest BorrowCreditRequest=new BorrowCreditRequest();
@@ -108,6 +110,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 						param.put("productDate", map.get("productDate"));
 						list.add(param);
 					}
+				}else{
 					List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByBorrowNid(borrowNid);
 					if(hjhDebtCreditList==null||hjhDebtCreditList.size()==0){
 						return null;
@@ -151,6 +154,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 		if("1".equals(flag)){
 			if("5".equals(status)){
 				List<BorrowRepayVO> list=amTradeClient.getBorrowRepayList(borrowNid);
+				logger.info(logHeader +"List<BorrowRepayVO> :"+ JSONObject.toJSONString(list));
 				//	转让项目编号
 				map.put("borrowNid", borrowNid);
 				//状态编码

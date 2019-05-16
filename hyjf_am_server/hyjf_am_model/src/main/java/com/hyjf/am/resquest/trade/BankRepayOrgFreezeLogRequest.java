@@ -49,6 +49,8 @@ public class BankRepayOrgFreezeLogRequest {
 
     private Integer delFlag;
 
+    private Integer latePeriod;
+
     public Integer getRepayUserId() {
         return repayUserId;
     }
@@ -215,5 +217,13 @@ public class BankRepayOrgFreezeLogRequest {
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public Integer getLatePeriod() {
+        return latePeriod;
+    }
+
+    public void setLatePeriod(Integer latePeriod) {
+        this.latePeriod = latePeriod;
     }
 }

@@ -28,13 +28,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -51,9 +49,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Autowired
 	private RestTemplate restTemplate;
-
-	@Value("${am.user.service.name}")
-	private String userService;
 
 	/**
 	 * 根据userName查询user信息
@@ -659,21 +654,7 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 		return result;
 	}
-
-	/**
-	 * 保存用户绑定的银行卡
-	 *
-	 * @auther: nxl
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public int insertUserCard(BankCardRequest request) {
-		int result = restTemplate.postForEntity("http://AM-ADMIN/am-user/card/insertUserCard", request, Integer.class)
-				.getBody();
-		return result;
-	}
-
+	
 	/**
 	 * 单表查询开户信息
 	 *
@@ -2525,7 +2506,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public HjhUserAuthLogVO selectByExample(String orderId) {
 		HjhUserAuthLogResponse response = restTemplate
-				.getForEntity(userService+"/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
+				.getForEntity("http://AM-ADMIN/am-user/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -2796,6 +2777,22 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/***
+	 * 开户掉单，保存用户绑定的银行卡
+	* @author Zha Daojian
+	* @date 2019/3/15 10:13
+	* @param requestBean
+	* @return com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO
+	**/
+	@Override
+	public int insertUserCard(BankCardRequest requestBean){
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/insertUserCard", requestBean, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/***
 	 * 开户掉单，保存开户(Account)数据
 	 * @author Zha Daojian
 	 * @date 2019/1/22 9:48
@@ -2831,5 +2828,67 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultInt();
 		}
 		return 0;
+	}
+
+
+	/**
+	 * 企业信息补录时查询，根据对公账号查找银行信息
+	 *
+	 * @param updCompanyRequest
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest) {
+		BankCardResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankInfoByAccount", updCompanyRequest, BankCardResponse.class)
+				.getBody();
+		return response;
+	}
+
+	/**
+	 * 用户销户操作
+	 *
+	 * @param userId
+	 * @param bankOpenAccount
+	 * @return
+	 */
+	@Override
+	public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+		IntegerResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-user/userManager/cancellationAccountAction/" + userId + "/" + bankOpenAccount, IntegerResponse.class).getBody();
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 *
+	 * 用户销户成功后,保存销户记录表
+	 *
+	 * @param bankCancellationAccountRequest
+	 * @return
+	 */
+	@Override
+	public int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userManager/saveCancellationAccountRecordAction", bankCancellationAccountRequest, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 查询销户记录列表
+	 *
+	 * @param bankCancellationAccountRequest
+	 * @return
+	 */
+	@Override
+	public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+		BankCancellationAccountResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankCancellationAccountList", bankCancellationAccountRequest, BankCancellationAccountResponse.class)
+				.getBody();
+		return response;
 	}
 }

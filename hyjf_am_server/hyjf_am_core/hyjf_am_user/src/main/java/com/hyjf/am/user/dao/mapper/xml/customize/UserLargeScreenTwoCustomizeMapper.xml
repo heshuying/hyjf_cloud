@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserLargeScreenTwoCustomizeMapper" >
+  
+  <select id="getCurrentOwners" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+      SELECT customer_name AS currentOwner, customer_group AS customerGroup FROM ht_customer_task_config WHERE task_time = DATE_FORMAT(NOW(), '%Y-%m')
+  </select>
+
+  <select id="getCurrentOwnerUserIds" resultType="java.lang.Integer">
+    SELECT user_id FROM ht_user_portrait
+    <if test="currentOwner != null" >
+      <where>
+        AND current_owner = #{currentOwner}
+      </where>
+    </if>
+  </select>
+
+</mapper> 

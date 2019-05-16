@@ -1,12 +1,15 @@
 package com.hyjf.am.user.controller.admin.exception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankOpenAccountLogResponse;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
 import com.hyjf.am.resquest.admin.BindCardExceptionRequest;
 import com.hyjf.am.resquest.admin.OpenAccountEnquiryDefineRequest;
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
 import com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize;
 import com.hyjf.am.user.service.admin.exception.BankOpenAccountLogService;
@@ -15,10 +18,12 @@ import com.hyjf.am.vo.admin.OpenAccountEnquiryCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -140,7 +145,25 @@ public class OpenAccountEnquiryController extends BaseController {
     @ApiOperation(value = "开户掉单，同步保存开户(user)数据", notes = "开户掉单，同步保存开户数据")
     @PostMapping(value = "/updateUser")
     public OpenAccountEnquiryResponse updateUser(@RequestBody OpenAccountEnquiryDefineRequest request){
+        logger.info("开户掉单，同步保存开户数据：" +JSONObject.toJSONString(request));
         OpenAccountEnquiryResponse response = bankOpenAccountLogSrvice.updateUser(request);
         return response;
+    }
+
+
+    /**
+     * 保存用户绑定的银行卡
+     *
+     * @author Zha Daojian
+     * @date 2019/3/15 10:09
+     * @param bankCardRequest
+     * @return int
+     **/
+    @RequestMapping(value = "/insertUserCard", method = RequestMethod.POST)
+    public int insertUserCard(@RequestBody @Valid BankCardRequest bankCardRequest) {
+        BankCard bankCard = new BankCard();
+        BeanUtils.copyProperties(bankCardRequest, bankCard);
+        int cnt =bankOpenAccountLogSrvice.insertUserCard(bankCard);
+        return cnt;
     }
 }

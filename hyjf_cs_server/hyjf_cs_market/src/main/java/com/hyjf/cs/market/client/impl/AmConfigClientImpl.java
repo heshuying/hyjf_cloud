@@ -283,6 +283,17 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
+	public boolean isWorkdateOnSomeDay(Date date) {
+		BooleanResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/holidays/is_workdateOn", date,
+				BooleanResponse.class);
+		if (response != null) {
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	@Override
 	public Date getFirstWorkdateBeforeSomeDate(Date date) {
 		HolidaysConfigResponse response = restTemplate.postForObject(
 				"http://AM-CONFIG/am-config/holidays/get_first_workdate_before_some_date", date,
@@ -294,10 +305,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public Date getFirstWorkdateAfterSomeDate(Date torrowDate) {
-		HolidaysConfigResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomeDate", torrowDate,
-				HolidaysConfigResponse.class);
+	public Date getFirstWorkdateAfterSomeDate(Date somedate) {
+		HolidaysConfigResponse response = restTemplate.getForEntity(
+				"http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomedate/" + somedate,
+				HolidaysConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getSomedate();
 		}

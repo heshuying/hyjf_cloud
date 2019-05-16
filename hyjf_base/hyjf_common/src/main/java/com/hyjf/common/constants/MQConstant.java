@@ -134,6 +134,12 @@ public interface MQConstant {
 	String USER_OPERATION_LOG_TOPIC = "USER_OPERATION_LOG_TOPIC";
 
 	/**
+	 * 用户大屏三消息
+	 */
+	String USER_SCREEN_PICTURE3_GROUP = "USER_SCREEN_PICTURE3_GROUP";
+	String USER_SCREEN_PICTURE3_TOPIC = "USER_SCREEN_PICTURE3_TOPIC";
+
+	/**
 	 * 新PC渠道统计
 	 */
 	String PC_CHANNEL_STATISTICS_GROUP = "PC_CHANNEL_STATISTICS_GROUP";
@@ -582,6 +588,14 @@ public interface MQConstant {
 	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
     String SELL_DAILY_SELECT_TAG = "SELL_DAILY_SELECT_TAG";
 
+    /** ------------------------------ 运营大屏数据统计 start ------------------------------ */
+	String SCREEN_DATA_GROUP = "SCREEN_DATA_GROUP";
+	String SCREEN_DATA_TOPIC = "SCREEN_DATA_TOPIC";
+	String SCREEN_DATA_TWO_GROUP = "SCREEN_DATA_TWO_GROUP";
+	String SCREEN_DATA_TWO_TOPIC = "SCREEN_DATA_TWO_TOPIC";
+	String SCREEN_DATA_TWO_SELECT_TAG = "SCREEN_DATA_TWO_SELECT_TAG";
+	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
+
     /**--------------------------------- 应急中心 -------------------------------------*/
 
     /**用户信息*/
@@ -706,9 +720,19 @@ public interface MQConstant {
 	String REPAY_ALL_SUCCESS_TAG = "REPAY_ALL_SUCCESS_TAG";
 	// TAG：新增智投
 	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
+	// TAG：同步余额
+	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
+	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
+	String SYNBALANCE_TAG = "SYNBALANCE_TAG";
+
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
 
 	// 合规互金上报用MQ延迟发送等级（30s）
 	int HG_REPORT_DELAY_LEVEL = 4;
+
+	/**--------------------------------- 业务流程配置start -------------------------------------*/
+	String WORKFLOW_GROUP = "WORKFLOW_GROUP";
+	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
+	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
 }

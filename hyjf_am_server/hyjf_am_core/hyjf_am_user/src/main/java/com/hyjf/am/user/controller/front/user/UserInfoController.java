@@ -35,7 +35,7 @@ public class UserInfoController extends BaseController {
 	@Autowired
 	private UserInfoService userInfoService;
 
-	@RequestMapping("/findById/{userId}")
+	@GetMapping("/findById/{userId}")
 	public UserInfoResponse findUserInfoById(@PathVariable int userId) {
 		UserInfoResponse response = new UserInfoResponse();
 		UserInfo usersInfo = userInfoService.findUserInfoById(userId);

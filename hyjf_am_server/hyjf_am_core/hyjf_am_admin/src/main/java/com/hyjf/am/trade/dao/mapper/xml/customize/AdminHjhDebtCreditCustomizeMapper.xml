@@ -6,6 +6,8 @@
         <result column="id"							property="id" 						jdbcType="VARCHAR" />
         <result column="plan_nid" 					property="planNid" 					jdbcType="VARCHAR" />
         <result column="plan_order_id" 				property="planOrderId" 				jdbcType="VARCHAR" />
+        <result column="order_id" 				property="orderId" 				jdbcType="VARCHAR" />
+        <result column="assign_id" 				property="assignId" 				jdbcType="VARCHAR" />
         <result column="plan_nid_new" 				property="planNidNew" 			    jdbcType="VARCHAR" />
         <result column="user_name" 					property="userName" 				jdbcType="VARCHAR" />
         <result column="credit_nid" 				property="creditNid" 				jdbcType="VARCHAR" />
@@ -44,6 +46,14 @@
             <!-- 出让人计划订单号 -->
             <if test="planOrderId != null and planOrderId != ''">
                 AND dc.plan_order_id = #{planOrderId}
+            </if>
+            <!-- 出让人出借订单号 -->
+            <if test="orderId != null and orderId != ''">
+                AND dc.invest_order_id = #{orderId}
+            </if>
+            <!-- 出让人承接订单号 -->
+            <if test="assignId != null and assignId != ''">
+                AND dc.sell_order_id = #{assignId}
             </if>
             <!-- 清算后计划编号 -->
             <if test="planNidNew != null and planNidNew != ''">
@@ -94,16 +104,18 @@
             </if>
             <!-- 下期还款时间 -->
             <if test="repayNextTimeStart != null and repayNextTimeStart != ''">
-                AND dc.credit_repay_next_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                and CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN dc.credit_repay_end_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                ELSE dc.credit_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                END
             </if>
             <if test="repayNextTimeEnd != null and repayNextTimeEnd != ''">
-                AND dc.credit_repay_next_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                and CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN  dc.credit_repay_end_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                ELSE dc.credit_repay_next_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                END
             </if>
-
             <if test="creditCapitalWait != null and creditCapitalWait != ''">
                 AND dc.credit_capital_wait = #{creditCapitalWait}
             </if>
-
             <!-- 债转结束时间 -->
             <if test="endTimeStart != null and endTimeStart != ''">
                 AND dc.end_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{endTimeStart},' 00:00:00'))
@@ -141,6 +153,8 @@
         dc.plan_nid,
         dc.plan_nid_new,
         dc.plan_order_id,
+        dc.invest_order_id as order_id,
+        dc.sell_order_id as assign_id,
         dc.user_name,
         dc.credit_nid,
         dc.borrow_nid,
@@ -155,7 +169,9 @@
         dc.credit_interest_advance_assigned AS assign_advance_interest,
         dc.credit_income AS account_receive,
         dc.credit_status,
-        dc.repay_status,
+        CASE
+        when b.`status`=8 then 99
+        else dc.repay_status end as repay_status,
         DATE_FORMAT( dc.create_time, '%Y-%m-%d %H:%i:%s' ) AS liquidates_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,

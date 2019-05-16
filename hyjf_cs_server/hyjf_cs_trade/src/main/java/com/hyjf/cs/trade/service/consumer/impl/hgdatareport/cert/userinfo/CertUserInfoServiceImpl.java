@@ -123,6 +123,8 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
 
         CorpOpenAccountRecordVO accountRecord = null;
         String userIdcard = "";
+        // 是否企业
+        boolean isCompany = false;
         String userLawperson = "-1";
         String userFund = "-1";
         String userProvince = "-1";
@@ -163,6 +165,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             if ("1".equals(borrow.getCompanyOrPersonal())) {
                 // 公司
                 BorrowUserVO borrowUsers = getBorrowUsers(borrow.getBorrowNid());
+                //isCompany = true;
                 // 统一社会信用代码
                 userIdcard = borrowUsers.getSocialCreditCode();
                 if (borrowUsers.getSocialCreditCode() == null || "".equals(borrowUsers.getSocialCreditCode())) {
@@ -238,7 +241,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 用户标识编码  身份证号(个人) 工商注册号(企业) 三证合一号(企业)
         //说明：允许脱敏处理,但只能脱敏后4位
         // 个人报送身份证号加密 企业报送统一社会信用代码加密值  无社会信用代码 报送注册号加密值    借款人报送借款主体的证件编码
-        param.put("userIdcard", CertCallUtil.desUserIdcard(userIdcard));
+        param.put("userIdcard", CertCallUtil.desUserIdcard(userIdcard,isCompany));
         // 用户标示哈希
         // 身份证号／工商注册号／三证合一号hash值（64位随机数字和字母）
         //使用工具包中idCardHash方法生成的hash值 此字段是散标接口、交易流水接口、还款计划、债权信息、转让项目、承接项目的关联字段

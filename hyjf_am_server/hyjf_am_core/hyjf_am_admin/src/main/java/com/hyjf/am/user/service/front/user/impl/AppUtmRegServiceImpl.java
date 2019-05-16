@@ -39,6 +39,18 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
         appUtmRegMapper.updateByPrimaryKey(entity);
     }
 
+    /***
+     * 开户更新开户渠道统计开户时间_test
+     * @author Zha Daojian
+     * @date 2019/3/11 11:19
+     * @param entity
+     * @return void
+     **/
+    @Override
+    public int updateByPrimaryKeySelective(AppUtmReg entity) {
+        return  appUtmRegMapper.updateByPrimaryKeySelective(entity);
+    }
+
     @Override
     public void insert(AppUtmReg entity) {
         appUtmRegMapper.insertSelective(entity);

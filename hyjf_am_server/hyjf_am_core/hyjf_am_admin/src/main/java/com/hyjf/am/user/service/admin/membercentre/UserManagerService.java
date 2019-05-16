@@ -4,10 +4,7 @@
 package com.hyjf.am.user.service.admin.membercentre;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
-import com.hyjf.am.resquest.user.UpdCompanyRequest;
-import com.hyjf.am.resquest.user.UserInfosUpdCustomizeRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
@@ -240,7 +237,7 @@ public interface UserManagerService extends BaseService {
      * @param updCompanyRequest
      * @return
      */
-    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId);
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user,String bankId);
 
 	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
 
@@ -336,4 +333,40 @@ public interface UserManagerService extends BaseService {
      * @return
      */
    int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog);
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId, Integer bankOpenAccount);
+
+    /**
+     * 用户销户成功后,插入销户记录表
+     *
+     * @param bankCancellationAccount
+     * @return
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccount bankCancellationAccount);
+
+    /**
+     * 查询销户记录件数
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    int countBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     *
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    List<BankCancellationAccount> getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest, int limitStart, int limitEnd);
 }

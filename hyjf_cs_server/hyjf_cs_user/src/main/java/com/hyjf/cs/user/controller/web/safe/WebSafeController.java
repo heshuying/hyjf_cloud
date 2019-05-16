@@ -78,20 +78,22 @@ public class WebSafeController extends BaseUserController {
         Map<String, Object> result = safeService.safeInit(user);
 
         // 合规需求 分享链接增加渠道信息 add by huanghui
+        // 合规自查添加
+        // 20181205 产品需求, 屏蔽渠道,只保留用户ID
         String inviteLink = null;
         UserUtmInfoCustomizeVO userUtmInfo = safeService.getUserUtmInfo(userId);
-        if (userUtmInfo != null){
-            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-        }else {
+//        if (userUtmInfo != null){
+//            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//        }else {
             inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-        }
+//        }
         result.put("inviteLink", inviteLink);
 
         if (null == result) {
             response.setStatus(ApiResult.FAIL);
             response.setStatusDesc("账户设置查询失败");
         }
-        logger.info("账户设置查询 is {}"+result);
+        logger.info("账户设置查询 is {}"+JSONObject.toJSONString(result));
         response.setData(result);
         return response;
     }

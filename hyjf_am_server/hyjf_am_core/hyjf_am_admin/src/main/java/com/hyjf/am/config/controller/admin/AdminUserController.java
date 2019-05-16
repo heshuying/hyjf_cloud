@@ -6,6 +6,7 @@ import com.hyjf.am.config.service.AdminUserService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminUserResponse;
+import com.hyjf.am.resquest.admin.AdminUserWorkFlowRequest;
 import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.user.service.admin.adminuser.DepartmentService;
 import com.hyjf.am.vo.admin.AdminCustomizeVO;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,17 +62,22 @@ public class AdminUserController {
 	private AdminUserResponse createPage(@RequestBody AdminRequest adminRequest) {
 		AdminCustomize adminCustomize = new AdminCustomize();
 		BeanUtils.copyProperties(adminRequest, adminCustomize);
-		List<AdminCustomize> recordList = this.adminService.getRecordList(adminCustomize);
+		int count = this.adminService.selectAdminListCount(adminCustomize);
 		AdminUserResponse ar = new AdminUserResponse();
-		if (recordList != null) {
-			ar.setRecordTotal(recordList.size());
-			Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),
+		if (count>0) {
+			ar.setRecordTotal(count);
+			Paginator paginator = new Paginator(adminRequest.getCurrPage(), count,
 					adminRequest.getPageSize());
 			adminCustomize.setLimitStart(paginator.getOffset());
 			adminCustomize.setLimitEnd(paginator.getLimit());
 			adminCustomize.setDelFlag(0);
-			recordList = this.adminService.getRecordList(adminCustomize);
-			ar.setResultList(CommonUtils.convertBeanList(recordList, AdminCustomizeVO.class));
+			List<AdminCustomize> recordList = this.adminService.getRecordList(adminCustomize);
+			List<AdminCustomize> recordList2=new  ArrayList<AdminCustomize>();
+			for (AdminCustomize adminCustomize2 : recordList) {
+				adminCustomize2.setPassword("");
+				recordList2.add(adminCustomize2);
+			}
+			ar.setResultList(CommonUtils.convertBeanList(recordList2, AdminCustomizeVO.class));
 			return ar;
 		}
 		return ar;
@@ -333,6 +340,17 @@ public class AdminUserController {
 			AdminVO adminVO = new AdminVO();
 			BeanUtils.copyProperties(admin, adminVO);
 			response.setResult(adminVO);
+		}
+		return response;
+	}
+
+	@PostMapping("/getAdminUser")
+	public AdminResponse getAdminUser(@RequestBody AdminUserWorkFlowRequest request) {
+		AdminResponse response = new AdminResponse();
+		List<Admin> admin = adminService.getAdminUser(request.getAdminuserId());
+		if (admin != null) {
+			List<AdminVO> voList = CommonUtils.convertBeanList(admin, AdminVO.class);
+			response.setAdminVOList(voList);
 		}
 		return response;
 	}

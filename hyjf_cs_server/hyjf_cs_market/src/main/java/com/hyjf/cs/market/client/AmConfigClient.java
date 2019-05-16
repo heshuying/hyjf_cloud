@@ -195,10 +195,17 @@ public interface AmConfigClient {
 
 	/**
 	 * 判断某天是否是工作日
-	 * 
+	 *
 	 * @return
 	 */
 	boolean isWorkdateOnSomeDay();
+
+	/**
+	 * 判断某天是否是工作日
+	 * 
+	 * @return
+	 */
+	boolean isWorkdateOnSomeDay(Date date);
 
 	/**
 	 * 取昨日开始时间

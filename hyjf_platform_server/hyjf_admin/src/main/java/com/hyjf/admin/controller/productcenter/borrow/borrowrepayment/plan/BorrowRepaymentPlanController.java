@@ -128,11 +128,17 @@ public class BorrowRepaymentPlanController extends BaseController {
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","项目编号");
+        //智投编号planNid
+        map.put("planNid","智投编号");
         map.put("instName","资产来源");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
+      //受托支付收款人用户名 
+        map.put("entrustedUserName","受托支付收款人用户名");
+        map.put("repayOrgName","担保人");
+        map.put("borrowName","项目名称");
         map.put("projectTypeName","项目类型");
-        map.put("borrowPeriod","借款期限");
+        map.put("borrowPeriodExcl","借款期限");
         map.put("borrowApr","出借利率");
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
@@ -143,29 +149,42 @@ public class BorrowRepaymentPlanController extends BaseController {
         map.put("repayAccount","应还本息");
         map.put("repayFee","还款服务费");
         map.put("tiqiantianshu","提前天数");
-        map.put("shaohuanlixi","少还利息");
-        map.put("yanqitianshu","延期天数");
-        map.put("yanqilixi","延期利息");
+        map.put("shaohuanlixi","提前还款减息");
+        //提前还款违约金 shihuanzonge
+        map.put("shihuanzonge","提前还款违约金");
+//        map.put("yanqitianshu","延期天数");
+//        map.put("yanqilixi","延期利息");
         map.put("yuqitianshu","逾期天数");
-        map.put("yuqilixi","逾期利息");
-        map.put("yinghuanzonge","应还总额");
-        map.put("shihuanzonge","实还总额");
+        map.put("yuqilixi","逾期违约金");
+        map.put("yanqilixi","应还总额");
+        //实还本金 repayAccountCapitalYes
+        //实还利息 repayAccountInterestYes
+        //实还服务费 yihuanfuwufei
+        map.put("repayAccountCapitalYes","实还本金");
+        map.put("repayAccountInterestYes","实还利息");
+        map.put("yihuanfuwufei","实还服务费");
+        map.put("yinghuanzonge","实还总额");
         map.put("status","还款状态");
         map.put("repayActionTime","实际还款日期");
         map.put("repayLastTime","应还日期");
         map.put("repayMoneySource","还款来源");
-        map.put("repayAccountCapitalWait","剩余待还本金");
-        map.put("repayAccountInterestWait","剩余待还利息");
+        map.put("userName","还款人");
+        map.put("submitter","发起人");
+        map.put("verifyTime","发标时间");
+        map.put("borrowFullTime","满标时间");
+        map.put("recoverLastTime","放款时间");
+//        map.put("repayAccountCapitalWait","剩余待还本金");
+//        map.put("repayAccountInterestWait","剩余待还利息");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter borrowPeriodAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                return object+"个月";
-            }
-        };
+//        IValueFormatter borrowPeriodAdapter = new IValueFormatter() {
+//            @Override
+//            public String format(Object object) {
+//                return object+"个月";
+//            }
+//        };
         IValueFormatter borrowAprAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -187,13 +206,26 @@ public class BorrowRepaymentPlanController extends BaseController {
         IValueFormatter statusAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                if (null!=object) {
-                    return"0".equals(object) ? "还款中" : "已还款";
+                if ("0".equals(object) ) {
+                    return "还款中";
+                }
+                if("1".equals(object)) {
+                	return "已还款";
+                }
+                if("2".equals(object)) {
+                	return "逾期中";
                 }
                 return null;
             }
         };
-        mapAdapter.put("borrowPeriod", borrowPeriodAdapter);
+		IValueFormatter timeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(value));
+			}
+		};
+//        mapAdapter.put("borrowPeriod", borrowPeriodAdapter);
         mapAdapter.put("borrowApr", borrowAprAdapter);
         mapAdapter.put("borrowAccount", valueFormatAdapter);
         mapAdapter.put("borrowAccountYes", valueFormatAdapter);
@@ -210,6 +242,9 @@ public class BorrowRepaymentPlanController extends BaseController {
         mapAdapter.put("status", statusAdapter);
         mapAdapter.put("repayAccountCapitalWait",valueFormatAdapter);
         mapAdapter.put("repayAccountInterestWait",valueFormatAdapter);
+        mapAdapter.put("verifyTime",timeAdapter);
+        mapAdapter.put("borrowFullTime",timeAdapter);
+        mapAdapter.put("recoverLastTime",timeAdapter);
         return mapAdapter;
     }
 

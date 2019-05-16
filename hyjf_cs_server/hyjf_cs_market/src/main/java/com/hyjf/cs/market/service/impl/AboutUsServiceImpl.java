@@ -78,13 +78,17 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     public ContentArticleVO getNoticeInfo(Integer id) {
         ContentArticleVO contentArticle = amConfigClient.getContentArticleById(id);
         String cdnUrl = CdnUrlUtil.getCdnUrl();
+        if(null == contentArticle){
+            return null;
+        }
         String content = contentArticle.getContent();
         if (StringUtils.isNotBlank(content)) {
-            int start = content.indexOf("http");
-            int end = content.indexOf(".com");
-            if (start >=0 && end >=0) {
-                String imgUrl = content.substring(start, end + 4);
-                contentArticle.setContent(content.replaceAll(imgUrl, cdnUrl));
+            if (StringUtils.isNotBlank(content)) {
+//            int start = content.indexOf("http");
+//            int end = content.indexOf(".com");
+//            if (start >=0 && end >=0) {
+//            String imgUrl = content.substring(start, end + 4);
+                contentArticle.setContent(content.replaceAll("https://www.huiyingdai.com/data", cdnUrl + "data"));
             }
         }
         return contentArticle;
@@ -92,6 +96,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     /**
      * 根据ID获取公司历程详情
+     *
      * @param id
      * @return
      * @Author : huanghui
@@ -136,29 +141,34 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
      * 返回快捷银行充值限额
      */
     @Override
-    public  List<JxBankConfigVO> getBanksList() {
+    public List<JxBankConfigVO> getBanksList() {
         return amConfigClient.getBankRecordList();
 
     }
 
     /**
      * 累计出借总额
+     *
      * @return
      */
     @Override
     public BigDecimal selectTenderSum() {
         return amDataCollectClient.selectTenderSum();
     }
+
     /**
      * 累计收益
+     *
      * @return
      */
     @Override
     public BigDecimal selectInterestSum() {
         return amDataCollectClient.selectInterestSum();
     }
+
     /**
      * 累计出借笔数
+     *
      * @return
      */
     @Override
@@ -167,7 +177,8 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     /**
-     *获取公司公告列表
+     * 获取公司公告列表
+     *
      * @param request
      * @return
      */
