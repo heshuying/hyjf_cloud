@@ -1699,7 +1699,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 延期利息
 		debtDetail.setDelayInterest(delayInterest);
 		// 逾期天数
-		debtDetail.setLateDays(borrowRecover.getLateDays());
+		debtDetail.setLateDays(borrowRepay.getLateDays());// 取repay表，区分分期和不分期 update by wgx 2019/05/16
 		// 逾期利息
 		debtDetail.setLateInterest(lateInterest);
 		// 还款订单号
