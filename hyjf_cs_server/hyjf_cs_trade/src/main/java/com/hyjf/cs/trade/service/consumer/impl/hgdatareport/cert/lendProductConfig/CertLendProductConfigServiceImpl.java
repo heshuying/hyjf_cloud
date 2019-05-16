@@ -245,6 +245,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                         }
                     }
 //                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码：" + nid +"组装数据");
+                    sourceFinancingcode = hjhDebtCreditTenderVO.getAssignPlanNid();
                     finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                     userId = hjhDebtCreditTenderVO.getUserId();
                     String strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
