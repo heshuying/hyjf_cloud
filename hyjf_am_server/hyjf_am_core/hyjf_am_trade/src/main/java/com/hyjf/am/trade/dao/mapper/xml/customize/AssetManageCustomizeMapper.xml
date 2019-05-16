@@ -2553,7 +2553,7 @@
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
-		borrow.`status` = 4
+		(borrow.`status` = 4 OR borrow.`status` = 8)
 		AND ten.user_id= #{userId}
 		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
 		AND borrow.plan_nid IS NULL
@@ -2571,7 +2571,7 @@
 		ht_credit_tender ten
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
 		WHERE ten.user_id= #{userId}
-		AND borrow.`status` = 4
+		AND (borrow.`status` = 4 OR borrow.`status` = 8)
 		AND ten.assign_interest>0
 		AND borrow.plan_nid IS NULL
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2612,7 +2612,7 @@
 		) hiil ON hiil.invest_order_id=hiii.order_id
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
-		WHERE borrow.`status` = 4
+		WHERE (borrow.`status` = 4 OR borrow.`status` = 8)
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
 		<if test="tradeYear != null and tradeYear != '' ">
