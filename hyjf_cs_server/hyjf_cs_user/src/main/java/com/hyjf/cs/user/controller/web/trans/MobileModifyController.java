@@ -27,6 +27,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +135,24 @@ public class MobileModifyController extends BaseUserController {
             throw new CheckException(MsgEnum.STATUS_CE000004);
         }
         return newBankMobile;
+    }
+
+    /**
+     * @Description 修改预留手机号异步回调结果查询
+     * @Author liushouyi
+     */
+    @ApiOperation(value = "修改预留手机号异步回调结果查询", notes = "修改预留手机号异步回调结果查询")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ResponseBody
+    public WebResult<Object> getMobileModifyMessage(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        WebResult<Object> result = new WebResult<Object>();
+        String retMsg = mobileModifyService.getFailedMess(param.get("logOrdId"));
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
+        return result;
     }
 
     /**

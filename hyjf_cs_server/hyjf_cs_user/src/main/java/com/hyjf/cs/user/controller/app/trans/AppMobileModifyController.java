@@ -11,7 +11,6 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.BankMobileModifyBean;
@@ -21,7 +20,9 @@ import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +65,7 @@ public class AppMobileModifyController extends BaseUserController {
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         // 目前只有个人用户可修改
-        if(null == user.getUserType() || user.getUserType() ==  1) {
+        if (null == user.getUserType() || user.getUserType() == 1) {
             // 只针对个人用户修改手机号
             throw new ReturnMessageException(MsgEnum.ERR_USER_PERSON_ONLY);
         }
@@ -109,10 +110,28 @@ public class AppMobileModifyController extends BaseUserController {
     public String getNewBankMobile(@RequestHeader(value = "userId") int userId) {
         // 调用银行接口获取最新银行预留手机号
         String newBankMobile = mobileModifyService.getNewBankMobile(userId);
-        if(StringUtils.isBlank(newBankMobile)) {
+        if (StringUtils.isBlank(newBankMobile)) {
             throw new CheckException(MsgEnum.STATUS_CE000004);
         }
         return newBankMobile;
+    }
+
+    /**
+     * @Description 修改预留手机号异步回调结果查询
+     * @Author liushouyi
+     */
+    @ApiOperation(value = "修改预留手机号异步回调结果查询", notes = "修改预留手机号异步回调结果查询")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param", value = "{logOrdId:String}", dataType = "Map")
+    @ResponseBody
+    public AppResult<Object> getMobileModifyMessage(@RequestBody Map<String, String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        AppResult<Object> result = new AppResult<Object>();
+        String retMsg = mobileModifyService.getFailedMess(param.get("logOrdId"));
+        Map<String, String> map = new HashedMap();
+        map.put("error", retMsg);
+        result.setData(map);
+        return result;
     }
 
     @ApiOperation(value = "绑定新手机", notes = "绑定新手机")

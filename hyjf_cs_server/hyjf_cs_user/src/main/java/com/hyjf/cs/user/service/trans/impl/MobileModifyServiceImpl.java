@@ -183,10 +183,10 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public Map<String, Object> getBankMobileModify(BankMobileModifyBean bean, String sign) {
         // 调用开户接口
-        BankCallBean openAccoutBean = new BankCallBean(bean.getUserId(), BankCallConstant.TXCODE_MOBILE_MODIFY_PAGE, Integer.parseInt(bean.getPlatform()), BankCallConstant.BANK_URL_MOBILE_MODIFY_PAGE);
-        openAccoutBean.setChannel(bean.getChannel());
+        BankCallBean mobileModifyBean = new BankCallBean(bean.getUserId(), BankCallConstant.TXCODE_MOBILE_MODIFY_PAGE, Integer.parseInt(bean.getPlatform()), BankCallConstant.BANK_URL_MOBILE_MODIFY_PAGE);
+        mobileModifyBean.setChannel(bean.getChannel());
         // 该接口只有一个返回页面
-        String successPath = "/user/bankMobileModifySuccess";
+        String successPath = "/user/bankMobileModifySuccess?logOrdId=" + mobileModifyBean.getLogOrderId();
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
         // 如果是移动端  返回别的url
@@ -194,18 +194,18 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             successPath = "/user/bankMobileModify/result/success";
             // 同步地址  是否跳转到前端页面
             retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath + "?status=000&statusDesc=";
-            retUrl += "&token=1&sign=" + sign;
+            retUrl += "&token=1&sign=" + sign + "&logOrdId=" + mobileModifyBean.getLogOrderId();
         }
         String bgRetUrl = "http://CS-USER/hyjf-web/user/bankMobileModifyBgReturn?phone=" + bean.getBankMobile()+"&modifyclient="+bean.getPlatform()+"&logIp=" + bean.getIp();
         // 接口只给了一个返回地址
-        openAccoutBean.setRetUrl(retUrl);
-        openAccoutBean.setNotifyUrl(bgRetUrl);
-        openAccoutBean.setLogRemark("修改银行预留手机号");
-        openAccoutBean.setLogIp(bean.getIp());
-        openAccoutBean.setAccountId(bean.getAccountId());
-        bean.setOrderId(openAccoutBean.getLogOrderId());
+        mobileModifyBean.setRetUrl(retUrl);
+        mobileModifyBean.setNotifyUrl(bgRetUrl);
+        mobileModifyBean.setLogRemark("修改银行预留手机号");
+        mobileModifyBean.setLogIp(bean.getIp());
+        mobileModifyBean.setAccountId(bean.getAccountId());
+        bean.setOrderId(mobileModifyBean.getLogOrderId());
         try {
-            Map<String, Object> map = BankCallUtils.callApiMap(openAccoutBean);
+            Map<String, Object> map = BankCallUtils.callApiMap(mobileModifyBean);
             return map;
         } catch (Exception e) {
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
