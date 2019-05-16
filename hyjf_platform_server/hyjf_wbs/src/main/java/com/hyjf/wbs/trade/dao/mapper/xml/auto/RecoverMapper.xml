@@ -38,7 +38,7 @@
     br.recover_account AS expectedExitAmount,
     br.recover_account_yes AS actualExitAmount,
     br.recover_period AS period,
-    2 AS status
+    1 AS status
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
     LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
@@ -71,7 +71,7 @@
     brp.recover_account AS expectedExitAmount,
     brp.recover_account_yes AS actualExitAmount,
     brp.recover_period AS period,
-    2 AS status
+    1 AS status
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
     LEFT  JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
@@ -104,7 +104,7 @@ union all
     ha.should_pay_total AS expectedExitAmount,
     ha.received_total AS actualExitAmount,
     ha.lock_period AS period,
-    2 AS status
+    1 AS status
     FROM ht_hjh_accede ha
     LEFT JOIN ht_hjh_repay hr ON ha.accede_order_id=hr.accede_order_id
     AND hr.repay_status=2
