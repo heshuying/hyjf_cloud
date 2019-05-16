@@ -127,7 +127,7 @@ public class AppMobileModifyController extends BaseUserController {
     public AppResult<Object> getMobileModifyMessage(@RequestBody Map<String, String> param) {
         logger.info("调用银行失败原因start,logOrdId:{}", param);
         AppResult<Object> result = new AppResult<Object>();
-        String retMsg = mobileModifyService.getFailedMess(param.get("logOrdId"));
+        String retMsg = mobileModifyService.getMobileModifyMess(param.get("logOrdId"));
         Map<String, String> map = new HashedMap();
         map.put("error", retMsg);
         result.setData(map);
