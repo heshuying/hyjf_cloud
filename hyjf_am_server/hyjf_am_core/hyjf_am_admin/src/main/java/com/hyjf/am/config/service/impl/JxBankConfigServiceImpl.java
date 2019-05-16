@@ -7,6 +7,7 @@ import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
 import com.hyjf.am.config.service.JxBankConfigService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +60,20 @@ public class JxBankConfigServiceImpl implements JxBankConfigService {
     public List<JxBankConfig> selectBankConfigList(){
         List<JxBankConfig> banks = jxBankConfigMapper.selectByExample(new JxBankConfigExample());
         return banks;
+    }
+    /**
+     * 根据银行卡名获取江西银行配置
+     * @Author : nxl
+     */
+    @Override
+    public JxBankConfig selectBankConfigByName(String bankName){
+        JxBankConfigExample example = new JxBankConfigExample();
+        JxBankConfigExample.Criteria cra = example.createCriteria();
+        cra.andBankNameLike("%"+bankName+"%");
+        List<JxBankConfig> banks = jxBankConfigMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(banks)){
+            return banks.get(0);
+        }
+        return null;
     }
 }

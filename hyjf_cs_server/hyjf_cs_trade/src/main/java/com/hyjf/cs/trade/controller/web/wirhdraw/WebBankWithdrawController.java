@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -25,11 +27,13 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +72,24 @@ public class WebBankWithdrawController extends BaseTradeController {
         return objectWebResult;
     }
 
+    /**
+     * 用户银行提现校验
+     *
+     * @param userId
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "用户银行提现校验", notes = "用户银行提现校验")
+    @PostMapping("/userBankWithdrawCheck")
+    public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId, @RequestBody WithdrawRuleConfigRequest withdrawRuleConfigRequest, HttpServletRequest request) {
+        WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
+        String withdrawMoney = withdrawRuleConfigRequest.getWithdrawMoney();
+        logger.info("提现金额:[" + withdrawMoney + "]");
+        CheckUtil.check(null != user, MsgEnum.ERR_OBJECT_GET, "用户信息");
+        WebResult<Object> objectWebResult = bankWithdrawService.userBankWithdrawCheck(userId, withdrawMoney);
+        return objectWebResult;
+    }
+
 
     /**
      * 用户银行提现
@@ -95,12 +117,30 @@ public class WebBankWithdrawController extends BaseTradeController {
         logger.info("ipAddr is :{}", ipAddr);
         String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawError?token=1";
 
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO =  bankWithdrawService.getWithdrawRuleConfig(userId, bankWithdrawVO.getWithdrawmoney());
+        if (withdrawRuleConfigVO == null) {
+            String statusDesc = "";
+            // 个人用户
+            if (user.getUserType() == 0 && new BigDecimal(bankWithdrawVO.getWithdrawmoney()).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+                // 提现金额> 个人最大提现金额
+                logger.info("个人提现金额超限");
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else if (user.getUserType() == 1 && new BigDecimal(bankWithdrawVO.getWithdrawmoney()).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+            } else {
+                statusDesc = "获取提现配置失败";
+            }
+            throw new CheckException(statusDesc);
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         //                 http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn
         String successfulUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawSuccess?token=1";
         String bgRetUrl = "http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
         String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
+                bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl,withdrawRuleConfigVO);
         if (null == bean) {
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }

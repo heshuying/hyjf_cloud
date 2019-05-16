@@ -140,11 +140,11 @@ public class CalculatesUtil {
         BigDecimal feeTotal = BigDecimal.ZERO;
 
         // 每月还款本金
-        Map<Integer, BigDecimal> monthlyCapital = AverageCapitalPlusInterestUtils.getPerMonthPrincipal(account, apr, borrowPeriod);
-        // 每月还款利息
-        Map<Integer, BigDecimal> monthlyInterest = AverageCapitalPlusInterestUtils.getPerMonthInterest(account, apr, borrowPeriod);
+        Map<Integer, BigDecimal> monthlyCapital = AverageCapitalPlusInterestUtils.getPerMonthPrincipalForMonth(account, apr, borrowPeriod);
         // 每月还款本息
-        BigDecimal monthlyAccount = AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(account, apr, borrowPeriod);
+        Map<Integer, BigDecimal> monthlyCapitalInterest  = AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterestForMonth(account, apr, borrowPeriod, monthlyCapital.get(borrowPeriod));
+        // 每月还款利息
+        Map<Integer, BigDecimal> monthlyInterest = AverageCapitalPlusInterestUtils.getPerMonthInterestForMonth(monthlyCapitalInterest, monthlyCapital, account, apr, borrowPeriod);
 
         BigDecimal monthlyInterestStart = null;
         BigDecimal monthlyInterestEnd = null;
@@ -155,7 +155,7 @@ public class CalculatesUtil {
         }
         // 设置月还款列表
         List<InterestInfo> listMonthly = null;
-        if (monthlyCapital != null && monthlyInterest != null && monthlyAccount != null && monthlyCapital.size() == monthlyInterest.size()) {
+        if (monthlyCapital != null && monthlyInterest != null && monthlyCapitalInterest != null && monthlyCapital.size() == monthlyInterest.size() && monthlyCapital.size() == monthlyCapitalInterest.size()) {
             listMonthly = new ArrayList<InterestInfo>();
             InterestInfo monthly = null;
             for (Entry<Integer, BigDecimal> entry : monthlyCapital.entrySet()) {
@@ -163,7 +163,7 @@ public class CalculatesUtil {
                 // 期数
                 monthly.setMontyNo(entry.getKey());
                 // 本息总额
-                monthly.setRepayAccount(monthlyAccount);
+                monthly.setRepayAccount(monthlyCapitalInterest.get(entry.getKey()));
                 // 利息
                 monthly.setRepayAccountInterest(monthlyInterest.get(entry.getKey()));
                 // 本金

@@ -2829,4 +2829,66 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
+
+	/**
+	 * 企业信息补录时查询，根据对公账号查找银行信息
+	 *
+	 * @param updCompanyRequest
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest) {
+		BankCardResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankInfoByAccount", updCompanyRequest, BankCardResponse.class)
+				.getBody();
+		return response;
+	}
+
+	/**
+	 * 用户销户操作
+	 *
+	 * @param userId
+	 * @param bankOpenAccount
+	 * @return
+	 */
+	@Override
+	public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+		IntegerResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-user/userManager/cancellationAccountAction/" + userId + "/" + bankOpenAccount, IntegerResponse.class).getBody();
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 *
+	 * 用户销户成功后,保存销户记录表
+	 *
+	 * @param bankCancellationAccountRequest
+	 * @return
+	 */
+	@Override
+	public int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userManager/saveCancellationAccountRecordAction", bankCancellationAccountRequest, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 查询销户记录列表
+	 *
+	 * @param bankCancellationAccountRequest
+	 * @return
+	 */
+	@Override
+	public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+		BankCancellationAccountResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankCancellationAccountList", bankCancellationAccountRequest, BankCancellationAccountResponse.class)
+				.getBody();
+		return response;
+	}
 }
