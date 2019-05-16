@@ -572,7 +572,6 @@
                 hcr.repay_period AS recoverPeriod,
                 hct.assign_capital AS account,
                 (SELECT IFNULL(SUM(cr1.repay_capital),0) FROM ht_hjh_debt_credit_repay cr1 WHERE cr1.repay_status != 1 AND cr1.del_flag = 0 AND cr1.assign_order_id = hct.assign_order_id) AS amountHold,
-                hct.assign_capital - hct.repay_capital_yes  AS amountHold,
                 hcr.repay_capital AS recoverCapital,
                 hcr.repay_interest AS recoverInterest,
                 hcr.repay_account AS recoverAccount,
@@ -600,12 +599,6 @@
             END,
             ''
             ) AS repayMoneySource,
-            hcr.receive_account_yes +
-        IF (
-            hcr.repay_status = 1,
-            hcr.manage_fee,
-            0
-        ) AS recoverAmountTotal,
         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = hcr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
         IF (
             hcr.assign_repay_next_time IS NULL
@@ -1182,9 +1175,9 @@
         WHEN 3 THEN '线上员工'
         ELSE ''
         END recoverUserAttributeNow,
-        ct.invite_region_name AS recoverRegionName,
-        ct.invite_branch_name AS recoverBranchName,
-        ct.invite_department_name AS recoverDepartmentName,
+        ct.invite_user_regionname AS recoverRegionName,
+        ct.invite_user_branchname AS recoverBranchName,
+        ct.invite_user_departmentname AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
