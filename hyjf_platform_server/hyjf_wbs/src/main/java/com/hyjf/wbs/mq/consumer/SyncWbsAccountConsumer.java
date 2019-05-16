@@ -200,7 +200,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
             if (hex.length() == 1) {
                 sign.append("0");
             }
-            sign.append(hex.toUpperCase());
+            sign.append(hex.toLowerCase());
         }
         return sign.toString();
     }
