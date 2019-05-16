@@ -86,7 +86,7 @@ public class RecoverInfoController extends BaseController {
             recoverQO.setEntId(recoverQO.getEntId());
             logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口 请求实体参数 " + JSONObject.toJSON(recoverQO));
             int countRecover=recoverService.getRecoverCount(recoverQO);
-            Paginator paginator = new Paginator(Integer.parseInt(recoverQO.getCurrentPage()),countRecover,10000);
+            Paginator paginator = new Paginator(Integer.parseInt(recoverQO.getCurrentPage()),countRecover,10);
             recoverQO.setLimitStart(paginator.getOffset());
             recoverQO.setLimitEnd(paginator.getLimit());
             List<RecoverVO> recoverVOS = recoverService.getRecoverInfo(recoverQO);
