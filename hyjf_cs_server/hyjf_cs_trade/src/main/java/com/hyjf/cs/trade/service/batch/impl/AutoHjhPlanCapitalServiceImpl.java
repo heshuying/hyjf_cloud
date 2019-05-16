@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wenxin
@@ -71,6 +73,16 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             // 预计新增债转额
             List<HjhPlanCapitalPredictionVO> hjhPlanCapitalPredictionList = amTradeClient.getPlanCapitalForCreditInfo(GetDate.dateToString(initDate),GetDate.dateToString(beginDate));
             listAll.addAll(hjhPlanCapitalPredictionList);
+        }
+        // 去除list中planid为“清算后无匹配标签”的数据（预计新增债转额专用逻辑）
+        // 索引遍历,但是需要在删除之后保证索引的正常，不能用循环中是一个迭代器来进行迭代，这样会导致迭代器的modCount和expectedModCount的值不一致 ，如果你看到这不明白的话具体原因请自行了解百度啥的。
+        for(int i=0;i<listAll.size();i++){
+            // 包含中文字符的就干掉
+            if(isContainChinese(listAll.get(i).getPlanNid())){
+                listAll.remove(i);
+                // 索引要减一
+                i--;
+            }
         }
         // 处理相同的planid，不同日期的数据（整理listAll数据放入到map中）
         Map<Date,Map<String, List<HjhPlanCapitalPredictionVO>>> mapDate = new HashMap<>();
@@ -228,4 +240,21 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         }
         logger.info("实际资金计划batch计算结束！结束时间："+ GetDate.dateToString(GetDate.getDate()));
     }
+
+    /**
+     * 判断字符串中是否包含中文
+     * @param str
+     * 待校验字符串
+     * @return 是否为中文
+     * @warn 不能校验是否为中文标点符号
+     */
+    public static boolean isContainChinese(String str) {
+        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Matcher m = p.matcher(str);
+        if (m.find()) {
+            return true;
+        }
+        return false;
+    }
+
 }
