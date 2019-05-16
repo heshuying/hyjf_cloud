@@ -33,10 +33,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -101,7 +98,7 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/registAction.do")
-    public UserRegistResult registAction(HttpServletRequest request) throws UnsupportedEncodingException {
+    public UserRegistResult registAction(@RequestHeader(value = "wjtClient",required = false) String wjtClient, HttpServletRequest request) throws UnsupportedEncodingException {
         UserRegistResult ret = new UserRegistResult();
         ret.setRequest("/registAction.do");
         // 手机号
@@ -143,6 +140,10 @@ public class WeChatRegistController extends BaseUserController {
         ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
         if(null!=ret.getStatus()&&!ret.getStatus().equals("000")){
             return ret;
+        }
+        if(wjtClient!=null){
+            logger.info("温金投用户注册开始");
+            isWjt="1";
         }
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
