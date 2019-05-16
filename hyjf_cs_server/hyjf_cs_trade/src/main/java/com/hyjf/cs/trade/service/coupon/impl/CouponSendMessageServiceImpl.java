@@ -178,7 +178,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 couponCodeList.add(paramBean.getCouponCode());
                 activityId = paramBean.getActivityId();
                 couponSource = 2;
-                this.sendConponAction(couponCodeList, userId, sendFlg, activityId, couponSource, "");
+                couponCount = this.sendConponAction(couponCodeList, userId, sendFlg, activityId, couponSource, "");
             }
 
 			logger.info("发放优惠券：" + couponCount + " 张");

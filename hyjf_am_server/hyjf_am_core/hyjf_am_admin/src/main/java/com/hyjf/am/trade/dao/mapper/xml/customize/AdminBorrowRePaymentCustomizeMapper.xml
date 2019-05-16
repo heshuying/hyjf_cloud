@@ -35,7 +35,7 @@
 					 and br.repay_status=1
 				</if>
 				<if test="statusSrch ==2">
-					br.repay_status=0 and br.advance_status=3
+					and br.repay_status=0 and br.advance_status=3
 				</if>
 			</if>
 			<!-- 最后还款日 -->
@@ -176,7 +176,7 @@
 
 		hic.inst_name as instName,
 
-		binfo.borrow_measures_instit as webName,
+		binfo.repay_org_name as webName,
 		rflg.order_id AS freezeOrderId,
 		br.repay_fee-b.repay_fee_normal as repayFeeWait,
 		b.repay_fee_normal as repayFeeYes,
