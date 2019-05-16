@@ -45,7 +45,7 @@ public interface PassWordService extends BaseUserService {
      * @param user
      * @return
      */
-    Map<String,Object> resetPassword(UserVO user);
+    Map<String,Object> resetPassword(UserVO user,String wjtClient);
 
     /**
      * web端检查参数

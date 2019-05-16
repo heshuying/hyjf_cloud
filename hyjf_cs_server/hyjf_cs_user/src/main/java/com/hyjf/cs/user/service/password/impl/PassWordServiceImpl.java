@@ -166,7 +166,7 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
     }
 
     @Override
-    public Map<String, Object> resetPassword(UserVO user) {
+    public Map<String, Object> resetPassword(UserVO user,String wjtClient) {
         int userId = user.getUserId();
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
@@ -192,6 +192,13 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
+        // 同步地址  是否跳转到前端页面
+        String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        }
+
         //channel=0：设置交易密码/1：重置交易密码
         String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult" + "?channel=1&logOrdId=" + bean.getLogOrderId();
         // 异步调用路

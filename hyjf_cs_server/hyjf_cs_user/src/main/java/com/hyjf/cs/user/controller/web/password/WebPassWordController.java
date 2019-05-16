@@ -160,7 +160,9 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "重置交易密码", notes = "重置交易密码")
     @PostMapping(value = "/resetTeaderPassword", produces = "application/json; charset=utf-8")
-    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
+    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId,
+                                            @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                            HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -179,7 +181,7 @@ public class WebPassWordController extends BaseUserController{
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
-        Map<String,Object> map = passWordService.resetPassword(user);
+        Map<String,Object> map = passWordService.resetPassword(user,wjtClient);
         result.setData(map);
         return result;
     }
