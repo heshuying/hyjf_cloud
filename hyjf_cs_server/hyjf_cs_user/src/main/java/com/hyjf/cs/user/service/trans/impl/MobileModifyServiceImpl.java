@@ -189,7 +189,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         BankCallBean mobileModifyBean = new BankCallBean(bean.getUserId(), BankCallConstant.TXCODE_MOBILE_MODIFY_PAGE, Integer.parseInt(bean.getPlatform()), BankCallConstant.BANK_URL_MOBILE_MODIFY_PAGE);
         mobileModifyBean.setChannel(bean.getChannel());
         // 该接口只有一个返回页面
-        String successPath = "/user/bankMobileModifySuccess?logOrdId=" + mobileModifyBean.getLogOrderId();
+        String successPath = "/user/bankMobileModify/result?logOrdId=" + mobileModifyBean.getLogOrderId();
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
         // 如果是移动端  返回别的url
