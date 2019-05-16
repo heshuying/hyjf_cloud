@@ -515,12 +515,7 @@
             END,
             ''
             ) AS repayMoneySource,
-            cr.assign_repay_account +
-        IF (
-            cr. STATUS = 1,
-            cr.manage_fee,
-            0
-        ) AS recoverAmountTotal,
+         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = cr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
          FROM_UNIXTIME(
             cr.assign_repay_next_time,
             '%Y-%m-%d'
@@ -611,6 +606,7 @@
             hcr.manage_fee,
             0
         ) AS recoverAmountTotal,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = hcr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
         IF (
             hcr.assign_repay_next_time IS NULL
             OR hcr.assign_repay_time = '',
@@ -1239,7 +1235,7 @@
         cr.late_interest AS lateInterest,
         cr.assign_repay_capital AS recoverCapitalYesPeriod,
         cr.assign_repay_interest AS recoverInterestYesPeriod,
-        cr.assign_repay_account AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = cr.credit_repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
 
         IF (
         cr.`status` = 1,
@@ -1406,7 +1402,7 @@
         hcr.repay_late_interest AS lateInterest,
         hcr.receive_capital_yes AS recoverCapitalYesPeriod,
         hcr.receive_interest_yes AS recoverInterestYesPeriod,
-        hcr.receive_account_yes AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = hcr.credit_repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
 
         IF (
         hcr.repay_status = 1,
