@@ -100,7 +100,8 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<BorrowRecover> selectBorrowRecoverListByRequest(CertRequest certRequest) {
         BorrowRecoverExample borrowRecoverExample=new BorrowRecoverExample();
-        borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(certRequest.getRepayOrdid());
+        borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(certRequest.getRepayOrdid())
+                .andBorrowNidEqualTo(certRequest.getBorrowNid());
         List<BorrowRecover> borrowRecovers=borrowRecoverMapper.selectByExample(borrowRecoverExample);
         return borrowRecovers;
     }

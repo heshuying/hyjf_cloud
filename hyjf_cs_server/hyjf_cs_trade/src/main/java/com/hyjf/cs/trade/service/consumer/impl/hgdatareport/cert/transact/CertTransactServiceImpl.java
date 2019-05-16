@@ -469,6 +469,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		if("end".equals(borrowAndInfoVO.getBorrowStyle())||"endday".equals(borrowAndInfoVO.getBorrowStyle())){
 			CertRequest certRequest=new CertRequest();
 			certRequest.setRepayOrdid(accountList.getNid());
+			certRequest.setBorrowNid(accountList.getRemark());
 			List<BorrowRecoverVO> borrowRecovers=amTradeClient.selectBorrowRecoverListByRequest(certRequest);
 			if(borrowRecovers==null||borrowRecovers.size()==0){
 				return;
