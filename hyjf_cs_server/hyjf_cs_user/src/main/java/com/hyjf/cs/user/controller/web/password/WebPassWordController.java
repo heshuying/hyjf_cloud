@@ -99,7 +99,9 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/transaction", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
+    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId,
+                                             @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                             HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -117,7 +119,7 @@ public class WebPassWordController extends BaseUserController{
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
-        Map<String,Object> map = passWordService.setPassword(user);
+        Map<String,Object> map = passWordService.setPassword(user,wjtClient);
         result.setData(map);
         return result;
     }
