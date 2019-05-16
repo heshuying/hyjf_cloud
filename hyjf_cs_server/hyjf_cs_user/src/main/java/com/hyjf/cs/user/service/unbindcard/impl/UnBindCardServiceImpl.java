@@ -187,7 +187,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
      * @return
      */
     @Override
-    public Map<String, Object> callUnBindCardPage(DeleteCardPageBean bean, String channel, String sign, HttpServletRequest request) {
+    public Map<String, Object> callUnBindCardPage(DeleteCardPageBean bean, String channel, String sign, HttpServletRequest request, String wjtClient) {
         Map<String, Object> mv = new HashMap<>();
         //
         bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
@@ -204,19 +204,29 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         // 回调路径
         String retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + errorPath;
         String successUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
+        // 同步地址  是否跳转到前端页面
+        String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,wjtClient);
+        }
         if (!channel.contains(BankCallConstant.CHANNEL_PC)) {
             //返回路径
             errorPath = "/user/bankCard/unbind/result/failed";
             successPath = "/user/bankCard/unbind/result/success";
             // 同步地址  是否跳转到前端页面
-            retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + errorPath + "?status=99";
-            successUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath + "?status=000&statusDesc=";
+            retUrl = host + errorPath + "?status=99";
+            successUrl = host + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
             successUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
         }
 
         // 忘记密码跳转链接
         String forgetPassworedUrl = getForgotPwdUrl(channel, request, systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgetPassworedUrl = getWjtForgotPwdUrl(wjtClient, systemConfig);
+        }
         bindCardBean.setForgotPwdUrl(forgetPassworedUrl);
         bindCardBean.setRetUrl(retUrl);
         bindCardBean.setSuccessfulUrl(successUrl);
@@ -343,6 +353,22 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         if (ClientConstants.WECHAT_CLIENT == client) {
             String sign = request.getParameter("sign");
             return sysConfig.getWeiFrontHost() + "/submitForm?queryType=6";
+        }
+        return "";
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtForgotPwdUrl(String platform, SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
         }
         return "";
     }
