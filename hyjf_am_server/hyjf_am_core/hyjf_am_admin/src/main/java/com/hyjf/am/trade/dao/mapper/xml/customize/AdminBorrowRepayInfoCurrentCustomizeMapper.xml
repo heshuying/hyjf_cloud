@@ -488,7 +488,7 @@
                 ) AS period,
                 cr.recover_period AS recoverPeriod,
                 ct.assign_capital AS account,
-                ct.assign_capital - ct.assign_repay_capital AS amountHold,
+                (SELECT IFNULL(SUM(cr1.assign_capital),0) FROM ht_credit_repay cr1 WHERE cr1.`status` != 1 AND cr1.assign_nid = ct.assign_nid) AS amountHold,
                 cr.assign_capital AS recoverCapital,
                 cr.assign_interest AS recoverInterest,
                 cr.assign_account AS recoverAccount,
@@ -1161,13 +1161,7 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        CASE ct.invite_user_attribute
-        WHEN 0 THEN '无主单'
-        WHEN 1 THEN '有主单'
-        WHEN 2 THEN '线下员工'
-        WHEN 3 THEN '线上员工'
-        ELSE ''
-        END  AS recoverUserAttribute,
+        '' AS recoverUserAttribute,
         CASE u2.attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
@@ -1334,14 +1328,14 @@
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
-        END recoverUserAttribute,
+        END recoverUserAttributeNow,
         CASE acc.user_attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
-        END recoverUserAttributeNow,
+        END recoverUserAttribute,
         acc.invite_user_regionname AS recoverRegionName,
         acc.invite_user_branchname AS recoverBranchName,
         acc.invite_user_departmentname AS recoverDepartmentName,
