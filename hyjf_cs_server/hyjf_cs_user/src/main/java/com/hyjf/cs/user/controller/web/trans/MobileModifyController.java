@@ -151,6 +151,9 @@ public class MobileModifyController extends BaseUserController {
         String retMsg = mobileModifyService.getMobileModifyMess(param.get("logOrdId"));
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
+        if(StringUtils.isNotBlank(retMsg) && "WATING".equals(retMsg)) {
+            map.put("error","处理中");
+        }
         result.setData(map);
         return result;
     }

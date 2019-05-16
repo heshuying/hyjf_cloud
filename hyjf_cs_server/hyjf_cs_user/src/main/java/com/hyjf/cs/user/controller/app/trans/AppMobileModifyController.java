@@ -21,7 +21,6 @@ import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -125,14 +124,31 @@ public class AppMobileModifyController extends BaseUserController {
      */
     @ApiOperation(value = "修改预留手机号异步回调结果查询", notes = "修改预留手机号异步回调结果查询")
     @PostMapping("/searchMobileModifyMess")
-    @ApiImplicitParam(name = "param", value = "{logOrdId:String}", dataType = "Map")
     @ResponseBody
-    public AppResult<Object> getMobileModifyMessage(@RequestBody Map<String, String> param) {
-        logger.info("调用银行失败原因start,logOrdId:{}", param);
+    public AppResult<Object> getMobileModifyMessage(@RequestHeader(value = "logOrdId") String logOrdId) {
+        logger.info("修改预留手机号异步回调结果start,logOrdId:{}", logOrdId);
         AppResult<Object> result = new AppResult<Object>();
-        String retMsg = mobileModifyService.getMobileModifyMess(param.get("logOrdId"));
+        // 跳转给原生页状态用000
+        result.setStatusInfo(BaseResult.SUCCESS, BaseResult.SUCCESS_DESC);
+        String retMsg = mobileModifyService.getMobileModifyMess(logOrdId);
         Map<String, String> map = new HashedMap();
+        map.put("status", "2");
+        // 未返回查询结果返回处理异常
+        if (StringUtils.isBlank(retMsg)) {
+            map.put("error", "未知错误");
+            result.setData(map);
+            return result;
+        }
         map.put("error", retMsg);
+        // 未查询到返回结果码显示处理中
+        if ("WATING".equals(retMsg)) {
+            map.put("status", "1");
+        }
+        // 处理成功
+        if ("00000000".equals(retMsg)) {
+            map.put("status", "0");
+            map.put("error", BaseResult.SUCCESS_DESC);
+        }
         result.setData(map);
         return result;
     }

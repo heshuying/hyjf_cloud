@@ -399,7 +399,8 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         String retCode = amDataCollectClient.getRetCode(logOrdId);
         logger.info("根据"+logOrdId+"获取retcode="+retCode);
         if (retCode==null){
-            return "处理中";
+            // 设定个变量页面展示处理中
+            return "WATING";
         }
         if(retCode.equals("00000000")){
             return "00000000";

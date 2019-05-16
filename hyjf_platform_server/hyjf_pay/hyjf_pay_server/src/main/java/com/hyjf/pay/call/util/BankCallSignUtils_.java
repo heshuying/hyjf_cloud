@@ -85,7 +85,7 @@ public class BankCallSignUtils_ {
                 .append(signStr).toString());
         String sign = null;
         try {
-            RSAKeyUtil rsaKey = new RSAKeyUtil(new File(systemConfig.getBankPrikeyPath()), systemConfig.getBankPrikeyPass());
+            RSAKeyUtil rsaKey = new RSAKeyUtil(new File("D:\\HYJF\\bank_key\\huiyinjinrong_sit.p12"), systemConfig.getBankPrikeyPass());
             RSAHelper signer = new RSAHelper(rsaKey.getPrivateKey());
 
             sign = signer.sign(signStr);
@@ -114,7 +114,7 @@ public class BankCallSignUtils_ {
 
         boolean b = false;
         try {
-            RSAKeyUtil ru = new RSAKeyUtil(new File(systemConfig.getBankPubkeyPath()));
+            RSAKeyUtil ru = new RSAKeyUtil(new File("D:\\HYJF\\bank_key\\fdep.crt"));
             RSAHelper signHelper = new RSAHelper(ru.getPublicKey());
             b = signHelper.verify(dataText, signText);
         } catch (Exception e) {
