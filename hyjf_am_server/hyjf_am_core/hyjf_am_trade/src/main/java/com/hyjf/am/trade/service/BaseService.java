@@ -264,4 +264,12 @@ public interface BaseService {
 	 * @return
 	 */
 	HjhLabel getLabelIdCommon(HjhDebtCredit credit);
+
+	/**
+	 * 更新还款日志表
+	 * @param apicron
+	 * @param status
+	 * @return
+	 */
+	boolean updateBorrowApicronLog(BorrowApicron apicron, int status);
 }

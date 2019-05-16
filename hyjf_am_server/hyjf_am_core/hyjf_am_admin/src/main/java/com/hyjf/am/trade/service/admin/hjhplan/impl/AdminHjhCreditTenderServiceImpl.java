@@ -73,6 +73,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getTenderType())){
 			param.put("tenderType",request.getTenderType());
 		}
+		if (StringUtils.isNotEmpty(request.getSellOrderId())){
+			param.put("sellOrderId",request.getSellOrderId());
+		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		int count = adminHjhCreditTenderCustomizeMapper.countDebtCreditTender(param);
@@ -111,6 +114,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		}
 		if (StringUtils.isNotEmpty(request.getTenderType())){
 			param.put("tenderType",request.getTenderType());
+		}
+		if (StringUtils.isNotEmpty(request.getSellOrderId())){
+			param.put("sellOrderId",request.getSellOrderId());
 		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
@@ -159,7 +165,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getTenderType())){
 			param.put("tenderType",request.getTenderType());
 		}
-		
+		if (StringUtils.isNotEmpty(request.getSellOrderId())){
+			param.put("sellOrderId",request.getSellOrderId());
+		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderCustomizeMapper.selectDebtCreditTenderList(param);
@@ -225,6 +233,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getTenderType())) {
 			param.put("tenderType", request.getTenderType());
 		}
+        if (StringUtils.isNotEmpty(request.getSellOrderId())){
+            param.put("sellOrderId",request.getSellOrderId());
+        }
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		HjhCreditTenderSumVO vo = adminHjhCreditTenderCustomizeMapper.getHjhCreditTenderCalcSumByParam(param);

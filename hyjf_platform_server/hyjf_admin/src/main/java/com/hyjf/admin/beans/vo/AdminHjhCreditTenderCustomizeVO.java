@@ -93,12 +93,23 @@ public class AdminHjhCreditTenderCustomizeVO extends BaseVO implements Serializa
 
 	@ApiModelProperty(value = "债转服务费率")
 	private String assignServiceApr;
-	
+
+	@ApiModelProperty(value = "出让人智投订单号")
+	private String sellOrderId;
+
 	/**
 	 * 构造方法
 	 */
 	public AdminHjhCreditTenderCustomizeVO() {
 		super();
+	}
+
+	public String getSellOrderId() {
+		return sellOrderId;
+	}
+
+	public void setSellOrderId(String sellOrderId) {
+		this.sellOrderId = sellOrderId;
 	}
 
 	public String getId() {

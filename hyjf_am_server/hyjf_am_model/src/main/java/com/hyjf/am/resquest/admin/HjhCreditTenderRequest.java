@@ -209,6 +209,11 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	private String assignServiceApr;
 
 	/**
+	 * 出让人智投订单号
+	 */
+	private String sellOrderId;
+
+	/**
 	 * 构造方法
 	 */
 	public HjhCreditTenderRequest() {
@@ -549,5 +554,13 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 
 	public void setAssignServiceApr(String assignServiceApr) {
 		this.assignServiceApr = assignServiceApr;
+	}
+
+	public String getSellOrderId() {
+		return sellOrderId;
+	}
+
+	public void setSellOrderId(String sellOrderId) {
+		this.sellOrderId = sellOrderId;
 	}
 }

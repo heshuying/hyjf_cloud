@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.tyy
@@ -62,7 +63,7 @@ public class OperationReportJobBean implements Serializable {
     //渠道分析
     private List<OperationReportJobVO> listCompleteCount;
     //性别分布
-    private List<OperationReportJobVO> listSexDistribute;
+    private List<OperationReportJobVO>  listSexDistribute;
     //年龄分布
     private List<OperationReportJobVO> listAgeDistribute;
     //金额分布

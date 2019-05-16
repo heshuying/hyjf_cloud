@@ -854,4 +854,28 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 		example.setOrderByClause(" update_time desc ");
 		return this.hjhLabelMapper.selectByExample(example);
 	}
+
+	@Override
+	public boolean updateBorrowApicronLog(BorrowApicron apicron, int status) {
+		BorrowApicronLogExample logExample = new BorrowApicronLogExample();
+		logExample.createCriteria().andBankSeqNoEqualTo(apicron.getBankSeqNo());
+		List<BorrowApicronLog> borrowApicronLogList = borrowApicronLogMapper.selectByExample(logExample);
+		if(borrowApicronLogList == null || borrowApicronLogList.size() == 0){
+			logger.error("未查询到对应的还款日志！借款编号：{},银行流水号：{}", apicron.getBorrowNid(), apicron.getBankSeqNo());
+			return false;
+		}
+		for(BorrowApicronLog borrowApicronLog: borrowApicronLogList){
+			BorrowApicronLog newBorrowApicronLog = new BorrowApicronLog();
+			newBorrowApicronLog.setId(borrowApicronLog.getId());
+			newBorrowApicronLog.setStatus(status);
+			if (CustomConstants.BANK_BATCH_STATUS_SUCCESS == status || CustomConstants.BANK_BATCH_STATUS_PART_FAIL == status) {
+				newBorrowApicronLog.setSucAmount(apicron.getSucAmount());
+				newBorrowApicronLog.setSucCounts(apicron.getSucCounts());
+				newBorrowApicronLog.setFailAmount(apicron.getFailAmount());
+				newBorrowApicronLog.setFailCounts(apicron.getFailCounts());
+			}
+			borrowApicronLogMapper.updateByPrimaryKeySelective(newBorrowApicronLog);
+		}
+		return true;
+	}
 }

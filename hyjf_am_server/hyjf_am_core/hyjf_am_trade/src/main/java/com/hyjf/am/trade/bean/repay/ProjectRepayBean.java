@@ -68,6 +68,12 @@ public class ProjectRepayBean implements Serializable {
     /** 用户还款详情 */
     private List<ProjectRepayDetailBean> userRepayDetailList;
 
+    // 原始提前还款利息
+    public String chargeOriginalInterest;
+
+    // 提前还款罚息
+    public String chargePenaltyInterest;
+
     public ProjectRepayBean() {
         super();
     }
@@ -232,4 +238,19 @@ public class ProjectRepayBean implements Serializable {
 		this.repayUserId = repayUserId;
 	}
 
+    public String getChargeOriginalInterest() {
+        return chargeOriginalInterest;
+    }
+
+    public void setChargeOriginalInterest(String chargeOriginalInterest) {
+        this.chargeOriginalInterest = chargeOriginalInterest;
+    }
+
+    public String getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(String chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
+    }
 }

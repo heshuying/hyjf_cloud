@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AccountListCustomizeMapper" >
+
+    <select id="getUsersMonthBeginBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
+        SELECT
+        IFNULL(SUM(bank_balance), 0) monthBeginBalance
+        FROM
+        (
+        SELECT
+        MAX(id) AS max_id
+        FROM
+        ht_account_list
+        WHERE
+        create_time <![CDATA[<=]]> DATE_FORMAT(NOW(), '%Y-%m-01 23:59:59')
+        GROUP BY
+        user_id
+        ) AS r1
+        LEFT JOIN ht_account_list ON id = max_id
+        <where>
+            <if test="list != null" >
+                AND user_id IN
+                <foreach collection="list" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getUsersMonthNowBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
+        SELECT
+        IFNULL(SUM(bank_balance),0) monthNowBalance
+        FROM
+        ht_account
+        <where>
+            AND create_time <![CDATA[<=]]> NOW()
+            <if test="list != null" >
+                AND user_id IN
+                <foreach collection="list" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

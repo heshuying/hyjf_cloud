@@ -125,6 +125,8 @@ public class NifaRepayInfoMessageConsumer implements RocketMQListener<MessageExt
             BankCardVO bankCard = this.nifaRepayInfoMessageService.selectBankCardByUserId(borrow.getUserId());
             if (null == bankCard || StringUtils.isBlank(bankCard.getBank())) {
                 bank = "工商银行";
+            } else {
+                bank = bankCard.getBank();
             }
 
             // 逾期次数

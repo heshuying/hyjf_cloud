@@ -26,6 +26,8 @@
         <result column="increase_interest_flag" property="increaseInterestFlag" /> <!-- 是否加息 -->
         <result column="extra_yield_status" property="extraYieldStatus" /> <!-- 加息放款状态 -->
         <result column="extra_yield_repay_status" property="extraYieldRepayStatus" /> <!-- 加息还款状态 -->
+        <result column="seq_no" property="seqNo" /> <!-- 交易流水号 -->
+        <result column="bank_seq_no" property="bankSeqNo" /> <!-- 银行交易流水号 -->
     </resultMap>
 
     <sql id="Where_Clause">
@@ -95,7 +97,9 @@
         hba.data,
         b.increase_interest_flag,
         hba.extra_yield_status,
-        hba.extra_yield_repay_status
+        hba.extra_yield_repay_status,
+		hba.seq_no,
+		hba.bank_seq_no
         FROM
         ht_borrow_apicron hba
         LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
