@@ -64,7 +64,7 @@ public class WhereaboutsPageController extends BaseController {
 			}else if (1 == vo.getStyle().intValue()){
 //				vo.setJumpPath(wxcunguanUrl.replace("xxxx", vo.getId()+""));
 			} else {
-				vo.setJumpPath(wxUrl.replace("xxxx", vo.getId()+""));
+				vo.setJumpPath(wxUrl.replace("xxxx", vo.getUtmId()+""));
 			}
 		}
 		return new AdminResult<>(ListResult.build(vos, response.getCount()));
