@@ -144,9 +144,9 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             productInfoQO.setPublishStatus(publishStatus);
             productInfoQO.setH5linkUrl(H5linkUrl);
             productInfoQO.setLinkUrl(linkUrl);
-            //productInfoQO.setProductName(productName);
-            //TODO:方便测试使用，将产品编号用作产品名称，方便测试传数据区分
 
+            //TODO:方便测试使用，将产品编号用作产品名称，方便测试传数据区分 上线前删除此行
+            productInfoQO.setProductName(productNo);
             productInfoQO.setProductNo(productNo);
             productInfoQO.setProductStatus(Integer.valueOf(productStatus));
 
