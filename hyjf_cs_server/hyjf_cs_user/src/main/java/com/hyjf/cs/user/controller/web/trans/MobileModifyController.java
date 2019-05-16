@@ -142,7 +142,7 @@ public class MobileModifyController extends BaseUserController {
      * @Author liushouyi
      */
     @ApiOperation(value = "修改预留手机号异步回调结果查询", notes = "修改预留手机号异步回调结果查询")
-    @PostMapping("/searchFiledMess")
+    @PostMapping("/searchMobileModifyMess")
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
     public WebResult<Object> getMobileModifyMessage(@RequestBody Map<String,String> param) {
