@@ -962,6 +962,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		String borrowNid = apicron.getBorrowNid();
 		// 还款人(借款人或垫付机构)ID
 		Integer repayUserId = apicron.getUserId();
+
 		logger.info("【直投还款/承接人】借款编号：{}，开始更新承接人的还款数据。还款人ID：{}，承接订单号：{}", borrowNid, repayUserId, creditRepay.getCreditNid());
 		// 还款人用户名
 		String repayUserName = apicron.getUserName();
@@ -1027,6 +1028,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		Account assignBankAccount = getAccountByUserId(assignUserId);
 		// 出借用户银行账户
 		String assignAccountId = assignBankAccount.getAccountId();
+
+		// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+		int advance_status = borrowRecover.getAdvanceStatus();
+
 		// 判断该收支明细存在时,跳出本次循环
 		if (countCreditAccountListByNid(repayOrderId)) {
 			logger.error("【直投还款/承接人】借款编号：{}，承接人收支明细已存在！还款订单号:{}", borrowNid, repayOrderId);
@@ -1318,6 +1323,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRepayPlan.setDelayDays(borrowRecoverPlan.getDelayDays());
 				// 用户是否提前还款
 				borrowRepayPlan.setAdvanceStatus(borrowRecoverPlan.getAdvanceStatus());
+				// 是否提前还款
+				advance_status = borrowRecoverPlan.getAdvanceStatus();
 				// 还款来源
 				if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
 					// 还款来源（1、借款人还款，2、机构垫付，3、保证金垫付）
@@ -1402,10 +1409,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             }
         }
         try {
-            // 发送短信
-            this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest, borrowRecover.getAdvanceStatus());
-            // 推送消息
-            this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest, borrowRecover.getAdvanceStatus());
+			// 发送短信
+			this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest, advance_status);
+			if(borrowRecover.getAdvanceStatus()-1==0){
+				// 提前还款
+				// 发送短信
+				logger.info("borrowNid:{} 承接 提前还款  给用户发送短信",borrowNid);
+			}else{
+				// 推送消息
+				this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest, advance_status);
+			}
         } catch (Exception e) {
             logger.error("【直投还款/承接人】发送短信和推送消息时发生系统异常！", e);
         }
@@ -2181,6 +2194,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		BigDecimal repayInterest = BigDecimal.ZERO;
 		// 管理费
 		BigDecimal manageFee = BigDecimal.ZERO;
+		// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+		int advance_status = 0;
 		// 放款分期明细
 		BorrowRecoverPlan borrowRecoverPlan = null;
 		// 是否分期(true:分期, false:不分期)
@@ -2226,6 +2241,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
 			// 还款管理费
 			manageFee = recoverFee.subtract(recoverFeeYes);
+			// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+			advance_status = borrowRecoverPlan.getAdvanceStatus();
 		} else { // endday: 按天计息, end:按月计息
 			borrowRecover = selectBorrowRecoverByNid(borrowRecover.getNid());// 非完全承接需要更新已还款债转数据
 			// 还款订单号
@@ -2262,6 +2279,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
 			// 还款管理费
 			manageFee = recoverFee.subtract(recoverFeeYes);
+			// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+			advance_status = borrowRecover.getAdvanceStatus();
 		}
 		// 判断该收支明细存在时,跳出本次循环
 		if (countAccountListByNid(repayOrderId)) {
@@ -2591,15 +2610,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             }
         }
         try {
-			if(borrowRecover.getAdvanceStatus()-1==0){
+			if(advance_status-1==0){
 				// 提前还款
                 // 发送短信
-				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,borrowRecover.getAdvanceStatus());
+				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,advance_status);
 			}else{
 				// 发送短信
-				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,borrowRecover.getAdvanceStatus());
+				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,advance_status);
 				// 推送消息
-				this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest,borrowRecover.getAdvanceStatus());
+				this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest,advance_status);
 			}
         } catch (Exception e) {
             logger.error("【直投还款/出借人】发送短信和推送消息时发生系统异常！", e);

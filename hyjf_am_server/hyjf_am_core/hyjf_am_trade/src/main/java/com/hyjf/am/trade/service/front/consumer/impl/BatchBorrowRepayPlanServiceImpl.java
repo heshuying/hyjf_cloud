@@ -1310,6 +1310,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		BigDecimal manageFee = BigDecimal.ZERO;
 		// 放款分期明细
 		BorrowRecoverPlan borrowRecoverPlan = null;
+		// 还款状态 0:正常,1:提前,3:逾期
+		int advanceStatus = 0;
 		// 是否分期(true:分期, false:不分期)
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
@@ -1355,6 +1357,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
 				// 还款管理费
 				manageFee = recoverFee.subtract(recoverFeeYes);
+				// 还款状态
+				advanceStatus = borrowRecoverPlan.getAdvanceStatus() == 30 ? 3 : borrowRecoverPlan.getAdvanceStatus();
 			}
 		} else { // endday: 按天计息, end:按月计息
 			borrowRecover = selectBorrowRecoverByNid(borrowRecover.getNid());// 非完全承接需要更新已还款债转数据
@@ -1392,6 +1396,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
 			// 还款管理费
 			manageFee = recoverFee.subtract(recoverFeeYes);
+			// 还款状态
+			advanceStatus = borrowRecover.getAdvanceStatus() == 30 ? 3 : borrowRecover.getAdvanceStatus();
 		}
 		// 判断该收支明细存在时,跳出本次循环
 		if (countAccountListByNid(repayOrderId)) {
@@ -1683,7 +1689,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 未收利息
 		debtDetail.setRepayInterestWait(BigDecimal.ZERO);
 		// 提前还款状态
-		debtDetail.setAdvanceStatus(borrowRecover.getAdvanceStatus());
+		debtDetail.setAdvanceStatus(advanceStatus);// 区分分期和不分期 update by wgx 2019/05/16
 		// 提前还款天数
 		debtDetail.setAdvanceDays(borrowRepay.getChargeDays());
 		// 提前还款利息
@@ -1693,7 +1699,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 延期利息
 		debtDetail.setDelayInterest(delayInterest);
 		// 逾期天数
-		debtDetail.setLateDays(borrowRecover.getLateDays());
+		debtDetail.setLateDays(borrowRepay.getLateDays());// 取repay表，区分分期和不分期 update by wgx 2019/05/16
 		// 逾期利息
 		debtDetail.setLateInterest(lateInterest);
 		// 还款订单号
