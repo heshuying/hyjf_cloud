@@ -102,4 +102,12 @@ public interface MobileModifyService extends BaseUserService {
      * @return
      */
     String getNewBankMobile(Integer userId);
+
+    /**
+     * 修改预留手机号异步回调结果查询
+     *
+     * @param logOrdId
+     * @return
+     */
+    String getMobileModifyMess(String logOrdId);
 }

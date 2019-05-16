@@ -22,6 +22,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.bean.BankMobileModifyBean;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
@@ -59,6 +60,8 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     AmConfigClient amConfigClient;
     @Autowired
     CommonProducer commonProducer;
+    @Autowired
+    AmDataCollectClient amDataCollectClient;
 
     /**
      * 更换手机号条件校验
@@ -381,6 +384,29 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         vo.setUpdateTime(new Date());
         this.amUserClient.updateBankMobileModify(vo);
         return newBankMobile;
+    }
+
+    /**
+     * 修改预留手机号异步回调结果查询
+     *
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public String getMobileModifyMess(String logOrdId) {
+
+        //根据ordid获取retcode
+        String retCode = amDataCollectClient.getRetCode(logOrdId);
+        logger.info("根据"+logOrdId+"获取retcode="+retCode);
+        if (retCode==null){
+            return "处理中";
+        }
+        if(retCode.equals("00000000")){
+            return "00000000";
+        }
+        //根据retCode获取retMsg
+        String retMsg = this.getBankRetMsg(retCode);
+        return retMsg;
     }
 
     /**
