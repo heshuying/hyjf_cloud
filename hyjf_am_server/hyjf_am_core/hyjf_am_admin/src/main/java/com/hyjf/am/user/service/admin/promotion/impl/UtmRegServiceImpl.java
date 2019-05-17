@@ -47,4 +47,10 @@ public class UtmRegServiceImpl extends BaseServiceImpl implements UtmRegService 
     public void updatePcUtmReg(UtmReg utmReg){
         utmRegMapper.updateByPrimaryKeySelective(utmReg);
     }
+
+    @Override
+    public void deleteUtmReg(Integer id){
+        utmRegMapper.deleteByPrimaryKey(id);
+    }
+
 }

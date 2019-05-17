@@ -3029,4 +3029,16 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteAppUtmReg/" + id;
 		return restTemplate.getForEntity(url, boolean.class).getBody();
 	}
+
+	/**
+	 * 根据Id删除pc渠道信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteUtmReg(Integer id) {
+		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteUtmReg/" + id;
+		return restTemplate.getForEntity(url, boolean.class).getBody();
+	}
 }

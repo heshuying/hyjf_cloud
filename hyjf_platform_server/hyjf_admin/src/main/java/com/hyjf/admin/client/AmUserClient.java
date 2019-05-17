@@ -1513,4 +1513,12 @@ public interface AmUserClient {
      * @return
      */
     boolean deleteAppUtmReg(Long id);
+
+    /**
+     * 根据渠道id删除渠道记录
+     *
+     * @param id
+     * @return
+     */
+    boolean deleteUtmReg(Integer id);
 }

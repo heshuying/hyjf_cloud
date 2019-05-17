@@ -124,6 +124,17 @@ public class AppUtmRegController extends BaseController {
     }
 
     /**
+     * 删除pc渠道信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/deleteUtmReg/{id}")
+    public boolean deleteUtmReg(@PathVariable Integer id) {
+        utmRegService.deleteUtmReg(id);
+        return true;
+    }
+
+    /**
      * 新增pc渠道信息
      * @param appUtmReg
      * @return

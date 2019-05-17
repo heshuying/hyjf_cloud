@@ -47,4 +47,11 @@ public interface UtmRegService extends BaseService {
      * @return
      */
     void updatePcUtmReg(UtmReg utmReg);
+
+    /**
+     * 删除pc渠道信息
+     * @param id
+     * @return
+     */
+    void deleteUtmReg(Integer id);
 }
