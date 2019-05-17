@@ -13,7 +13,7 @@
         case when posttime > '2018-12-27' then (s.sms_number * 0.04)  else (s.sms_number * 0.042) end as smsMoney
         from ht_sms_count s
 
-        <trim prefix="having" prefixOverrides="AND |OR ">
+        <where>
         <if test="post_time_begin!=null">
             AND posttime <![CDATA[>=]]>  STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
         </if>
@@ -26,7 +26,7 @@
                 #{dep}
             </foreach>
         </if>
-        </trim>
+        </where>
         ORDER BY s.posttime desc
         <if test="limitStart >=0 and limitEnd > 0">
             LIMIT #{limitStart} , #{limitEnd}
@@ -104,7 +104,7 @@
 	<select id="selectCount" parameterType="com.hyjf.am.resquest.user.SmsCountRequest" resultType="INTEGER">
 		select count(1) from ht_sms_count
 
-        <trim prefix="having" prefixOverrides="AND |OR ">
+        <where>
         <if test="post_time_begin!=null">
             AND posttime <![CDATA[>=]]>  STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
         </if>
@@ -117,7 +117,7 @@
                 #{dep}
             </foreach>
         </if>
-        </trim>
+        </where>
     </select>
 
     <select id="queryUser" resultType="java.lang.String" parameterType="java.util.Map">
