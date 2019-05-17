@@ -47,6 +47,7 @@ public class SmsCountTemp {
     @RequestMapping(value = "/auto", method = RequestMethod.GET)
     @ResponseBody
     public void smsAuto() {
+        logger.info("SmsCountTemp smsAuto 开始运行");
         long startTime = System.currentTimeMillis();   //获取开始时间
 
         //先将CRM中的企业用户对应的部门都查询出来
