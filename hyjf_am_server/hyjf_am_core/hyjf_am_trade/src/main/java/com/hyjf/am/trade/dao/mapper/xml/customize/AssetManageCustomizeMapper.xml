@@ -2672,6 +2672,7 @@
 		<result column="coupon_type" property="couponType" />
 		<result column="assign_nid" property="assignNid" />
 		<result column="order_status" property="orderStatus"/>
+		<result column="borrowStatus" property="borrowStatus"/>
 	</resultMap>
 
 	<select id="selectRepaymentCalendar" resultMap="repayCalendarMap" parameterType="java.util.Map">
@@ -2702,7 +2703,8 @@
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		ten.nid as order_id,
 		'' as assign_nid,
-		'' as order_status
+		'' as order_status,
+		borrow.`status` AS borrowStatus
 		FROM
 		ht_borrow_tender ten
 		LEFT JOIN ht_borrow_recover_plan rec
@@ -2745,7 +2747,8 @@
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		ten.credit_tender_nid as order_id,
 		ten.assign_nid,
-		'' as order_status
+		'' as order_status,
+		borrow.`status` AS borrowStatus
 		FROM
 		ht_credit_tender ten
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
@@ -2788,7 +2791,8 @@
 		ELSE CONCAT(hb.borrow_period, '个月') END borrow_period,
 		hbtc.nid AS order_id,
 		'' AS assign_nid,
-		'' as order_status
+		'' as order_status,
+		hb.`status` AS borrowStatus
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
@@ -2823,7 +2827,8 @@
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		hiii.tender_nid as order_id,
 		'' as assign_nid,
-		'' as order_status
+		'' as order_status,
+		borrow.`status` AS borrowStatus
 		FROM
 		ht_increase_interest_invest hiii
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
@@ -2857,7 +2862,8 @@
 		ELSE CONCAT(hhp.lock_period, '个月') END borrow_period,
 		hha.accede_order_id as order_id,
 		'' as assign_nid,
-		hha.order_status order_status
+		hha.order_status order_status,
+		'' AS borrowStatus
 		FROM ht_hjh_accede hha
 		LEFT JOIN ht_hjh_plan hhp
 		ON hha.plan_nid=hhp.plan_nid
@@ -2898,7 +2904,8 @@
 		ELSE CONCAT(hhp.lock_period, '个月') END borrow_period,
 		hbtc.nid as order_id,
 		'' as assign_nid,
-		hha.order_status order_status
+		hha.order_status order_status,
+		'' AS borrowStatus
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
