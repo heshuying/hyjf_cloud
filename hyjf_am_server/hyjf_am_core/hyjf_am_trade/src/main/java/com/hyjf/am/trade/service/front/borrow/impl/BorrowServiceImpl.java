@@ -531,7 +531,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 borrowParams.put("productStatus", "3");
                 // 产品类型 0 散标类, 1 计划类
                 borrowParams.put("productType", 0);
-                commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+                commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), borrowParams));
             }catch (Exception e){
                 logger.error(e.getMessage());
                 logger.error("wbs系统推送标的信息发送MQ失败");
