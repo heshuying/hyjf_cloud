@@ -109,10 +109,15 @@ public class CertUserInfoMessageConsumer implements RocketMQListener<MessageExt>
                     certUser.add(oneUser);
                 }
             }
+            // 垫付机构不用上报
+            if (users.getUserAttr().equals(3)){
+                logger.info(logHeader+"垫付机构不用上报.");
+                return;
+            }
             // 如果是借款人   并且是解绑卡操作
             if (users.getUserAttr().equals(2) && (StringUtils.isBlank(borrowNid))) {
                 // 修改手机号风险测评时候用
-                if(certUser==null){
+                if(certUser==null||certUser.size()==0){
                     logger.info(logHeader+"借款人未上报过，userId:"+userId);
                     return;
                 }
