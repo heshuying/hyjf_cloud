@@ -15,7 +15,7 @@ public class RepaymentPlan implements Serializable {
     private Integer userId;
 
     /**
-     * 标的编号
+     * 投资订单号(ht_borrow_recover 的nid)
      *
      * @mbggenerated
      */
@@ -57,6 +57,13 @@ public class RepaymentPlan implements Serializable {
     private Date repaymentTime;
 
     /**
+     * 是否有效 1:有效,2:无效
+     *
+     * @mbggenerated
+     */
+    private Integer status;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -69,6 +76,8 @@ public class RepaymentPlan implements Serializable {
      * @mbggenerated
      */
     private Date updateTime;
+
+    private BigDecimal oldMoney;
 
     private static final long serialVersionUID = 1L;
 
@@ -136,6 +145,14 @@ public class RepaymentPlan implements Serializable {
         this.repaymentTime = repaymentTime;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -150,5 +167,13 @@ public class RepaymentPlan implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getOldMoney() {
+        return oldMoney;
+    }
+
+    public void setOldMoney(BigDecimal oldMoney) {
+        this.oldMoney = oldMoney;
     }
 }

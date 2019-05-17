@@ -222,6 +222,10 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
        return amTradeClient.countBorrowUser();
     }
 
+    /**
+     * 累计借贷余额笔数
+     * @return
+     */
     private String getTotalLoanBalanceNum() {
         return String.valueOf(amTradeClient.getTotalLoanBalanceNum());
     }

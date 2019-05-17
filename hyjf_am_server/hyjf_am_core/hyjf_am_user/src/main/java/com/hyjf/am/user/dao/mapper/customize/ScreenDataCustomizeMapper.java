@@ -16,7 +16,7 @@ public interface ScreenDataCustomizeMapper {
      * 查询用户是否为无主单非千乐渠道
      * @return
      */
-    HashMap<String,String> findUserGroupNotQianLe(@Param(value = "userId") Integer userId);
+    HashMap<String,String> findUserGroupNotQianLe(@Param(value = "userId") Integer userId,@Param(value = "taskTime") String taskTime);
 
 
 }

@@ -283,31 +283,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public void updateUser(int userId, String ip,User user) {
-        UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
-        if (userLoginLog == null) {
-            userLoginLog = new UserLoginLog();
-            userLoginLog.setUserId(userId);
-            userLoginLog.setLoginIp(ip);
-            userLoginLog.setLoginTime(new Date());
-            userLoginLog.setLastIp(userLoginLog.getLoginIp());
-            userLoginLog.setLastTime(userLoginLog.getLoginTime());
-            userLoginLog.setLoginTimes(1);
-            userLoginLog.setCreateTime(new Date());
-            userLoginLogMapper.insertSelective(userLoginLog);
-        } else {
-            if (userLoginLog.getLoginIp() != null) {
-                userLoginLog.setLastIp(userLoginLog.getLoginIp());
-            }
-            if (userLoginLog.getLoginTime() != null) {
-                userLoginLog.setLastTime(userLoginLog.getLoginTime());
-            }
-            userLoginLog.setLoginIp(ip);
-            userLoginLog.setLoginTime(new Date());
-            // 登录次数
-            userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);
-            userLoginLog.setUpdateTime(new Date());
-            userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
-        }
+        updateLoginUser(userId, ip);
         userMapper.updateByPrimaryKeySelective(user);
     }
 
@@ -1683,6 +1659,20 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public HashMap<String, String> findUserGroup(Integer userId) {
-        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId);
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String taskTime = formatter.format(currentTime);
+        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
+    }
+    /**
+     * 获取现在时间
+     *
+     * @return 返回时间类型 yyyyMM
+     */
+    private  String getNowDateOfDay() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String dateString = formatter.format(currentTime);
+        return dateString;
     }
 }

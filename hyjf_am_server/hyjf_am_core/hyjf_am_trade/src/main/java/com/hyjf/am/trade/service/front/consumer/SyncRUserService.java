@@ -5,13 +5,13 @@ import com.hyjf.am.trade.service.BaseService;
 
  public interface SyncRUserService extends BaseService {
 
-    void updateUserInfo(JSONObject jsonObj);
+    void updateUserInfo(JSONObject jsonObj) throws RuntimeException;
 
     void insertUser(JSONObject jsonObj);
 
-    void updateUser(JSONObject jsonObj);
+    void updateUser(JSONObject jsonObj) throws RuntimeException;
 
-    void updateSpreadUser(JSONObject jsonObj);
+    void updateSpreadUser(JSONObject jsonObj) throws RuntimeException;
 
     void updateUserInfoByReferrer(JSONObject jsonObj);
 

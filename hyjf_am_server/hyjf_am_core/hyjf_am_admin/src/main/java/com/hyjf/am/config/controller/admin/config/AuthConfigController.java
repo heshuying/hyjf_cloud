@@ -42,8 +42,8 @@ public class AuthConfigController extends BaseConfigController {
         AdminAuthConfigCustomizeResponse response =new AdminAuthConfigCustomizeResponse();
         //查询版本配置列表条数
         int recordTotal = authConfigService.getAuthConfigCount();
-        List<HjhUserAuthConfigCustomize> recordList = authConfigService.getAuthConfigList();
         if (recordTotal > 0) {
+            List<HjhUserAuthConfigCustomize> recordList = authConfigService.getAuthConfigList();
             if(CollectionUtils.isNotEmpty(recordList)){
                 response.setResultList(CommonUtils.convertBeanList(recordList, HjhUserAuthConfigCustomizeVO.class));
                 response.setCount(recordTotal);
@@ -72,11 +72,10 @@ public class AuthConfigController extends BaseConfigController {
         }
 
         List<HjhUserAuthConfigLogCustomize> results=authConfigService.getAuthConfigLogList(request);
-        String returnCode = "0";
         if (CollectionUtils.isNotEmpty(results)){
             response.setResultList(CommonUtils.convertBeanList(results,HjhUserAuthConfigLogCustomizeVO.class));
             response.setCount(count);
-            response.setRtn(returnCode);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }
@@ -90,10 +89,9 @@ public class AuthConfigController extends BaseConfigController {
     public AdminAuthConfigResponse getAuthConfigById(@PathVariable Integer id){
         AdminAuthConfigResponse response = new AdminAuthConfigResponse();
         HjhUserAuthConfigCustomize authConfig = authConfigService.getAuthConfigById(id);
-        String returnCode = "0";
         if (Validator.isNotNull(authConfig)){
             response.setResult(CommonUtils.convertBean(authConfig,HjhUserAuthConfigVO.class));
-            response.setRtn(returnCode);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }

@@ -4,7 +4,8 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+
+    <properties resource="init_market.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -514,7 +515,15 @@
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
 			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
-			<columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_late" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_borrow_apicron_log" domainObjectName="BorrowApicronLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1907,13 +1916,13 @@
             <columnOverride column="exception_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-	    
+
 	    <table tableName="ht_debt_config" domainObjectName="DebtConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="config_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_debt_config_log" domainObjectName="DebtConfigLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2034,6 +2043,34 @@
             <columnOverride column="customer_group" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+
+        <table tableName="ht_workflow" domainObjectName="WorkFlow">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="flow_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_workflow_node" domainObjectName="WorkFlowNode">
+
+        <table tableName="ht_workname" domainObjectName="WorkName">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        
+        <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_activity_user_reward" domainObjectName="ActivityUserReward">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        
+        <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
 
     </context>
 </generatorConfiguration>

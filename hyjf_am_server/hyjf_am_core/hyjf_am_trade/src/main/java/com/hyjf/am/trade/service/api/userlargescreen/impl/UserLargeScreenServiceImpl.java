@@ -3,12 +3,23 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen.impl;
 
+import com.hyjf.am.trade.dao.mapper.auto.ScreenTwoParamMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AccountListCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.ScreenTwoParam;
+import com.hyjf.am.trade.dao.model.auto.ScreenTwoParamExample;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -25,8 +36,12 @@ import java.util.List;
 @Service
 public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserLargeScreenService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserLargeScreenServiceImpl.class);
+
     @Autowired
     private AccountListCustomizeMapper accountListCustomizeMapper;
+    @Autowired
+    private ScreenTwoParamMapper screenTwoParamMapper;
 
     @Override
     public UserLargeScreenVO getTotalAmount(){
@@ -77,11 +92,13 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getMonthReceivedPayments();
         List<EchartsResultVO> monthReceivedPaymentsNew = new ArrayList<>();
         List<EchartsResultVO> monthReceivedPaymentsOld = new ArrayList<>();
-        for(EchartsResultVO echartsResultVO:list){
-            if("1".equals(echartsResultVO.getCustomerGroup())){
-                monthReceivedPaymentsNew.add(echartsResultVO);
-            }else {
-                monthReceivedPaymentsOld.add(echartsResultVO);
+        if(!CollectionUtils.isEmpty(list)) {
+            for (EchartsResultVO echartsResultVO : list) {
+                if ("1".equals(echartsResultVO.getCustomerGroup())) {
+                    monthReceivedPaymentsNew.add(echartsResultVO);
+                } else {
+                    monthReceivedPaymentsOld.add(echartsResultVO);
+                }
             }
         }
         vo.setMonthReceivedPaymentsNew(monthReceivedPaymentsNew);
@@ -149,52 +166,39 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
      * @return
      */
     @Override
-    public UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds) {
+    public UserLargeScreenTwoVO getMonthDataStatistics() {
         List<MonthDataStatisticsVO> monthDataStatisticsNew = new ArrayList<>();
         List<MonthDataStatisticsVO> monthDataStatisticsOld = new ArrayList<>();
+        List<MonthDataStatisticsVO> currentOwnersAndUserIds = null;
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
 
-        // 坐席
-        // List<MonthDataStatisticsVO> listOn =  userLargeScreenCustomizeMapper.getMonthDataStatisticsBO();
-        // 坐席、年化业绩
-        List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
-        // 坐席、充值
-        List<MonthDataStatisticsVO> listO =  userLargeScreenCustomizeMapper.getMonthDataStatisticsO();
-        // 坐席、提现
-        List<MonthDataStatisticsVO> listT =  userLargeScreenCustomizeMapper.getMonthDataStatisticsT();
-        // 坐席、回款
-        List<MonthDataStatisticsVO> listFi =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFi();
+        // 查询当天batch统计数据
+        ScreenTwoParamExample example = new ScreenTwoParamExample();
+        ScreenTwoParamExample.Criteria criteria = example.createCriteria();
+        criteria.andQueryTimeEqualTo(new Date());
+        List<ScreenTwoParam> screenTwoParams = screenTwoParamMapper.selectByExample(example);
 
-        if(!CollectionUtils.isEmpty(currentOwnersAndUserIds)){
+        if (!CollectionUtils.isEmpty(screenTwoParams)){
+            // 对象数据转移
+            currentOwnersAndUserIds = new ArrayList();
+            for (ScreenTwoParam param : screenTwoParams) {
+                MonthDataStatisticsVO monthDataStatisticsVO = new MonthDataStatisticsVO();
+                monthDataStatisticsVO.setCustomerGroup(param.getFlag().toString());
+                monthDataStatisticsVO.setCurrentOwner(param.getCustomerName());
+                monthDataStatisticsVO.setGuardFund(param.getNowBalance());
+                monthDataStatisticsVO.setAdditionalShare(param.getCapitalIncrease());
+                monthDataStatisticsVO.setExtractionRate(param.getCashWithdrawalRate());
+                currentOwnersAndUserIds.add(monthDataStatisticsVO);
+            }
+            // 坐席、年化业绩
+            List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
+            // 坐席、充值
+            List<MonthDataStatisticsVO> listO =  userLargeScreenCustomizeMapper.getMonthDataStatisticsO();
+            // 坐席、提现
+            List<MonthDataStatisticsVO> listT =  userLargeScreenCustomizeMapper.getMonthDataStatisticsT();
+            // 新、老客组数据处理
             for(MonthDataStatisticsVO monthDataStatisticsVOO : currentOwnersAndUserIds){
                 if("1".equals(monthDataStatisticsVOO.getCustomerGroup())){
-                    // 查询每个坐席下的所有用户
-                    // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 1);
-                   // List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
-                    // 坐席下用户们当前总站岗资金
-                    BigDecimal monthNowBalance = new BigDecimal(0);
-                    /*if (!CollectionUtils.isEmpty(userIds)){
-                        // 一次查询的条件数
-                        int queryNum = 1000;
-                        if(userIds.size() > queryNum){
-                            int time = userIds.size()/queryNum;
-                            if(userIds.size()%queryNum > 0){
-                                time += 1;
-                            }
-                            for(int i=1; i<time+1; i++){
-                                List<Integer> queryList = new ArrayList();
-                                for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
-                                    if(null != userIds.get(j)){
-                                        queryList.add(userIds.get(j));
-                                    }
-                                }
-                                monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
-                            }
-
-                        }else {
-                            monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
-                        }
-                    }*/
                     // 年化业绩
                     if(!CollectionUtils.isEmpty(listFo)){
                         for(MonthDataStatisticsVO listFoSon : listFo){
@@ -222,16 +226,20 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             }
                         }
                     }
-                    // 站岗资金
-                    monthDataStatisticsVOO.setGuardFund(monthNowBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
+                    logger.info("新客组{}月坐席下用户的 年化业绩:{},充值:{},提现:{},当前站岗资金:{}",
+                            monthDataStatisticsVOO.getCurrentOwner(),
+                            monthDataStatisticsVOO.getYearMoney(),
+                            monthDataStatisticsVOO.getRecharge(),
+                            monthDataStatisticsVOO.getWithdraw(),
+                            monthDataStatisticsVOO.getGuardFund());
 
                     // 新客组数据
                     monthDataStatisticsNew.add(monthDataStatisticsVOO);
-                }else {
+                }else if("2".equals(monthDataStatisticsVOO.getCustomerGroup())) {
                     // 年化业绩
                     if(!CollectionUtils.isEmpty(listFo)){
                         for(MonthDataStatisticsVO listFoSon : listFo){
-                            if (!"1".equals(listFoSon.getCustomerGroup()) &&
+                            if ("2".equals(listFoSon.getCustomerGroup()) &&
                                     listFoSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney());
                             }
@@ -240,7 +248,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 充值
                     if(!CollectionUtils.isEmpty(listO)){
                         for(MonthDataStatisticsVO listOSon : listO){
-                            if (!"1".equals(listOSon.getCustomerGroup()) &&
+                            if ("2".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setRecharge(listOSon.getRecharge());
                             }
@@ -249,90 +257,20 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 提现
                     if(!CollectionUtils.isEmpty(listT)){
                         for(MonthDataStatisticsVO listTSon : listT){
-                            if (!"1".equals(listTSon.getCustomerGroup()) &&
+                            if ("2".equals(listTSon.getCustomerGroup()) &&
                                     listTSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setWithdraw(listTSon.getWithdraw());
                             }
                         }
-                    }
-                    // 回款
-                    if(!CollectionUtils.isEmpty(listFi)){
-                        for(MonthDataStatisticsVO listFiSon : listFi){
-                            if (!"1".equals(listFiSon.getCustomerGroup()) &&
-                                    listFiSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setReceived(listFiSon.getReceived());
-                            }
-                        }
-                    }
-                    // 查询每个坐席下的所有用户
-                    // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 2);
-                    List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
-                    // 坐席下用户月初站岗资金
-                    BigDecimal monthBeginBalance = new BigDecimal("0");
-                    // 坐席下用户当前站岗资金
-                    BigDecimal monthNowBalance = new BigDecimal("0");
-                    if (!CollectionUtils.isEmpty(userIds)){
-                        // 一次查询的条件数
-                        // 月初
-                        /*int queryNum = 1000;
-                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
-                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
-                        }else {
-                            if(userIds.size() > queryNum){
-                                int time = userIds.size()/queryNum;
-                                if(userIds.size()%queryNum > 0){
-                                    time += 1;
-                                }
-                                for(int i=1; i<time+1; i++){
-                                    List<Integer> queryList = new ArrayList();
-                                    for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
-                                        if(null != userIds.get(j)){
-                                            queryList.add(userIds.get(j));
-                                        }
-                                    }
-                                    monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(queryList));
-                                }
-
-                            }else {
-                                monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(userIds));
-                            }
-                            RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
-                        }
-                        // 当前
-                        if(userIds.size() > queryNum){
-                            int time = userIds.size()/queryNum;
-                            if(userIds.size()%queryNum > 0){
-                                time += 1;
-                            }
-                            for(int i=1; i<time+1; i++){
-                                List<Integer> queryList = new ArrayList();
-                                for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
-                                    if(null != userIds.get(j)){
-                                        queryList.add(userIds.get(j));
-                                    }
-                                }
-                                monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
-                            }
-
-                        }else {
-                            monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
-                        }*/
-                    }
-                    // 当前站岗资金
-                    monthDataStatisticsVOO.setGuardFund(monthNowBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
-                    // 增资
-                    BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthNowBalance);
-                    if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
-                        additionalShare = new BigDecimal("0");
-                    }
-                    monthDataStatisticsVOO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
-                    // 提现率
-                    BigDecimal extractionRate = new BigDecimal("0");
-                    if(monthDataStatisticsVOO.getWithdraw().compareTo(BigDecimal.ZERO) > 0 &&
-                            monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
-                        extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP);
-                    }
-                    monthDataStatisticsVOO.setExtractionRate(extractionRate);
+                    };
+                    logger.info("老客组{}月坐席下用户的 年化业绩:{},充值:{},提现:{},当前站岗资金:{},增资:{},提现率:{}",
+                            monthDataStatisticsVOO.getCurrentOwner(),
+                            monthDataStatisticsVOO.getYearMoney(),
+                            monthDataStatisticsVOO.getRecharge(),
+                            monthDataStatisticsVOO.getWithdraw(),
+                            monthDataStatisticsVOO.getGuardFund(),
+                            monthDataStatisticsVOO.getAdditionalShare(),
+                            monthDataStatisticsVOO.getExtractionRate());
 
                     // 老客组数据
                     monthDataStatisticsOld.add(monthDataStatisticsVOO);
@@ -365,28 +303,23 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         OperMonthPerformanceDataVO listFo =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFo();
         // 运营部-年化业绩
         OperMonthPerformanceDataVO listSi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataSi();
-        // 获得坐席当前站岗资金
-        BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
-        if(nowMonthBalance == null){
-            nowMonthBalance = new BigDecimal("0");
-        }
-        // 获得坐席月初站岗资金
-        BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
-        if (startMonthBalance == null){
-            startMonthBalance = new BigDecimal("0");
+        // 查询当天batch统计数据
+        ScreenTwoParamExample example = new ScreenTwoParamExample();
+        ScreenTwoParamExample.Criteria criteria = example.createCriteria();
+        criteria.andFlagEqualTo(3);
+        criteria.andQueryTimeEqualTo(new Date());
+        List<ScreenTwoParam> screenTwoParams = screenTwoParamMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(screenTwoParams)){
+            ScreenTwoParam param = screenTwoParams.get(0);
+            // 当前站岗资金
+            operMonthPerformanceDataVO.setBalance(param.getNowBalance());
+            // 增资
+            operMonthPerformanceDataVO.setAdditionalShare(param.getCapitalIncrease());
         }
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
         operMonthPerformanceDataVO.setYearAmount(listSi.getYearAmount());
-        // 站岗资金
-        operMonthPerformanceDataVO.setBalance(nowMonthBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
-        // 增资
-        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(startMonthBalance).subtract(nowMonthBalance);
-        if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
-            additionalShare = new BigDecimal("0");
-        }
-        operMonthPerformanceDataVO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
         // 提现
         operMonthPerformanceDataVO.setWithdraw(listT.getWithdraw().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 充值
@@ -395,10 +328,17 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay());
         // 已回金额
         operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
+        logger.info("运营部的 规模业绩:{},年化业绩:{},当前站岗资金:{},增资:{},提现:{},充值:{},总待回金额:{},已回金额:{}",
+                operMonthPerformanceDataVO.getInvest(),
+                operMonthPerformanceDataVO.getYearAmount(),
+                operMonthPerformanceDataVO.getBalance(),
+                operMonthPerformanceDataVO.getAdditionalShare(),
+                operMonthPerformanceDataVO.getWithdraw(),
+                operMonthPerformanceDataVO.getRecharge(),
+                operMonthPerformanceDataVO.getAllWaitRepay(),
+                operMonthPerformanceDataVO.getAllRepay());
 
         vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
         return vo;
     }
-
-
 }

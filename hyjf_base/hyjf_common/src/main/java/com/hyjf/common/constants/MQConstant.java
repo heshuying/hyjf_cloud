@@ -587,17 +587,14 @@ public interface MQConstant {
 	String SELL_DAILY_GROUP = "SELL_DAILY_GROUP";
 	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
     String SELL_DAILY_SELECT_TAG = "SELL_DAILY_SELECT_TAG";
-	/** ------------------------------ 运营大屏数据统计 start ------------------------------ */
+
+    /** ------------------------------ 运营大屏数据统计 start ------------------------------ */
 	String SCREEN_DATA_GROUP = "SCREEN_DATA_GROUP";
 	String SCREEN_DATA_TOPIC = "SCREEN_DATA_TOPIC";
-
-	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
-
-	/** ------------------------------ 运营大屏二月初、末站岗资金统计 start ------------------------------ */
 	String SCREEN_DATA_TWO_GROUP = "SCREEN_DATA_TWO_GROUP";
 	String SCREEN_DATA_TWO_TOPIC = "SCREEN_DATA_TWO_TOPIC";
 	String SCREEN_DATA_TWO_SELECT_TAG = "SCREEN_DATA_TWO_SELECT_TAG";
-	/** ------------------------------ 运营大屏二月初、末站岗资金统计 end ------------------------------ */
+	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
 
     /**--------------------------------- 应急中心 -------------------------------------*/
 
@@ -794,5 +791,10 @@ public interface MQConstant {
 	int HG_REPORT_DELAY_LEVEL = 4;
 	// 合规互金上报用MQ延迟发送等级（10s） add by nxl
 	int HG_REPORT_DELAY_LEVEL_TEN = 3;
+
+	/**--------------------------------- 业务流程配置start -------------------------------------*/
+	String WORKFLOW_GROUP = "WORKFLOW_GROUP";
+	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
+	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
 }

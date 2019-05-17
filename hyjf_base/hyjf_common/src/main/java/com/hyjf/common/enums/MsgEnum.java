@@ -106,6 +106,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_WITHDRAW_CARD("EAM000103","银行卡号不正确，请确认后再次提现"),
 	ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED("EAM000104","大额提现时,开户行号不能为空"),
 	ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE("EAM000105","提现金额大于可用余额，请确认后再次提现"),
+	ERR_GET_WITHDRAW_CONFIG("EAM000106","获取提现配置失败"),
 
 
 	// 资金-出借相关错误信息ERR_AMT_TENDER_
@@ -145,8 +146,10 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TRANSFER("EAM000401","转账发生异常"),
 
 	//资金-还款相关错误信息ERR_AMT_REPAY_
+	ERR_AMT_REPAY_BATCH("EAM000500","{0}"),// 批次还款错误信息提示
 	ERR_AMT_REPAY_AUTO_CREDIT("EAM000501","系统正在处理项目债转，请{0}后发起还款！"),
 	ERR_AMT_REPAY_FAIL_CREDIT("EAM000502","还款提交失败，请联系汇盈金服业务部门核实处理！"),
+	ERR_AMT_REPAY_FAIL_QUERY("EAM000503","还款查询失败，请联系汇盈金服业务部门核实处理！"),
 
 	//授权相关错误信息ERR_AUTHORIZE_
 	ERR_AUTHORIZE_REPEAT("EAU000001","用户已授权,无需重复授权"),

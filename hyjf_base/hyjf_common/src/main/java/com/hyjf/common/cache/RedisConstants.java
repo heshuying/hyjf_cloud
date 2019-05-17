@@ -561,4 +561,11 @@ public class RedisConstants {
      * 投资成功后  12小时以内不处理
      */
     public static final String BORROW_TENDER_ORDER_CHECK = "BORROW_TENDER_ORDER_CHECK:";
+
+
+    /**
+     * 清算,计算公允价值与自动投资并发处理
+     *
+     */
+    public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
 }

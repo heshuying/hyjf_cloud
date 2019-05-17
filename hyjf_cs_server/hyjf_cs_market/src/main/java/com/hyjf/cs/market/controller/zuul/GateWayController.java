@@ -1,10 +1,8 @@
 package com.hyjf.cs.market.controller.zuul;
 
-import com.hyjf.am.response.config.GatewayApiConfigResponse;
-import com.hyjf.am.vo.config.GatewayApiConfigVO;
-import com.hyjf.cs.market.service.zuul.GateWayService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import com.hyjf.am.response.config.GatewayApiConfigResponse;
+import com.hyjf.am.vo.config.GatewayApiConfigVO;
+import com.hyjf.cs.market.service.zuul.GateWayService;
 
 /**
  * @author lisheng
  * @version ZuulController, v0.1 2018/12/19 14:44
  */
-@Api(tags = "网关")
+//@Api(tags = "网关")
 @RestController
 @RequestMapping("/cs-market/zuul")
 public class GateWayController {
@@ -33,7 +32,7 @@ public class GateWayController {
      */
     ConcurrentHashMap<String,List<GatewayApiConfigVO>> cache= new ConcurrentHashMap<>();
 
-    @ApiOperation(value = "网关url", notes = "网关")
+    //@ApiOperation(value = "网关url", notes = "网关")
     @GetMapping(value = "/gateConfig")
     public GatewayApiConfigResponse gateConfig() {
         GatewayApiConfigResponse gatewayConfigs=null;

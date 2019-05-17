@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.customize.BorrowInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
@@ -296,6 +297,50 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         return borrowTenderCustomizeMapper.getCreditTenderByClient(source,dayStart,dayEnd);
     }
 
+    @Override
+    public BigDecimal getInvestAmountByPeriod(Date startTime, Date endTime) {
+        logger.info("开始日期：" + startTime + ",结束日期：" + endTime);
+        return borrowInvestCustomizeMapper.getActivityInvestAmount(startTime, endTime);
+    }
+
+    @Override
+    public BigDecimal getAnnualInvestAmount(Integer userId, Date startTime, Date endTime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        logger.info("开始日期：" + startTime + ",结束日期：" + endTime + ", userId：" + userId);
+        BigDecimal investSum = borrowInvestCustomizeMapper.getAnnualInvestAmount(map);
+        if (investSum == null) {
+            investSum = BigDecimal.ZERO;
+        }
+        logger.debug("investSum: {}", investSum);
+        BigDecimal planSum = borrowInvestCustomizeMapper.getPlanAnnualAmount(map);
+        if(planSum!=null){
+            logger.debug("planSum: {}", planSum);
+        }else {
+            logger.warn("planSum is null....");
+        }
+        return investSum.add(planSum);
+    }
+
+    @Override
+    public BigDecimal getUserInvestAmount(int userId, Date startDate, Date endDate, Integer client) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("startTime", startDate);
+        map.put("endTime", endDate);
+        map.put("client", client);
+        return borrowInvestCustomizeMapper.getUserInvestAmount(map);
+    }
+
+    @Override
+    public List<UserTenderVO> getSumAnnualInvestAmountTop5(Date startDate, Date endDate) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("startTime", startDate);
+        map.put("endTime", endDate);
+        return borrowInvestCustomizeMapper.getSumAnnualInvestAmountTop5(map);
+    }
     /**
      * 根据计划订单号查找投资详情
      * @param accedeOrderId

@@ -86,7 +86,13 @@ public class ProjectBean extends Response<ProjectBean> implements Serializable {
 	public boolean isAllRepay;
     /** 用户还款详情 */
     private List<ProjectRepayBean> userRepayList;
-    
+
+	// 原始提前还款利息
+	private String chargeOriginalInterest;
+
+	// 提前还款罚息
+	private String chargePenaltyInterest;
+
     public ProjectBean() {
         super();
     }
@@ -302,4 +308,20 @@ public class ProjectBean extends Response<ProjectBean> implements Serializable {
 	public boolean isAllRepay() { return isAllRepay; }
 
 	public void setAllRepay(boolean allRepay) { isAllRepay = allRepay; }
+
+	public String getChargeOriginalInterest() {
+		return chargeOriginalInterest;
+	}
+
+	public void setChargeOriginalInterest(String chargeOriginalInterest) {
+		this.chargeOriginalInterest = chargeOriginalInterest;
+	}
+
+	public String getChargePenaltyInterest() {
+		return chargePenaltyInterest;
+	}
+
+	public void setChargePenaltyInterest(String chargePenaltyInterest) {
+		this.chargePenaltyInterest = chargePenaltyInterest;
+	}
 }
