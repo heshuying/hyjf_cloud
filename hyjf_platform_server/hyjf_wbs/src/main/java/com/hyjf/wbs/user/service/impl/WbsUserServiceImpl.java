@@ -193,6 +193,14 @@ public class WbsUserServiceImpl implements WbsUserService {
 
 		verifyParameters(qo);
 
+		if (Strings.isNullOrEmpty(qo.getEntId()) || Strings.isNullOrEmpty(qo.getToken())) {
+			//不需要登录，直接跳转
+			WebUserBindVO vo=new WebUserBindVO();
+			vo.setRetUrl(buildRetUrl(qo,channel));
+			return vo;
+		}
+
+
 		UserVO userVO = getCustomerFromNewBanker(qo);
 
 		User user = userService.findUserById(userVO.getUserId());
@@ -328,13 +336,16 @@ public class WbsUserServiceImpl implements WbsUserService {
 		if (Strings.isNullOrEmpty(qo.getType())) {
 			throw new CheckException("999", "重定向Type为空！");
 		}
-		if (Strings.isNullOrEmpty(qo.getEntId()) || Strings.isNullOrEmpty(qo.getToken())) {
-			throw new CheckException("999", "token或entId为空！");
-		}
 
 		if (RedirectTypeEnum.BORROW_TYPE.getType().equals(qo.getType())) {
 			if (Strings.isNullOrEmpty(qo.getBorrowNid())) {
 				throw new CheckException("999", "重定向到标的详情页标的号为必填项！");
+			}
+		}
+
+		if(RedirectTypeEnum.PANDECT_TYPE.equals(qo.getType())){
+			if (Strings.isNullOrEmpty(qo.getEntId()) || Strings.isNullOrEmpty(qo.getToken())) {
+				throw new CheckException("999", "跳转个人主面token或entId不能为空！");
 			}
 		}
 
