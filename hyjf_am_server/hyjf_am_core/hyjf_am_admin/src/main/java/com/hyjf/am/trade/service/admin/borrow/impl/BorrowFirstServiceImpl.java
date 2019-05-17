@@ -154,6 +154,20 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 3) {
                         // 发标时间
                         borrow.setOntime(GetDate.strYYYYMMDDHHMMSS2Timestamp(borrowFireRequest.getOntime()));
+                        // add by liuyang 20190415 wbs标的信息推送 start
+                        // 立即发标时,设置牛投邦状态为:1 预热中
+                        try {
+                            Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+                            // 判断标的当前状态是否是投资中的状态
+                            if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0) {
+                                logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+                                sendWbsBorrowInfo(borrow.getBorrowNid(), "1", 0);
+                            }
+                        } catch (Exception e) {
+                            logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+                        }
+                        // add by liuyang 20190415 wbs标的信息推送 end
+
                     } else if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 2) {
                         // 发标时间
                         borrow.setOntime(0);
@@ -199,17 +213,8 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                             return new Response(Response.FAIL, "获取第三方资产失败");
                         }
                     }
-                }
-                // 更新时间
-                borrow.setUpdatetime(systemNowDate);
-                BorrowExample borrowExample = new BorrowExample();
-                BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
-                borrowCra.andBorrowNidEqualTo(borrow.getBorrowNid());
-                int updateCount = this.borrowMapper.updateByExampleSelective(borrow, borrowExample);
-                if (updateCount > 0) {
-                    // 更新redis的定时发标时间
-                    changeOntimeOfRedis(borrow);
                     // add by liuyang 20190415 wbs标的信息推送 start
+                    // 立即发标时,设置牛投邦状态为:2 募集中
                     try {
                         Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
                         // 判断标的当前状态是否是投资中的状态
@@ -221,7 +226,16 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                         logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
                     }
                     // add by liuyang 20190415 wbs标的信息推送 end
-
+                }
+                // 更新时间
+                borrow.setUpdatetime(systemNowDate);
+                BorrowExample borrowExample = new BorrowExample();
+                BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
+                borrowCra.andBorrowNidEqualTo(borrow.getBorrowNid());
+                int updateCount = this.borrowMapper.updateByExampleSelective(borrow, borrowExample);
+                if (updateCount > 0) {
+                    // 更新redis的定时发标时间
+                    changeOntimeOfRedis(borrow);
                     return new Response();
                 } else {
                     return new Response(Response.FAIL, "标的信息更新失败");

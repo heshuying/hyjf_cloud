@@ -1282,6 +1282,19 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 定时发标
 					if (Integer.valueOf(borrowBean.getVerifyStatus()) == 3) {
 						borrow.setOntime(GetDate.strYYYYMMDDHHMMSS2Timestamp(borrowBean.getOntime()));// 发标时间
+						// add by liuyang 20190415 wbs标的信息推送 start
+						// 立即发标时,设置牛投邦状态为:1 预热中
+						try {
+							Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+							// 判断标的当前状态是否是投资中的状态
+							if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0) {
+								logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+								sendWbsBorrowInfo(borrow.getBorrowNid(), "1", 0);
+							}
+						} catch (Exception e) {
+							logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+						}
+						// add by liuyang 20190415 wbs标的信息推送 end
 					} else if (Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 						borrow.setOntime(0);// 发标时间
 					}
