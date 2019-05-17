@@ -4,16 +4,12 @@ package com.hyjf.cs.message.controller.web.operationaldata;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
 import com.hyjf.cs.message.bean.ic.report.OperationReport;
-import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.beanutils.BeanComparator;
-import org.apache.commons.collections.ComparatorUtils;
-import org.apache.commons.collections.comparators.ComparableComparator;
-import org.apache.commons.collections.comparators.ComparatorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author tanyy
  * @version PlatDataStatisticsController, v0.1 2018/9/16 17:39
  */
-@Api(tags = "运营数据")
+@Api(tags = "web-运营数据页面展示")
 @RestController
 @RequestMapping("/hyjf-web/platdatastatistics")
 public class PlatDataStatisticsController {
