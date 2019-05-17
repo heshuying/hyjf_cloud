@@ -44,7 +44,7 @@ public class SmsCountTemp {
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
 
-    @RequestMapping(value = "/auto", method = RequestMethod.POST)
+    @RequestMapping(value = "/auto", method = RequestMethod.GET)
     @ResponseBody
     public void smsAuto() {
         long startTime = System.currentTimeMillis();   //获取开始时间
