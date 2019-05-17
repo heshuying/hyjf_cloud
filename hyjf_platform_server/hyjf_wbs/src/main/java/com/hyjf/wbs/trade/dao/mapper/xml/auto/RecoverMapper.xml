@@ -105,13 +105,13 @@ union all
     ha.received_total AS actualExitAmount,
     ha.lock_period AS period,
     1 AS status
-    FROM ht_hjh_accede ha
-    LEFT JOIN ht_hjh_repay hr ON ha.accede_order_id=hr.accede_order_id
-    AND hr.repay_status=2
-    LEFT  JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
-    WHERE ha.order_status=7
+    FROM ht_hjh_repay hr
+    LEFT JOIN ht_hjh_accede ha ON ha.accede_order_id = hr.accede_order_id
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
+    WHERE
+    hr.repay_status IN ( 0, 1 )
     <if test="assetCustomerId != null and assetCustomerId != ''">
-      AND br.user_id = #{assetCustomerId}
+      AND hr.user_id = #{assetCustomerId}
     </if>
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="utmIds != null">
@@ -165,13 +165,13 @@ union all
     union all
     SELECT
     ha.user_id AS assetCustomerId
-    FROM ht_hjh_accede ha
-    LEFT JOIN ht_hjh_repay hr ON ha.accede_order_id=hr.accede_order_id
-    AND hr.repay_status=2
-    LEFT  JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
-    WHERE ha.order_status=7
+    FROM ht_hjh_repay hr
+    LEFT JOIN ht_hjh_accede ha ON ha.accede_order_id = hr.accede_order_id
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
+    WHERE
+    hr.repay_status IN ( 0, 1 )
     <if test="assetCustomerId != null and assetCustomerId != ''">
-      AND br.user_id = #{assetCustomerId}
+      AND hr.user_id = #{assetCustomerId}
     </if>
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="utmIds != null">
