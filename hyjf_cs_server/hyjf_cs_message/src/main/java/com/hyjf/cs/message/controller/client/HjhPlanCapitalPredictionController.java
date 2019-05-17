@@ -21,6 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,11 +47,23 @@ public class HjhPlanCapitalPredictionController extends BaseController {
      */
     @PostMapping(value = "/insertPlanCaptialPrediction")
     public BooleanResponse insertPlanCaptialPrediction(@RequestBody List<HjhPlanCapitalPredictionVO> list) {
-        if(null != list || list.size() > 0 ) {
+        if (null != list || list.size() > 0) {
             return new BooleanResponse(this.hjhPlanCapitalPredictionService.insertPlanCaptialPrediction(list));
         } else {
             return new BooleanResponse(true);
         }
+    }
+
+    /**
+     * 汇计划 -- 资金计划 -- 历史数据update delFlg->1
+     *
+     * @param initDate
+     * @return
+     * @Author : liushouyi
+     */
+    @GetMapping(value = "/updatePlanCaptialPrediction/{initDate}")
+    public BooleanResponse updatePlanCaptialPrediction(@PathVariable Date initDate) {
+        return new BooleanResponse(this.hjhPlanCapitalPredictionService.updatePlanCaptialPrediction(initDate));
     }
 
     /**
@@ -119,8 +132,8 @@ public class HjhPlanCapitalPredictionController extends BaseController {
         if (CollectionUtils.isNotEmpty(recordList)) {
             List<HjhPlanCapitalPredictionVO> hjhPlanCapitalVOList = CommonUtils.convertBeanList(recordList, HjhPlanCapitalPredictionVO.class);
 
-            for(HjhPlanCapitalPredictionVO vo: hjhPlanCapitalVOList) {
-                if(null != vo.getIsMonth()) {
+            for (HjhPlanCapitalPredictionVO vo : hjhPlanCapitalVOList) {
+                if (null != vo.getIsMonth()) {
                     // 为服务回报期限 添加单位
                     if (vo.getIsMonth() == 0) {
                         vo.setLockPeriodView(vo.getLockPeriod() + "天");
@@ -134,7 +147,7 @@ public class HjhPlanCapitalPredictionController extends BaseController {
                 vo.setStringDate(formatter.format(vo.getDate()));
                 try {
                     // 时间格式化
-                    if(null != vo.getDualBaseDate()) {
+                    if (null != vo.getDualBaseDate()) {
                         vo.setDualBaseDateStr(formatter.format(vo.getDualBaseDate()));
                     }
                 } catch (Exception e) {

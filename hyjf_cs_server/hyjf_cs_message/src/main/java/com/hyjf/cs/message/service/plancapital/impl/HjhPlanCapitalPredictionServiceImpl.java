@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,13 +42,13 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
     @Override
     public boolean insertPlanCaptialPrediction(List<HjhPlanCapitalPredictionVO> list) {
         // 历史数据delflg为0的更新成1
-        Query query = new Query();
-        Criteria criteria = new Criteria();
-        criteria.and("delFlg").is(0);
-        query.addCriteria(criteria);
-        Update update = new Update();
-        update.set("delFlg", 1);
-        this.planCapitalPredictionDao.updateAll(query, update);
+//        Query query = new Query();
+//        Criteria criteria = new Criteria();
+//        criteria.and("delFlg").is(0);
+//        query.addCriteria(criteria);
+//        Update update = new Update();
+//        update.set("delFlg", 1);
+//        this.planCapitalPredictionDao.updateAll(query, update);
         // 插入新增数据
         List<HjhPlanCapitalPrediction> inList = CommonUtils.convertBeanList(list, HjhPlanCapitalPrediction.class);
         this.planCapitalPredictionDao.insertAll(inList);
@@ -87,6 +88,24 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
 
         List<HjhPlanCapitalPrediction> hjhPlanCapitalList = planCapitalPredictionDao.find(query);
         return hjhPlanCapitalList;
+    }
+
+    /**
+     * 历史数据update delFlg->1
+     *
+     * @param initDate
+     * @return
+     */
+    @Override
+    public Boolean updatePlanCaptialPrediction(Date initDate) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("date").gt(initDate);
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("delFlg", 1);
+        this.planCapitalPredictionDao.updateAll(query, update);
+        return true;
     }
 
 

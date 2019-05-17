@@ -24,6 +24,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
      */
     private Date date;
 
+    /**
+     * 运行时间
+     */
+    private Date initDate;
+
     @ApiModelProperty(value = "给前端的格式化后的日期")
     private String stringDate;
 
@@ -234,5 +239,13 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
 
     public void setDualBaseDateStr(String dualBaseDateStr) {
         this.dualBaseDateStr = dualBaseDateStr;
+    }
+
+    public Date getInitDate() {
+        return initDate;
+    }
+
+    public void setInitDate(Date initDate) {
+        this.initDate = initDate;
     }
 }

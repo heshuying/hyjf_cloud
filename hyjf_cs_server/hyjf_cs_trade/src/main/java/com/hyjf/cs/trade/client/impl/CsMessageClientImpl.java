@@ -30,6 +30,7 @@ import com.hyjf.cs.trade.client.CsMessageClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -475,6 +476,22 @@ public class CsMessageClientImpl implements CsMessageClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 历史数据update delFlg->1
+     *
+     * @param initDate
+     * @return
+     */
+    @Override
+    public boolean updatePlanCapitalForCreditInfo(Date initDate) {
+        String url = "http://CS-MESSAGE/cs-message/hjhPlanCapitalPrediction/updatePlanCaptialPrediction/" + initDate;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 
 }

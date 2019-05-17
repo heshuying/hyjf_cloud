@@ -8,6 +8,7 @@ import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapitalPrediction;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,4 +41,12 @@ public interface HjhPlanCapitalPredictionService extends BaseService {
      * @return
      */
     List<HjhPlanCapitalPrediction> getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest request);
+
+    /**
+     *  历史数据update delFlg->1
+     *
+     * @param initDate
+     * @return
+     */
+    Boolean updatePlanCaptialPrediction(Date initDate);
 }

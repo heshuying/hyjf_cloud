@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.bifa.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -258,4 +259,12 @@ public interface CsMessageClient {
      * @date 2019/4/23 14:31
      */
     HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest);
+
+    /**
+     * 历史数据update delFlg->1
+     *
+     * @param initDate
+     * @return
+     */
+    boolean updatePlanCapitalForCreditInfo(Date initDate);
 }

@@ -52,6 +52,12 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         Date beginDate = GetDate.getDate();
         // 初始化当天运行时间
         Date initDate = GetDate.getDate();
+        // 历史数据清理
+        boolean re = csMessageClient.updatePlanCapitalForCreditInfo(initDate);
+        if(!re) {
+            logger.error("资金计划预估值历史数据flg处理失败！");
+        }
+
         // 当前时间today_end转换为时间戳
         long toEndDay = GetDate.getDayEnd10(initDate);
         // 初始化当前执行时间的时间戳,初始化执行次数
