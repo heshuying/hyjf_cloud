@@ -354,7 +354,7 @@ public class AppRechargeController extends BaseUserController {
     @ApiOperation(value = "获取充值说明", notes = "获取充值说明")
     @PostMapping(value = "/getRechargeDetail")
     @ResponseBody
-    public WebResult<AppRechargeVO> getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
+    public WebResult<AppRechargeVO> getRechargeRule() {
         WebResult webResult = new WebResult("0","成功");
         try {
             List<AppRechargeRuleVO> rechargeRuleList = appRechargeService.getRechargeRule();
