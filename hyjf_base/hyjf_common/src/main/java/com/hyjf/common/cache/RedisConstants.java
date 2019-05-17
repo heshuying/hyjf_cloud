@@ -557,6 +557,15 @@ public class RedisConstants {
 
 
     /**
+     * app端短信验证码登录   自动登录的key
+     */
+    public static final String APP_SMS_LOGIN_KEY = "APP_SMS_LOGIN_KEY:";
+
+
+
+
+
+    /**
      * 投资异步执行三次问题  加一个锁校验一下
      * 投资成功后  12小时以内不处理
      */

@@ -4,7 +4,6 @@ import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.auto.ConfigApplicant;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
-import com.hyjf.am.response.config.ConfigApplicantResponse;
 import com.hyjf.am.resquest.config.ConfigApplicantRequest;
 
 import java.util.List;
@@ -77,4 +76,11 @@ public interface AdminSystemService {
 	 * @return
 	 */
 	Integer countApplicantConfigList(ConfigApplicantRequest request);
+
+	/**
+	 *根据手机号查询用户
+	 * @param mobile
+	 * @return
+	 */
+    AdminSystem getUserInfoByMobile(String mobile);
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -292,6 +291,17 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 *
+	 * @param userId
+	 */
+	@Override
+	public void unlockUser(Integer userId) {
+		String url = userService+"/user/unlockUser/"+userId;
+		restTemplate.postForEntity(url, null, BooleanResponse.class);
 	}
 
 	/**

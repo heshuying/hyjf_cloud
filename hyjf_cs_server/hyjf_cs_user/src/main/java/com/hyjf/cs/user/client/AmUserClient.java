@@ -642,4 +642,10 @@ public interface AmUserClient {
 	 * @return
 	 */
     UtmVO selectUtmBySourceId(String utmId);
+
+	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 * @param userId
+	 */
+	void unlockUser(Integer userId);
 }

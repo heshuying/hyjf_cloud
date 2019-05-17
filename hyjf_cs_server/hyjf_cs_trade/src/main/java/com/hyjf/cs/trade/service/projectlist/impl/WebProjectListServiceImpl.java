@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
@@ -176,7 +177,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchProjectListNew(ProjectListRequest request) {
-
+        logger.info("Web端项目列表 requestBean：{}", JSON.toJSONString(request));
         WebResult result = new WebResult();
         BorrowProjectListBean resultBean = new BorrowProjectListBean();
         // 初始化分页参数，并组合到请求参数
@@ -215,19 +216,14 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 request.setBorrowClass(borrowClass);
                 request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
 
-                // 统计相应的汇直投的数据记录数
-                int projectToal = amTradeClient.countProjectList(request);
-
-                Map<String, Object> params = new HashMap<String, Object>();
-                if (projectToal > 0) {
-
-                    //add by cwyang 项目列表显示2页
-                    int pageNum = 2;
-                    if(projectToal > request.getPageSize() * pageNum){
-                        projectToal = request.getPageSize() * pageNum;
-                    }
-
-                    page.setTotal(projectToal);
+                // 统计定时发标+出借中总记录数
+                request.setStatus("21");
+                int projectTotal = amTradeClient.countProjectList(request);
+                int defaultCount = request.getPageSize() * 2;
+                logger.info("defaultCount:" + defaultCount + " projectTotal:" + projectTotal);
+                if(projectTotal >= defaultCount){
+                    // 只查询定时发标和出借中标的
+                    page.setTotal(projectTotal);
                     // 查询相应的汇直投列表数据
                     int limit = page.getLimit();
                     int offSet = page.getOffset();
@@ -238,14 +234,32 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     if (limit > 0) {
                         request.setLimitEnd(limit);
                     }
+                    logger.info("requestBean:{}", JSON.toJSONString(request));
                     List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
                     resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
-                    //int nowTime = GetDate.getNowTime10();
-                    // result.setNowTime(nowTime);
-                } else {
-                    resultBean.setList(new ArrayList<WebProjectListCsVO>());
-                    page.setTotal(0);
+                }else{
+                    //查询所有标的
+                    int pageNum = 2;
+                    projectTotal = request.getPageSize() * pageNum;
+
+                    page.setTotal(projectTotal);
+                    // 查询相应的汇直投列表数据
+                    int limit = page.getLimit();
+                    int offSet = page.getOffset();
+
+                    if (offSet == 0 || offSet > 0) {
+                        request.setLimitStart(offSet);
+                    }
+                    if (limit > 0) {
+                        request.setLimitEnd(limit);
+                    }
+
+                    request.setStatus(null);
+                    logger.info("requestBean:{}", JSON.toJSONString(request));
+                    List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
+                    resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
                 }
+
             } else {
                 resultBean.setList(new ArrayList<WebProjectListCsVO>());
                 page.setTotal(0);
@@ -257,6 +271,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
+        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 
@@ -1387,7 +1402,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     public WebResult searchPlanList(ProjectListRequest request) {
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(0);
-        request.setLimitEnd(4);
+        request.setLimitEnd(100);
         request.setIsHome("1");
         Integer count = amTradeClient.countPlanList(request);
         WebResult webResult = new WebResult();
