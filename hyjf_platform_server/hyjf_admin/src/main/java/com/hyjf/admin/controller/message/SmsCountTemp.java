@@ -47,7 +47,7 @@ public class SmsCountTemp {
     @RequestMapping(value = "/auto", method = RequestMethod.GET)
     @ResponseBody
     public void smsAuto() {
-        logger.info("SmsCountTemp smsAuto 开始运行");
+        logger.info("短信统计 初始化SmsCountTemp smsAuto 开始运行");
         long startTime = System.currentTimeMillis();   //获取开始时间
 
         //先将CRM中的企业用户对应的部门都查询出来
@@ -69,6 +69,7 @@ public class SmsCountTemp {
         smlogCustomize.setPostTimeEnd(String.valueOf(GetDate.dateToDateFormatStr(new Date(),"yyyy-MM-dd")));//结束时间 当前时间
         //查询当前短信日志的总数
         Integer count = this.smsCodeService.queryLogCount(smlogCustomize);
+        logger.info("短信统计 初始化SmsCountTemp smsAuto 短信日志的总数 ="+count);
 
         Integer loopCount = (count + 5000 - 1) / 5000;
 
@@ -205,7 +206,7 @@ public class SmsCountTemp {
         //修改and删除短信统计重复数据
         smsCountService.updateOrDelectRepeatData();
         long endTime = System.currentTimeMillis(); //获取结束时间
-        logger.info(this.toString(), "smsAuto" + "程序运行时间： " + (endTime - startTime) + "ms");
+        logger.info("短信统计 初始化SmsCountTemp smsAuto" + "程序运行时间： " + (endTime - startTime) + "ms");
     }
 
     /**
