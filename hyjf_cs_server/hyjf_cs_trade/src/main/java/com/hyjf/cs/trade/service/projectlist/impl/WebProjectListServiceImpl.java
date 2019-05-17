@@ -271,7 +271,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
-        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 
