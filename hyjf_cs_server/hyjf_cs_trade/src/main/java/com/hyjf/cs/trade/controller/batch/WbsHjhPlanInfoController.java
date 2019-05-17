@@ -46,14 +46,14 @@ public class WbsHjhPlanInfoController extends BaseTradeController {
                 if (planInvestStatus == 1 && planDisplayStatus == 1 && planBalance.compareTo(BigDecimal.ZERO) > 0) {
                     // 智投开启的状态:开启
                     try {
-                        this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "2", 1);
+                        this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "7", 1);
                     } catch (Exception e) {
                         logger.error("WBS系统发送智投服务MQ失败,[" + e + "].");
                     }
                 } else {
                     // 智投开启的状态:关闭
                     try {
-                        this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "3", 1);
+                        this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "8", 1);
                     } catch (Exception e) {
                         logger.error("WBS系统发送智投服务MQ失败,[" + e + "].");
                     }
