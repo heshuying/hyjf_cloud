@@ -710,6 +710,7 @@
             ) t
     </select>
 
+    <!-- 页面底部累计统计-->
     <select id="getRepayInfoCurrentSum" resultType="map" parameterType="map">
         SELECT
             SUM(IFNULL(recoverCapital,0)) AS capitalSum,

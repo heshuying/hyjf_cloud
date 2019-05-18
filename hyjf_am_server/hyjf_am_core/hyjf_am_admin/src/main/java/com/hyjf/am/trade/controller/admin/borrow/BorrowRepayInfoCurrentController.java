@@ -115,7 +115,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         response.setSumInfo(sumInfo);
         response.setRtn(Response.SUCCESS);
 
-        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
+//        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 
