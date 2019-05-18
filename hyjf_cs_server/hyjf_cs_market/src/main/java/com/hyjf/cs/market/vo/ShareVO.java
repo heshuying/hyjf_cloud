@@ -1,12 +1,12 @@
-package com.hyjf.cs.market.bean;
+package com.hyjf.cs.market.vo;
 
 import com.hyjf.cs.common.bean.result.WeChatResult;
 
 /**
  * @author xiasq
- * @version ShareResultBean, v0.1 2018/9/26 13:52
+ * @version ShareVO, v0.1 2018/9/26 13:52
  */
-public class ShareResultBean extends WeChatResult {
+public class ShareVO extends WeChatResult {
 
     private String appId;
     private String timestamp;

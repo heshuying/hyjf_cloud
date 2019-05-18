@@ -1,6 +1,6 @@
 package com.hyjf.cs.market.controller.wechat.share;
 
-import com.hyjf.cs.market.bean.ShareResultBean;
+import com.hyjf.cs.market.vo.ShareVO;
 import com.hyjf.cs.market.util.WxConfigUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,9 +30,9 @@ public class ShareController {
 
     @ApiOperation(value = "微信分享", notes = "微信分享")
     @RequestMapping(value = "/doShare", method = RequestMethod.POST)
-    public ShareResultBean doShare(@RequestHeader(required = false) Integer userId,
-                                   @RequestBody String url) {
-        ShareResultBean resultBean = new ShareResultBean();
+    public ShareVO doShare(@RequestHeader(required = false) Integer userId,
+                           @RequestBody String url) {
+        ShareVO resultBean = new ShareVO();
         logger.info("当前登录用户: {}", userId);
         WxConfigUtil.TicketBean ticketBean = WxConfigUtil.getSignature(url, WECHAT_APP_APPID,
                 WECHAT_APP_SECRET, userId);

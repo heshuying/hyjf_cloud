@@ -52,6 +52,9 @@ public class CommonConstant {
     /** 更换手机号-绑定新手机号 */
     public static final String PARAM_TPL_BDYSJH = "TPL_BDYSJH";
 
+    /** 验证码登录 */
+    public static final String PARAM_TPL_DUANXINDENGLU = "TPL_DUANXINDENGLU";
+
 
 
 	/** borrow_apicron 字段说明 */
