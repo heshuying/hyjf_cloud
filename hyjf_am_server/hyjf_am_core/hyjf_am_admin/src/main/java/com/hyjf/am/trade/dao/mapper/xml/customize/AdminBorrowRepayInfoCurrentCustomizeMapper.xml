@@ -417,7 +417,7 @@
                 rp.recover_status = 0,
 
                 IF (brp.advance_status = 3, 8, 0),
-                1
+                rp.recover_status
                 ) AS recoverStatus,
 
                 IF (
@@ -497,7 +497,7 @@
                 cr.`status` = 0,
 
                 IF (cr.advance_status = 3, 8, 0),
-                1
+                cr.`status`
                 ) AS recoverStatus,
 
             IF (
@@ -580,7 +580,7 @@
                 hcr.repay_status = 0,
 
                 IF (hcr.advance_status = 3, 8, 0),
-                1
+                hcr.repay_status
                 )
                 AS recoverStatus,
 
@@ -1080,7 +1080,7 @@
         IF (
         rp.recover_status = 0,
         IF (brp.advance_status = 3, 8, 0),
-        1
+        rp.recover_status
         ) AS recoverStatus,
         IF(brp.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
@@ -1237,7 +1237,7 @@
         IF (
         cr.`status` = 0,
         IF (cr.advance_status = 3, 8, 0),
-        1
+        cr.`status`
         ) AS recoverStatus,
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
@@ -1404,7 +1404,7 @@
         IF (
         hcr.repay_status = 0,
         IF (hcr.advance_status = 3, 8, 0),
-        1
+        hcr.repay_status
         )
         AS recoverStatus,
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
