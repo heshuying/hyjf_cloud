@@ -1048,12 +1048,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 			}
 			logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
-			if (password.equals(passwordDb)){
-				// 是否禁用
-				if (userVO.getStatus() == 1) {
-					r.put("info","该用户已被禁用");
-					return r;
-				}
+			// 是否禁用
+			if (userVO.getStatus() == 1) {
+				r.put("info","该用户已被禁用");
+				return r;
 			}
 			//判断密码错误次数是否超限
 			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {

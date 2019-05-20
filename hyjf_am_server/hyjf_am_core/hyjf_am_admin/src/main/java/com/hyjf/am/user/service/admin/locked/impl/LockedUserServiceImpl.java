@@ -126,7 +126,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
 		if (password.equals(passwordDb)){
 			// 是否禁用
-			if (admin.getStatus() == 1) {
+			if (admin.getState() == "1") {
 				r.put("info","该用户已被禁用");
 				return  r;
 			}
