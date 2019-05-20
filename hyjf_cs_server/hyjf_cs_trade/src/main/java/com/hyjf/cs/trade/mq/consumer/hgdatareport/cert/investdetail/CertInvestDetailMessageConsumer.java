@@ -101,7 +101,7 @@ public class CertInvestDetailMessageConsumer implements RocketMQListener<Message
             }
             logger.info(logHeader + " 处理成功。" + msgBody);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("报错了",e);
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {

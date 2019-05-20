@@ -75,7 +75,7 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
         String tradeDate = jsonObject.getString("tradeDate");
 
         Integer page=1;
-        Integer size=1000;
+        Integer size=100;
         try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_RECOVER_YES_RUN"))){
                 // --> 消息处理
@@ -106,7 +106,7 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
                 page++;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("报错了",e);
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {
