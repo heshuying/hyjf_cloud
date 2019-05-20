@@ -24,7 +24,7 @@
     select * from
     (SELECT
     br.user_id AS assetCustomerId,
-    br.nid AS refundOrderNumber,
+    CONCAT(br.nid,br.recover_period) AS refundOrderNumber,
     br.nid AS orderNo,
     br.borrow_nid AS productNo,
     #{entId} AS entId,
@@ -59,7 +59,7 @@
     UNION ALL
     SELECT
     brp.user_id AS assetCustomerId,
-    brp.nid AS refundOrderNumber,
+    CONCAT(brp.nid,brp.recover_period) AS refundOrderNumber,
     brp.nid AS orderNo,
     brp.borrow_nid AS productNo,
     #{entId} AS entId,
@@ -94,7 +94,7 @@
     union all
     SELECT
     cr.user_id AS assetCustomerId,
-    cr.credit_tender_nid AS refundOrderNumber,
+    CONCAT(cr.credit_tender_nid,cr.assign_repay_period) AS refundOrderNumber,
     cr.credit_tender_nid AS orderNo,
     cr.bid_nid AS productNo,
     #{entId} AS entId,
@@ -129,7 +129,7 @@
     union all
     SELECT
     ha.user_id AS assetCustomerId,
-    ha.accede_order_id AS refundOrderNumber,
+    CONCAT(ha.accede_order_id,'1')  AS refundOrderNumber,
     ha.accede_order_id AS orderNo,
     ha.plan_nid AS productNo,
     #{entId} AS entId,
