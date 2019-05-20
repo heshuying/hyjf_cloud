@@ -98,7 +98,7 @@ public class MyProfileController extends BaseUserController {
 //            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
 //        }else {
             // 已确认未关联渠道的用户
-            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId+"&action=scan";
 //        }
         myProfileVO.getUserAccountInfo().setQrcodeUrl(userQrCodeUrl);
         //        myProfileVO.getUserAccountInfo().setQrcodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
