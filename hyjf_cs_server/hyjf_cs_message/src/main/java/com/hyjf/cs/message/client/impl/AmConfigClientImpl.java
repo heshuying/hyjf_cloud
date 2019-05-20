@@ -229,4 +229,5 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
 
+
 }

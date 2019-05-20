@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -64,12 +65,18 @@ public class ScreenDataController extends BaseController {
         Integer endTime = GetDate.getLastDayOfMonth();
         if (screenDataBean.getTenderUserId()!=null&&screenDataBean.getTenderUserId()!=0) {
             RepaymentPlan repayUser = service.findRepayUser(screenDataBean, startTime, endTime);
+            //承接要生成一条
             if (repayUser !=null) {
                 repayUser.setUserId(screenDataBean.getTenderUserId());
                 service.insertRepayUser(repayUser);
             }
         }
-        Integer result = service.updateRepayMoney(screenDataBean,startTime,endTime);
+        Date star = GetDate.getFirstDayOfMonthDate();
+        Calendar cal=Calendar.getInstance();
+        cal.add(Calendar.DATE,-1);
+        Date end = cal.getTime();
+        //改成当月第一天到当前时间前一天。
+        Integer result = service.updateRepayMoney(screenDataBean,star,end);
         response.setResultInt(result);
         return response;
     }

@@ -13,7 +13,9 @@ public class RepayRequestUpdateRequest {
     /**
      * 对分期标的，是否一次全部还款
      */
-    boolean isAllRepay;
+    private boolean isAllRepay;
+
+    private int latePeriod;// 提交的逾期期数
 
     public String getRepayBeanData() {
         return repayBeanData;
@@ -37,5 +39,13 @@ public class RepayRequestUpdateRequest {
 
     public void setAllRepay(boolean allRepay) {
         isAllRepay = allRepay;
+    }
+
+    public int getLatePeriod() {
+        return latePeriod;
+    }
+
+    public void setLatePeriod(int latePeriod) {
+        this.latePeriod = latePeriod;
     }
 }

@@ -2,115 +2,352 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.UserLargeScreenTwoCustomizeMapper">
 
-	<select id="getOperMonthStartBalance" parameterType="java.util.Date" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
-            SELECT
-            IFNULL(
-            SUM(r2.monthStartBalance),
-            0
-            ) AS monthStartBalance
-            FROM
-            (
-            SELECT
-            IFNULL(SUM(l2.bank_balance), 0) AS monthStartBalance
-            FROM
-            (
-            SELECT
-            max(l.id) AS max_id
-            FROM
-            hyjf_user.ht_user_info i
-            LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
-            LEFT JOIN hyjf_user.ht_utm u ON u.utm_id = r.utm_id
-            LEFT JOIN hyjf_trade.ht_account_list l ON l.user_id = i.user_id
-            WHERE
-            (
-            u.source_id <![CDATA[<>]]> 349
-            OR u.source_id IS NULL
-            )
-            AND i.attribute = 0
-            AND i.role_id = 1
-            AND l.create_time <![CDATA[<]]> DATE_ADD(
-            curdate(),
-            INTERVAL - DAY (curdate()) + 2 DAY
-            )
-            GROUP BY
-            l.user_id
-            ) r1
-            LEFT JOIN hyjf_trade.ht_account_list l2 ON l2.id = r1.max_id
-            UNION ALL
-            SELECT
-            IFNULL(SUM(l2.bank_balance), 0) AS monthStartBalance
-            FROM
-            (
-            SELECT
-            max(l.id) AS max_id
-            FROM
-            hyjf_user.ht_user_info i
-            LEFT JOIN hyjf_user.ht_spreads_user s ON s.user_id = i.user_id
-            LEFT JOIN hyjf_user.ht_r_oa_users ou ON ou.hyd_id = s.spreads_user_id
-            LEFT JOIN hyjf_user.ht_r_oa_department d1 ON d1.id = ou.departmentid
-            LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
-            LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
-            LEFT JOIN hyjf_trade.ht_account_list l ON l.user_id = i.user_id
-            WHERE
-            ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-            AND d3.`name` = '惠众商务'
-            AND (
-            d1.`name` = '电销部'
-            OR d1.`name` = '网络运营部'
-            )
-            AND i.attribute <![CDATA[<>]]> 0
-            AND i.role_id = 1
-            AND l.create_time <![CDATA[<]]> DATE_ADD(
-            curdate(),
-            INTERVAL - DAY (curdate()) + 2 DAY
-            )
-            GROUP BY
-            l.user_id
-            ) r1
-            LEFT JOIN hyjf_trade.ht_account_list l2 ON l2.id = r1.max_id
-            ) AS r2
+	<select id="getCustomer" resultType="com.hyjf.am.user.dao.model.auto.CustomerTaskConfig">
+		SELECT
+			customer_name AS customerName
+		FROM
+			hyjf_user.ht_customer_task_config
+		WHERE
+			status = 1 AND del_flag = 0
 	</select>
 
-    <select id="getOperMonthNowBalance" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
-            SELECT
-            IFNULL(SUM(r1.monthNowBalance), 0) AS monthNowBalance
-            FROM
-            (
-            SELECT
-            IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
-            FROM
-            hyjf_user.ht_user_info i
-            LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
-            LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
-            LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
-            WHERE
-            (
-            u1.source_id <![CDATA[<>]]> 349
-            OR u1.source_id IS NULL
-            )
-            AND i.attribute = 0
-            AND i.role_id = 1
-            UNION ALL
-            SELECT
-            IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
-            FROM
-            hyjf_user.ht_user_info i
-            LEFT JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
-            LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
-            LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
-            LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
-            LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
-            LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
-            WHERE
-            ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-            AND d3. NAME = '惠众商务'
-            AND (
-            d1. NAME = '电销部'
-            OR d1. NAME = '网络运营部'
-            )
-            AND i.attribute <![CDATA[<>]]> 0
-            AND i.role_id = 1
-            ) r1
-    </select>
-	
+	<select id="getCapitalIncreaseAndCashWithdrawalRateByCustomer" parameterType="java.util.List" resultType="com.hyjf.am.market.dao.model.auto.ScreenTwoParam">
+		SELECT
+		customer_group AS flag,
+		current_owner AS customerName,
+		NOW() AS queryTime,
+		ROUND(SUM(add_share), 0) AS capitalIncrease,
+		ROUND(IFNULL(SUM(numerator) / SUM(denominator), 0), 2) AS cashWithdrawalRate,
+		ROUND(SUM(end_balance), 0) AS nowBalance
+		FROM
+		(
+		SELECT
+		username AS '用户名',
+		attribute AS '用户属性',
+		IFNULL(money - withdraw + start_balance - end_balance, 0) AS add_share,
+		money AS '充值',
+		withdraw AS '提现',
+		start_balance AS '月初站岗',
+		end_balance,
+		credit_advanc AS '债转到手金额',
+		withdraw - credit_advanc AS '提现-债转',
+		recover_account_yes AS '回款',
+		utm_source AS 'pc渠道来源',
+
+		IF (
+
+		IF (
+		(
+		withdraw - credit_advanc - money
+		) <![CDATA[<]]> (
+		start_balance + recover_account_yes
+		),
+		withdraw - credit_advanc - money,
+		start_balance + recover_account_yes
+		) <![CDATA[<]]> 0,
+		0,
+
+		IF (
+		(
+		withdraw - credit_advanc - money
+		) <![CDATA[<]]> (
+		start_balance + recover_account_yes
+		),
+		withdraw - credit_advanc - money,
+		start_balance + recover_account_yes
+		)
+		) AS numerator,
+		start_balance + recover_account_yes AS denominator,
+		current_owner,
+		customer_group
+		FROM
+		(
+		SELECT
+		u.username,
+		ui.attribute,
+		ifnull(
+		(
+		SELECT
+		SUM(money) AS money
+		FROM
+		hyjf_trade.ht_account_recharge r
+		WHERE
+		u.user_id = r.user_id
+		AND STATUS = 2
+		AND create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+		),
+		0
+		) AS money,
+		ifnull(
+		(
+		SELECT
+		SUM(total) AS withdraw
+		FROM
+		hyjf_trade.ht_account_withdraw w
+		WHERE
+		u.user_id = w.user_id
+		AND STATUS = 2
+		AND w.create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+		GROUP BY
+		user_id
+		),
+		0
+		) AS withdraw,
+		(
+		SELECT
+		l.bank_balance AS start_balance
+		FROM
+		hyjf_trade.ht_account_list l
+		WHERE
+		l.create_time <![CDATA[<]]> date_format(
+		now() - INTERVAL 1 DAY,
+		'%Y-%m-01'
+		)
+		AND l.user_id = u.user_id
+		ORDER BY
+		l.create_time DESC
+		LIMIT 1
+		) AS start_balance,
+		(
+		SELECT
+		l.bank_balance AS end_balance
+		FROM
+		hyjf_trade.ht_account_list l
+		WHERE
+		l.user_id = u.user_id
+		ORDER BY
+		l.create_time DESC
+		LIMIT 1
+		) AS end_balance,
+		ifnull(
+		(
+		SELECT
+		sum(
+		ct.assign_price + ct.assign_interest_advance - ct.credit_fee
+		) AS credit_advanc
+		FROM
+		hyjf_trade.ht_borrow_recover br
+		INNER JOIN hyjf_trade.ht_borrow_tender bt ON br.nid = bt.nid
+		LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+		LEFT JOIN hyjf_trade.ht_borrow_credit bc ON bc.tender_nid = bt.nid
+		LEFT JOIN hyjf_trade.ht_credit_tender ct ON ct.credit_nid = bc.credit_nid
+		WHERE
+		ct.create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+		AND br.accede_order_id IS NULL
+		AND ui.attribute = 0
+		AND br.user_id = u.user_id
+		),
+		0
+		) AS credit_advanc,
+		ifnull(
+		(
+		SELECT
+		sum(recover_account_yes) AS recover_account_yes
+		FROM
+		(
+		<!-- 汇直投已还 -->
+		SELECT
+		hbr.user_id,
+		recover_account_yes
+		FROM
+		hyjf_trade.ht_borrow_recover hbr
+		INNER JOIN hyjf_trade.ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+		WHERE
+		hbr.accede_order_id IS NULL
+		AND hbr.recover_yestime >= unix_timestamp(
+		DATE_FORMAT(CURDATE(), '%Y-%m-01')
+		)
+		AND (
+		hb.borrow_style = 'endday'
+		OR hb.borrow_style = 'end'
+		)
+		AND hbr.recover_status = 1
+		UNION ALL
+		SELECT
+		hbrp.user_id,
+		recover_account_yes
+		FROM
+		hyjf_trade.ht_borrow_recover_plan hbrp
+		INNER JOIN hyjf_trade.ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+		WHERE
+		hbrp.accede_order_id IS NULL
+		AND hbrp.recover_yestime >= unix_timestamp(
+		DATE_FORMAT(CURDATE(), '%Y-%m-01')
+		)
+		AND (
+		hb.borrow_style = 'month'
+		OR hb.borrow_style = 'endmonth'
+		)
+		AND hbrp.recover_status = 1
+		UNION ALL
+		<!-- 汇计划已还 -->
+		SELECT
+		br.user_id,
+		br.repay_total AS recover_account_yes
+		FROM
+		hyjf_trade.ht_hjh_repay br
+		LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
+		LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+		WHERE
+		ui.role_id = 1
+		AND br.repay_actual_time >= unix_timestamp(
+		DATE_FORMAT(CURDATE(), '%Y-%m-01')
+		)
+		AND br.repay_status = 2
+		) br
+		WHERE
+		u.user_id = br.user_id
+		GROUP BY
+		user_id
+		),
+		0
+		) AS recover_account_yes,
+		utm.utm_source,
+		current_owner,
+		customer_group
+		FROM
+		hyjf_user.ht_user u
+		LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+		LEFT JOIN hyjf_user.ht_utm_reg utmreg ON u.user_id = utmreg.user_id
+		LEFT JOIN hyjf_user.ht_utm utm ON utmreg.utm_id = utm.utm_id
+		INNER JOIN hyjf_user.ht_user_portrait up ON up.user_name = u.username
+		INNER JOIN hyjf_user.ht_customer_task_config ctc ON ctc.customer_name = up.current_owner
+		WHERE
+		ui.attribute = 0
+		<if test="list != null" >
+			AND current_owner IN
+			<foreach collection="list" item="item" separator="," open="(" close=")">
+				#{item.customerName}
+			</foreach>
+		</if>
+		) bt
+		) hh
+		WHERE
+		add_share >= 0
+		GROUP BY
+		current_owner
+	</select>
+
+	<select id="getOperNowBalance" resultType="java.math.BigDecimal">
+		SELECT
+		ROUND(IFNULL(SUM(r1.monthNowBalance), 0), 0) AS monthNowBalance
+		FROM
+		(
+		SELECT
+		IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
+		FROM
+		hyjf_user.ht_user_info i
+		LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
+		LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
+		LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
+		WHERE
+		(
+		u1.source_id <![CDATA[<>]]> 349
+		OR u1.source_id IS NULL
+		)
+		AND i.attribute = 0
+		AND i.role_id = 1
+		UNION ALL
+		SELECT
+		IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
+		FROM
+		hyjf_user.ht_user_info i
+		LEFT JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
+		LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+		LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
+		WHERE
+		ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		AND d3. NAME = '惠众商务'
+		AND (
+		d1. NAME = '电销部'
+		OR d1. NAME = '网络运营部'
+		)
+		AND i.attribute <![CDATA[<>]]> 0
+		AND i.role_id = 1
+		) r1
+	</select>
+
+	<delete id="deleteAllParam">
+		DELETE FROM hyjf_trade.ht_screen_two_param
+	</delete>
+
+	<insert id="insertResult" parameterType="java.util.List">
+		INSERT INTO hyjf_trade.ht_screen_two_param (flag, customer_name, query_time, capital_increase, cash_withdrawal_rate, now_balance)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.flag} ,
+			#{item.customerName} ,
+			#{item.queryTime} ,
+			#{item.capitalIncrease} ,
+			#{item.cashWithdrawalRate} ,
+			#{item.nowBalance}
+			)
+		</foreach>
+	</insert>
+
+	<select id="getOperationUserId" resultType="java.lang.String">
+		SELECT
+	  	r1.user_id
+		FROM
+		(
+		SELECT
+		i.user_id
+		FROM
+		hyjf_user.ht_user_info i
+		LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
+		LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
+		WHERE
+		(
+		u1.source_id <![CDATA[<>]]> 349
+		OR u1.source_id IS NULL
+		)
+		AND i.attribute = 0
+		AND i.role_id = 1
+		UNION ALL
+		SELECT
+		i.user_id
+		FROM
+		hyjf_user.ht_user_info i
+		LEFT JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
+		LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+		WHERE
+		ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		AND d3. NAME = '惠众商务'
+		AND (
+		d1. NAME = '电销部'
+		OR d1. NAME = '网络运营部'
+		)
+		AND i.attribute <![CDATA[<>]]> 0
+		AND i.role_id = 1
+		) r1
+	</select>
+
+	<select id="getUserOperateListUserId" resultType="java.lang.String">
+		SELECT user_id FROM hyjf_trade.ht_user_operate_list GROUP BY user_id;
+	</select>
+
+	<select id="getRepaymentPlan" resultType="java.lang.String">
+		SELECT user_id FROM hyjf_trade.ht_repayment_plan GROUP BY user_id;
+	</select>
+
+	<delete id="delUserOperate" parameterType="java.util.List">
+		DELETE FROM hyjf_trade.ht_user_operate_list WHERE user_id IN
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<delete id="delRepaymentPlan" parameterType="java.util.List">
+		DELETE FROM hyjf_trade.ht_repayment_plan WHERE user_id IN
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
 </mapper>

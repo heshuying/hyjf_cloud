@@ -663,6 +663,66 @@ public class RepaymentPlanExample {
             return (Criteria) this;
         }
 
+        public Criteria andStatusIsNull() {
+            addCriterion("`status` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("`status` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("`status` =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("`status` <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("`status` >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`status` >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("`status` <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("`status` <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("`status` in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("`status` not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("`status` between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("`status` not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
@@ -780,6 +840,66 @@ public class RepaymentPlanExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyIsNull() {
+            addCriterion("old_money is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyIsNotNull() {
+            addCriterion("old_money is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyEqualTo(BigDecimal value) {
+            addCriterion("old_money =", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyNotEqualTo(BigDecimal value) {
+            addCriterion("old_money <>", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyGreaterThan(BigDecimal value) {
+            addCriterion("old_money >", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("old_money >=", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyLessThan(BigDecimal value) {
+            addCriterion("old_money <", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("old_money <=", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyIn(List<BigDecimal> values) {
+            addCriterion("old_money in", values, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyNotIn(List<BigDecimal> values) {
+            addCriterion("old_money not in", values, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("old_money between", value1, value2, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("old_money not between", value1, value2, "oldMoney");
             return (Criteria) this;
         }
     }

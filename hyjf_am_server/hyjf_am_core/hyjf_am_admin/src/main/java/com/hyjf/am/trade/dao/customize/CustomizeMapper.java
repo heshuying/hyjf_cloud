@@ -76,6 +76,9 @@ public class CustomizeMapper extends AutoMapper {
 	protected BatchCenterCustomizeMapper batchCenterCustomizeMapper;
 
 	@Autowired
+	protected BatchCenterLogCustomizeMapper batchCenterLogCustomizeMapper;
+
+	@Autowired
 	protected TzjCustomizeMapper tzjCustomizeMapper;
 
 	@Autowired
@@ -219,4 +222,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected EvaluationConfigLogMapper evaluationConfigLogMapper;
+
+	@Autowired
+	protected AdminBorrowRepayInfoCurrentCustomizeMapper adminBorrowRepayInfoCurrentCustomizeMapper;
 }

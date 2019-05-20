@@ -64,11 +64,11 @@ public class CertCallUtil implements Serializable {
         }
         // 产品信息
         if(CertCallConstant.CERT_INF_TYPE_FINANCE.equals(infType)){
-            return CertCallConstant.CERT_CALL_FINANCE_URL;
+            return CertCallConstant.CERT_CALL_LENDPRODUCT_URL;
         }
         // 产品散标配置
         if(CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG.equals(infType)){
-            return CertCallConstant.CERT_CALL_FINANCE_SCATTER_CONFIG_URL;
+            return CertCallConstant.CERT_CALL_LENDPRODUCTCONFIG_URL;
         }
         // 债权信息
         if(CertCallConstant.CERT_INF_TYPE_CREDITOR.equals(infType)){
@@ -90,6 +90,11 @@ public class CertCallUtil implements Serializable {
         if(CertCallConstant.CERT_INF_TYPE_TRANSACT.equals(infType)){
             return CertCallConstant.CERT_CALL_TRANSACT_URL;
         }
+        // 投资明细
+        if(CertCallConstant.CERT_INF_TYPE_INVEST_DETAIL.equals(infType)){
+            return CertCallConstant.CERT_CALL_INVEST_DETAIL_URL;
+        }
+
         return null;
     }
 
@@ -207,7 +212,7 @@ public class CertCallUtil implements Serializable {
             return "1";
         }
         if("1".equals(userType+"")){
-            return "-1";
+            return "7";
         }
         return "";
     }
@@ -217,9 +222,13 @@ public class CertCallUtil implements Serializable {
      * @param userIdcard
      * @return
      */
-    public static String desUserIdcard(String userIdcard) {
+    public static String desUserIdcard(String userIdcard,boolean isCompany) {
         if (StringUtils.isBlank(userIdcard)) {
             return "";
+        }
+        if(isCompany){
+            // 如果是企业的话  不用脱敏
+            return userIdcard;
         }
         String name = StringUtils.left(userIdcard, userIdcard.length()-4);
         return StringUtils.rightPad(name, StringUtils.length(userIdcard), "*");

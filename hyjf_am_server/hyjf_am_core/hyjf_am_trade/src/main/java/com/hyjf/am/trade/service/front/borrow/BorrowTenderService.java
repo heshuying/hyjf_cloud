@@ -2,11 +2,13 @@ package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -151,4 +153,32 @@ public interface BorrowTenderService {
     List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(String source,String dayStart, String dayEnd);
 
     List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(String source,String dayStart, String dayEnd);
+
+    BigDecimal getInvestAmountByPeriod(Date startTime, Date endTime);
+
+    BigDecimal getAnnualInvestAmount(Integer userId, Date startTime, Date endTime);
+
+    /**
+     * 查询活动期间用户投资
+     * @param userId
+     * @param startDate
+     * @param endDate
+     * @param client 客户端
+     * @return
+     */
+    BigDecimal getUserInvestAmount(int userId, Date startDate, Date endDate, Integer client);
+
+    /**
+     * 查询投资年化用户top5
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<UserTenderVO> getSumAnnualInvestAmountTop5(Date startDate, Date endDate);
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    List<BorrowTender> getBorrowTenderByAccede(String accedeOrderId);
 }

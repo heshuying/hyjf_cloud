@@ -11,12 +11,17 @@ import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.coupon.MyCouponListService;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.trade.utils.coupon.BestCouponUtil;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -126,6 +132,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         // 排序
         Collections.sort(couponConfigs, new ComparatorCouponBean());
         for (BestCouponListVO bestCoupon : couponConfigs) {
+
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if (bestCoupon.getCouponType() == 2) {
@@ -137,9 +144,20 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     continue;
                 }
             }
+
+            // 验证使用平台
+            boolean ifcouponSystem = BestCouponUtil.dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+            if(ifcouponSystem){
+                continue;
+            }
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
+
             // 验证项目期限、
             Integer type = bestCoupon.getProjectExpirationType();
-            if(dealProjectExpiration(borrow.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
+            if(BestCouponUtil.dealProjectExpiration(borrow.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
                 continue;
             }
 
@@ -155,24 +173,15 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 }
             }
             // 验证优惠券适用的项目 新逻辑 pcc20160715
-            String projectType = bestCoupon.getProjectType();
-            boolean ifprojectType = dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
+            boolean ifprojectType = BestCouponUtil.dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
             if (ifprojectType) {
                 continue;
             }
             //是否与本金公用
-            boolean addFlg = false;
-            if (bestCoupon.getAddFlag()!=null&&bestCoupon.getAddFlag() == 1 && (!"0".equals(money) && !"".equals(money))) {
-                addFlg = true;
-            }
-            if (addFlg) {
+            if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
                 continue;
             }
-            // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
-            if(!ifcouponSystem){
-                return bestCoupon;
-            }
+            return bestCoupon;
         }
         return null;
     }
@@ -221,7 +230,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目金额
             Integer tenderQuota = bestCoupon.getTenderQuotaType();
-
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
             if (tenderQuota == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     continue;
@@ -233,29 +245,26 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目期限
             Integer type = bestCoupon.getProjectExpirationType();
-            if(dealProjectExpiration(borrow.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
+            if(BestCouponUtil.dealProjectExpiration(borrow.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
                 continue;
             }
             // 验证可使用项目
             String projectType = bestCoupon.getProjectType();
             // String[] projectTypeArr=projectType.split(",");
-            boolean ifprojectType = dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
+            boolean ifprojectType = BestCouponUtil.dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
             if (ifprojectType) {
                 continue;
             }
 
             /**************逻辑修改 pcc start***************/
             //是否与本金公用
-            boolean addFlg = false;
-            if (bestCoupon.getAddFlag()!=null&&bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
-                addFlg = true;
-            }
-            if (addFlg) {
+            //是否与本金公用
+            if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
                 continue;
             }
             /**************逻辑修改 pcc end***************/
             // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+            boolean ifcouponSystem = BestCouponUtil.dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
             if (ifcouponSystem) {
                 continue;
             } else {
@@ -307,9 +316,19 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                         continue;
                     }
                 }
+                // 验证使用平台
+                boolean ifcouponSystem = BestCouponUtil.dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+                if(ifcouponSystem){
+                    continue;
+                }
+                // 加息券如果没有填金额则不可用
+                if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                    continue;
+                }
+
                 // 验证项目期限
                 Integer type = bestCoupon.getProjectExpirationType();
-                if(dealProjectExpiration(plan.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),plan.getLockPeriod())){
+                if(BestCouponUtil.dealProjectExpiration(plan.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),plan.getLockPeriod())){
                     continue;
                 }
 
@@ -334,18 +353,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     continue;
                 }
                 //是否与本金公用
-                boolean addFlg = false;
-                if (bestCoupon.getAddFlag()!=null && bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
-                    addFlg = true;
-                }
-                if (addFlg) {
+                if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
                     continue;
                 }
-                // 验证使用平台
-                boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
-                if(!ifcouponSystem){
-                    return bestCoupon;
-                }
+                return bestCoupon;
             }
             return null;
         }
@@ -393,12 +404,16 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目期限
             Integer type = bestCoupon.getProjectExpirationType();
-            if(dealProjectExpiration(plan.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),plan.getLockPeriod())){
+            if(BestCouponUtil.dealProjectExpiration(plan.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),plan.getLockPeriod())){
                 continue;
             }
 
             // 验证项目金额
             Integer tenderQuota = bestCoupon.getTenderQuotaType();
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
             if (tenderQuota == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     continue;
@@ -418,15 +433,12 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 continue;
             }
             //是否与本金公用
-            boolean addFlg = false;
-            if (bestCoupon.getAddFlag() !=null && bestCoupon.getAddFlag().equals(1) && !"0".equals(money)) {
-                addFlg = true;
-            }
-            if (addFlg) {
+            //是否与本金公用
+            if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
                 continue;
             }
             // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+            boolean ifcouponSystem = BestCouponUtil.dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
             if(!ifcouponSystem){
                 allCount++;
                 continue;
@@ -457,14 +469,14 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             CouponUserForAppCustomizeVO couponUserForAppCustomizeVO = new CouponUserForAppCustomizeVO();
 
             //根据项目类型处理转换项目
-            String projectString = this.dealProjectType(myCouponListCustomizeVO.getProjectType());
+            String projectString = BestCouponUtil.dealProjectType(myCouponListCustomizeVO.getProjectType());
             couponUserForAppCustomizeVO.setProjectType(projectString);
 
             //处理选中的操作平台
-            String clientString = dealOperation(myCouponListCustomizeVO.getCouponSystem());
+            String clientString = BestCouponUtil.dealOperation(myCouponListCustomizeVO.getCouponSystem());
             couponUserForAppCustomizeVO.setOperationPlatform(clientString);
             //处理优惠券面额
-            couponUserForAppCustomizeVO.setCouponQuota(myCouponListCustomizeVO.getCouponQuota() + dealCouponQuota(myCouponListCustomizeVO.getCouponType()));
+            couponUserForAppCustomizeVO.setCouponQuota(myCouponListCustomizeVO.getCouponQuota() + BestCouponUtil.dealCouponQuota(myCouponListCustomizeVO.getCouponType()));
             couponUserForAppCustomizeVO.setId(myCouponListCustomizeVO.getId());
             couponUserForAppCustomizeVO.setCouponType(myCouponListCustomizeVO.getCouponTypeName());
             couponUserForAppCustomizeVO.setCouponTypeOrigin(myCouponListCustomizeVO.getCouponType());
@@ -474,6 +486,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             couponUserForAppCustomizeVO.setInvestQuota(myCouponListCustomizeVO.getTenderQuota());
             couponUserForAppCustomizeVO.setInvestTime(myCouponListCustomizeVO.getProjectExpirationType());
             couponUserForAppCustomizeVO.setCouponName(myCouponListCustomizeVO.getCouponName());
+            couponUserForAppCustomizeVO.setEndTimeStamp(myCouponListCustomizeVO.getEndTimeStamp());
             couponList.add(couponUserForAppCustomizeVO);
         }
         return couponList;
@@ -497,8 +510,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         String userId = requestBean.getUserId();
         String borrowNid = requestBean.getBorrowNid();
         String money = requestBean.getMoney();
+        BigDecimal moneyBigDecimal = BigDecimal.ZERO;
+        if(StringUtils.isNotBlank(money)){
+            moneyBigDecimal = new BigDecimal(money);
+        }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
+        List<CouponBeanVo> availableCouponListSort=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -515,72 +533,103 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         Integer moneyFlg = borrowInfo.getBorrowTasteMoney();
         List<MyCouponListCustomizeVO> list = myCouponListCustomizeMapper.selectMyCouponList(map);
         for (MyCouponListCustomizeVO bestCoupon : list) {
+            // 验证使用平台
+            boolean ifcouponSystem = BestCouponUtil.dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+            if(ifcouponSystem){
+                continue;
+            }
+
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if ("2".equals(bestCoupon.getCouponType())) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用");
+                    //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+                    // 加息券利率统一为小数点后一位
+                    String fromatCoupon = FormatRateUtil.formatBorrowApr(bestCoupon.getCouponQuota());
+                    bestCoupon.setCouponQuota(fromatCoupon);
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             }
             if (moneyFlg != null && moneyFlg == 0) {
                 if ("1".equals(bestCoupon.getCouponType())) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目优惠券不能使用");
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目优惠券不能使用",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             }
+
             // 验证项目期限、
             Integer type = bestCoupon.getExpirationType();
-            if(dealProjectExpiration(style,type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
+            if(BestCouponUtil.dealProjectExpiration(style,type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
                 continue;
             }
             // 验证项目金额
             Integer tenderQuotaType = bestCoupon.getTenderQuotaType();
+
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                            bestCoupon.getTenderQuota());
+                            bestCoupon.getTenderQuota(),platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             } else if (tenderQuotaType == 2) {
                 if (bestCoupon.getTenderQuotaAmount() != null && (new Double(bestCoupon.getTenderQuotaAmount()) > new Double(money))) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota());
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota(),platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             }
 
             //是否与本金公用
-            boolean addFlg = false;
-            if (null != bestCoupon.getAddFlag() && bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
-                addFlg = true;
-            }
-            if (addFlg) {
-                /*CouponBean couponBean =
-                        createCouponBean(userCouponConfigCustomize, "不能与本金共用");*/
-//                notAvailableCouponList.add(couponBean);
+            if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"不能与本金共用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
             /**************逻辑修改 pcc end***************/
 
             // 验证优惠券适用的项目 新逻辑 pcc20160715
-            boolean ifprojectType = dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
+            boolean ifprojectType = BestCouponUtil.dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
             if (ifprojectType) {
                 continue;
             }
-            // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
-            if(!ifcouponSystem){
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"");
-                availableCouponList.add(couponBean);
+
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
+                continue;
+            }
+
+            CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"",platform,moneyBigDecimal);
+            availableCouponList.add(couponBean);
+
+        }
+
+        if(!availableCouponList.isEmpty()){
+            BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
+            if(bestCoupon != null){
+                // 遍历查询出最优优惠券
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
+                        availableCouponListSort.add(couponBeanVo);
+                        break;
+                    }
+                }
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(!couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                    }
+                }
             }
         }
 
-        jsonObject.put("availableCouponList", availableCouponList);
+        jsonObject.put("availableCouponList", availableCouponListSort);
         jsonObject.put("notAvailableCouponList", notAvailableCouponList);
-        jsonObject.put("availableCouponListCount", availableCouponList.size());
+        jsonObject.put("availableCouponListCount", availableCouponListSort.size());
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
         return jsonObject;
     }
@@ -591,8 +640,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         String userId = requestBean.getUserId();
         String planNid = requestBean.getBorrowNid();
         String money = requestBean.getMoney();
+        BigDecimal moneyBigDecimal = BigDecimal.ZERO;
+        if(StringUtils.isNotBlank(money)){
+            moneyBigDecimal = new BigDecimal(money);
+        }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
+        List<CouponBeanVo> availableCouponListSort=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -605,7 +659,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         for (MyCouponListCustomizeVO userCouponConfigCustomize : list) {
             CouponBeanVo couponBeanVo = new CouponBeanVo();
             couponBeanVo.setCouponSystem(userCouponConfigCustomize.getCouponSystem());
-            couponBeanVo.setProjectType(dealProjectType(userCouponConfigCustomize.getProjectType()));
+            couponBeanVo.setProjectType(BestCouponUtil.dealProjectType(userCouponConfigCustomize.getProjectType()));
             couponBeanVo.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
             couponBeanVo.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
             // 验证优惠券适用的项目 新逻辑 pcc20160715
@@ -638,20 +692,19 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             // 验证项目期限、
             Integer type = userCouponConfigCustomize.getExpirationType();
-            if(dealProjectExpiration(hjhPlan.getBorrowStyle(),type,userCouponConfigCustomize.getProjectExpirationLength(),userCouponConfigCustomize.getProjectExpirationLengthMin(),userCouponConfigCustomize.getProjectExpirationLengthMax(),hjhPlan.getLockPeriod())){
+            if(BestCouponUtil.dealProjectExpiration(hjhPlan.getBorrowStyle(),type,userCouponConfigCustomize.getProjectExpirationLength(),userCouponConfigCustomize.getProjectExpirationLengthMin()
+                    ,userCouponConfigCustomize.getProjectExpirationLengthMax(),hjhPlan.getLockPeriod())){
                 continue;
             }
             //是否与本金公用
-            boolean addFlg = false;
-            if(userCouponConfigCustomize.getAddFlag()!=null&&userCouponConfigCustomize.getAddFlag()==1&&!"0".equals(money)){
-                addFlg = true;
-            }
-            if(addFlg){
+            if (!BestCouponUtil.tasteMoneyCheck(userCouponConfigCustomize.getAddFlag(), money)) {
+                CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"不能与本金共用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
             /**************逻辑修改 pcc end***************/
             // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(userCouponConfigCustomize.getCouponSystem(),platform);
+            boolean ifcouponSystem = BestCouponUtil.dealCheckCouponSystem(userCouponConfigCustomize.getCouponSystem(),platform);
 
             if (!ifcouponSystem) {
                 // 验证项目金额
@@ -660,27 +713,54 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
+                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform,moneyBigDecimal);
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
                     }
                 } else if (2 == tenderQuotaType) {
                     if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
                         if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
-                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform,moneyBigDecimal);
                             notAvailableCouponList.add(couponBeanVo);
                             continue;
                         }
                     }
                 }
-                couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "");
+
+                // 加息券如果没有填金额则不可用
+                if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
+                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform, moneyBigDecimal);
+                    notAvailableCouponList.add(couponBean);
+                    continue;
+                }
+                couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "",platform,moneyBigDecimal);
                 availableCouponList.add(couponBeanVo);
             }
         }
+
+        if(!availableCouponList.isEmpty()){
+            BestCouponListVO bestCoupon = this.selectHJHBestCoupon(requestBean);
+            if(bestCoupon != null){
+                // 遍历查询出最优优惠券
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
+                        availableCouponListSort.add(couponBeanVo);
+                        break;
+                    }
+                }
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(!couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                    }
+                }
+            }
+        }
+
         // 排序
-        jsonObject.put("availableCouponList", availableCouponList);
+        jsonObject.put("availableCouponList", availableCouponListSort);
         jsonObject.put("notAvailableCouponList", notAvailableCouponList);
-        jsonObject.put("availableCouponListCount", availableCouponList.size());
+        jsonObject.put("availableCouponListCount", availableCouponListSort.size());
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
 
         return jsonObject;
@@ -708,13 +788,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             String couponSystem = myCouponCustomizeVO.getCouponSystem();
             //处理使用平台
             if (StringUtils.isNotBlank(couponSystem)){
-                couponSystem = dealOperation(couponSystem);
+                couponSystem = BestCouponUtil.dealOperation(couponSystem);
                 myCouponCustomizeVO.setCouponSystem(couponSystem);
             }
             //处理项目类型
             String projectType = myCouponCustomizeVO.getProjectType();
             if (StringUtils.isNotBlank(projectType)){
-                projectType = dealProjectType(projectType);
+                projectType = BestCouponUtil.dealProjectType(projectType);
                 myCouponCustomizeVO.setProjectType(projectType);
             }
             wechatList.add(myCouponCustomizeVO);
@@ -724,124 +804,12 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
     }
 
     /**
-     * 处理校验优惠券平台
-     * @param couponSystem 优惠券适用平台
-     * @param platform 出借平台
-     * @return
-     */
-    public boolean dealCheckCouponSystem(String couponSystem,String platform){
-        String[] couponSystemArr = couponSystem.split(",");
-        boolean ifcouponSystem = true;
-        for (String couponSystemString : couponSystemArr) {
-            if ("-1".equals(couponSystemString)) {
-                ifcouponSystem = false;
-                break;
-            }
-
-            if (platform.equals(couponSystemString)) {
-                ifcouponSystem = false;
-                break;
-            }
-        }
-        return ifcouponSystem;
-    }
-
-    /**
-     * 处理项目期限
-     * @param style
-     * @param type
-     * @param projectExpirationLength
-     * @param projectExpirationLengthMin
-     * @param projectExpirationLengthMax
-     * @param borrowPeriod
-     * @return
-     */
-    public boolean dealProjectExpiration(String style,Integer type,Integer projectExpirationLength,Integer projectExpirationLengthMin,Integer projectExpirationLengthMax,Integer borrowPeriod){
-        boolean flag = false;
-        if ("endday".equals(style)) {
-            if (type == 1) {
-                if ((projectExpirationLength * 30) != borrowPeriod) {
-                    flag = true;
-                }
-            } else if (type == 3) {
-                if ((projectExpirationLength * 30) > borrowPeriod) {
-                    flag = true;
-                }
-            } else if (type == 4) {
-                if ((projectExpirationLength * 30) < borrowPeriod) {
-                    flag = true;
-                }
-            } else if (type == 2) {
-                if ((projectExpirationLengthMin * 30) > borrowPeriod
-                        || (projectExpirationLengthMax * 30) < borrowPeriod) {
-                    flag = true;
-                }
-            }
-        } else {
-            if (type == 1) {
-                if (!projectExpirationLength.equals(borrowPeriod)) {
-                    flag = true;
-                }
-            } else if (type == 3) {
-                if (projectExpirationLength > borrowPeriod) {
-                    flag = true;
-                }
-            } else if (type == 4) {
-                if (projectExpirationLength < borrowPeriod) {
-                    flag = true;
-                }
-            } else if (type == 2) {
-                if (projectExpirationLengthMin > borrowPeriod || projectExpirationLengthMax < borrowPeriod) {
-                    flag = true;
-                }
-            }
-        }
-        return flag;
-    }
-
-    /**
-     * 验证优惠券适用的项目
-     * @param projectType 项目类型
-     * @param borrowClass 标的类型
-     * @return
-     */
-    public boolean dealBorrowClass(String projectType,String borrowClass){
-        boolean ifprojectType = true;
-        if (projectType.indexOf("-1") != -1) {
-            if (!"RTB".equals(borrowClass)) {
-                ifprojectType = false;
-            }
-        } else {
-            if ("HXF".equals(borrowClass)) {
-                if (projectType.indexOf("2") != -1) {
-                    ifprojectType = false;
-                }
-            } else if ("NEW".equals(borrowClass)) {
-                if (projectType.indexOf("3") != -1) {
-                    ifprojectType = false;
-                }
-            } else if ("ZXH".equals(borrowClass)) {
-                if (projectType.indexOf("4") != -1) {
-                    ifprojectType = false;
-                }
-            } else {
-                if (projectType.indexOf("1") != -1) {
-                    if (!"RTB".equals(borrowClass)) {
-                        ifprojectType = false;
-                    }
-                }
-            }
-        }
-        return ifprojectType;
-    }
-
-    /**
      * 处理优惠券对象
      * @param userCouponConfigCustomize 查询到的优惠券
      * @param remarks 备注
      * @return CouponBeanVo
      */
-    private CouponBeanVo createCouponBean(MyCouponListCustomizeVO userCouponConfigCustomize,CouponBeanVo couponBean, String remarks) {
+    private CouponBeanVo createCouponBean(MyCouponListCustomizeVO userCouponConfigCustomize,CouponBeanVo couponBean, String remarks,String platform, BigDecimal money) {
         if(null == couponBean){
             couponBean=new CouponBeanVo();
         }
@@ -858,130 +826,61 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         }
 
         //处理优惠券面额
-        couponBean.setCouponQuota(userCouponConfigCustomize.getCouponQuota() + dealCouponQuota(userCouponConfigCustomize.getCouponType()));
+        couponBean.setCouponQuota(userCouponConfigCustomize.getCouponQuota() + BestCouponUtil.dealCouponQuota(userCouponConfigCustomize.getCouponType()));
         couponBean.setCouponQuotaStr(userCouponConfigCustomize.getCouponQuota());
         couponBean.setCouponType(userCouponConfigCustomize.getCouponTypeName());
-        //处理优惠券类型
-        String projectString = this.dealProjectType(userCouponConfigCustomize.getProjectType());;
 
-        couponBean.setProjectType(projectString);
         couponBean.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
         couponBean.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
-        //处理优惠券使用平台
-        String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());;
-        couponBean.setOperationPlatform(clientString);
+        if(platform.equals("0")){
+            //处理优惠券适用项目
+            String projectString = BestCouponUtil.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
+            couponBean.setProjectType(projectString);
+            //处理优惠券使用平台
+            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem());
+            couponBean.setOperationPlatform(clientString);
+            long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(userCouponConfigCustomize.getEndTimeStamp())) + 1;
+            if(userCouponConfigCustomize.getUsedFlag() == 0 && day >= 1 && day <=3){
+                couponBean.setTime("还有"+day+"天过期");
+            }else{
+                couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+            }
+            couponBean.setInvestQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+            couponBean.setTenderQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+//            if("2".equals(userCouponConfigCustomize.getCouponType()) && money.compareTo(BigDecimal.ZERO)<=0){
+//                couponBean.setInvestQuota("加息券不可以单独使用");
+//                couponBean.setTenderQuota("加息券不可以单独使用");
+//            }
+        }else if ("2".equals(platform) || "3".equals(platform)){
+            //处理优惠券适用项目
+            String projectString = BestCouponUtil.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
+            couponBean.setProjectType(projectString);
+            //处理优惠券使用平台
+            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem());
+            couponBean.setOperationPlatform(clientString);
+            long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(userCouponConfigCustomize.getEndTimeStamp())) + 1;
+            if(userCouponConfigCustomize.getUsedFlag() == 0 && day <=3){
+                couponBean.setRemarks("即将过期");
+            }
+            couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+            couponBean.setInvestQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+            couponBean.setTenderQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+        }else {
+            //处理优惠券适用项目
+            String projectString = BestCouponUtil.dealProjectType(userCouponConfigCustomize.getProjectType());
+            couponBean.setProjectType(projectString);
+            //处理优惠券使用平台
+            String clientString = BestCouponUtil.dealOperation(userCouponConfigCustomize.getCouponSystem());
+            couponBean.setOperationPlatform(clientString);
+            couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+            couponBean.setInvestQuota(userCouponConfigCustomize.getTenderQuota());
+            couponBean.setTenderQuota(userCouponConfigCustomize.getTenderQuota());
+        }
 
-        couponBean.setTime(userCouponConfigCustomize.getAddTime() + "-" + userCouponConfigCustomize.getEndTime());
-        couponBean.setInvestQuota(userCouponConfigCustomize.getTenderQuota());
-        couponBean.setTenderQuota(userCouponConfigCustomize.getTenderQuota());
         couponBean.setCouponUserCode(userCouponConfigCustomize.getCouponUserCode());
         return couponBean;
     }
 
-    /**
-     * 处理优惠券面额
-     *
-     * @param couponType 优惠券类型
-     * @return String
-     */
-    public String dealCouponQuota(String couponType) {
-        String couponQuota = "";
-        if ("2".equals(couponType)) {
-            couponQuota = "%";
-        }else{
-            couponQuota = "元";
-        }
-        return couponQuota;
-    }
-
-    /**
-     * 处理选中的操作平台
-     *
-     * @param operationPlatform
-     * @return
-     */
-    public String dealOperation(String operationPlatform) {
-        String clientString = "";
-        // 操作平台
-        //操作平台
-        Map<String, String> map = CacheUtil.getParamNameMap("CLIENT");
-        // 被选中操作平台
-        String clientSed[] = StringUtils.split(operationPlatform, ",");
-        for (int i = 0; i < clientSed.length; i++) {
-            if ("-1".equals(clientSed[i])) {
-                clientString = clientString + "全部平台";
-                break;
-            } else {
-                for (String key : map.keySet()) {
-                    if (clientSed[i].equals(key)) {
-                        if (i != 0 && clientString.length() != 0) {
-                            clientString = clientString + "、";
-                        }
-                        clientString = clientString + map.get(key);
-                    }
-                }
-            }
-        }
-        if (clientString.contains("Android、iOS")) {
-            clientString = clientString.replace("Android、iOS", "APP");
-        }
-        return clientString;
-    }
-
-    /**
-     * 根据项目类型转换中文项目类型
-     *
-     * @param projectType 项目类型
-     * @return
-     */
-    public String dealProjectType(String projectType) {
-        String projectString = ",";
-        //勾选汇直投，尊享汇，融通宝
-        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "散标,";
-        }
-        //勾选汇直投  未勾选尊享汇，融通宝
-        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") == -1) {
-            projectString = projectString + "散标,";
-        }
-        //勾选汇直投，融通宝  未勾选尊享汇
-        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "散标,";
-        }
-        //勾选汇直投，选尊享汇 未勾选融通宝
-        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
-            projectString = projectString + "散标,";
-        }
-        //勾选尊享汇，融通宝  未勾选直投
-        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "散标,";
-        }
-        //勾选尊享汇  未勾选直投，融通宝
-        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
-            projectString = projectString + "散标,";
-        }
-        //勾选尊享汇  未勾选直投，融通宝
-        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "散标,";
-        }
-
-        if (projectType.indexOf("3") != -1) {
-            projectString = projectString + "新手,";
-        }
-    		/*if (projectType.indexOf("5")!=-1) {
-            projectString = projectString + "汇添金,";
-        }*/
-        // mod by nxl 智投服务：修改汇计划->智投 start
-       /* if (projectType.indexOf("6") != -1) {
-            projectString = projectString + "汇计划,";
-        }*/
-        if (projectType.indexOf("6")!=-1) {
-            projectString = projectString + "智投,";
-        }
-        // mod by nxl 智投服务：修改汇计划->智投 end
-
-        return projectString.substring(1, projectString.length() - 1);
-    }
 
     /**
      * 比较器

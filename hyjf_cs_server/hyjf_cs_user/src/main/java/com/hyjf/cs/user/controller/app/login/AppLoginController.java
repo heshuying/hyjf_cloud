@@ -15,15 +15,19 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -65,6 +69,9 @@ public class AppLoginController extends BaseUserController {
 
     @Autowired
     private CommonProducer commonProducer;
+
+    @Autowired
+    private PassWordService passWordService;
     /**
      * 登录
      *
@@ -132,38 +139,7 @@ public class AppLoginController extends BaseUserController {
             if (webViewUserVO != null) {
                 logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
                 //登录成功发送mq
-                UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-                userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
-                userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
-                userOperationLogEntity.setPlatform(Integer.valueOf(platform));
-                userOperationLogEntity.setRemark("");
-                userOperationLogEntity.setOperationTime(new Date());
-                userOperationLogEntity.setUserName(webViewUserVO.getUsername());
-                userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
-                try {
-                    commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
-                } catch (MQException e) {
-                    logger.error("保存用户日志失败", e);
-                }
-                logger.info("appAfterLogin:"+sign);
-                // ios审核时跳转最优服务器的场景sign值重新获取
-                sign = this.appAfterLogin(sign, webViewUserVO, username,version);
-
-                if (StringUtils.isNotEmpty(presetProps)){
-                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
-                    // 将json串转换成Bean
-                    try {
-                        Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
-                        });
-                        sensorsDataBean.setPresetProps(sensorsDataMap);
-                        sensorsDataBean.setUserId(webViewUserVO.getUserId());
-                        sensorsDataBean.setEventCode("login");
-                        // 发送神策数据统计MQ
-                        this.loginService.sendSensorsDataMQ(sensorsDataBean);
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    }
-                }
+                sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
                 ret.put("status", "0");
                 ret.put("statusDesc", "登录成功");
                 ret.put("token", webViewUserVO.getToken());
@@ -488,4 +464,235 @@ public class AppLoginController extends BaseUserController {
         return sign;
     }
 
+    /**
+     * 短信验证码登录  PC1.1.3 需求新增
+     * @param version
+     * @param key
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "短信验证码登录", notes = "登录")
+    @PostMapping(value = "/mobileCodeLogin")
+    public JSONObject mobileCodeLogin(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/mobileCodeLogin");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 用户名
+        String username = request.getParameter("username");
+        // 密码
+        String smsCode = request.getParameter("smsCode");
+        // 神策预置属性
+        String presetProps = request.getParameter("presetProps");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        loginService.checkForApp(version,platform,netStatus);
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(username) ) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 取得加密用的Key
+        if (Validator.isNull(key)) {
+            ret.put("status", "709");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        // 业务逻辑
+        // try {
+        // 解密
+        logger.info("APP登录 ---> 解密前 key：{}，username：{}，smsCode：{}", key, username, smsCode);
+        username = DES.decodeValue(key, username);
+        logger.info("APP登录 ---> 解密后 username：{}，smsCode：{}", username, smsCode);
+        if (Validator.isNull(username)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "用户名不能为空");
+            return ret;
+        }
+        if(!Validator.isMobile(username)){
+            ret.put("status", "1");
+            ret.put("statusDesc", "手机号格式错误");
+            return ret;
+        }
+        if (Validator.isNull(smsCode)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "验证码不能为空");
+            return ret;
+        }
+        UserVO userVO = loginService.getUsersByMobile(username);
+        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,platform,userVO);
+        if (!errorInfo.isEmpty()){
+            ret.put("status", "1");
+            ret.put("statusDesc", errorInfo.get("statusDesc"));
+            return ret;
+        }
+
+        // 执行登录(登录时间，登录ip)
+        WebViewUserVO webViewUserVO = loginService.loginByCode(username, GetCilentIP.getIpAddr(request), platform,userVO);
+        if (webViewUserVO != null) {
+            logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
+            sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
+            // 一个用户用同一个值   如果已经存在  就用以前的
+            String codeLoginKey = "";
+            if(RedisUtils.exists(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId())){
+                codeLoginKey = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId());
+            }else{
+                codeLoginKey =  SecretUtil.createSign();
+            }
+            // 设置十三天内有效
+            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId(),codeLoginKey,60*60*24*13);
+            ret.put("status", "0");
+            ret.put("statusDesc", "登录成功");
+            ret.put("token", webViewUserVO.getToken());
+            ret.put("sign", sign);
+            ret.put("codeLoginKey", codeLoginKey);
+
+            // pc1.1.3 新增 如果短信登录成功 就解锁帐号锁定
+            passWordService.unlockUser(userVO.getUserId());
+
+        } else {
+            logger.error("app端登录失败...");
+            ret.put("status", "1");
+            ret.put("statusDesc", "app端登录失败");
+        }
+        return ret;
+    }
+
+    /**
+     * 登录成功后操作
+     * @param version
+     * @param request
+     * @param platform
+     * @param username
+     * @param presetProps
+     * @param sign
+     * @param webViewUserVO
+     * @return
+     */
+    private String doLoginAfter(String version, HttpServletRequest request, String platform, String username, String presetProps, String sign, WebViewUserVO webViewUserVO) {
+        //登录成功发送mq
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(Integer.valueOf(platform));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(webViewUserVO.getUsername());
+        userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
+        try {
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
+        logger.info("appAfterLogin:"+sign);
+        // ios审核时跳转最优服务器的场景sign值重新获取
+        sign = this.appAfterLogin(sign, webViewUserVO, username,version);
+
+        if (StringUtils.isNotEmpty(presetProps)){
+            SensorsDataBean sensorsDataBean = new SensorsDataBean();
+            // 将json串转换成Bean
+            try {
+                Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                });
+                sensorsDataBean.setPresetProps(sensorsDataMap);
+                sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                sensorsDataBean.setEventCode("login");
+                // 发送神策数据统计MQ
+                this.loginService.sendSensorsDataMQ(sensorsDataBean);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        }
+        return sign;
+    }
+
+    /**
+     * 短信验证码登录之后  自动登陆用
+     */
+
+    @ResponseBody
+    @ApiOperation(value = "短信验证码登录后自动登录", notes = "登录")
+    @PostMapping(value = "/autoLoginByCode")
+    public JSONObject autoLoginByCode(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/autoLoginByCode");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 用户名
+        String username = request.getParameter("username");
+        /**
+         * 自动登陆用
+         */
+        String codeLoginKey = request.getParameter("codeLoginKey");
+
+        // 神策预置属性
+        String presetProps = request.getParameter("presetProps");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        loginService.checkForApp(version,platform,netStatus);
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(codeLoginKey) ||Validator.isNull(username)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 取得加密用的Key
+        if (Validator.isNull(key)) {
+            ret.put("status", "709");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        // 业务逻辑
+        // try {
+        // 解密
+        logger.info("APP登录 ---> 解密前 key：{}，username：{}，codeLoginKey：{}", key, username, codeLoginKey);
+        username = DES.decodeValue(key, username);
+        logger.info("APP登录 ---> 解密后 username：{}，smsCode：{}", username, codeLoginKey);
+        if(!Validator.isMobile(username)){
+            ret.put("status", "709");
+            ret.put("statusDesc", "手机号格式错误");
+            return ret;
+        }
+        UserVO userVO = loginService.getUsersByMobile(username);
+        CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+        // 是否禁用
+        if (userVO.getStatus() == 1) {
+            throw new CheckException(MsgEnum.ERR_USER_INVALID);
+        }
+        String redisUserId = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId());
+        if(redisUserId==null || !codeLoginKey.equals(redisUserId)){
+            // 自动登录失败
+            ret.put("status", "1");
+            ret.put("statusDesc", "自动登录失败");
+            return ret;
+        }
+
+        // 执行登录(登录时间，登录ip)
+        WebViewUserVO webViewUserVO = loginService.loginByCode(username, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
+        if (webViewUserVO != null) {
+            logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
+            sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
+            // 设置七天内有效
+            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId(),codeLoginKey,60*60*24*13);
+            ret.put("status", "0");
+            ret.put("statusDesc", "登录成功");
+            ret.put("token", webViewUserVO.getToken());
+            ret.put("sign", sign);
+
+        } else {
+            logger.error("app端登录失败...");
+            ret.put("status", "1");
+            ret.put("statusDesc", "app端登录失败");
+        }
+        return ret;
+    }
 }
