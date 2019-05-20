@@ -57,6 +57,12 @@ public interface MQConstant {
 	String GRANT_COUPON_TOPIC = "COUPON_TOPIC";
 
 	/**
+	 * 优惠券发放失败转存
+	 */
+	String GRANT_COUPON_FAIL_GROUP = "COUPON_FAIL_GROUP";
+	String GRANT_COUPON_FAIL_TOPIC = "COUPON_FAIL_TOPIC";
+
+	/**
 	 * 汇直投-优惠券使用
 	 */
 	String HZT_COUPON_TENDER_GROUP = "HZT_COUPON_TENDER_GROUP";
