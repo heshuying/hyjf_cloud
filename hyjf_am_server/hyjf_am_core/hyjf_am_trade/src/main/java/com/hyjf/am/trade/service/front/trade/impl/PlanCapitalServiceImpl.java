@@ -54,11 +54,12 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
 
     /**
      * 获取该期间的实际资金计划
+     *
      * @param date
      * @return
      */
     @Override
-    public List<HjhPlanCapitalActualVO> getPlanCapitalActualformaList(String date){
+    public List<HjhPlanCapitalActualVO> getPlanCapitalActualformaList(String date) {
         List<HjhPlanCapitalActualVO> list = this.hjhPlanCapitalCustomizeMapper.getPlanCapitalActualformaList(date);
         return list;
     }
@@ -270,15 +271,19 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                     logger.info(LOG_MAIN_INFO + "债权已被清算出,债权出借订单号:[" + hjhDebtDetail.getInvestOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
                     continue;
                 }
-                // 还款日在T-3日的累加还款本息
+                // 判断当前计算预估日大于计算处理日3天
                 if (GetDate.daysBetween(date, dualDate) > 3) {
                     String dualDateT3 = GetDate.date2Str(GetDate.countDate(dualDate, 5, -3), new SimpleDateFormat("yyyy-MM-dd"));
+                    // 查询还款日在T-3日的累加还款本息
                     HjhDebtDetail assignT3 = this.hjhDebtDetailCustomizeMapper.selectHjhDebtCreditAssignT3(hjhDebtDetail.getOrderId(), dualDateT3);
-                    HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
-                    vo.setDate(dualDate);
-                    vo.setPlanNid(assignT3.getPlanNid());
-                    vo.setCreditAccount(assignT3.getRepayCapitalWait().add(assignT3.getRepayInterestWait()));
-                    list.add(vo);
+                    if (null != assignT3) {
+                        HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
+                        vo.setDate(dualDate);
+                        vo.setPlanNid(assignT3.getPlanNid());
+                        vo.setCreditAccount(assignT3.getRepayCapitalWait().add(assignT3.getRepayInterestWait()));
+                        list.add(vo);
+                        continue;
+                    }
                 }
 
                 // 新的债权信息
