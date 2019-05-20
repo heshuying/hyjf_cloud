@@ -24,26 +24,28 @@
     select * from
     (SELECT
     br.user_id AS assetCustomerId,
-    br.repay_ordid AS refundOrderNumber,
+    br.nid AS refundOrderNumber,
     br.nid AS orderNo,
     br.borrow_nid AS productNo,
     #{entId} AS entId,
     1 AS assetId,
     FROM_UNIXTIME(br.recover_time,'%Y-%m-%d') AS expectedExitTime,
-    FROM_UNIXTIME(br.recover_yestime,'%Y-%m-%d') AS actualExitTime,
-    br.recover_interest AS expectedRepay,
-    br.recover_interest_yes AS actualRepay,
-    br.recover_capital AS expectedExitCapital,
-    br.recover_capital_yes AS actualExitCapital,
-    br.recover_account AS expectedExitAmount,
-    br.recover_account_yes AS actualExitAmount,
+    '' AS actualExitTime,
+    br.recover_interest-br.credit_interest_amount AS expectedRepay,
+    '' AS actualRepay,
+    br.recover_capital - br.credit_amount AS expectedExitCapital,
+    '' AS actualExitCapital,
+    br.recover_interest-br.credit_interest_amount+br.recover_capital - br.credit_amount AS expectedExitAmount,
+    '' AS actualExitAmount,
     br.recover_period AS period,
     1 AS status
     FROM ht_borrow_recover br
-    LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
+    LEFT JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
     LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-    WHERE br.recover_status=1 and br.accede_order_id is null
-    and b.borrow_style in ('principal','month','endmonth','endday','end')
+    WHERE br.recover_status=0 and br.accede_order_id is null
+    AND b.borrow_style IN ( 'endday', 'end' )
+    AND br.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -57,26 +59,28 @@
     UNION ALL
     SELECT
     brp.user_id AS assetCustomerId,
-    brp.repay_order_id AS refundOrderNumber,
+    brp.nid AS refundOrderNumber,
     brp.nid AS orderNo,
-    brp.borrow_nid  AS productNo,
+    brp.borrow_nid AS productNo,
     #{entId} AS entId,
     1 AS assetId,
-      FROM_UNIXTIME(brp.recover_time,'%Y-%m-%d') AS expectedExitTime,
-      FROM_UNIXTIME(brp.recover_yestime,'%Y-%m-%d') AS actualExitTime,
-    brp.recover_interest AS expectedRepay,
-    brp.recover_interest_yes AS actualRepay,
-    brp.recover_capital AS expectedExitCapital,
-    brp.recover_capital_yes AS actualExitCapital,
-    brp.recover_account AS expectedExitAmount,
-    brp.recover_account_yes AS actualExitAmount,
+    FROM_UNIXTIME( brp.recover_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
+    brp.recover_interest-brp.credit_interest AS expectedRepay,
+    '' AS actualRepay,
+    brp.recover_capital - brp.credit_amount AS expectedExitCapital,
+    '' AS actualExitCapital,
+    brp.recover_interest-brp.credit_interest+ brp.recover_capital - brp.credit_amount AS expectedExitAmount,
+    '' AS actualExitAmount,
     brp.recover_period AS period,
-    1 AS status
+    1 AS STATUS
     FROM ht_borrow_recover_plan brp
-    LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    LEFT  JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
-    WHERE brp.recover_status=1
+    LEFT JOIN ht_borrow b ON brp.borrow_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    WHERE brp.recover_status=0
     and brp.accede_order_id is null
+    AND brp.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -87,29 +91,65 @@
         #{item}
       </foreach>
     </if>
-union all
+    union all
+    SELECT
+    cr.user_id AS assetCustomerId,
+    cr.credit_tender_nid AS refundOrderNumber,
+    cr.credit_tender_nid AS orderNo,
+    cr.bid_nid AS productNo,
+    #{entId} AS entId,
+    1 AS assetId,
+    FROM_UNIXTIME( cr.assign_repay_next_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
+    cr.assign_interest AS expectedRepay,
+    '' AS actualRepay,
+    cr.assign_capital AS expectedExitCapital,
+    '' AS actualExitCapital,
+    cr.assign_account AS expectedExitAmount,
+    '' AS actualExitAmount,
+    cr.assign_repay_period AS period,
+    1 AS STATUS
+    FROM ht_credit_repay cr
+    LEFT JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON cr.user_id = ur.user_id
+    WHERE
+    cr.`status` = 0
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND cr.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+
+    union all
     SELECT
     ha.user_id AS assetCustomerId,
     ha.accede_order_id AS refundOrderNumber,
     ha.accede_order_id AS orderNo,
-    ha.plan_nid  AS productNo,
+    ha.plan_nid AS productNo,
     #{entId} AS entId,
     1 AS assetId,
-    FROM_UNIXTIME(ha.quit_time,'%Y-%m-%d') AS expectedExitTime,
-    FROM_UNIXTIME(ha.acctual_payment_time,'%Y-%m-%d') AS actualExitTime,
+    FROM_UNIXTIME( ha.quit_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
     ha.should_pay_interest AS expectedRepay,
     ha.received_interest AS actualRepay,
     ha.should_pay_capital AS expectedExitCapital,
     ha.received_capital AS actualExitCapital,
     ha.should_pay_total AS expectedExitAmount,
     ha.received_total AS actualExitAmount,
-    ha.lock_period AS period,
-    1 AS status
+    1 AS period,
+    1 AS STATUS
     FROM ht_hjh_repay hr
     LEFT JOIN ht_hjh_accede ha ON ha.accede_order_id = hr.accede_order_id
     LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
     WHERE
     hr.repay_status IN ( 0, 1 )
+    AND ha.acctual_payment_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND hr.user_id = #{assetCustomerId}
     </if>
@@ -120,6 +160,7 @@ union all
         #{item}
       </foreach>
     </if>
+
     ) as recover
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
@@ -131,10 +172,12 @@ union all
     from (SELECT
     br.user_id AS assetCustomerId
     FROM ht_borrow_recover br
-    LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
+    LEFT JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
     LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-    WHERE br.recover_status=1 and br.accede_order_id is null
-    and b.borrow_style in ('principal','month','endmonth','endday','end')
+    WHERE br.recover_status=0 and br.accede_order_id is null
+    AND b.borrow_style IN ( 'endday', 'end' )
+    AND br.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -149,9 +192,12 @@ union all
     SELECT
     brp.user_id AS assetCustomerId
     FROM ht_borrow_recover_plan brp
-    LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    LEFT  JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
-    WHERE brp.recover_status=1  and brp.accede_order_id is null
+    LEFT JOIN ht_borrow b ON brp.borrow_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    WHERE brp.recover_status=0
+    and brp.accede_order_id is null
+    AND brp.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -164,12 +210,33 @@ union all
     </if>
     union all
     SELECT
+    cr.user_id AS assetCustomerId
+    FROM ht_credit_repay cr
+    LEFT JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON cr.user_id = ur.user_id
+    WHERE
+    cr.`status` = 0
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND cr.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+
+    union all
+    SELECT
     ha.user_id AS assetCustomerId
     FROM ht_hjh_repay hr
     LEFT JOIN ht_hjh_accede ha ON ha.accede_order_id = hr.accede_order_id
     LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
     WHERE
     hr.repay_status IN ( 0, 1 )
+    AND ha.acctual_payment_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND hr.user_id = #{assetCustomerId}
     </if>
