@@ -112,9 +112,6 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
     @Override
     public List<HjhPlan> selectHjhPlanList() {
         HjhPlanExample example = new HjhPlanExample();
-        //测试，获取10条记录
-        example.setLimitEnd(0);
-        example.setLimitEnd(10);
         return this.hjhPlanMapper.selectByExample(example);
     }
 
