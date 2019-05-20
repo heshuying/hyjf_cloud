@@ -1047,9 +1047,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}else {
 				password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 			}
-			logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+			logger.info("userName:[{}],passwordDB:[{}],password:[{}],相等:[{}]",userName,passwordDb,password,password.equals(passwordDb));
 			// 是否禁用
-			if (userVO.getStatus() == 1) {
+			if (userVO.getStatus().equals(1)) {
 				r.put("info","该用户已被禁用");
 				return r;
 			}

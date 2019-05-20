@@ -123,9 +123,9 @@ public class LockedUserServiceImpl implements LockedUserService {
 		String passwordDb = admin.getPassword();
 		// 页面传来的密码
 		String password = MD5.toMD5Code(loginPassword);
-		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		logger.info("userName:[{}],passwordDB:[{}],password:[{}],相等:[{}]",userName,passwordDb,password,password.equals(passwordDb));
         // 是否禁用
-        if (admin.getState() == "1") {
+        if (admin.getState() .equals("1") ) {
             r.put("info","该用户已被禁用");
             return  r;
         }
