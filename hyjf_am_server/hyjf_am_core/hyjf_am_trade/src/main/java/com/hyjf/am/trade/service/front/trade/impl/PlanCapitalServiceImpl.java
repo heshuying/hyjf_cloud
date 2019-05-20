@@ -334,6 +334,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                     HjhDebtDetail hjhDebtDetailCur = this.hjhDebtDetailCustomizeMapper.selectDebtDetailCurRepayPeriodByDate(hjhDebtDetail.getOrderId(), dualDateStr);
                     // 如果取不到债权说明有逾期的债权
                     if (hjhDebtDetailCur != null) {
+                        // 未逾期
+                        hjhDebtCredit.setIsLateCredit(0);
                         // 剩余未还本金
                         BigDecimal capital = hjhDebtDetailCur.getRepayCapitalWait();
                         // 待收利息
@@ -346,10 +348,19 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         Integer loanTime = hjhDebtDetailCur.getLoanTime();
 
                         // 当前期计息天数 =  放款日期到还款日 + 1 天
-                        try {
-                            duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
-                        } catch (ParseException e) {
-                            logger.error(e.getMessage());
+                        if(CustomConstants.BORROW_STYLE_ENDDAY.equals(hjhDebtDetail.getBorrowStyle())) {
+                            try {
+                                duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                            } catch (ParseException e) {
+                                logger.error(e.getMessage());
+                            }
+                        }else{
+                            // 按月计息
+                            try {
+                                duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime));
+                            } catch (ParseException e) {
+                                logger.error(e.getMessage());
+                            }
                         }
                         // 持有天数 =  放款日期 到 清算日 - 1 天
                         try {
