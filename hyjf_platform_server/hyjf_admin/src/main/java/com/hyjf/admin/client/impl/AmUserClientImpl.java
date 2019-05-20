@@ -2891,4 +2891,50 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 		return response;
 	}
+
+	/**
+	 * 短信验证码保存
+	 * @param mobile
+	 * @param checkCode
+	 * @param verificationType
+	 * @param ckcodeNew
+	 * @param platform
+	 */
+	@Override
+	public int saveSmsCode(String mobile, String checkCode, String verificationType, Integer ckcodeNew, int platform) {
+		logger.debug("短信验证码入库, mobile is:　{}", mobile);
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(checkCode);
+		request.setVerificationType(verificationType);
+		request.setStatus(ckcodeNew);
+		request.setPlatform(platform+"");
+		SmsCodeResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/smsCode/saveCode", request, SmsCodeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getCnt();
+		} else {
+			logger.warn("response is null, send fail....");
+			throw new RuntimeException("发送验证码失败...");
+		}
+	}
+
+	@Override
+	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+							   Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(verificationCode);
+		request.setVerificationType(verificationType);
+		request.setPlatform(platform);
+		request.setStatus(searchStatus);
+		request.setUpdateStatus(updateStatus);
+		request.setUpdate(isUpdate);
+		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/smsCode/check/", request, IntegerResponse.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result.getResultInt();
+	}
 }

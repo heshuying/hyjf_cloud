@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.batch.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
@@ -28,6 +29,7 @@ import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
 import com.hyjf.common.util.calculate.HJHServiceFeeUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -204,6 +206,27 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
         result = true;
         return result;
+    }
+
+    /**
+     * 根据参数查找标的投资表
+     * @param borrowTenderParam
+     * @return
+     */
+    public BorrowTender selectBorrowTenderByParam(BorrowTender borrowTenderParam){
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria criteria =example.createCriteria();
+        if(StringUtils.isNotBlank(borrowTenderParam.getAccedeOrderId())){
+            criteria.andAccedeOrderIdEqualTo(borrowTenderParam.getAccedeOrderId());
+        }
+        if(StringUtils.isNotBlank(borrowTenderParam.getBorrowNid())){
+            criteria.andBorrowNidEqualTo(borrowTenderParam.getBorrowNid());
+        }
+        List<BorrowTender> borrowTenderList =borrowTenderMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(borrowTenderList)){
+            return borrowTenderList.get(0);
+        }
+        return null;
     }
 
     /**

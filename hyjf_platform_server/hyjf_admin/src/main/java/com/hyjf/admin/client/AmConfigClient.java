@@ -1653,4 +1653,11 @@ public interface AmConfigClient {
 	 */
 	WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request);
 
+
+	/**
+	 * 根据手机号查询用户
+	 * @param adminSystemRequest
+	 * @return
+	 */
+    AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
 }

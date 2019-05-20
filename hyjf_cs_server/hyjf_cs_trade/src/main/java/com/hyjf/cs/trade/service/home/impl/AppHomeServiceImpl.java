@@ -22,6 +22,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
@@ -286,7 +287,10 @@ public class AppHomeServiceImpl implements AppHomeService {
         this.createBannerPage(info, platform, request, HOST);//加缓存
         this.createBannerlittlePage(info,getNewProjectFlag);
         this.createPopImgPage(info, uniqueIdentifier);
+        // IOS强制更新
         this.createForceUpdateInfo(info, platform, version, HOST);
+        // 升级维护页面
+        this.createNoticeInfo(info, platform, version, HOST);
 
         String serviceAgreementUrl = systemConfig.getAppServiceAgreementUrl();
         String privacyPolicyUrl = systemConfig.getAppPrivacyPolicyUrl();
@@ -636,12 +640,12 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setBorrowUrl(appHomePageCustomize.getBorrowUrl());
         project.setBorrowName(appHomePageCustomize.getBorrowName());
         project.setBorrowType(appHomePageCustomize.getBorrowType());
-        project.setBorrowApr(appHomePageCustomize.getBorrowApr());
+        project.setBorrowApr( FormatRateUtil.formatBorrowApr(appHomePageCustomize.getBorrowApr()));
         project.setBorrowPeriod(appHomePageCustomize.getBorrowTheSecondDesc() + appHomePageCustomize.getBorrowTheSecond());
         project.setBorrowDesc(appHomePageCustomize.getBorrowDesc());
         project.setButtonText(appHomePageCustomize.getStatusName());
         // 产品加息
-        project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
+        project.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(appHomePageCustomize.getBorrowExtraYield()));
         project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
         if("13".equals(project.getStatus()) || "12".equals(project.getStatus())){
             project.setButtonText("查看详情");
@@ -722,8 +726,8 @@ public class AppHomeServiceImpl implements AppHomeService {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 appProjectListCustomize.setStatus(entity.getStatus());
                 appProjectListCustomize.setBorrowName(entity.getPlanName());
-                appProjectListCustomize.setPlanApr(entity.getPlanApr());
-                appProjectListCustomize.setBorrowApr(entity.getPlanApr());
+                appProjectListCustomize.setPlanApr( FormatRateUtil.formatBorrowApr(entity.getPlanApr()));
+                appProjectListCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(entity.getPlanApr()));
                 appProjectListCustomize.setPlanPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setBorrowPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setAvailableInvestAccount(entity.getAvailableInvestAccount());
@@ -767,7 +771,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowDesc("计划");
             homePageCustomize.setBorrowDesc(listCustomize.getBorrowDesc());
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
-            homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             // mod by nxl 智投服务 计划的历史回报率->参考年回报率
 //			homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
             homePageCustomize.setBorrowTheFirstDesc("参考年回报率");
@@ -787,7 +791,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
 
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
-            homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             String status = listCustomize.getStatus();
             homePageCustomize.setTitle("推荐服务");
@@ -811,7 +815,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 // add by nxl 智投服务 推荐产品显示历史年回报率
                 homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
                 homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
-                String borrowExtraYield = listCustomize.getBorrowExtraYield();
+                String borrowExtraYield = FormatRateUtil.formatBorrowApr(listCustomize.getBorrowExtraYield());
                 homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             }else if("复审中".equals(listCustomize.getStatusName()) || "还款中".equals(listCustomize.getStatusName()) ){
                 //add by nxl 智投服务->添加推荐服务标题
@@ -826,7 +830,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 if(StringUtils.isNotBlank(borrowExtraYield)){
                     borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
                 }
-                homePageCustomize.setBorrowExtraYield(borrowExtraYield);
+                homePageCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(borrowExtraYield));
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());
@@ -858,9 +862,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setBorrowDesc("散标");
             }
             // 产品加息
-            homePageCustomize.setBorrowExtraYield(listCustomize.getBorrowExtraYield());
+            homePageCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowExtraYield()));
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
-            homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
             homePageCustomize.setBorrowTheSecond(listCustomize.getBorrowPeriod());
             homePageCustomize.setBorrowTheSecondDesc("项目期限");
@@ -878,7 +882,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             String statusNameDesc = String.valueOf(listCustomize.getBorrowAccountWait());
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
-            homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             homePageCustomize.setStatus(listCustomize.getStatus());
             homePageCustomize.setOnTime(listCustomize.getOnTime());
@@ -926,6 +930,49 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("needForcedToUpdate", "0");
             info.put("forcedToUpdateUrl", "");
         }
+
+    }
+
+    /**
+     *
+     * 升级维护页
+     * @author hsy
+     * @param info
+     */
+    private void createNoticeInfo(JSONObject info, String platform, String version, String HOST){
+        // 从配置文件中加载配置信息
+        String haltStatus = systemConfig.haltStatus;
+//        String haltTimeRange = systemConfig.haltTimeRange;
+        String haltUrl = systemConfig.haltUrl;
+//        if (StringUtils.isNotBlank(haltUrl)){
+//            haltUrl = (haltUrl.substring(0,1).equals("/")) ? haltUrl.substring(1) : haltUrl;
+//        }
+//        haltUrl = HOST +"/"+ haltUrl+"?";
+        logger.info("haltStatus:" + haltStatus  + " haltUrl:" + haltUrl);
+
+        // 未开启直接返回
+        if(haltStatus.equals("false")){
+            info.put("needForcedToUpdate", "0");
+            info.put("forcedToUpdateUrl", "");
+            return;
+        }else{
+            info.put("needForcedToUpdate", "1");
+            info.put("forcedToUpdateUrl", haltUrl);
+            return;
+        }
+
+//        Integer timeStart = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[0]);
+//        Integer timeEnd = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[1]);
+//        Integer nowTime = GetDate.getNowTime10();
+
+        // 是否需要显示维护通知
+//        if(timeStart <= nowTime && timeEnd >= nowTime){
+//            info.put("needForcedToUpdate", "1");
+//            info.put("forcedToUpdateUrl", haltUrl);
+//        }else {
+//            info.put("needForcedToUpdate", "0");
+//            info.put("forcedToUpdateUrl", "");
+//        }
 
     }
 
@@ -1153,7 +1200,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                     list.add(project);
                 }
                 info.put("sprogExist", "1");
-                info.put("sprogBorrowApr", project.getBorrowApr());
+                info.put("sprogBorrowApr", FormatRateUtil.formatBorrowApr(project.getBorrowApr()));
                 info.put("sprogBorrowPeriod", project.getBorrowPeriod());
                 String balance = project.getBorrowAccountWait();//add by cwyang 根据borrowNid 获取项目可投金额
                 info.put("sprogBorrowMoney", balance);//新手标取得是可投余额不是出借总额 add by cwyang
@@ -1163,7 +1210,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 if(!Validator.isIncrease(project.getIncreaseInterestFlag(), project.getBorrowExtraYieldOld())){
                     project.setBorrowExtraYield("");
                 }
-                info.put("borrowExtraYield", project.getBorrowExtraYield());
+                info.put("borrowExtraYield", FormatRateUtil.formatBorrowApr(project.getBorrowExtraYield()));
             }else {
                 info.put("sprogExist", "0");
                 info.put("sprogBorrowApr", "");
