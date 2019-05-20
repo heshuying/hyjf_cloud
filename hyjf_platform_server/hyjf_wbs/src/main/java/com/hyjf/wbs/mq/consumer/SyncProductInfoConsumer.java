@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+
 /**
  * @Auther: wxd
  * @Date: 2019-04-16 14:05
@@ -87,7 +89,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 productTpyeInt = 2;
                 linkUrl = PC_SANBIAO_URL + productNo;
                 H5linkUrl = H5_SANBIAO_URL + productNo;
-                if (productStatus.equals("3") ||productStatus.equals("5") || productStatus.equals("6")) {
+                if (productStatus.equals("3") || productStatus.equals("5") || productStatus.equals("6")) {
                     publishStatus = 3;
                 }
                 //查询标的信息
@@ -97,12 +99,15 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                     /**
                      * 散标判断是否加入计划，如果加入计划，则不推送
                      */
-                    if(borrowCustomize.getPlanNid()==null||borrowCustomize.getPlanNid().isEmpty()) {
+                    if (borrowCustomize.getPlanNid() == null || borrowCustomize.getPlanNid().isEmpty()) {
                         productInfoQO.setDeadlineNum(borrowCustomize.getDeadlineNum());
                         productInfoQO.setDeadlineUnit(borrowCustomize.getDeadlineUnit());
                         productInfoQO.setInvestAmount(Double.valueOf(borrowCustomize.getInvestAmount()));
                         productInfoQO.setReferenceIncome(String.valueOf(borrowCustomize.getReferenceIncome()));
-                    }else{
+                        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String publishDate = sf.format(borrowCustomize.getPublishTime());
+                        productInfoQO.setPublishTime(publishDate);
+                    } else {
                         logger.info("====" + CONSUMER_NAME + "散标已加入计划，不符合推送范围，不消费，标的编号[{}]=====", productNo);
                         return;
                     }
@@ -133,6 +138,9 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                     productInfoQO.setInvestAmount(hjhPlan.getMinInvestment().doubleValue());
                     productInfoQO.setReferenceIncome(String.valueOf(hjhPlan.getExpectApr()));
                     productInfoQO.setProductName(hjhPlan.getPlanName());
+                    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String publishDate = sf.format(hjhPlan.getCreateTime());
+                    productInfoQO.setPublishTime(publishDate);
                 }
             } else {
                 logger.info("====" + CONSUMER_NAME + "产品类型传值不符合要求，消息内容[{}]=====", jsonObj);

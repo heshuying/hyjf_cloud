@@ -11,10 +11,12 @@
         <result column="borrow_apr" property="referenceIncome" jdbcType="DECIMAL"/>
         <result column="tender_account_min" property="investAmount" jdbcType="INTEGER"/>
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<result column="create_time" property="publishTime" jdbcType="TIMESTAMP" />
     </resultMap>
     <select id="getBorrowCustomize" resultMap="borrowCustomizeMap"
             parameterType="String">
 		SELECT
+		b.create_time,
 		b.plan_nid,
 		b.borrow_period,
 		CASE

@@ -1,6 +1,7 @@
 package com.hyjf.wbs.trade.dao.model.customize;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -14,6 +15,16 @@ public class BorrowCustomize {
     private Integer deadlineUnit;
     private Integer investAmount;
     private String planNid;
+    private Date publishTime;
+
+
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
+    }
 
     public String getPlanNid() {
         return planNid;

@@ -23,6 +23,8 @@ public class ProductInfoQO implements Serializable {
     protected Integer productStatus;
     @ApiModelProperty(value = "产品发布状态")
     protected Integer publishStatus;
+    @ApiModelProperty(value = "产品发布时间")
+    protected String publishTime;
     @ApiModelProperty(value = "pc站外跳转链接")
     protected String linkUrl;
     @ApiModelProperty(value = "h5站外跳转链接")
@@ -35,6 +37,14 @@ public class ProductInfoQO implements Serializable {
     private Integer deadlineUnit;
     @ApiModelProperty(value = "起投金额")
     private Double investAmount;
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
 
     public Integer getDeadlineNum() {
         return deadlineNum;
