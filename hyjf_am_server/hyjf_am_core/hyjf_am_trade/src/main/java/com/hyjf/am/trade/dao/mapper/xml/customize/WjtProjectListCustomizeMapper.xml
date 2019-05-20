@@ -367,7 +367,7 @@
         AND hydb.is_show  <![CDATA[<>]]>  1
         AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
         <if test="publishInstCode != null and publishInstCode != ''">
-            AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+            AND (borrowInfo.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR borrowInfo.publish_inst_code ='0')
         </if>
         )
         ) t
