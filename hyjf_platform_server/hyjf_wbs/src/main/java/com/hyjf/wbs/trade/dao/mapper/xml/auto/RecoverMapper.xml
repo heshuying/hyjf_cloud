@@ -94,8 +94,8 @@
     union all
     SELECT
     cr.user_id AS assetCustomerId,
-    CONCAT(cr.credit_tender_nid,cr.assign_repay_period) AS refundOrderNumber,
-    cr.credit_tender_nid AS orderNo,
+    CONCAT(cr.assign_nid,cr.assign_repay_period) AS refundOrderNumber,
+    cr.assign_nid AS orderNo,
     cr.bid_nid AS productNo,
     #{entId} AS entId,
     1 AS assetId,
