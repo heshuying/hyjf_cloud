@@ -13,6 +13,7 @@ import com.hyjf.cs.message.mongo.ic.HjhPlanCapitalPredictionDao;
 import com.hyjf.cs.message.service.plancapital.HjhPlanCapitalPredictionService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -85,7 +86,7 @@ public class HjhPlanCapitalPredictionServiceImpl extends BaseServiceImpl impleme
         if (request.getLimitStart() != -1) {
             query.skip(request.getLimitStart()).limit(request.getLimitEnd());
         }
-
+        query.with(new Sort(Sort.Direction.ASC , "date","lockPeriod"));
         List<HjhPlanCapitalPrediction> hjhPlanCapitalList = planCapitalPredictionDao.find(query);
         return hjhPlanCapitalList;
     }
