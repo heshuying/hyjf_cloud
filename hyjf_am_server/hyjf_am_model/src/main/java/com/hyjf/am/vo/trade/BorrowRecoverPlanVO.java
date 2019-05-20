@@ -131,6 +131,12 @@ public class BorrowRecoverPlanVO extends BaseVO implements Serializable {
 
     private BigDecimal creditInterest;
 
+    // 提前还款罚息
+    public BigDecimal chargePenaltyInterest;
+
+    // 已还提前还款罚息
+    public BigDecimal repayChargePenaltyInterest;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -627,5 +633,21 @@ public class BorrowRecoverPlanVO extends BaseVO implements Serializable {
 
     public void setCreditInterest(BigDecimal creditInterest) {
         this.creditInterest = creditInterest;
+    }
+
+    public BigDecimal getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
+    }
+
+    public BigDecimal getRepayChargePenaltyInterest() {
+        return repayChargePenaltyInterest;
+    }
+
+    public void setRepayChargePenaltyInterest(BigDecimal repayChargePenaltyInterest) {
+        this.repayChargePenaltyInterest = repayChargePenaltyInterest;
     }
 }

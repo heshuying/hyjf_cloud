@@ -125,4 +125,23 @@ public interface LoginService extends BaseUserService {
      * @throws MQException
      */
     void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
+
+    /**
+     *
+     * @param smsCode
+     * @param channelApp
+     * @param userVO
+     * @return
+     */
+    Map<String,String> checkMobileCodeLogin(String smsCode, String channelApp, UserVO userVO);
+
+    /**
+     * 执行短信验证码登录
+     * @param username
+     * @param ipAddr
+     * @param channelApp
+     * @param userVO
+     * @return
+     */
+    WebViewUserVO loginByCode(String username, String ipAddr, String channelApp, UserVO userVO);
 }

@@ -102,6 +102,12 @@ public class WeChatSmsCodeController extends BaseUserController {
 						return ret;
 					}
 				}
+			}else if(CommonConstant.PARAM_TPL_DUANXINDENGLU.equals(verificationType)){
+				logger.info("开始发送登录验证码  ，手机号：{}   IP  {}",mobile,GetCilentIP.getIpAddr(request));
+				// 发送登录短信验证码
+				sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
+				ret.put("status", "000");
+				ret.put("statusDesc", "发送验证码成功");
 			}
 		} catch (Exception e) {
 			ret.put("status", "99");

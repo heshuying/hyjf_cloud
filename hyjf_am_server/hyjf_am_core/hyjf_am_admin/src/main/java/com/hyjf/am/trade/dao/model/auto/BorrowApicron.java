@@ -257,6 +257,27 @@ public class BorrowApicron implements Serializable {
     private Date updateTime;
 
     /**
+     * 还款提交人
+     *
+     * @mbggenerated
+     */
+    private String submitter;
+
+    /**
+     * 批次任务是否逾期还款 0：否 1：是
+     *
+     * @mbggenerated
+     */
+    private Integer isLate;
+
+    /**
+     * 多期还款提交的最后一期(带逾期当期还款的当期和多期逾期还款的最后一期,其余默认为0)
+     *
+     * @mbggenerated
+     */
+    private Integer lastPeriod;
+
+    /**
      * 错误信息
      *
      * @mbggenerated
@@ -567,6 +588,30 @@ public class BorrowApicron implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSubmitter() {
+        return submitter;
+    }
+
+    public void setSubmitter(String submitter) {
+        this.submitter = submitter == null ? null : submitter.trim();
+    }
+
+    public Integer getIsLate() {
+        return isLate;
+    }
+
+    public void setIsLate(Integer isLate) {
+        this.isLate = isLate;
+    }
+
+    public Integer getLastPeriod() {
+        return lastPeriod;
+    }
+
+    public void setLastPeriod(Integer lastPeriod) {
+        this.lastPeriod = lastPeriod;
     }
 
     public String getData() {

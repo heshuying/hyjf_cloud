@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchCenterLogCustomizeMapper">
+    <resultMap id="batchCenterMap" type="com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo">
+        <result column="borrow_nid" property="borrowNid" /><!-- 项目编号 -->
+        <result column="inst_name" property="instName" /><!-- 资产来源 -->
+        <result column="batch_no" property="batchNo" /> <!-- 批次号 -->
+        <result column="user_id" property="userId" /> <!-- 用户id -->
+        <result column="user_name" property="userName" /> <!-- 用户名 -->
+        <result column="period_now" property="periodNow" /> <!-- 当前期数 -->
+        <result column="borrow_period" property="borrowPeriod" /> <!-- 总期数 -->
+        <result column="borrow_account" property="borrowAccount" /> <!-- 借款金额  -->
+        <result column="batch_amount" property="batchAmount" /> <!-- 应还/应放款金额  -->
+        <result column="batch_counts" property="batchCounts" /> <!-- 总笔数  -->
+        <result column="batch_service_fee" property="batchServiceFee" /> <!-- 应收服务费  -->
+        <result column="suc_amount" property="sucAmount" /> <!-- 成功金额  -->
+        <result column="suc_counts" property="sucCounts" /> <!-- 成功笔数 -->
+        <result column="fail_amount" property="failAmount" /> <!-- 失败金额 -->
+        <result column="fail_counts" property="failCounts" /> <!-- 失败笔数 -->
+        <result column="status" property="status" /> <!-- 交易状态 -->
+        <result column="status_str" property="statusStr" /> <!-- 交易状态 -->
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" /> <!-- 提交时间  -->
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" /> <!-- 修改时间  -->
+        <result column="is_repay_org_flag" property="isRepayOrgFlag" /> <!-- 是否是担保机构还款(0:否,1:是)  -->
+        <result column="data" property="data" /> <!-- 银行回执说明 -->
+        <result column="increase_interest_flag" property="increaseInterestFlag" /> <!-- 是否加息 -->
+        <result column="extra_yield_status" property="extraYieldStatus" /> <!-- 加息放款状态 -->
+        <result column="extra_yield_repay_status" property="extraYieldRepayStatus" /> <!-- 加息还款状态 -->
+        <result column="seq_no" property="seqNo" /> <!-- 交易流水号 -->
+        <result column="bank_seq_no" property="bankSeqNo" /> <!-- 银行交易流水号 -->
+    </resultMap>
+
+    <sql id="Where_Clause">
+        where 1=1
+        <if test="borrowNid != null and borrowNid != ''">
+            AND log.borrow_nid = #{borrowNid}
+        </if>
+        <if test="batchNo != null and batchNo != ''">
+            AND log.batch_no = #{batchNo}
+        </if>
+        <if test="status != null and status != ''">
+            AND cast(log.`status` AS CHAR) = #{status}
+        </if>
+        <if test="submitTimeStartSrch != null and submitTimeStartSrch != ''">
+
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND log.create_time >= STR_TO_DATE(#{submitTimeStartSrch},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
+
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND log.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{submitTimeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <!-- add by LSY START -->
+        <!-- 资产来源 -->
+        <if test="instCodeSrch != null and instCodeSrch != ''">
+            AND bi.inst_code = #{instCodeSrch}
+        </if>
+        <!-- add by LSY END -->
+    </sql>
+
+    <select id="countBorrowBatchCenterListTotal" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
+        SELECT
+        count(1)
+        FROM
+        ht_borrow_apicron_log log
+        LEFT JOIN ht_borrow b ON log.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info bi ON log.borrow_nid = bi.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
+        <include refid="Where_Clause"/>
+    </select>
+
+    <select id="queryBatchCenterList" resultMap="batchCenterMap"
+            parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
+        SELECT
+        api.id,
+        log.borrow_nid borrow_nid,
+        hic.inst_name,
+        log.batch_no batch_no,
+        log.user_id user_id,
+        log.user_name user_name,
+        log.period_now period_now,
+        log.borrow_period borrow_period,
+        log.borrow_account borrow_account,
+        log.batch_amount batch_amount,
+        log.batch_service_fee batch_service_fee,
+        log.batch_counts batch_counts,
+        log.suc_amount suc_amount,
+        log.suc_counts suc_counts,
+        log.fail_amount fail_amount,
+        log.fail_counts fail_counts,
+        log.`status` AS status,
+        log.seq_no,
+        log.bank_seq_no,
+        DATE_FORMAT(
+        log.create_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS create_time,
+        DATE_FORMAT(
+        log.update_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS update_time,
+        log.is_repay_org_flag is_repay_org_flag,
+        log.`data`,
+        b.increase_interest_flag
+        FROM
+        ht_borrow_apicron_log log
+        INNER JOIN ht_borrow_apicron api ON api.nid = log.nid AND api.api_type=1
+        LEFT JOIN ht_borrow b ON log.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info bi ON log.borrow_nid = bi.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
+        <include refid="Where_Clause"/>
+        ORDER BY log.id DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+</mapper>
+

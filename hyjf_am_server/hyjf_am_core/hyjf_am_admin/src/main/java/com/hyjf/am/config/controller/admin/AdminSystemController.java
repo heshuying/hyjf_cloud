@@ -1,6 +1,5 @@
 package com.hyjf.am.config.controller.admin;
 
-import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.auto.AdminAndRole;
@@ -10,7 +9,6 @@ import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.config.service.AdminSystemService;
-import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -306,5 +304,32 @@ public class AdminSystemController extends BaseConfigController {
 			response.setResult(CommonUtils.convertBean(configApplicant, ConfigApplicantVO.class));
 		}
 		return response;
+	}
+
+	/**
+	 * 根据手机号查询用户
+	 * @param adminSystemR
+	 * @return
+	 */
+	@RequestMapping("/getUserInfoByMobile")
+	public AdminSystemResponse getUserInfoByMobile(@RequestBody AdminSystemRequest adminSystemR) {
+		AdminSystemResponse asr = new AdminSystemResponse();
+		AdminSystem adminSystemr = adminSystemService.getUserInfoByMobile(adminSystemR.getMobile());
+		if (adminSystemr != null) {
+			AdminSystemVO asv = new AdminSystemVO();
+			// 如果状态不可用
+			if ("1".equals(adminSystemr.getState())) {
+				asr.setMessage("该用户已被禁用");
+				asr.setRtn(Response.ERROR);
+				return asr;
+			}
+
+			BeanUtils.copyProperties(adminSystemr, asv);
+			asr.setResult(asv);
+			return asr;
+		}
+		asr.setRtn(Response.ERROR);
+		asr.setMessage("用户不存在");
+		return asr;
 	}
 }

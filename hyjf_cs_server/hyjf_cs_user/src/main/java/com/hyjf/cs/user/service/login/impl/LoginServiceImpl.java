@@ -705,7 +705,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 //			if (userUtmInfoCustomizeVO != null){
 //				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
 //			}else {
-				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId+"&action=scan";
 //			}
 			// 二维码
 			result.setQrCodeUrl(linkUrl);
@@ -1180,4 +1180,43 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
 		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
+
+    /**
+     * @param smsCode
+     * @param channelApp
+     * @param userVO
+     * @return
+     */
+    @Override
+    public Map<String, String> checkMobileCodeLogin(String smsCode, String channelApp, UserVO userVO) {
+        Map<String, String> ret =new HashMap<>();
+        CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+        if(userVO!=null){
+            // 检查验证码是否正确
+            int cnt = updateCheckMobileCode(userVO.getMobile(), smsCode, CommonConstant.PARAM_TPL_DUANXINDENGLU, channelApp, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+            if (cnt == 0) {
+                ret.put("status", "1");
+                ret.put("statusDesc", "验证码错误");
+                return ret;
+            }
+        }
+        return  ret;
+    }
+
+    /**
+     * 执行短信验证码登录
+     *
+     * @param username
+     * @param ipAddr
+     * @param channelApp
+     * @param userVO
+     * @return
+     */
+    @Override
+    public WebViewUserVO loginByCode(String username, String ipAddr, String channelApp, UserVO userVO) {
+        logger.info("短信验证码登陆获取loginUserName:"+username+";userVO:"+(userVO==null));
+        WebViewUserVO webViewUserVO = new WebViewUserVO();
+        webViewUserVO = loginOperationOnly(userVO,username,ipAddr,channelApp);
+        return webViewUserVO;
+    }
 }

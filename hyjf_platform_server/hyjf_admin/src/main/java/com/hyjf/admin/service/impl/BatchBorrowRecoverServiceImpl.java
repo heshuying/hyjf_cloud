@@ -328,6 +328,18 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 for (int j = 0; j < loanDetails.size(); j++) {
                     JSONObject loanDetail = loanDetails.getJSONObject(j);
                     BatchBorrowRepayBankInfoVO info = new BatchBorrowRepayBankInfoVO();
+                    //交易状态S-成功 F-失败 N-交易不存在 Z-未知 D-待处理
+                    if(loanDetail.getString(BankCallConstant.PARAM_TXSTATE).equals("S")) {
+                    	info.setTxMsg("成功");
+                    }else if(loanDetail.getString(BankCallConstant.PARAM_TXSTATE).equals("F")) {
+                    	info.setTxMsg("失败");
+                    }else if(loanDetail.getString(BankCallConstant.PARAM_TXSTATE).equals("N")) {
+                    	info.setTxMsg("交易不存在");
+                    }else if(loanDetail.getString(BankCallConstant.PARAM_TXSTATE).equals("Z")) {
+                    	info.setTxMsg("未知");
+                    }else if(loanDetail.getString(BankCallConstant.PARAM_TXSTATE).equals("D")) {
+                    	info.setTxMsg("待处理");
+                    }
                     info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
                     info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
                     info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
