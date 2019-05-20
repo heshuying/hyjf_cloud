@@ -1053,8 +1053,13 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
             cra.andConfigStatusEqualTo(1);
             cra.andLabelStatusEqualTo(1);
             List<HjhAllocationEngine> list = this.hjhAllocationEngineMapper.selectByExample(example);
-            return CollectionUtils.isEmpty(list) ? "清算后无匹配计划" : list.get(0).getPlanNid();
+            if(CollectionUtils.isEmpty(list)) {
+                logger.info(LOG_MAIN_INFO + hjhDebtCredit.getPlanOrderId() + "预清算后无匹配计划。");
+                return "清算后无匹配计划";
+            }
+            return list.get(0).getPlanNid();
         } else {
+            logger.info(LOG_MAIN_INFO + hjhDebtCredit.getPlanOrderId() + "预清算后五匹配标签。");
             return "清算后无匹配标签";
         }
     }

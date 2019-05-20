@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.admin.HjhPlanCapitalPredictionRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapitalPrediction;
 import com.hyjf.cs.message.service.plancapital.HjhPlanCapitalPredictionService;
@@ -62,8 +63,8 @@ public class HjhPlanCapitalPredictionController extends BaseController {
      * @Author : liushouyi
      */
     @GetMapping(value = "/updatePlanCaptialPrediction/{initDate}")
-    public BooleanResponse updatePlanCaptialPrediction(@PathVariable Date initDate) {
-        return new BooleanResponse(this.hjhPlanCapitalPredictionService.updatePlanCaptialPrediction(initDate));
+    public BooleanResponse updatePlanCaptialPrediction(@PathVariable String initDate) {
+        return new BooleanResponse(this.hjhPlanCapitalPredictionService.updatePlanCaptialPrediction( GetDate.stringToDate2(initDate)));
     }
 
     /**

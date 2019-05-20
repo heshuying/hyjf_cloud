@@ -266,5 +266,5 @@ public interface CsMessageClient {
      * @param initDate
      * @return
      */
-    boolean updatePlanCapitalForCreditInfo(Date initDate);
+    boolean updatePlanCapitalForCreditInfo(String initDate);
 }

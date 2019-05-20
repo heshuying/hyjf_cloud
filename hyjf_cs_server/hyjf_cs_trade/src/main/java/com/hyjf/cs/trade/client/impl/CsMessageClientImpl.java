@@ -485,7 +485,7 @@ public class CsMessageClientImpl implements CsMessageClient {
      * @return
      */
     @Override
-    public boolean updatePlanCapitalForCreditInfo(Date initDate) {
+    public boolean updatePlanCapitalForCreditInfo(String initDate) {
         String url = "http://CS-MESSAGE/cs-message/hjhPlanCapitalPrediction/updatePlanCaptialPrediction/" + initDate;
         BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
         if (Response.isSuccess(response)) {
