@@ -7318,7 +7318,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Cached(name="wechatWjtHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String, Object> projectMap){
-        String url = BASE_URL + "/web/wjt/getWjtWechatProjectList";
+        String url = BASE_URL + "/wechat/wjt/searchHomeProejctList";
         WechatProjectListResponse res = restTemplate.postForEntity(url, projectMap, WechatProjectListResponse.class).getBody();
         if (Response.isSuccess(res)){
             return res.getResultList();
