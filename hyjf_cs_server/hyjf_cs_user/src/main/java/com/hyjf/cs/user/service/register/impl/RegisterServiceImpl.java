@@ -321,7 +321,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * 默认fallback
      * @return
      */
-    private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType) {
+    private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType,String isWjt) {
         logger.info("==================已进入 用户注册(三端) fallBackRegister 方法================");
         return null;
     }
