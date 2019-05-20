@@ -273,6 +273,7 @@
 			hcu.user_id = #{userId}
 		AND hcu.used_flag = 0
 		AND hcu.del_flag = 0
+		AND hcc.status = 2
 		ORDER BY
 			hcc.coupon_type,
 			hcc.coupon_quota DESC,
