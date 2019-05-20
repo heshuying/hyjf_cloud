@@ -486,6 +486,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             couponUserForAppCustomizeVO.setInvestQuota(myCouponListCustomizeVO.getTenderQuota());
             couponUserForAppCustomizeVO.setInvestTime(myCouponListCustomizeVO.getProjectExpirationType());
             couponUserForAppCustomizeVO.setCouponName(myCouponListCustomizeVO.getCouponName());
+            couponUserForAppCustomizeVO.setEndTimeStamp(myCouponListCustomizeVO.getEndTimeStamp());
             couponList.add(couponUserForAppCustomizeVO);
         }
         return couponList;
@@ -850,7 +851,21 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 //                couponBean.setInvestQuota("加息券不可以单独使用");
 //                couponBean.setTenderQuota("加息券不可以单独使用");
 //            }
-        }else{
+        }else if ("2".equals(platform) || "3".equals(platform)){
+            //处理优惠券适用项目
+            String projectString = BestCouponUtil.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
+            couponBean.setProjectType(projectString);
+            //处理优惠券使用平台
+            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem());
+            couponBean.setOperationPlatform(clientString);
+            long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(userCouponConfigCustomize.getEndTimeStamp())) + 1;
+            if(userCouponConfigCustomize.getUsedFlag() == 0 && day <=3){
+                couponBean.setRemarks("即将过期");
+            }
+            couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+            couponBean.setInvestQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+            couponBean.setTenderQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+        }else {
             //处理优惠券适用项目
             String projectString = BestCouponUtil.dealProjectType(userCouponConfigCustomize.getProjectType());
             couponBean.setProjectType(projectString);
