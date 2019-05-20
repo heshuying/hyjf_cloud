@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -237,6 +238,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("host",request.getHost());
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
+        params.put("status",request.getStatus());
         return webProjectListCustomizeMapper.countAppProject(params);
     }
 
@@ -558,4 +560,5 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
 
         return appProjectListCustomizeMapper.selectHomeRepayProjectList(map);
     }
+
 }

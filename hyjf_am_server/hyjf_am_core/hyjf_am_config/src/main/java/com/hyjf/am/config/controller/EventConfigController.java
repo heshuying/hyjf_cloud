@@ -5,6 +5,7 @@ package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.service.EventService;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
@@ -70,5 +71,6 @@ public class EventConfigController extends BaseConfigController {
         response.setCount(count);
         return response;
     }
+
 
 }

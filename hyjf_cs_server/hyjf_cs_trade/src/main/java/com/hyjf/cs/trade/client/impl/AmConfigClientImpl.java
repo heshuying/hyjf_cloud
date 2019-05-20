@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -417,6 +418,40 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public ShareNewsBeanVO queryShareNews() {
 		ShareNewsResponse response = restTemplate
 				.getForObject("http://AM-CONFIG/am-config/article/querysharenews" , ShareNewsResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询某一天是否是工作日
+	 *
+	 * @return
+	 */
+	@Override
+	public boolean checkSomedayIsWorkDateForWithdraw() {
+		WithdrawTimeConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/withdrawTimeConfig/checkSomedayIsWorkDateForWithdraw", WithdrawTimeConfigResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.isWorkDateFlag();
+		}
+		return false;
+	}
+
+
+	/**
+	 * 获取提现规则配置
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public WithdrawRuleConfigVO selectWithdrawRuleConfig(WithdrawRuleConfigRequest request) {
+		String url = "http://AM-CONFIG/am-config/withdrawRuleConfig/selectWithdrawRuleConfig";
+		WithdrawRuleConfigResponse response = restTemplate.postForEntity(url, request, WithdrawRuleConfigResponse.class)
+				.getBody();
 		if (response != null) {
 			return response.getResult();
 		}

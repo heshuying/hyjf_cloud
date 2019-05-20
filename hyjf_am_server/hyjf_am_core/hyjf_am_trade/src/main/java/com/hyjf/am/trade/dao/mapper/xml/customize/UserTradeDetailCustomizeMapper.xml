@@ -15,10 +15,10 @@
 			</if>
 
 			<if test="startDate != null and startDate != ''">
-				AND unix_timestamp(hydal.create_time) <![CDATA[>=]]> unix_timestamp(CONCAT(#{startDate,jdbcType=VARCHAR},' 00:00:00'))
+				AND hydal.create_time <![CDATA[>=]]> CONCAT(#{startDate,jdbcType=VARCHAR},' 00:00:00')
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND unix_timestamp(hydal.create_time) <![CDATA[<=]]> unix_timestamp(CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59'))
+				AND hydal.create_time <![CDATA[<=]]> CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 			</if>
 
 			<if test="tradeType != null and tradeType != ''">
