@@ -69,7 +69,7 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         String tradeDate = jsonObject.getString("tradeDate");
 
         Integer page=1;
-        Integer size=1000;
+        Integer size=100;
         try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN"))){
                 // --> 消息处理
