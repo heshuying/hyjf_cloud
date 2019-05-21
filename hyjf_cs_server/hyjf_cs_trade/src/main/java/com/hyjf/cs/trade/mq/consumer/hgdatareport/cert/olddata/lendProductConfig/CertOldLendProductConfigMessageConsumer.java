@@ -101,56 +101,70 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
             JSONArray listRepay = certLendProductConfigService.getHistoryDate();
             int intCount = listRepay == null ? 0 : listRepay.size();
             logger.info(logHeader + "查询的产品配置历史数据共: " + intCount + "条" + ",当前时间为:" + GetDate.getNowTime10());
-            if (null == listRepay || listRepay.size() <= 0) {
-                logger.error(logHeader + "组装参数为空！！！");
-                return;
-            }
-
-            //转换为list
-            List<JSONArray> jsonArrayList = new ArrayList<JSONArray>();
-            List<CertOldLendProductConfigVO> certOldRepayPlanBeans = JSONArray.parseArray(listRepay.toJSONString(), CertOldLendProductConfigVO.class);
-            if (null != certOldRepayPlanBeans) {
-                //拆分数据,防止数据长多过长
-                List<List<CertOldLendProductConfigVO>> parts = Lists.partition(certOldRepayPlanBeans, 3000);
-                for (List<CertOldLendProductConfigVO> child : parts) {
-                    JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(child));
-                    jsonArrayList.add(jsonArray);
-                }
-            }
-            logger.info(logHeader + "产品配置历史数据拆分完毕,共" + jsonArrayList.size() + "条" + ",当前时间为:" + GetDate.getNowTime10());
-            if (null != jsonArrayList && jsonArrayList.size() > 0) {
-                for (int i = 0; i < jsonArrayList.size(); i++) {
-                    JSONArray repay = jsonArrayList.get(i);
-                    List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(repay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG);
-                    // 遍历循环上报
-                    for (CertReportEntityVO entity : entitys) {
-                        try {
-                            certLendProductConfigService.insertAndSendPost(entity);
-                        } catch (Exception e) {
-                            throw e;
-                        }
-                        // 批量修改状态  start
-                        List<Integer> ids = new ArrayList<>();
-                        for (CertClaimVO item : certBorrowEntityList) {
-                            ids.add(item.getId());
-                        }
-                        if (ids.size() > 0) {
-                            CertClaimUpdateVO update = new CertClaimUpdateVO();
-                            update.setIds(ids);
-                            CertClaimVO certBorrow = new CertClaimVO();
-                            if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
-                                // 成功
-                                certBorrow.setIsConfig(1);
-                            } else {
-                                // 失败
-                                certBorrow.setIsConfig(99);
-                            }
-                            update.setCertClaim(certBorrow);
-                            // 批量修改
-                            certLendProductConfigService.updateCertBorrowStatusBatch(update);
-                        }
-                        // 批量修改状态  end
+            if (null != listRepay && listRepay.size() > 0) {
+                //转换为list
+                List<JSONArray> jsonArrayList = new ArrayList<JSONArray>();
+                List<CertOldLendProductConfigVO> certOldRepayPlanBeans = JSONArray.parseArray(listRepay.toJSONString(), CertOldLendProductConfigVO.class);
+                if (null != certOldRepayPlanBeans) {
+                    //拆分数据,防止数据长多过长
+                    List<List<CertOldLendProductConfigVO>> parts = Lists.partition(certOldRepayPlanBeans, 3000);
+                    for (List<CertOldLendProductConfigVO> child : parts) {
+                        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(child));
+                        jsonArrayList.add(jsonArray);
                     }
+                }
+                logger.info(logHeader + "产品配置历史数据拆分完毕,共" + jsonArrayList.size() + "条" + ",当前时间为:" + GetDate.getNowTime10());
+                if (null != jsonArrayList && jsonArrayList.size() > 0) {
+                    for (int i = 0; i < jsonArrayList.size(); i++) {
+                        JSONArray repay = jsonArrayList.get(i);
+                        List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(repay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG);
+                        // 遍历循环上报
+                        for (CertReportEntityVO entity : entitys) {
+                            try {
+                                certLendProductConfigService.insertAndSendPost(entity);
+                            } catch (Exception e) {
+                                throw e;
+                            }
+                            // 批量修改状态  start
+                            List<Integer> ids = new ArrayList<>();
+                            for (CertClaimVO item : certBorrowEntityList) {
+                                ids.add(item.getId());
+                            }
+                            if (ids.size() > 0) {
+                                CertClaimUpdateVO update = new CertClaimUpdateVO();
+                                update.setIds(ids);
+                                CertClaimVO certBorrow = new CertClaimVO();
+                                if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
+                                    // 成功
+                                    certBorrow.setIsConfig(1);
+                                } else {
+                                    // 失败
+                                    certBorrow.setIsConfig(99);
+                                }
+                                update.setCertClaim(certBorrow);
+                                // 批量修改
+                                certLendProductConfigService.updateCertBorrowStatusBatch(update);
+                            }
+                            // 批量修改状态  end
+                        }
+                    }
+                }
+            }else {
+                //查询的数据全部被完全承接的情况下，修改状态
+                // 批量修改状态  start
+                List<Integer> ids = new ArrayList<>();
+                for (CertClaimVO item : certBorrowEntityList) {
+                    ids.add(item.getId());
+                }
+                if (ids.size() > 0) {
+                    CertClaimUpdateVO update = new CertClaimUpdateVO();
+                    update.setIds(ids);
+                    CertClaimVO certBorrow = new CertClaimVO();
+                    //查询出的数据被完全承接
+                    certBorrow.setIsConfig(98);
+                    update.setCertClaim(certBorrow);
+                    // 批量修改
+                    certLendProductConfigService.updateCertBorrowStatusBatch(update);
                 }
             }
             logger.info(logHeader + " 处理成功。" + msgBody);
