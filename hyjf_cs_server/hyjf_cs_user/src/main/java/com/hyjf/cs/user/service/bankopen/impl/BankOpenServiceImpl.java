@@ -189,6 +189,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 成功页面
         String successPath = "/user/openSuccess";
         // 同步地址  是否跳转到前端页面
+        logger.info("openBean.getWjtClient():"+openBean.getWjtClient());
         String host = super.getFrontHost(systemConfig,openBean.getPlatform());
         if(StringUtils.isNotBlank(openBean.getWjtClient())){
             // 如果是温金投的  则跳转到温金投那边
