@@ -51,6 +51,17 @@
                 <if test="status == '4'.toString()">
                     AND ( htb.`status` = 4)
                 </if>
+                <!-- 获取 定时发标+出借中 -->
+                <if test="status == '21'.toString()">
+                    AND (( htb.`status` = 1 AND htb.verify_status = 3 )
+                    OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP(NOW())))
+                </if>
+                <!-- 获取 复审中+还款中+逾期中 -->
+                <if test="status == '22'.toString()">
+                    AND ((htb.`status` = 3)
+                    OR ( htb.`status` = 4)
+                    OR ( htb.`status` = 8))
+                </if>
             </if>
             AND htb.is_show <![CDATA[<>]]> 1
             <if test="publishInstCode != null and publishInstCode != ''">
@@ -732,8 +743,9 @@
         <include refid="Web_Plan_Where_Clause" />
         ORDER BY
         <if test="isHome != null" >
+            hp.plan_invest_status asc,
             hp.lock_period asc,
-            hp.plan_invest_status asc, hp.available_invest_account desc, hp.id
+            hp.available_invest_account desc, hp.id
         </if>
         <if test="isHome == null" >
             hp.is_month asc,
@@ -753,13 +765,12 @@
         <include refid="Web_Plan_Where_Clause" />
     </select>
 
+    <!-- PC1.1.3 修改  都显示   AND hp.lock_period IN(1 , 3 , 6 , 12)-->
     <sql id="Web_Plan_Where_Clause">
         <where>
             hp.del_flag = 0
             AND hp.plan_display_status = 1
             <if test="isHome != null" >
-                AND hp.is_month = 1
-                AND hp.lock_period IN(1 , 3 , 6 , 12)
             </if>
         </where>
     </sql>
@@ -1055,6 +1066,13 @@
                 <!-- 新手汇 还款 -->
                 <when test="status == '17'">
                     AND ( hydb.`status` = 4 AND hydb.project_type = 4  )
+                </when>
+                <!-- 获取待发布+出借中-->
+                <when test="status == '21'">
+                    AND (
+                    ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+                    OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                    )
                 </when>
             </choose>
             <if test="termStart != null and termStart != ''">

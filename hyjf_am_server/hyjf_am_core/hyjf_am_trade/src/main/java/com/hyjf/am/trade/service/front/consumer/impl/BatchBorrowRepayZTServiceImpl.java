@@ -1063,6 +1063,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		Account assignBankAccount = getAccountByUserId(assignUserId);
 		// 出借用户银行账户
 		String assignAccountId = assignBankAccount.getAccountId();
+
+		// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+		int advance_status = borrowRecover.getAdvanceStatus();
+
 		// 判断该收支明细存在时,跳出本次循环
 		if (countCreditAccountListByNid(repayOrderId)) {
 			logger.error("【直投还款/承接人】借款编号：{}，承接人收支明细已存在！还款订单号:{}", borrowNid, repayOrderId);
@@ -1375,6 +1379,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRepayPlan.setChargeDays(borrowRecoverPlan.getChargeDays());
 				// 用户是否提前还款
 				borrowRepayPlan.setAdvanceStatus(borrowRecoverPlan.getAdvanceStatus());
+				// 是否提前还款
+				advance_status = borrowRecoverPlan.getAdvanceStatus();
 				// 还款来源
 				if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
 					// 还款来源（1、借款人还款，2、机构垫付，3、保证金垫付）
@@ -1460,12 +1466,18 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         }
         try {
             // 发送短信
-            this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest);
-            // 推送消息
-            this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest);
+            this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest, advance_status);
+            if(borrowRecover.getAdvanceStatus()-1==0){
+                // 提前还款
+                // 发送短信
+                logger.info("borrowNid:{} 承接 提前还款  给用户发送短信",borrowNid);
+            }else{
+                // 推送消息
+                this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest, advance_status);
+            }
             //发送大屏统计数据
- 			ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,assignUserId,creditRepay.getUserName(),assignCapital,3);
-			this.sendScreenDataMQ(screenDataBean);
+            ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,assignUserId,creditRepay.getUserName(),assignCapital,3);
+            this.sendScreenDataMQ(screenDataBean);
         } catch (Exception e) {
             logger.error("【直投还款/承接人】发送短信和推送消息时发生系统异常！", e);
         }
@@ -2266,6 +2278,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		BigDecimal repayInterest = BigDecimal.ZERO;
 		// 管理费
 		BigDecimal manageFee = BigDecimal.ZERO;
+		// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+		int advance_status = 0;
 		// 放款分期明细
 		BorrowRecoverPlan borrowRecoverPlan = null;
 		// 是否分期(true:分期, false:不分期)
@@ -2309,6 +2323,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			repayInterest = recoverInterestWait.add(lateInterest).add(chargeInterest);
 			// 还款管理费
 			manageFee = recoverFee.subtract(recoverFeeYes);
+			// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+			advance_status = borrowRecoverPlan.getAdvanceStatus();
 		} else { // endday: 按天计息, end:按月计息
 			borrowRecover = selectBorrowRecoverByNid(borrowRecover.getNid());// 非完全承接需要更新已还款债转数据
 			// 还款订单号
@@ -2343,6 +2359,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			repayInterest = recoverInterestWait.add(lateInterest).add(chargeInterest);
 			// 还款管理费
 			manageFee = recoverFee.subtract(recoverFeeYes);
+			// 是否提前还款 0:正常,1:提前,2:延期,3:逾期
+			advance_status = borrowRecover.getAdvanceStatus();
 		}
 		// 判断该收支明细存在时,跳出本次循环
 		if (countAccountListByNid(repayOrderId)) {
@@ -2684,14 +2702,17 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         }
         try {
             // 发送短信
-            this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest);
-            // 推送消息
-            this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest);
-			//发送大屏统计数据
-			ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,tenderUserId,borrowRecover.getUserName(),repayCapital,3);
-			this.sendScreenDataMQ(screenDataBean);
-
-		} catch (Exception e) {
+            this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,advance_status);
+            if(advance_status-1==0){
+                // 提前还款
+            }else{
+                // 推送消息
+                this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest,advance_status);
+            }
+            //发送大屏统计数据
+            ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,tenderUserId,borrowRecover.getUserName(),repayCapital,3);
+            this.sendScreenDataMQ(screenDataBean);
+        } catch (Exception e) {
             logger.error("【直投还款/出借人】发送短信和推送消息时发生系统异常！", e);
         }
 		// 直投类还款成功之后， 判断是风车理财的出借，发送到队列，准备回调通知
@@ -2933,16 +2954,30 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 发送短信(还款成功)
 	 *
 	 * @param userId
+	 * @param advanceStatus
 	 */
-	private void sendSms(int userId, String borrowNid, BigDecimal repayCapital, BigDecimal repayInterest) {
+	private void sendSms(int userId, String borrowNid, BigDecimal repayCapital, BigDecimal repayInterest, Integer advanceStatus) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayCapital)) {
- 			Map<String, String> msg = new HashMap<>();
-			msg.put("userId", String.valueOf(userId));
-			msg.put("val_borrownid", borrowNid);
-			msg.put("val_capital", repayCapital.toString());
-			msg.put("val_interest", repayInterest.toString());
-			SmsMessage smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
-					CustomConstants.CHANNEL_TYPE_NORMAL);
+			SmsMessage smsMessage = null ;
+			if(advanceStatus-1==0){
+				logger.info("提前还款，标的号:{}  userID:{}",borrowNid,String.valueOf(userId));
+				// 提前还款
+				Map<String, String> msg = new HashMap<>();
+				msg.put("userId", String.valueOf(userId));
+				msg.put("val_borrownid", borrowNid);
+				msg.put("val_capital", repayCapital.toString());
+				msg.put("val_interest", repayInterest.toString());
+				smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN,
+						CustomConstants.CHANNEL_TYPE_NORMAL);
+			}else {
+				Map<String, String> msg = new HashMap<>();
+				msg.put("userId", String.valueOf(userId));
+				msg.put("val_borrownid", borrowNid);
+				msg.put("val_capital", repayCapital.toString());
+				msg.put("val_interest", repayInterest.toString());
+				smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
+						CustomConstants.CHANNEL_TYPE_NORMAL);
+			}
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 			} catch (MQException e2) {
@@ -2956,16 +2991,24 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 
 	 * @author Administrator
 	 */
-	private void sendMessage(int userId, String borrowNid, BigDecimal repayAccount, BigDecimal repayInterest) {
+	private void sendMessage(int userId, String borrowNid, BigDecimal repayAccount, BigDecimal repayInterest, Integer advanceStatus) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayAccount)) {
-			Map<String, String> msg = new HashMap<>();
-			msg.put("userId", String.valueOf(userId));
-			msg.put("val_borrownid", borrowNid);
-			msg.put("val_amount", repayAccount.toString());
-			msg.put("val_interest", repayInterest.toString());
+			AppMsMessage smsMessage = null ;
+			if(advanceStatus-1==0){
+				// 提前还款
+				logger.info("提前还款不进行消息推送,borrowNid:{}",borrowNid);
+				return;
+			}else {
+				Map<String, String> msg = new HashMap<>();
+				msg.put("userId", String.valueOf(userId));
+				msg.put("val_borrownid", borrowNid);
+				msg.put("val_amount", repayAccount.toString());
+				msg.put("val_interest", repayInterest.toString());
 
-			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get("userId")), msg, null,
-					MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
+				smsMessage = new AppMsMessage(Integer.valueOf(msg.get("userId")), msg, null,
+						MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
+			}
+
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
 						smsMessage));

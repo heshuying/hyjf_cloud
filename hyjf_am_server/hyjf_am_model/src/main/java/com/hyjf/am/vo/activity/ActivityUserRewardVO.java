@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.activity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -16,6 +17,7 @@ public class ActivityUserRewardVO implements Serializable {
 	private String sendType;
 	private Integer sendStatus;
 	private Integer grade;
+    private Date createTime;
 
     @Override
     public String toString() {
@@ -83,5 +85,13 @@ public class ActivityUserRewardVO implements Serializable {
 
     public void setGrade(Integer grade) {
         this.grade = grade;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

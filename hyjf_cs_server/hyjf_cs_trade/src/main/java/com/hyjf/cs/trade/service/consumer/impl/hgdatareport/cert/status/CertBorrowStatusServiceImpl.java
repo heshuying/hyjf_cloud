@@ -123,12 +123,14 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
         param.put("sourceCode",systemConfig.getCertSourceCode());
         //原产品信息编号
         param.put("sourceProductCode", borrowNid);
+        // 应急中心二期，去掉sourceFinancingcode原产品信息编号
         //原产品信息编号
-        param.put("sourceFinancingCode", "-1");
+//        param.put("sourceFinancingCode", "-1");
         //状态编码
         param.put("productStatus", productStatus);
+        // 应急中心二期，去掉productStatusDesc状态描述
         //状态描述
-        param.put("productStatusDesc", productStatusDesc);
+//        param.put("productStatusDesc", productStatusDesc);
         //状态更新时间
         param.put("productDate", productDate);
         return param;

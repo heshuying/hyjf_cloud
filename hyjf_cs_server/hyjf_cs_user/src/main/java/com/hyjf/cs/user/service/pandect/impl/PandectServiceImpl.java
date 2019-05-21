@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmDataCollectClient;
@@ -182,6 +183,9 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         }
 
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
+        for (RecentPaymentListCustomizeVO recentPaymentListCustomizeVO : recoverLatestList) {
+        	recentPaymentListCustomizeVO.setBorrowApr(FormatRateUtil.formatBorrowApr(recentPaymentListCustomizeVO.getBorrowApr()));
+		}
         result.put("recoverLatestList", recoverLatestList);
         // 登录用户
         result.put("currentUsersInfo", usersinfo);

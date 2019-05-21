@@ -600,6 +600,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 资金相关-收到还款 */
     public static final String PARAM_TPL_SHOUDAOHUANKUAN = "TPL_SHOUDAOHUANKUAN";
 
+    /** 资金相关-收到还款（提前还款） */
+    public static final String PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN = "TPL_SHOUDAOHUANKUAN_TIQIAN";
+
     /** 还款前三天短信提醒 */
     public static final String PARAM_TPL_HUANKUANTIXING = "TPL_HUANKUANTIXING";
 
