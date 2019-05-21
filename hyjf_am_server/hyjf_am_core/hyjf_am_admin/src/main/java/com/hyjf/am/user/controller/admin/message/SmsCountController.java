@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.ListRequest;
+import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.resquest.user.UserRequest;
@@ -50,6 +51,9 @@ public class SmsCountController extends BaseController {
         int count = smsCountService.selectCount(request);
         response.setCount(count);
         if(count > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+            request.setLimitStart( paginator.getOffset());
+            request.setLimitEnd( paginator.getLimit());
             //根据需求：2018年12月27日之前的按照0.042分钱算，之后按0.04分钱算
             List<SmsCountCustomize> list = smsCountService.querySmsCountLlist(request);
             if (!CollectionUtils.isEmpty(list)) {

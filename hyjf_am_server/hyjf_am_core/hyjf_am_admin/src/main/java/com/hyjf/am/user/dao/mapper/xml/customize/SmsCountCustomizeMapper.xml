@@ -27,7 +27,7 @@
             </foreach>
         </if>
         </where>
-        ORDER BY s.posttime desc
+        ORDER BY s.posttime desc, s.id desc
         <if test="limitStart >=0 and limitEnd > 0">
             LIMIT #{limitStart} , #{limitEnd}
         </if>

@@ -17,10 +17,7 @@ import com.hyjf.common.http.HtmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author fq
@@ -107,8 +104,52 @@ public class SmsCountServiceImpl implements SmsCountService {
     }
 
     /**
-     *  修改and删除短信统计重复数据
+     * 获取查询底层部门 id
      * @param list
+     * @return
+     */
+    public HashSet getByCrmDepartmentList(String[] list) {
+        List<OADepartmentCustomizeVO> departmentList = amUserClient.queryDepartmentInfo(null);
+        HashSet hashSet = new HashSet();
+        for(String topCd : list){
+            hashSet.addAll(getTreeDepartmentList(departmentList, topCd));
+        }
+
+        return hashSet;
+    }
+
+    /**
+     * 部门树形结构
+     *
+     * @param departmentTreeDBList
+     * @param topParentDepartmentCd
+     * @return
+     */
+    private ArrayList getTreeDepartmentList(List<OADepartmentCustomizeVO> departmentTreeDBList, String topParentDepartmentCd) {
+        ArrayList arrayList = new ArrayList();
+
+        if (departmentTreeDBList != null && departmentTreeDBList.size() > 0) {
+            ArrayList  jo = null;
+            arrayList.add(topParentDepartmentCd);
+            for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
+                jo = new ArrayList();
+
+                String departmentCd = String.valueOf(departmentTreeRecord.getId());
+                String parentDepartmentCd = String.valueOf(departmentTreeRecord.getParentid());
+                if (topParentDepartmentCd.equals(parentDepartmentCd)) {
+                    jo.add(departmentTreeRecord.getId().toString());
+
+                    ArrayList array = getTreeDepartmentList(departmentTreeDBList, departmentCd);
+                    arrayList.addAll(jo);
+                    arrayList.addAll(array);
+                }
+            }
+        }
+        return arrayList;
+    }
+
+    /**
+     *  修改and删除短信统计重复数据
      */
     @Override
     public void updateOrDelectRepeatData(){

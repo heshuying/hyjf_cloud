@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -42,6 +43,8 @@ public interface SmsCountService {
     List<UserVO> getUsersVo(List<String> list);
 
     void insertBatchSmsCount(List<SmsCountCustomizeVO> list);
+
+    HashSet getByCrmDepartmentList(String[] list);
 
     void updateOrDelectRepeatData();
 
