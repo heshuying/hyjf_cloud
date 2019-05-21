@@ -175,21 +175,25 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
             return accountLists;
         }
         if("accede_assign".equals(trade)){
-            logger.info("map:" + JSONObject.toJSONString(map));
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByAccedeassign(map);
             logger.info("accountLists.size():" + accountLists.size());
             return accountLists;
         }
         if("tenderRecoverYes".equals(trade)){
-            logger.info("map:" + JSONObject.toJSONString(map));
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByTenderRecoverYes(map);
-            logger.info("accountLists.size():" + accountLists.size());
+            if(accountLists.size()>0){
+                logger.info("map.size():" + JSONObject.toJSONString(map));
+                logger.info("accountLists.size():" + accountLists.size());
+            }
+
             return accountLists;
         }
         if("creditTenderRecoverYes".equals(trade)){
-            logger.info("map:" + JSONObject.toJSONString(map));
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditTenderRecoverYes(map);
-            logger.info("accountLists.size():" + accountLists.size());
+            if(accountLists.size()>0){
+                logger.info("map.size():" + JSONObject.toJSONString(map));
+                logger.info("accountLists.size():" + accountLists.size());
+            }
             return accountLists;
         }
         List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);

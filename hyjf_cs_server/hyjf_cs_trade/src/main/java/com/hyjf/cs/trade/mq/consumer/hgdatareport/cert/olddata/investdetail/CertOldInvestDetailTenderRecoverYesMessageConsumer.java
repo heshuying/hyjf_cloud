@@ -88,11 +88,12 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
                 if(selectBorrowNidList.size()==10){
                     // --> 消息处理
                     List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"tenderRecoverYes");
-                    logger.info(logHeader + " accountLists.size()=" +accountLists.size());
+
                     if (accountLists.size()==0){
                         selectBorrowNidList=new ArrayList<String>();
                         continue;
                     }
+                    logger.info(logHeader + " accountLists.size()=" +accountLists.size());
                     // --> 调用service组装数据
                     JSONArray data =certOldInvestDetailService.createDate(accountLists);
                     if(data==null){
@@ -108,7 +109,8 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
                         }
                         certOldInvestDetailService.insertOldMessage(entity);
                     } catch (Exception e) {
-                        throw e;
+                        selectBorrowNidList=new ArrayList<String>();
+                        continue;
                     }
                     logger.info(logHeader + " 处理成功。data.size()"+data.size());
                     selectBorrowNidList=new ArrayList<String>();
@@ -123,6 +125,7 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
                     RedisUtils.set("CREDIT_TENDER_RECOVER_YES_RUN","1");
                     return;
                 }
+                logger.info(logHeader + " accountLists.size()=" +accountLists.size());
                 // --> 调用service组装数据
                 JSONArray data =certOldInvestDetailService.createDate(accountLists);
                 if(data==null){
