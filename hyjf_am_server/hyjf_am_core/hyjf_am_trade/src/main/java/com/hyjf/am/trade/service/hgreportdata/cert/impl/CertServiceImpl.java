@@ -210,9 +210,8 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         }
         //配置信息未上报
         criteria.andIsConfigEqualTo(0);
-        //测试，获取300条数据
         example.setLimitStart(0);
-        example.setLimitEnd(300);
+        example.setLimitEnd(1000);
         return certClaimMapper.selectByExample(example);
     }
 
