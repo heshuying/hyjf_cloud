@@ -69,7 +69,6 @@ public class CertController extends BaseController {
 
     @PostMapping("/getCertAccountListCustomizeVO")
     public CertAccountListResponse getCertAccountListCustomizeVO(@RequestBody CertRequest certRequest) {
-        logger.info("getCertAccountListCustomizeVO:" + JSONObject.toJSONString(certRequest));
         CertAccountListResponse response = new CertAccountListResponse();
         List<CertAccountListCustomize> certAccountListCustomizes = certService.getCertAccountListCustomizeVO(certRequest);
         if (!CollectionUtils.isEmpty(certAccountListCustomizes)) {

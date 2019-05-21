@@ -93,7 +93,9 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
                         selectBorrowNidList=new ArrayList<String>();
                         continue;
                     }
+
                     logger.info(logHeader + " accountLists.size()=" +accountLists.size());
+                    logger.info(logHeader + " selectBorrowNidList.size()=" +JSONObject.toJSONString(selectBorrowNidList));
                     // --> 调用service组装数据
                     JSONArray data =certOldInvestDetailService.createDate(accountLists);
                     if(data==null){
