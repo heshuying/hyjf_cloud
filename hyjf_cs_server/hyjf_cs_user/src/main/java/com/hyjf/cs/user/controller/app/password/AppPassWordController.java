@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.app.password;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -403,6 +402,10 @@ public class AppPassWordController extends BaseUserController {
                 if (success) {
                     //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
                     RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
+                    // pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+                    passWordService.unlockUser(user.getUserId());
+                    // pc1.1.3 新增 如果重置密码成功 就重新自动登陆  短信登录
+                    RedisUtils.del(RedisConstants.APP_SMS_LOGIN_KEY+user.getUserId());
                     ret.put("status", "0");
                     ret.put("statusDesc", "找回密码成功");
                 } else {

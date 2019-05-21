@@ -2456,6 +2456,24 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
 
     }
+
+    /**
+     * 根据手机号查询用户
+     *
+     * @param adminSystemRequest
+     * @return
+     */
+    @Override
+    public AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest) {
+        AdminSystemResponse adminSystemResponse = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/adminSystem/getUserInfoByMobile", adminSystemRequest,
+                        AdminSystemResponse.class)
+                .getBody();
+        if (adminSystemResponse != null) {
+            return adminSystemResponse;
+        }
+        return null;
+    }
     @Override
     public Integer insertBusinessName(BusinessNameMgRequest request) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/insert";

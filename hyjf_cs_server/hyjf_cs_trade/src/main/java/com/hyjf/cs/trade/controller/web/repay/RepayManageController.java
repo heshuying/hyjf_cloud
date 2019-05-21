@@ -26,6 +26,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -197,6 +198,9 @@ public class RepayManageController extends BaseTradeController {
         requestBean.setLimitEnd(page.getLimit());
         try {
             List<RepayListCustomizeVO> resultList = repayManageService.selectRepayList(requestBean);
+            for (RepayListCustomizeVO repayListCustomizeVO : resultList) {
+            	repayListCustomizeVO.setBorrowInterest( FormatRateUtil.formatBorrowApr(repayListCustomizeVO.getBorrowInterest()));
+			}
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取用户待还款列表异常", e);
@@ -231,6 +235,9 @@ public class RepayManageController extends BaseTradeController {
         requestBean.setLimitEnd(page.getLimit());
         try {
             List<RepayListCustomizeVO> resultList = repayManageService.selectRepayList(requestBean);
+            for (RepayListCustomizeVO repayListCustomizeVO : resultList) {
+            	repayListCustomizeVO.setBorrowInterest( FormatRateUtil.formatBorrowApr(repayListCustomizeVO.getBorrowInterest()));
+			}
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取用户已还款列表异常", e);
@@ -428,6 +435,9 @@ public class RepayManageController extends BaseTradeController {
         requestBean.setLimitEnd(page.getLimit());
         try {
             List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayedList(requestBean);
+            for (RepayListCustomizeVO repayListCustomizeVO : resultList) {
+            		repayListCustomizeVO.setBorrowInterest(FormatRateUtil.formatBorrowApr(repayListCustomizeVO.getBorrowInterest()));
+			}
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("【担保机构已还款列表】获取列表发生异常！", e);
