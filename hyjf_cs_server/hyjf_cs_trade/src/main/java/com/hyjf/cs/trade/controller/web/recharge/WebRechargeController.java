@@ -87,6 +87,7 @@ public class WebRechargeController extends BaseTradeController{
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
+		directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
 		String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
 		if(StringUtils.isNotBlank(wjtClient)){
 			// 如果是温金投的  则跳转到温金投那边
