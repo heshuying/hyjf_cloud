@@ -109,7 +109,8 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
                 }
             }
 
-            if(selectBorrowNidList.size()!=0){
+            if(selectBorrowNidList.size()>0){
+                logger.info(logHeader + " selectBorrowNidList.size()=" +selectBorrowNidList.size());
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"creditTenderRecoverYes");
                 if (accountLists.size()==0){
