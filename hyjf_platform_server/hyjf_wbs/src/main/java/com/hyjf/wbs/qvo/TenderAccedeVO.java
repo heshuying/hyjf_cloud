@@ -12,6 +12,8 @@ public class TenderAccedeVO {
 
     //订单编号
     private String orderNo;
+    //财富端id
+    private Integer entId;
     //订单状态
     private  Integer  orderStatus;
     //资产端客户id
@@ -135,6 +137,14 @@ public class TenderAccedeVO {
 
     public String getTransTime() {
         return transTime;
+    }
+
+    public Integer getEntId() {
+        return entId;
+    }
+
+    public void setEntId(Integer entId) {
+        this.entId = entId;
     }
 
     public void setTransTime(String transTime) {

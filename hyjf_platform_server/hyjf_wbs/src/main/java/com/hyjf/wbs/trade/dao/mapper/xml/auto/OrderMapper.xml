@@ -31,6 +31,7 @@
     <select id="getOrderInfo" resultMap="BaseResultMap"
           parameterType="com.hyjf.wbs.qvo.TenderAccedeQO">
     SELECT
+        #{entId} AS entId,
         br.nid	AS orderNo,
         2	AS orderStatus,
         br.user_id	AS assetCustomerId,
@@ -73,6 +74,7 @@
         </if>
         union all
         SELECT
+        #{entId} AS entId,
         ha.accede_order_id	AS orderNo,
         2	AS orderStatus,
         ha.user_id	AS assetCustomerId,
