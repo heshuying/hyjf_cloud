@@ -255,7 +255,7 @@ public class CertController extends BaseController {
     }
 
 
-    @PostMapping("/getBorrowNidList")
+    @GetMapping("/getBorrowNidList")
     public StringResponse getBorrowNidList() {
         StringResponse response=new StringResponse();
         List<String> borrowNidList=certService.getBorrowNidList();
