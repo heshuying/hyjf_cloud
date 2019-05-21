@@ -62,11 +62,14 @@
 					AND br.recover_status = #{status}
 				</if>
 				<if test="status ==2">
-					AND br.advance_status=3
-					AND br.recover_status = 0
+					AND br.recover_status = 2
 				</if>
 				<if test="status ==1">
 					AND br.recover_status = #{status}
+				</if>
+				<if test="status ==3">
+					AND br.advance_status=3
+					AND br.recover_status = 0
 				</if>
 			</if>
 
@@ -212,7 +215,7 @@
 			br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
 			br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
 			if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
-			if(br.recover_status=0 and br.advance_status=3 ,'2',br.recover_status) AS status,
+			if(br.recover_status=0 and br.advance_status=3 ,'3',br.recover_status) AS status,
 			if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 			b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
 			if(br.recover_yestime is null or br.recover_yestime='',
@@ -266,9 +269,9 @@
 			br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
 			br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
 			if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
-			if(br.recover_status=0 and br.advance_status=3 ,'2',br.recover_status) AS status,
+			if(br.recover_status=0 and br.advance_status=3 ,'3',br.recover_status) AS status,
 			if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
-			b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+			br.recover_time, '%Y-%m-%d' )) AS recoverLastTime,
 			if(br.recover_yestime is null or br.recover_yestime='',
 			'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
 			br.repay_order_id AS repay_ordid,
@@ -469,7 +472,7 @@
 					if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
 					br.recover_status AS status,
 					if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
-					b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+					br.recover_time, '%Y-%m-%d' )) AS recoverLastTime,
 					if(br.recover_yestime is null or br.recover_yestime='',
 					'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
 					br.repay_order_id AS repay_ordid,
