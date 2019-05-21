@@ -51,6 +51,8 @@ public class ActivityUserRewardServiceImpl implements ActivityUserRewardService 
         map.put("userName", rewardRequest.getUserName());
         map.put("trueName", rewardRequest.getTrueName());
         map.put("sendStatus", rewardRequest.getSendStatus());
+        map.put("activityId", rewardRequest.getActivityId());
+        map.put("rewardCode", rewardRequest.getRewardCode());
         return map;
     }
 }

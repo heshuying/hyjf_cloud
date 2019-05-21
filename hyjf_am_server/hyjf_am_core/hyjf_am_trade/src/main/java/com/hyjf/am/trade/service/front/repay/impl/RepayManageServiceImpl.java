@@ -20,6 +20,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
@@ -358,6 +359,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+            	//格式化利率
+            	 list.get(i).setBorrowInterest( FormatRateUtil.formatBorrowApr(list.get(i).getBorrowInterest()));
                 RepayListCustomizeVO info = list.get(i);
                 //获得标的类型
                 String borrowStyle = info.getBorrowStyle();

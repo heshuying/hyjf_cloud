@@ -1,4 +1,4 @@
-package com.hyjf.cs.market.vo;
+package com.hyjf.cs.market.vo.activity51;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

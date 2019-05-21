@@ -805,4 +805,14 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         result.put("flag", "1");
         return result;
     }
+
+    /**
+     * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     *
+     * @param userId
+     */
+    @Override
+    public void unlockUser(Integer userId) {
+        amUserClient.unlockUser(userId);
+    }
 }

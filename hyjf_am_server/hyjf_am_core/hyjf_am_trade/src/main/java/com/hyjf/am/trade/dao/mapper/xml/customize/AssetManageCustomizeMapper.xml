@@ -432,9 +432,9 @@
 		END AS capital,
 		3 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) total_wait,
@@ -929,9 +929,9 @@
 		MAX(hcr.recover_yestime) orderby_repay_orddate,
 		3 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type,
 		'' groupaccount
@@ -1272,9 +1272,9 @@
 		hcr.recover_time orderby_quit_time,
 		2 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type
 		FROM
@@ -1442,9 +1442,9 @@
 		MAX(hcr.recover_yestime) orderby_repay_orddate,
 		2 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type
 		FROM
