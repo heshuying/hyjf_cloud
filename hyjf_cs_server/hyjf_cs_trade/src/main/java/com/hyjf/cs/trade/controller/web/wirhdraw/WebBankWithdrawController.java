@@ -120,7 +120,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
         if(StringUtils.isNotBlank(wjtClient)){
             // 如果是温金投的  则跳转到温金投那边
-            host = super.getFrontHost(systemConfig,wjtClient);
+            host = super.getWjtFrontHost(systemConfig,wjtClient);
         }
         String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
         if(StringUtils.isNotBlank(wjtClient)){

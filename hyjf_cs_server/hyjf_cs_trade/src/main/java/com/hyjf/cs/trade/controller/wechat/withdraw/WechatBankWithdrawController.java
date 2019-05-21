@@ -241,7 +241,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         String host = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT);
         if(StringUtils.isNotBlank(wjtClient)){
             // 如果是温金投的  则跳转到温金投那边
-            host = super.getFrontHost(systemConfig,wjtClient);
+            host = super.getWjtFrontHost(systemConfig,wjtClient);
         }
         String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, request, systemConfig);
         if(StringUtils.isNotBlank(wjtClient)){
