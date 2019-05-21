@@ -206,16 +206,16 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
      * @return
      */
     @Override
-    public List<CertClaim> selectCertBorrowConfig(String isTender){
+    public List<CertClaim> selectCertBorrowConfig(){
         CertClaimExample example = new CertClaimExample();
         CertClaimExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(isTender)){
+        /*if(StringUtils.isNotBlank(isTender)){
             criteria.andCreditFlgEqualTo(Integer.parseInt(isTender));
-        }
+        }*/
         //配置信息未上报
         criteria.andIsConfigEqualTo(0);
         example.setLimitStart(0);
-        example.setLimitEnd(1000);
+        example.setLimitEnd(2000);
         return certClaimMapper.selectByExample(example);
     }
 

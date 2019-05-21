@@ -220,14 +220,13 @@ public class CertController extends BaseController {
     }
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param flg
      * @return
      */
-    @GetMapping("/selectCertBorrowByFlg/{flg}")
-    public CertClaimResponse selectCertBorrowByFlg(@PathVariable String flg){
+    @GetMapping("/selectCertBorrowByFlg")
+    public CertClaimResponse selectCertBorrowByFlg(){
         CertClaimResponse response = new CertClaimResponse();
         response.setRtn(Response.FAIL);
-        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig(flg);
+        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig();
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
             List<CertClaimVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertClaimVO.class);
             response.setResultList(borrowVOList);

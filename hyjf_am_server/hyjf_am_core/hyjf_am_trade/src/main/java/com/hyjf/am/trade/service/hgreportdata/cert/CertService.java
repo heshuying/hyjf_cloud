@@ -45,10 +45,9 @@ public interface CertService extends BaseService {
     List<CertAccountListCustomize> getCertAccountListCustomizeVO(CertRequest certRequest);
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param isTender
      * @return
      */
-    List<CertClaim> selectCertBorrowConfig(String isTender);
+    List<CertClaim> selectCertBorrowConfig();
     /**
      * 批量更新
      * @param update
