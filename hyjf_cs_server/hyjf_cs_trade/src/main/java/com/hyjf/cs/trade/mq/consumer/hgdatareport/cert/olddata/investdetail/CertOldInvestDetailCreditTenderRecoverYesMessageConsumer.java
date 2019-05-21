@@ -87,8 +87,6 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
                         selectBorrowNidList=new ArrayList<String>();
                         continue;
                     }
-                    logger.info(logHeader + " accountLists.size()=" +accountLists.size());
-                    logger.info(logHeader + " selectBorrowNidList.size()=" +JSONObject.toJSONString(selectBorrowNidList));
                     // --> 调用service组装数据
                     JSONArray data =certOldInvestDetailService.createDate(accountLists);
                     if(data==null){
@@ -113,7 +111,6 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
             }
 
             if(selectBorrowNidList.size()>0){
-                logger.info(logHeader + " selectBorrowNidList.size()=" +selectBorrowNidList.size());
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"creditTenderRecoverYes");
                 if (accountLists.size()==0){

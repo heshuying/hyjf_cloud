@@ -176,24 +176,14 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         }
         if("accede_assign".equals(trade)){
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByAccedeassign(map);
-            logger.info("accountLists.size():" + accountLists.size());
             return accountLists;
         }
         if("tenderRecoverYes".equals(trade)){
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByTenderRecoverYes(map);
-            if(accountLists.size()>0){
-                logger.info("map.size():" + JSONObject.toJSONString(map));
-                logger.info("accountLists.size():" + accountLists.size());
-            }
-
             return accountLists;
         }
         if("creditTenderRecoverYes".equals(trade)){
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditTenderRecoverYes(map);
-            if(accountLists.size()>0){
-                logger.info("map.size():" + JSONObject.toJSONString(map));
-                logger.info("accountLists.size():" + accountLists.size());
-            }
             return accountLists;
         }
         List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);
@@ -202,7 +192,6 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
 
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param isTender
      * @return
      */
     @Override
