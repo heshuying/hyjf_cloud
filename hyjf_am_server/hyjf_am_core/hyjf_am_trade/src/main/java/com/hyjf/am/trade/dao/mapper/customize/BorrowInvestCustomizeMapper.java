@@ -6,6 +6,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -84,4 +85,18 @@ public interface BorrowInvestCustomizeMapper {
     BigDecimal getAnnualInvestAmount(Map<String, Object> map);
 
     BigDecimal getPlanAnnualAmount(Map<String, Object> map);
+
+    /**
+     * 查询用户投资金额
+     * @param map
+     * @return
+     */
+    BigDecimal getUserInvestAmount(Map<String, Object> map);
+
+    /**
+     * 查询投资年化的用户top5
+     * @param map
+     * @return
+     */
+    List<UserTenderVO> getSumAnnualInvestAmountTop5(Map<String, Object> map);
 }

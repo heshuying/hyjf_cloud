@@ -158,6 +158,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setStatusDesc("您的账户信息存在异常，请联系客服人员处理。");
             return result;
         }
+
         // add by liuyang 20190422 节假日提现修改 start
         // 获取提现规则配置
         logger.info("提现金额:[" + getcash + "].");
@@ -165,19 +166,27 @@ public class AppBankWithdrawController extends BaseTradeController {
         if (!StringUtils.isBlank(getcash)) {
             withdrawMoney = getcash;
         }
+        // 投标金额大于可用余额
+        if (new BigDecimal(withdrawMoney).compareTo(account.getBankBalance()) > 0) {
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("提现金额大于可用金额，请确认后再次提现。");
+            return result;
+        }
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, withdrawMoney);
         if (withdrawRuleConfigVO == null){
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
-            String statusDesc = "";
-            // 个人用户
-            if (user.getUserType() == 0 &&
-                    new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
-                // 提现金额> 个人最大提现金额
-                logger.info("个人提现金额超限");
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else if (user.getUserType() == 1 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            }
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
+
             result.setStatusDesc(statusDesc);
             return result;
         }
@@ -351,18 +360,18 @@ public class AppBankWithdrawController extends BaseTradeController {
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, total);
         if (withdrawRuleConfigVO == null){
             ret.put("status", CustomConstants.APP_STATUS_FAIL);
-            String statusDesc = "";
-            // 个人用户
-            if (user.getUserType() == 0 &&
-                    new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
-                // 提现金额> 个人最大提现金额
-                logger.info("个人提现金额超限");
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else if (user.getUserType() == 1 && new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
-                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
-            } else {
-                statusDesc = "获取提现配置失败";
-            }
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 &&
+//                    new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
             ret.put("statusDesc",statusDesc);
             ret.put("request", requestStr);
             return ret;

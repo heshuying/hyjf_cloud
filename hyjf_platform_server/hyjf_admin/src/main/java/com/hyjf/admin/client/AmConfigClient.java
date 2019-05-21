@@ -26,8 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
-
-
 /**
  * @author zhangqingqing
  * @version AmConfigClient, v0.1 2018/4/23 20:00
@@ -1564,6 +1562,34 @@ public interface AmConfigClient {
 	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
 
 	/**
+	 * 提现规则配置详情
+	 * @param id
+	 * @return
+	 */
+    WithdrawRuleConfigResponse getWithdrawRuleConfigById(Integer id);
+
+	/**
+	 * 提现规则配置修改
+	 * @param form
+	 * @return
+	 */
+	int updateWithdrawRuleConfig(WithdrawRuleConfigVO form);
+
+	/**
+	 * 保存提现时间配置
+	 * @param form
+	 * @return
+	 */
+    int saveWithdrawTimeConfig(WithdrawTimeConfigVO form);
+
+	/**
+	 * 提现时间配置详情
+	 * @param id
+	 * @return
+	 */
+	WithdrawTimeConfigResponse getWithdrawTimeConfigById(Integer id);
+
+	/**
 	 * 添加业务名称管理
 	 * @param request
 	 * @return
@@ -1627,31 +1653,11 @@ public interface AmConfigClient {
 	 */
 	WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request);
 
-	/**
-	 * 提现规则配置详情
-	 * @param id
-	 * @return
-	 */
-    WithdrawRuleConfigResponse getWithdrawRuleConfigById(Integer id);
 
 	/**
-	 * 提现规则配置修改
-	 * @param form
+	 * 根据手机号查询用户
+	 * @param adminSystemRequest
 	 * @return
 	 */
-	int updateWithdrawRuleConfig(WithdrawRuleConfigVO form);
-
-	/**
-	 * 保存提现时间配置
-	 * @param form
-	 * @return
-	 */
-    int saveWithdrawTimeConfig(WithdrawTimeConfigVO form);
-
-	/**
-	 * 提现时间配置详情
-	 * @param id
-	 * @return
-	 */
-	WithdrawTimeConfigResponse getWithdrawTimeConfigById(Integer id);
+    AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
 }

@@ -62,11 +62,14 @@
 					AND br.recover_status = #{status}
 				</if>
 				<if test="status ==2">
-					AND br.advance_status=3
-					AND br.recover_status = 0
+					AND br.recover_status = 2
 				</if>
 				<if test="status ==1">
 					AND br.recover_status = #{status}
+				</if>
+				<if test="status ==3">
+					AND br.advance_status=3
+					AND br.recover_status = 0
 				</if>
 			</if>
 
@@ -212,7 +215,7 @@
 			br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
 			br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
 			if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
-			if(br.recover_status=0 and br.advance_status=3 ,'2',br.recover_status) AS status,
+			if(br.recover_status=0 and br.advance_status=3 ,'3',br.recover_status) AS status,
 			if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 			b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
 			if(br.recover_yestime is null or br.recover_yestime='',
@@ -266,9 +269,9 @@
 			br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
 			br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
 			if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
-			if(br.recover_status=0 and br.advance_status=3 ,'2',br.recover_status) AS status,
+			if(br.recover_status=0 and br.advance_status=3 ,'3',br.recover_status) AS status,
 			if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
-			b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+			br.recover_time, '%Y-%m-%d' )) AS recoverLastTime,
 			if(br.recover_yestime is null or br.recover_yestime='',
 			'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
 			br.repay_order_id AS repay_ordid,
@@ -352,9 +355,9 @@
 					u2.user_id AS recoverUserId,
 					u2.username AS recoverUserName,
 					u2.attribute AS recover_user_attribute,
-					CASE WHEN u2.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
-					CASE WHEN u2.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
-					CASE WHEN u2.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
+					t.invite_region_name AS `recover_region_name`,
+					t.invite_branch_name AS  `recover_branch_name`,
+					t.invite_department_name AS `recover_department_name`,
 					u3.username AS referrer_name,
 					u3.user_id AS referrer_user_id,
 					u3.truename AS referrer_true_name,
@@ -392,11 +395,12 @@
 					br.charge_penalty_interest as chargeInterest,
 					br.late_days as lateDays,
 					br.late_interest as lateInterest,
-					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '' END  as repayMoneySource,
 					brr.repay_username as repayUsername,
 					CASE brr.auto_repay when 0
-					then '手动还款'
-					else '自动还款' end as autoRepay,
+					then '主动还款'
+					WHEN 1 THEN '系统自动'
+					else '' end as autoRepay,
 					ba.submitter as submitter,
 						br.id
 					FROM
@@ -415,7 +419,7 @@
 					LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
 			
 			
-					LEFT JOIN ht_r_user AS u3 ON u2.spreads_user_id = u3.user_id
+					LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
 					LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 					LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 					LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
@@ -424,7 +428,7 @@
 					LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
 					LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 					Left join ht_borrow_apicron ba on br.borrow_nid=ba.borrow_nid and br.recover_period=ba.period_now and ba.api_type='1'
-					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period
+					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid 
 					<include refid="Where_Clause" />
 			UNION ALL
 			SELECT
@@ -445,9 +449,9 @@
 					u2.user_id AS recoverUserId,
 					u2.username AS recoverUserName,
 					u2.attribute AS recover_user_attribute,
-					CASE WHEN u2.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
-					CASE WHEN u2.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
-					CASE WHEN u2.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
+					t.invite_region_name AS `recover_region_name`,
+					t.invite_branch_name AS `recover_branch_name`,
+					t.invite_department_name AS `recover_department_name`,
 					u3.username AS referrer_name,
 					u3.user_id AS referrer_user_id,
 					u3.truename AS referrer_true_name,
@@ -468,7 +472,7 @@
 					if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
 					br.recover_status AS status,
 					if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
-					b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+					br.recover_time, '%Y-%m-%d' )) AS recoverLastTime,
 					if(br.recover_yestime is null or br.recover_yestime='',
 					'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
 					br.repay_order_id AS repay_ordid,
@@ -485,11 +489,12 @@
 					br.charge_penalty_interest as chargeInterest,
 					br.late_days as lateDays,
 					br.late_interest as lateInterest,
-					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '' END  as repayMoneySource,
 					brr.repay_username as repayUsername,
 					CASE brr.auto_repay when 0
-					then '手动还款'
-					else '自动还款' end as autoRepay,
+					then '主动还款'
+					WHEN 1 THEN '系统自动'
+					else '' end as autoRepay,
 					ba.submitter as submitter,
 						br.id
 					FROM
@@ -508,7 +513,7 @@
 					LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
 			
 			
-					LEFT JOIN ht_r_user AS u3 ON u2.spreads_user_id = u3.user_id
+					LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
 					LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 					LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 					LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
@@ -517,7 +522,7 @@
 					LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
 					LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 					Left join ht_borrow_apicron ba on br.borrow_nid=ba.borrow_nid and br.recover_period=ba.period_now and ba.api_type='1'
-					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period 
+					left join ht_borrow_repay_plan brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period 
 					<include refid="Where_Clause" />
 		) t
 		ORDER BY

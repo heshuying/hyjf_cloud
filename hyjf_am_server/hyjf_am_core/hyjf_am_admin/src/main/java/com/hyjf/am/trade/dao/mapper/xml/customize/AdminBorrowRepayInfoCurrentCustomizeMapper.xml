@@ -9,6 +9,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND t.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND br.nid = #{tenderOrderId}
         </if>
@@ -21,8 +24,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND br.recover_status = 0 AND br.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND br.recover_status = #{repayStatus} AND br.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND br.recover_status = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -39,9 +45,12 @@
     </sql>
 
     <sql id="where-type-2">
-        AND rp.credit_status != 2 AND  br.recover_capital > br.credit_amount
+        AND rp.credit_status != 2 AND (rp.recover_capital > rp.credit_amount OR (b.borrow_style = 'endmonth' AND rp.recover_interest > rp.credit_interest))
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND t.user_name = #{tenderUserName}
         </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND rp.nid = #{tenderOrderId}
@@ -55,8 +64,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND rp.recover_status = 0 AND rp.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND rp.recover_status = #{repayStatus} AND rp.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND rp.recover_status = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND rp.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -76,6 +88,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND cr.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND cr.credit_tender_nid = #{tenderOrderId}
         </if>
@@ -88,8 +103,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND cr.`status` = 0 AND cr.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND cr.`status` = #{repayStatus} AND cr.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND cr.`status` = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND cr.assign_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -110,6 +128,9 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderUserName != null and tenderUserName != ''">
+            AND hcr.user_name = #{tenderUserName}
+        </if>
         <if test="tenderOrderId != null and tenderOrderId != ''">
             AND hcr.invest_order_id = #{tenderOrderId}
         </if>
@@ -122,8 +143,11 @@
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND hcr.repay_status = 0 AND hcr.advance_status = 3
         </if>
-        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 0">
             AND hcr.repay_status = #{repayStatus} AND hcr.advance_status != 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 0 and repayStatus != 8">
+            AND hcr.repay_status = #{repayStatus}
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND hcr.assign_repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -244,7 +268,7 @@
                     WHEN 1 THEN
                     '借款人还款'
                     WHEN 2 THEN
-                    '机构垫付'
+                    '第三方保障'
                     WHEN 3 THEN
                     '保证金垫付'
                     ELSE
@@ -303,7 +327,9 @@
                 ) AS period,
                 rp.recover_period AS recoverPeriod,
                 t.account,
-                br.recover_capital - br.credit_amount - (
+                <!-- 当前持有=投资额-债转金额-（已还本金-已还债转）-->
+                br.recover_capital - br.credit_amount -
+                ((
                 SELECT
                 IFNULL(
                 SUM(p.recover_capital_yes),
@@ -314,6 +340,9 @@
                 WHERE
                 br.nid = p.nid
                 AND p.recover_status = 1
+                )
+                - (select IFNULL(SUM(t.repay_capital_yes),0) from ht_hjh_debt_credit_tender t where t.invest_order_id = br.nid)
+                - (select IFNULL(SUM(t.assign_repay_capital),0) from ht_credit_tender t where t.credit_tender_nid = br.nid)
                 )AS amountHold,
                 rp.recover_capital - (
                 SELECT
@@ -388,7 +417,7 @@
                 rp.recover_status = 0,
 
                 IF (brp.advance_status = 3, 8, 0),
-                1
+                rp.recover_status
                 ) AS recoverStatus,
 
                 IF (
@@ -398,7 +427,7 @@
                 WHEN 1 THEN
                 '借款人还款'
                 WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
                 WHEN 3 THEN
                 '保证金垫付'
                 ELSE
@@ -459,7 +488,7 @@
                 ) AS period,
                 cr.recover_period AS recoverPeriod,
                 ct.assign_capital AS account,
-                ct.assign_capital - ct.assign_repay_capital AS amountHold,
+                (SELECT IFNULL(SUM(cr1.assign_capital),0) FROM ht_credit_repay cr1 WHERE cr1.`status` != 1 AND cr1.assign_nid = ct.assign_nid) AS amountHold,
                 cr.assign_capital AS recoverCapital,
                 cr.assign_interest AS recoverInterest,
                 cr.assign_account AS recoverAccount,
@@ -468,17 +497,17 @@
                 cr.`status` = 0,
 
                 IF (cr.advance_status = 3, 8, 0),
-                1
+                cr.`status`
                 ) AS recoverStatus,
 
             IF (
                 cr.`status` = 1
                 AND cr.assign_repay_yes_time > 0,
-                CASE bry.repay_money_source
+                CASE brp.repay_money_source
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
             WHEN 3 THEN
                 '保证金垫付'
             ELSE
@@ -486,12 +515,7 @@
             END,
             ''
             ) AS repayMoneySource,
-            cr.assign_repay_account +
-        IF (
-            cr. STATUS = 1,
-            cr.manage_fee,
-            0
-        ) AS recoverAmountTotal,
+         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = cr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
          FROM_UNIXTIME(
             cr.assign_repay_next_time,
             '%Y-%m-%d'
@@ -547,7 +571,7 @@
                 ) AS period,
                 hcr.repay_period AS recoverPeriod,
                 hct.assign_capital AS account,
-                hct.assign_capital - hct.repay_capital_yes  AS amountHold,
+                (SELECT IFNULL(SUM(cr1.repay_capital),0) FROM ht_hjh_debt_credit_repay cr1 WHERE cr1.repay_status != 1 AND cr1.del_flag = 0 AND cr1.assign_order_id = hct.assign_order_id) AS amountHold,
                 hcr.repay_capital AS recoverCapital,
                 hcr.repay_interest AS recoverInterest,
                 hcr.repay_account AS recoverAccount,
@@ -556,18 +580,18 @@
                 hcr.repay_status = 0,
 
                 IF (hcr.advance_status = 3, 8, 0),
-                1
+                hcr.repay_status
                 )
                 AS recoverStatus,
 
             IF (
                 hcr.repay_status = 1
                 AND hcr.assign_repay_yes_time > 0,
-                CASE bry.repay_money_source
+                CASE brp.repay_money_source
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
-                '机构垫付'
+                '第三方保障'
             WHEN 3 THEN
                 '保证金垫付'
             ELSE
@@ -575,12 +599,7 @@
             END,
             ''
             ) AS repayMoneySource,
-            hcr.receive_account_yes +
-        IF (
-            hcr.repay_status = 1,
-            hcr.manage_fee,
-            0
-        ) AS recoverAmountTotal,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = hcr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
         IF (
             hcr.assign_repay_next_time IS NULL
             OR hcr.assign_repay_time = '',
@@ -691,33 +710,16 @@
             ) t
     </select>
 
+    <!-- 页面底部累计统计-->
     <select id="getRepayInfoCurrentSum" resultType="map" parameterType="map">
         SELECT
             SUM(IFNULL(recoverCapital,0)) AS capitalSum,
-            SUM(IFNULL(recoverInterest,0)) AS interestSum,
-            SUM(IFNULL(recoverAccount,0)) AS accountSum,
-            SUM(IFNULL(recoverFee,0)) AS feeSum
+            SUM(IFNULL(recoverInterest,0)) AS interestSum
         FROM
         (
         <!-- 1、未分期原始出借订单查询-->
         SELECT
-        br.recover_capital - (
-        SELECT
-        IFNULL(SUM(cr1.assign_capital), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = br.nid
-        AND cr1.recover_period = br.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_capital), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
-        ) AS recoverCapital,
+        br.recover_capital - br.credit_amount AS recoverCapital,
         br.recover_interest - (
         SELECT
         IFNULL(SUM(cr1.assign_interest), 0)
@@ -734,41 +736,8 @@
         WHERE
         cr1.invest_order_id = br.nid
         AND cr1.repay_period = br.recover_period
-        ) AS recoverInterest,
-        br.recover_account - (
-        SELECT
-        IFNULL(SUM(cr1.assign_account), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = br.nid
-        AND cr1.recover_period = br.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_account), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
-        ) AS recoverAccount,
-        br.recover_fee - (
-        SELECT
-        IFNULL(SUM(cr1.manage_fee), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = br.nid
-        AND cr1.recover_period = br.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.manage_fee), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
-        ) AS recoverFee
+        ) AS recoverInterest
+
         FROM
         ht_borrow_recover br
         INNER JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
@@ -819,41 +788,7 @@
         WHERE
         cr1.invest_order_id = rp.nid
         AND cr1.repay_period = rp.recover_period
-        )AS recoverInterest,
-        rp.recover_account - (
-        SELECT
-        IFNULL(SUM(cr1.assign_account), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.repay_account), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverAccount,
-        rp.recover_fee - (
-        SELECT
-        IFNULL(SUM(cr1.manage_fee), 0)
-        FROM
-        ht_credit_repay cr1
-        WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
-        ) - (
-        SELECT
-        IFNULL(SUM(cr1.manage_fee), 0)
-        FROM
-        ht_hjh_debt_credit_repay cr1
-        WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverFee
+        ) AS recoverInterest
         FROM
         ht_borrow_recover_plan rp
         INNER JOIN ht_borrow_recover br ON br.nid = rp.nid
@@ -869,9 +804,7 @@
         <!-- 3、债权转让承接订单查询-->
         SELECT
         cr.assign_capital AS recoverCapital,
-        cr.assign_interest AS recoverInterest,
-        cr.assign_account AS recoverAccount,
-        cr.manage_fee AS recoverFee
+        cr.assign_interest AS recoverInterest
         FROM
         ht_credit_repay cr
         JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
@@ -885,9 +818,7 @@
         <!-- 4、计划底层标的债权转让承接订单查询-->
         SELECT
         hcr.repay_capital AS recoverCapital,
-        hcr.repay_interest AS recoverInterest,
-        hcr.repay_account AS recoverAccount,
-        hcr.manage_fee AS recoverFee
+        hcr.repay_interest AS recoverInterest
         FROM
         ht_hjh_debt_credit_repay hcr
         INNER JOIN ht_hjh_debt_credit_tender hct ON hct.assign_order_id = hcr.assign_order_id
@@ -924,46 +855,66 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        CASE u2.attribute
+        CASE t.tender_user_attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
         END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttributeNow,
+        t.invite_region_name AS recoverRegionName,
+        t.invite_branch_name AS recoverBranchName,
+        t.invite_department_name AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         t.account AS recoverTotal,
         IF (
         br.recover_status = 1,
         0,
         br.recover_capital - br.credit_amount
         ) AS amountHold,
-        br.recover_capital AS recoverCapital,
-        br.recover_interest AS recoverInterest,
-        br.recover_Account AS recoverAccount,
+        br.recover_capital - br.credit_amount AS recoverCapital,
+        br.recover_interest - (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        ) AS recoverInterest,
+        br.recover_account - (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        ) AS recoverAccount,
         br.recover_fee AS recoverFee,
 
         IF (
@@ -978,18 +929,82 @@
         ) AS recoverLastTime,
         '1' AS period,
         '1' AS periodTotal,
-        br.recover_capital AS recoverCapitalPeriod,
-        br.recover_interest AS recoverInterestPeriod,
-        br.recover_Account AS recoverAccountPeriod,
+        br.recover_capital - br.credit_amount AS recoverCapitalPeriod,
+        br.recover_interest - (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        ) AS recoverInterestPeriod,
+        br.recover_account - (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        ) AS recoverAccountPeriod,
         br.recover_fee AS recoverFeePeriod,
         br.charge_days AS chargeDays,
         br.charge_interest - br.charge_penalty_interest AS chargeInterestReduce,
         br.charge_penalty_interest AS chargePenaltyInterest,
         br.late_days AS lateDays,
         br.late_interest AS lateInterest,
-        br.recover_capital_yes AS recoverCapitalYesPeriod,
-        br.recover_interest_yes AS recoverInterestYesPeriod,
-        br.recover_Account_yes AS recoverAccountYesPeriod,
+        br.recover_capital_yes - (
+        SELECT
+        IFNULL(SUM(cr1.assign_repay_capital), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.receive_capital_yes), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        )AS recoverCapitalYesPeriod,
+        br.recover_interest_yes - (
+        SELECT
+        IFNULL(SUM(cr1.assign_repay_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.receive_interest_yes), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        )AS recoverInterestYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAccountYesPeriod,
         br.recover_fee_yes AS recoverFeeYesPeriod,
         br.recover_capital_wait AS recoverCapitalWait,
         br.recover_interest_wait AS recoverInterestWait,
@@ -1009,7 +1024,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1049,12 +1064,6 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON br.borrow_userid = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON br.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = br.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
         LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
         LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -1088,39 +1097,33 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        CASE u2.attribute
+        CASE t.tender_user_attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
         END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttributeNow,
+        t.invite_region_name AS recoverRegionName,
+        t.invite_branch_name AS recoverBranchName,
+        t.invite_department_name AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         t.account AS recoverTotal,
-        br.recover_capital - br.credit_amount - (
+        <!-- 当前持有=投资额-债转金额-（已还本金-已还债转）-->
+        br.recover_capital - br.credit_amount -
+        ((
         SELECT
         IFNULL(
         SUM(p.recover_capital_yes),
@@ -1131,10 +1134,41 @@
         WHERE
         br.nid = p.nid
         AND p.recover_status = 1
+        )
+        - (select IFNULL(SUM(t.repay_capital_yes),0) from ht_hjh_debt_credit_tender t where t.invest_order_id = br.nid)
+        - (select IFNULL(SUM(t.assign_repay_capital),0) from ht_credit_tender t where t.credit_tender_nid = br.nid)
         )AS amountHold,
-        br.recover_capital AS recoverCapital,
-        br.recover_interest AS recoverInterest,
-        br.recover_Account AS recoverAccount,
+        br.recover_capital - br.credit_amount AS recoverCapital,
+        br.recover_interest - (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        ) AS recoverInterest,
+        br.recover_account - (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        ) AS recoverAccount,
         br.recover_fee AS recoverFee,
 
         IF (
@@ -1153,27 +1187,91 @@
         b.borrow_period
         ) AS period,
         b.borrow_period AS periodTotal,
-        rp.recover_capital AS recoverCapitalPeriod,
-        rp.recover_interest AS recoverInterestPeriod,
-        rp.recover_Account AS recoverAccountPeriod,
+        rp.recover_capital - rp.credit_amount AS recoverCapitalPeriod,
+        rp.recover_interest - (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        AND cr1.recover_period = rp.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.repay_period = rp.recover_period
+        ) AS recoverInterestPeriod,
+        rp.recover_account - (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        AND cr1.recover_period = rp.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.repay_period = rp.recover_period
+        ) AS recoverAccountPeriod,
         rp.recover_fee AS recoverFeePeriod,
         rp.charge_days AS chargeDays,
         rp.charge_interest - rp.charge_penalty_interest AS chargeInterestReduce,
         rp.charge_penalty_interest AS chargePenaltyInterest,
         rp.late_days AS lateDays,
         rp.late_interest AS lateInterest,
-        rp.recover_capital_yes AS recoverCapitalYesPeriod,
-        rp.recover_interest_yes AS recoverInterestYesPeriod,
-        rp.recover_Account_yes AS recoverAccountYesPeriod,
+        rp.recover_capital_yes - (
+        SELECT
+        IFNULL(SUM(cr1.assign_repay_capital), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        AND cr1.recover_period = rp.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.receive_capital_yes), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.repay_period = rp.recover_period
+        )AS recoverCapitalYesPeriod,
+        rp.recover_interest_yes - (
+        SELECT
+        IFNULL(SUM(cr1.assign_repay_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        AND cr1.recover_period = rp.recover_period
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.receive_interest_yes), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.repay_period = rp.recover_period
+        )AS recoverInterestYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
         rp.recover_fee_yes AS recoverFeeYesPeriod,
-        br.recover_capital_wait AS recoverCapitalWait,
-        br.recover_interest_wait AS recoverInterestWait,
-        br.recover_account_wait AS recoverAccountWait,
+        rp.recover_capital_wait AS recoverCapitalWait,
+        rp.recover_interest_wait AS recoverInterestWait,
+        rp.recover_account_wait AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
         IF (brp.advance_status = 3, 8, 0),
-        1
+        rp.recover_status
         ) AS recoverStatus,
         IF(brp.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
@@ -1184,7 +1282,7 @@
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1226,12 +1324,6 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON rp.borrow_userid = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON rp.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = rp.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
         LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
         LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -1261,37 +1353,23 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
+        '' AS recoverUserAttribute,
         CASE u2.attribute
         WHEN 0 THEN '无主单'
         WHEN 1 THEN '有主单'
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
-        END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        END recoverUserAttributeNow,
+        ct.invite_user_regionname AS recoverRegionName,
+        ct.invite_user_branchname AS recoverBranchName,
+        ct.invite_user_departmentname AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         ct.assign_capital AS recoverTotal,
         ct.assign_capital - ct.assign_repay_capital AS amountHold,
         ct.assign_capital AS recoverCapital,
@@ -1336,32 +1414,32 @@
         cr.late_interest AS lateInterest,
         cr.assign_repay_capital AS recoverCapitalYesPeriod,
         cr.assign_repay_interest AS recoverInterestYesPeriod,
-        cr.assign_repay_account AS recoverAccountYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = cr.credit_repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
 
         IF (
         cr.`status` = 1,
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
-        ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
-        ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
-        bry.repay_username AS repayUserName,
+        IF(cr.`status`=0,cr.assign_capital,0) AS recoverCapitalWait,
+        IF(cr.`status`=0,cr.assign_interest,0) AS recoverInterestWait,
+        IF(cr.`status`=0,cr.assign_account,0) AS recoverAccountWait,
+        brp.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
         IF (cr.advance_status = 3, 8, 0),
-        1
+        cr.`status`
         ) AS recoverStatus,
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
         IF (
-        bry.repay_status = 1
-        AND bry.repay_action_time > 0,
-        CASE bry.repay_money_source
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1407,14 +1485,8 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON cr.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = cr.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
+        LEFT JOIN ht_r_user AS u3 ON ct.invite_user_name = u3.username
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u3.user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid`
         AND `od4`.id IS NOT NULL
@@ -1448,33 +1520,25 @@
         WHEN 2 THEN '线下员工'
         WHEN 3 THEN '线上员工'
         ELSE ''
+        END recoverUserAttributeNow,
+        CASE acc.user_attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
         END recoverUserAttribute,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od6`.`name`
-        ELSE
-        `od3`.`name`
-        END `recoverRegionName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od5`.`name`
-        ELSE
-        `od2`.`name`
-        END `recoverBranchName`,
-        CASE
-        WHEN u2.attribute = '1' THEN
-        `od4`.`name`
-        ELSE
-        `od`.`name`
-        END `recoverDepartmentName`,
+        acc.invite_user_regionname AS recoverRegionName,
+        acc.invite_user_branchname AS recoverBranchName,
+        acc.invite_user_departmentname AS recoverDepartmentName,
         u3.username AS referrerName,
         u3.user_id AS referrerUserId,
         u3.truename AS referrerTrueName,
-        `od6`.`name` AS `referrerRegionName`,
-        `od5`.`name` AS `referrerBranchName`,
-        `od4`.`name` AS `referrerDepartmentName`,
+        `od6`.`name` AS `referrerRegionNameNow`,
+        `od5`.`name` AS `referrerBranchNameNow`,
+        `od4`.`name` AS `referrerDepartmentNameNow`,
         hct.assign_capital AS recoverTotal,
-        hct.assign_capital - hct.repay_capital_yes  AS amountHold,
+        (SELECT IFNULL(SUM(cr1.repay_capital),0) FROM ht_hjh_debt_credit_repay cr1 WHERE cr1.repay_status != 1 AND cr1.del_flag = 0 AND cr1.assign_order_id = hct.assign_order_id) AS amountHold,
         hct.assign_capital AS recoverCapital,
         hct.assign_interest AS recoverInterest,
         hct.assign_account AS recoverAccount,
@@ -1515,34 +1579,34 @@
         hcr.repay_advance_penalty_interest AS chargePenaltyInterest,
         hcr.late_days AS lateDays,
         hcr.repay_late_interest AS lateInterest,
-        hcr.repay_capital_yes AS recoverCapitalYesPeriod,
-        hcr.repay_interest_yes AS recoverInterestYesPeriod,
-        hcr.repay_account_yes AS recoverAccountYesPeriod,
+        hcr.receive_capital_yes AS recoverCapitalYesPeriod,
+        hcr.receive_interest_yes AS recoverInterestYesPeriod,
+        IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = hcr.credit_repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
 
         IF (
         hcr.repay_status = 1,
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        hct.repay_capital_wait AS recoverCapitalWait,
-        hct.repay_interest_wait AS recoverInterestWait,
-        hct.repay_interest_wait AS recoverAccountWait,
-        bry.repay_username AS repayUserName,
+        IF(hcr.repay_status=0,hcr.repay_capital,0) AS recoverCapitalWait,
+        IF(hcr.repay_status=0,hcr.repay_interest,0) AS recoverInterestWait,
+        IF(hcr.repay_status=0,hcr.repay_account,0) AS recoverAccountWait,
+        brp.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
         IF (hcr.advance_status = 3, 8, 0),
-        1
+        hcr.repay_status
         )
         AS recoverStatus,
         IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
         IF (
-        bry.repay_status = 1
-        AND bry.repay_action_time > 0,
-        CASE bry.repay_money_source
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
-        '机构垫付'
+        '第三方保障'
         WHEN 3 THEN
         '保证金垫付'
         ELSE
@@ -1551,10 +1615,16 @@
         ''
         ) AS repayMoneySource,
         api.submitter,
+        IF (
+        hcr.assign_repay_next_time IS NULL
+        OR hcr.assign_repay_time = '',
+        '',
         FROM_UNIXTIME(
-        hcr.assign_repay_next_time,
+        hcr.assign_repay_time,
         '%Y-%m-%d'
-        ) AS recoverTime,
+        )
+        )
+        AS recoverTime,
 
         IF (
         hcr.assign_repay_yes_time IS NULL
@@ -1576,6 +1646,7 @@
         FROM
         ht_hjh_debt_credit_repay hcr
         INNER JOIN ht_hjh_debt_credit_tender hct ON hct.assign_order_id = hcr.assign_order_id
+        INNER JOIN ht_hjh_accede acc ON acc.accede_order_id = hct.assign_plan_order_id
         INNER JOIN ht_borrow b ON hcr.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
@@ -1588,14 +1659,8 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON hcr.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = hcr.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
+        LEFT JOIN ht_r_user AS u3 ON acc.invite_user_id = u3.user_id
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = acc.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid`
         AND `od4`.id IS NOT NULL
@@ -1626,12 +1691,6 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON br.borrow_userid = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON br.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = br.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
         LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
         LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -1662,12 +1721,6 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON rp.borrow_userid = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON rp.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = rp.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
         LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
         LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -1691,17 +1744,12 @@
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         LEFT JOIN ht_borrow_apicron AS api ON api.borrow_nid = b.borrow_nid AND api.api_type = 1
         AND api.period_now = cr.assign_repay_period
+        LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON cr.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = cr.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
+        LEFT JOIN ht_r_user AS u3 ON ct.invite_user_name = u3.username
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u3.user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid`
         AND `od4`.id IS NOT NULL
@@ -1715,6 +1763,7 @@
         FROM
         ht_hjh_debt_credit_repay hcr
         INNER JOIN ht_hjh_debt_credit_tender hct ON hct.assign_order_id = hcr.assign_order_id
+        INNER JOIN ht_hjh_accede acc ON acc.accede_order_id = hct.assign_plan_order_id
         INNER JOIN ht_borrow b ON hcr.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
@@ -1727,14 +1776,8 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON hcr.user_id = u2.user_id
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = hcr.user_id
-        AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid`
-        AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.invite_user_id
+        LEFT JOIN ht_r_user AS u3 ON acc.invite_user_id = u3.user_id
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = acc.invite_user_id
         AND ou1.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid`
         AND `od4`.id IS NOT NULL

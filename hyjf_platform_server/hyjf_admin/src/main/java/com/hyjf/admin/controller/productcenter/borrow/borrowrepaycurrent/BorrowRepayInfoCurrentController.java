@@ -87,7 +87,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         dataMap.put("sumInfo", amResponse.getSumInfo());
         response.setData(dataMap);
         response.setTotalCount(amResponse.getCount());
-        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
+//        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 
@@ -105,7 +105,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
 
         // 不加条件不能导出
         if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getAssignOrderId())
-                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
+                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart()) && StringUtils.isBlank(requestBean.getTenderUserName())){
             return;
         }
 
@@ -126,7 +126,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         requestBean.setCurrPage(1);
         // 查询
 
-        Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean.getBorrowNid());
+        Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean);
         requestBean.setCount(totalCount);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
@@ -177,11 +177,12 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             map.put("recoverBranchName","出借人所属二级分部（当时）");
             map.put("recoverDepartmentName","出借人所属团队（当时）");
         }
+        map.put("recoverUserAttributeNow","出借人用户属性（当前）");
         map.put("referrerName","推荐人用户名（当时）");
         if (org.apache.commons.lang3.StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("referrerRegionName","推荐人所属一级分部（当时）");
-            map.put("referrerBranchName","推荐人所属二级分部（当时）");
-            map.put("referrerDepartmentName","推荐人所属团队（当时）");
+            map.put("referrerRegionNameNow","推荐人所属一级分部（当前）");
+            map.put("referrerBranchNameNow","推荐人所属二级分部（当前）");
+            map.put("referrerDepartmentNameNow","推荐人所属团队（当前）");
         }
 
         map.put("recoverTotal","出借金额");
@@ -189,7 +190,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         map.put("recoverCapital","应回本金");
         map.put("recoverInterest","应回利息");
         map.put("recoverAccount","应回本息");
-        map.put("recoverFee","还款服务费");
+//        map.put("recoverFee","还款服务费");
         map.put("recoverLastTime","到期日");
         map.put("period","回款期数");
         map.put("periodTotal","总期数");

@@ -523,6 +523,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					BankCardRequest bankCard=new BankCardRequest();
 					bankCard.setId(retCard.getId());
 					bankCard.setMobile(bean.getMobile());
+					bankCard.setUserId(userId);
 					amUserClient.updateUserCard(bankCard);
 				}
 			}

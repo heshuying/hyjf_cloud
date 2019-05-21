@@ -112,6 +112,12 @@ public class AdminSystemController extends BaseConfigController {
 			if (admin!=null){
 				Integer id = admin.getId();
 				AdminAndRole adminAndRole = adminRoleService.getRole(id);
+				// 是否禁用
+				if ("1".equals(adminSystem.getState())) {
+					asr.setMessage("该用户已禁用");
+					asr.setRtn(Response.ERROR);
+					return asr;
+				}
 				if (adminAndRole != null) {
 					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
 					if(role.getStatus()!=0||"wjt温金运营".equals(role.getRoleName())) {
@@ -300,5 +306,32 @@ public class AdminSystemController extends BaseConfigController {
 			response.setResult(CommonUtils.convertBean(configApplicant, ConfigApplicantVO.class));
 		}
 		return response;
+	}
+
+	/**
+	 * 根据手机号查询用户
+	 * @param adminSystemR
+	 * @return
+	 */
+	@RequestMapping("/getUserInfoByMobile")
+	public AdminSystemResponse getUserInfoByMobile(@RequestBody AdminSystemRequest adminSystemR) {
+		AdminSystemResponse asr = new AdminSystemResponse();
+		AdminSystem adminSystemr = adminSystemService.getUserInfoByMobile(adminSystemR.getMobile());
+		if (adminSystemr != null) {
+			AdminSystemVO asv = new AdminSystemVO();
+			// 如果状态不可用
+			if ("1".equals(adminSystemr.getState())) {
+				asr.setMessage("该用户已被禁用");
+				asr.setRtn(Response.ERROR);
+				return asr;
+			}
+
+			BeanUtils.copyProperties(adminSystemr, asv);
+			asr.setResult(asv);
+			return asr;
+		}
+		asr.setRtn(Response.ERROR);
+		asr.setMessage("用户不存在");
+		return asr;
 	}
 }

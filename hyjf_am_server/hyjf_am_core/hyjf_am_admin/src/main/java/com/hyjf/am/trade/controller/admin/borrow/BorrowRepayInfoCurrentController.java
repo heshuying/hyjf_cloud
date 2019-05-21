@@ -115,7 +115,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         response.setSumInfo(sumInfo);
         response.setRtn(Response.SUCCESS);
 
-        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
+//        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 
@@ -150,7 +150,12 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     private Map<String,Object> getQueryParamMap(BorrowRepayInfoCurrentRequest requestBean){
         Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
+        if(StringUtils.isNotBlank(requestBean.getBorrowNid())){
+            paraMap.put("borrowNid", requestBean.getBorrowNid());
+        }
+        if(StringUtils.isNotBlank(requestBean.getTenderUserName())){
+            paraMap.put("tenderUserName", requestBean.getTenderUserName());
+        }
         if(StringUtils.isNotBlank(requestBean.getAssignOrderId())){
             paraMap.put("assignOrderId",requestBean.getAssignOrderId());
         }
@@ -217,7 +222,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         for(BorrowRepayInfoCurrentExportCustomizeVO repayInfo : resultList){
             if(repayInfo.getRecordType().equals("3") || repayInfo.getRecordType().equals("4")){
                 BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户还款管理费
-                BigDecimal assignCapital = new BigDecimal(repayInfo.getRecoverCapital());
+                BigDecimal assignCapital = new BigDecimal(repayInfo.getRecoverCapitalPeriod());
                 BigDecimal feeRate = repayInfo.getFeeRate();
                 BigDecimal differentialRate = repayInfo.getDifferentialRate();
                 BigDecimal borrowAccount = new BigDecimal(repayInfo.getBorrowAccount());

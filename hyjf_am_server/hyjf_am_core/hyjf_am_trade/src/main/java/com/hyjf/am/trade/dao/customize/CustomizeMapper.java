@@ -1,9 +1,7 @@
 package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.EvaluationConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhAssetRiskInfoMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
@@ -280,4 +278,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected WjtProjectListCustomizeMapper wjtProjectListCustomizeMapper;
+
+	@Autowired
+	protected CertClaimMapper certClaimMapper;
 }

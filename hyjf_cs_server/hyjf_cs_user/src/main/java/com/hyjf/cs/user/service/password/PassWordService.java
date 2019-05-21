@@ -184,4 +184,10 @@ public interface PassWordService extends BaseUserService {
      * @return
      */
     Map<String,Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type,String verifyValue);
+
+    /**
+     * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     * @param userId
+     */
+    void unlockUser(Integer userId);
 }

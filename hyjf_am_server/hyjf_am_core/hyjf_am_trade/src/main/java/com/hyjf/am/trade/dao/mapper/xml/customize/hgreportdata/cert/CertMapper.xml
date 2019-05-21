@@ -55,10 +55,79 @@
 			hru.role_id role_id,
 			hal.*
 		FROM
-			ht_account_list hal
-		INNER JOIN ht_r_user hru ON hal.user_id = hru.user_id
-		WHERE hal.id<![CDATA[>=]]>#{minId} AND hal.id<![CDATA[<=]]>#{maxId}
+        ht_account_list hal
+        LEFT JOIN ht_r_user hru ON hal.user_id = hru.user_id
+        WHERE hal.id<![CDATA[>=]]>#{minId} AND hal.id<![CDATA[<=]]>#{maxId}
+    </select>
+
+
+    <select id="getCertAccountListCustomizeVO" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+        "1" role_id,
+        hal.*
+        FROM
+        ht_borrow hb
+        INNER JOIN ht_account_list hal ON hb.borrow_nid = hal.remark
+        WHERE
+        hb.`status` IN (2, 3, 4, 7)
+        AND hal.id <![CDATA[<=]]> #{maxId}
+        <if test="trade == 'tenderRecoverYes'">
+            AND (
+            hal.trade = "tender_recover_yes"
+            OR hal.trade = "hjh_repay_balance"
+            OR hal.trade = "hjh_repay_frost"
+            )
+        </if>
+        <if test="trade == 'creditTenderRecoverYes'">
+            AND (
+            hal.trade = "credit_tender_recover_yes"
+            OR hal.trade = "credit_tender_recover_forst"
+            )
+        </if>
+        <if test="trade == 'hjh_tender_success'">
+            AND  hal.trade = "hjh_tender_success"
+        </if>
+        <if test="trade == 'tender_success'">
+            AND  hal.trade = "tender_success"
+        </if>
+
+        LIMIT #{limitStart} , #{limitEnd}
 	</select>
+
+
+    <select id="getCertAccountListCustomizeVOByCreditassign" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+        hru.role_id role_id,
+        hal.*
+        FROM
+        ht_borrow hb
+        INNER JOIN ht_credit_tender hct ON hb.borrow_nid=hct.bid_nid
+        INNER JOIN ht_account_list hal ON hct.assign_nid = hal.nid
+        LEFT JOIN ht_r_user hru ON hal.user_id = hru.user_id
+        WHERE
+        hb.`status` IN (2, 3, 4, 7)
+        AND hal.id <![CDATA[<=]]> #{maxId}
+        AND  hal.trade = "creditassign"
+        LIMIT #{limitStart} , #{limitEnd}
+    </select>
+    <select id="getCertAccountListCustomizeVOByAccedeassign" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+            hru.role_id role_id,
+            hal.*
+        FROM
+            ht_borrow hb
+				INNER JOIN ht_hjh_debt_credit_tender hdct ON hb.borrow_nid=hdct.borrow_nid
+        INNER JOIN ht_account_list hal ON hdct.assign_order_id = hal.nid
+        LEFT JOIN ht_r_user hru ON hal.user_id = hru.user_id
+        WHERE
+            hb.`status` IN (2, 3, 4, 7)
+        AND hal.id <![CDATA[<=]]> #{maxId}
+        AND  hal.trade = "accede_assign"
+        LIMIT #{limitStart} , #{limitEnd}
+    </select>
 
 
     <resultMap id="queryCertAccountListIdMap" type="com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize" >

@@ -12,5 +12,5 @@ public interface BorrowRepayInfoCurrentService {
 
     BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean);
 
-    Integer getRepayInfoCurrentExportCount(String borrowNid);
+    Integer getRepayInfoCurrentExportCount(BorrowRepayInfoCurrentRequest requestBean);
 }

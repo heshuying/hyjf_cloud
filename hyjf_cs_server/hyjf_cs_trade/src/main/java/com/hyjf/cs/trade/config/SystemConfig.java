@@ -81,6 +81,15 @@ public class SystemConfig {
     @Value("${hyjf.notice.ios.version}")
     public String iosNoticeVersion;
 
+    @Value("${hyjf.notice.halt.status}")
+    public String haltStatus;
+
+//    @Value("${hyjf.notice.halt.timerange}")
+//    public String haltTimeRange;
+
+    @Value("${hyjf.notice.halt.requesturl}")
+    public String haltUrl;
+
     @Value("${hyjf.ftp.ip}")
     private String hyjfFtpIp;
 
@@ -967,6 +976,30 @@ public class SystemConfig {
 
     public void setCertWebYibu(String certWebYibu) {
         this.certWebYibu = certWebYibu;
+    }
+
+    public String getHaltStatus() {
+        return haltStatus;
+    }
+
+    public void setHaltStatus(String haltStatus) {
+        this.haltStatus = haltStatus;
+    }
+
+//    public String getHaltTimeRange() {
+//        return haltTimeRange;
+//    }
+//
+//    public void setHaltTimeRange(String haltTimeRange) {
+//        this.haltTimeRange = haltTimeRange;
+//    }
+
+    public String getHaltUrl() {
+        return haltUrl;
+    }
+
+    public void setHaltUrl(String haltUrl) {
+        this.haltUrl = haltUrl;
     }
 
     public String getPersonalWithdrawLimit() {
