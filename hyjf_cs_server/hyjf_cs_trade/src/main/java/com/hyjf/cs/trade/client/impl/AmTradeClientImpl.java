@@ -7342,7 +7342,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<CertClaimVO> selectCertBorrowByFlg(){
 //        String url = "http://AM-TRADE/am-trade/cert/selectCertBorrowByFlg/"+flg;
-        String url = urlBase+"cert/selectCertBorrowByFlg/";
+        String url = urlBase+"cert/selectCertBorrowByFlg";
         CertClaimResponse response = restTemplate.getForEntity(url,CertClaimResponse.class).getBody();
         if (Validator.isNotNull(response)&&Response.isSuccess(response)){
             return response.getResultList();
