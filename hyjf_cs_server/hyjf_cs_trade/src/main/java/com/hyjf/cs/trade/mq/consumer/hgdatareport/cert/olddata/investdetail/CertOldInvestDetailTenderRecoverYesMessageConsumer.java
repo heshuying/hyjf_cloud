@@ -88,6 +88,7 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
                 if(selectBorrowNidList.size()==10){
                     // --> 消息处理
                     List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"tenderRecoverYes");
+                    logger.info(logHeader + " accountLists.size()=" +accountLists.size());
                     if (accountLists.size()==0){
                         selectBorrowNidList=new ArrayList<String>();
                         continue;
