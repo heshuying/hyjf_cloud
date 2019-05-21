@@ -67,7 +67,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
-
 			}
 			if(list==null||list.size()==0){
 				return null;
@@ -192,6 +191,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
+        if(borrowAndInfoVO==null){
+            return;
+        }
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		if(usersInfo==null||usersInfo.getIdcard()==null){
 			return;
@@ -245,6 +247,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
+        if(borrowAndInfoVO==null){
+            return;
+        }
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		if(usersInfo==null||usersInfo.getIdcard()==null){
 			return;
@@ -315,6 +320,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
+        if(borrowAndInfoVO==null){
+            return;
+        }
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		if(usersInfo==null||usersInfo.getIdcard()==null){
 			return;
@@ -580,6 +588,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
+        if(borrowAndInfoVO==null){
+            return;
+        }
 		Map<String, Object> param = new HashMap<String, Object>();
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);

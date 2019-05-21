@@ -106,6 +106,12 @@ public class AdminSystemController extends BaseConfigController {
 			if (admin!=null){
 				Integer id = admin.getId();
 				AdminAndRole adminAndRole = adminRoleService.getRole(id);
+				// 是否禁用
+				if ("1".equals(adminSystem.getState())) {
+					asr.setMessage("该用户已禁用");
+					asr.setRtn(Response.ERROR);
+					return asr;
+				}
 				if (adminAndRole != null) {
 					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
 					if(role.getStatus()!=0) {

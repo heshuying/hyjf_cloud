@@ -142,6 +142,14 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
     private String account;
     /** 借款期限*/
     private Integer borrowPeriodInt;
+    /** 出借人用户属性（当前）*/
+    private String recoverUserAttributeNow;
+    /** 推荐人所属一级分部（当前）*/
+    private String referrerRegionNameNow;
+    /** 推荐人所属二级分部（当前）*/
+    private String referrerBranchNameNow;
+    /** 推荐人所属团队（当前）*/
+    private String referrerDepartmentNameNow;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -685,5 +693,37 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
 
     public void setBorrowPeriodInt(Integer borrowPeriodInt) {
         this.borrowPeriodInt = borrowPeriodInt;
+    }
+
+    public String getRecoverUserAttributeNow() {
+        return recoverUserAttributeNow;
+    }
+
+    public void setRecoverUserAttributeNow(String recoverUserAttributeNow) {
+        this.recoverUserAttributeNow = recoverUserAttributeNow;
+    }
+
+    public String getReferrerRegionNameNow() {
+        return referrerRegionNameNow;
+    }
+
+    public void setReferrerRegionNameNow(String referrerRegionNameNow) {
+        this.referrerRegionNameNow = referrerRegionNameNow;
+    }
+
+    public String getReferrerBranchNameNow() {
+        return referrerBranchNameNow;
+    }
+
+    public void setReferrerBranchNameNow(String referrerBranchNameNow) {
+        this.referrerBranchNameNow = referrerBranchNameNow;
+    }
+
+    public String getReferrerDepartmentNameNow() {
+        return referrerDepartmentNameNow;
+    }
+
+    public void setReferrerDepartmentNameNow(String referrerDepartmentNameNow) {
+        this.referrerDepartmentNameNow = referrerDepartmentNameNow;
     }
 }

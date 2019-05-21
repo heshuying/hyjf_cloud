@@ -47,6 +47,7 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        defaultMQPushConsumer.setConsumeTimeout(600);
         logger.info("====CertOldInvestDetailCreditTenderRecoverYesMessageConsumer start=====");
     }
 
@@ -69,7 +70,7 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         String tradeDate = jsonObject.getString("tradeDate");
 
         Integer page=1;
-        Integer size=1000;
+        Integer size=100;
         try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN"))){
                 // --> 消息处理
@@ -101,7 +102,7 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
                 page++;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("报错了",e);
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {
