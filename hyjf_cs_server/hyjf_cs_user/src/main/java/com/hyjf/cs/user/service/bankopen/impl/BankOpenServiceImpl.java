@@ -157,7 +157,17 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/15 17:20
      */
     @Override
-
+    @HystrixCommand(commandKey = "开户(三端)-getOpenAccountMV",fallbackMethod = "fallBackBankOpen",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean, String sign) {
         try {
         // 根据身份证号码获取性别
@@ -180,13 +190,11 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 成功页面
         String successPath = "/user/openSuccess";
         // 同步地址  是否跳转到前端页面
-        logger.info("openBean.getWjtClient():"+openBean.getWjtClient());
         String host = super.getFrontHost(systemConfig,openBean.getPlatform());
         if(StringUtils.isNotBlank(openBean.getWjtClient())){
             // 如果是温金投的  则跳转到温金投那边
             host = super.getWjtFrontHost(systemConfig,openBean.getWjtClient());
         }
-        logger.info("host:"+host);
         String retUrl = host+ errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
         String successUrl = host + successPath;
         // 如果是移动端  返回别的url
@@ -208,9 +216,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
 
-            logger.info("openAccoutBean:"+JSONObject.toJSONString(openAccoutBean));
             Map<String,Object> map = BankCallUtils.callApiMap(openAccoutBean);
-            logger.info("map:"+JSONObject.toJSONString(map));
             return map;
         } catch (Exception e) {
             logger.info("e:::::",e);

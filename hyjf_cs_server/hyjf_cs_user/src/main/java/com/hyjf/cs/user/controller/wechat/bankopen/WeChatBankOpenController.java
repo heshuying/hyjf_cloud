@@ -140,6 +140,7 @@ public class WeChatBankOpenController extends BaseUserController {
         // 开户角色
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         openBean.setWjtClient(wjtClient);
+        openBean.setPlatform(ClientConstants.WECHAT_CLIENT + "");
         // 组装调用江西银行的MV
         logger.info("组装调用江西银行的MV");
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);

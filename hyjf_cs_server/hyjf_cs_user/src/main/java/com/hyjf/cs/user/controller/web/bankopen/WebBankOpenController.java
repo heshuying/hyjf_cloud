@@ -129,6 +129,7 @@ public class WebBankOpenController extends BaseUserController {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+        openBean.setPlatform(ClientConstants.WEB_CLIENT + "");
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
