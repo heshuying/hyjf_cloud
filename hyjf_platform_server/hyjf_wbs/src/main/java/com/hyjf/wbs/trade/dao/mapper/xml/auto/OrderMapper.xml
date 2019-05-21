@@ -37,7 +37,10 @@
         br.user_id	AS assetCustomerId,
         1	AS assetId,
         ""	AS empNo,
-        2 AS productType,
+        CASE
+        WHEN LEFT ( br.borrow_nid, 3 ) = "NEW" THEN
+        4 ELSE 2
+        END AS productType,
         br.borrow_nid AS productNo,
         '散标' AS productName,
         br.recover_capital	AS transAmount,
@@ -45,7 +48,7 @@
         b.borrow_period	AS deadlineNum,
         CASE WHEN b.is_month=0 THEN 1
         WHEN b.is_month=1 THEN 2
-        END	AS DeadlineUnit,
+        END	AS deadlineUnit,
         ta.contract_number AS contractNumber
         FROM ht_borrow_recover br
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
@@ -82,13 +85,13 @@
         ""	AS empNo,
         3 AS productType,
         ha.plan_nid AS productNo,
-        '智投' AS productName,
+        hp.plan_name AS productName,
         ha.accede_account	AS transAmount,
         date_format(ha.create_time,'%Y-%m-%d %H:%i:%s') AS transTime,
         hp.lock_period	AS deadlineNum,
         CASE WHEN hp.is_month=0 THEN 1
         WHEN hp.is_month=1 THEN 2
-        END	AS DeadlineUnit,
+        END	AS deadlineUnit,
         ta.contract_number AS contractNumber
         FROM ht_hjh_accede ha
         LEFT JOIN ht_hjh_plan hp ON ha.plan_nid=hp.plan_nid
