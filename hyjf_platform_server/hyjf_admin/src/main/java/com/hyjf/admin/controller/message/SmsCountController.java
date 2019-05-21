@@ -65,8 +65,8 @@ public class SmsCountController extends BaseController {
         }
 
         if (request.getCurrPage() >0 && request.getPageSize() >0) {
-            smsCountCustomize.setLimitStart((request.getCurrPage() - 1) * (request.getPageSize()));
-            smsCountCustomize.setLimitEnd(request.getPageSize());
+            smsCountCustomize.setCurrPage(request.getCurrPage());
+            smsCountCustomize.setPageSize(request.getPageSize());
         }
 
         // 部门
