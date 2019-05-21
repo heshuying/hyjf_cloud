@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.hgreportdata.cert;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -252,4 +253,14 @@ public class CertController extends BaseController {
         }
         return response;
     }
+
+
+    @PostMapping("/getBorrowNidList")
+    public StringResponse getBorrowNidList() {
+        StringResponse response=new StringResponse();
+        List<String> borrowNidList=certService.getBorrowNidList();
+        response.setResultList(borrowNidList);
+        return response;
+    }
+
 }

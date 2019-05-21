@@ -55,4 +55,6 @@ public interface CertService extends BaseService {
      * @return
      */
     int updateCertBorrowStatusBatch (CertClaimUpdateVO update);
+
+    List<String> getBorrowNidList();
 }

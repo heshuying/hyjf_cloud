@@ -3021,6 +3021,8 @@ public interface AmTradeClient {
      */
     List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId);
 
+    List<String> getBorrowNidList();
+
     // 应急中心二期，历史数据上报 add by nxl end
 
 }

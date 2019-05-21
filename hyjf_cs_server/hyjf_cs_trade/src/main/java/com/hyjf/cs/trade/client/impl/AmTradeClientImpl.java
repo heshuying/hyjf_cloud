@@ -7390,5 +7390,15 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public List<String> getBorrowNidList() {
+        String url = "http://AM-TRADE/am-trade/cert/getBorrowNidList";
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
     // 应急中心二期，历史数据上报 add by nxl end
 }

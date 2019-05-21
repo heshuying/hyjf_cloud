@@ -109,8 +109,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<HjhDebtCreditRepay> getHjhDebtCreditRepayListByRequest(CertRequest certRequest) {
         HjhDebtCreditRepayExample example=new HjhDebtCreditRepayExample();
-        example.createCriteria().
-                andInvestOrderIdEqualTo(certRequest.getInvestOrderId()).
+        example.createCriteria().andSellOrderIdEqualTo(certRequest.getInvestOrderId()).
                 andBorrowNidEqualTo(certRequest.getBorrowNid()).
                 andAssignRepayPeriodEqualTo(certRequest.getPeriod());
         List<HjhDebtCreditRepay> hjhDebtCreditRepays=hjhDebtCreditRepayMapper.selectByExample(example);
@@ -170,6 +169,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         map.put("limitEnd", certRequest.getLimitEnd());
         map.put("trade",certRequest.getTrade());
         map.put("maxId", certRequest.getMaxId());
+        map.put("borrowNidList",certRequest.getBorrowNidList());
         if("creditassign".equals(trade)){
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditassign(map);
             return accountLists;
@@ -177,6 +177,18 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         if("accede_assign".equals(trade)){
             logger.info("map:" + JSONObject.toJSONString(map));
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByAccedeassign(map);
+            logger.info("accountLists.size():" + accountLists.size());
+            return accountLists;
+        }
+        if("tenderRecoverYes".equals(trade)){
+            logger.info("map:" + JSONObject.toJSONString(map));
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByTenderRecoverYes(map);
+            logger.info("accountLists.size():" + accountLists.size());
+            return accountLists;
+        }
+        if("creditTenderRecoverYes".equals(trade)){
+            logger.info("map:" + JSONObject.toJSONString(map));
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditTenderRecoverYes(map);
             logger.info("accountLists.size():" + accountLists.size());
             return accountLists;
         }
@@ -217,5 +229,10 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         CertClaim certBorrow = new CertClaim();
         BeanUtils.copyProperties(update.getCertClaim(),certBorrow);
         return certClaimMapper.updateByExampleSelective(certBorrow,example);
+    }
+
+    @Override
+    public List<String> getBorrowNidList() {
+        return certMapper.getBorrowNidList();
     }
 }
