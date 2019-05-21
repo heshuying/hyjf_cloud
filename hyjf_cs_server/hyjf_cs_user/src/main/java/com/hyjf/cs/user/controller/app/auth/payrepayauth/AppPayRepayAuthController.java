@@ -18,6 +18,7 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -91,9 +92,9 @@ public class AppPayRepayAuthController extends BaseUserController {
         String errorPath = "/user/setting/repayauth/result/failed?logOrdId="+orderId+"&authType=payRepayAuth&platform="+platform+"";
         //同步地址
         //String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH+"&platform="+platform;
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath;
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig, platform)+errorPath;
 
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH+"&platform="+platform;
+        String successUrl = BankCommonUtil.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH+"&platform="+platform;
         //异步地址
         String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
@@ -114,7 +115,7 @@ public class AppPayRepayAuthController extends BaseUserController {
         authBean.setPlatform(platform);
         authBean.setAuthType(AuthBean.AUTH_TYPE_PAY_REPAY_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_APP);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
+        authBean.setForgotPwdUrl(BankCommonUtil.getForgotPwdUrl(platform, request.getParameter("sign"), systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(StringUtil.valueOf(usersInfo.getRoleId()));

@@ -20,6 +20,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -202,13 +203,13 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         // 成功页面
         String successPath = "/user/bindCardSuccess?bind=false&unbind=true&msg=解绑银行卡成功!";
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + errorPath;
-        String successUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig, bean.getPlatform()) + errorPath;
+        String successUrl = BankCommonUtil.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
         // 同步地址  是否跳转到前端页面
-        String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
         if(StringUtils.isNotBlank(wjtClient)){
             // 如果是温金投的  则跳转到温金投那边
-            host = super.getWjtFrontHost(systemConfig,wjtClient);
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
         }
         if (!channel.contains(BankCallConstant.CHANNEL_PC)) {
             //返回路径
@@ -222,10 +223,10 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         }
 
         // 忘记密码跳转链接
-        String forgetPassworedUrl = getForgotPwdUrl(channel, request, systemConfig);
+        String forgetPassworedUrl = BankCommonUtil.getForgotPwdUrl(channel, sign, systemConfig);
         if(StringUtils.isNotBlank(wjtClient)){
             // 如果是温金投的  则跳转到温金投那边
-            forgetPassworedUrl = getWjtForgotPwdUrl(wjtClient, systemConfig);
+            forgetPassworedUrl = BankCommonUtil.getWjtForgotPwdUrl(wjtClient, sign,systemConfig);
         }
         bindCardBean.setForgotPwdUrl(forgetPassworedUrl);
         bindCardBean.setRetUrl(retUrl);
@@ -339,39 +340,6 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         return ret;
     }
 
-    public String getForgotPwdUrl(String platform, HttpServletRequest request, SystemConfig sysConfig) {
-
-        Integer client = Integer.parseInt(platform);
-        if (ClientConstants.WEB_CLIENT == client) {
-            String token = request.getHeader("token");
-            return sysConfig.getFrontHost() + "/user/setTradePassword";
-        }
-        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
-            String sign = request.getParameter("sign");
-            return sysConfig.getAppFrontHost() + "/public/formsubmit?sign=" + sign + "&requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD;
-        }
-        if (ClientConstants.WECHAT_CLIENT == client) {
-            String sign = request.getParameter("sign");
-            return sysConfig.getWeiFrontHost() + "/submitForm?queryType=6";
-        }
-        return "";
-    }
-
-    /**
-     * 获取温金投前端的地址
-     * @param sysConfig
-     * @param platform
-     * @return
-     */
-    public String getWjtForgotPwdUrl(String platform, SystemConfig sysConfig) {
-        Integer client = Integer.parseInt(platform);
-        if (ClientConstants.WJT_PC_CLIENT == client) {
-            return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
-        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
-            return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
-        }
-        return "";
-    }
 }
 
 	

@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
@@ -27,6 +28,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -228,10 +230,10 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         // 页面调用必须传的
         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
 		// 同步地址  是否跳转到前端页面
-		String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+		String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
 		if(StringUtils.isNotBlank(wjtClient)){
 			// 如果是温金投的  则跳转到温金投那边
-			host = super.getWjtFrontHost(systemConfig,wjtClient);
+			host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
 		}
         // 回调路径
         String retUrl = host + "/user/bindCardError?logOrdId=" + orderId + "&bind=true&unbind=false&msg=";
@@ -239,8 +241,12 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         String successfulUrl = host + "/user/bindCardSuccess?bind=true&unbind=false&msg=";
 		// 商户后台应答地址(必须)
 		String notifyUrl = "http://CS-USER/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
-        // 忘记密码跳转链接
-        String forgotPwdUrl = host+systemConfig.getForgetpassword();
+		// 忘记密码跳转链接
+		String forgotPwdUrl = BankCommonUtil.getForgotPwdUrl(CommonConstant.CLIENT_PC, null, systemConfig);
+		if(StringUtils.isNotBlank(wjtClient)){
+			// 如果是温金投的  则跳转到温金投那边
+			forgotPwdUrl = BankCommonUtil.getWjtForgotPwdUrl(wjtClient, null, systemConfig);
+		}
 		UserInfoVO userInfoVO = amUserClient.findUserInfoById(user.getUserId());
 		BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(user.getUserId());
 
@@ -339,7 +345,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		// 异步调用路
 		String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行
-		String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getAppForgetpassword();
+		String forgetPassworedUrl = BankCommonUtil.getForgotPwdUrl(platform, sign, systemConfig);
 
 		bindCardBean.setRetUrl(retUrl);
 		bindCardBean.setSuccessfulUrl(successUrl);

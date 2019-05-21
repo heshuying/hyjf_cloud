@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
@@ -18,12 +19,14 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.vo.AuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +68,8 @@ public class WeChatPayRepayAuthController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "二合一授权(缴费授权、还款授权)", notes = "二合一授权(缴费授权、还款授权)")
     @GetMapping(value = PAY_REPAY_AUTH, produces = "application/json; charset=utf-8")
-    public  WebResult<Object> auth(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+    public  WebResult<Object> auth(@RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                   @RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         logger.info("缴费、还款二合一授权开始", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
         WebResult<Object> result = new WebResult<>();
         // 验证请求参数
@@ -75,15 +79,28 @@ public class WeChatPayRepayAuthController extends BaseUserController {
         checkUserMessage(user);
 
         // 拼装参数 调用江西银行
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
         // 失败页面
         String errorPath = "/user/setting/repayauth/result/failed";
         // 成功页面
         String successPath = "/user/setting/repayauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
+        String retUrl = host + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
+        String successUrl = host+ successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
         String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
+
+        // 忘记密码跳转链接
+        String forgotPwdUrl = BankCommonUtil.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, null, systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = BankCommonUtil.getWjtForgotPwdUrl(wjtClient, null, systemConfig);
+        }
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
@@ -100,7 +117,7 @@ public class WeChatPayRepayAuthController extends BaseUserController {
         authBean.setPlatform(CustomConstants.CLIENT_WECHAT);
         authBean.setAuthType(AuthBean.AUTH_TYPE_PAY_REPAY_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_WEI);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_WECHAT,request,systemConfig));
+        authBean.setForgotPwdUrl(forgotPwdUrl);
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(String.valueOf(usersInfo.getRoleId()));
