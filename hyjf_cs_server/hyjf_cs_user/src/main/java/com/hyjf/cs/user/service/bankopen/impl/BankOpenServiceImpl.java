@@ -194,6 +194,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 如果是温金投的  则跳转到温金投那边
             host = super.getWjtFrontHost(systemConfig,openBean.getWjtClient());
         }
+        logger.info("host:"+host);
         String retUrl = host+ errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
         String successUrl = host + successPath;
         // 如果是移动端  返回别的url
@@ -215,7 +216,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
         try {
+            logger.info("openAccoutBean:"+JSONObject.toJSONString(openAccoutBean));
             Map<String,Object> map = BankCallUtils.callApiMap(openAccoutBean);
+            logger.info("map:"+JSONObject.toJSONString(map));
             return map;
         } catch (Exception e) {
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
