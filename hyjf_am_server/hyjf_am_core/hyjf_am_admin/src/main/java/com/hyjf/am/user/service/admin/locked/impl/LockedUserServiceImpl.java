@@ -119,16 +119,21 @@ public class LockedUserServiceImpl implements LockedUserService {
 		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
 		//3.redis配置的超限有效时间
 		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + userName);
-		//判断密码错误次数是否超限
-		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
-//			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
-			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
-		}
 		//查询到的密码
 		String passwordDb = admin.getPassword();
 		// 页面传来的密码
 		String password = MD5.toMD5Code(loginPassword);
-		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		logger.info("userName:[{}],passwordDB:[{}],password:[{}],相等:[{}]",userName,passwordDb,password,password.equals(passwordDb));
+        // 是否禁用
+        if (admin.getState() .equals("1") ) {
+            r.put("info","该用户已被禁用");
+            return  r;
+        }
+		//判断密码错误次数是否超限
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
+			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+			return r;
+		}
 		if (!password.equals(passwordDb)) {
 			long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ userName);//以用户手机号为key
 			for (int i=1;i<4;i++){
@@ -162,7 +167,11 @@ public class LockedUserServiceImpl implements LockedUserService {
 		long retValue  = RedisUtils.incr(key);
 //		RedisUtils.expire(key,RedisUtils.getRemainMiao());//给key设置过期时间
 		Integer	loginErrorConfigManager=LockedConfigManager.getInstance().getAdminConfig().getLockLong();
-		RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+        //.获取用户允许输入的最大错误次数
+        Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
+        if(retValue<=maxLoginErrorNum){
+            RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+        }
 		return retValue;
 	}
 }
