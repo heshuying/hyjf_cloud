@@ -79,7 +79,7 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         try {
             for(String borrowNid:borrowNidList) {
                 selectBorrowNidList.add(borrowNid);
-                if(selectBorrowNidList.size()==10){
+                if(selectBorrowNidList.size()==100){
                     // --> 消息处理
                     List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"creditTenderRecoverYes");
 
