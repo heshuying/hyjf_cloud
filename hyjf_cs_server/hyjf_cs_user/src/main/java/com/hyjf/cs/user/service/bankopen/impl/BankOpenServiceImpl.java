@@ -157,18 +157,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/15 17:20
      */
     @Override
-    @HystrixCommand(commandKey = "开户(三端)-getOpenAccountMV",fallbackMethod = "fallBackBankOpen",ignoreExceptions = CheckException.class,commandProperties = {
-            //设置断路器生效
-            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
-            //一个统计窗口内熔断触发的最小个数3/10s
-            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
-            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
-            //熔断5秒后去尝试请求
-            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
-            //失败率达到30百分比后熔断
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
+
     public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean, String sign) {
+        try {
         // 根据身份证号码获取性别
         String gender = "F";
         String idType = BankCallConstant.ID_TYPE_IDCARD;
@@ -216,12 +207,13 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
-        try {
+
             logger.info("openAccoutBean:"+JSONObject.toJSONString(openAccoutBean));
             Map<String,Object> map = BankCallUtils.callApiMap(openAccoutBean);
             logger.info("map:"+JSONObject.toJSONString(map));
             return map;
         } catch (Exception e) {
+            logger.info("e:::::",e);
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }
     }
