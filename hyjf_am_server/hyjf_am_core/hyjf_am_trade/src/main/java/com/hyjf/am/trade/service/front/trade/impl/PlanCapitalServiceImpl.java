@@ -480,11 +480,21 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         // 放款时间
                         Integer loanTime = hjhDebtDetail.getLoanTime();
 
-                        try {
-                            // 当前期计息天数  =  放款日期到还款日 + 1 天
-                            duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
-                        } catch (ParseException e) {
-                            logger.error(e.getMessage());
+                        // 当前期计息天数 =  放款日期到还款日 + 1 天
+                        //  分成按月跟按天
+                        if(CustomConstants.BORROW_STYLE_ENDDAY.equals(hjhDebtDetail.getBorrowStyle())) {
+                            try {
+                                duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                            } catch (ParseException e) {
+                                logger.error(e.getMessage());
+                            }
+                        }else{
+                            // 按月计息
+                            try {
+                                duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime));
+                            } catch (ParseException e) {
+                                logger.error(e.getMessage());
+                            }
                         }
 
                         try {
@@ -613,13 +623,13 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             Integer liquidationBeforeTime = liquidationShouldTime - 60 * 60 * 24;
                             // 持有时间是放款时间至清算日前一天
                             try {
-                                holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(hjhDebtDetailCur.getLoanTime()), GetDate.timestamptoStrYYYYMMDD(liquidationBeforeTime)) + 1;
+                                holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(hjhDebtDetailCur.getLoanTime()), GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime)) ;
                             } catch (ParseException e) {
                                 logger.error(e.getMessage());
                             }
                             // 当前期计息天数
                             try {
-                                duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                                duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime));
                             } catch (ParseException e) {
                                 logger.error(e.getMessage());
                             }
@@ -633,7 +643,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             Integer repayPreTime = Integer.valueOf(borrowRecoverPlan.getRecoverTime()) + 60 * 60 * 24;
                             // 持有期是上一期应还时间的后一天至当清算日前一天
                             try {
-                                holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(repayPreTime), GetDate.timestamptoStrYYYYMMDD(liquidationBeforeTime)) + 1;
+                                holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(repayPreTime), GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime));
                             } catch (ParseException e) {
                                 logger.error(e.getMessage());
                             }
@@ -642,7 +652,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             }
                             // 当前期计息天数
                             try {
-                                duringDays = GetDate.daysBetween(repayPreTime, repayTime) + 1;
+                                duringDays = GetDate.daysBetween(repayPreTime, repayTime);
                             } catch (ParseException e) {
                                 logger.error(e.getMessage());
                             }
@@ -652,7 +662,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         if (borrowRepayPlan != null) {
                             // 剩余期限 当前日期 到 最后一期还款日
                             try {
-                                remainDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime), GetDate.timestamptoStrYYYYMMDD(borrowRepayPlan.getRepayTime())) + 1;
+                                remainDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime), GetDate.timestamptoStrYYYYMMDD(borrowRepayPlan.getRepayTime()));
                             } catch (ParseException e) {
                                 logger.error(e.getMessage());
                             }
@@ -743,7 +753,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                         Integer currentPeriodLoanTime = currentPeriodDebtDetail.getLoanTime();
                                         // 当前期计息期间 = 放款时间 到 应还款时间
                                         try {
-                                            currentPeriodDuringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(currentPeriodLoanTime), GetDate.timestamptoStrYYYYMMDD(repayTimeDebtDetail)) + 1;
+                                            currentPeriodDuringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(currentPeriodLoanTime), GetDate.timestamptoStrYYYYMMDD(repayTimeDebtDetail));
                                         } catch (ParseException e) {
                                             logger.error(e.getMessage());
                                         }
@@ -752,10 +762,10 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                         // 查询上一期还款的债权详情
                                         BorrowRecoverPlan borrowRecoverPlan = this.selectLastPeriodRecoverPlan(currentPeriodDebtDetail.getBorrowNid(), currentPeriodDebtDetail.getInvestOrderId(), currentPeriodDebtDetail.getRepayPeriod() - 1);
                                         // 还款日后一天
-                                        Integer repayPreTime = Integer.valueOf(borrowRecoverPlan.getRecoverTime()) + 60 * 60 * 24;
+                                        Integer repayPreTime =borrowRecoverPlan.getRecoverTime();
                                         // 当前期计息期间 = 上一期应还时间 到 应还款时间
                                         try {
-                                            currentPeriodDuringDays = GetDate.daysBetween(repayPreTime, repayTimeDebtDetail) + 1;
+                                            currentPeriodDuringDays = GetDate.daysBetween(repayPreTime, repayTimeDebtDetail);
                                         } catch (ParseException e) {
                                             logger.error(e.getMessage());
                                         }
@@ -838,13 +848,13 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             if (lastTermDebtDetail.getRepayPeriod() == 1) {
                                 // 如果第一期尚未还款
                                 try {
-                                    holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(lastTermDebtDetail.getLoanTime()), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                                    holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(lastTermDebtDetail.getLoanTime()), GetDate.timestamptoStrYYYYMMDD(repayTime));
                                 } catch (ParseException e) {
                                     logger.error(e.getMessage());
                                 }
                                 // 当前期计息天数
                                 try {
-                                    duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                                    duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(loanTime), GetDate.timestamptoStrYYYYMMDD(repayTime));
                                 } catch (ParseException e) {
                                     logger.error(e.getMessage());
                                 }
@@ -853,10 +863,10 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                 // 查询上一期还款的债权详情
                                 BorrowRecoverPlan borrowRecoverPlan = this.selectLastPeriodRecoverPlan(lastTermDebtDetail.getBorrowNid(), lastTermDebtDetail.getInvestOrderId(), lastTermDebtDetail.getRepayPeriod() - 1);
                                 // 还款日后一天
-                                Integer repayPreTime = Integer.valueOf(borrowRecoverPlan.getRecoverTime()) + 60 * 60 * 24;
+                                Integer repayPreTime = borrowRecoverPlan.getRecoverTime();
                                 // 持有期是上一期应还时间的后一天至当清算日前一天
                                 try {
-                                    holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(repayPreTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                                    holdDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(repayPreTime), GetDate.timestamptoStrYYYYMMDD(repayTime));
                                 } catch (ParseException e) {
                                     logger.error(e.getMessage());
                                 }
@@ -865,7 +875,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                 }
                                 // 当前期计息天数
                                 try {
-                                    duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(repayPreTime), GetDate.timestamptoStrYYYYMMDD(repayTime)) + 1;
+                                    duringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(repayPreTime), GetDate.timestamptoStrYYYYMMDD(repayTime));
                                 } catch (ParseException e) {
                                     logger.error(e.getMessage());
                                 }
@@ -875,7 +885,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             if (borrowRepayPlan != null) {
                                 // 剩余期限 当前日期 到 最后一期还款日
                                 try {
-                                    remainDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime), GetDate.timestamptoStrYYYYMMDD(borrowRepayPlan.getRepayTime())) + 1;
+                                    remainDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime), GetDate.timestamptoStrYYYYMMDD(borrowRepayPlan.getRepayTime())) ;
                                 } catch (ParseException e) {
                                     logger.error(e.getMessage());
                                 }
@@ -948,7 +958,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                         // 应还时间到清算日天数
                                         int currentPeriodAdvanceDays = 0;
                                         try {
-                                            currentPeriodAdvanceDays = GetDate.daysBetween(repayTimeDebtDetail, liquidationShouldTime);
+                                            currentPeriodAdvanceDays = GetDate.daysBetween(liquidationShouldTime, repayTimeDebtDetail);
                                         } catch (ParseException e) {
                                             logger.error(e.getMessage());
                                         }
@@ -962,7 +972,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                             Integer currentPeriodLoanTime = currentPeriodDebtDetail.getLoanTime();
                                             // 当前期计息期间 = 放款时间 到 应还款时间
                                             try {
-                                                currentPeriodDuringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(currentPeriodLoanTime), GetDate.timestamptoStrYYYYMMDD(repayTimeDebtDetail)) + 1;
+                                                currentPeriodDuringDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(currentPeriodLoanTime), GetDate.timestamptoStrYYYYMMDD(repayTimeDebtDetail));
                                             } catch (ParseException e) {
                                                 logger.error(e.getMessage());
                                             }
@@ -971,10 +981,10 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                             // 查询上一期还款的债权详情
                                             BorrowRecoverPlan borrowRecoverPlan = this.selectLastPeriodRecoverPlan(currentPeriodDebtDetail.getBorrowNid(), currentPeriodDebtDetail.getInvestOrderId(), currentPeriodDebtDetail.getRepayPeriod() - 1);
                                             // 还款日后一天
-                                            Integer repayPreTime = Integer.valueOf(borrowRecoverPlan.getRecoverTime()) + 60 * 60 * 24;
+                                            Integer repayPreTime = borrowRecoverPlan.getRecoverTime();
                                             // 当前期计息期间 = 上一期应还时间 到 应还款时间
                                             try {
-                                                currentPeriodDuringDays = GetDate.daysBetween(repayPreTime, repayTimeDebtDetail) + 1;
+                                                currentPeriodDuringDays = GetDate.daysBetween(repayPreTime, repayTimeDebtDetail);
                                             } catch (ParseException e) {
                                                 logger.error(e.getMessage());
                                             }
