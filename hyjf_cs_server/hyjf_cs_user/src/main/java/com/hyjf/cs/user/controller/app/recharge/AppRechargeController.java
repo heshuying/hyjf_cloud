@@ -281,6 +281,9 @@ public class AppRechargeController extends BaseUserController {
                                         (BigDecimal.ZERO.compareTo(monthLimitAmount)==0)?"":"单月 " + monthLimitAmount.toString() + "万元");
 
                                 result.setMoneyInfo(moneyInfo);
+                                // 添加应用市场链接  update by wgx 2019/05/21
+                                result.setAndroidMarket(jxBankConfigVO.getAndroidMarket());
+                                result.setIosMarket(jxBankConfigVO.getIosMarket());
                             }
                         }
                     } else {
