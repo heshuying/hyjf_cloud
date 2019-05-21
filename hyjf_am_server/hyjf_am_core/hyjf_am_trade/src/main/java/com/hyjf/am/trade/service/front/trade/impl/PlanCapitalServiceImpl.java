@@ -282,10 +282,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         vo.setPlanNid(assignT3.getPlanNid());
                         vo.setCreditAccount(assignT3.getRepayCapitalWait().add(assignT3.getRepayInterestWait()));
                         list.add(vo);
-                        continue;
                     }
                 }
-
                 // 新的债权信息
                 HjhDebtCredit hjhDebtCredit = new HjhDebtCredit();
                 // 出让人用户ID
@@ -324,10 +322,17 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 hjhDebtCredit.setIsLiquidates(0);
                 // 是否原始债权 0非原始 1原始
                 hjhDebtCredit.setSourceType(hjhDebtDetail.getSourceType());
-
+                // T日年月日获取0时时间戳
+                Integer dateStamp = GetDate.getDayStart11(date);
                 // 不分期项目
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(hjhDebtDetail.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(hjhDebtDetail.getBorrowStyle())) {
-
+                    // 若标的到期时间（分期标的的最后一期）>T日继续计算债权在T日的预计债权价值
+                    // repay表下期还款时间>T日继续下面计算否则处理下一条数据
+                    BorrowRepay borrowRepay = this.getBorrowRepay(borrowNid);
+                    Integer repayTimeStamp = GetDate.getDayStart11(GetDate.getDate(borrowRepay.getRepayTime()));
+                    if(repayTimeStamp <= dateStamp) {
+                        continue;
+                    }
                     // 查询当前所处的计息期数的债权信息
                     // 应还日期>= 当前日期 未还款的债权
                     // 日期需要修改
@@ -600,6 +605,12 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         list.add(vo);
                     }
                 } else {
+                    // repayplan表最后一期还款时间>T日继续下面计算否则处理下一条数据
+                    BorrowRepayPlan repayPlan = this.getLastPeriodBorrowRepayPlan(borrowNid,borrow.getBorrowPeriod());
+                    Integer repayTimeStamp = GetDate.getDayStart11(GetDate.getDate(repayPlan.getRepayTime()));
+                    if(repayTimeStamp <= dateStamp) {
+                        continue;
+                    }
                     // 分期项目
                     // 查询当前所处的计息期数的债权信息
                     // 应还日期 >= 当前日期 未还款的债权
