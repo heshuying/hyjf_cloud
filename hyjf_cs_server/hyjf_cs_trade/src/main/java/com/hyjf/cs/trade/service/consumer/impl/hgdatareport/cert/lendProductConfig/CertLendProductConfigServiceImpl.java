@@ -92,20 +92,6 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                         json = putParam(sourceFinancingcode, finClaimID, idCardHash, json, false, null);
                     }
                 }
-                //加入智投
-                //根据投资订单号查找标的投资详情信息
-                /*BorrowTenderVO borrowTenderVO = selectBorrowTenderByOrderId(orderId);
-                if (null == borrowTenderVO) {
-                    throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！出借订单号为:" + orderId);
-                }
-                //加入智投信息
-                HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
-                if (null == hjhAccedeVO) {
-                    throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + borrowTenderVO.getAccedeOrderId());
-                }
-                userId = hjhAccedeVO.getUserId();
-                sourceFinancingcode = hjhAccedeVO.getPlanNid();
-                finClaimID = borrowTenderVO.getNid();*/
             } else if (flag.equals("1")) {
                 //计划承接
                 logger.info(logHeader + "智投承接后推送数据，承接单号为：" + orderId);
@@ -253,7 +239,6 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,strDate);
                 }
             }
-
         }catch (Exception e) {
             logger.error(e.getMessage());
         }
