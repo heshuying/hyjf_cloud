@@ -81,7 +81,6 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
         Map<String, Object> param = new HashMap<String, Object>();
         try {
             HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
-            logger.info(logHeader+"根据计划编号:" + planNid+"获取的计划产品信息为："+JSONArray.toJSONString(hjhPlanVO));
             if (null == hjhPlanVO) {
                 throw new Exception("产品信息推送,获取计划信息为空！！计划编码:" + planNid);
             }
