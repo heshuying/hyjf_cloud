@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -77,7 +78,79 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
 
         Integer page=1;
         Integer size=100;
+
+        List<String> borrowNidList=certOldInvestDetailService.getBorrowNidList();
+        logger.info(logHeader + " borrowNidList.size()=" +borrowNidList.size());
+        List<String> selectBorrowNidList=new ArrayList<String>();
         try {
+            for(String borrowNid:borrowNidList) {
+                selectBorrowNidList.add(borrowNid);
+                if(selectBorrowNidList.size()==100){
+                    // --> 消息处理
+                    List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"tenderRecoverYes");
+
+                    if (accountLists.size()==0){
+                        selectBorrowNidList=new ArrayList<String>();
+                        continue;
+                    }
+                    // --> 调用service组装数据
+                    JSONArray data =certOldInvestDetailService.createDate(accountLists);
+                    if(data==null){
+                        selectBorrowNidList=new ArrayList<String>();
+                        continue;
+                    }
+                    // 上送数据
+                    CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_INVEST_DETAIL, thisMessName, data);
+                    try {
+                        // 掉单用
+                        if(tradeDate!=null&&!"".equals(tradeDate)){
+                            entity.setTradeDate(tradeDate);
+                        }
+                        certOldInvestDetailService.insertOldMessage(entity);
+                    } catch (Exception e) {
+                        selectBorrowNidList=new ArrayList<String>();
+                        continue;
+                    }
+                    logger.info(logHeader + " 处理成功。data.size()"+data.size());
+                    selectBorrowNidList=new ArrayList<String>();
+                }
+            }
+
+            if(selectBorrowNidList.size()>0){
+                // --> 消息处理
+                List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,selectBorrowNidList,"tenderRecoverYes");
+                if (accountLists.size()==0){
+                    RedisUtils.set("CREDIT_TENDER_RECOVER_YES_RUN","1");
+                    return;
+                }
+                // --> 调用service组装数据
+                JSONArray data =certOldInvestDetailService.createDate(accountLists);
+                if(data==null){
+                    RedisUtils.set("CREDIT_TENDER_RECOVER_YES_RUN","1");
+                    return;
+                }
+                // 上送数据
+                CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_INVEST_DETAIL, thisMessName, data);
+                try {
+                    // 掉单用
+                    if(tradeDate!=null&&!"".equals(tradeDate)){
+                        entity.setTradeDate(tradeDate);
+                    }
+                    certOldInvestDetailService.insertOldMessage(entity);
+                } catch (Exception e) {
+                    throw e;
+                }
+                logger.info(logHeader + " 处理成功。data.size()"+data.size());
+            }
+        } catch (Exception e) {
+            logger.error("报错了",e);
+            // 错误时，以下日志必须出力（预警捕捉点）
+            logger.error(logHeader + " 处理失败！！" + msgBody, e);
+        } finally {
+            logger.info(logHeader + " 结束。");
+        }
+        RedisUtils.set("CREDIT_TENDER_RECOVER_YES_RUN","1");
+        /*try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_RECOVER_YES_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"tenderRecoverYes");
@@ -112,6 +185,6 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {
             logger.info(logHeader + " 结束。");
-        }
+        }*/
     }
 }

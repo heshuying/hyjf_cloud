@@ -26,4 +26,10 @@ public interface CertMapper {
     List<CertAccountListCustomize> getCertAccountListCustomizeVOByCreditassign(Map<String,Object> map);
 
     List<CertAccountListCustomize> getCertAccountListCustomizeVOByAccedeassign(Map<String,Object> map);
+
+    List<String> getBorrowNidList();
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVOByTenderRecoverYes(Map<String,Object> map);
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVOByCreditTenderRecoverYes(Map<String,Object> map);
 }
