@@ -3002,10 +3002,9 @@ public interface AmTradeClient {
     // 应急中心二期，历史数据上报 add by nxl start
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param flg
      * @return
      */
-    List<CertClaimVO> selectCertBorrowByFlg(String flg);
+    List<CertClaimVO> selectCertBorrowByFlg();
     List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
     /**
      * 批量更新

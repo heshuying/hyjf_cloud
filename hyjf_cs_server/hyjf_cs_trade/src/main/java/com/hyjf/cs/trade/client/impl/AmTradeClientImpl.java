@@ -7337,11 +7337,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     // 应急中心二期，历史数据上报 add by nxl start
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param flg
      * @return
      */
     @Override
-    public List<CertClaimVO> selectCertBorrowByFlg(String flg){
+    public List<CertClaimVO> selectCertBorrowByFlg(){
 //        String url = "http://AM-TRADE/am-trade/cert/selectCertBorrowByFlg/"+flg;
         String url = urlBase+"cert/selectCertBorrowByFlg/";
         CertClaimResponse response = restTemplate.getForEntity(url,CertClaimResponse.class).getBody();
