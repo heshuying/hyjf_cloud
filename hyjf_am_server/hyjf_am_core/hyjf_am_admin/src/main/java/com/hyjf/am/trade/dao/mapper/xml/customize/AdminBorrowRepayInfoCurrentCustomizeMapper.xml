@@ -182,7 +182,7 @@
           t.recoverFee,
           t.recoverStatus,
           t.repayMoneySource,
-          t.recoverAmountTotal + IFNULL(t.recoverFeeYesPeriod,0),
+          t.recoverAmountTotal + IFNULL(t.recoverFeeYesPeriod,0) AS recoverAmountTotal,
           t.recoverTime,
           t.repayActionTime,
           t.borrowStyle,
@@ -1179,34 +1179,36 @@
         )AS recoverCapitalWait,
         br.recover_interest_wait - (
         SELECT
-        IFNULL(SUM(ct1.assign_interest-ct1.assign_repay_interest), 0)
+        IFNULL(SUM(cr1.assign_interest), 0)
         FROM
-        ht_credit_tender ct1
+        ht_credit_repay cr1
         WHERE
-        ct1.credit_tender_nid = br.nid
+        cr1.credit_tender_nid = br.nid AND cr1.`status` != 1
         ) - (
         SELECT
-        IFNULL(SUM(ct1.assign_interest-ct1.repay_interest_yes), 0)
+        IFNULL(SUM(cr1.repay_interest), 0)
         FROM
-        ht_hjh_debt_credit_tender ct1
+        ht_hjh_debt_credit_repay cr1
         WHERE
-        ct1.invest_order_id = br.nid AND ct1.del_flag = 0
-        )AS recoverInterestWait,
+        cr1.invest_order_id = br.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverInterestWait,
         br.recover_account_wait - (
         SELECT
-        IFNULL(SUM(ct1.assign_account-ct1.assign_repay_account), 0)
+        IFNULL(SUM(cr1.assign_account), 0)
         FROM
-        ht_credit_tender ct1
+        ht_credit_repay cr1
         WHERE
-        ct1.credit_tender_nid = br.nid
+        cr1.credit_tender_nid = br.nid AND cr1.`status` != 1
         ) - (
         SELECT
-        IFNULL(SUM(ct1.assign_account-ct1.repay_account_yes), 0)
+        IFNULL(SUM(cr1.repay_account), 0)
         FROM
-        ht_hjh_debt_credit_tender ct1
+        ht_hjh_debt_credit_repay cr1
         WHERE
-        ct1.invest_order_id = br.nid AND ct1.del_flag = 0
-        )AS recoverAccountWait,
+        cr1.invest_order_id = br.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverAccountWait,
         bry.repay_username AS repayUserName,
         IF (
         b.`status` != 8,
@@ -1495,34 +1497,36 @@
         )AS recoverCapitalWait,
         br.recover_interest_wait - (
         SELECT
-        IFNULL(SUM(ct1.assign_interest-ct1.assign_repay_interest), 0)
+        IFNULL(SUM(cr1.assign_interest), 0)
         FROM
-        ht_credit_tender ct1
+        ht_credit_repay cr1
         WHERE
-        ct1.credit_tender_nid = rp.nid
+        cr1.credit_tender_nid = rp.nid AND cr1.`status` != 1
         ) - (
         SELECT
-        IFNULL(SUM(ct1.assign_interest-ct1.repay_interest_yes), 0)
+        IFNULL(SUM(cr1.repay_interest), 0)
         FROM
-        ht_hjh_debt_credit_tender ct1
+        ht_hjh_debt_credit_repay cr1
         WHERE
-        ct1.invest_order_id = rp.nid AND ct1.del_flag = 0
-        )AS recoverInterestWait,
+        cr1.invest_order_id = rp.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverInterestWait,
         br.recover_account_wait - (
         SELECT
-        IFNULL(SUM(ct1.assign_account-ct1.assign_repay_account), 0)
+        IFNULL(SUM(cr1.assign_account), 0)
         FROM
-        ht_credit_tender ct1
+        ht_credit_repay cr1
         WHERE
-        ct1.credit_tender_nid = rp.nid
+        cr1.credit_tender_nid = rp.nid AND cr1.`status` != 1
         ) - (
         SELECT
-        IFNULL(SUM(ct1.assign_account-ct1.repay_account_yes), 0)
+        IFNULL(SUM(cr1.repay_account), 0)
         FROM
-        ht_hjh_debt_credit_tender ct1
+        ht_hjh_debt_credit_repay cr1
         WHERE
-        ct1.invest_order_id = rp.nid AND ct1.del_flag = 0
-        )AS recoverAccountWait,
+        cr1.invest_order_id = rp.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
@@ -1678,8 +1682,22 @@
         0
         ) AS recoverFeeYesPeriod,
         ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
-        ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
-        ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = cr.credit_tender_nid AND cr1.`status` != 1
+        ) AS recoverInterestWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = cr.credit_tender_nid AND cr1.`status` != 1
+        ) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
@@ -1845,8 +1863,24 @@
         0
         ) AS recoverFeeYesPeriod,
         hct.assign_capital - hct.repay_capital_yes AS recoverCapitalWait,
-        hct.assign_interest - hct.repay_interest_yes AS recoverInterestWait,
-        hct.assign_account - hct.repay_account_yes AS recoverAccountWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = cr.invest_order_id
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverInterestWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = cr.invest_order_id
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
