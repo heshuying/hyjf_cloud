@@ -30,18 +30,6 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
 
     BorrowTenderVO selectBorrowTenderByOrderId(String orderId);
 
-    /**
-     * 未还款的标的
-     * @return
-     */
-     List<CertClaimVO> getBorrowNoRepay();
-
-    /**
-     * 未完全转让的标的
-     * @return
-     */
-     List<CertClaimVO> getBorrowNoTransferred();
-
      List<CertClaimVO> getCertBorrowNoConfig();
     /**
      * 批量更新

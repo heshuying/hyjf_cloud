@@ -18,9 +18,11 @@ public interface CertOldInvestDetailService extends BaseHgCertReportService {
 
 	void insertOldMessage(CertReportEntityVO entity);
 
-	List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(Integer page, Integer size,String trader);
+	List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(Integer page, Integer size, List<String> selectBorrowNidList, String trader);
 
 	List<CertReportEntityVO> getNotSendAccountList();
 
 	void updateAccountSuccess(CertReportEntityVO accountList);
+
+    List<String> getBorrowNidList();
 }
