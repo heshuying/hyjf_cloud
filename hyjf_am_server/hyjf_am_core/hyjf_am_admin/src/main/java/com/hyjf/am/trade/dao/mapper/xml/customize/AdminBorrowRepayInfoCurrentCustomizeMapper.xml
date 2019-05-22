@@ -1869,7 +1869,7 @@
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = cr.invest_order_id
+        cr1.invest_order_id = hcr.invest_order_id
         AND cr1.del_flag = 0 AND cr1.repay_status != 1
         ) AS recoverInterestWait,
         (
@@ -1878,7 +1878,7 @@
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = cr.invest_order_id
+        cr1.invest_order_id = hcr.invest_order_id
         AND cr1.del_flag = 0 AND cr1.repay_status != 1
         ) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
