@@ -150,7 +150,7 @@
 		WHERE
 		order_id = #{orderId}
 		AND repay_time <![CDATA[<]]> UNIX_TIMESTAMP(#{dualDateT3})
-		AND repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(now())
+		AND repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(DATE_FORMAT(now(),'%Y-%m-%d'))
 		AND status = 1
 		AND repay_status = 0
 		ORDER BY
