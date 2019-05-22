@@ -213,7 +213,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param.put("transType", "2");
 		//交易金额
@@ -294,7 +294,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param.put("transType", "8");
 		//交易金额
@@ -312,7 +312,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+		param1.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
@@ -349,7 +349,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			capital=borrowRecovers.get(0).getRecoverCapitalYes();
 			BorrowRecoverVO borrowRecover=borrowRecovers.get(0);
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
-				//智投
+				/*//智投
 				CertRequest certRequest1=new CertRequest();
 				certRequest1.setInvestOrderId(borrowRecover.getNid());
 				certRequest1.setBorrowNid(borrowRecover.getBorrowNid());
@@ -358,7 +358,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
 					interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
 					capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-				}
+				}*/
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
@@ -382,7 +382,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			interest=borrowRecoverPlan.getRecoverInterestYes();
 			capital=borrowRecoverPlan.getRecoverCapitalYes();
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
-				//智投
+				/*//智投
 
 				CertRequest certRequest1=new CertRequest();
 				certRequest1.setInvestOrderId(borrowRecoverPlan.getNid());
@@ -392,7 +392,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
 					interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
 					capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-				}
+				}*/
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
@@ -418,7 +418,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param.put("transType", "8");
 		//交易金额
@@ -436,7 +436,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+		param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
