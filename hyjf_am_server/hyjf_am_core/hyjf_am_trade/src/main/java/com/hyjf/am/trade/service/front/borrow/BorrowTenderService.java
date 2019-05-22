@@ -175,4 +175,10 @@ public interface BorrowTenderService {
      * @return
      */
     List<UserTenderVO> getSumAnnualInvestAmountTop5(Date startDate, Date endDate);
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    List<BorrowTender> getBorrowTenderByAccede(String accedeOrderId);
 }
