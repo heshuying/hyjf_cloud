@@ -2556,6 +2556,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
+        // 获取app渠道
+        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
         // 开始调用原子层操作主表
         logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
@@ -2564,7 +2568,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 投资成功后往redis里面放一个值
             RedisUtils.set(RedisConstants.BORROW_TENDER_ORDER_CHECK+bean.getLogOrderId(),bean.getLogOrderId(),12 * 60 * 60);
 
-            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
+            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow,utmRegVO,appUtmRegVO);
             // 网站累计出借追加
             // 出借、收益统计表
             JSONObject params = new JSONObject();
@@ -2685,7 +2689,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
     }
 
-    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
+    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow ,UtmRegVO utmRegVO,AppUtmRegVO appUtmRegVO) {
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计出借
         // 出借人信息
@@ -2707,8 +2711,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("investProjectPeriod", investProjectPeriod);
         params.put("investFlag", checkAppUtmInvestFlag(userId));
-        // 获取PC 渠道
-        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+
         if (utmRegVO != null ){
             // PC渠道用户
             try {
@@ -2718,8 +2721,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.error("PC渠道统计用户累计出借推送消息队列失败！！！");
             }
         }
-        // 获取app渠道
-        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+
         if (appUtmRegVO != null){
             //压入消息队列
             try {
