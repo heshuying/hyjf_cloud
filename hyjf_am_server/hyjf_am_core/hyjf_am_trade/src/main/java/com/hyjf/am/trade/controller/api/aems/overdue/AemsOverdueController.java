@@ -33,6 +33,11 @@ public class AemsOverdueController {
     @Autowired
     private AemsOverdueService aemsOverdueService;
 
+
+    public static void main(String[] args) {
+        Integer t = GetDate.getDayStart10(GetDate.countDate(new Date(),5,-1));
+        System.out.println(t);
+    }
     /**
      * 查询当期还款是否逾期
      * @param params
@@ -42,6 +47,8 @@ public class AemsOverdueController {
     public AemsOverdueCustomizeResponse selectRepayOverdue(@RequestBody Map<String, Object> params) {
         Integer t = GetDate.getDayStart10(GetDate.getNowTime());
         params.put("repayTime",t);
+        params.put("repayTimeStart",GetDate.getDayStart10(GetDate.countDate(new Date(),5,-1)));
+
         logger.info("判断当期是否逾期请求参数为params:" + JSONObject.toJSONString(params));
         AemsOverdueCustomizeResponse response = new AemsOverdueCustomizeResponse();
         //查询borrowRepay表
