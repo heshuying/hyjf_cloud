@@ -209,7 +209,19 @@
 		AND repay_status = 0
 		AND status = 1
   </select>
-  
+
+  <select id="selectDebtDetailAfterDateNoRepay" resultMap="BaseResultMap" parameterType="String"  >
+		select
+		<include refid="Base_Column_List" />
+		FROM
+		ht_hjh_debt_detail
+		WHERE
+		order_id = #{orderId}
+		AND repay_status = 0
+		AND status = 1
+	  	AND repay_time >= UNIX_TIMESTAMP(#{dualDate}) + 24 * 60 * 60
+	</select>
+
   <update id="updateDetailDelFlagToOne">
 	  	UPDATE ht_hjh_debt_detail
 			SET del_flag = 1,
