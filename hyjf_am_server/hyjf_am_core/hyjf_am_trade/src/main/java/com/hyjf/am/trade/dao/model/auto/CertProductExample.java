@@ -3,7 +3,7 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CertClaimExample {
+public class CertProductExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -14,7 +14,7 @@ public class CertClaimExample {
 
     protected int limitEnd = -1;
 
-    public CertClaimExample() {
+    public CertProductExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -184,133 +184,73 @@ public class CertClaimExample {
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidIsNull() {
-            addCriterion("claim_nid is null");
+        public Criteria andProductNidIsNull() {
+            addCriterion("product_nid is null");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidIsNotNull() {
-            addCriterion("claim_nid is not null");
+        public Criteria andProductNidIsNotNull() {
+            addCriterion("product_nid is not null");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidEqualTo(String value) {
-            addCriterion("claim_nid =", value, "claimNid");
+        public Criteria andProductNidEqualTo(String value) {
+            addCriterion("product_nid =", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidNotEqualTo(String value) {
-            addCriterion("claim_nid <>", value, "claimNid");
+        public Criteria andProductNidNotEqualTo(String value) {
+            addCriterion("product_nid <>", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidGreaterThan(String value) {
-            addCriterion("claim_nid >", value, "claimNid");
+        public Criteria andProductNidGreaterThan(String value) {
+            addCriterion("product_nid >", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidGreaterThanOrEqualTo(String value) {
-            addCriterion("claim_nid >=", value, "claimNid");
+        public Criteria andProductNidGreaterThanOrEqualTo(String value) {
+            addCriterion("product_nid >=", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidLessThan(String value) {
-            addCriterion("claim_nid <", value, "claimNid");
+        public Criteria andProductNidLessThan(String value) {
+            addCriterion("product_nid <", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidLessThanOrEqualTo(String value) {
-            addCriterion("claim_nid <=", value, "claimNid");
+        public Criteria andProductNidLessThanOrEqualTo(String value) {
+            addCriterion("product_nid <=", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidLike(String value) {
-            addCriterion("claim_nid like", value, "claimNid");
+        public Criteria andProductNidLike(String value) {
+            addCriterion("product_nid like", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidNotLike(String value) {
-            addCriterion("claim_nid not like", value, "claimNid");
+        public Criteria andProductNidNotLike(String value) {
+            addCriterion("product_nid not like", value, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidIn(List<String> values) {
-            addCriterion("claim_nid in", values, "claimNid");
+        public Criteria andProductNidIn(List<String> values) {
+            addCriterion("product_nid in", values, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidNotIn(List<String> values) {
-            addCriterion("claim_nid not in", values, "claimNid");
+        public Criteria andProductNidNotIn(List<String> values) {
+            addCriterion("product_nid not in", values, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidBetween(String value1, String value2) {
-            addCriterion("claim_nid between", value1, value2, "claimNid");
+        public Criteria andProductNidBetween(String value1, String value2) {
+            addCriterion("product_nid between", value1, value2, "productNid");
             return (Criteria) this;
         }
 
-        public Criteria andClaimNidNotBetween(String value1, String value2) {
-            addCriterion("claim_nid not between", value1, value2, "claimNid");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgIsNull() {
-            addCriterion("credit_flg is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgIsNotNull() {
-            addCriterion("credit_flg is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgEqualTo(Integer value) {
-            addCriterion("credit_flg =", value, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgNotEqualTo(Integer value) {
-            addCriterion("credit_flg <>", value, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgGreaterThan(Integer value) {
-            addCriterion("credit_flg >", value, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgGreaterThanOrEqualTo(Integer value) {
-            addCriterion("credit_flg >=", value, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgLessThan(Integer value) {
-            addCriterion("credit_flg <", value, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgLessThanOrEqualTo(Integer value) {
-            addCriterion("credit_flg <=", value, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgIn(List<Integer> values) {
-            addCriterion("credit_flg in", values, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgNotIn(List<Integer> values) {
-            addCriterion("credit_flg not in", values, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgBetween(Integer value1, Integer value2) {
-            addCriterion("credit_flg between", value1, value2, "creditFlg");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreditFlgNotBetween(Integer value1, Integer value2) {
-            addCriterion("credit_flg not between", value1, value2, "creditFlg");
+        public Criteria andProductNidNotBetween(String value1, String value2) {
+            addCriterion("product_nid not between", value1, value2, "productNid");
             return (Criteria) this;
         }
 
@@ -374,63 +314,63 @@ public class CertClaimExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigIsNull() {
-            addCriterion("is_config is null");
+        public Criteria andIsProductIsNull() {
+            addCriterion("is_product is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigIsNotNull() {
-            addCriterion("is_config is not null");
+        public Criteria andIsProductIsNotNull() {
+            addCriterion("is_product is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigEqualTo(Integer value) {
-            addCriterion("is_config =", value, "isConfig");
+        public Criteria andIsProductEqualTo(Integer value) {
+            addCriterion("is_product =", value, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigNotEqualTo(Integer value) {
-            addCriterion("is_config <>", value, "isConfig");
+        public Criteria andIsProductNotEqualTo(Integer value) {
+            addCriterion("is_product <>", value, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigGreaterThan(Integer value) {
-            addCriterion("is_config >", value, "isConfig");
+        public Criteria andIsProductGreaterThan(Integer value) {
+            addCriterion("is_product >", value, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_config >=", value, "isConfig");
+        public Criteria andIsProductGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_product >=", value, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigLessThan(Integer value) {
-            addCriterion("is_config <", value, "isConfig");
+        public Criteria andIsProductLessThan(Integer value) {
+            addCriterion("is_product <", value, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigLessThanOrEqualTo(Integer value) {
-            addCriterion("is_config <=", value, "isConfig");
+        public Criteria andIsProductLessThanOrEqualTo(Integer value) {
+            addCriterion("is_product <=", value, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigIn(List<Integer> values) {
-            addCriterion("is_config in", values, "isConfig");
+        public Criteria andIsProductIn(List<Integer> values) {
+            addCriterion("is_product in", values, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigNotIn(List<Integer> values) {
-            addCriterion("is_config not in", values, "isConfig");
+        public Criteria andIsProductNotIn(List<Integer> values) {
+            addCriterion("is_product not in", values, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigBetween(Integer value1, Integer value2) {
-            addCriterion("is_config between", value1, value2, "isConfig");
+        public Criteria andIsProductBetween(Integer value1, Integer value2) {
+            addCriterion("is_product between", value1, value2, "isProduct");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfigNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_config not between", value1, value2, "isConfig");
+        public Criteria andIsProductNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_product not between", value1, value2, "isProduct");
             return (Criteria) this;
         }
     }

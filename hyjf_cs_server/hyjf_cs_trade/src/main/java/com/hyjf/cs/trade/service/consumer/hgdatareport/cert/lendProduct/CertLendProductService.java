@@ -18,7 +18,7 @@ public interface CertLendProductService extends BaseHgCertReportService {
      * @param planNid
      * @return
      */
-    JSONArray getPlanProdouct(String planNid,Boolean isOld);
+    JSONArray getPlanProdouct(String planNid,Boolean isOld,String isPlan);
 
     /**
      * 获取线上所有计划信息
