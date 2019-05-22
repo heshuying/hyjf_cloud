@@ -840,16 +840,16 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         // 债权剩余期限
                         hjhDebtCredit.setRemainDays(remainDays);
                         hjhDebtCredit.setCreditTerm(remainDays);
-                        // 计算预计实际收益率  预计实际收益（预计承接收益）=（全部承接时待收收益-全部承接的垫付利息）÷剩余天数*360÷全部承接时实际支付*100%
-                        if (remainDays == 0) {
-                            // 债权的实际年化收益率
-                            actualApr = hjhDebtCredit.getBorrowApr();
-                        } else {
-                            // 债权的实际年化收益率
-                            actualApr = (hjhDebtCredit.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtCredit.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
-                                    .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
-                        }
-                        hjhDebtCredit.setActualApr(actualApr);
+//                        // 计算预计实际收益率  预计实际收益（预计承接收益）=（全部承接时待收收益-全部承接的垫付利息）÷剩余天数*360÷全部承接时实际支付*100%
+//                        if (remainDays == 0) {
+//                            // 债权的实际年化收益率
+//                            actualApr = hjhDebtCredit.getBorrowApr();
+//                        } else {
+//                            // 债权的实际年化收益率
+//                            actualApr = (hjhDebtCredit.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtCredit.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
+//                                    .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
+//                        }
+//                        hjhDebtCredit.setActualApr(actualApr);
                         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                         vo.setDate(dualDate);
                         vo.setCreditAccount(totalFairValue);
@@ -1071,16 +1071,16 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             hjhDebtCredit.setRemainDays(remainDays);
                             hjhDebtCredit.setCreditTerm(remainDays);
                             hjhDebtCredit.setIsLateCredit(0);
-                            // 计算预计实际收益率  预计实际收益（预计承接收益）=（全部承接时待收收益-全部承接的垫付利息）÷剩余天数*360÷全部承接时实际支付*100%
-                            if (remainDays == 0) {
-                                // 债权的实际年化收益率
-                                actualApr = hjhDebtCredit.getBorrowApr();
-                            } else {
-                                // 债权的实际年化收益率.
-                                actualApr = (hjhDebtCredit.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtCredit.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
-                                        .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
-                            }
-                            hjhDebtCredit.setActualApr(actualApr);
+//                            // 计算预计实际收益率  预计实际收益（预计承接收益）=（全部承接时待收收益-全部承接的垫付利息）÷剩余天数*360÷全部承接时实际支付*100%
+//                            if (remainDays == 0) {
+//                                // 债权的实际年化收益率
+//                                actualApr = hjhDebtCredit.getBorrowApr();
+//                            } else {
+//                                // 债权的实际年化收益率.
+//                                actualApr = (hjhDebtCredit.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtCredit.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
+//                                        .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
+//                            }
+//                            hjhDebtCredit.setActualApr(actualApr);
                             HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                             vo.setDate(dualDate);
                             vo.setCreditAccount(totalFairValue);
