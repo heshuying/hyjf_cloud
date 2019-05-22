@@ -1274,8 +1274,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-//    @Cached(name="webHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-//	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+    @Cached(name="webHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1285,8 +1285,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-//    @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-//    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+    @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
