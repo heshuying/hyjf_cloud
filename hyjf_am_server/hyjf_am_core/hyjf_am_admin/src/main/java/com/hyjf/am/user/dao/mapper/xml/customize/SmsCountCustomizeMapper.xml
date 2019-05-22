@@ -10,7 +10,7 @@
         IFNULL(od3.id,0) as departmentId,
         sum(s.sms_number) as smsNumber,
         s.posttime as posttime,
-        case when posttime > '2018-12-27' then (s.sms_number * 0.04)  else (s.sms_number * 0.042) end as smsMoney
+        case when posttime > '2018-12-27' then (sum(s.sms_number) * 0.04)  else (sum(s.sms_number) * 0.042) end as smsMoney
         from ht_sms_count s
         LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
         LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
