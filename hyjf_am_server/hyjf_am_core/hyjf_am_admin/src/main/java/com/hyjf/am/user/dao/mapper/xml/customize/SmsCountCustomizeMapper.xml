@@ -6,14 +6,17 @@
 	<select id="querySmsCountLlist" parameterType="com.hyjf.am.resquest.user.SmsCountRequest"
             resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
         select
-        s.department_name AS `departmentName`,
-        s.department_id as departmentId,
-        s.sms_number as smsNumber,
+        IFNULL(`od3`.`name`,'其他') AS `departmentName`,
+        IFNULL(od3.id,0) as departmentId,
+        sum(s.sms_number) as smsNumber,
         s.posttime as posttime,
         case when posttime > '2018-12-27' then (s.sms_number * 0.04)  else (s.sms_number * 0.042) end as smsMoney
         from ht_sms_count s
-
-        <where>
+        LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        group by posttime,departmentName
+        <trim prefix="having" prefixOverrides="AND |OR ">
         <if test="post_time_begin!=null">
             AND posttime <![CDATA[>=]]>  STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
         </if>
@@ -21,13 +24,13 @@
             AND posttime  <![CDATA[<=]]> STR_TO_DATE(#{post_time_end},'%Y-%m-%d')
         </if>
         <if test="combotreeListSrch != null and combotreeListSrch != ''">
-            AND department_id in
+            AND departmentId in
             <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
                 #{dep}
             </foreach>
         </if>
-        </where>
-        ORDER BY s.posttime desc, s.id desc
+        </trim>
+        ORDER BY s.posttime desc
         <if test="limitStart >=0 and limitEnd > 0">
             LIMIT #{limitStart} , #{limitEnd}
         </if>
@@ -102,9 +105,18 @@
 	</select>
 	
 	<select id="selectCount" parameterType="com.hyjf.am.resquest.user.SmsCountRequest" resultType="INTEGER">
-		select count(1) from ht_sms_count
+		select count(1) from (select
+        IFNULL(`od3`.`name`,'其他') AS `departmentName`,
+        IFNULL(od3.id,0) as departmentId,
+        sum(s.sms_number) as smsNumber,
+        s.posttime as posttime
+        from ht_sms_count s
+        LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        group by posttime,departmentName
 
-        <where>
+        <trim prefix="having" prefixOverrides="AND |OR ">
         <if test="post_time_begin!=null">
             AND posttime <![CDATA[>=]]>  STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
         </if>
@@ -112,12 +124,14 @@
             AND posttime  <![CDATA[<=]]> STR_TO_DATE(#{post_time_end},'%Y-%m-%d')
         </if>
         <if test="combotreeListSrch != null and combotreeListSrch != ''">
-            AND department_id in
+            AND departmentId in
             <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
                 #{dep}
             </foreach>
         </if>
-        </where>
+        </trim>
+        ORDER BY s.posttime desc
+        ) t
     </select>
 
     <select id="queryUser" resultType="java.lang.String" parameterType="java.util.Map">

@@ -83,8 +83,8 @@ public class SmsCountController extends BaseController {
                     }
                 }
             }
-            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
-            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
+//            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
+//            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         SmsCountCustomizeResponse response = smsCountService.querySmsCountList(smsCountCustomize);
@@ -191,8 +191,8 @@ public class SmsCountController extends BaseController {
                     }
                 }
             }
-            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
-            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
+//            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
+//            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         //请求第一页5000条
