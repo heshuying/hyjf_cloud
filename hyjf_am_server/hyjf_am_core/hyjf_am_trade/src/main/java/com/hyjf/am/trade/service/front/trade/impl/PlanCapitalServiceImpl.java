@@ -320,6 +320,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 hjhDebtCredit.setRepayStatus(0);
                 // 是否清算
                 hjhDebtCredit.setIsLiquidates(0);
+                // 不考虑逾期
+                hjhDebtCredit.setIsLateCredit(0);
                 // 是否原始债权 0非原始 1原始
                 hjhDebtCredit.setSourceType(hjhDebtDetail.getSourceType());
                 // T日年月日获取0时时间戳
