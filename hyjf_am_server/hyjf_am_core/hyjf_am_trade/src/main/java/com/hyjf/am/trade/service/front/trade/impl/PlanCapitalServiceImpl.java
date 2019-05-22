@@ -847,6 +847,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             actualApr = (hjhDebtCredit.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtCredit.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
                                     .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
                         }
+                        hjhDebtCredit.setActualApr(actualApr);
                         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                         vo.setDate(dualDate);
                         vo.setCreditAccount(totalFairValue);
@@ -1077,6 +1078,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                 actualApr = (hjhDebtCredit.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtCredit.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
                                         .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
                             }
+                            hjhDebtCredit.setActualApr(actualApr);
                             HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                             vo.setDate(dualDate);
                             vo.setCreditAccount(totalFairValue);
