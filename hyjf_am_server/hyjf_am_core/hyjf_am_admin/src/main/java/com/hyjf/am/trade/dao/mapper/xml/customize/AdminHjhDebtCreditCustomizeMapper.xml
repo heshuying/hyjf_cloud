@@ -169,7 +169,9 @@
         dc.credit_interest_advance_assigned AS assign_advance_interest,
         dc.credit_income AS account_receive,
         dc.credit_status,
-        dc.repay_status,
+        CASE
+        when b.`status`=8 then 99
+        else dc.repay_status end as repay_status,
         DATE_FORMAT( dc.create_time, '%Y-%m-%d %H:%i:%s' ) AS liquidates_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,

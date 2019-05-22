@@ -404,7 +404,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","项目名称");
         map.put("projectTypeName","项目类型");
-        map.put("partner","合作机构");
+        map.put("webName","担保机构");
         map.put("borrowPeriod","借款期限");
         map.put("borrowApr","出借利率");
         map.put("borrowAccount","借款金额");
@@ -412,7 +412,8 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayType","还款方式");
         map.put("repayAccountCapital","应还本金");
         map.put("repayAccountInterest","应还利息");
-        map.put("repayAccountAll","应还本息");
+        map.put("repayFeeWaitAll","应还本息");
+        map.put("repayAccountAll","应还总额");
         map.put("repayFee","还款服务费");
         map.put("repayAccountCapitalYes","已还本金");
         map.put("repayAccountInterestYes","已还利息");
@@ -430,7 +431,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("recoverLastTime","放款时间");
         map.put("repayLastTime","到期日");
   //      map.put("repayNextTime","下期还款日");
-        map.put("repayMoneySource","还款来源");
+     //   map.put("repayMoneySource","还款来源");
         map.put("repayActionTime","实际还款时间");
        // map.put("repayOrgUserName" ,"担保机构用户名");
       //  map.put("createUserName","添加标的人员");

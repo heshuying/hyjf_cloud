@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.admin.CertLogRequestBean;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
@@ -169,4 +170,19 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	int selectCertLogLength();
+
+	/**
+	 * 判断某一日期是否是工作日
+	 *
+	 * @return
+	 */
+	boolean checkSomedayIsWorkDateForWithdraw();
+
+	/**
+	 * 获取提现规则配置
+	 *
+	 * @param request
+	 * @return
+	 */
+	WithdrawRuleConfigVO selectWithdrawRuleConfig(WithdrawRuleConfigRequest request);
 }

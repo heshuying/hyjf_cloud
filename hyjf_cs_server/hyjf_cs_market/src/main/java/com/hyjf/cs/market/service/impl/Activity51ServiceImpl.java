@@ -18,9 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -143,8 +145,8 @@ public class Activity51ServiceImpl implements Activity51Service {
 
 	@Override
 	public boolean isRepeatReceive(int userId, int grade) {
-		ActivityUserRewardVO vo = amMarketClient.selectActivityUserReward(activityId, userId, grade);
-		if (vo != null) {
+		List<ActivityUserRewardVO> list = amMarketClient.selectActivityUserReward(activityId == null ? 0 : activityId, userId, grade);
+		if (!CollectionUtils.isEmpty(list) && list.size() > 0) {
 			return true;
 		}
 		return false;

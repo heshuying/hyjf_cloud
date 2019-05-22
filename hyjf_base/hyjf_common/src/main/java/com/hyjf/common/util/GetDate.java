@@ -69,6 +69,8 @@ public class GetDate extends PropertyEditorSupport {
 
 	public static final String mmDD_key = "MM-dd";
 
+	public static final String short_time_sdf_hms = "HH:mm:ss";
+
 
 
 
@@ -86,6 +88,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat(datetimeFormathhmm_key);
 	public static final SimpleDateFormat datesdf = new SimpleDateFormat(datesdf_key);
 	public static final SimpleDateFormat yyyyMMdf = new SimpleDateFormat(yyyyMM_key);
+	public static final SimpleDateFormat short_time_sdf_hhmmss = new SimpleDateFormat(short_time_sdf_hms);
 
 	// 以毫秒表示的时间
 	private static final long DAY_IN_MILLIS = (long) 24 * 3600 * 1000;
@@ -1496,6 +1499,44 @@ public class GetDate extends PropertyEditorSupport {
 	}
 
 	/**
+	 * 日期相差的绝对值
+	 * @param timeBegin
+	 * @param timeEnd
+	 * @return
+	 */
+	public static int differentDays(Long timeBegin, Long timeEnd) {
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTimeInMillis(timeBegin*1000);
+
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTimeInMillis(timeEnd*1000);
+		int day1 = cal1.get(Calendar.DAY_OF_YEAR);
+		int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+
+		int year1 = cal1.get(Calendar.YEAR);
+		int year2 = cal2.get(Calendar.YEAR);
+		if (year1 != year2)   //同一年
+		{
+			int timeDistance = 0;
+			for (int i = year1; i < year2; i++) {
+				if (i % 4 == 0 && i % 100 != 0 || i % 400 == 0)    //闰年
+				{
+					timeDistance += 366;
+				} else    //不是闰年
+				{
+					timeDistance += 365;
+				}
+			}
+
+			return timeDistance + (day2 - day1);
+		} else    //不同年
+		{
+			System.out.println("判断day2 - day1 : " + (day2 - day1));
+			return day2 - day1;
+		}
+	}
+
+	/**
 	 * gc.add(1,-1)表示年份减一. gc.add(2,-1)表示月份减一. gc.add(3.-1)表示周减一.
 	 * gc.add(5,-1)表示天减一.
 	 *
@@ -2332,4 +2373,19 @@ public class GetDate extends PropertyEditorSupport {
 		c.set(Calendar.DAY_OF_MONTH,1);
 		return c.getTime();
 	}
+
+	// ////////////////////////////////////////////////////////////////////////////
+	// formatShortTimehhmmss
+	// 将日期按照一定的格式转化为字符串
+	// ////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：时：分:秒
+	 *
+	 * @return 默认日期按“时：分:秒“格式显示
+	 */
+	public static String formatShortTimehhmmss() {
+		return getDateFormat(short_time_sdf_hms).format(getCalendar().getTime());
+	}
+
 }

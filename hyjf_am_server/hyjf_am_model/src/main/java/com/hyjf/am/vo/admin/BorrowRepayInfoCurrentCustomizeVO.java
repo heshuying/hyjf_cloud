@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.admin;
 
+import java.math.BigDecimal;
+
 /**
  * @author hesy
  */
@@ -46,6 +48,20 @@ public class BorrowRepayInfoCurrentCustomizeVO {
     private String repayActionTime;
     /** 记录类别 1 未分期原始出借 2 分期原始出借 3 汇转让承接 4 计划底层债转标的承接*/
     private String recordType;
+    /** 还款方式*/
+    private String borrowStyle;
+    /** 项目期限*/
+    private String borrowPeriod;
+    /** 配置的管理费率*/
+    private BigDecimal feeRate;
+    /** 差异费率*/
+    private BigDecimal differentialRate;
+    /** 初审时间*/
+    private Integer verifyTime;
+    /** 借款金额*/
+    private BigDecimal borrowAccount;
+    /** 当前还款期数*/
+    private Integer recoverPeriod;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -213,5 +229,61 @@ public class BorrowRepayInfoCurrentCustomizeVO {
 
     public void setRecordType(String recordType) {
         this.recordType = recordType;
+    }
+
+    public String getBorrowStyle() {
+        return borrowStyle;
+    }
+
+    public void setBorrowStyle(String borrowStyle) {
+        this.borrowStyle = borrowStyle;
+    }
+
+    public String getBorrowPeriod() {
+        return borrowPeriod;
+    }
+
+    public void setBorrowPeriod(String borrowPeriod) {
+        this.borrowPeriod = borrowPeriod;
+    }
+
+    public BigDecimal getFeeRate() {
+        return feeRate;
+    }
+
+    public void setFeeRate(BigDecimal feeRate) {
+        this.feeRate = feeRate;
+    }
+
+    public BigDecimal getDifferentialRate() {
+        return differentialRate;
+    }
+
+    public void setDifferentialRate(BigDecimal differentialRate) {
+        this.differentialRate = differentialRate;
+    }
+
+    public Integer getVerifyTime() {
+        return verifyTime;
+    }
+
+    public void setVerifyTime(Integer verifyTime) {
+        this.verifyTime = verifyTime;
+    }
+
+    public BigDecimal getBorrowAccount() {
+        return borrowAccount;
+    }
+
+    public void setBorrowAccount(BigDecimal borrowAccount) {
+        this.borrowAccount = borrowAccount;
+    }
+
+    public Integer getRecoverPeriod() {
+        return recoverPeriod;
+    }
+
+    public void setRecoverPeriod(Integer recoverPeriod) {
+        this.recoverPeriod = recoverPeriod;
     }
 }

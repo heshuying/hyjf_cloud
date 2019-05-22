@@ -59,13 +59,16 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     public void sendSmsCodeCheckParam(String validCodeType, String mobile, Integer userId, String ip) {
 
         List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
-                CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
+                CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_DUANXINDENGLU);
         //无效的验证码类型
         CheckUtil.check(Validator.isNotNull(validCodeType) && codeTypes.contains(validCodeType), MsgEnum.ERR_OBJECT_INVALID, "验证码类型");
         CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
         if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
             // 注册时要判断不能重复
-            CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
+            CheckUtil.check(!existUser(mobile), MsgEnum.ERR_USER_NOT_EXISTS);
+        }
+        if(CommonConstant.PARAM_TPL_DUANXINDENGLU.equals(validCodeType)){
+            CheckUtil.check(existUser(mobile), MsgEnum.ERR_USER_NOT_EXISTS);
         }
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
 			if (userId != null) {
@@ -207,7 +210,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     public JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, Integer userId, String ip) {
         JSONObject ret = new JSONObject();
         List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
-                CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
+                CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH, CommonConstant.PARAM_TPL_DUANXINDENGLU);
         //无效的验证码类型
         if(Validator.isNull(validCodeType) || !codeTypes.contains(validCodeType)){
             ret.put("status", "1");
@@ -227,6 +230,15 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 return ret;
             }
         }
+        if (validCodeType.equals(CommonConstant.PARAM_TPL_DUANXINDENGLU)) {
+            //
+            if(!existUser(mobile)){
+                ret.put("status", "1");
+                ret.put("statusDesc", "不存在用户");
+                return ret;
+            }
+        }
+
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
             if (userId != null) {
                 WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
@@ -414,7 +426,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                     ret.put("statusDesc", "该手机号已经注册");
                     return ret;
                 }
-            } else if (verificationType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA) || verificationType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
+            } else if (verificationType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA) || verificationType.equals(CommonConstant.PARAM_TPL_YZYSJH) || verificationType.equals(CommonConstant.PARAM_TPL_DUANXINDENGLU)) {
                 if (!existUser(mobile)) {
                     ret.put("status", "99");
                     ret.put("statusDesc", "该手机号尚未注册");

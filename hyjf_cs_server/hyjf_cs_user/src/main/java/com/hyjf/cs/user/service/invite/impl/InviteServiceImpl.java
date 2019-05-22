@@ -89,7 +89,7 @@ public class InviteServiceImpl extends BaseUserServiceImpl implements InviteServ
         MyCouponListRequest requestBeanCoupon = new MyCouponListRequest();
         requestBeanCoupon.setUserId(userId);
         requestBeanCoupon.setUsedFlag("0");
-        couponCount = amTradeClient.selectMyCouponCount(requestBeanCoupon);
+//        couponCount = amTradeClient.selectMyCouponCount(requestBeanCoupon);
         // 累计邀请数
         MyInviteListRequest requestBeanReward = new MyInviteListRequest();
         requestBeanReward.setUserId(userId);
