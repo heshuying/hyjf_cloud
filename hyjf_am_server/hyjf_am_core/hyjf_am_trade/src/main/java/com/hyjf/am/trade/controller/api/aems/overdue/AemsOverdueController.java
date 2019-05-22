@@ -34,10 +34,6 @@ public class AemsOverdueController {
     private AemsOverdueService aemsOverdueService;
 
 
-    public static void main(String[] args) {
-        Integer t = GetDate.getDayStart10(GetDate.countDate(new Date(),5,-1));
-        System.out.println(t);
-    }
     /**
      * 查询当期还款是否逾期
      * @param params
