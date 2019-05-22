@@ -798,6 +798,8 @@ public interface MQConstant {
 	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
 	// TAG：修改智投 add by nxl
 	String HJHPLAN_MODIFY_TAG = "HJHPLAN_ADD_MODIFY";
+	// TAG：散标发标 add by nxl
+	String BORROW_MODIFY_TAG = "BORROW_MODIFY_TAG";
 	// TAG：同步余额
 	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
 	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
