@@ -98,9 +98,11 @@ public class ProjectListController extends BaseController {
      */
     @RequestMapping("/web/countProjectList")
     public ProjectListResponse countProjectList(@RequestBody @Valid ProjectListRequest request){
+        logger.info("web端散标列表记录数 requestBean:{}", JSON.toJSONString(request));
         ProjectListResponse projectListResponse = new ProjectListResponse();
         int count = projectListService.countProjectList(request);
         projectListResponse.setCount(count);
+        logger.info("web端散标列表记录数 count:", count);
         return projectListResponse;
     }
 
