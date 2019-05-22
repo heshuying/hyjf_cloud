@@ -1217,8 +1217,7 @@
         br.recover_status,
         8
         ) AS recoverStatus,
-        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
-
+        IF(bry.repay_status = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
         bry.repay_status = 1
         AND bry.repay_action_time > 0,
@@ -1535,8 +1534,7 @@
         IF (brp.advance_status = 3, 8, 0),
         rp.recover_status
         ) AS recoverStatus,
-        IF(brp.auto_repay=0,'主动还款','系统自动') AS autoRepay,
-
+        IF(brp.repay_status = 1,IF(brp.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
         brp.repay_status = 1
         AND brp.repay_action_time > 0,
@@ -1706,8 +1704,7 @@
         IF (cr.advance_status = 3, 8, 0),
         cr.`status`
         ) AS recoverStatus,
-        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
-
+        IF(cr.`status` = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
         cr.`status` = 1
         AND cr.assign_repay_yes_time > 0,
@@ -1890,7 +1887,7 @@
         hcr.repay_status
         )
         AS recoverStatus,
-        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
+        IF(brp.repay_status = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
         brp.repay_status = 1
         AND brp.repay_action_time > 0,
