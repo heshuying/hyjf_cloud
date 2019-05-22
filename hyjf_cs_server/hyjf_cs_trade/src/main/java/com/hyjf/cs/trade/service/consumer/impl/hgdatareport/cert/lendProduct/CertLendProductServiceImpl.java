@@ -1,8 +1,11 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProduct;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -66,9 +69,9 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
      * @return
      */
     @Override
-    public JSONArray getPlanProdouct(String planNid,Boolean isOld){
+    public JSONArray getPlanProdouct(String planNid,Boolean isOld,String isPlan){
         JSONArray json = new JSONArray();
-        Map<String, Object> param =getParam(planNid,isOld);
+        Map<String, Object> param =getParam(planNid,isOld,isPlan);
         if(!param.isEmpty()&&param.size()>0){
             json.add(param);
         }
@@ -77,43 +80,81 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
 
     //
 
-    public Map<String,Object> getParam(String planNid,Boolean isOld){
+    public Map<String,Object> getParam(String planNid,Boolean isOld,String isPlan) {
         Map<String, Object> param = new HashMap<String, Object>();
+        String sourceFinancingCode = "";
+        String financingStartTime = "";
+        String productName = "";
+        String rate = "";
+        int term = 0;
+        String groupByDateStr="";
         try {
-            HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
-            if (null == hjhPlanVO) {
-                throw new Exception("产品信息推送,获取计划信息为空！！计划编码:" + planNid);
-            }
-            if(null!=hjhPlanVO){
-                //接口版本号
-                param.put("version", CertCallConstant.CERT_CALL_VERSION);
-                //平台编号
-                param.put("sourceCode", systemConfig.getCertSourceCode());
+            if (isPlan.equals("1")) {
+                //计划信息
+                HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
+                if (null == hjhPlanVO) {
+                    throw new Exception("产品信息推送,获取计划信息为空！！计划编码:" + planNid);
+                }
+                if (null != hjhPlanVO) {
+                    //产品信息编号
+                    sourceFinancingCode = hjhPlanVO.getPlanNid();
+                    //发布时间
+                    financingStartTime = dateFormatTransformationDate(hjhPlanVO.getCreateTime(), "H");
+                    //产品名称
+                    productName = hjhPlanVO.getPlanName();
+                    //预期年化利率（参考回报率）
+                    rate = CertCallUtil.convertLoanRate(hjhPlanVO.getExpectApr(), 0, "");
+                    //产品期限（服务期限）(天)
+                    term = hjhPlanVO.getLockPeriod();
+                    if (hjhPlanVO.getIsMonth() == 1) {
+                        //月标（转换为天数）
+                        term = hjhPlanVO.getLockPeriod() * 30;
+                    }
+                    param.put("term", String.valueOf(term));
+                    groupByDateStr = dateFormatTransformation(hjhPlanVO.getCreateTime());
+                }
+            } else if (isPlan.equals("0")) {
+                //散标信息
+                BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(planNid);
+                RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(planNid);
+                if (null == borrowInfoVO || null == borrowVO) {
+                    throw new Exception("产品信息推送,获取散标信息为空！！散标编码:" + planNid);
+                }
                 //产品信息编号
-                param.put("sourceFinancingCode",hjhPlanVO.getPlanNid());
+                sourceFinancingCode = borrowInfoVO.getBorrowNid();
                 //发布时间
-                String financingStartTime =dateFormatTransformationDate(hjhPlanVO.getCreateTime(),"H");
-                param.put("financingStartTime",financingStartTime);
+                financingStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrowInfoVO.getBorrowValidTime().toString());
                 //产品名称
-                param.put("productName",hjhPlanVO.getPlanName());
+                productName = borrowInfoVO.getName();
                 //预期年化利率（参考回报率）
-                String rate = CertCallUtil.convertLoanRate(hjhPlanVO.getExpectApr(),0,"");
-                param.put("rate",rate);
-                //最小预期年化利率
-                param.put("minRate","-1");
-                //最大预期年化利率
-                param.put("maxRate","-1");
+                rate = CertCallUtil.convertLoanRate(borrowVO.getBorrowApr(), 0, "");
                 //产品期限（服务期限）(天)
-                int termDays = hjhPlanVO.getLockPeriod();
-                if (hjhPlanVO.getIsMonth() == 1) {
-                    //月标（转换为天数）
-                    termDays = hjhPlanVO.getLockPeriod() * 30;
+                term = borrowVO.getBorrowPeriod();
+                if (borrowVO.getIsMonth() == 1) {
+                    term = borrowVO.getBorrowPeriod() * 30;
                 }
-                param.put("term", String.valueOf(termDays));
-                if(isOld){
-                    String groupByDateStr = dateFormatTransformation(hjhPlanVO.getCreateTime());
-                    param.put("groupByDate", groupByDateStr);
-                }
+                groupByDateStr = dateFormatTransformation(borrowVO.getCreateTime());
+            }
+            //接口版本号
+            param.put("version", CertCallConstant.CERT_CALL_VERSION);
+            //平台编号
+            param.put("sourceCode", systemConfig.getCertSourceCode());
+            //产品信息编号
+            param.put("sourceFinancingCode", sourceFinancingCode);
+            //发布时间
+            param.put("financingStartTime", financingStartTime);
+            //产品名称
+            param.put("productName", productName);
+            //预期年化利率（参考回报率）
+            param.put("rate", rate);
+            //最小预期年化利率
+            param.put("minRate", "-1");
+            //最大预期年化利率
+            param.put("maxRate", "-1");
+            //产品期限（服务期限）(天)
+            param.put("term", String.valueOf(term));
+            if(isOld) {
+                param.put("groupByDate", groupByDateStr);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

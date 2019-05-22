@@ -92,7 +92,7 @@ public class CertOldLendProductMessageConsumer implements RocketMQListener<Messa
                 return;
             }
             for (HjhPlanVO hjhPlanVO:hjhPlanVOList){
-                JSONArray listRepay = certLendProductService.getPlanProdouct(hjhPlanVO.getPlanNid(),true);
+                JSONArray listRepay = certLendProductService.getPlanProdouct(hjhPlanVO.getPlanNid(),true,"1");
                 logger.info("数据：" + listRepay.toString());
                 if (null == listRepay || listRepay.size() <= 0) {
                     logger.error(logHeader + "组装参数为空！！！参数为：" + hjhPlanVO.getPlanNid());
