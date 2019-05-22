@@ -73,6 +73,9 @@ public class SmsCountController extends BaseController {
         if (Validator.isNotNull(request.getCombotreeListSrch())) {
 
             String[] combotreeListSrch = request.getCombotreeListSrch();
+
+            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
+            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
@@ -83,9 +86,8 @@ public class SmsCountController extends BaseController {
                     }
                 }
             }
-//            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
-//            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
+
         }
         SmsCountCustomizeResponse response = smsCountService.querySmsCountList(smsCountCustomize);
 
@@ -181,6 +183,9 @@ public class SmsCountController extends BaseController {
         if (Validator.isNotNull(form.getCombotreeListSrch())) {
 
             String[] combotreeListSrch = form.getCombotreeListSrch();
+
+            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
+            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
@@ -191,8 +196,6 @@ public class SmsCountController extends BaseController {
                     }
                 }
             }
-//            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
-//            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         //请求第一页5000条
