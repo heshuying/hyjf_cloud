@@ -79,7 +79,7 @@ public class AdminSystemController extends BaseConfigController {
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
 			AdminRole role = adminRoleService.getRecord(adminSystemr.getRoleId());
-			if("wjt温金运营".equals(role.getRoleName())){
+			if(role.getRoleName()!=null&&role.getRoleName().startsWith("wjt")){
 				asr.setRtn(Response.ERROR);
 				asr.setMessage("该用户角色状态异常");
 				return asr;
@@ -120,7 +120,7 @@ public class AdminSystemController extends BaseConfigController {
 				}
 				if (adminAndRole != null) {
 					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
-					if(role.getStatus()!=0||"wjt温金运营".equals(role.getRoleName())) {
+					if(role.getStatus()!=0||(role.getRoleName()!=null&&role.getRoleName().startsWith("wjt"))) {
 						asr.setRtn(Response.ERROR);
 						asr.setMessage("该用户角色状态异常");
 						return asr;
