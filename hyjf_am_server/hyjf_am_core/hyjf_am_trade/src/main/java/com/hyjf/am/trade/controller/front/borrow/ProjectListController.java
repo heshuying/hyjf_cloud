@@ -102,7 +102,7 @@ public class ProjectListController extends BaseController {
         ProjectListResponse projectListResponse = new ProjectListResponse();
         int count = projectListService.countProjectList(request);
         projectListResponse.setCount(count);
-        logger.info("web端散标列表记录数 count:", count);
+        logger.info("web端散标列表记录数 count:{}", count);
         return projectListResponse;
     }
 
