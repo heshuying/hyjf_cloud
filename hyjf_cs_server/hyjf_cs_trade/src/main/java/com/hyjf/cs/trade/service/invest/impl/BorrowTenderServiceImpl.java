@@ -2553,8 +2553,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 获取PC 渠道
         UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
-        // 获取app渠道
-        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
+        AppUtmRegVO appUtmRegVO = null;
+        if(utmRegVO!=null){
+            tenderBg.setTenderUserUtmId(utmRegVO.getUtmId());
+        }else{
+            // 获取app渠道
+            appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
+            tenderBg.setTenderUserUtmId(utmRegVO.getUtmId());
+        }
+
         // 开始调用原子层操作主表
         logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
