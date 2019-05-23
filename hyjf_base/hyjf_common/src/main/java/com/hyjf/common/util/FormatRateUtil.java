@@ -7,10 +7,7 @@
 package com.hyjf.common.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 
 /**
  * @author nxl
@@ -19,14 +16,12 @@ import java.math.BigDecimal;
  * 小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
  */
 public class FormatRateUtil {
-	private static final Logger logger = LoggerFactory.getLogger(ConvertUtils.class);
     /**
      * 格式化利率(判断两位小数的后一位是否为0，如果是，则转换为一位小数）
      * @param borrowApr
      * @return
      */
     public static String formatBorrowApr(String borrowApr) {
-    	logger.error("格式化字段"+borrowApr);
     	if(borrowApr==null) {
     		return null;
     	}
