@@ -103,7 +103,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 } else {
                     customerSyncQO.setPlatformAccountOpeningTime(bankOpenAccountRecordCustomize.getOpenTime());
                     customerSyncQO.setName(bankOpenAccountRecordCustomize.getRealName());
-                    customerSyncQO.setDocumentNoMd5(md5(bankOpenAccountRecordCustomize.getIdCard()));
+                    customerSyncQO.setDocumentNoMd5(bankOpenAccountRecordCustomize.getIdCard());
                 }
                 customerSyncQO.setAssetCustomerId(userId);
                 if (!getEntId(utmReg.getUtmId()).isEmpty()) {
@@ -163,46 +163,5 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
         logger.info("====" + CONSUMER_NAME + "监听初始化完成, 启动完毕=====");
     }
 
-    /**
-     * 生成md5,全部大写
-     *
-     * @param message
-     * @return
-     */
-    public static String md5(String message) {
-        try {
-            // 1 创建一个提供信息摘要算法的对象，初始化为md5算法对象
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            // 2 将消息变成byte数组
-            byte[] input = message.getBytes();
-
-            // 3 计算后获得字节数组,这就是那128位了
-            byte[] buff = md.digest(input);
-
-            // 4 把数组每一字节（一个字节占八位）换成16进制连成md5字符串
-            return byte2hex(buff);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 二进制转十六进制字符串
-     *
-     * @param bytes
-     * @return
-     */
-    private static String byte2hex(byte[] bytes) {
-        StringBuilder sign = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(bytes[i] & 0xFF);
-            if (hex.length() == 1) {
-                sign.append("0");
-            }
-            sign.append(hex.toLowerCase());
-        }
-        return sign.toString();
-    }
 
 }
