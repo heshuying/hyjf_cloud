@@ -6,6 +6,8 @@ package com.hyjf.cs.message.service.message.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.vo.config.SmsTemplateVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -15,6 +17,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmTradeClient;
+import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
@@ -57,6 +60,9 @@ public class MessageServiceImpl implements MessageService {
 	private AmTradeClient amTradeClient;
 
 	@Autowired
+	private AmUserClient amUserClient;
+
+	@Autowired
 	private CommonProducer smsProducer;
 
 	@Override
@@ -96,40 +102,8 @@ public class MessageServiceImpl implements MessageService {
 			List<String> mobiles = this.queryUser(smsOntime);
 			// 用户数
 			logger.info("发送用户数" + mobiles.size());
-			// 用户未手写手机号码
-			int number = 200;// 分组每组数
-			if (mobiles != null && mobiles.size() != 0) {
-				int i = mobiles.size() / number;
-				for (int j = 0; j <= i; j++) {
-					int tosize = (j + 1) * number;
-					List<String> smslist;
-					if (tosize > mobiles.size()) {
-						smslist = mobiles.subList(j * number, mobiles.size());
-					} else {
-						smslist = mobiles.subList(j * number, tosize);
-					}
-					String phones = "";
-					for (int z = 0; z < smslist.size(); z++) {
-						if (StringUtils.isNotEmpty(smslist.get(z))
-								&& Validator.isPhoneNumber(smslist.get(z))) {
-							if (z < smslist.size() - 1) {
-								phones += smslist.get(z) + ",";
-							} else {
-								phones += smslist.get(z);
-							}
-						}
-					}
-					try {
-						SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
-								MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
-						smsProducer.messageSend(
-								new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
-					} catch (Exception e) {
-						logger.error("发送短信失败......", e);
-						errorCnt++;
-					}
-				}
-			}
+			//群发短信
+			errorCnt = massTexting(mobiles,send_message,channelType);
 		} else {
 			// 发送短信
 			try {
@@ -164,8 +138,6 @@ public class MessageServiceImpl implements MessageService {
 
 	/**
 	 * 获取查询出来的用户手机号码和数量
-	 *
-	 * @param apicron
 	 * @return
 	 */
 	private List<String> queryUser(SmsOntime smsOntime) {
@@ -214,5 +186,98 @@ public class MessageServiceImpl implements MessageService {
 			record.setStarttime(GetDate.getMyTimeInMillis());
 		}
 		smsOntimeMongoDao.save(record);
+	}
+
+	/**
+	 * 手动群发
+	 * @param mobiles 多个手机号码 "," 隔开
+	 * @param send_message 短信内容
+	 * @param channelType 渠道类型
+	 * @return 错误条数
+	 */
+	private int massTexting(List<String> mobiles,String send_message,String channelType){
+		int errorCnt = 0;
+		// 用户未手写手机号码
+		int number = 200;// 分组每组数
+		if (mobiles != null && mobiles.size() != 0) {
+			int i = mobiles.size() / number;
+			for (int j = 0; j <= i; j++) {
+				int tosize = (j + 1) * number;
+				List<String> smslist;
+				if (tosize > mobiles.size()) {
+					smslist = mobiles.subList(j * number, mobiles.size());
+				} else {
+					smslist = mobiles.subList(j * number, tosize);
+				}
+				String phones = "";
+				for (int z = 0; z < smslist.size(); z++) {
+					if (StringUtils.isNotEmpty(smslist.get(z))
+							&& Validator.isPhoneNumber(smslist.get(z))) {
+						if (z < smslist.size() - 1) {
+							phones += smslist.get(z) + ",";
+						} else {
+							phones += smslist.get(z);
+						}
+					}
+				}
+				try {
+					SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
+							MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+					smsProducer.messageSend(
+							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
+				} catch (Exception e) {
+					logger.error("发送短信失败......", e);
+					errorCnt++;
+				}
+			}
+		}
+
+		return errorCnt;
+	}
+
+	/**
+	 * 群发生日祝福短信
+	 */
+	@Override
+	public void sendBirthdayBlessSms() throws Exception {
+
+		SmsTemplateRequest request = new SmsTemplateRequest();
+		// 只查询开启状态模板
+		request.setStatus(1);
+		request.setTplCode("birthday_bless");
+		SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplate(request);
+		if (smsTemplate == null) {
+			logger.warn("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]","birthday_bless");
+			return ;
+		}
+
+		int errorCnt = 0;
+		//短信内容
+		String send_message = smsTemplate.getTplContent();
+		String channelType = "normal";
+
+		// 在筛选条件下查询出用户
+		List<String> mobiles = this.queryUserByBirthday();
+		// 用户数
+		logger.info("发送用户数" + mobiles.size());
+		//群发短信
+		errorCnt = massTexting(mobiles,send_message,channelType);
+		// 有错误时
+		if (errorCnt > 0) {
+			throw new Exception("群发生日祝福短信时发生错误。" + "[错误件数：" + errorCnt + "]");
+		}
+	}
+
+	/**
+	 * 通过手机号码获取查询出来的用户手机号码
+	 * @return
+	 */
+	private List<String> queryUserByBirthday() {
+		SmsCodeUserRequest request = new SmsCodeUserRequest();
+		String birthday = GetDate.formatDateMMDD();
+		if (StringUtils.isNotBlank(birthday)) {
+			request.setBirthday(birthday);
+		}
+		return amUserClient.queryUserByBirthday(request);
 	}
 }

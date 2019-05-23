@@ -79,6 +79,8 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private Date updateTime;
 
+	private Integer referrer;
+
 	public String getIconUrl() {
 		return iconUrl;
 	}
@@ -349,6 +351,14 @@ public class UserVO extends BaseVO implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public Integer getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(Integer referrer) {
+		this.referrer = referrer;
 	}
 
 	@Override

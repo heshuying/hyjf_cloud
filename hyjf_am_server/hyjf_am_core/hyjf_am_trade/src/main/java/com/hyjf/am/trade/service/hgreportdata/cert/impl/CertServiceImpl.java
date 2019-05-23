@@ -109,8 +109,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<HjhDebtCreditRepay> getHjhDebtCreditRepayListByRequest(CertRequest certRequest) {
         HjhDebtCreditRepayExample example=new HjhDebtCreditRepayExample();
-        example.createCriteria().
-                andInvestOrderIdEqualTo(certRequest.getInvestOrderId()).
+        example.createCriteria().andSellOrderIdEqualTo(certRequest.getInvestOrderId()).
                 andBorrowNidEqualTo(certRequest.getBorrowNid()).
                 andAssignRepayPeriodEqualTo(certRequest.getPeriod());
         List<HjhDebtCreditRepay> hjhDebtCreditRepays=hjhDebtCreditRepayMapper.selectByExample(example);
@@ -170,14 +169,21 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         map.put("limitEnd", certRequest.getLimitEnd());
         map.put("trade",certRequest.getTrade());
         map.put("maxId", certRequest.getMaxId());
+        map.put("borrowNidList",certRequest.getBorrowNidList());
         if("creditassign".equals(trade)){
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditassign(map);
             return accountLists;
         }
         if("accede_assign".equals(trade)){
-            logger.info("map:" + JSONObject.toJSONString(map));
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByAccedeassign(map);
-            logger.info("accountLists.size():" + accountLists.size());
+            return accountLists;
+        }
+        if("tenderRecoverYes".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByTenderRecoverYes(map);
+            return accountLists;
+        }
+        if("creditTenderRecoverYes".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditTenderRecoverYes(map);
             return accountLists;
         }
         List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);
@@ -186,21 +192,19 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
 
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param isTender
      * @return
      */
     @Override
-    public List<CertClaim> selectCertBorrowConfig(String isTender){
+    public List<CertClaim> selectCertBorrowConfig(){
         CertClaimExample example = new CertClaimExample();
         CertClaimExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(isTender)){
+        /*if(StringUtils.isNotBlank(isTender)){
             criteria.andCreditFlgEqualTo(Integer.parseInt(isTender));
-        }
+        }*/
         //配置信息未上报
         criteria.andIsConfigEqualTo(0);
-        //测试，获取300条数据
         example.setLimitStart(0);
-        example.setLimitEnd(300);
+        example.setLimitEnd(2000);
         return certClaimMapper.selectByExample(example);
     }
 
@@ -217,5 +221,10 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         CertClaim certBorrow = new CertClaim();
         BeanUtils.copyProperties(update.getCertClaim(),certBorrow);
         return certClaimMapper.updateByExampleSelective(certBorrow,example);
+    }
+
+    @Override
+    public List<String> getBorrowNidList() {
+        return certMapper.getBorrowNidList();
     }
 }

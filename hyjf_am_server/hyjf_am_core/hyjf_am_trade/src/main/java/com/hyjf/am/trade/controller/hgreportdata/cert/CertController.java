@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.hgreportdata.cert;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -68,7 +69,6 @@ public class CertController extends BaseController {
 
     @PostMapping("/getCertAccountListCustomizeVO")
     public CertAccountListResponse getCertAccountListCustomizeVO(@RequestBody CertRequest certRequest) {
-        logger.info("getCertAccountListCustomizeVO:" + JSONObject.toJSONString(certRequest));
         CertAccountListResponse response = new CertAccountListResponse();
         List<CertAccountListCustomize> certAccountListCustomizes = certService.getCertAccountListCustomizeVO(certRequest);
         if (!CollectionUtils.isEmpty(certAccountListCustomizes)) {
@@ -220,14 +220,13 @@ public class CertController extends BaseController {
     }
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
-     * @param flg
      * @return
      */
-    @GetMapping("/selectCertBorrowByFlg/{flg}")
-    public CertClaimResponse selectCertBorrowByFlg(@PathVariable String flg){
+    @GetMapping("/selectCertBorrowByFlg")
+    public CertClaimResponse selectCertBorrowByFlg(){
         CertClaimResponse response = new CertClaimResponse();
         response.setRtn(Response.FAIL);
-        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig(flg);
+        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig();
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
             List<CertClaimVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertClaimVO.class);
             response.setResultList(borrowVOList);
@@ -252,4 +251,14 @@ public class CertController extends BaseController {
         }
         return response;
     }
+
+
+    @GetMapping("/getBorrowNidList")
+    public StringResponse getBorrowNidList() {
+        StringResponse response=new StringResponse();
+        List<String> borrowNidList=certService.getBorrowNidList();
+        response.setResultList(borrowNidList);
+        return response;
+    }
+
 }
