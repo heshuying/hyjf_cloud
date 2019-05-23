@@ -245,14 +245,15 @@ public class SmsCountController extends BaseController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("departmentName","分公司");
         map.put("smsNumber","数量(条)");
-        map.put("smsFee","费用(元)");
+        map.put("smsMoney","费用(元)");
         map.put("posttime","时间");
         return map;
     }
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-//        IValueFormatter decimalFormat = new IValueFormatter() {
+
+        return mapAdapter;//        IValueFormatter decimalFormat = new IValueFormatter() {
 //            //查询短信单价配置
 //            String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
 //            DecimalFormat decimalFormat = new DecimalFormat("0.000");
@@ -262,7 +263,6 @@ public class SmsCountController extends BaseController {
 //            }
 //        };
 //        mapAdapter.put("smsFee", decimalFormat);
-        return mapAdapter;
     }
 
 }
