@@ -325,7 +325,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 // 是否原始债权 0非原始 1原始
                 hjhDebtCredit.setSourceType(hjhDebtDetail.getSourceType());
                 // T日年月日获取0时时间戳
-                Integer dateStamp = GetDate.getDayStart11(date);
+                Integer dateStamp = GetDate.getDayStart11(dualDate);
                 // 不分期项目
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(hjhDebtDetail.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(hjhDebtDetail.getBorrowStyle())) {
                     // 若标的到期时间（分期标的的最后一期）>T日继续计算债权在T日的预计债权价值
@@ -440,6 +440,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         //  剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
                         logger.info(LOG_MAIN_INFO + "剩余未还债权本金:[" + capital + "].");
                         logger.info(LOG_MAIN_INFO + "预计年化收益率:[" + actualApr + "].");
+                        logger.info(LOG_MAIN_INFO + "当前债权的剩余债权价值:[" + fairValue + "].");
                         logger.info(LOG_MAIN_INFO + "计划订单的债权价值 = 剩余未还债权本金 + 垫付利息,[" + totalFairValue + "].");
                         hjhDebtCredit.setLiquidationFairValue(capital.add(creditValue));
                         // 已还总额
@@ -468,7 +469,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         hjhDebtCredit.setCreditRepayLastTime(0);
                         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                         vo.setDate(dualDate);
-                        vo.setCreditAccount(totalFairValue);
+                        vo.setCreditAccount(fairValue);
                         // 根据收益率配置匹配计划编号
                         vo.setPlanNid(getPlanNid(hjhDebtCredit));
                         list.add(vo);
@@ -573,6 +574,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         //  剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
                         logger.info(LOG_MAIN_INFO + "剩余未还债权本金:[" + capital + "].");
                         logger.info(LOG_MAIN_INFO + "预计年华收益率:[" + actualApr + "].");
+                        logger.info(LOG_MAIN_INFO + "当前债权的剩余债权价值:[" + fairValue + "].");
                         logger.info(LOG_MAIN_INFO + "计划订单的债权价值 = 剩余未还债权本金 + 垫付利息,[" + totalFairValue + "].");
                         hjhDebtCredit.setLiquidationFairValue(fairValue);
                         // 已还总额
@@ -601,7 +603,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         hjhDebtCredit.setCreditRepayLastTime(0);
                         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                         vo.setDate(dualDate);
-                        vo.setCreditAccount(totalFairValue);
+                        vo.setCreditAccount(fairValue);
                         // 根据收益率配置匹配计划编号
                         vo.setPlanNid(getPlanNid(hjhDebtCredit));
                         list.add(vo);
@@ -852,7 +854,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
 //                        hjhDebtCredit.setActualApr(actualApr);
                         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                         vo.setDate(dualDate);
-                        vo.setCreditAccount(totalFairValue);
+                        vo.setCreditAccount(fairValue);
                         // 根据收益率配置匹配计划编号
                         vo.setPlanNid(getPlanNid(hjhDebtCredit));
                         list.add(vo);
@@ -1083,7 +1085,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
 //                            hjhDebtCredit.setActualApr(actualApr);
                             HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                             vo.setDate(dualDate);
-                            vo.setCreditAccount(totalFairValue);
+                            vo.setCreditAccount(fairValue);
                             // 根据收益率配置匹配计划编号
                             vo.setPlanNid(getPlanNid(hjhDebtCredit));
                             list.add(vo);
