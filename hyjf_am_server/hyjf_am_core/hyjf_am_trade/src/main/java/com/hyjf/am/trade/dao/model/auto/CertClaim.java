@@ -25,7 +25,7 @@ public class CertClaim implements Serializable {
     private Integer creditFlg;
 
     /**
-     * 是否是智投 1：散标,2：智投
+     * 是否是智投 0：散标,1：智投
      *
      * @mbggenerated
      */
