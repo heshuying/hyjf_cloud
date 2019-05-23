@@ -85,7 +85,7 @@ public class WebSafeController extends BaseUserController {
 //        if (userUtmInfo != null){
 //            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
 //        }else {
-            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId+"&action=scan";
 //        }
         result.put("inviteLink", inviteLink);
 

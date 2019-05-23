@@ -1288,7 +1288,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
+        logger.info("散标列表记录数，request：{}", JSON.toJSONString(request));
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
+        logger.info("散标列表记录数，response:{}", JSON.toJSONString(response));
         if (Response.isSuccess(response)){
             return response.getCount();
         }
