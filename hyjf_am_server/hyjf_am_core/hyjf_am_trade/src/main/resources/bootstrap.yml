@@ -15,7 +15,7 @@ spring:
       failFast: true
     
   profiles:
-    active: beta
+    active: dev
 server:
   port: 8096
 
