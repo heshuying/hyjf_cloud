@@ -24,24 +24,33 @@
     select * from
     (SELECT
     br.user_id AS assetCustomerId,
-    CONCAT(br.nid,br.recover_period) AS refundOrderNumber,
+    CONCAT( br.nid, br.recover_period ) AS refundOrderNumber,
     br.nid AS orderNo,
     br.borrow_nid AS productNo,
-    #{entId} AS entId,
+    8001 AS entId,
     1 AS assetId,
-    FROM_UNIXTIME(br.recover_time,'%Y-%m-%d') AS expectedExitTime,
+    FROM_UNIXTIME( br.recover_time, '%Y-%m-%d' ) AS expectedExitTime,
     '' AS actualExitTime,
-    br.recover_interest-br.credit_interest_amount AS expectedRepay,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    br.recover_interest - crs.suminterest ELSE br.recover_interest
+    END AS expectedRepay,
     '' AS actualRepay,
     br.recover_capital - br.credit_amount AS expectedExitCapital,
     '' AS actualExitCapital,
-    br.recover_interest-br.credit_interest_amount+br.recover_capital - br.credit_amount AS expectedExitAmount,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    br.recover_interest - crs.suminterest + br.recover_capital - br.credit_amount ELSE br.recover_interest + br.recover_capital - br.credit_amount
+    END AS expectedExitAmount,
     '' AS actualExitAmount,
     br.recover_period AS period,
-    1 AS status
+    1 AS STATUS
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
     LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
+    LEFT JOIN ( SELECT DISTINCT ( cr.credit_tender_nid ), sum( cr.assign_interest ) AS suminterest FROM ht_credit_repay cr GROUP BY cr.credit_tender_nid ) crs ON br.nid = crs.credit_tender_nid
     WHERE br.recover_status=0 and br.accede_order_id is null
     AND b.borrow_style IN ( 'endday', 'end' )
     AND br.credit_status <![CDATA[<>]]> 2
@@ -59,24 +68,41 @@
     UNION ALL
     SELECT
     brp.user_id AS assetCustomerId,
-    CONCAT(brp.nid,brp.recover_period) AS refundOrderNumber,
+    CONCAT( brp.nid, brp.recover_period ) AS refundOrderNumber,
     brp.nid AS orderNo,
     brp.borrow_nid AS productNo,
-    #{entId} AS entId,
+    8001 AS entId,
     1 AS assetId,
     FROM_UNIXTIME( brp.recover_time, '%Y-%m-%d' ) AS expectedExitTime,
     '' AS actualExitTime,
-    brp.recover_interest-brp.credit_interest AS expectedRepay,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    brp.recover_interest - crs.suminterest ELSE brp.recover_interest
+    END AS expectedRepay,
     '' AS actualRepay,
     brp.recover_capital - brp.credit_amount AS expectedExitCapital,
     '' AS actualExitCapital,
-    brp.recover_interest-brp.credit_interest+ brp.recover_capital - brp.credit_amount AS expectedExitAmount,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    brp.recover_interest - crs.suminterest + brp.recover_capital - brp.credit_amount ELSE brp.recover_interest + brp.recover_capital - brp.credit_amount
+    END AS expectedExitAmount,
     '' AS actualExitAmount,
     brp.recover_period AS period,
     1 AS STATUS
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid = b.borrow_nid
     LEFT JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    LEFT JOIN (
+    SELECT DISTINCT
+    ( CONCAT( cr.credit_tender_nid, cr.recover_period ) ) AS crsnid,
+    sum( cr.assign_interest ) AS suminterest
+    FROM
+    ht_credit_repay cr
+    GROUP BY
+    CONCAT( cr.credit_tender_nid, cr.recover_period )
+    ) crs ON CONCAT( brp.nid, brp.recover_period ) = crs.crsnid
     WHERE brp.recover_status=0
     and brp.accede_order_id is null
     AND brp.credit_status <![CDATA[<>]]> 2
