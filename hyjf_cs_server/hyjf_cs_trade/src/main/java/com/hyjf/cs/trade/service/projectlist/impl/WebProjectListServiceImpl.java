@@ -227,6 +227,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     requestList.setProjectType(projectType);
                     requestList.setBorrowClass(borrowClass);
                     requestList.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                    requestList.setStatus("21");
                     // 只查询定时发标和出借中标的
                     page.setTotal(projectTotal);
                     // 查询相应的汇直投列表数据
