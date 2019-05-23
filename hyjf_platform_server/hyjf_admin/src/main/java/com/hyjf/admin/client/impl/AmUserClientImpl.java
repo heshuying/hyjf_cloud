@@ -35,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -2026,11 +2027,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
-		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_number_total", request, Integer.class);
-	}
-
-	@Override
 	public List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o) {
 		SmsCountCustomizeResponse response = restTemplate.getForObject(
 				"http://AM-ADMIN/am-user/sms_count/query_department_info", SmsCountCustomizeResponse.class,
@@ -2712,16 +2708,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request) {
-		SmsCountCustomizeResponse response =
-				restTemplate.postForEntity("http://AM-ADMIN/am-user/sms_count/getsmslistforexport", request, SmsCountCustomizeResponse.class).getBody();
-		if(Response.isSuccess(response)){
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
 	public int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest) {
 		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPayAuth/selectUserMemberCount", userPayAuthRequest, IntegerResponse.class);
 		if (response != null) {
@@ -2890,6 +2876,42 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankCancellationAccountList", bankCancellationAccountRequest, BankCancellationAccountResponse.class)
 				.getBody();
 		return response;
+	}
+
+	@Override
+	public List<SmsCountCustomizeVO>  getuserIdAnddepartmentName() {
+		SmsCountCustomizeResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/sms_count/getuserIdAnddepartmentName", SmsCountCustomizeResponse.class)
+				.getBody();
+		if(response != null && response.getResultList() != null && response.getResultList().size() > 0){
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<UserVO> selectUserListByMobile(ListRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/sms_count/selectUserListByMobile", request, UserResponse.class)
+				.getBody();
+		if(response != null && response.getResultList() != null){
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public void insertBatchSmsCount(ListRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/sms_count/insertBatchSmsCount", request, UserResponse.class)
+				.getBody();
+	}
+
+	@Override
+	public void updateOrDelectRepeatData() {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/sms_count/updateOrDelectRepeatData", UserResponse.class)
+				.getBody();
 	}
 
 	/**

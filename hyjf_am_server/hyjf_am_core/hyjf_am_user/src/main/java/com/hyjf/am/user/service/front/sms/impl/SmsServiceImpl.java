@@ -198,10 +198,24 @@ public class SmsServiceImpl extends BaseServiceImpl implements SmsService {
         if (StringUtils.isNotBlank(request.getRe_time_begin())) {
             params.put("re_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getRe_time_begin())));
         }
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(request.getRe_time_end())) {
+        if (StringUtils.isNotBlank(request.getRe_time_end())) {
             params.put("re_time_end", GetDate.dateString2Timestamp(GetDate.getDayEnd(request.getRe_time_end())));
         }
         return smsCountCustomizeMapper.queryUser(params);
+	}
+
+	/**
+	 * 根据用户生日查询手机号码
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<String> queryUserByBirthday(SmsCodeUserRequest request) {
+		Map<String, Object> params = new HashMap<>();
+		if (StringUtils.isNotBlank(request.getBirthday()) ) {
+			params.put("birthday", "%"+request.getBirthday());
+		}
+		return smsCountCustomizeMapper.queryUserByBirthday(params);
 	}
 
 }

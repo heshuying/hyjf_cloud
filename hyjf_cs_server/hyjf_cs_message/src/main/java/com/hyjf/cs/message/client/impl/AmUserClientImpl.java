@@ -10,6 +10,7 @@ import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.admin.UtmVO;
@@ -29,10 +30,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -311,4 +309,13 @@ public class AmUserClientImpl implements AmUserClient {
 				request, AppUtmRegResponse.class);
 	}
 
+	@Override
+	public List<String> queryUserByBirthday(SmsCodeUserRequest request) {
+		Response response = restTemplate
+				.postForEntity("http://AM-USER/am-user/smsCode/queryUserByBirthday", request, Response.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
 }
