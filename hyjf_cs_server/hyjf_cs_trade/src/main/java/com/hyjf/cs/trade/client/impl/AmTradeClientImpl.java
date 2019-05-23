@@ -1285,7 +1285,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    @Cached(name="webHomeProjectListCountCache1-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
         logger.info("散标列表记录数，request：{}", JSON.toJSONString(request));
