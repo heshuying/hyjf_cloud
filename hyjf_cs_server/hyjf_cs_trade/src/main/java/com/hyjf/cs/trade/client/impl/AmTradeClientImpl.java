@@ -1290,10 +1290,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     public Integer countProjectList(ProjectListRequest request) {
         logger.info("散标列表记录数，request：" + JSON.toJSONString(request));
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
+        logger.info("散标列表记录数，response:", JSON.toJSONString(response));
         if (Response.isSuccess(response)){
             return response.getCount();
         }
-        logger.info("散标列表记录数，response:", JSON.toJSONString(response));
         return null;
     }
 
