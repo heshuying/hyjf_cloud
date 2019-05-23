@@ -3,6 +3,8 @@ package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProduct;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -69,8 +71,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
      * @return
      */
     @Override
-    public JSONArray getPlanProdouct(String planNid,Boolean isOld,String isPlan){
-        JSONArray json = new JSONArray();
+    public JSONArray getPlanProdouct(String planNid,Boolean isOld,String isPlan,JSONArray json){
         Map<String, Object> param =getParam(planNid,isOld,isPlan);
         if(!param.isEmpty()&&param.size()>0){
             json.add(param);
@@ -183,4 +184,47 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
         List<HjhPlanVO> hjhPlanVOList = amTradeClient.selectAllPlan();
         return hjhPlanVOList;
     }
+
+    /**
+     * 查找未上报的产品信息
+     * @return
+     */
+    @Override
+    public List<CertProductVO> selectCertProductList(){
+        return amTradeClient.selectCertProductList();
+    }
+    /**
+     * 批量更新
+     *
+     * @param updateVO
+     * @return
+     */
+    @Override
+    public Integer updateCertProductBatch(CertProductUpdateVO updateVO) {
+        return amTradeClient.updateCertProductBatch(updateVO);
+    }
+
+    /**
+     * 组装产品信息历史数据
+     * @return
+     */
+    @Override
+    public JSONArray getHistoryDateProduct() {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            List<CertProductVO> certProductVOList = selectCertProductList();
+            if(CollectionUtils.isEmpty(certProductVOList)){
+                logger.info("产品信息历史数据推送,暂无报送的产品信息");
+                return null;
+            }
+            for(CertProductVO certProductVO:certProductVOList){
+                //是否是智投 1：散标,2：智投
+                jsonArray = getPlanProdouct(certProductVO.getProductNid(),true,certProductVO.getIsPlan().toString(),jsonArray);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return jsonArray;
+    }
+
 }

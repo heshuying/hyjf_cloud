@@ -1,8 +1,8 @@
-package com.hyjf.am.trade.dao.model.auto;
+package com.hyjf.am.vo.trade.cert;
 
 import java.io.Serializable;
 
-public class CertProduct implements Serializable {
+public class CertProductVO implements Serializable {
     /**
      * 主键
      *
@@ -18,7 +18,7 @@ public class CertProduct implements Serializable {
     private String productNid;
 
     /**
-     * 是否是智投 0：散标,1：智投
+     * 是否是智投 1：散标,2：智投
      *
      * @mbggenerated
      */
@@ -30,8 +30,6 @@ public class CertProduct implements Serializable {
      * @mbggenerated
      */
     private Integer isProduct;
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -46,7 +44,7 @@ public class CertProduct implements Serializable {
     }
 
     public void setProductNid(String productNid) {
-        this.productNid = productNid == null ? null : productNid.trim();
+        this.productNid = productNid;
     }
 
     public Integer getIsPlan() {
