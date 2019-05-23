@@ -73,7 +73,7 @@ public class CertOldInvestDetailHjhTenderSuccessMessageConsumer implements Rocke
         try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_HJH_TENDER_SUCCESS_RUN"))){
                 // --> 消息处理
-                List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"hjh_tender_success");
+                List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size, null, "hjh_tender_success");
                 if (accountLists.size()==0){
                     logger.info(logHeader + "生成完成！");
                     RedisUtils.set("CREDIT_TENDER_HJH_TENDER_SUCCESS_RUN","1");
@@ -100,7 +100,7 @@ public class CertOldInvestDetailHjhTenderSuccessMessageConsumer implements Rocke
                 page++;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("报错了",e);
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {

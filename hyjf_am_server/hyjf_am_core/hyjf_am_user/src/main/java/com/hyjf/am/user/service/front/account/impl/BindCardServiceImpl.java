@@ -117,7 +117,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 
 		// add 合规数据上报 埋点 liubin 20181122 start
 		logger.info("绑卡：："+bankCard.getCardNo()+"-------"+cnt);
-		if (StringUtils.isNotEmpty(bankCard.getCardNo()) && cnt > 0){
+		if ( cnt > 0){
 			// 推送数据到MQ 用户信息修改（绑卡异步）
 			JSONObject params = new JSONObject();
 			params.put("userId", bankCard.getUserId());

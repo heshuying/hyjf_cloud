@@ -43,6 +43,12 @@ public interface MQConstant {
 	 */
 	String APP_MESSAGE_GROUP = "APP_MESSAGE_GROUP";
 	String APP_MESSAGE_TOPIC = "APP_MESSAGE_TOPIC";
+
+	/**
+	 * 发送短信统计 push group topic
+	 */
+	String SMS_COUNT_MESSAGE_GROUP = "SMS_COUNT_MESSAGE_GROUP";
+	String SMS_COUNT_MESSAGE_TOPIC = "SMS_COUNT_MESSAGE_TOPIC";
 	/** ------------------------------ 消息中心 end ------------------------------ */
 
 
@@ -55,6 +61,12 @@ public interface MQConstant {
 	 */
 	String GRANT_COUPON_GROUP = "COUPON_GROUP";
 	String GRANT_COUPON_TOPIC = "COUPON_TOPIC";
+
+	/**
+	 * 优惠券发放失败转存
+	 */
+	String GRANT_COUPON_FAIL_GROUP = "COUPON_FAIL_GROUP";
+	String GRANT_COUPON_FAIL_TOPIC = "COUPON_FAIL_TOPIC";
 
 	/**
 	 * 汇直投-优惠券使用
@@ -700,14 +712,18 @@ public interface MQConstant {
 	// 产品信息异常重发
 	String CERT_REPAIR_LENDPRODUCT = "CERT_REPAIR_LENDPRODUCT";
 	// 产品信息异常、添加智投、修改智投时报送
-	String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG ;
+//  String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG ;
+	//不上线，不报送，后期改回上面配置
+	String CERT_LENDPRODUCT_TAG = "NO_SENDP_LENDPRODUCT" ;
 
 	/** 产品配置信息*/
 	String CERT_LENDPRODUCTCONFIG_GROUP = "CERT_LENDPRODUCTCONFIG_GROUP";
 	// 产品配置异常重发
 	String CERT_REPAIR_LENDPRODUCTCONFIG = "CERT_REPAIR_LENDPRODUCTCONFIG";
 	// 计入计划，或单笔承接成功
-	String CERT_LENDPRODUCTCONFIG_TAG = CERT_REPAIR_LENDPRODUCTCONFIG+"||"+MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG+"||"+MQConstant.LOAN_SUCCESS_TAG;
+//  String CERT_LENDPRODUCTCONFIG_TAG = CERT_REPAIR_LENDPRODUCTCONFIG+"||"+MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG+"||"+MQConstant.LOAN_SUCCESS_TAG;
+	//不上线，不报送，后期改回上面配置
+	String CERT_LENDPRODUCTCONFIG_TAG = "NO_SEND_LENDPRODUCTCONFIG";
 
 	//产品信息历史数据推送
 	String CERT_OLD_LENDPRODUCT_GROUP = "CERT_OLD_LENDPRODUCT_GROUP";

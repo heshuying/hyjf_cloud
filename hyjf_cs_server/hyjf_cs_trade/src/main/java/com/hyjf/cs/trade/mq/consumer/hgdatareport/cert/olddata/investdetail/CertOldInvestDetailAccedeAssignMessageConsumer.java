@@ -73,7 +73,7 @@ public class CertOldInvestDetailAccedeAssignMessageConsumer implements RocketMQL
         try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_ACCEDE_ASSIGN_RUN"))){
                 // --> 消息处理
-                List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"accede_assign");
+                List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size, null, "accede_assign");
                 logger.info(logHeader + "accountLists.size():"+accountLists.size());
                 if (accountLists.size()==0){
                     logger.info(logHeader + "生成完成！");
@@ -101,7 +101,7 @@ public class CertOldInvestDetailAccedeAssignMessageConsumer implements RocketMQL
                 page++;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("报错了",e);
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {

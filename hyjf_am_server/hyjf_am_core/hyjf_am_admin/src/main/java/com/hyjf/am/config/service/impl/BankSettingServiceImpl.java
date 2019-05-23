@@ -88,7 +88,7 @@ public class BankSettingServiceImpl implements BankSettingService {
         if(result>0){
             logger.info("插入返回结果jxBankConfig"+ JSONObject.toJSONString(jxBankConfig));
             jxBankConfig.setBankId(jxBankConfig.getId());
-            jxBankConfigMapper.updateByPrimaryKey(jxBankConfig);
+            jxBankConfigMapper.updateByPrimaryKeySelective(jxBankConfig);
         }
         return result;
     }
