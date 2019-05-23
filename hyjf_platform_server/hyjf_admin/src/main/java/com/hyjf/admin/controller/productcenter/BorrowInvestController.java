@@ -474,7 +474,8 @@ public class BorrowInvestController extends BaseController {
         map.put("contractCreateTime", "合同生成时间");
         map.put("contractSignTime", "合同签署时间");
         map.put("tenderType", "循环出借");
-
+        map.put("utmSource1", "出借人渠道来源（出借时）");
+        map.put("utmSource2", "出借人渠道来源（当前）");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
