@@ -4,7 +4,6 @@ import com.hyjf.am.admin.mq.consumer.SellDailyConsumer;
 import com.hyjf.am.market.dao.model.auto.ScreenTwoParam;
 import com.hyjf.am.market.service.UserLargeScreenTwoCustomizeService;
 import com.hyjf.am.trade.service.UserLargeScreenTwoCustomizeTService;
-import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -40,36 +39,32 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
         if (MQConstant.SCREEN_DATA_TWO_SELECT_TAG.equals(messageExt.getTags())) {
             logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [Start]");
             // 增资、提现率处理
-            // 查询有效坐席
-            List<CustomerTaskConfig> customerList = userLargeScreenTwoCustomizeService.getCustomer();
-            if (!CollectionUtils.isEmpty(customerList)){
-                // 查询坐席下的增资、提现率
-                List<ScreenTwoParam> result = userLargeScreenTwoCustomizeService.getCapitalIncreaseAndCashWithdrawalRateByCustomer(customerList);
-                if (!CollectionUtils.isEmpty(result)){
-                    // 运营部对象
-                    ScreenTwoParam operationParam = new ScreenTwoParam();
-                    // 运营部总增资
-                    BigDecimal operationalCapitalIncrease = new BigDecimal("0");
-                    for (ScreenTwoParam param : result) {
-                        if(param.getFlag() == 2){
-                            operationalCapitalIncrease = operationalCapitalIncrease.add(param.getCapitalIncrease());
-                        }
+            // 查询有效坐席下的 增资、提现率
+            List<ScreenTwoParam> result = userLargeScreenTwoCustomizeService.getCapitalIncreaseAndCashWithdrawalRateByCustomer();
+            if (!CollectionUtils.isEmpty(result)){
+                // 运营部对象
+                ScreenTwoParam operationParam = new ScreenTwoParam();
+                // 运营部总增资
+                BigDecimal operationalCapitalIncrease = new BigDecimal("0");
+                for (ScreenTwoParam param : result) {
+                    if(param.getFlag() == 2){
+                        operationalCapitalIncrease = operationalCapitalIncrease.add(param.getCapitalIncrease());
                     }
-                    // 查询运营部当前总站岗资金
-                    BigDecimal operNowBalance = userLargeScreenTwoCustomizeService.getOperNowBalance();
-                    // 给运营部对象赋值
-                    operationParam.setCapitalIncrease(operationalCapitalIncrease);
-                    operationParam.setCashWithdrawalRate(BigDecimal.ZERO);
-                    operationParam.setNowBalance(operNowBalance);
-                    operationParam.setQueryTime(new Date());
-                    operationParam.setCustomerName("");
-                    operationParam.setFlag(3);
-                    result.add(operationParam);
-                    // 添加数据之前先清空表历史数据,防止表数据增长太快
-                    userLargeScreenTwoCustomizeTService.deleteAllParam();
-                    // 添加集合数据到 用户画像-屏幕二数据表
-                    userLargeScreenTwoCustomizeTService.insertResult(result);
                 }
+                // 查询运营部当前总站岗资金
+                BigDecimal operNowBalance = userLargeScreenTwoCustomizeService.getOperNowBalance();
+                // 给运营部对象赋值
+                operationParam.setCapitalIncrease(operationalCapitalIncrease);
+                operationParam.setCashWithdrawalRate(BigDecimal.ZERO);
+                operationParam.setNowBalance(operNowBalance);
+                operationParam.setQueryTime(new Date());
+                operationParam.setCustomerName("运营部数据(非坐席名)");
+                operationParam.setFlag(3);
+                result.add(operationParam);
+                // 添加数据之前先清空表历史数据,防止表数据增长太快
+                userLargeScreenTwoCustomizeTService.deleteAllParam();
+                // 添加集合数据到 用户画像-屏幕二数据表
+                userLargeScreenTwoCustomizeTService.insertResult(result);
             }
             logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [End]");
 
