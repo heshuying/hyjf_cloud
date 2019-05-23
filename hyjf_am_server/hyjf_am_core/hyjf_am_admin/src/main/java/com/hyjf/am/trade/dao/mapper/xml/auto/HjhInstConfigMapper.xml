@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+    <result column="inst_type" property="instType" jdbcType="TINYINT" />
+    <result column="capital_toplimit" property="capitalToplimit" jdbcType="DECIMAL" />
+    <result column="cooperative_agency" property="cooperativeAgency" jdbcType="VARCHAR" />
+    <result column="commission_fee" property="commissionFee" jdbcType="DECIMAL" />
+    <result column="repay_capital_type" property="repayCapitalType" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, inst_code, inst_name, inst_type, capital_toplimit, cooperative_agency, commission_fee, 
+    repay_capital_type, remark, del_flag, create_user, update_user, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_inst_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_inst_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_inst_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" >
+    delete from ht_hjh_inst_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_inst_config (inst_code, inst_name, inst_type, 
+      capital_toplimit, cooperative_agency, commission_fee, 
+      repay_capital_type, remark, del_flag, 
+      create_user, update_user, create_time, 
+      update_time)
+    values (#{instCode,jdbcType=VARCHAR}, #{instName,jdbcType=VARCHAR}, #{instType,jdbcType=TINYINT}, 
+      #{capitalToplimit,jdbcType=DECIMAL}, #{cooperativeAgency,jdbcType=VARCHAR}, #{commissionFee,jdbcType=DECIMAL}, 
+      #{repayCapitalType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_inst_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="instName != null" >
+        inst_name,
+      </if>
+      <if test="instType != null" >
+        inst_type,
+      </if>
+      <if test="capitalToplimit != null" >
+        capital_toplimit,
+      </if>
+      <if test="cooperativeAgency != null" >
+        cooperative_agency,
+      </if>
+      <if test="commissionFee != null" >
+        commission_fee,
+      </if>
+      <if test="repayCapitalType != null" >
+        repay_capital_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="instName != null" >
+        #{instName,jdbcType=VARCHAR},
+      </if>
+      <if test="instType != null" >
+        #{instType,jdbcType=TINYINT},
+      </if>
+      <if test="capitalToplimit != null" >
+        #{capitalToplimit,jdbcType=DECIMAL},
+      </if>
+      <if test="cooperativeAgency != null" >
+        #{cooperativeAgency,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionFee != null" >
+        #{commissionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalType != null" >
+        #{repayCapitalType,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_inst_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_inst_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instName != null" >
+        inst_name = #{record.instName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instType != null" >
+        inst_type = #{record.instType,jdbcType=TINYINT},
+      </if>
+      <if test="record.capitalToplimit != null" >
+        capital_toplimit = #{record.capitalToplimit,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cooperativeAgency != null" >
+        cooperative_agency = #{record.cooperativeAgency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commissionFee != null" >
+        commission_fee = #{record.commissionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapitalType != null" >
+        repay_capital_type = #{record.repayCapitalType,jdbcType=TINYINT},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_inst_config
+    set id = #{record.id,jdbcType=INTEGER},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      inst_name = #{record.instName,jdbcType=VARCHAR},
+      inst_type = #{record.instType,jdbcType=TINYINT},
+      capital_toplimit = #{record.capitalToplimit,jdbcType=DECIMAL},
+      cooperative_agency = #{record.cooperativeAgency,jdbcType=VARCHAR},
+      commission_fee = #{record.commissionFee,jdbcType=DECIMAL},
+      repay_capital_type = #{record.repayCapitalType,jdbcType=TINYINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    update ht_hjh_inst_config
+    <set >
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="instName != null" >
+        inst_name = #{instName,jdbcType=VARCHAR},
+      </if>
+      <if test="instType != null" >
+        inst_type = #{instType,jdbcType=TINYINT},
+      </if>
+      <if test="capitalToplimit != null" >
+        capital_toplimit = #{capitalToplimit,jdbcType=DECIMAL},
+      </if>
+      <if test="cooperativeAgency != null" >
+        cooperative_agency = #{cooperativeAgency,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionFee != null" >
+        commission_fee = #{commissionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalType != null" >
+        repay_capital_type = #{repayCapitalType,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    update ht_hjh_inst_config
+    set inst_code = #{instCode,jdbcType=VARCHAR},
+      inst_name = #{instName,jdbcType=VARCHAR},
+      inst_type = #{instType,jdbcType=TINYINT},
+      capital_toplimit = #{capitalToplimit,jdbcType=DECIMAL},
+      cooperative_agency = #{cooperativeAgency,jdbcType=VARCHAR},
+      commission_fee = #{commissionFee,jdbcType=DECIMAL},
+      repay_capital_type = #{repayCapitalType,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
