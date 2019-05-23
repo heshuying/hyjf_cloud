@@ -431,7 +431,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             return;
         }
         BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
-        if(borrowAndInfoVO==null){
+        if(borrowAndInfoVO==null||borrowAndInfoVO.getBorrowNid()==null){
             return;
         }
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
@@ -482,7 +482,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             return;
         }
         BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
-        if(borrowAndInfoVO==null){
+        if(borrowAndInfoVO==null||borrowAndInfoVO.getBorrowNid()==null){
             return;
         }
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
