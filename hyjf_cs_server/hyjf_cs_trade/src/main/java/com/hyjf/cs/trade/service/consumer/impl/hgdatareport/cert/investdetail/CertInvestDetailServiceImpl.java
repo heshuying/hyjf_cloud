@@ -177,6 +177,10 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     //已改
     private void creditAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
         Map<String, Object> param = new HashMap<String, Object>();
+        List<CreditTenderVO> creditTenders=amTradeClient.selectCreditTender(accountList.getNid());
+        if(creditTenders==null||creditTenders.size()==0){
+            return;
+        }
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
         if(usersInfo==null||usersInfo.getIdcard()==null){
             return;
@@ -188,7 +192,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", creditTenders.get(0).getBidNid());
         //交易类型
         param.put("transType", "2");
         //交易金额
@@ -441,7 +445,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", borrowAndInfoVO.getBorrowNid());
         //交易类型
         param.put("transType", "41");
         //交易金额
@@ -492,7 +496,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", borrowAndInfoVO.getBorrowNid());
         //交易类型
         param.put("transType", "10");
         //交易金额
@@ -536,7 +540,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", accountList.getRemark());
         //交易类型
         param.put("transType", "2");
         //用户标示哈希
