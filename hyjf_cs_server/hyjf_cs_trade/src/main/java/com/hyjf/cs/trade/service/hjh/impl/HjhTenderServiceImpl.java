@@ -1340,6 +1340,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         planAccede.setRequest(request);
         planAccede.setCreateTime(new Date());
+
+        // 渠道用
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetails =null;
+        if(utmRegVO!=null){
+            planAccede.setTenderUserUtmId(utmRegVO.getUtmId());
+        }else{
+            // 获取app渠道
+            appChannelStatisticsDetails = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+            planAccede.setTenderUserUtmId(utmRegVO.getUtmId());
+        }
+
         // 插入汇计划加入明细表
         logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
@@ -1360,7 +1372,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 logger.error("发送CRM消息失败:" + e.getMessage());
             }
             // 更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始
-            this.updateUtm(request, plan);
+            this.updateUtm(request, plan,utmRegVO);
             // 网站累计出借追加
             // 出借、收益统计表
             JSONObject params = new JSONObject();
@@ -1384,7 +1396,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
 
         }
-        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+
         if (appChannelStatisticsDetails != null) {
             logger.info("更新app渠道统计表, userId is: {}", userId);
             Map<String, Object> params = new HashMap<String, Object>();
@@ -1497,7 +1509,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      * @param plan
      */
-    private void updateUtm(TenderRequest request, HjhPlanVO plan) {
+    private void updateUtm(TenderRequest request, HjhPlanVO plan ,UtmRegVO utmRegVO ) {
         logger.info("加入计划成功  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始  userId {}  计划编号 {}", request.getUserId(), plan.getPlanNid());
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计出借
@@ -1524,7 +1536,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         //根据investFlag标志位来决定更新哪种出借
         params.put("investFlag", checkIsNewUserCanInvest2(request.getUserId()));
         // PC渠道
-        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(request.getUserId());
         if (utmRegVO != null) {
             //压入消息队列
             try {
