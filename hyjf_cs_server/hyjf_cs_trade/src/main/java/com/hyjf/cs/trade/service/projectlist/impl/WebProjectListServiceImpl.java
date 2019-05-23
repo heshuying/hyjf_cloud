@@ -221,7 +221,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 int projectTotal = amTradeClient.countProjectList(request);
                 int defaultCount = request.getPageSize() * 2;
                 logger.info("defaultCount:" + defaultCount + " projectTotal:" + projectTotal);
-                if(projectTotal >= defaultCount){
+                if(projectTotal > defaultCount){
                     // 只查询定时发标和出借中标的
                     page.setTotal(projectTotal);
                     // 查询相应的汇直投列表数据
@@ -271,7 +271,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
-        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
+//        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 
