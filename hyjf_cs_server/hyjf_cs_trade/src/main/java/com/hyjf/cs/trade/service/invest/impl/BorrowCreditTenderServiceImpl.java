@@ -319,9 +319,10 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    public JSONObject getInterestInfo(int userId, String creditNid, String assignCapital) {
+    public JSONObject getInterestInfo(Integer userId, String creditNid, String assignCapital) {
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
         JSONObject ret = new JSONObject();
+
         if (Validator.isNotNull(creditAssign)) {
             creditAssign.setMoney(DF_FOR_VIEW.format(new BigDecimal(assignCapital).setScale(2, BigDecimal.ROUND_DOWN)));
             ret.put("creditAssign", creditAssign);
@@ -1066,14 +1067,19 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         params.put("projectType", "汇转让");
         // 首次投标项目期限
         params.put("investProjectPeriod", investProjectPeriod);
+        // 是否是首次投资
+        params.put("investFlag", checkAppUtmInvestFlag(userId));
         //压入消息队列
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error(e.getMessage());
-            logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+        if (utmRegVO != null) {
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+                logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+            }
         }
-
         /*(6)更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 结束*/
     }
 
@@ -1579,4 +1585,26 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
+
+
+    /**
+     * 查询appUtmReg是否首投
+     * @param userId
+     * @return
+     */
+    private boolean checkAppUtmInvestFlag(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户出借数量 userID {} 数量 {} ",userId,total);
+            if (total == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
+    }
+
 }

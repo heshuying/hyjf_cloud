@@ -653,7 +653,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     }
 
     @Override
-    public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
+    public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO,RegisterRequest register) {
         Integer sourceId = -1;
         if (StringUtils.isNotBlank(version)) {
             String[] shuzu = version.split("\\.");
@@ -663,24 +663,28 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 } catch (Exception e) {
                 }
                 // 查询推广渠道
-                    UtmPlatVO plat = amUserClient.selectUtmPlatByUtmId(sourceId.toString());
+                UtmPlatVO plat = amUserClient.selectUtmPlatByUtmId(sourceId.toString());
 
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("sourceId",sourceId);
-                    params.put("sourceName",plat!=null&&plat.getSourceName() != null ? plat.getSourceName() : "");
-                    params.put("userId",webViewUserVO.getUserId());
-                    params.put("userName",webViewUserVO.getUsername());
-                    params.put("firstInvestTime",0);
-                    params.put("investAmount",0.00);
-                    params.put("registerTime",new Date());
-                    params.put("cumulativeInvest",BigDecimal.ZERO);
-                    try {
-                        commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), params));
-                    } catch (MQException e) {
-                        logger.error(e.getMessage());
-                        logger.error("app注册推广保存用户数据！！！");
-                    }
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("sourceId",sourceId);
+                params.put("sourceName",plat!=null&&plat.getSourceName() != null ? plat.getSourceName() : "");
+                params.put("userId",webViewUserVO.getUserId());
+                params.put("userName",webViewUserVO.getUsername());
+                params.put("firstInvestTime",0);
+                params.put("investAmount",0.00);
+                params.put("registerTime",new Date());
+                params.put("cumulativeInvest",BigDecimal.ZERO);
+                // 手机号
+                params.put("mobile",register.getMobile());
+                // 推荐人
+                params.put("reffer",register.getReffer());
+                try {
+                    commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), params));
+                } catch (MQException e) {
+                    logger.error(e.getMessage());
+                    logger.error("app注册推广保存用户数据！！！");
+                }
             }
         }
     }
@@ -756,8 +760,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         int userId = userVO.getUserId();
         try {
             JSONObject params = new JSONObject();
-            params.put("mqMsgId", GetCode.getRandomCode(10));
-            params.put("userId", String.valueOf(userId));
+            params.put("userId", userId);
             params.put("sendFlg", "11");
             commonProducer.messageSendDelay(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                     UUID.randomUUID().toString(), params),1);

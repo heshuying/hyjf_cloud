@@ -15,6 +15,8 @@ import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCancellationAccountResponse;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
@@ -697,5 +699,68 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
         UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = userCenterClient.getUserUtmInfo(userId);
         return userUtmInfoCustomizeVO;
+    }
+
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     * @param account
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+    @Override
+    public BankCardResponse getBankInfoByAccount(String account,String userId) {
+        UpdCompanyRequest updCompanyRequest = new  UpdCompanyRequest();
+        updCompanyRequest.setAccount(account);
+        updCompanyRequest.setUserId(userId);
+        BankCardResponse bankCardResponse = userCenterClient.getBankInfoByAccount(updCompanyRequest);
+        return bankCardResponse;
+    }
+
+    /**
+     *  用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    @Override
+    public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+        return userCenterClient.cancellationAccountAction(userId, bankOpenAccount);
+    }
+
+    /**
+     *
+     * 用户销户成功后,删除用户账户表
+     *
+     * @param userId
+     */
+    @Override
+    public int deleteUserAccountAction(String userId) {
+        return this.amTradeClient.deleteUserAccountAction(userId);
+    }
+
+    /**
+     *
+     * 销户成功后,保存用户销户记录
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @Override
+    public int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest) {
+        return this.userCenterClient.saveCancellationAccountRecordAction(bankCancellationAccountRequest);
+    }
+
+    /**
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @Override
+    public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+        BankCancellationAccountResponse response = this.userCenterClient.getBankCancellationAccountList(bankCancellationAccountRequest);
+        return response;
     }
 }

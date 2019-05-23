@@ -6,6 +6,8 @@ package com.hyjf.admin.service;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCancellationAccountResponse;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -254,4 +256,45 @@ public interface UserCenterService {
      * @Author : huanghui
      */
     UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     * @param account
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+    BankCardResponse getBankInfoByAccount(String account,String userId);
+
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId,Integer bankOpenAccount);
+
+    /**
+     * 用户销户后,删除用户账户表
+     *
+     * @param userId
+     */
+    int deleteUserAccountAction(String userId);
+
+    /**
+     * 用户保存用户销户记录
+     *
+     * @param bankCancellationAccountRequest
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     *
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

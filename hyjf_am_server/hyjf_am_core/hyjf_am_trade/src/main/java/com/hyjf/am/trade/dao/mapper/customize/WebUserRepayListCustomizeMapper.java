@@ -86,5 +86,30 @@ public interface WebUserRepayListCustomizeMapper {
 	 */
 	BigDecimal getOrgWaitRepayPlanManageFee(Integer userId);
 
+	/**
+	 * 查询借款人非分期待还逾期利息
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getWaitRepayLateInterest(Integer userId);
+	/**
+	 * 查询借款人借款分期待还逾期利息
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getWaitRepayPlanLateInterest(Integer userId);
+	/**
+	 * 查询垫付机构非分期待还逾期利息
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getOrgWaitRepayLateInterest(Integer userId);
+	/**
+	 * 查询垫付机构分期待还逾期利息
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getOrgWaitRepayPlanLateInterest(Integer userId);
+
 	Integer getFailCredit(String borrowNid);
 }

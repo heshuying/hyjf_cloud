@@ -1,12 +1,14 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmMarketClient;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
+import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -249,6 +251,24 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
     public ActivityListResponse getInfoById(Integer id) {
 		ActivityListResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/activity/getInfoById/" + id, ActivityListResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public NewYearActivityRewardResponse selectAwardList(NewYearNineteenRequestBean requestBean) {
+    	NewYearActivityRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/getAwardList", requestBean, NewYearActivityRewardResponse.class);
+        return response;
+    }
+
+    @Override
+    public NewYearActivityRewardResponse selectAwardInfo(NewYearNineteenRequestBean request) {
+    	NewYearActivityRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/getAwardInfo", request, NewYearActivityRewardResponse.class);
+        return response;
+    }
+
+    @Override
+    public BooleanResponse updateStatus(NewYearNineteenRequestBean request) {
+    	BooleanResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/updateStatus", request, BooleanResponse.class);
         return response;
     }
 

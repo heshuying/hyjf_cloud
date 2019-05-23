@@ -35,5 +35,11 @@ public interface ChangeLogService extends BaseService {
 	 */
 	public int countRecordTotal(ChangeLogCustomize userChangeLog);
 
-
+	/**
+	 * 新增用户信息修改记录数
+	 *
+	 * @param userChangeLog
+	 * @return
+	 */
+	public boolean insertSelective(ChangeLogCustomize userChangeLog) ;
 }

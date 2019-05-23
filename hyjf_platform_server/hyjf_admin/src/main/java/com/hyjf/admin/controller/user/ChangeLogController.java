@@ -281,6 +281,7 @@ public class ChangeLogController extends BaseController {
         map.put("role", "用户角色");
         map.put("attribute", "用户属性");
         map.put("recommendUser", "推荐人");
+        map.put("utmName", "注册渠道");
         map.put("status", "用户状态");
         map.put("changeUser", "修改人");
         map.put("changeTime", "修改时间");

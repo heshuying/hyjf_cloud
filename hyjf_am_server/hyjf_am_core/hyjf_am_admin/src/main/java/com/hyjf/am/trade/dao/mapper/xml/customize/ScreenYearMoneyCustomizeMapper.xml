@@ -4,12 +4,75 @@
 
 	<insert id="addRepayUserList">
 		insert into ht_repayment_plan
-		(`user_id`, `borrow_nid`, `accede_order_id`, `customer_name`, `customer_group`, `money`, `repayment_time`)
+		(`user_id`, `borrow_nid`, `accede_order_id`, `customer_name`, `customer_group`, `money`, `old_money`,`repayment_time`)
 		values
 		<foreach collection="repaymentPlanVOS" item="item" index="index" separator=",">
-			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.repaymentTime})
+			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.money},#{item.repaymentTime})
 		</foreach>
 	</insert>
+
+	<select id="getRechargeList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean">
+		SELECT t1.user_id AS userId,t2.username AS userName,t1.money AS money ,'2' AS operating,t1.create_time as createTime
+		from ht_account_recharge t1
+        left join ht_r_user t2 on t1.user_id = t2.user_id
+		where t1.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
+        AND t1.create_time <![CDATA[<]]>    STR_TO_DATE('2019-04-03 18:00:00', '%Y-%m-%d %H:%i:%s')
+        AND t1.`status`=2
+        limit #{startIndex},#{endIndex}
+	</select>
+
+	<select id="getPlanRepayList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean" parameterType="java.util.HashMap">
+		SELECT  t1.user_id AS userId,t1.user_name AS userName,t1.actual_pay_total AS money ,'3' AS operating ,FROM_UNIXTIME(t1.repay_actual_time,'%Y-%m-%d %H:%i:%s') as createTime
+		from ht_hjh_repay t1
+		where t1.repay_status = 2
+		and t1.order_status=7
+		and  t1.repay_actual_time <![CDATA[>=]]>  UNIX_TIMESTAMP('2019-04-01 00:00:00')
+		AND t1.repay_actual_time <![CDATA[<]]>    UNIX_TIMESTAMP('2019-04-03 18:00:00')
+		limit #{startIndex},#{endIndex}
+	</select>
+
+	<select id="getCreditTenderList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean" parameterType="java.util.HashMap">
+		select  t1.user_id AS userId,t1.user_name AS userName,t1.assign_capital AS money ,'3' AS operating ,t1.create_time as createTime
+		from ht_credit_tender t1
+		where t1.create_time <![CDATA[>=]]>  STR_TO_DATE('2019-04-01 00:00:00','%Y-%m-%d %H:%i:%s')
+		AND   t1.create_time <![CDATA[<]]>   STR_TO_DATE('2019-04-03 18:00:00','%Y-%m-%d %H:%i:%s')
+		limit #{startIndex},#{endIndex}
+	</select>
+	<select id="getPlanTenderList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean" parameterType="java.util.HashMap">
+		select  t1.user_id AS userId,t1.user_name AS userName,t1.accede_account AS money ,'1' AS operating ,t1.create_time as createTime,'3' as productType,accede_order_id as orderId
+		from ht_hjh_accede t1
+		where t1.create_time <![CDATA[>=]]>  STR_TO_DATE('2019-04-01 00:00:00','%Y-%m-%d %H:%i:%s')
+		AND   t1.create_time <![CDATA[<]]>   STR_TO_DATE('2019-04-03 18:00:00','%Y-%m-%d %H:%i:%s')
+		limit #{startIndex},#{endIndex}
+	</select>
+	<select id="getWithdrawList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean">
+		SELECT t1.user_id AS userId,t2.username AS userName,t1.total AS money,'4' AS operating,t1.create_time as createTime
+		from ht_account_withdraw t1
+		left join ht_r_user t2 on t1.user_id = t2.user_id
+		where t1.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
+		      AND t1.create_time <![CDATA[<]]> STR_TO_DATE('2019-04-03 18:00:00', '%Y-%m-%d %H:%i:%s')
+		      AND t1.`status`=2
+			  limit #{startIndex},#{endIndex}
+	</select>
+
+	<select id="getBorrowRecoverList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean">
+		SELECT t1.nid orderId,t1.user_id userId, t1.user_name userName,t1.recover_account_yes money,'3' AS operating,FROM_UNIXTIME(t1.recover_yestime,'%Y-%m-%d %H:%i:%s') as createTime
+		from ht_borrow_recover t1
+		where t1.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP('2019-04-01 00:00:00')
+			  and t1.recover_yestime <![CDATA[<]]> UNIX_TIMESTAMP('2019-04-03 18:00:00')
+			  limit #{startIndex},#{endIndex}
+	</select>
+
+	<select id="getBorrowTenderList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean">
+		SELECT bt.user_name as userName,bt.user_id as userId, bt.nid as orderId,bt.account as money,
+			   b.project_type AS productType,'1' as operating,bt.create_time as createTime
+		FROM ht_borrow_tender bt
+		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+		where bt.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
+		      AND bt.create_time <![CDATA[<]]> STR_TO_DATE('2019-04-03 18:00:00', '%Y-%m-%d %H:%i:%s')
+		      and bt.accede_order_id is null
+			  limit #{startIndex},#{endIndex}
+	</select>
 
 
 </mapper>

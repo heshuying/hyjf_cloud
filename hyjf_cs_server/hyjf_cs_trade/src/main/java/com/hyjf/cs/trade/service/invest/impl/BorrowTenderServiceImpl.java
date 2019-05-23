@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -251,10 +252,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
+        // 解决PC端投资结果页开小差问题
+        String pageSuccessName = "success";
+        String pageFailedName = "failed";
+        if ((ClientConstants.WEB_CLIENT+"").equals(request.getPlatform())) {
+            pageSuccessName = "suc";
+            pageFailedName = "fal";
+
+        }
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fal?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/suc?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
@@ -2670,11 +2679,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 出借时间
         params.put("investTime", nowTime);
         // 项目类型
-        if (borrow.getProjectType() == 13) {
-            params.put("projectType", "汇金理财");
-        } else {
-            params.put("projectType", "汇直投");
-        }
+        params.put("projectType", "散标");
         // 首次投标项目期限
         String investProjectPeriod = "";
         String borrowStyle = borrow.getBorrowStyle();
@@ -2685,12 +2690,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("investProjectPeriod", investProjectPeriod);
         params.put("investFlag", checkAppUtmInvestFlag(userId));
-        //压入消息队列
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error("渠道统计用户累计出借推送消息队列失败！！！", e);
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+        if (utmRegVO != null ){
+            // PC渠道用户
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+                logger.error("PC渠道统计用户累计出借推送消息队列失败！！！");
+            }
+        }
+        // 获取app渠道
+        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appUtmRegVO != null){
+            //压入消息队列
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error("APP渠道统计用户累计出借推送消息队列失败！！！", e);
+            }
         }
 
         /*(6)更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 结束*/

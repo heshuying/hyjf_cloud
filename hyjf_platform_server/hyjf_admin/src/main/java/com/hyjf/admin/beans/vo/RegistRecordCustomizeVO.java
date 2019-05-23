@@ -4,9 +4,11 @@
 package com.hyjf.admin.beans.vo;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author nxl
@@ -31,18 +33,27 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     //用户属性
     @ApiModelProperty(value = "用户属性")
     private String userProperty;
+    //注册渠道Id
+    @ApiModelProperty(value = "注册渠道Id")
+    public String sourceId;
     //注册渠道
     @ApiModelProperty(value = "注册渠道")
     public String sourceName;
     // 注册平台
     @ApiModelProperty(value = "注册平台")
     public String registPlat;
+    // 注册平台ID
+    @ApiModelProperty(value = "注册平台ID")
+    public String registPlatCode;
     // 注册时间
     @ApiModelProperty(value = "注册时间")
     public String regTime;
     // 注册ip
     @ApiModelProperty(value = "注册ip")
     public String regIP;
+    // 注册渠道ListAll
+    @ApiModelProperty(value = "所有有效注册渠道")
+    private List<UtmPlatVO> utmPlatList;
 
     /**
      * 获取用户id userId
@@ -187,5 +198,28 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     public void setRegIP(String regIP) {
         this.regIP = regIP;
     }
-    
+
+    public List<UtmPlatVO> getUtmPlatList() {
+        return utmPlatList;
+    }
+
+    public void setUtmPlatList(List<UtmPlatVO> utmPlatList) {
+        this.utmPlatList = utmPlatList;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public String getRegistPlatCode() {
+        return registPlatCode;
+    }
+
+    public void setRegistPlatCode(String registPlatCode) {
+        this.registPlatCode = registPlatCode;
+    }
 }

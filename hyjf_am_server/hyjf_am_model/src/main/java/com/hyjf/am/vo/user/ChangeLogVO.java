@@ -42,6 +42,18 @@ public class ChangeLogVO extends BaseVO implements Serializable {
     //合规四期(添加邮箱) add by nxl
     private String email;
 
+    //注册渠道
+    private String utmName;
+
+    //原注册渠道ID
+    private String sourceIdWasId;
+    //原注册渠道NAME
+    private String sourceIdWasName;
+
+    private String utmType;
+
+    private String utmSourceId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -197,6 +209,46 @@ public class ChangeLogVO extends BaseVO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUtmName() {
+        return utmName;
+    }
+
+    public void setUtmName(String utmName) {
+        this.utmName = utmName;
+    }
+
+    public String getSourceIdWasId() {
+        return sourceIdWasId;
+    }
+
+    public void setSourceIdWasId(String sourceIdWasId) {
+        this.sourceIdWasId = sourceIdWasId;
+    }
+
+    public String getSourceIdWasName() {
+        return sourceIdWasName;
+    }
+
+    public void setSourceIdWasName(String sourceIdWasName) {
+        this.sourceIdWasName = sourceIdWasName;
+    }
+
+    public String getUtmType() {
+        return utmType;
+    }
+
+    public void setUtmType(String utmType) {
+        this.utmType = utmType;
+    }
+
+    public String getUtmSourceId() {
+        return utmSourceId;
+    }
+
+    public void setUtmSourceId(String utmSourceId) {
+        this.utmSourceId = utmSourceId;
     }
 }
 

@@ -22,4 +22,9 @@ public interface AdminCustomizeMapper {
 	 * @return
 	 */
 	List<Admin> selectByUsername(String userName);
+
+	/**
+	 * 根据用户ID获取用户
+	 */
+	List<Admin> selectByUserId(Integer[] userId);
 }

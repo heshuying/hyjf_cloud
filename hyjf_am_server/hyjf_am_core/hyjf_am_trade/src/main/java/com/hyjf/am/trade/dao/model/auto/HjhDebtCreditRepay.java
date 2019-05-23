@@ -281,7 +281,7 @@ public class HjhDebtCreditRepay implements Serializable {
     private Integer advanceDays;
 
     /**
-     * 借款人提前还款利息
+     * 借款人提前还款利息(已加罚息)
      *
      * @mbggenerated
      */
@@ -433,6 +433,13 @@ public class HjhDebtCreditRepay implements Serializable {
      * @mbggenerated
      */
     private Date updateTime;
+
+    /**
+     * 提前还款罚息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal repayAdvancePenaltyInterest;
 
     private static final long serialVersionUID = 1L;
 
@@ -930,5 +937,13 @@ public class HjhDebtCreditRepay implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getRepayAdvancePenaltyInterest() {
+        return repayAdvancePenaltyInterest;
+    }
+
+    public void setRepayAdvancePenaltyInterest(BigDecimal repayAdvancePenaltyInterest) {
+        this.repayAdvancePenaltyInterest = repayAdvancePenaltyInterest;
     }
 }

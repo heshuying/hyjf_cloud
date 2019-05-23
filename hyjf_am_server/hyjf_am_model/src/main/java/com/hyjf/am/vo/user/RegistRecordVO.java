@@ -29,10 +29,16 @@ public class RegistRecordVO extends BaseVO implements Serializable {
     public String sourceName;
     // 注册平台
     public String registPlat;
+    // 注册平台
+    public String registPlatCode;
     // 注册时间
     public String regTime;
     // 注册ip
     public String regIP;
+    // 注册渠道Id
+    public String sourceId;
+    // 注册渠道类型（pc,app,all,no）
+    public String sourceType;
 
     /**
      * 获取用户id userId
@@ -177,5 +183,28 @@ public class RegistRecordVO extends BaseVO implements Serializable {
     public void setRegIP(String regIP) {
         this.regIP = regIP;
     }
-    
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public String getRegistPlatCode() {
+        return registPlatCode;
+    }
+
+    public void setRegistPlatCode(String registPlatCode) {
+        this.registPlatCode = registPlatCode;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
 }

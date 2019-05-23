@@ -743,4 +743,9 @@ public interface MQConstant {
 	String WBS_BORROW_INFO_TAG = "WBS_BORROW_INFO_TAG";
 	// add by liuyang 20190415 wbs系统 标的信息推送MQ end
 
+	/**--------------------------------- 业务流程配置start -------------------------------------*/
+	String WORKFLOW_GROUP = "WORKFLOW_GROUP";
+	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
+	/**--------------------------------- 业务流程配置end -------------------------------------*/
+
 }

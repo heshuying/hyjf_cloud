@@ -2,24 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.RegistRecordCustomizeMapper">
     <resultMap id="RegistListPOMap" type="com.hyjf.am.user.dao.model.customize.RegistRecordCustomize">
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
         <result column="username" property="userName" jdbcType="VARCHAR" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
         <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
-        <result column="utm_source" property="sourceName" jdbcType="VARCHAR" />
+        <result column="source_name" property="sourceName" jdbcType="VARCHAR" />
         <result column="regist_plat" property="registPlat" jdbcType="VARCHAR" />
         <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
         <result column="reg_ip" property="regIP" jdbcType="VARCHAR" />
+        <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
+        <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectRegistList" resultMap="RegistListPOMap" parameterType="Map">
         SELECT
+        hydu.user_id AS user_id,
         hydu.username,
         hydu.mobile,
         hydui.attribute AS user_property,
         hydur.username AS recommend_name,
-        hydutm.utm_source AS utm_source,
-        hydu.reg_esb AS regist_plat,
-        date_format(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
+        IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.source_id), IF(appdurl.source_id IS NOT NULL,plat.source_id,null)) AS source_id,
+        IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.utm_source), IF(appdurl.source_id IS NOT NULL,plat.source_name,null)) AS source_name,
+        hydu.reg_esb AS regist_plat, DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
         ht_user hydu
@@ -28,6 +32,8 @@
         LEFT JOIN ht_user hydur ON hydur.user_id=hydsu.spreads_user_id
         LEFT JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
         LEFT JOIN ht_utm hydutm ON hydur1.utm_id = hydutm.utm_id
+        LEFT JOIN ht_app_utm_reg appdurl ON appdurl.user_id = hydu.user_id
+        LEFT JOIN ht_utm_plat plat ON plat.source_id = appdurl.source_id
         <include refid="Where_Clause" />
         ORDER BY hydu.reg_time DESC
         <if test="limitStart != null and limitEnd !=null" >
@@ -43,10 +49,47 @@
         LEFT  JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
         <include refid="Where_Clause" />
     </select>
+    <select id="selectRegistOne" resultMap="RegistListPOMap" parameterType="java.lang.Integer" >
+        SELECT hydu.user_id AS user_id,
+            hydu.username, hydu.mobile,
+            hydui.attribute AS user_property,
+            hydur.username AS recommend_name,
+            IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.source_id), IF(appdurl.source_id IS NOT NULL,plat.source_id,null)) AS source_id,
+            IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.utm_source), IF(appdurl.source_id IS NOT NULL,plat.source_name,null)) AS source_name,
+            hydu.reg_esb AS regist_plat,
+            DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
+            hydu.reg_ip
+            FROM ht_user hydu
+            LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+            LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+            LEFT JOIN ht_user hydur ON hydur.user_id=hydsu.spreads_user_id
+            LEFT JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
+            LEFT JOIN ht_utm hydutm ON hydur1.utm_id = hydutm.utm_id
+            LEFT JOIN ht_app_utm_reg appdurl ON appdurl.user_id = hydu.user_id
+            LEFT JOIN ht_utm_plat plat ON plat.source_id = appdurl.source_id
+        WHERE hydu.user_id = #{userId}
+        LIMIT 1
+    </select>
+    <select id="selectByUserType" resultMap="RegistListPOMap" parameterType="java.lang.Integer" >
+        SELECT hydu.user_id AS user_id, IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,'all','pc'), IF(appdurl.source_id IS NOT NULL,'app','no')) AS source_type
+        FROM ht_user hydu
+        LEFT JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
+        LEFT JOIN ht_app_utm_reg appdurl ON appdurl.user_id = hydu.user_id
+        WHERE hydu.user_id = #{userId}
+    </select>
     <sql id="Where_Clause">
         <where>
+            <if test="userId != null and userId !='' ">
+                AND hydu.user_id = #{userId}
+            </if>
             <if test="recommendName != null and recommendName !='' ">
                 AND hydur.username LIKE CONCAT(#{recommendName}, '%')
+            </if>
+            <if test="sourceId != null and sourceId !='' ">
+                AND IF(plat.source_type <![CDATA[<>]]> 0,plat.source_id, hydutm.source_id) = #{sourceId}
+            </if>
+            <if test="sourceName != null and sourceName !='' ">
+                AND IF(plat.source_type <![CDATA[<>]]> 0,plat.source_name, hydutm.utm_source) LIKE CONCAT(#{sourceName}, '%')
             </if>
             <if test="userName != null and userName !='' ">
                 AND hydu.username LIKE CONCAT(#{userName}, '%')

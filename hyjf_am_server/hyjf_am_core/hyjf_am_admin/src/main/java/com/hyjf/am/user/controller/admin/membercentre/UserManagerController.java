@@ -24,6 +24,7 @@ import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -55,9 +56,6 @@ public class UserManagerController extends BaseController {
     private BankConfigService bankConfigService;
     @Autowired
     BankAccountManageService bankAccountManageService;
-
-
-
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -165,7 +163,7 @@ public class UserManagerController extends BaseController {
      * @param userId
      * @return
      */
-    @RequestMapping("/selectCorpOpenAccountRecordByUserId/{userId}")
+    @GetMapping("/selectCorpOpenAccountRecordByUserId/{userId}")
     public CorpOpenAccountRecordResponse selectCorpOpenAccountRecordByUserId(@PathVariable int userId) {
         logger.info("---selectCorpOpenAccountRecordByUserId---  " + userId);
         CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
@@ -690,7 +688,20 @@ public class UserManagerController extends BaseController {
         }
         User user = userManagerService.selectUserByUserId(Integer.parseInt(userId));
         String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
-        logger.info("==============企业信息补录,获取的bankId值为: "+bankId+" ==============");
+        // add by nxl 后台优化 start
+        //企业账户由于银行卡号是短号,获取不到bankid的情况下,根据输入所属银行名获取bankId
+        if(StringUtils.isBlank(bankId)&&StringUtils.isNotBlank(updCompanyRequest.getBankName())){
+            JxBankConfig jxBankConfig = jxBankConfigService.selectBankConfigByName(updCompanyRequest.getBankName());
+            if(null!=jxBankConfig){
+                bankId=jxBankConfig.getBankId().toString();
+                if(StringUtils.isBlank(updCompanyRequest.getPayAllianceCode())){
+                    //如果银联号没有输入的情况下,获取江西银行配置
+                    updCompanyRequest.setPayAllianceCode(jxBankConfig.getPayAllianceCode());
+                }
+            }
+        }
+        // 企业用户补录功能追加所属银行跟联行号 需求,根据也么输入保存银行卡信息
+        /*logger.info("==============企业信息补录,获取的bankId值为: "+bankId+" ==============");
         String bankName = null;
         String payAllianceCode = null;
         if (StringUtils.isNotBlank(bankId)) {
@@ -711,8 +722,9 @@ public class UserManagerController extends BaseController {
                     }
                 }
             }
-        }
-        response = userManagerService.saveCompanyInfo(updCompanyRequest, bankName, payAllianceCode, user, bankId);
+        }*/
+        // add by nxl 后台优化 end
+        response = userManagerService.saveCompanyInfo(updCompanyRequest, user, bankId);
         //
         if(response.getRtn()!=Response.SUCCESS){
             return response;
@@ -964,4 +976,109 @@ public class UserManagerController extends BaseController {
         int updateUser =  userManagerService.updateUserBankInfo(bankCard,bankAccountLog);
         return new IntegerResponse(updateUser);
     }
+
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     * add by nxl 20190328
+     * @param updCompanyRequest
+     * @return
+     */
+    @RequestMapping("/getBankInfoByAccount")
+    public BankCardResponse getBankInfoByAccount(@RequestBody UpdCompanyRequest updCompanyRequest){
+        BankCardResponse response = new BankCardResponse();
+        BankCardVO bankCardVO = new BankCardVO();
+        String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
+        logger.info("==============企业信息查询,获取的bankId值为: "+bankId+" ==============");
+        String bankName = null;
+        String payAllianceCode = null;
+        if (StringUtils.isNotBlank(bankId)) {
+            List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
+            if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
+                bankName = jxBankConfigList.get(0).getBankName();
+                bankCardVO.setBank(bankName);
+            }
+        }
+        BankCallBean callBean = userManagerService.payAllianceCodeQuery(updCompanyRequest.getAccount(), Integer.parseInt(updCompanyRequest.getUserId()));
+        if (null!=callBean&&BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
+            payAllianceCode = callBean.getPayAllianceCode();
+            if (StringUtils.isBlank(payAllianceCode)) {
+                if (StringUtils.isNotBlank(bankId)) {
+                    List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
+                    if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
+                        payAllianceCode = jxBankConfigList.get(0).getPayAllianceCode();
+                    }
+                }
+            }
+            bankCardVO.setPayAllianceCode(payAllianceCode);
+        }
+        response.setResult(bankCardVO);
+        return response;
+    }
+
+
+    /**
+     * 用户销户
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    @GetMapping("/cancellationAccountAction/{userId}/{bankOpenAccount}")
+    public IntegerResponse cancellationAccountAction(@PathVariable String userId, @PathVariable Integer bankOpenAccount) {
+        logger.info("用户销户操作:用户ID:[" + userId + "],开户状态:[" + bankOpenAccount + "].");
+        int userCounts = userManagerService.cancellationAccountAction(userId, bankOpenAccount);
+        return new IntegerResponse(userCounts);
+    }
+
+
+    /**
+     * 用户销户成功后,保存用户销户记录表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @PostMapping("/saveCancellationAccountRecordAction")
+    public IntegerResponse saveCancellationAccountRecordAction(@RequestBody BankCancellationAccountRequest bankCancellationAccountRequest) {
+        logger.info("用户销户操作:用户ID:[" + bankCancellationAccountRequest.getUserId() + "],用户名:[" + bankCancellationAccountRequest.getUsername() + "].");
+        BankCancellationAccount bankCancellationAccount = new BankCancellationAccount();
+        BeanUtils.copyProperties(bankCancellationAccountRequest,bankCancellationAccount);
+        int userCounts =  this.userManagerService.saveCancellationAccountRecordAction(bankCancellationAccount);
+        return new IntegerResponse(userCounts);
+    }
+
+    /**
+     *
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @PostMapping("/getBankCancellationAccountList")
+    public BankCancellationAccountResponse getBankCancellationAccountList(@RequestBody BankCancellationAccountRequest bankCancellationAccountRequest){
+        logger.info("--getBankCancellationAccountList by param---  " + JSONObject.toJSON(bankCancellationAccountRequest));
+        BankCancellationAccountResponse response = new BankCancellationAccountResponse();
+        int usesrCount = userManagerService.countBankCancellationAccountList(bankCancellationAccountRequest);
+        Paginator paginator = new Paginator(bankCancellationAccountRequest.getCurrPage(), usesrCount,bankCancellationAccountRequest.getPageSize());
+        if (bankCancellationAccountRequest.getPageSize() == 0) {
+            paginator = new Paginator(bankCancellationAccountRequest.getCurrPage(), usesrCount);
+        }
+        int limitStart = paginator.getOffset();
+        int limitEnd =  paginator.getLimit();
+        response.setCount(usesrCount);
+        if(usesrCount>0){
+            List<BankCancellationAccount> userManagerCustomizeList = userManagerService.getBankCancellationAccountList(bankCancellationAccountRequest,limitStart,limitEnd);
+            if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
+                List<BankCancellationAccountVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, BankCancellationAccountVO.class);
+                Map<String, String> userStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+                for (BankCancellationAccountVO accountVO : userVoList){
+                    accountVO.setBankOpenAccountStr(userStatus.getOrDefault(String.valueOf(accountVO.getBankOpenAccount()), null));
+                }
+                response.setResultList(userVoList);
+                response.setRtn(Response.SUCCESS);
+                response.setMessage(Response.SUCCESS_MSG);
+            }
+        }
+        return response;
+    }
+
 }

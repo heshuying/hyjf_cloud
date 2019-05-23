@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
 
 import java.util.Date;
@@ -24,4 +25,64 @@ public interface BorrowRepayScreenDataService {
      */
     Integer countRepayUserList(Date startTime, Date endTime);
 
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的充值数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.tyy
+     * @Description //投屏数据修复，获取2019年4月1号，2号，3号的计划退出回款
+     * @Date 10:12 2019-04-11
+     * @Param [paramMap]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex);
+    /**
+     * @Author walter.tyy
+     * @Description //投屏数据修复，获取2019年4月1号，2号，3号的计划投资
+     * @Date 10:12 2019-04-11
+     * @Param [paramMap]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.tyy
+     * @Description //投屏数据修复，获取2019年4月1号，2号，3号的散标承接
+     * @Date 10:12 2019-04-11
+     * @Param [paramMap]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex);
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的提现数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的还款成功数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getBorrowRecoverList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的散标投资数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
 }
