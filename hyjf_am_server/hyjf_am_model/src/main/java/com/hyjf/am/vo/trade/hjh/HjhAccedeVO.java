@@ -118,6 +118,12 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     private Date updateTime;
     private TenderRequest request;
+    /**
+     * 出借人渠道来源（出借时）
+     *
+     * @mbggenerated
+     */
+    private Integer tenderUserUtmId;
 
 
     private static final long serialVersionUID = 1L;
@@ -544,5 +550,13 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     public void setRequest(TenderRequest request) {
         this.request = request;
+    }
+
+    public Integer getTenderUserUtmId() {
+        return tenderUserUtmId;
+    }
+
+    public void setTenderUserUtmId(Integer tenderUserUtmId) {
+        this.tenderUserUtmId = tenderUserUtmId;
     }
 }
