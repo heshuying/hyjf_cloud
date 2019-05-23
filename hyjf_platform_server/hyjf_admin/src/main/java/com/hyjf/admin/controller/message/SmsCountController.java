@@ -73,6 +73,9 @@ public class SmsCountController extends BaseController {
         if (Validator.isNotNull(request.getCombotreeListSrch())) {
 
             String[] combotreeListSrch = request.getCombotreeListSrch();
+
+            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
+            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
@@ -83,9 +86,8 @@ public class SmsCountController extends BaseController {
                     }
                 }
             }
-//            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
-//            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
+
         }
         SmsCountCustomizeResponse response = smsCountService.querySmsCountList(smsCountCustomize);
 
@@ -181,6 +183,9 @@ public class SmsCountController extends BaseController {
         if (Validator.isNotNull(form.getCombotreeListSrch())) {
 
             String[] combotreeListSrch = form.getCombotreeListSrch();
+
+            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
+            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
@@ -191,8 +196,6 @@ public class SmsCountController extends BaseController {
                     }
                 }
             }
-//            HashSet combotreeListSrchSet = smsCountService.getByCrmDepartmentList(combotreeListSrch);
-//            combotreeListSrch = Arrays.copyOf(combotreeListSrchSet.toArray(), combotreeListSrchSet.size(), String[].class);
             smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         //请求第一页5000条
@@ -242,14 +245,15 @@ public class SmsCountController extends BaseController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("departmentName","分公司");
         map.put("smsNumber","数量(条)");
-        map.put("smsFee","费用(元)");
+        map.put("smsMoney","费用(元)");
         map.put("posttime","时间");
         return map;
     }
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-//        IValueFormatter decimalFormat = new IValueFormatter() {
+
+        return mapAdapter;//        IValueFormatter decimalFormat = new IValueFormatter() {
 //            //查询短信单价配置
 //            String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
 //            DecimalFormat decimalFormat = new DecimalFormat("0.000");
@@ -259,7 +263,6 @@ public class SmsCountController extends BaseController {
 //            }
 //        };
 //        mapAdapter.put("smsFee", decimalFormat);
-        return mapAdapter;
     }
 
 }
