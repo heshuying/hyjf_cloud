@@ -864,7 +864,24 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 		// 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
 		borrowInfo.setAssetAttributes(hjhPlanAsset.getAssetAttributes());
 
+		// 本息保障 险控制措施-措施  风控措施  现在默认写死
+		String measureMea = "1、汇盈金服已对该项目进行了严格的审核，最大程度的确保借款方信息的真实性，但不保证审核信息完全无误。<br>2、汇盈金服仅为信息发布平台，不对出借人提供担保或承诺保本保息，出借人应根据自身的出借偏好和风险承受能力进行独立判断和作出决策。市场有风险，出借需谨慎。<br>";
+		borrowInfo.setBorrowMeasuresMea(measureMea);
+		//风险控制措施-机构
+		borrowInfo.setBorrowMeasuresInstit(getCooperativeAgency(hjhPlanAsset.getInstCode()));
+
 		return borrowInfo;
+	}
+
+	private String getCooperativeAgency(String instCode){
+		HjhInstConfigExample example = new HjhInstConfigExample();
+		HjhInstConfigExample.Criteria criteria = example.createCriteria();
+		criteria.andInstCodeEqualTo(instCode);
+		List<HjhInstConfig> list = hjhInstConfigMapper.selectByExample(example);
+		if(list.size() > 0) {
+			return list.get(0).getCooperativeAgency();
+		}return "";
+
 	}
 
 	/**
