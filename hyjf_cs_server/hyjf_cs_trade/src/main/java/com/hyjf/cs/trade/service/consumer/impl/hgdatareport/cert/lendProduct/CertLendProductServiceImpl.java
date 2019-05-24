@@ -131,7 +131,8 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                 rate = CertCallUtil.convertLoanRate(borrowVO.getBorrowApr(), 0, "");
                 //产品期限（服务期限）(天)
                 term = borrowVO.getBorrowPeriod();
-                if (borrowVO.getIsMonth() == 1) {
+                //判断是否是月标
+                if (!borrowVO.getBorrowStyle().equals("endday")) {
                     term = borrowVO.getBorrowPeriod() * 30;
                 }
                 groupByDateStr = dateFormatTransformation(borrowVO.getCreateTime());
