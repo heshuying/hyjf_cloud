@@ -124,7 +124,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                 //产品信息编号
                 sourceFinancingCode = borrowInfoVO.getBorrowNid();
                 //发布时间
-                financingStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrowInfoVO.getBorrowValidTime().toString());
+                financingStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrowVO.getVerifyTime().toString());
                 //产品名称
                 productName = borrowInfoVO.getName();
                 //预期年化利率（参考回报率）
