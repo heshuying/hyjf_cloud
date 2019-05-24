@@ -79,6 +79,16 @@ public class SmsLogRequestBean {
     /**
      * 提交时间区间查询开始时间
      */
+    private String postTimeBegin;
+
+    /**
+     * 提交时间区间查询结束时间
+     */
+    private String postTimeEnd;
+
+    /**
+     * 提交时间区间查询开始时间
+     */
     private Integer post_time_begin;
 
     /**
@@ -286,32 +296,20 @@ public class SmsLogRequestBean {
         this.posttime = posttime;
     }
 
-    /**
-     * @return the post_time_begin
-     */
-    public Integer getPost_time_begin() {
-        return post_time_begin;
+    public String getPostTimeBegin() {
+        return postTimeBegin;
     }
 
-    /**
-     * @param post_time_begin the post_time_begin to set
-     */
-    public void setPost_time_begin(Integer post_time_begin) {
-        this.post_time_begin = post_time_begin;
+    public void setPostTimeBegin(String postTimeBegin) {
+        this.postTimeBegin = postTimeBegin;
     }
 
-    /**
-     * @return the post_time_end
-     */
-    public Integer getPost_time_end() {
-        return post_time_end;
+    public String getPostTimeEnd() {
+        return postTimeEnd;
     }
 
-    /**
-     * @param post_time_end the post_time_end to set
-     */
-    public void setPost_time_end(Integer post_time_end) {
-        this.post_time_end = post_time_end;
+    public void setPostTimeEnd(String postTimeEnd) {
+        this.postTimeEnd = postTimeEnd;
     }
 
     /**
@@ -390,5 +388,21 @@ public class SmsLogRequestBean {
 
     public void setRowrank(String rowrank) {
         this.rowrank = rowrank;
+    }
+
+    public Integer getPost_time_begin() {
+        return post_time_begin;
+    }
+
+    public void setPost_time_begin(Integer post_time_begin) {
+        this.post_time_begin = post_time_begin;
+    }
+
+    public Integer getPost_time_end() {
+        return post_time_end;
+    }
+
+    public void setPost_time_end(Integer post_time_end) {
+        this.post_time_end = post_time_end;
     }
 }
