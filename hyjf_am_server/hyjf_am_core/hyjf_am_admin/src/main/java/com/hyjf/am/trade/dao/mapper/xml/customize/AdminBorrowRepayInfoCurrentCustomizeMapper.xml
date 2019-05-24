@@ -651,17 +651,17 @@
                 AS recoverStatus,
 
             IF (
-                hcr.repay_status = 1
-                AND hcr.assign_repay_yes_time > 0,
-                CASE brp.repay_money_source
+            hcr.repay_status = 1
+            AND hcr.assign_repay_yes_time > 0,
+            CASE IFNULL(brp.repay_money_source,bry.repay_money_source)
             WHEN 1 THEN
-                '借款人还款'
+            '借款人还款'
             WHEN 2 THEN
-                '第三方保障'
+            '第三方保障'
             WHEN 3 THEN
-                '保证金垫付'
+            '保证金垫付'
             ELSE
-                '借款人还款'
+            '借款人还款'
             END,
             ''
             ) AS repayMoneySource,
@@ -1166,19 +1166,20 @@
         ) AS recoverFeeYesPeriod,
         br.recover_capital_wait - (
         SELECT
-        IFNULL(SUM(ct1.assign_capital-ct1.assign_repay_capital), 0)
+        IFNULL(SUM(cr1.assign_capital), 0)
         FROM
-        ht_credit_tender ct1
+        ht_credit_repay cr1
         WHERE
-        ct1.credit_tender_nid = br.nid
+        cr1.credit_tender_nid = br.nid AND cr1.`status` != 1
         ) - (
         SELECT
-        IFNULL(SUM(ct1.assign_capital-ct1.repay_capital_yes), 0)
+        IFNULL(SUM(cr1.repay_capital), 0)
         FROM
-        ht_hjh_debt_credit_tender ct1
+        ht_hjh_debt_credit_repay cr1
         WHERE
-        ct1.invest_order_id = br.nid AND ct1.del_flag = 0
-        )AS recoverCapitalWait,
+        cr1.invest_order_id = br.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverCapitalWait,
         br.recover_interest_wait - (
         SELECT
         IFNULL(SUM(cr1.assign_interest), 0)
@@ -1483,19 +1484,20 @@
         ) AS recoverFeeYesPeriod,
         br.recover_capital_wait - (
         SELECT
-        IFNULL(SUM(ct1.assign_capital-ct1.assign_repay_capital), 0)
+        IFNULL(SUM(cr1.assign_capital), 0)
         FROM
-        ht_credit_tender ct1
+        ht_credit_repay cr1
         WHERE
-        ct1.credit_tender_nid = rp.nid
+        cr1.credit_tender_nid = rp.nid AND cr1.`status` != 1
         ) - (
         SELECT
-        IFNULL(SUM(ct1.assign_capital-ct1.repay_capital_yes), 0)
+        IFNULL(SUM(cr1.repay_capital), 0)
         FROM
-        ht_hjh_debt_credit_tender ct1
+        ht_hjh_debt_credit_repay cr1
         WHERE
-        ct1.invest_order_id = rp.nid AND ct1.del_flag = 0
-        )AS recoverCapitalWait,
+        cr1.invest_order_id = rp.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverCapitalWait,
         br.recover_interest_wait - (
         SELECT
         IFNULL(SUM(cr1.assign_interest), 0)
@@ -1681,7 +1683,14 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.assign_capital), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.assign_nid = cr.assign_nid AND cr1.`status` != 1
+        ) AS recoverCapitalWait,
         (
         SELECT
         IFNULL(SUM(cr1.assign_interest), 0)
@@ -1861,7 +1870,15 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        hct.assign_capital - hct.repay_capital_yes AS recoverCapitalWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.repay_capital), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.assign_order_id = hcr.assign_order_id
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverCapitalWait,
         (
         SELECT
         IFNULL(SUM(cr1.repay_interest), 0)
@@ -1880,18 +1897,18 @@
         cr1.assign_order_id = hcr.assign_order_id
         AND cr1.del_flag = 0 AND cr1.repay_status != 1
         ) AS recoverAccountWait,
-        brp.repay_username AS repayUserName,
+        IFNULL(brp.repay_username,bry.repay_username) AS repayUserName,
         IF (
         hcr.repay_status = 0,
         IF (hcr.advance_status = 3, 8, 0),
         hcr.repay_status
         )
         AS recoverStatus,
-        IF(brp.repay_status = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
+        IF(hcr.repay_status = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
-        brp.repay_status = 1
-        AND brp.repay_action_time > 0,
-        CASE brp.repay_money_source
+        hcr.repay_status = 1
+        AND hcr.assign_repay_yes_time > 0,
+        CASE IFNULL(brp.repay_money_source,bry.repay_money_source)
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
