@@ -884,6 +884,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 couponBean2.setCouponType(4);
             }
             int flag = couponBean1.getCouponType() - couponBean2.getCouponType();
+            // 相同类型优惠券排序随机问题修改 add by hesy
+            if(flag == 0){
+                flag = couponBean1.getId() - couponBean2.getId();
+            }
             if (4 == couponBean1.getCouponType()) {
                 couponBean1.setCouponType(1);
             }
