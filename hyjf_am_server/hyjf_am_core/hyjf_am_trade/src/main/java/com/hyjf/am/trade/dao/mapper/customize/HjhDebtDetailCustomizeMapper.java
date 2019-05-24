@@ -106,4 +106,13 @@ public interface HjhDebtDetailCustomizeMapper {
      * @return
      */
     List<HjhDebtDetail> selectDebtDetailToDate(@Param("expectTime") String expectTime);
+
+    /**
+     * 查询当前期到最后一期的债权信息
+     *
+     * @param orderId
+     * @param dualDate
+     * @return
+     */
+    List<HjhDebtDetail> selectDebtDetailAfterDateNoRepay(@Param("orderId") String orderId, @Param("dualDate") String dualDate);
 }
