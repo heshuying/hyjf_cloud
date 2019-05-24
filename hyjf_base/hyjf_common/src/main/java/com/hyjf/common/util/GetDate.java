@@ -67,6 +67,8 @@ public class GetDate extends PropertyEditorSupport {
 
 	public static final String yyyyMM_key = "yyyy-MM";
 
+	public static final String mmDD_key = "MM-dd";
+
 	public static final String short_time_sdf_hms = "HH:mm:ss";
 
 
@@ -615,6 +617,16 @@ public class GetDate extends PropertyEditorSupport {
 	public static String formatDate() {
 		return getDateFormat(date_sdf_key).format(getCalendar().getTime());
 	}
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：月-日
+	 *
+	 * @return 默认日期按“月-日“格式显示
+	 */
+	public static String formatDateMMDD() {
+		return getDateFormat(mmDD_key).format(getCalendar().getTime());
+	}
+
 
 	/**
 	 * 获取时间字符串
