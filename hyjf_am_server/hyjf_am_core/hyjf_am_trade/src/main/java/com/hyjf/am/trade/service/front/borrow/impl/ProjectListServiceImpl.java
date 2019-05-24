@@ -56,6 +56,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("status", request.getStatus());
         params.put("limitStart", limitStart);
         params.put("limitEnd", limitEnd);
         params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
@@ -81,6 +82,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("status", request.getStatus());
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
         params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());

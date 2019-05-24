@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -23,13 +25,6 @@ public interface SmsCountService {
     SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
 
     /**
-     * 查询短信总条数+总费用
-     * @param
-     * @return
-     */
-    Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
-
-    /**
      * 获取部门列表
      * @param list
      * @return
@@ -43,10 +38,14 @@ public interface SmsCountService {
      */
     Integer getSmsCountForExport(SmsCountRequest request);
 
-    /**
-     * 查询导出列表
-     * @param request
-     * @return
-     */
-    List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
+    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
+
+    List<UserVO> getUsersVo(List<String> list);
+
+    void insertBatchSmsCount(List<SmsCountCustomizeVO> list);
+
+    HashSet getByCrmDepartmentList(String[] list);
+
+    void updateOrDelectRepeatData();
+
 }

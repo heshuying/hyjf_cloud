@@ -159,4 +159,53 @@
 			) t
 	</select>
 
+    <select id="getBorrowNidList" resultType="java.lang.String">
+       SELECT
+            hb.borrow_nid
+        FROM
+            ht_borrow hb
+        WHERE
+            hb.`status` IN (2, 3, 4, 7)
+    </select>
+
+    <select id="getCertAccountListCustomizeVOByTenderRecoverYes" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+            "1" role_id,
+            hal.*
+        FROM
+             ht_account_list hal
+        WHERE
+        hal.id <![CDATA[<=]]> #{maxId}
+        AND (
+            hal.trade = "tender_recover_yes"
+            OR hal.trade = "hjh_repay_balance"
+            OR hal.trade = "hjh_repay_frost"
+        )
+        AND hal.remark in
+        <foreach collection="borrowNidList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
+    </select>
+
+    <select id="getCertAccountListCustomizeVOByCreditTenderRecoverYes" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+       SELECT
+            "1" role_id,
+            hal.*
+        FROM
+             ht_account_list hal
+        WHERE
+        hal.id <![CDATA[<=]]> #{maxId}
+        AND (
+            hal.trade = "credit_tender_recover_yes"
+            OR hal.trade = "credit_tender_recover_forst"
+         )
+        AND hal.remark in
+        <foreach collection="borrowNidList" item="listItem" open="(" close=")" separator="," >
+          #{listItem}
+        </foreach>
+    </select>
+
+
 </mapper>

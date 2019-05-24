@@ -178,7 +178,7 @@
 	</select>
 	<sql id="Where_Clause">
 		<where>
-			cu.del_flag = 0
+			cu.del_flag = 0 and cc.status = 2
 			<if test="userId != null and userId != ''">
 				AND cu.user_id = #{userId}
 			</if>
@@ -273,6 +273,7 @@
 			hcu.user_id = #{userId}
 		AND hcu.used_flag = 0
 		AND hcu.del_flag = 0
+		AND hcc.status = 2
 		ORDER BY
 			hcc.coupon_type,
 			hcc.coupon_quota DESC,
