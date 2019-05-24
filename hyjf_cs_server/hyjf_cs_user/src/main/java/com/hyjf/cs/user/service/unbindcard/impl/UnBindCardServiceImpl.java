@@ -210,6 +210,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         if(StringUtils.isNotBlank(wjtClient)){
             // 如果是温金投的  则跳转到温金投那边
             host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+            retUrl = host + errorPath;
+            successUrl = host + successPath;
         }
         if (!channel.contains(BankCallConstant.CHANNEL_PC)) {
             //返回路径
