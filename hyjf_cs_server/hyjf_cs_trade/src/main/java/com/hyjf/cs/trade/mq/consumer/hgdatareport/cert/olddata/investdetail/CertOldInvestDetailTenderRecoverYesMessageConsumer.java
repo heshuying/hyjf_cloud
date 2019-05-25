@@ -77,7 +77,7 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
         String tradeDate = jsonObject.getString("tradeDate");
 
         Integer page=1;
-        Integer size=100;
+        Integer size=1000;
 
         /*List<String> borrowNidList=certOldInvestDetailService.getBorrowNidList();
         logger.info(logHeader + " borrowNidList.size()=" +borrowNidList.size());
