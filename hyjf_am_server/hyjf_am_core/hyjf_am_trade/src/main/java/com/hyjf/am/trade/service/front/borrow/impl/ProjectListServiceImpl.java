@@ -59,6 +59,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("limitStart", limitStart);
         params.put("limitEnd", limitEnd);
         params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
+        params.put("wjtInstCode", request.getWjtInstCode());
         return webProjectListCustomizeMapper.searchProjectList(params);
     }
 
