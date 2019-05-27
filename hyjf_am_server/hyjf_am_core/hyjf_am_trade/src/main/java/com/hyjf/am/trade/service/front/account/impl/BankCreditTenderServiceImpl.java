@@ -829,6 +829,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					params.put("assignOrderId", creditTender.getAssignNid());
 					params.put("flag", "1");//1（散）2（智投）
 					params.put("status", "1"); //1承接（每笔）
+					// 应急中心二期，添加承接标示 add by nxl
+					params.put("isTender","1"); //1:承接，2：加入
 					// 推送数据到MQ 承接（每笔）散
 					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
 							MQConstant.HG_REPORT_DELAY_LEVEL);
@@ -1535,6 +1537,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		params.put("assignOrderId", creditTender.getAssignNid());
 		params.put("flag", "1");//1（散）2（智投）
 		params.put("status", "1"); //1承接（每笔）
+		// 应急中心二期，添加承接标示 add by nxl
+		params.put("isTender","1"); //1:承接，2：加入
 		// 推送数据到MQ 承接（每笔）散
 		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
 				MQConstant.HG_REPORT_DELAY_LEVEL);

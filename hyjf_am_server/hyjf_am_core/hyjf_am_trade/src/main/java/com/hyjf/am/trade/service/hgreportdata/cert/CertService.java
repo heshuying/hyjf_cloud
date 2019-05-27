@@ -6,6 +6,7 @@ import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
 
 import java.util.List;
 
@@ -54,6 +55,19 @@ public interface CertService extends BaseService {
      * @return
      */
     int updateCertBorrowStatusBatch (CertClaimUpdateVO update);
+
+    /**
+     * 产品信息未上报的
+     * @return
+     */
+    List<CertProduct> selectCertProductList();
+
+    /**
+     * 批量更新产品信息
+     * @param update
+     * @return
+     */
+    int updateCertProductBatch (CertProductUpdateVO update);
 
     List<String> getBorrowNidList();
 }

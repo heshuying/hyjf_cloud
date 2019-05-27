@@ -163,7 +163,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid());
+        param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
         //交易类型
         param.put("transType", "2");
         //交易金额
@@ -177,6 +177,10 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     //已改
     private void creditAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
         Map<String, Object> param = new HashMap<String, Object>();
+        List<CreditTenderVO> creditTenders=amTradeClient.selectCreditTender(accountList.getNid());
+        if(creditTenders==null||creditTenders.size()==0){
+            return;
+        }
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
         if(usersInfo==null||usersInfo.getIdcard()==null){
             return;
@@ -188,7 +192,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", creditTenders.get(0).getBidNid());
         //交易类型
         param.put("transType", "2");
         //交易金额
@@ -241,7 +245,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
         //交易类型
         param.put("transType", "8");
         //交易金额
@@ -259,7 +263,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param1.put("transId", accountList.getNid());
         //产品信息编号
-        param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+        param1.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
         //交易类型
         param1.put("transType", "9");
         //交易金额
@@ -291,10 +295,12 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             }
             interest=borrowRecovers.get(0).getRecoverInterestYes();
             capital=borrowRecovers.get(0).getRecoverCapitalYes();
+            logger.info(logHeader + "interest:"+interest);
+            logger.info(logHeader + "capital:"+capital);
             BorrowRecoverVO borrowRecover=borrowRecovers.get(0);
             if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
                 //智投
-                CertRequest certRequest1=new CertRequest();
+                /*CertRequest certRequest1=new CertRequest();
                 certRequest1.setInvestOrderId(borrowRecover.getNid());
                 certRequest1.setBorrowNid(borrowRecover.getBorrowNid());
                 certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
@@ -302,7 +308,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
                     interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
                     capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-                }
+                }*/
             }else{
                 //散标
                 CertRequest certRequest1=new CertRequest();
@@ -325,18 +331,27 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             BorrowRecoverPlanVO borrowRecoverPlan=borrowRecoverPlans.get(0);
             interest=borrowRecoverPlan.getRecoverInterestYes();
             capital=borrowRecoverPlan.getRecoverCapitalYes();
+            logger.info(logHeader + "interest:"+interest);
+            logger.info(logHeader + "capital:"+capital);
             if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
                 //智投
-
+/*
                 CertRequest certRequest1=new CertRequest();
                 certRequest1.setInvestOrderId(borrowRecoverPlan.getNid());
                 certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
                 certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
                 List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
+                logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
+                    logger.info(logHeader + "hjhDebtCreditRepay.getReceiveInterestYes():"+hjhDebtCreditRepay.getReceiveInterestYes());
+                    logger.info(logHeader + "hjhDebtCreditRepay.getReceiveCapitalYes():"+hjhDebtCreditRepay.getReceiveCapitalYes());
                     interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
                     capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
+                    logger.info(logHeader + "interest:"+interest);
+                    logger.info(logHeader + "capital:"+capital);
+
                 }
+                logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());*/
             }else{
                 //散标
                 CertRequest certRequest1=new CertRequest();
@@ -352,7 +367,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 
             }
         }
-
+        logger.info(logHeader + "interest00:"+interest);
+        logger.info(logHeader + "capital00:"+capital);
         /****************** 发送8赎回本金******************/
 
         //接口版本号
@@ -362,7 +378,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
         //交易类型
         param.put("transType", "8");
         //交易金额
@@ -380,7 +396,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param1.put("transId", accountList.getNid());
         //产品信息编号
-        param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+        param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid()
+        );
         //交易类型
         param1.put("transType", "9");
         //交易金额
@@ -414,7 +431,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             return;
         }
         BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
-        if(borrowAndInfoVO==null){
+        if(borrowAndInfoVO==null||borrowAndInfoVO.getBorrowNid()==null){
             return;
         }
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
@@ -428,7 +445,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", borrowTenderCpnList.get(0).getBorrowNid());
         //交易类型
         param.put("transType", "41");
         //交易金额
@@ -465,7 +482,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             return;
         }
         BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
-        if(borrowAndInfoVO==null){
+        if(borrowAndInfoVO==null||borrowAndInfoVO.getBorrowNid()==null){
             return;
         }
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
@@ -479,7 +496,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", borrowTenderCpnList.get(0).getBorrowNid());
         //交易类型
         param.put("transType", "10");
         //交易金额
@@ -523,7 +540,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", accountList.getRemark());
         //交易类型
         param.put("transType", "2");
         //用户标示哈希
