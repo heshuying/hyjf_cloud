@@ -28,6 +28,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +62,10 @@ public class BorrowCommonController extends BaseController {
 
 	@Autowired
 	BorrowService borrowService;
+
+	@Value("${wjt.instCode}")
+	private String wjtInstCode;
+
 	/**
      * 迁移到详细画面
      *
@@ -319,6 +324,13 @@ public class BorrowCommonController extends BaseController {
 			form.setBorrowCommonNameAccountList(borrowCommonNameAccountList);
 		}
 
+		// add by liuyang 温金投推送标的不能为新手标 20190527 start
+		if(wjtInstCode.equals(form.getPublishInstCode()) && form.getProjectType() == 14){
+			bcr.setRtn(Response.FAIL);
+			bcr.setMessage("新手标出借终端仅能选择汇盈金服。");
+			return bcr;
+		}
+		// add by liuyang 温金投推送标的不能为新手标 20190527 end
 		if (isExistsRecord) {
 			this.borrowCommonService.modifyRecord(form,borrowCommonRequest.getAdminUsername(),borrowCommonRequest.getAdminId());
 
