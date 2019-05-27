@@ -4,7 +4,11 @@
 package com.hyjf.wbs.user.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.hyjf.wbs.user.dao.model.customize.BankOpenAccountRecordCustomize;
+import com.hyjf.wbs.user.service.BankOpenRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,9 @@ public class SyncCustomerBaseServiceImpl implements SyncCustomerBaseService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BankOpenRecordService bankOpenRecordService;
 
     @Autowired
     private WbsConfig wbsConfig;
@@ -113,6 +120,16 @@ public class SyncCustomerBaseServiceImpl implements SyncCustomerBaseService {
 
         buildData(userVO, customerSyncQO);
 
+        //身份证信息
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        mapParam.put("userId", Integer.valueOf(userVO.getUserId()));
+        BankOpenAccountRecordCustomize bankOpenAccountRecordCustomize = bankOpenRecordService.selectBankAccountList(mapParam);
+        if (bankOpenAccountRecordCustomize == null) {
+            logger.error("userId【{}】未查到开户记录",userVO.getUserId());
+        } else {
+            customerSyncQO.setDocumentNo(bankOpenAccountRecordCustomize.getIdCard());
+        }
+
         // 开户行信息
         customerSyncQO.setBankOfDeposit(bankCardVO.getBank());
 
@@ -127,7 +144,7 @@ public class SyncCustomerBaseServiceImpl implements SyncCustomerBaseService {
                 .setPrecipitatedCapital(accountVO.getBalance() == null ? 0 : accountVO.getBalance().doubleValue());
 
         customerSyncQO
-                .setFundsToBeCollected(accountVO.getBankAwait() == null ? 0 : accountVO.getBankAwait().doubleValue());
+                .setFundsToBeCollected(accountVO.getBankAwait() == null ? 0 : accountVO.getBankAwait().add(accountVO.getPlanAccountWait()).doubleValue());
 
     }
 
