@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WebProjectListCustomizeMapper">
     <sql id="Where_Clause_New">
-        <where>(
+        <where> (
             <if test="projectType != null and projectType != ''">
                 htbpt.borrow_project_type = #{projectType,jdbcType=VARCHAR}
             </if>
@@ -98,7 +98,7 @@
              OR ( htb.`status` = 8))
 
             AND htb.is_show <![CDATA[<>]]> 1
-            AND (hbi.publish_inst_code = #{wjtInstCode,jdbcType=VARCHAR}
+            AND hbi.publish_inst_code = #{wjtInstCode,jdbcType=VARCHAR}
             )
 
         </where>
