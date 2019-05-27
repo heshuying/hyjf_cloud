@@ -54,7 +54,7 @@ public class SellDailyDataHandler {
 		// 运营部
 		SellDailyVO operationSellDaily = null;
 		// app推广单独查询
-		List<SellDailyVO> appSellDailyList = null;
+		//List<SellDailyVO> appSellDailyList = null;
 		// 千乐数据
 		SellDailyVO qlSellDaily = null;
 		// 债转数
@@ -69,7 +69,7 @@ public class SellDailyDataHandler {
 					QUERY_OC_THREE_DIVISION_TYPE);
 			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
 					: mergeSellDaily(operSellDailyList);
-			appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
+			//appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
 			qlSellDaily = sellDailyService.countTotalInvestOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
@@ -90,7 +90,7 @@ public class SellDailyDataHandler {
 					QUERY_OC_THREE_DIVISION_TYPE);
 			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
 					: mergeSellDaily(operSellDailyList);
-			appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime, QUERY_APP_TYPE);
+			//appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime, QUERY_APP_TYPE);
 
 			qlSellDaily = sellDailyService.countTotalInvestOnPreviousMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -121,7 +121,7 @@ public class SellDailyDataHandler {
 					QUERY_OC_THREE_DIVISION_TYPE);
 			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
 					: mergeSellDaily(operSellDailyList);
-			appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
+			//appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
 
 			qlSellDaily = sellDailyService.countTotalAnnualInvestOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -132,8 +132,8 @@ public class SellDailyDataHandler {
 					QUERY_OC_THREE_DIVISION_TYPE);
 			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
 					: mergeSellDaily(operSellDailyList);
-			appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
-					QUERY_APP_TYPE);
+			//appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
+					//QUERY_APP_TYPE);
 
 			qlSellDaily = sellDailyService.countTotalAnnualInvestOnPreviousMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -144,7 +144,7 @@ public class SellDailyDataHandler {
 					QUERY_OC_THREE_DIVISION_TYPE);
 			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
 					: mergeSellDaily(operSellDailyList);
-			appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
+			//appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
 
 			qlSellDaily = sellDailyService.countTotalTenderYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -165,7 +165,7 @@ public class SellDailyDataHandler {
 					QUERY_OC_THREE_DIVISION_TYPE);
 			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
 					: mergeSellDaily(operSellDailyList);
-			appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime, QUERY_APP_TYPE);
+			//appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime, QUERY_APP_TYPE);
 
 			qlSellDaily = sellDailyService.countTotalAnnualInvestYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -251,7 +251,7 @@ public class SellDailyDataHandler {
 
 		SellDailyDataDto dto = new SellDailyDataDto();
 		dto.setList(list);
-		dto.setAppSellDailyList(appSellDailyList);
+		//dto.setAppSellDailyList(appSellDailyList);
 		dto.setCreditSellDaily(creditSellDaily);
 
 		if (operationSellDaily != null) {
@@ -259,6 +259,7 @@ public class SellDailyDataHandler {
 		}
 
 		if (qlSellDaily != null) {
+			logger.info("千乐数据qlSellDaily: {}", qlSellDaily.print());
 			dto.setQlSellDaily(setValue(qlSellDaily, QIANLE_DIVISION_NAME, "千乐", 2, 0));
 		}
 		return dto;

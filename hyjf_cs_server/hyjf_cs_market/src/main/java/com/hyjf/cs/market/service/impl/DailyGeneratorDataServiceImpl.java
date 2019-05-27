@@ -99,7 +99,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         list.add(new SellDailyVO(YYZX_DIVISION_NAME, "网络运营部", DRAW_ORDER_LEVEL2, 0));
         list.add(new SellDailyVO(YYZX_DIVISION_NAME, "无主单", DRAW_ORDER_LEVEL2, 0));
         list.add(new SellDailyVO(QIANLE_DIVISION_NAME, "千乐", DRAW_ORDER_LEVEL2, 0));
-        list.add(new SellDailyVO("其中：", "APP推广", DRAW_ORDER_LEVEL2, 0));
+        //list.add(new SellDailyVO("其中：", "APP推广", DRAW_ORDER_LEVEL2, 0));
         list.add(new SellDailyVO(HZSW_DIVISION_NAME, "其它", DRAW_ORDER_LEVEL2, 0));
 
 
