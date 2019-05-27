@@ -276,7 +276,6 @@
         where  t.order_by_status_name=1
         AND 1=2
         )
-        UNION ALL
         (SELECT
         hydbpt.borrow_class AS borrow_type,
         hydb.borrow_nid,
@@ -318,54 +317,11 @@
         AND hydb.project_type  <![CDATA[<>]]>  '4'
         AND hydb.project_type  <![CDATA[<>]]>  '11'
         AND hydb.is_show  <![CDATA[<>]]>  1
-        AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) )
-        <if test="publishInstCode != null and publishInstCode != ''">
-            AND (borrowInfo.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR})
-        </if>
-        )
-        UNION ALL
-        (SELECT
-        hydbpt.borrow_class AS borrow_type,
-        hydb.borrow_nid,
-
-        hydb.borrow_nid AS borrow_name,
-
-        hydb.borrow_apr,
-        hydb.borrow_period borrow_period,
-        CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
-        CASE
-        WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
-        WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) ) THEN '11'
-        WHEN hydb.`status` = 3 THEN '12'
-        WHEN hydb.`status` = 4 THEN '13'
-        ELSE
-        ''
-        END AS tstatus,
-        CASE
-        WHEN hydb.`status` = 1 AND hydb.verify_status =3
-        THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
-        ELSE ''
-        END AS on_time,
-        IFNULL(hydb.borrow_account_wait,0) borrow_account_wait,
-        '2' type,
-        hydb.borrow_account_scale borrow_account_scale,
-        hydb.verify_time verify_time,
-        case when borrowInfo.borrow_extra_yield=0 then
-        ''
-        else
-        CONCAT(borrowInfo.borrow_extra_yield, '%')
-        end
-        borrow_extra_yield
-        FROM
-        ht_borrow hydb
-        INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
-        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-        WHERE
-        hydbpt.borrow_project_type = 'HZT'
-        AND hydb.project_type  <![CDATA[<>]]>  '4'
-        AND hydb.project_type  <![CDATA[<>]]>  '11'
-        AND hydb.is_show  <![CDATA[<>]]>  1
-        AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+        AND (( hydb.`status` = 1 AND hydb.verify_status = 3 )
+              OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) )
+              OR ( hydb.`status` = 3 )
+              OR ( hydb.`status` = 4 )
+              OR ( hydb.`status` = 8 ))
         <if test="publishInstCode != null and publishInstCode != ''">
             AND (borrowInfo.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR})
         </if>
