@@ -106,11 +106,11 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
 				///无主单扣除VIP用户组
 				if(VIP_PRIMARY_DIVISION.equals(entity.getPrimaryDivision())){
-					noneRefferRecord = sellDailyService.addValue(noneRefferRecord, entity, column, SUBTRACT);
+					noneRefferRecord = sellDailyService.addValue(entity, noneRefferRecord, column, SUBTRACT);
 				}
 			}
 			//无主单扣除千乐
-			noneRefferRecord = sellDailyService.addValue(noneRefferRecord, qlSellDaily, column, SUBTRACT);
+			noneRefferRecord = sellDailyService.addValue(qlSellDaily, noneRefferRecord, column, SUBTRACT);
 			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
 			if (column == 17 || column == 2) {
 				if (creditSellDaily != null) {

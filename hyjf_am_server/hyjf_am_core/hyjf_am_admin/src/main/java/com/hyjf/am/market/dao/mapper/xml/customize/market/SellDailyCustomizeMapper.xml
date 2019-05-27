@@ -299,7 +299,7 @@
         AND p.source_id = #{sourceId}
         AND bt.create_time <![CDATA[>=]]> #{startTime}
         AND bt.create_time <![CDATA[<=]]> #{endTime}
-        UNION
+        UNION ALL
         SELECT a.accede_account AS account,
         CASE b.is_month WHEN 0 THEN   CONCAT(b.lock_period, "天") ELSE   CONCAT(b.lock_period, "个月") END AS borrow_period
         FROM hyjf_trade.ht_hjh_accede a
