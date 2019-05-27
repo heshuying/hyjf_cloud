@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.investdetail;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
@@ -63,6 +62,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	@Override
 	public JSONArray createDate(List<CertAccountListCustomizeVO> accountLists) {
 		
+
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
@@ -97,12 +97,15 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	}
 
 	@Override
-	public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(Integer page, Integer size, String trader) {
+	public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(Integer page, Integer size, List<String> selectBorrowNidList, String trader) {
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setLimitStart((page-1) * size);
 		certTransactRequest.setLimitEnd(size);
 		certTransactRequest.setTrade(trader);
 		certTransactRequest.setMaxId(RedisUtils.get("CERT_OLD_INVEST_DETAIL_MAX_ID"));
+		if(selectBorrowNidList!=null){
+			certTransactRequest.setBorrowNidList(selectBorrowNidList);
+		}
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.getCertAccountListCustomizeVO(certTransactRequest);
 		return accountLists;
 	}
@@ -121,8 +124,13 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		BooleanResponse response = this.baseClient.postExe(url, bean, BooleanResponse.class);
 	}
 
+    @Override
+    public List<String> getBorrowNidList() {
+        return amTradeClient.getBorrowNidList();
+    }
 
-	private void createParam(CertAccountListCustomizeVO accountList,List<Map<String, Object>> list) throws Exception {
+
+    private void createParam(CertAccountListCustomizeVO accountList,List<Map<String, Object>> list) throws Exception {
 
 		switch (accountList.getTrade()) {
 		//提现  发送7提现  以及23提现手续费

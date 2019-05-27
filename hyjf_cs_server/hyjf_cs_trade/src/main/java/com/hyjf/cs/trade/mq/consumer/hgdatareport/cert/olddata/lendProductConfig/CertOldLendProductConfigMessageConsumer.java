@@ -96,7 +96,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
                 logger.error(logHeader + "暂无未上报的产品配置信息！！！");
                 return;
             }
-            logger.info(logHeader + "查询的未上报的产品配置历史数据共: " + certBorrowEntityList.size() + "条");
+            logger.info(logHeader + "查询的未上报的产品配置历史数据共: " + certBorrowEntityList.size() + "条,当前时间为:"+ GetDate.getNowTime10());
             // --> 调用service组装数据
             JSONArray listRepay = certLendProductConfigService.getHistoryDate();
             int intCount = listRepay == null ? 0 : listRepay.size();
