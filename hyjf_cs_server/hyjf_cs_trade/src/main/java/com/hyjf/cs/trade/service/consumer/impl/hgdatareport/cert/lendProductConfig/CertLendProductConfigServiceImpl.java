@@ -158,13 +158,13 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             //平台编号
             param.put("sourceCode", systemConfig.getCertSourceCode());
             //产品信息编号
-            param.put("sourceFinancingCode", mapParam.get("sourceFinancingCode"));
+            param.put("sourceFinancingCode", mapParam.get("sourceFinancingcode"));
             //债权编号
-            param.put("finClaimId", mapParam.get("finClaimId"));
+            param.put("finClaimId", mapParam.get("finClaimID"));
             //产品配置编号
-            param.put("configId", mapParam.get("finClaimId"));
+            param.put("configId", mapParam.get("finClaimID"));
             //智投出借人哈希
-            param.put("userIdcardHash", mapParam.get("userIdcardHash"));
+            param.put("userIdcardHash", mapParam.get("idCardHash"));
             String isOld = mapParam.get("isOld").toString();
             String date = mapParam.get("strDate").toString();
             if (isOld.equals("true")) {
@@ -352,7 +352,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             strDate = fromatDate(borrowTenderVO.getCreateTime());
         }
         mapParam.put("sourceFinancingcode",sourceFinancingcode);
-        mapParam.put("finClaimID",finClaimID);
+        mapParam.put("finClaimID", finClaimID);
         mapParam.put("idCardHash",idCardHash);
         mapParam.put("strDate",strDate);
         mapParam.put("isOld","true");
