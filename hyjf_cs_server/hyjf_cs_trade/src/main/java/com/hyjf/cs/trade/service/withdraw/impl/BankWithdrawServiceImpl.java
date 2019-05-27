@@ -759,6 +759,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if(account.compareTo(accountVO.getBankBalance()) > 0){
             throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE);
         }
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(users.getUserId(),account)) {
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
+        }
         // 服务费授权状态
         if(!authService.checkPaymentAuthStatus(user.getUserId())){
             throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
@@ -1353,6 +1357,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
                 return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000010,"用户账户余额不足");
+            }
+            // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+            if (!this.capitalExpendituresCheck(userId,new BigDecimal(account))) {
+                syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000011,"账户余额不同步");
             }
             // 取得手续费 默认1
             // 11-23  改为从数据库中读取配置的手续费
