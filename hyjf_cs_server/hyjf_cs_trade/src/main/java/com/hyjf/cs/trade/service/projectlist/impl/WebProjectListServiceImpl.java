@@ -218,8 +218,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
                 request.setWjtInstCode(systemConfig.getWjtInstCode());
                 // 统计定时发标+出借中总记录数
-                requestCount.setStatus("21");
-                int projectTotal = amTradeClient.countProjectList(requestCount);
+                request.setStatus("21");
+                int projectTotal = amTradeClient.countProjectList(request);
                 int defaultCount = pageSize * 2;
                 logger.info("defaultCount:" + defaultCount + " projectTotal:" + projectTotal);
                 if(projectTotal > defaultCount){
