@@ -2,8 +2,8 @@ package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProductCon
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -69,12 +69,12 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             if (isTender.equals("2")) {
                 //原始债权
                 logger.info(logHeader + "智投发生出借推送数据，标的编号：" + orderId);
-                BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(orderId);
-                if (null == borrowVO) {
+                RightBorrowVO rightBorrowVO = amTradeClient.getRightBorrowByNid(orderId);
+                if (null == rightBorrowVO) {
                     throw new Exception(logHeader + "标的信息为空！！borrowNid:" + orderId);
                 }
                 //如果标的信息不为空,而且标的状态为放款中,即标的放款成功
-                if (borrowVO.getStatus() != 4) {
+                if (rightBorrowVO.getStatus() != 4) {
                     throw new Exception(logHeader + "标的未放款成功！！borrowNid:" + orderId);
                 }
                 List<BorrowTenderVO> borrowTenderList = amTradeClient.getBorrowTenderListByBorrowNid(orderId);
@@ -166,8 +166,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             //智投出借人哈希
             param.put("userIdcardHash", mapParam.get("idCardHash"));
             String isOld = mapParam.get("isOld").toString();
-            String date = mapParam.get("strDate").toString();
             if (isOld.equals("true")) {
+                String date = mapParam.get("strDate").toString();
                 param.put("groupByDate", date);
             }
             json.add(param);
