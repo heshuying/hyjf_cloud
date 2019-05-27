@@ -54,4 +54,12 @@ public interface BankAccountManageService extends BaseService {
      * @return
      */
     Integer updAccountId(Account account);
+
+    /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    BankAccountManageCustomize queryAccountUserMoney(Integer userId);
 }
