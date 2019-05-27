@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WebProjectListCustomizeMapper">
     <sql id="Where_Clause_New">
-        <where>
+        <where>(
             <if test="projectType != null and projectType != ''">
                 htbpt.borrow_project_type = #{projectType,jdbcType=VARCHAR}
             </if>
@@ -27,7 +27,8 @@
                 AND
                 (
                 ( htb.`status` = 1 AND htb.verify_status = 3 )
-                OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]>
+                UNIX_TIMESTAMP( NOW() ) )
                 OR ( htb.`status` = 3 )
                 OR ( htb.`status` = 4 )
                 OR ( htb.`status` = 8 )
@@ -41,7 +42,8 @@
                 </if>
                 <!-- 获取 出借中 -->
                 <if test="status == '2'.toString()">
-                    AND ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                    AND ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]>
+                    UNIX_TIMESTAMP( NOW() ) )
                 </if>
                 <!-- 获取 投标结束 -->
                 <if test="status == '3'.toString()">
@@ -54,7 +56,8 @@
                 <!-- 获取 定时发标+出借中 -->
                 <if test="status == '21'.toString()">
                     AND (( htb.`status` = 1 AND htb.verify_status = 3 )
-                    OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP(NOW())))
+                    OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]>
+                    UNIX_TIMESTAMP(NOW())))
                 </if>
                 <!-- 获取 复审中+还款中+逾期中 -->
                 <if test="status == '22'.toString()">
@@ -67,6 +70,37 @@
             <if test="publishInstCode != null and publishInstCode != ''">
                 AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
             </if>
+
+            ) or(
+
+            <if test="projectType != null and projectType != ''">
+                htbpt.borrow_project_type = #{projectType,jdbcType=VARCHAR}
+            </if>
+            <if test="borrowClass != null and borrowClass != ''">
+                AND htbpt.borrow_class = #{borrowClass,jdbcType=VARCHAR}
+            </if>
+            <if test="borrowClass == null or borrowClass == ''">
+                <!-- 新手汇  -->
+                AND htbpt.borrow_class <![CDATA[<>]]> 'NEW'
+                <!-- 汇直投列表数据过滤:只显示有效的项目 -->
+                <if test="projectType == 'HZT'">
+                    AND CASE
+                    WHEN ( htb.`status` = 1 AND htb.verify_status = 3)
+                    THEN
+                    htb.ontime + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                    ELSE
+                    htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                    END
+                </if>
+            </if>
+             AND ((htb.`status` = 3)
+             OR ( htb.`status` = 4)
+             OR ( htb.`status` = 8))
+
+            AND htb.is_show <![CDATA[<>]]> 1
+            AND (hbi.publish_inst_code = #{wjtInstCode,jdbcType=VARCHAR}
+            )
+
         </where>
     </sql>
 

@@ -159,7 +159,8 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @ApiImplicitParam(name = "paraMap", value = "{email:string}", dataType = "Map")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
-    public WebResult<Object> sendEmailActive(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<Object> sendEmailActive(@RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                             @RequestHeader(value = "userId") Integer userId,
                                              @RequestHeader(value = "token") String token ,
                                              @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
@@ -184,7 +185,7 @@ public class WebSafeController extends BaseUserController {
             logger.error("保存用户日志失败", e);
         }
         try {
-            safeService.sendEmailActive(userId, token, paraMap.get("email"));
+            safeService.sendEmailActive(userId, token, paraMap.get("email"),wjtClient);
         } catch (MQException e) {
             logger.error("发送激活邮件失败", e);
             result.setStatus(ApiResult.FAIL);

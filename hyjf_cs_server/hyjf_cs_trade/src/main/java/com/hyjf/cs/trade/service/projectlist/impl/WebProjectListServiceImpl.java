@@ -212,11 +212,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 page.setTotal(0);
             }
             if (typeFlag && classFlag) {
-                ProjectListRequest requestCount = new ProjectListRequest();
-                requestCount.setProjectType(projectType);
-                requestCount.setBorrowClass(borrowClass);
-                requestCount.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
 
+                request.setProjectType(projectType);
+                request.setBorrowClass(borrowClass);
+                request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                request.setWjtInstCode(systemConfig.getWjtInstCode());
                 // 统计定时发标+出借中总记录数
                 requestCount.setStatus("21");
                 int projectTotal = amTradeClient.countProjectList(requestCount);
@@ -280,7 +280,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
-//        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 
