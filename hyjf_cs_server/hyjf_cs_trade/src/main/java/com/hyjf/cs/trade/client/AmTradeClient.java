@@ -2913,6 +2913,13 @@ public interface AmTradeClient {
     Integer countPlanAccedeRecord(HjhAccedeRequest request);
 
     /**
+     * 获取borrow对象
+     * @param userId
+     * @return
+     */
+    BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId);
+
+    /**
      * 插入大屏数据
      * @param screenDataBean
      * @return

@@ -7070,6 +7070,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 查询用户账户信息金额信息
+     *
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomizeResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrow/query_account_userMoney/" + userId ,
+                BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 更新还款逾期标的信息
      */
     @Override
