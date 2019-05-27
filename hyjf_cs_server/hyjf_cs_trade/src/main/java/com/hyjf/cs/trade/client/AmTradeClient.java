@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.MyCreditListQueryResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
@@ -50,6 +48,8 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -2995,5 +2995,41 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId);
+    /**
+     * 获取线上所有智投信息
+     * @return
+     */
+    List<HjhPlanVO> selectAllPlan();
+    // 应急中心二期，历史数据上报 add by nxl start
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    List<CertClaimVO> selectCertBorrowByFlg();
+    List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO);
+    /**
+     * 根据原投资订单号查找转让信息
+     *
+     * @param sellOrderId
+     * @return add by nxl
+     */
+    List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId);
+
+    List<String> getBorrowNidList();
+
+    // 应急中心二期，历史数据上报 add by nxl end
+
 }
 

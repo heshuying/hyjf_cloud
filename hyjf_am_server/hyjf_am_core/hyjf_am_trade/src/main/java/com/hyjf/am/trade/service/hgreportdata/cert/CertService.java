@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 
 import java.util.List;
 
@@ -40,4 +41,19 @@ public interface CertService extends BaseService {
     List<CreditRepay> getCreditRepayListByRepayOrdId(CertRequest certRequest);
 
     CertAccountListIdCustomize queryCertAccountListId(CertRequest certRequest);
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVO(CertRequest certRequest);
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    List<CertClaim> selectCertBorrowConfig();
+    /**
+     * 批量更新
+     * @param update
+     * @return
+     */
+    int updateCertBorrowStatusBatch (CertClaimUpdateVO update);
+
+    List<String> getBorrowNidList();
 }

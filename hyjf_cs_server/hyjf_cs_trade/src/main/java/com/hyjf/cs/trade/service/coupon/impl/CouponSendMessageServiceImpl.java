@@ -85,7 +85,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
 					}
 				}
 
-				couponCount = this.sendConponAction(couponCodeList, userId, sendFlg, paramBean.getActivityId(),
+				couponCount = this.sendCouponAction(couponCodeList, userId, sendFlg, paramBean.getActivityId(),
 						paramBean.getCouponSource(), paramBean.getRemark());
 			}
             // sendFlg == 1
@@ -146,7 +146,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
 					}
 				}
 				// 发放优惠券
-				couponCount += this.sendConponAction(couponCodeList, userId, sendFlg, activityId, couponSource, "");
+				couponCount += this.sendCouponAction(couponCodeList, userId, sendFlg, activityId, couponSource, "");
 
 			}
 
@@ -178,7 +178,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 couponCodeList.add(paramBean.getCouponCode());
                 activityId = paramBean.getActivityId();
                 couponSource = 2;
-                this.sendConponAction(couponCodeList, userId, sendFlg, activityId, couponSource, "");
+                couponCount = this.sendCouponAction(couponCodeList, userId, sendFlg, activityId, couponSource, "");
             }
 
 			logger.info("发放优惠券：" + couponCount + " 张");
@@ -240,94 +240,15 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
         return couponConfigClient.getSendRepeat(couponUserRequest);
     }
 
-    /**
-     * 带返回发放的用户优惠券编号
-     * @param couponCodeList
-     * @param userId
-     * @param sendFlg
-     * @param activityId
-     * @param couponSource
-     * @return
-     * @throws Exception
-     */
-    private int sendConponAction(List<String> couponCodeList, Integer userId, Integer sendFlg, Integer activityId,
-                                 Integer couponSource,String content) throws Exception {
-        int nowTime = GetDate.getNowTime10();
-        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-        String channelName = amUserClient.getChannelNameByUserId(userId);
-
-        int couponCount = 0;
-        if (couponCodeList != null) {
-            for (String couponCode : couponCodeList) {
-                // 如果优惠券的发行数量已大于等于配置的发行数量，则不在发放该类别优惠券
-                if (!this.checkSendNum(couponCode)) {
-                    logger.info( "优惠券发行数量超出上限，不再发放！");
-                    continue;
-                }
-                couponCount++;
-                CouponUserVO couponUser = new CouponUserVO();
-                couponUser.setCouponCode(couponCode);
-                if (StringUtils.contains(couponCode, "PT")) {
-                    // 体验金编号
-                    couponUser.setCouponUserCode(GetCode.getCouponUserCode(1));
-                } else if (StringUtils.contains(couponCode, "PJ")) {
-                    // 加息券编号
-                    couponUser.setCouponUserCode(GetCode.getCouponUserCode(2));
-                } else if (StringUtils.contains(couponCode, "PD")) {
-                    // 代金券编号
-                    couponUser.setCouponUserCode(GetCode.getCouponUserCode(3));
-                }
-                // 优惠券组编号
-                // couponUser.setCouponGroupCode(couponGroupCode);
-                couponUser.setUserId(userId);
-                if (Validator.isNotNull(sendFlg) && sendFlg != CouponUtil.NUM_TWO && Validator.isNotNull(activityId)) {
-                    // 购买vip与活动无关
-                    couponUser.setActivityId(activityId);
-                }
-                couponUser.setUsedFlag(CustomConstants.USER_COUPON_STATUS_UNUSED);
-
-                // 根据优惠券编码查询优惠券
-                CouponConfigVO config = couponConfigClient.selectCouponConfig(couponCode);
-                if (null == config) {
-                    continue;
-                }
-
-                // 加息券编号
-                couponUser.setCouponUserCode(GetCode.getCouponUserCode(config.getCouponType()));
-
-                if(config.getExpirationType() == 1){ //截止日
-                    couponUser.setEndTime(config.getExpirationDate());
-                }else if(config.getExpirationType() == 2){  //时长（月）
-                    Date endDate = GetDate.countDate(GetDate.getDate(), 2, config.getExpirationLength());
-                    couponUser.setEndTime((int)(endDate.getTime()/1000));
-                }else if(config.getExpirationType() == 3){  //时长（天）
-                    Date endDate = GetDate.countDate(GetDate.getDate(), 5, config.getExpirationLengthDay());
-                    couponUser.setEndTime((int)(endDate.getTime()/1000));
-                }
-
-                couponUser.setCouponSource(couponSource);
-                couponUser.setAddTime(nowTime);
-                couponUser.setAddUser(CustomConstants.OPERATOR_AUTO_REPAY);
-                couponUser.setUpdateTime(nowTime);
-                couponUser.setUpdateUser(CustomConstants.OPERATOR_AUTO_REPAY);
-                couponUser.setDelFlag(CustomConstants.FALG_NOR);
-                couponUser.setChannel(channelName);
-                couponUser.setAttribute(userInfo.getAttribute());
-                couponUser.setContent(StringUtils.isEmpty(content)?"":content);
-                couponConfigClient.insertCouponUser(couponUser);
-            }
-            logger.info("发放优惠券成功，发放张数：" + couponCount);
-        }
-        return couponCount;
-    }
 
     private int sendCouponAction(List<String> couponCodeList, Integer userId, Integer sendFlg, Integer activityId,
-                                Integer couponSource, String content) throws Exception {
+                                Integer couponSource, String content) {
         logger.info("用户："+userId+",执行发券逻辑开始  " + GetDate.dateToString(new Date()));
         int nowTime = GetDate.getNowTime10();
 
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         if(userInfo == null){
+            logger.warn("用户未找到, userId is : {}", userId);
             return 0;
         }
 
@@ -338,7 +259,8 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
             for (String couponCode : couponCodeList) {
                 // 如果优惠券的发行数量已大于等于配置的发行数量，则不在发放该类别优惠券
                 if (!this.checkSendNum(couponCode)) {
-                    logger.info( "优惠券发行数量超出上限，不再发放！");
+                    logger.warn("优惠券发行数量超出上限，不再发放, couponCode is: {}", couponCode);
+                    saveFailSendCoupon(userId, couponCode, activityId, sendFlg, "优惠券发行数量超出上限");
                     continue;
                 }
                 CouponUserVO couponUser = new CouponUserVO();
@@ -365,12 +287,15 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 // 根据优惠券编码查询优惠券
                 CouponConfigVO config = couponConfigClient.selectCouponConfig(couponCode);
                 if (null == config) {
+                    logger.warn( "优惠券配置错误, couponCode is: {}", couponCode);
+                    saveFailSendCoupon(userId, couponCode, activityId, sendFlg, "优惠券配置错误");
                     continue;
                 }
 
                 Integer status = config.getStatus();
-                if(status==null||status==1||status==3){
-                    logger.info("优惠券审核未通过，无法发放！（coupon）"+couponCode);
+                if (status == null || status == 1 || status == 3) {
+                    logger.warn("优惠券审核未通过，无法发放！（coupon）"+couponCode);
+                    saveFailSendCoupon(userId, couponCode, activityId, sendFlg, "优惠券审核未通过");
                     continue;
                 }
                 // 加息券编号
@@ -410,4 +335,24 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
         int remain = couponConfigClient.checkCouponSendExcess(couponCode);
         return remain > 0 ? true : false;
     }
+
+    @Autowired
+    private CommonProducer producer;
+
+    private void saveFailSendCoupon(int userId, String couponCode, int activityId, Integer sendFlg, String desc) {
+        // 发券失败保存
+        try {
+            logger.info("用户:{}发放优惠券:{}, 活动:{}失败, 失败原因: {}", userId, couponCode, activityId, desc);
+            UserCouponBean couponBean = new UserCouponBean();
+            couponBean.setUserId(userId);
+            couponBean.setSendFlg(sendFlg);
+            couponBean.setActivityId(activityId);
+            couponBean.setCouponCode(couponCode);
+            couponBean.setRemark(desc);
+            producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_FAIL_TOPIC, userId + "," + "", couponBean));
+        } catch (MQException e) {
+            logger.error("活动发券失败保存错误...", e);
+        }
+    }
+
 }

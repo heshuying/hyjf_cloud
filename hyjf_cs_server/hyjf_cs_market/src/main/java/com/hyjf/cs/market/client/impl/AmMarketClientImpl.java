@@ -190,13 +190,23 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-	public ActivityUserRewardVO selectActivityUserReward(Integer activityId, int userId, int grade) {
+	public List<ActivityUserRewardVO> selectActivityUserReward(int activityId, int userId, int grade) {
 		ActivityUserRewardResponse response = restTemplate.getForEntity(
 				"http://AM-MARKET/am-market/activity/reward/select/" + activityId + "/" + userId + "/" + grade,
 				ActivityUserRewardResponse.class).getBody();
 		if (Response.isSuccess(response)) {
-			return response.getResult();
+			return response.getResultList();
 		}
 		return null;
 	}
+
+    @Override
+    public Integer saveActivity518UserReward(ActivityUserRewardVO vo) {
+        ActivityUserRewardResponse response = restTemplate.postForObject("http://AM-MARKET/am-market/activity/reward/save", vo,
+                ActivityUserRewardResponse.class);
+        if (response != null && response.getRewardId() != null) {
+            return response.getRewardId();
+        }
+        return null;
+    }
 }
