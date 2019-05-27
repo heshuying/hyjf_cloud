@@ -326,7 +326,7 @@ public class BorrowCommonController extends BaseController {
 
 		// add by liuyang 温金投推送标的不能为新手标 20190527 start
 		if(wjtInstCode.equals(form.getPublishInstCode()) && form.getProjectType() == 14){
-			bcr.setRtn(Response.FAIL);
+			bcr.setRtn(Response.ERROR);
 			bcr.setMessage("新手标出借终端仅能选择汇盈金服。");
 			return bcr;
 		}
