@@ -3,6 +3,7 @@ package com.hyjf.cs.message.controller.web.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
@@ -22,10 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -234,6 +232,12 @@ public class PlatDataStatisticsController {
         jsonObject.put("tenderuserCountCurrent", oe.getTenderUserCountCurrent());
         jsonObject.put("borrowuserMoneyTopone", oe.getBorrowUserMoneyTopOne() == null ? 0.00 : oe.getBorrowUserMoneyTopOne().setScale(2, BigDecimal.ROUND_DOWN));
         jsonObject.put("borrowuserMoneyTopten", oe.getBorrowUserMoneyTopTen() == null ? 0.00 : oe.getBorrowUserMoneyTopTen().setScale(2, BigDecimal.ROUND_DOWN));
+
+        //安全运营天数
+        Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
+        jsonObject.put("survivalYears",totalDays/365);
+        jsonObject.put("survivalDays",totalDays%365);
+
         result.setData(jsonObject);
         return result;
     }

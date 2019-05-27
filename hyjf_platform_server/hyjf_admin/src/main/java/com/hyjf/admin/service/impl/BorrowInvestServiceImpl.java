@@ -543,7 +543,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                             amTradeClient.selectUserInvestList(borrowInvestRequest);
                     if (tzList != null && tzList.size() > 0) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
-                        userInvest.setIdCard(borrowerUserinfo.getIdcard());
+                        userInvest.setIdCard(usersInfo.getIdcard());
                         contents.put("userInvest", userInvest);
                     } else {
                         logger.error("标的出借信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");

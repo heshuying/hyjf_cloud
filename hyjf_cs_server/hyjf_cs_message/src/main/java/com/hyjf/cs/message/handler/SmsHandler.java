@@ -3,20 +3,28 @@ package com.hyjf.cs.message.handler;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.am.vo.config.SmsNoticeConfigVO;
 import com.hyjf.am.vo.config.SmsTemplateVO;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
+import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.config.PropertiesConfig;
 import com.hyjf.cs.message.config.properties.SmsProperties;
 import com.hyjf.cs.message.mongo.mc.SmsLogDao;
+import com.hyjf.cs.message.mq.base.CommonProducer;
+import com.hyjf.cs.message.mq.base.MessageContent;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.HttpHostConnectException;
@@ -24,10 +32,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 public class SmsHandler {
@@ -50,6 +59,8 @@ public class SmsHandler {
 	private AmConfigClient amConfigClient;
 	@Autowired
 	private SmsProperties smsProperties;
+	@Autowired
+	private CommonProducer messageProducer;
 
 	/**
 	 * 获取参数集合
@@ -148,7 +159,43 @@ public class SmsHandler {
 		smsLog.setStatus(status);
 		// 入库
 		smsLogDao.save(smsLog);
+		//新需求，統計每个人员发送的短信，将手机号码对应到分公司算短信发送数量，财务算账用，插入sms_count表统计短信条数
+		//发送成功才计算费用,0==成功
+		if(status == 0){
+			addSmsCount( mobile,  messageStr);
+		}else{
+			//是否是测试环境 true=测试,测试环境直接计入
+			final boolean envTest = PropertiesConfig.hyjfEnvProperties.isTest();
+			if(envTest){
+				addSmsCount( mobile,  messageStr);
+			}
+		}
+
 		return status;
+	}
+
+	/**
+	 * 短信统计，将手机号码对应到分公司算短信发送数量，财务算账用
+	 * @param mobile
+	 * @param messageStr
+	 */
+	public void addSmsCount(String mobile, String messageStr){
+		//过滤掉类型为空的数据
+		if(StringUtils.isEmpty(mobile) || StringUtils.isEmpty(messageStr)) {
+			logger.warn("【短信统计】手机号码或者短信内容为空 =========== mobile=" +mobile+",messageStr"+messageStr);
+			return;
+		}
+		// 添加到发送队列
+		Map<String,String> messageMap = new HashMap<>();
+		messageMap.put("mobile",mobile);
+		messageMap.put("messageStr",messageStr);
+		try {
+			messageProducer.messageSend(
+					new MessageContent(MQConstant.SMS_COUNT_MESSAGE_TOPIC, UUID.randomUUID().toString(),messageMap));
+		} catch (MQException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -209,6 +256,17 @@ public class SmsHandler {
 		smsLog.setStatus(status);
 		// 入库
 		smsLogDao.save(smsLog);
+		//新需求，統計每个人员发送的短信，将手机号码对应到分公司算短信发送数量，财务算账用，插入sms_count表统计短信条数
+		//发送成功才计算费用,0==成功
+		if(status == 0){
+			addSmsCount( mobile,  messageStr);
+		}else{
+			//是否是测试环境 true=测试,测试环境直接计入
+			final boolean envTest = PropertiesConfig.hyjfEnvProperties.isTest();
+			if(envTest){
+				addSmsCount( mobile,  messageStr);
+			}
+		}
 		return status;
 	}
 
@@ -344,6 +402,11 @@ public class SmsHandler {
 				}
 			}
 			if (tplCode != null && tplCode.equals(CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN)) {
+				if (user.getRecieveSms() != null && user.getRecieveSms() != 0) {
+					return 0;
+				}
+			}
+			if (tplCode != null && tplCode.equals(CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN)) {
 				if (user.getRecieveSms() != null && user.getRecieveSms() != 0) {
 					return 0;
 				}

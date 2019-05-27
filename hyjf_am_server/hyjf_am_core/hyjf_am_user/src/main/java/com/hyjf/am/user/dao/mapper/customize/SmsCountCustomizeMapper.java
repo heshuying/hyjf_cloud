@@ -29,4 +29,11 @@ public interface SmsCountCustomizeMapper {
      * @return
      */
     List<String> queryUser(Map<String,Object> params);
+
+    /**
+     * 查询符合条件的用户
+     * @param params
+     * @return
+     */
+    List<String> queryUserByBirthday(Map<String,Object> params);
 }

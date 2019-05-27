@@ -119,4 +119,11 @@ public interface HjhDebtCreditService {
     List<HjhDebtCredit> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCredit> getHjhDebtCreditListByBorrowNid(String borrowNid);
+    /**
+     * 根据原投资订单号查找转让信息
+     * @param sellOrderId
+     * @return
+     * add by nxl
+     */
+    List<HjhDebtCredit> selectCreditBySellOrderId(String sellOrderId);
 }
