@@ -356,7 +356,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setUserName(tenderBg.getUserName());
         
         
-        logger.info("开始插入borrowTender表...");
+        logger.info("开始插入borrowTender表...borrowTender:{}",JSONObject.toJSONString(borrowTender));
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
 
