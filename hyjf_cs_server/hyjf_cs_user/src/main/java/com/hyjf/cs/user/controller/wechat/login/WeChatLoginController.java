@@ -95,6 +95,12 @@ public class WeChatLoginController extends BaseUserController {
         }
         //判断用户输入的密码错误次数---开始
         UserVO user = loginService.getUser(userName);
+        if(user==null){
+            logger.error("weChat端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
+            return result;
+        }
         // 汇盈的用户不能登录温金投
         if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
                 && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
