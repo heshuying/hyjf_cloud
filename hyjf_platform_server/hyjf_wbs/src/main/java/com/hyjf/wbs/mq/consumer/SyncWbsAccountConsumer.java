@@ -106,6 +106,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                     customerSyncQO.setPlatformAccountOpeningTime(bankOpenAccountRecordCustomize.getOpenTime());
                     customerSyncQO.setName(bankOpenAccountRecordCustomize.getRealName());
                     customerSyncQO.setDocumentNo(bankOpenAccountRecordCustomize.getIdCard());
+                    customerSyncQO.setMobile(bankOpenAccountRecordCustomize.getMobile());
                 }
                 customerSyncQO.setAssetCustomerId(userId);
                 if (!getEntId(utmReg.getUtmId()).isEmpty()) {
