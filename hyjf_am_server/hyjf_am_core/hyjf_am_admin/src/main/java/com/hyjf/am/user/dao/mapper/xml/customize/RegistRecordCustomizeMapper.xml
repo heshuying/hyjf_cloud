@@ -13,6 +13,7 @@
         <result column="reg_ip" property="regIP" jdbcType="VARCHAR" />
         <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
         <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
+        <result column="user_type" property="userType" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectRegistList" resultMap="RegistListPOMap" parameterType="Map">
         SELECT
@@ -24,7 +25,8 @@
         IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.source_id), IF(appdurl.source_id IS NOT NULL,plat.source_id,null)) AS source_id,
         IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.utm_source), IF(appdurl.source_id IS NOT NULL,plat.source_name,null)) AS source_name,
         hydu.reg_esb AS regist_plat, DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
-        hydu.reg_ip
+        hydu.reg_ip,
+        hydu.user_type
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
@@ -58,7 +60,8 @@
             IF(hydur1.utm_id IS NOT NULL, IF(appdurl.source_id IS NOT NULL,null,hydutm.utm_source), IF(appdurl.source_id IS NOT NULL,plat.source_name,null)) AS source_name,
             hydu.reg_esb AS regist_plat,
             DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
-            hydu.reg_ip
+            hydu.reg_ip,
+            hydu.user_type
             FROM ht_user hydu
             LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
             LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id

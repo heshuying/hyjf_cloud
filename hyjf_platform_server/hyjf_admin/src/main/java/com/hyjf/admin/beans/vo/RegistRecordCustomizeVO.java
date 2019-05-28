@@ -33,6 +33,9 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
     //用户属性
     @ApiModelProperty(value = "用户属性")
     private String userProperty;
+    //用户类型
+    @ApiModelProperty(value = "用户类型")
+    private String userType;
     //注册渠道Id
     @ApiModelProperty(value = "注册渠道Id")
     public String sourceId;
@@ -221,5 +224,13 @@ public class RegistRecordCustomizeVO extends BaseVO implements Serializable {
 
     public void setRegistPlatCode(String registPlatCode) {
         this.registPlatCode = registPlatCode;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

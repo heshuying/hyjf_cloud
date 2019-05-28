@@ -25,6 +25,8 @@ public class RegistRecordVO extends BaseVO implements Serializable {
     public String recommendName;
     //用户属性
     private String userProperty;
+    //用户类型
+    private String userType;
     //注册渠道
     public String sourceName;
     // 注册平台
@@ -206,5 +208,13 @@ public class RegistRecordVO extends BaseVO implements Serializable {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }
