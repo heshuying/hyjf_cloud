@@ -5,6 +5,7 @@
     <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="bank_mobile" property="bankMobile" jdbcType="CHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="salt" property="salt" jdbcType="CHAR" />
@@ -35,6 +36,8 @@
     <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="points_total" property="pointsTotal" jdbcType="INTEGER" />
+    <result column="points_current" property="pointsCurrent" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -95,11 +98,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, mobile, email, `password`, salt, `status`, open_account, recharge_sms, 
-    withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, reg_esb, eprovince, 
-    send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, is_set_password, 
-    bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
-    is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time
+    user_id, username, mobile, bank_mobile, email, `password`, salt, `status`, open_account, 
+    recharge_sms, withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, 
+    reg_esb, eprovince, send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, 
+    is_set_password, bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+    is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time, points_total, points_current
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserExample" >
     select
@@ -138,30 +141,30 @@
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_user (username, mobile, email, 
-      `password`, salt, `status`, 
-      open_account, recharge_sms, withdraw_sms, 
-      icon_url, if_receive_notice, invest_sms, 
-      recieve_sms, reg_esb, eprovince, 
-      send_sms, is_inst_flag, inst_code, 
-      account_esb, user_type, payment_auth_status, 
-      is_set_password, bank_open_account, bank_account_esb, 
-      is_evaluation_flag, evaluation_expired_time, 
+    insert into ht_user (username, mobile, bank_mobile, 
+      email, `password`, salt, 
+      `status`, open_account, recharge_sms, 
+      withdraw_sms, icon_url, if_receive_notice, 
+      invest_sms, recieve_sms, reg_esb, 
+      eprovince, send_sms, is_inst_flag, 
+      inst_code, account_esb, user_type, 
+      payment_auth_status, is_set_password, bank_open_account, 
+      bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
       is_ca_flag, is_smtp, reg_ip, 
-      reg_time, create_time, update_time
-      )
-    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, 
-      #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, #{withdrawSms,jdbcType=TINYINT}, 
-      #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, #{investSms,jdbcType=TINYINT}, 
-      #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, 
-      #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, 
-      #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{paymentAuthStatus,jdbcType=TINYINT}, 
-      #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, 
-      #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
+      reg_time, create_time, update_time, 
+      points_total, points_current)
+    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankMobile,jdbcType=CHAR}, 
+      #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, 
+      #{status,jdbcType=TINYINT}, #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, 
+      #{withdrawSms,jdbcType=TINYINT}, #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, 
+      #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, 
+      #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, 
+      #{instCode,jdbcType=VARCHAR}, #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
+      #{paymentAuthStatus,jdbcType=TINYINT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
+      #{bankAccountEsb,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
       #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, 
-      #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{pointsTotal,jdbcType=INTEGER}, #{pointsCurrent,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.User" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -174,6 +177,9 @@
       </if>
       <if test="mobile != null" >
         mobile,
+      </if>
+      <if test="bankMobile != null" >
+        bank_mobile,
       </if>
       <if test="email != null" >
         email,
@@ -265,6 +271,12 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="pointsTotal != null" >
+        points_total,
+      </if>
+      <if test="pointsCurrent != null" >
+        points_current,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="username != null" >
@@ -272,6 +284,9 @@
       </if>
       <if test="mobile != null" >
         #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="bankMobile != null" >
+        #{bankMobile,jdbcType=CHAR},
       </if>
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
@@ -363,6 +378,12 @@
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="pointsTotal != null" >
+        #{pointsTotal,jdbcType=INTEGER},
+      </if>
+      <if test="pointsCurrent != null" >
+        #{pointsCurrent,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserExample" resultType="java.lang.Integer" >
@@ -382,6 +403,9 @@
       </if>
       <if test="record.mobile != null" >
         mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.bankMobile != null" >
+        bank_mobile = #{record.bankMobile,jdbcType=CHAR},
       </if>
       <if test="record.email != null" >
         email = #{record.email,jdbcType=VARCHAR},
@@ -473,6 +497,12 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.pointsTotal != null" >
+        points_total = #{record.pointsTotal,jdbcType=INTEGER},
+      </if>
+      <if test="record.pointsCurrent != null" >
+        points_current = #{record.pointsCurrent,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -483,6 +513,7 @@
     set user_id = #{record.userId,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
       mobile = #{record.mobile,jdbcType=CHAR},
+      bank_mobile = #{record.bankMobile,jdbcType=CHAR},
       email = #{record.email,jdbcType=VARCHAR},
       `password` = #{record.password,jdbcType=VARCHAR},
       salt = #{record.salt,jdbcType=CHAR},
@@ -512,7 +543,9 @@
       reg_ip = #{record.regIp,jdbcType=VARCHAR},
       reg_time = #{record.regTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      points_total = #{record.pointsTotal,jdbcType=INTEGER},
+      points_current = #{record.pointsCurrent,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -525,6 +558,9 @@
       </if>
       <if test="mobile != null" >
         mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="bankMobile != null" >
+        bank_mobile = #{bankMobile,jdbcType=CHAR},
       </if>
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
@@ -616,6 +652,12 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="pointsTotal != null" >
+        points_total = #{pointsTotal,jdbcType=INTEGER},
+      </if>
+      <if test="pointsCurrent != null" >
+        points_current = #{pointsCurrent,jdbcType=INTEGER},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -623,6 +665,7 @@
     update ht_user
     set username = #{username,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=CHAR},
+      bank_mobile = #{bankMobile,jdbcType=CHAR},
       email = #{email,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=VARCHAR},
       salt = #{salt,jdbcType=CHAR},
@@ -652,7 +695,9 @@
       reg_ip = #{regIp,jdbcType=VARCHAR},
       reg_time = #{regTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      points_total = #{pointsTotal,jdbcType=INTEGER},
+      points_current = #{pointsCurrent,jdbcType=INTEGER}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 </mapper>
