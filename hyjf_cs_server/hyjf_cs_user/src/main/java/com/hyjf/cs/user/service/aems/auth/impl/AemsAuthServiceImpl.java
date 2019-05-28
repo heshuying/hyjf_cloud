@@ -198,12 +198,14 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 	/**
 	 * 校验用户角色和授权类型是否一致
 	 * @param authBean
+	 * @param authTypeString
+	 * @param resultMap
 	 * @return
 	 */
-	public Map<String, String> checkUserRoleAndAuthType(AuthBean authBean, String authTypeString){
+	public Map<String, String> checkUserRoleAndAuthType(AuthBean authBean, String authTypeString, Map<String, String> resultMap){
 		logger.info("所有用户角色:[1-投资人 2-借款人 3-垫付机构], 所有授权:[1：自动投标授权 2：自动债转授权 3：缴费授权 4：还款授权]");
 		logger.info("正在进行授权的，用户角色:[" +authBean.getIdentity()+ "], 此次进行的授权:["+ authBean.getAuthType() +"]");
-		Map<String, String> resultMap = new HashMap<>();
+		//Map<String, String> resultMap = new HashMap<>();
 		String[] authTypeArray = authTypeString.split(",");
 		// 1-投资人 2-借款人 3-垫付机构
 		if (authBean.getIdentity().equals("1")){
