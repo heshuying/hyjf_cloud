@@ -5,7 +5,7 @@
 
     <!-- 引入配置文件 -->
 
-    <properties resource="init_market.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -2078,5 +2078,29 @@
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+
+
+        <table tableName="ht_customer_service_channel" domainObjectName="CustomerServiceChannel">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_electricity_sales_data_push_list" domainObjectName="ElectricitySalesDataPushList">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="channel" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="upload_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_customer_service_group_config" domainObjectName="CustomerServiceGroupConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_customer_service_representive_config" domainObjectName="CustomerServiceRepresentiveConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
     </context>
 </generatorConfiguration>
