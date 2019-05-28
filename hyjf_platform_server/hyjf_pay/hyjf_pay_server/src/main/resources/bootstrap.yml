@@ -24,3 +24,7 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+
+logging:
+  file: pay.log
+  file.max-size: 100MB

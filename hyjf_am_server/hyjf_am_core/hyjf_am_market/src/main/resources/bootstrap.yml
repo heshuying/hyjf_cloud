@@ -30,6 +30,9 @@ management:
     health:
       show-details: ALWAYS
 
+logging:
+  file: am-market.log
+  file.max-size: 100MB
 
 info:
   name: am_market

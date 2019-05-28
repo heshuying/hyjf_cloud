@@ -65,6 +65,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
@@ -2904,6 +2905,12 @@ public interface AmTradeClient {
      * @return
      */
     List<ProtocolTemplateVO> getAllShowProtocolTemp();
+    /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean);
     /**
      * 统计最后三天的服务记录 add by nxl
      * app和危险的统计计划加入数量
