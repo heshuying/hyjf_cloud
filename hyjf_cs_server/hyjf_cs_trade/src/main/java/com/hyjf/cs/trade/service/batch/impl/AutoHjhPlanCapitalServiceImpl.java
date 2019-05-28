@@ -221,22 +221,22 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             actualVO.setDelFlg(0);
             // 初始化创建时间
             actualVO.setCreateTime(new Date());
+            // 当日新增复投额 （初始化 等于当日可复投额）
+            BigDecimal addReinvestAccount = sumReinvestAccount;
             // 计算当日新增复投额
             if(hjhPlanCapitalActualResponse != null){
                 for(HjhPlanCapitalActualVO actualVOLs: hjhPlanCapitalActualResponse.getResultList()){
-                    // 当日新增复投额 （初始化 等于当日可复投额）
-                    BigDecimal addReinvestAccount = sumReinvestAccount;
                     if(actualVO.getPlanNid().equals(actualVOLs.getPlanNid())){
                         // 当日新增复投额 实际值：当日可复投额-昨日未复投额
                         addReinvestAccount = addReinvestAccount.subtract(actualVOLs.getLeaveReinvestAccount());
                         // 将当日新增复投额set到list的bean中
                         actualVO.setAddReinvestAccount(addReinvestAccount);
-                    }else{
-                        // 如果没有取到前一天的计划（没有数据）且 当日可复投额不为零
-                        if(!BigDecimal.ZERO.equals(addReinvestAccount)){
-                            actualVO.setAddReinvestAccount(addReinvestAccount);
-                        }
-                    }
+                     }
+                }
+            }else{
+                // 如果没有取到前一天的计划（没有数据）且 当日可复投额不为零
+                if(!BigDecimal.ZERO.equals(addReinvestAccount)){
+                    actualVO.setAddReinvestAccount(addReinvestAccount);
                 }
             }
             // 将当日可复投额set到list的bean中
