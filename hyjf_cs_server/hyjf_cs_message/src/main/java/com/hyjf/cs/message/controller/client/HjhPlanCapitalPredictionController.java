@@ -112,7 +112,7 @@ public class HjhPlanCapitalPredictionController extends BaseController {
                     sumCreditAccount = sumCreditAccount.add(record.getCreditAccount());
                 }
                 if (record.getCapitalAccount() != null) {
-                    sumCapitalAccount = sumCapitalAccount.add(record.getCreditAccount());
+                    sumCapitalAccount = sumCapitalAccount.add(record.getCapitalAccount());
                 }
                 if (record.getAssetAccount() != null) {
                     sumAssetAccount = sumAssetAccount.add(record.getAssetAccount());
