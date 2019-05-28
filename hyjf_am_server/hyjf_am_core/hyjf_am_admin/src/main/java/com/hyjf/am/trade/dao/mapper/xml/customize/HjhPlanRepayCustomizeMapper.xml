@@ -182,7 +182,7 @@
         IFNULL(DATE_FORMAT(hha.create_time,  '%Y-%m-%d'),0) AS joinTime,
         IFNULL(hha.count_interest_time,0) AS orderLockTime,
         hhp.plan_name AS planName,
-        if(hha.create_time<'2019-5-27 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
+        if(hha.create_time<![CDATA[<]]>'2019-5-27 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
 		utm2.utm_source utmSource2
         FROM
         ht_hjh_repay hhr
