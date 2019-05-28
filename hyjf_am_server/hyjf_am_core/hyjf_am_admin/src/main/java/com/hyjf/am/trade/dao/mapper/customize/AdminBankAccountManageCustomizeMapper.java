@@ -5,6 +5,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -29,4 +30,13 @@ public interface AdminBankAccountManageCustomizeMapper {
      * @return
      */
     List<BankAccountManageCustomize> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest);
+
+    /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    BankAccountManageCustomize queryAccountUserMoney(@Param("user_id") Integer userId);
+
 }

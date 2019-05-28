@@ -164,7 +164,34 @@
     </sql>
     <select id="getRepayInfoCurrentList" resultMap="getRepayInfoCurrentListResultMap" parameterType="map">
         SELECT
-            *
+          t.borrowNid,
+          t.tenderOrdid,
+          t.assignOrdid,
+          t.repayOrdid,
+          t.instName,
+          t.planNid,
+          t.borrowUserName,
+          t.recoverUserName,
+          t.period,
+          t.recoverPeriod,
+          t.account,
+          t.amountHold,
+          t.recoverCapital,
+          t.recoverInterest,
+          t.recoverAccount,
+          t.recoverFee,
+          t.recoverStatus,
+          t.repayMoneySource,
+          t.recoverAmountTotal + IFNULL(t.recoverFeeYesPeriod,0) AS recoverAmountTotal,
+          t.recoverTime,
+          t.repayActionTime,
+          t.borrowStyle,
+          t.borrowPeriod,
+          t.feeRate,
+          t.differentialRate,
+          t.verifyTime,
+          t.borrowAccount,
+          t.recordType
         FROM
             (
                 <!-- 1、未分期原始出借订单查询-->
@@ -201,7 +228,7 @@
                     ht_hjh_debt_credit_repay cr1
                     WHERE
                     cr1.invest_order_id = br.nid
-                    AND cr1.repay_period = br.recover_period
+                    AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
                     ) AS recoverCapital,
                     br.recover_interest - (
                     SELECT
@@ -218,7 +245,7 @@
                     ht_hjh_debt_credit_repay cr1
                     WHERE
                     cr1.invest_order_id = br.nid
-                    AND cr1.repay_period = br.recover_period
+                    AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
                     ) AS recoverInterest,
                     br.recover_account - (
                     SELECT
@@ -235,7 +262,7 @@
                     ht_hjh_debt_credit_repay cr1
                     WHERE
                     cr1.invest_order_id = br.nid
-                    AND cr1.repay_period = br.recover_period
+                    AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
                     ) AS recoverAccount,
                     br.recover_fee - (
                     SELECT
@@ -252,7 +279,7 @@
                     ht_hjh_debt_credit_repay cr1
                     WHERE
                     cr1.invest_order_id = br.nid
-                    AND cr1.repay_period = br.recover_period
+                    AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
                     ) AS recoverFee,
 
                     IF (
@@ -276,6 +303,23 @@
                     END,
                     ''
                     ) AS repayMoneySource,
+                    br.recover_fee_yes - (
+                    SELECT
+                    IFNULL(SUM(cr1.manage_fee), 0)
+                    FROM
+                    ht_credit_repay cr1
+                    WHERE
+                    cr1.credit_tender_nid = br.nid
+                    AND cr1.recover_period = br.recover_period AND cr1.`status` = 1
+                    ) - (
+                    SELECT
+                    IFNULL(SUM(cr1.manage_fee), 0)
+                    FROM
+                    ht_hjh_debt_credit_repay cr1
+                    WHERE
+                    cr1.invest_order_id = br.nid
+                    AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0 AND cr1.repay_status = 1
+                    ) AS recoverFeeYesPeriod,
                     IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAmountTotal,
                     FROM_UNIXTIME(br.recover_time, '%Y-%m-%d') AS recoverTime,
 
@@ -359,7 +403,7 @@
                 ht_hjh_debt_credit_repay cr1
                 WHERE
                 cr1.invest_order_id = rp.nid
-                AND cr1.repay_period = rp.recover_period
+                AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
                 ) AS recoverCapital,
                 rp.recover_interest - (
                 SELECT
@@ -376,7 +420,7 @@
                 ht_hjh_debt_credit_repay cr1
                 WHERE
                 cr1.invest_order_id = rp.nid
-                AND cr1.repay_period = rp.recover_period
+                AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
                 )AS recoverInterest,
                 rp.recover_account - (
                 SELECT
@@ -393,7 +437,7 @@
                 ht_hjh_debt_credit_repay cr1
                 WHERE
                 cr1.invest_order_id = rp.nid
-                AND cr1.repay_period = rp.recover_period
+                AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
                 )AS recoverAccount,
                 rp.recover_fee - (
                 SELECT
@@ -410,7 +454,7 @@
                 ht_hjh_debt_credit_repay cr1
                 WHERE
                 cr1.invest_order_id = rp.nid
-                AND cr1.repay_period = rp.recover_period
+                AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
                 )AS recoverFee,
 
                 IF (
@@ -435,6 +479,23 @@
                 END,
                 ''
                 ) AS repayMoneySource,
+                rp.recover_fee_yes - (
+                SELECT
+                IFNULL(SUM(cr1.manage_fee), 0)
+                FROM
+                ht_credit_repay cr1
+                WHERE
+                cr1.credit_tender_nid = rp.nid
+                AND cr1.recover_period = rp.recover_period AND cr1.`status` = 1
+                ) - (
+                SELECT
+                IFNULL(SUM(cr1.manage_fee), 0)
+                FROM
+                ht_hjh_debt_credit_repay cr1
+                WHERE
+                cr1.invest_order_id = rp.nid
+                AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0 AND cr1.repay_status = 1
+                ) AS recoverFeeYesPeriod,
                 IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAmountTotal,
                 FROM_UNIXTIME(rp.recover_time, '%Y-%m-%d') AS recoverTime,
 
@@ -503,7 +564,7 @@
             IF (
                 cr.`status` = 1
                 AND cr.assign_repay_yes_time > 0,
-                CASE brp.repay_money_source
+                CASE IFNULL(brp.repay_money_source,bry.repay_money_source)
             WHEN 1 THEN
                 '借款人还款'
             WHEN 2 THEN
@@ -515,6 +576,11 @@
             END,
             ''
             ) AS repayMoneySource,
+            IF (
+            cr.`status` = 1,
+            cr.manage_fee,
+            0
+            ) AS recoverFeeYesPeriod,
          IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = cr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
          FROM_UNIXTIME(
             cr.assign_repay_next_time,
@@ -544,7 +610,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-3"/>
@@ -585,20 +651,25 @@
                 AS recoverStatus,
 
             IF (
-                hcr.repay_status = 1
-                AND hcr.assign_repay_yes_time > 0,
-                CASE brp.repay_money_source
+            hcr.repay_status = 1
+            AND hcr.assign_repay_yes_time > 0,
+            CASE IFNULL(brp.repay_money_source,bry.repay_money_source)
             WHEN 1 THEN
-                '借款人还款'
+            '借款人还款'
             WHEN 2 THEN
-                '第三方保障'
+            '第三方保障'
             WHEN 3 THEN
-                '保证金垫付'
+            '保证金垫付'
             ELSE
-                '借款人还款'
+            '借款人还款'
             END,
             ''
             ) AS repayMoneySource,
+            IF (
+            hcr.repay_status = 1,
+            hcr.manage_fee,
+            0
+            ) AS recoverFeeYesPeriod,
         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = hcr.credit_repay_order_id LIMIT 1),0) AS recoverAmountTotal,
         IF (
             hcr.assign_repay_next_time IS NULL
@@ -634,7 +705,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-4"/>
@@ -683,13 +754,13 @@
             SELECT
                 b.borrow_nid AS borrowNid
         FROM
-            ht_credit_repay cr
+        ht_credit_repay cr
         INNER JOIN ht_credit_tender ct ON ct.assign_nid = cr.assign_nid
         INNER JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-3"/>
@@ -703,7 +774,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-4"/>
@@ -735,7 +806,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
+        AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
         ) AS recoverInterest
 
         FROM
@@ -770,7 +841,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
         ) AS recoverCapital,
         rp.recover_interest - (
         SELECT
@@ -787,7 +858,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
         ) AS recoverInterest
         FROM
         ht_borrow_recover_plan rp
@@ -807,10 +878,12 @@
         cr.assign_interest AS recoverInterest
         FROM
         ht_credit_repay cr
-        JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
+        INNER JOIN ht_credit_tender ct ON ct.assign_nid = cr.assign_nid
+        INNER JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-3"/>
@@ -826,7 +899,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-4"/>
@@ -834,7 +907,76 @@
     </select>
 
     <select id="getRepayInfoCurrentListExport" resultType="com.hyjf.am.vo.admin.BorrowRepayInfoCurrentExportCustomizeVO" parameterType="map">
-        SELECT * FROM
+        SELECT
+          t.borrowNid,
+          t.tenderOrdid,
+          t.assignOrdid,
+          t.repayOrdid,
+          t.instName,
+          t.planNid,
+          t.borrowUserId,
+          t.borrowUserName,
+          t.borrowName,
+          t.projectTypeName,
+          t.borrowPeriod,
+          t.borrowApr,
+          t.borrowAccount,
+          t.borrowAccountYes,
+          t.repayType,
+          t.recoverUserId,
+          t.recoverUserName,
+          t.recoverUserAttribute,
+          t.recoverUserAttributeNow,
+          t.recoverRegionName,
+          t.recoverBranchName,
+          t.recoverDepartmentName,
+          t.referrerName,
+          t.referrerUserId,
+          t.referrerTrueName,
+          t.referrerRegionNameNow,
+          t.referrerBranchNameNow,
+          t.referrerDepartmentNameNow,
+          t.recoverTotal,
+          t.amountHold,
+          t.recoverCapital,
+          t.recoverInterest,
+          t.recoverAccount,
+          t.recoverFee,
+          t.recoverLastTime,
+          t.period,
+          t.periodTotal,
+          t.recoverCapitalPeriod,
+          t.recoverInterestPeriod,
+          t.recoverAccountPeriod,
+          t.recoverFeePeriod,
+          t.chargeDays,
+          t.chargeInterestReduce,
+          t.chargePenaltyInterest,
+          t.lateDays,
+          t.lateInterest,
+          t.recoverCapitalYesPeriod,
+          t.recoverInterestYesPeriod,
+          t.recoverAccountYesPeriod + IFNULL(t.recoverFeeYesPeriod,0) AS recoverAccountYesPeriod,
+          t.recoverFeeYesPeriod,
+          t.recoverCapitalWait,
+          t.recoverInterestWait,
+          t.recoverAccountWait,
+          t.repayUserName,
+          t.recoverStatus,
+          t.autoRepay,
+          t.repayMoneySource,
+          t.submitter,
+          t.recoverTime,
+          t.repayActionTime,
+          t.borrowStyle,
+          t.borrowPeriodInt,
+          t.feeRate,
+          t.differentialRate,
+          t.verifyTime,
+          t.account,
+          t.recoverPeriod,
+          t.recordType
+        FROM
         (
         <!-- 1、未分期原始出借订单查询-->
         SELECT
@@ -898,7 +1040,7 @@
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = br.nid
+        cr1.invest_order_id = br.nid AND cr1.del_flag = 0
         ) AS recoverInterest,
         br.recover_account - (
         SELECT
@@ -913,7 +1055,7 @@
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = br.nid
+        cr1.invest_order_id = br.nid AND cr1.del_flag = 0
         ) AS recoverAccount,
         br.recover_fee AS recoverFee,
 
@@ -945,7 +1087,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
+        AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
         ) AS recoverInterestPeriod,
         br.recover_account - (
         SELECT
@@ -962,7 +1104,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
+        AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
         ) AS recoverAccountPeriod,
         br.recover_fee AS recoverFeePeriod,
         br.charge_days AS chargeDays,
@@ -985,7 +1127,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
+        AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
         )AS recoverCapitalYesPeriod,
         br.recover_interest_yes - (
         SELECT
@@ -1002,21 +1144,81 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = br.nid
-        AND cr1.repay_period = br.recover_period
+        AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0
         )AS recoverInterestYesPeriod,
         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAccountYesPeriod,
-        br.recover_fee_yes AS recoverFeeYesPeriod,
-        br.recover_capital_wait AS recoverCapitalWait,
-        br.recover_interest_wait AS recoverInterestWait,
-        br.recover_account_wait AS recoverAccountWait,
+        br.recover_fee_yes - (
+        SELECT
+        IFNULL(SUM(cr1.manage_fee), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period AND cr1.`status` = 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.manage_fee), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period AND cr1.del_flag = 0 AND cr1.repay_status = 1
+        ) AS recoverFeeYesPeriod,
+        br.recover_capital_wait - (
+        SELECT
+        IFNULL(SUM(cr1.assign_capital), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid AND cr1.`status` != 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_capital), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverCapitalWait,
+        br.recover_interest_wait - (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid AND cr1.`status` != 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverInterestWait,
+        br.recover_account_wait - (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = br.nid AND cr1.`status` != 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = br.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverAccountWait,
         bry.repay_username AS repayUserName,
         IF (
         b.`status` != 8,
         br.recover_status,
         8
         ) AS recoverStatus,
-        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
-
+        IF(bry.repay_status = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
         bry.repay_status = 1
         AND bry.repay_action_time > 0,
@@ -1152,7 +1354,7 @@
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = rp.nid
+        cr1.invest_order_id = rp.nid AND cr1.del_flag = 0
         ) AS recoverInterest,
         br.recover_account - (
         SELECT
@@ -1167,7 +1369,7 @@
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = rp.nid
+        cr1.invest_order_id = rp.nid AND cr1.del_flag = 0
         ) AS recoverAccount,
         br.recover_fee AS recoverFee,
 
@@ -1203,7 +1405,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
         ) AS recoverInterestPeriod,
         rp.recover_account - (
         SELECT
@@ -1220,7 +1422,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
         ) AS recoverAccountPeriod,
         rp.recover_fee AS recoverFeePeriod,
         rp.charge_days AS chargeDays,
@@ -1243,7 +1445,7 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
         )AS recoverCapitalYesPeriod,
         rp.recover_interest_yes - (
         SELECT
@@ -1260,21 +1462,81 @@
         ht_hjh_debt_credit_repay cr1
         WHERE
         cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0
         )AS recoverInterestYesPeriod,
         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
-        rp.recover_fee_yes AS recoverFeeYesPeriod,
-        rp.recover_capital_wait AS recoverCapitalWait,
-        rp.recover_interest_wait AS recoverInterestWait,
-        rp.recover_account_wait AS recoverAccountWait,
+        rp.recover_fee_yes - (
+        SELECT
+        IFNULL(SUM(cr1.manage_fee), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid
+        AND cr1.recover_period = rp.recover_period AND cr1.`status` = 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.manage_fee), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.repay_period = rp.recover_period AND cr1.del_flag = 0 AND cr1.repay_status = 1
+        ) AS recoverFeeYesPeriod,
+        br.recover_capital_wait - (
+        SELECT
+        IFNULL(SUM(cr1.assign_capital), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid AND cr1.`status` != 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_capital), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverCapitalWait,
+        br.recover_interest_wait - (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid AND cr1.`status` != 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverInterestWait,
+        br.recover_account_wait - (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.credit_tender_nid = rp.nid AND cr1.`status` != 1
+        ) - (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.invest_order_id = rp.nid
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
         IF (brp.advance_status = 3, 8, 0),
         rp.recover_status
         ) AS recoverStatus,
-        IF(brp.auto_repay=0,'主动还款','系统自动') AS autoRepay,
-
+        IF(brp.repay_status = 1,IF(brp.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
         brp.repay_status = 1
         AND brp.repay_action_time > 0,
@@ -1421,21 +1683,41 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        IF(cr.`status`=0,cr.assign_capital,0) AS recoverCapitalWait,
-        IF(cr.`status`=0,cr.assign_interest,0) AS recoverInterestWait,
-        IF(cr.`status`=0,cr.assign_account,0) AS recoverAccountWait,
-        brp.repay_username AS repayUserName,
+        (
+        SELECT
+        IFNULL(SUM(cr1.assign_capital), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.assign_nid = cr.assign_nid AND cr1.`status` != 1
+        ) AS recoverCapitalWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.assign_interest), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.assign_nid = cr.assign_nid AND cr1.`status` != 1
+        ) AS recoverInterestWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.assign_account), 0)
+        FROM
+        ht_credit_repay cr1
+        WHERE
+        cr1.assign_nid = cr.assign_nid AND cr1.`status` != 1
+        ) AS recoverAccountWait,
+        IFNULL(brp.repay_username,bry.repay_username) AS repayUserName,
         IF (
         cr.`status` = 0,
         IF (cr.advance_status = 3, 8, 0),
         cr.`status`
         ) AS recoverStatus,
-        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
-
+        IF(cr.`status` = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
-        brp.repay_status = 1
-        AND brp.repay_action_time > 0,
-        CASE brp.repay_money_source
+        cr.`status` = 1
+        AND cr.assign_repay_yes_time > 0,
+        CASE IFNULL(brp.repay_money_source,bry.repay_money_source)
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
@@ -1477,7 +1759,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         LEFT JOIN ht_borrow_apicron AS api ON api.borrow_nid = b.borrow_nid AND api.api_type = 1
         AND api.period_now = cr.assign_repay_period
@@ -1588,21 +1870,45 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        IF(hcr.repay_status=0,hcr.repay_capital,0) AS recoverCapitalWait,
-        IF(hcr.repay_status=0,hcr.repay_interest,0) AS recoverInterestWait,
-        IF(hcr.repay_status=0,hcr.repay_account,0) AS recoverAccountWait,
-        brp.repay_username AS repayUserName,
+        (
+        SELECT
+        IFNULL(SUM(cr1.repay_capital), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.assign_order_id = hcr.assign_order_id
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverCapitalWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.repay_interest), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.assign_order_id = hcr.assign_order_id
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverInterestWait,
+        (
+        SELECT
+        IFNULL(SUM(cr1.repay_account), 0)
+        FROM
+        ht_hjh_debt_credit_repay cr1
+        WHERE
+        cr1.assign_order_id = hcr.assign_order_id
+        AND cr1.del_flag = 0 AND cr1.repay_status != 1
+        ) AS recoverAccountWait,
+        IFNULL(brp.repay_username,bry.repay_username) AS repayUserName,
         IF (
         hcr.repay_status = 0,
         IF (hcr.advance_status = 3, 8, 0),
         hcr.repay_status
         )
         AS recoverStatus,
-        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
+        IF(hcr.repay_status = 1,IF(bry.auto_repay=0,'主动还款','系统自动'),'') AS autoRepay,
         IF (
-        brp.repay_status = 1
-        AND brp.repay_action_time > 0,
-        CASE brp.repay_money_source
+        hcr.repay_status = 1
+        AND hcr.assign_repay_yes_time > 0,
+        CASE IFNULL(brp.repay_money_source,bry.repay_money_source)
         WHEN 1 THEN
         '借款人还款'
         WHEN 2 THEN
@@ -1651,7 +1957,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
         LEFT JOIN ht_borrow_apicron AS api ON api.borrow_nid = b.borrow_nid AND api.api_type = 1
@@ -1740,7 +2046,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         LEFT JOIN ht_borrow_apicron AS api ON api.borrow_nid = b.borrow_nid AND api.api_type = 1
         AND api.period_now = cr.assign_repay_period
@@ -1768,7 +2074,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
-        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.assign_repay_period
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
         LEFT JOIN ht_borrow_apicron AS api ON api.borrow_nid = b.borrow_nid AND api.api_type = 1

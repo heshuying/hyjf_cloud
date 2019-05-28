@@ -103,7 +103,7 @@ public class MessageServiceImpl implements MessageService {
 			// 用户数
 			logger.info("发送用户数" + mobiles.size());
 			//群发短信
-			errorCnt = massTexting(mobiles,send_message,channelType);
+			errorCnt = massTexting(mobiles,send_message,channelType,MessageConstant.SMS_SEND_FOR_USERS_NO_TPL);
 		} else {
 			// 发送短信
 			try {
@@ -195,7 +195,7 @@ public class MessageServiceImpl implements MessageService {
 	 * @param channelType 渠道类型
 	 * @return 错误条数
 	 */
-	private int massTexting(List<String> mobiles,String send_message,String channelType){
+	private int massTexting(List<String> mobiles,String send_message,String channelType,String serviceType){
 		int errorCnt = 0;
 		// 用户未手写手机号码
 		int number = 200;// 分组每组数
@@ -222,7 +222,7 @@ public class MessageServiceImpl implements MessageService {
 				}
 				try {
 					SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
-							MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+							serviceType, null, null, channelType);
 					smsProducer.messageSend(
 							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
 				} catch (Exception e) {
@@ -261,7 +261,7 @@ public class MessageServiceImpl implements MessageService {
 		// 用户数
 		logger.info("发送用户数" + mobiles.size());
 		//群发短信
-		errorCnt = massTexting(mobiles,send_message,channelType);
+		errorCnt = massTexting(mobiles,send_message,channelType,MessageConstant.SMS_SEND_FOR_BIRTHDAY);
 		// 有错误时
 		if (errorCnt > 0) {
 			throw new Exception("群发生日祝福短信时发生错误。" + "[错误件数：" + errorCnt + "]");

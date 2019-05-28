@@ -73,8 +73,11 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
 
         //加入订单号或承接承接订单号
         String assignOrderId = jsonObject.getString("assignOrderId");
-        // 1:承接智投，2：加入智投
+        // 1:承接，2：加入
         String isTender = jsonObject.getString("isTender");
+        //承接标识：1（散标承接）2（智投承接）
+        String flag = jsonObject.getString("flag");
+
         String tradeDate = jsonObject.getString("tradeDate");
         if (StringUtils.isBlank(assignOrderId)||StringUtils.isEmpty(isTender)) {
             logger.error(logHeader + "通知参数不全！！！");
@@ -92,7 +95,7 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductConfigService.productConfigInfo(assignOrderId,isTender);
+            JSONArray listRepay = certLendProductConfigService.productConfigInfo(assignOrderId,isTender,flag);
             logger.info("数据：" + listRepay.toString());
             if (null == listRepay || listRepay.size() <= 0) {
                 String typeStr = isTender.equals("1")?"承接智投":"智投出借";

@@ -541,6 +541,12 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             logger.error("borrowNid为空,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
             return null;
         }
+        // 查询用户信息
+        UserInfoVO userInfoVO = amUserClient.getUserInfo(userId);
+        if(null == userInfoVO){
+            logger.error("查询用户信息为空，下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+            return null;
+        }
         // 查询借款人用户名
         Map<String, Object> paraMap = new HashMap<>();
         paraMap.put("borrowNidSrch", borrowNid);
@@ -606,7 +612,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
                         userInvest.setRealName(userInvest.getRealName().substring(0, 1) + "**");
                         userInvest.setUsername(userInvest.getUsername().substring(0, 1) + "*****");
-                        userInvest.setIdCard(userInvest.getIdCard().substring(0, 4) + "**************");
+                        userInvest.setIdCard(userInfoVO.getIdcard().substring(0, 4) + "**************");
                     }
                     contents.put("userInvest", userInvest);
                 } else {
@@ -619,7 +625,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                     if (userInvest.getUserId().equals(String.valueOf(userId))) {
                         userInvest.setRealName(userInvest.getRealName().substring(0, 1) + "**");
                         userInvest.setUsername(userInvest.getUsername().substring(0, 1) + "*****");
-                        userInvest.setIdCard(userInvest.getIdCard().substring(0, 4) + "**************");
+                        userInvest.setIdCard(userInfoVO.getIdcard().substring(0, 4) + "**************");
                     }
                     contents.put("userInvest", userInvest);
                 } else {
