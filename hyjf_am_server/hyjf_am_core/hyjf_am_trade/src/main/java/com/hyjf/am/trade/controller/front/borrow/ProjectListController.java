@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
@@ -28,6 +29,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +61,7 @@ public class ProjectListController extends BaseController {
      */
     @PostMapping("/web/searchProjectList")
     public ProjectListResponse searchProjectList(@RequestBody @Valid ProjectListRequest request){
+        logger.info("web端散标列表 requestBean:{}", JSON.toJSONString(request));
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
         // add by nxl 判断是否为产品加息 start
@@ -67,6 +71,16 @@ public class ProjectListController extends BaseController {
                 BigDecimal dbYield=new BigDecimal(StringUtils.isNotBlank(webProjectListCustomize.getBorrowExtraYield())?webProjectListCustomize.getBorrowExtraYield():"0");
                 boolean booleanVal = Validator.isIncrease(intFlg,dbYield);
                 webProjectListCustomize.setIncrease(String.valueOf(booleanVal));
+                //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+                // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+                // mod by nxl 20190409 start
+                //历史年回报率
+                String fromatBorr= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowApr());
+                webProjectListCustomize.setBorrowApr(fromatBorr);
+                //加息利率
+                	String fromatExtraYield= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowExtraYield());
+                	webProjectListCustomize.setBorrowExtraYield(fromatExtraYield);
+                // mod by nxl 20190409 end
             }
         }
         // add by nxl 判断是否为产品加息 end
@@ -84,9 +98,11 @@ public class ProjectListController extends BaseController {
      */
     @RequestMapping("/web/countProjectList")
     public ProjectListResponse countProjectList(@RequestBody @Valid ProjectListRequest request){
+        logger.info("web端散标列表记录数 requestBean:{}", JSON.toJSONString(request));
         ProjectListResponse projectListResponse = new ProjectListResponse();
         int count = projectListService.countProjectList(request);
         projectListResponse.setCount(count);
+        logger.info("web端散标列表记录数 count:{}", count);
         return projectListResponse;
     }
 
@@ -105,6 +121,17 @@ public class ProjectListController extends BaseController {
             BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(vo.getBorrowExtraYield())?vo.getBorrowExtraYield():"0");
             boolean booleanVal = Validator.isIncrease(intFlg, dbYield);
             vo.setIsIncrease(String.valueOf(booleanVal));
+            //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+            // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+            // mod by nxl 20190409 start
+            //历史年回报率
+            String fromatBorr= FormatRateUtil.formatBorrowApr(vo.getBorrowApr());
+            vo.setBorrowApr(fromatBorr);
+            //加息利率
+            String fromatExtraYield= FormatRateUtil.formatBorrowApr(vo.getBorrowExtraYield());
+            vo.setBorrowExtraYield(fromatExtraYield);
+            // mod by nxl 20190409 end
+
             // upd by liushouyi nifa2 20190214 start
             // 处理借款用途
             if(StringUtils.isNotBlank(vo.getFinancePurpose())){
@@ -163,6 +190,17 @@ public class ProjectListController extends BaseController {
     public CreditListResponse searchCreditList(@RequestBody @Valid CreditListRequest request){
         CreditListResponse res = new CreditListResponse();
         List<CreditListVO> list = projectListService.searchCreditList(request);
+        if(null!=list&&list.size()>0){
+            for(CreditListVO creditListVO:list){
+                //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+                // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+                // mod by nxl 20190409 start
+                //历史年回报率
+                String fromatBorr= FormatRateUtil.formatBorrowApr(creditListVO.getBidApr());
+                creditListVO.setBidApr(fromatBorr);
+                // mod by nxl 20190409 end
+            }
+        }
         res.setResultList(list);
         return res;
     }
@@ -205,6 +243,13 @@ public class ProjectListController extends BaseController {
         HjhPlanResponse res = new HjhPlanResponse();
         List<HjhPlanCustomize> list= projectListService.searchWebPlanList(request);
         if (CollectionUtils.isNotEmpty(list)){
+            for(HjhPlanCustomize hjhPlanCustomize:list){
+                //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+                // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+                // mod by nxl 20190409
+                String fromatBorr= FormatRateUtil.formatBorrowApr(hjhPlanCustomize.getPlanApr());
+                hjhPlanCustomize.setPlanApr(fromatBorr);
+            }
             res.setResultList(CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class));
         }
         return res;
@@ -222,6 +267,11 @@ public class ProjectListController extends BaseController {
         PlanDetailCustomize detail= projectListService.getPlanDetail(planNid);
         if (detail != null){
             PlanDetailCustomizeVO detailCustomizeVO = CommonUtils.convertBean(detail,PlanDetailCustomizeVO.class);
+            //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+            // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+            // mod by nxl 20190409
+            String fromatBorr= FormatRateUtil.formatBorrowApr(detailCustomizeVO.getPlanApr());
+            detailCustomizeVO.setPlanApr(fromatBorr);
             res.setResult(detailCustomizeVO);
         }
         return res;
@@ -241,6 +291,7 @@ public class ProjectListController extends BaseController {
      */
     @RequestMapping("/app/searchAppProjectList")
     public AppProjectListResponse searchAppProjectList(@RequestBody @Valid AppProjectListRequest request){
+        logger.info("app端散标列表 requestBean：{}" + JSON.toJSONString(request));
         AppProjectListResponse projectListResponse = new AppProjectListResponse();
         ProjectListRequest req = CommonUtils.convertBean(request,ProjectListRequest.class);
         List<AppProjectListCustomize> list = projectListService.searchAppProjectList(req);
@@ -430,6 +481,11 @@ public class ProjectListController extends BaseController {
     public WechatProjectListResponse searchHomeProejctList(@RequestBody @Valid Map<String,Object> map){
         WechatProjectListResponse response = new WechatProjectListResponse();
         List<WechatHomeProjectListVO> list = projectListService.searchWechatProjectList(map);
+//        List<WechatHomeProjectListVO> list2=new ArrayList<WechatHomeProjectListVO>();
+//        for (WechatHomeProjectListVO wechatHomeProjectListVO : list) {
+//        	wechatHomeProjectListVO.setBorrowApr( FormatRateUtil.formatBorrowApr(wechatHomeProjectListVO.getBorrowApr()));
+//        	list2.add(wechatHomeProjectListVO);
+//		}
         response.setResultList(list);
         return response;
     }

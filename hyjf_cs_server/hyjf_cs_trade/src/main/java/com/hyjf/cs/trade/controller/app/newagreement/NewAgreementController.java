@@ -1162,7 +1162,7 @@ public class NewAgreementController extends BaseTradeController{
         try {
             List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
             //是否在枚举中有定义
-            if (CollectionUtils.isNotEmpty(list)) {
+            if (null!=list&&list.size()>0) {
                 for (ProtocolTemplateVO p : list) {
                     String protocolType = p.getProtocolType();
                     String alia = ProtocolEnum.getAlias(protocolType);

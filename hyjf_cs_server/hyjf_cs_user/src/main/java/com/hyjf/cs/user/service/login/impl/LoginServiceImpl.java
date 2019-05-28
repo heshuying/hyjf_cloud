@@ -339,6 +339,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					}
 				}
 			}
+
+			// 汇付开户标识 大版本前端发版的时候是否可以删除
 			if (user.getOpenAccount() != null && user.getOpenAccount() == 1) {
 				// 汇付开户
 				result.setHuifuOpenAccount(CustomConstants.FLAG_OPENACCOUNT_YES);
@@ -424,7 +426,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			AccountVO account = amTradeClient.getAccount(userId);
-			BigDecimal balance = BigDecimal.ZERO;
 			BigDecimal planInterestWait = BigDecimal.ZERO;
 			BigDecimal planCapitalWait = BigDecimal.ZERO;
 			if (account != null) {
@@ -433,22 +434,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				} else {
 
 					if (request.getParameter("version").startsWith("1.1.0")) {
-						// add by cwyang 增加汇付余额
-
-						result.setHuifuBalance(account.getBalance() + "");
 						result.setBalance(account.getBankBalance() + "");
 
-						BigDecimal indexbigD = new BigDecimal(0);
-						// add by cwyang
-						// 如果汇付余额为0,则将返回信息置空,用来区分前台页面是显示汇付余额还是江西银行余额
-						if (account.getBalance() == null || indexbigD.compareTo(account.getBalance()) == 0) {
-							result.setHuifuBalance("");
-						}
 					} else {
-						result.setHuifuBalance(account.getBalance() + "");
-						if (account.getBalance() != null) {
-							result.setHuifuBalance(DF_FOR_VIEW.format(account.getBalance()));
-						}
 						result.setBalance(account.getBankBalance() + "");
 						if (account.getBankBalance() != null) {
 							result.setBalance(DF_FOR_VIEW.format(account.getBankBalance()));
@@ -463,21 +451,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 							result.setAwaitTotal(
 									DF_FOR_VIEW.format(account.getBankAwait().add(account.getPlanAccountWait())));
 						}
-						BigDecimal indexbigD = new BigDecimal(0);
-						// add by cwyang
-						// 如果汇付余额为0,则将返回信息置空,用来区分前台页面是显示汇付余额还是江西银行余额
-						if (account.getBalance() == null || indexbigD.compareTo(account.getBalance()) == 0) {
-							result.setHuifuBalance("");
-						}
 					}
-					balance = account.getBankBalance();
-					/*if (balance == null) {
-						balance = BigDecimal.ZERO;
-					}*/
 				}
-				/*if (account.getFrost() != null) {
-					frost = account.getFrost();
-				}*/
 				if (account.getPlanCapitalWait() != null) {
 					planCapitalWait = account.getPlanCapitalWait();
 				}
@@ -488,6 +463,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			} else {
 				result.setBalance("0.00");
 			}
+			// add by pcc
+			// 前端汇付账户不显示  大版本更新app发版时候是否删除参数
+			result.setHuifuBalance("");
 			WebPandectRecoverMoneyCustomizeVO pr = amTradeClient.queryRecoverMoney(userId);
 			WebPandectRecoverMoneyCustomizeVO prRtb = amTradeClient.queryRecoverMoneyForRtb(userId);
 			BigDecimal RecoverInterest = BigDecimal.ZERO;
@@ -673,11 +651,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 		}
 		{
+		    // 汇付数据  大版本更新时app强更是否删除
 			AccountChinapnrVO accountChinapnrVO = amUserClient.getAccountChinapnr(userId);
 			// 江西银行绑卡接口修改
 			Integer urlType = amConfigClient.getBankInterfaceFlagByType("BIND_CARD");
 			// 江西银行绑卡接口修改
 			if (accountChinapnrVO != null) {
+				// 汇付数据  大版本更新时app强更是否删除
 				result.setChinapnrUsrcustid(accountChinapnrVO.getChinapnrUsrid() + "");
 				// 汇付天下账户描述
 				result.setHuifuDesc(
@@ -725,7 +705,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 //			if (userUtmInfoCustomizeVO != null){
 //				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
 //			}else {
-				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId+"&action=scan";
 //			}
 			// 二维码
 			result.setQrCodeUrl(linkUrl);
@@ -1058,11 +1038,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
 			//3.redis配置的超限有效时间
 			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
-			//判断密码错误次数是否超限
-			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
-//			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
-				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
-			}
 			String codeSalt = userVO.getSalt();
 			String passwordDb = userVO.getPassword();
 			// 页面传来的密码
@@ -1072,7 +1047,18 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}else {
 				password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 			}
-			logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+			logger.info("userName:[{}],passwordDB:[{}],password:[{}],相等:[{}]",userName,passwordDb,password,password.equals(passwordDb));
+			// 是否禁用
+			if (userVO.getStatus().equals(1)) {
+				r.put("info","该用户已被禁用");
+				return r;
+			}
+			//判断密码错误次数是否超限
+			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
+//			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
+				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+				return  r;
+			}
 			if (!password.equals(passwordDb)) {
 				long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ALL+ userVO.getUserId());//以用户手机号为key
 				for (int i=1;i<4;i++){
@@ -1109,7 +1095,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		long retValue  = RedisUtils.incr(key);
 //		RedisUtils.expire(key,RedisUtils.getRemainMiao());//给key设置过期时间
 		Integer	loginErrorConfigManager=LockedConfigManager.getInstance().getWebConfig().getLockLong();
-		RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+		//.获取用户允许输入的最大错误次数
+		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
+		if(retValue<=maxLoginErrorNum){
+			RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+		}
 		return retValue;
 	}
 	@Override
@@ -1190,4 +1180,43 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
 		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
+
+    /**
+     * @param smsCode
+     * @param channelApp
+     * @param userVO
+     * @return
+     */
+    @Override
+    public Map<String, String> checkMobileCodeLogin(String smsCode, String channelApp, UserVO userVO) {
+        Map<String, String> ret =new HashMap<>();
+        CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+        if(userVO!=null){
+            // 检查验证码是否正确
+            int cnt = updateCheckMobileCode(userVO.getMobile(), smsCode, CommonConstant.PARAM_TPL_DUANXINDENGLU, channelApp, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+            if (cnt == 0) {
+                ret.put("status", "1");
+                ret.put("statusDesc", "验证码错误");
+                return ret;
+            }
+        }
+        return  ret;
+    }
+
+    /**
+     * 执行短信验证码登录
+     *
+     * @param username
+     * @param ipAddr
+     * @param channelApp
+     * @param userVO
+     * @return
+     */
+    @Override
+    public WebViewUserVO loginByCode(String username, String ipAddr, String channelApp, UserVO userVO) {
+        logger.info("短信验证码登陆获取loginUserName:"+username+";userVO:"+(userVO==null));
+        WebViewUserVO webViewUserVO = new WebViewUserVO();
+        webViewUserVO = loginOperationOnly(userVO,username,ipAddr,channelApp);
+        return webViewUserVO;
+    }
 }

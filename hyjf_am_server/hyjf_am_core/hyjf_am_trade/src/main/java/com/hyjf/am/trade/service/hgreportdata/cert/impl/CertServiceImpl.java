@@ -10,7 +10,10 @@ import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -29,6 +32,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
 
     @Override
     public List<CertAccountListCustomize> queryCertAccountList(CertRequest certTransactRequest) {
+        logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
         Map<String, Object> map =new HashMap<String, Object>();
         map.put("minId", certTransactRequest.getMinId());
         map.put("maxId", certTransactRequest.getMaxId());
@@ -83,7 +87,12 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<CouponRealTender> getCouponRealTenderListByCertRequest(CertRequest certRequest) {
         CouponRealTenderExample couponRealTenderExample=new CouponRealTenderExample();
-        couponRealTenderExample.createCriteria().andCouponTenderIdEqualTo(certRequest.getCouponTenderId());
+        if(certRequest.getCouponTenderId()!=null){
+            couponRealTenderExample.createCriteria().andCouponTenderIdEqualTo(certRequest.getCouponTenderId());
+        }
+        if(certRequest.getRealTenderId()!=null){
+            couponRealTenderExample.createCriteria().andRealTenderIdEqualTo(certRequest.getRealTenderId());
+        }
         List<CouponRealTender> couponRealTenders=couponRealTenderMapper.selectByExample(couponRealTenderExample);
         return couponRealTenders;
     }
@@ -91,7 +100,8 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<BorrowRecover> selectBorrowRecoverListByRequest(CertRequest certRequest) {
         BorrowRecoverExample borrowRecoverExample=new BorrowRecoverExample();
-        borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(certRequest.getRepayOrdid());
+        borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(certRequest.getRepayOrdid())
+                .andBorrowNidEqualTo(certRequest.getBorrowNid());
         List<BorrowRecover> borrowRecovers=borrowRecoverMapper.selectByExample(borrowRecoverExample);
         return borrowRecovers;
     }
@@ -99,8 +109,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<HjhDebtCreditRepay> getHjhDebtCreditRepayListByRequest(CertRequest certRequest) {
         HjhDebtCreditRepayExample example=new HjhDebtCreditRepayExample();
-        example.createCriteria().
-                andInvestOrderIdEqualTo(certRequest.getInvestOrderId()).
+        example.createCriteria().andSellOrderIdEqualTo(certRequest.getInvestOrderId()).
                 andBorrowNidEqualTo(certRequest.getBorrowNid()).
                 andAssignRepayPeriodEqualTo(certRequest.getPeriod());
         List<HjhDebtCreditRepay> hjhDebtCreditRepays=hjhDebtCreditRepayMapper.selectByExample(example);
@@ -150,5 +159,101 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         param.put("limitEnd", certRequest.getLimitEnd());
         CertAccountListIdCustomize customize=certMapper.queryCertAccountListId(param);
         return customize;
+    }
+
+    @Override
+    public List<CertAccountListCustomize> getCertAccountListCustomizeVO(CertRequest certRequest) {
+        Map<String, Object> map =new HashMap<String, Object>();
+        String trade=certRequest.getTrade();
+        map.put("limitStart", certRequest.getLimitStart());
+        map.put("limitEnd", certRequest.getLimitEnd());
+        map.put("trade",certRequest.getTrade());
+        map.put("maxId", certRequest.getMaxId());
+        map.put("borrowNidList",certRequest.getBorrowNidList());
+        if("creditassign".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditassign(map);
+            return accountLists;
+        }
+        if("accede_assign".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByAccedeassign(map);
+            return accountLists;
+        }
+        /*if("tenderRecoverYes".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByTenderRecoverYes(map);
+            return accountLists;
+        }
+        if("creditTenderRecoverYes".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditTenderRecoverYes(map);
+            return accountLists;
+        }*/
+        List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);
+        return accountLists;
+    }
+
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    @Override
+    public List<CertClaim> selectCertBorrowConfig(){
+        CertClaimExample example = new CertClaimExample();
+        CertClaimExample.Criteria criteria = example.createCriteria();
+        /*if(StringUtils.isNotBlank(isTender)){
+            criteria.andCreditFlgEqualTo(Integer.parseInt(isTender));
+        }*/
+        //配置信息未上报
+        criteria.andIsConfigEqualTo(0);
+        example.setLimitStart(0);
+        example.setLimitEnd(2000);
+        return certClaimMapper.selectByExample(example);
+    }
+
+    /**
+     * 批量更新
+     * @param update
+     * @return
+     */
+    @Override
+    public int updateCertBorrowStatusBatch (CertClaimUpdateVO update) {
+        CertClaimExample example = new CertClaimExample();
+        CertClaimExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(update.getIds());
+        CertClaim certBorrow = new CertClaim();
+        BeanUtils.copyProperties(update.getCertClaim(),certBorrow);
+        return certClaimMapper.updateByExampleSelective(certBorrow,example);
+    }
+
+    /**
+     * 产品信息未上报的
+     * @return
+     */
+    @Override
+    public List<CertProduct> selectCertProductList(){
+        CertProductExample example = new CertProductExample();
+        CertProductExample.Criteria criteria = example.createCriteria();
+        //产品信息未上报
+        criteria.andIsProductEqualTo(0);
+        example.setLimitStart(0);
+        example.setLimitEnd(2000);
+        return certProductMapper.selectByExample(example);
+    }
+
+    /**
+     * 批量更新产品信息
+     * @param update
+     * @return
+     */
+    @Override
+    public int updateCertProductBatch (CertProductUpdateVO update) {
+        CertProductExample example = new CertProductExample();
+        CertProductExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(update.getIds());
+        CertProduct certProduct = new CertProduct();
+        BeanUtils.copyProperties(update.getCertProduct(),certProduct);
+        return certProductMapper.updateByExampleSelective(certProduct,example);
+    }
+    @Override
+    public List<String> getBorrowNidList() {
+        return certMapper.getBorrowNidList();
     }
 }

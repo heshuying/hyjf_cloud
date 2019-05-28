@@ -103,6 +103,8 @@
 		</where>
 	</sql>
 
+
+
 	<select id="getUtmPlat" resultType="com.hyjf.am.vo.user.UtmPlatVO" parameterType="map" >
 		SELECT id AS id,source_id sourceId,source_name sourceName,del_flag delFlag,attorn_flag attornFlag,remark remark, create_group_cd createGroupCd,
 		create_user_id createUserId,create_time createTime,update_group_cd updateGroupCd,update_user_id updateUserId,update_time updateTime,source_type sourceType
@@ -275,45 +277,45 @@
 		WHEN ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(assign_id)
+		assign_id
 		FROM
 		hyjf_trade.ht_credit_tender ct
 		WHERE
 		ct.user_id = a.user_id
-		AND ct.create_time <![CDATA[<]]> concat(a.invest_time)
+		AND ct.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) = 0 THEN
@@ -346,18 +348,13 @@
 		INNER JOIN hyjf_trade.ht_borrow_tender ten ON t.user_id = ten.user_id
 		AND ten.accede_order_id IS NULL
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
-		where 1=1
-		<if test="registStartTime != null">
-			AND reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
+		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
 		</if>
-		<if test="registEndTime != null">
-			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 		UNION ALL
 		SELECT
@@ -380,18 +377,13 @@
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
-		where 1=1
-		<if test="registStartTime != null">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
+		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
 		</if>
-		<if test="registEndTime != null">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 		UNION ALL
 		SELECT
@@ -411,22 +403,19 @@
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_credit_tender ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
-		where 1=1
-		<if test="registStartTime != null">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
+		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
 		</if>
-		<if test="registEndTime != null">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 		) AS a
 		) mm
-		<include refid="Where_Clause2" />
+		<if test="firstFlag != null ">
+			where is_first = #{firstFlag,jdbcType=INTEGER}
+		</if>
 		ORDER BY
 		mm.invest_time DESC
 		<if test="limitStart >= 0" >
@@ -441,59 +430,49 @@
 		FROM
 		(
 		SELECT
-		a.user_id,
-		a.user_name,
-		a.utm_id,
-		a.utm_name,
-		a.order_code,
-		a.borrow_nid,
-		a.borrow_period,
-		a.invest_amount,
-		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
-		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(assign_id)
+		assign_id
 		FROM
 		hyjf_trade.ht_credit_tender ct
 		WHERE
 		ct.user_id = a.user_id
-		AND ct.create_time <![CDATA[<]]> concat(a.invest_time)
+		AND ct.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) = 0 THEN
@@ -505,19 +484,6 @@
 		(
 		SELECT
 		t.user_id,
-		u.username AS user_name,
-		u.reg_time,
-		utm.source_id AS utm_id,
-		utm.utm_source AS utm_name,
-		ten.nid AS order_code,
-		ten.borrow_nid,
-		CASE
-		WHEN b.borrow_style = 'endday' THEN
-		CONCAT(b.borrow_period, '天')
-		ELSE
-		CONCAT(b.borrow_period, '个月')
-		END borrow_period,
-		ten.account AS invest_amount,
 		ten.create_time AS invest_time
 		FROM
 		ht_utm_reg t
@@ -526,33 +492,17 @@
 		INNER JOIN hyjf_trade.ht_borrow_tender ten ON t.user_id = ten.user_id
 		AND ten.accede_order_id IS NULL
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
-		where 1=1
-		<if test="registStartTime != null">
-			AND reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
+		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
 		</if>
-		<if test="registEndTime != null">
-			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
-		u.username AS user_name,
-		u.reg_time,
-		utm.source_id AS utm_id,
-		utm.utm_source AS utm_name,
-		ten.accede_order_id AS order_code,
-		ten.plan_nid AS borrow_nid,
-		CONCAT(
-		b.debt_lock_period,
-		'个月'
-		) AS borrow_period,
-		ten.accede_account AS invest_amount,
 		ten.create_time AS invest_time
 		FROM
 		ht_utm_reg t
@@ -560,30 +510,17 @@
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
-		where 1=1
-		<if test="registStartTime != null">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
+		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
 		</if>
-		<if test="registEndTime != null">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
-		u.username AS user_name,
-		u.reg_time,
-		utm.source_id AS utm_id,
-		utm.utm_source AS utm_name,
-		ten.assign_nid AS order_code,
-		CONCAT('HZR', ten.credit_nid) AS borrow_nid,
-		CONCAT(b.credit_term, '天') AS borrow_period,
-		ten.assign_capital AS invest_amount,
 		ten.create_time AS invest_time
 		FROM
 		ht_utm_reg t
@@ -591,23 +528,49 @@
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_credit_tender ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
-		where 1=1
-		<if test="registStartTime != null">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
+		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
 		</if>
-		<if test="registEndTime != null">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 		) AS a
 		) mm
-		<include refid="Where_Clause2" />
+		<if test="firstFlag != null ">
+			where is_first = #{firstFlag,jdbcType=INTEGER}
+		</if>
 	</select>
+
+	<sql id="Where_Concat_Query">
+		<where>
+			<if test="registStartTime != null">
+				AND u.reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="registEndTime != null">
+				AND u.reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="investStartTime != null">
+				AND ten.create_time <![CDATA[>=]]> DATE_FORMAT(#{investStartTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="investStartTime != null">
+				AND ten.create_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+
+			<if test="userName != null and userName !=''">
+				AND u.username LIKE #{userName,jdbcType=VARCHAR}
+			</if>
+
+			<if test="utmPlat != null and utmPlat != ''">
+				AND utm.source_id in
+				<foreach collection="utmPlat" open="(" close=")" separator="," item="utmName">
+					#{utmName}
+				</foreach>
+			</if>
+
+		</where>
+	</sql>
 
 	<sql id="Where_Clause_Hjh">
 		<where>
@@ -664,45 +627,45 @@
 		WHEN ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(assign_id)
+		assign_id
 		FROM
 		hyjf_trade.ht_credit_tender ct
 		WHERE
 		ct.user_id = a.user_id
-		AND ct.create_time <![CDATA[<]]> a.invest_time
+		AND ct.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) = 0 THEN
@@ -734,6 +697,7 @@
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_hjh_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_hjh_plan hhp ON ten.plan_nid = hhp.plan_nid
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		where 1=1
 		<if test="registStartTime != null">
 			AND reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
@@ -778,45 +742,45 @@
 		WHEN ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(assign_id)
+		assign_id
 		FROM
 		hyjf_trade.ht_credit_tender ct
 		WHERE
 		ct.user_id = a.user_id
-		AND ct.create_time <![CDATA[<]]> a.invest_time
+		AND ct.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) = 0 THEN
@@ -848,6 +812,7 @@
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_hjh_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_hjh_plan hhp ON ten.plan_nid = hhp.plan_nid
+		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		where 1=1
 		<if test="registStartTime != null">
 			AND reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
@@ -871,23 +836,24 @@
 		select * from (
 		SELECT
 		a.user_id,
-		r.user_name as user_name,
+		a.user_name as user_name,
 		a.order_code,
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		r.source_name as utm_name,
+		a.source_name as utm_name,
 		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
-		DATE_FORMAT(hu.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
-		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
-		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
-		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
-		+ ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time <![CDATA[<]]> a.invest_time limit 1),0) = 0
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
+		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time  <![CDATA[<]]>  a.invest_time  limit 1), 0)
+		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
+		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
+		+ ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time  <![CDATA[<]]>  a.invest_time limit 1),0) = 0
 		THEN '1' ELSE '0' END is_first
 		FROM
 		(
 		SELECT
 		ten.user_id,
+		r.user_name ,
 		ten.nid AS order_code,
 		ten.borrow_nid,
 		CASE
@@ -896,82 +862,79 @@
 		ELSE
 		CONCAT(b.borrow_period, '个月')
 		END borrow_period,
+		r.source_name,
 		ten.account AS invest_amount,
+		hu.reg_time,
 		ten.create_time AS invest_time
 		FROM
-		hyjf_trade.ht_borrow_tender ten
+		ht_app_utm_reg r
+		INNER JOIN  ht_user hu on r.user_id = hu.user_id
+		INNER JOIN hyjf_trade.ht_borrow_tender ten on ten.user_id = r.user_id
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
-		where ten.accede_order_id IS NULL
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
-		</if>
+		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
+		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
+		r.user_name ,
 		ten.accede_order_id AS order_code,
 		ten.plan_nid AS borrow_nid,
 		CONCAT(
 		b.debt_lock_period,
 		'个月'
 		) AS borrow_period,
+		r.source_name,
 		ten.accede_account AS invest_amount,
+		hu.reg_time,
 		ten.create_time AS invest_time
 		FROM
-		hyjf_trade.ht_debt_plan_accede ten
+		ht_app_utm_reg r
+		INNER JOIN  ht_user hu on r.user_id = hu.user_id
+		INNER JOIN hyjf_trade.ht_debt_plan_accede ten ON ten.user_id = r.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
-		where 1=1
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
-		</if>
+		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
+		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
+		r.user_name ,
 		ten.assign_nid AS order_code,
 		CONCAT('HZR', ten.credit_nid) AS borrow_nid,
 		CONCAT(b.credit_term, '天') AS borrow_period,
+		r.source_name,
 		ten.assign_capital AS invest_amount,
-		ten.create_time  AS invest_time
+		hu.reg_time,
+		ten.create_time as invest_time
 		FROM
-		hyjf_trade.ht_credit_tender ten
-		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
-		where 1=1
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
-		</if>
-		) AS a
-		INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
+		ht_app_utm_reg r
 		INNER JOIN  ht_user hu on r.user_id = hu.user_id
-		where 1=1
-		<if test="sourceId != null and sourceId != ''">
-			and r.source_id = #{sourceId}
-		</if>
+		INNER JOIN hyjf_trade.ht_credit_tender ten ON ten.user_id = r.user_id
+		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
+		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
+		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
+		) AS a
 		) tmp where 1=1
-		<if test="registStartTime != null">
-			AND tmp.reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
-		</if>
-		<if test="registEndTime != null">
-			AND tmp.reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
-		</if>
+
 		<if test="firstFlag != null ">
 			AND tmp.is_first = #{firstFlag,jdbcType=INTEGER}
-		</if>
-		<if test="userName != null and userName !=''">
-			AND tmp.user_name LIKE #{userName,jdbcType=VARCHAR}
-		</if>
-		<if test="orderCode != null and orderCode != ''">
-			AND tmp.order_code =  #{orderCode,jdbcType=VARCHAR}
-		</if>
-		<if test="borrowNid != null and borrowNid !=''">
-			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 
 		order by tmp.invest_time desc
@@ -983,111 +946,104 @@
 	<select id="selectAppChannelReconciliationRecordCount" parameterType="com.hyjf.am.resquest.admin.ChannelReconciliationRequest" resultType="int">
 		select count(1) from (
 		SELECT
-		a.user_id,
-		r.user_name as user_name,
-		a.order_code,
 		a.borrow_nid,
-		a.borrow_period,
-		a.invest_amount,
-		r.source_name as utm_name,
-		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
-		DATE_FORMAT(hu.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
-		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
-		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
-		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
-		+ ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time <![CDATA[<]]> a.invest_time limit 1),0) = 0
+		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time  <![CDATA[<]]>  a.invest_time  limit 1), 0)
+		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
+		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
+		+ ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time  <![CDATA[<]]>  a.invest_time limit 1),0) = 0
 		THEN '1' ELSE '0' END is_first
 		FROM
 		(
 		SELECT
 		ten.user_id,
-		ten.nid AS order_code,
-		ten.borrow_nid,
-		CASE
-		WHEN b.borrow_style = 'endday' THEN
-		CONCAT(b.borrow_period, '天')
-		ELSE
-		CONCAT(b.borrow_period, '个月')
-		END borrow_period,
-		ten.account AS invest_amount,
+		ten.borrow_nid as borrow_nid,
 		ten.create_time AS invest_time
 		FROM
-		hyjf_trade.ht_borrow_tender ten
+		ht_app_utm_reg r
+		INNER JOIN  ht_user hu on r.user_id = hu.user_id
+		INNER JOIN hyjf_trade.ht_borrow_tender ten on ten.user_id = r.user_id
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
-		where ten.accede_order_id IS NULL
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
-		</if>
+		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
+		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
-		ten.accede_order_id AS order_code,
-		ten.plan_nid AS borrow_nid,
-		CONCAT(
-		b.debt_lock_period,
-		'个月'
-		) AS borrow_period,
-		ten.accede_account AS invest_amount,
+		ten.plan_nid as borrow_nid,
 		ten.create_time AS invest_time
 		FROM
-		hyjf_trade.ht_debt_plan_accede ten
+		ht_app_utm_reg r
+		INNER JOIN  ht_user hu on r.user_id = hu.user_id
+		INNER JOIN hyjf_trade.ht_debt_plan_accede ten ON ten.user_id = r.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
-		where 1=1
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
-		</if>
+		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
+		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
-		ten.assign_nid AS order_code,
-		CONCAT('HZR', ten.credit_nid) AS borrow_nid,
-		CONCAT(b.credit_term, '天') AS borrow_period,
-		ten.assign_capital AS invest_amount,
+		ten.bid_nid as borrow_nid,
 		ten.create_time as invest_time
 		FROM
-		hyjf_trade.ht_credit_tender ten
-		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
-		where 1=1
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
-		</if>
-		<if test="investStartTime != null">
-			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
-		</if>
-		) AS a
-		INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
+		ht_app_utm_reg r
 		INNER JOIN  ht_user hu on r.user_id = hu.user_id
-		where 1=1
-		<if test="sourceId != null and sourceId != ''">
-			and r.source_id = #{sourceId}
-		</if>
+		INNER JOIN hyjf_trade.ht_credit_tender ten ON ten.user_id = r.user_id
+		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
+		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
+		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
+		) AS a
 		) tmp where 1=1
-		<if test="registStartTime != null">
-			AND tmp.reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
-		</if>
-		<if test="registEndTime != null">
-			AND tmp.reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
-		</if>
 		<if test="firstFlag != null ">
 			AND tmp.is_first = #{firstFlag,jdbcType=INTEGER}
 		</if>
-		<if test="userName != null and userName !=''">
-			AND tmp.user_name LIKE #{userName,jdbcType=VARCHAR}
-		</if>
-		<if test="orderCode != null and orderCode != ''">
-			AND tmp.order_code =  #{orderCode,jdbcType=VARCHAR}
-		</if>
-		<if test="borrowNid != null and borrowNid !=''">
-			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
-		</if>
+
 
 	</select>
+
+	<sql id="Where_APP_Concat_Query">
+		<where>
+			<if test="registStartTime != null">
+				AND hu.reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="registEndTime != null">
+				AND hu.reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="investStartTime != null">
+				AND ten.create_time <![CDATA[>=]]> DATE_FORMAT(#{investStartTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="investStartTime != null">
+				AND ten.create_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+
+			<if test="userName != null and userName !=''">
+				AND hu.username LIKE #{userName,jdbcType=VARCHAR}
+			</if>
+
+			<if test="utmPlat != null and utmPlat != ''">
+				AND r.source_id in
+				<foreach collection="utmPlat" open="(" close=")" separator="," item="utmName">
+					#{utmName}
+				</foreach>
+			</if>
+
+		</where>
+	</sql>
 
 	<select id="selectAppChannelReconciliationRecordHjh" parameterType="com.hyjf.am.resquest.admin.ChannelReconciliationRequest" resultMap="PcChannelReconciliationMap">
 		select * from (
@@ -1105,45 +1061,45 @@
 		WHEN ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(assign_id)
+		assign_id
 		FROM
 		hyjf_trade.ht_credit_tender ct
 		WHERE
 		ct.user_id = a.user_id
-		AND ct.create_time  <![CDATA[<]]> concat(a.invest_time)
+		AND ct.create_time  <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time  LIMIT 1
 		),
 		0
 		) = 0 THEN
@@ -1217,56 +1173,11 @@
 		r.source_name as utm_name,
 		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
 		DATE_FORMAT(r.register_time,'%Y-%m-%d %H:%i:%s') as reg_time,
-		CASE
-		WHEN ifnull(
-		(
-		SELECT
-		count(id)
-		FROM
-		hyjf_trade.ht_borrow_tender bt
-		WHERE
-		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
-		),
-		0
-		) + ifnull(
-		(
-		SELECT
-		count(assign_id)
-		FROM
-		hyjf_trade.ht_credit_tender ct
-		WHERE
-		ct.user_id = a.user_id
-		AND ct.create_time  <![CDATA[<]]> concat(a.invest_time)
-		),
-		0
-		) + ifnull(
-		(
-		SELECT
-		count(id)
-		FROM
-		hyjf_trade.ht_borrow_tender_cpn bc
-		WHERE
-		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
-		),
-		0
-		) + ifnull(
-		(
-		SELECT
-		count(id)
-		FROM
-		hyjf_trade.ht_hjh_accede ha
-		WHERE
-		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
-		),
-		0
-		) = 0 THEN
-		'1'
-		ELSE
-		'0'
-		END is_first
+		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time  <![CDATA[<]]>  a.invest_time  limit 1), 0)
+		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
+		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
+		+ ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time  <![CDATA[<]]>  a.invest_time limit 1),0) = 0
+		THEN '1' ELSE '0' END is_first
 		FROM
 		(
 		SELECT

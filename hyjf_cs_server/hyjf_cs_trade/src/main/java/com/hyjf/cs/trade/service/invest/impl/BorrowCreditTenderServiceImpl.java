@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.service.invest.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.config.DebtConfigResponse;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -318,9 +319,10 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    public JSONObject getInterestInfo(int userId, String creditNid, String assignCapital) {
+    public JSONObject getInterestInfo(Integer userId, String creditNid, String assignCapital) {
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
         JSONObject ret = new JSONObject();
+
         if (Validator.isNotNull(creditAssign)) {
             creditAssign.setMoney(DF_FOR_VIEW.format(new BigDecimal(assignCapital).setScale(2, BigDecimal.ROUND_DOWN)));
             ret.put("creditAssign", creditAssign);
@@ -426,7 +428,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setCouponType("");
             result.setCouponAvailableCount("");
             result.setAssignPay("");
-            result.setBorrowApr(creditAssign.getCreditDiscount()+"%");
+            result.setBorrowApr(FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%");
             if (StringUtils.isNotEmpty(money) && !"0".equals(money)) {
                 // 实际支付金额
                 result.setRealAmount("¥" + creditAssign.getAssignPay());
@@ -436,11 +438,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 //BigDecimal assignInterest = new BigDecimal(bean.getAssignInterest()).add(new BigDecimal(money));
                 //result.setProspectiveEarnings(assignInterest+"元");
                 //备注
-                result.setDesc("折让率: "+creditAssign.getCreditDiscount()+"%      历史回报: " + creditAssign.getAssignInterest() +"元");
+                result.setDesc("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%      历史回报: " + creditAssign.getAssignInterest() +"元");
                 //折让率
-                result.setDesc0("折让率: "+creditAssign.getCreditDiscount()+"%");
+                result.setDesc0("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%");
                 //历史回报
-                result.setDesc1("历史回报: "+creditAssign.getAssignInterest()+"元");
+                result.setDesc1("历史回报: "+FormatRateUtil.formatBorrowApr(creditAssign.getAssignInterest())+"元");
                 // 实际支付金额
                 result.setAssignPay(creditAssign.getAssignPay());
                 // 认购本金
@@ -452,7 +454,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 实际支付计算式
                 result.setAssignPayText(creditAssign.getAssignPayText());
                 // 折价率
-                result.setCreditDiscount(creditAssign.getCreditDiscount() + "%");
+                result.setCreditDiscount(FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+ "%");
                 //按钮上的文字
                 result.setButtonWord("实际支付"+creditAssign.getAssignPay()+"元");
             } else {
@@ -464,9 +466,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 垫付利息
                 result.setPaymentOfInterest("0.00" + "元");
                 //备注
-                result.setDesc("折让率: "+creditAssign.getCreditDiscount()+"%      历史回报: 0.00元");
+                result.setDesc("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%      历史回报: 0.00元");
                 //折让率
-                result.setDesc0("折让率: "+creditAssign.getCreditDiscount()+"%");
+                result.setDesc0("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%");
                 //历史回报
                 result.setDesc1("历史回报: "+"0.00元");
                 // 实际支付计算式
@@ -932,6 +934,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     } catch (MQException e) {
                         logger.error(e.getMessage());
                     }
+
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
@@ -973,6 +976,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         logger.error(e.getMessage());
                     }
                     // 神策数据统计 add by liuyang 20180726 end
+                    try {
+                        // 承接成功后,发送大屏数据统计MQ
+                        ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,sellerUserId,sellerAccount.getUserName(),creditTenderLog.getAssignCapital(),3);
+                        screenDataBean.setTenderUserId(assignAccount.getUserId());
+                        this.sendScreenDataMQ(screenDataBean);
+                    } catch (Exception e) {
+                        logger.error("承接成功后,发送大屏数据统计MQ失败",e.getMessage());
+                    }
                     return true;
                 }
             }else{
@@ -1056,14 +1067,19 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         params.put("projectType", "汇转让");
         // 首次投标项目期限
         params.put("investProjectPeriod", investProjectPeriod);
+        // 是否是首次投资
+        params.put("investFlag", checkAppUtmInvestFlag(userId));
         //压入消息队列
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error(e.getMessage());
-            logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+        if (utmRegVO != null) {
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+                logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+            }
         }
-
         /*(6)更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 结束*/
     }
 
@@ -1165,6 +1181,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 检查是否能债转  ？？？原来的逻辑不用了1726行CreditServiceImpl
         // 插入债转日志表
         Integer saveCount = amTradeClient.saveCreditTenderAssignLog(creditTenderLog);
+        if(saveCount-0==0){
+            // 如果是0的话  保存日志表失败
+            logger.error("保存债转日志失败，对象：{}",JSONObject.toJSONString(creditTenderLog));
+            throw new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
+        }
     }
 
     /**
@@ -1454,6 +1475,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 将出借金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));
         BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
+        Integer userId = Integer.valueOf(request.getUserId());
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(userId,new BigDecimal(assignPay))) {
+            // 账户余额不同步
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
+        }
         // 剩余可投金额
         Integer min = 1;
         if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
@@ -1555,4 +1582,35 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
+
+    /**
+     * 承接成功后,发送大屏数据统计MQ
+     *
+     * @param screenDataBean
+     */
+    private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
+    }
+
+
+    /**
+     * 查询appUtmReg是否首投
+     * @param userId
+     * @return
+     */
+    private boolean checkAppUtmInvestFlag(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户出借数量 userID {} 数量 {} ",userId,total);
+            if (total == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
+    }
+
 }

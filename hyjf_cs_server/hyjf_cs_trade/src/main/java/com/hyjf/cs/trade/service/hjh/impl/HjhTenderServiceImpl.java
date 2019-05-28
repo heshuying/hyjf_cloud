@@ -3,10 +3,12 @@
  */
 package com.hyjf.cs.trade.service.hjh.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -371,7 +373,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 计划不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
-        resultVo.setBorrowApr(plan.getExpectApr()+"%");
+        resultVo.setBorrowApr(FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
         PlanDetailCustomizeVO planDetail = amTradeClient.getPlanDetail(planNid);
         resultVo.setPaymentOfInterest("0" + "元");
         // 获取用户最优优惠券
@@ -522,8 +524,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 BigDecimal borrowInterest = earnings.add(couponInterest);
 
                 //备注
-                resultVo.setDesc("历史年回报率:  "+plan.getExpectApr()+"%      历史回报:  " + borrowInterest+"元");
-                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc("历史年回报率:  "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报:  " + borrowInterest+"元");
+                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
 
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null, borrowInterest) + "元");
@@ -548,8 +550,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("无可用");
                 }
 
-                resultVo.setDesc("历史年回报率: "+plan.getExpectApr()+"%      历史回报: " + earnings +"元");
-                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报: " + earnings +"元");
+                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings) + "元");
             }
@@ -1151,7 +1153,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 优惠券类别
             result.put("couponType", couponUser.getCouponType());
             // 优惠券额度
-            result.put("couponQuota", couponUser.getCouponQuota());
+            result.put("couponQuota", couponUser.getFormatCouponQuota());
             // 优惠券ID
             result.put("couponGrantId", couponUser.getId());
             result.put("projectType",couponUser.getProjectType());
@@ -1374,6 +1376,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             } catch (MQException e) {
                 logger.error(e.getMessage());
             }
+            try {
+                // 投标成功后,发送大屏数据统计MQ
+                sendScreenDataMQ(request.getUser().getUsername(), userId, planOrderId, new BigDecimal(accountStr), 3,planPeriod,borrowStyle);
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+            }
+
         }
         AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetails != null) {
@@ -1384,7 +1393,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 出借时间
             params.put("investTime", GetDate.getNowTime10());
             // 项目类型
-            params.put("projectType", "智投");
+            params.put("projectType", "智投服务");
             // 首次投标项目期限
             String investProjectPeriod = "";
             if ("endday".equals(borrowStyle)) {
@@ -1407,15 +1416,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }
 
-        //发送纳觅返现mq  add   tyy2018-12-25
-        try {
-            logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
-            sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
-
-        } catch (Exception e) {
-            logger.error("加入计划 纳觅返现mq出错",e);
-            logger.error(e.getMessage());
-        }
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId.intValue() >0) {
             logger.info("开始优惠券出借,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);
@@ -1425,6 +1425,15 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 // 真实出借金额
+                //发送纳觅返现mq  add   tyy2018-12-25
+                try {
+                    logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
+                    sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
+
+                } catch (Exception e) {
+                    logger.error("加入计划 纳觅返现mq出错",e);
+                    logger.error(e.getMessage());
+                }
                 params.put("money", accountStr);
                 // 借款项目编号
                 params.put("borrowNid", plan.getPlanNid());
@@ -1465,9 +1474,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         params.put("productType", projectType);
         commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
     }
+
+
+    /**
+     * 投资计划成功后,发送大屏数据统计MQ
+     *
+     */
+    private void sendScreenDataMQ(String username,Integer userId,String orderId,BigDecimal investMoney,Integer projectType,Integer planPeriod,String borrowStyle) throws MQException {
+        ScreenDataBean screenDataBean = new ScreenDataBean();
+        screenDataBean.setUserId(userId);
+        screenDataBean.setMoney(investMoney);
+        screenDataBean.setUserName(username);
+        screenDataBean.setOperating(1);
+        screenDataBean.setOrderId(orderId);
+        screenDataBean.setProductType(projectType);
+        screenDataBean.setPlanPeriod(planPeriod);
+        screenDataBean.setBorrowStyle(borrowStyle);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
+    }
     /**
      * 更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始
-     *
      * @param request
      * @param plan
      */
@@ -1484,7 +1510,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 出借时间
         params.put("investTime", request.getNowTime());
         // 项目类型
-        params.put("projectType", "汇计划");
+        params.put("projectType", "智投服务");
         // 首次投标项目期限
         String investProjectPeriod = "";
         // 还款方式
@@ -1495,12 +1521,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             investProjectPeriod = plan.getLockPeriod() + "个月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
-        //压入消息队列
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error(e.getMessage());
-            logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+        //根据investFlag标志位来决定更新哪种出借
+        params.put("investFlag", checkIsNewUserCanInvest2(request.getUserId()));
+        // PC渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(request.getUserId());
+        if (utmRegVO != null) {
+            //压入消息队列
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+                logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+            }
         }
         /*(6)更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 结束*/
     }
@@ -1603,7 +1635,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 OpenAccount.getAccount());
         if (userBankBalance.compareTo(accountBigDecimal) < 0) {
             // 你又没钱了
-            //throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
         }
         // redis剩余金额不足判断逻辑
         if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
@@ -1643,6 +1675,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
                 }
             }
+        }
+        //资金支出校验-智投（userId/出借金额）
+        if(!this.capitalExpendituresCheck(request.getUser().getUserId(), accountBigDecimal)){
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
         }
     }
 

@@ -31,16 +31,18 @@
 	   <result column="all_repay_fee" property="allRepayFee" jdbcType="VARCHAR" />
 	   <result column="batch_service_fee" property="serviceFee" jdbcType="VARCHAR" />
 	   <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+	   <result column="current_period" property="currentPeriod" jdbcType="VARCHAR" />
+	   <result column="borrow_period_int" property="borrowPeriodInt" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectRepayList" resultMap="repayListResultMap" parameterType="java.util.Map">
 		SELECT
 		hbap.suc_amount,
 		hbap.batch_service_fee,
-		DATE_FORMAT(
-		hbap.update_time,
-		'%Y-%m-%d'
-		) AS suc_time,
+        FROM_UNIXTIME(
+        hydb.reverify_time,
+        '%Y-%m-%d'
+        ) AS suc_time,
 		hydb.borrow_nid,
 		hbi.`name` AS borrow_name,
 		hydbpt.borrow_name AS project_type_name,
@@ -57,9 +59,10 @@
 		'个月'
 		)
 		END AS borrow_period,
+		hydb.borrow_period AS borrow_period_int,
 		hbi.company_or_personal AS com_or_per,
 		FROM_UNIXTIME(
-		hydb.verify_time,
+		hydb.reverify_time,
 		'%Y-%m-%d'
 		) AS loan_time,
 		hydb.account AS borrow_account,
@@ -71,8 +74,10 @@
 		) AS borrow_total,
 		CASE
 		WHEN (
-		hydb.`status` = 4
-		AND hydb.repay_full_status = 0
+		(hydb.`status` = 4
+		AND hydb.repay_full_status = 0)
+		OR (hydb.`status` = 8
+		AND hydb.repay_full_status = 0)
 		) THEN
 		CASE
 		WHEN EXISTS (
@@ -95,7 +100,7 @@
 		''
 		END AS `repay_status`,
 		FROM_UNIXTIME(
-		hydbr.repay_time,
+		IF(hydb.borrow_style = 'endday' OR hydb.borrow_style = 'end',hydbr.repay_time,plan.repay_time),
 		'%Y-%m-%d'
 		) AS repay_time,
 		hba.is_repay_org_flag AS repay_money_source,
@@ -124,7 +129,11 @@
 		plan.repay_fee
 		END AS repay_fee,
 		hydbr.repay_fee AS all_repay_fee,
-		hydb.plan_nid
+		hydb.plan_nid,
+		CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN 1
+		ELSE IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
+		END AS current_period
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
@@ -135,14 +144,14 @@
 		AND hba.`status` <![CDATA[<>]]> 6
 		AND CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		END
 		LEFT JOIN ht_borrow_apicron hbap ON hbap.borrow_nid = hydb.borrow_nid
 		AND hbap.api_type = 0
 		AND hbap.`status` = 6
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
 		AND plan.repay_period = (
-		hydb.borrow_period - hydbr.repay_period + 1
+		IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
 		)
 		<include refid="Where_Clause_Repay_List" />
 		ORDER BY
@@ -156,10 +165,23 @@
 		COUNT(hydb.borrow_nid) AS total
 		FROM
 		ht_borrow hydb
-		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
-		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
-		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
-		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
+        INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
+        LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
+        AND hba.api_type = 1
+        AND hba.`status` <![CDATA[<>]]> 6
+        AND CASE WHEN hydb.borrow_style in ('endday','end')
+        THEN hba.period_now = 1
+        ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+        END
+        LEFT JOIN ht_borrow_apicron hbap ON hbap.borrow_nid = hydb.borrow_nid
+        AND hbap.api_type = 0
+        AND hbap.`status` = 6
+        LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
+        AND plan.repay_period = (
+        IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
+        )
 		<include refid="Where_Clause_Repay_List" />
 	</select>
 	<sql id="Where_Clause_Repay_List">
@@ -168,11 +190,15 @@
 			AND hydb.user_id = #{userId,jdbcType=VARCHAR}
 			<if test="status == null or status =='' ">
 				AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+				<!-- 增加逾期中状态 add by hesy 2019-03-26-->
+				OR (hydb.`status` = 8 AND hydb.repay_full_status = 0)
 				OR ( hydb.`status` = 5))
 			</if>
 			<if test="status != null and status !=''">
 				<if test="status == '0'.toString()">
-					AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					OR (hydb.`status` = 8 AND hydb.repay_full_status = 0)
+					)
 				</if>
 				<if test="status == '1'.toString()">
 					AND ( hydb.`status` = 5 )
@@ -227,6 +253,7 @@
 		'个月'
 		)
 		END AS borrow_period,
+        hydb.borrow_period AS borrow_period_int,
 		hbi.company_or_personal AS com_or_per,
 		FROM_UNIXTIME(
 		hydb.verify_time,
@@ -236,8 +263,10 @@
 		hydb.repay_account_all AS borrow_total,
 		CASE
 		WHEN (
-		hydb.`status` = 4
-		AND hydb.repay_full_status = 0
+		(hydb.`status` = 4
+		AND hydb.repay_full_status = 0)
+		OR (hydb.`status` = 8
+		AND hydb.repay_full_status = 0)
 		) THEN
 		CASE
 		WHEN EXISTS (
@@ -308,7 +337,11 @@
 		)
 		ELSE
 		FROM_UNIXTIME(plan.repay_time, '%Y-%m-%d')
-		END AS repayYesTime
+		END AS repayYesTime,
+		CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN 1
+		ELSE (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+		END AS current_period
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
@@ -320,12 +353,10 @@
 		AND hba.`status` <![CDATA[<>]]> 6
 		AND CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		END
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
-		AND plan.repay_period = (
-		hydb.borrow_period - hydbr.repay_period + 1
-		)
+		AND plan.repay_period = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		<if test="repayStatus != null and repayStatus != ''">
             LEFT JOIN
             (select orgLog.del_flag,orgLog.borrow_nid from ht_bank_repay_org_freeze_log orgLog inner join ht_borrow hb ON orgLog.borrow_nid = hb.borrow_nid
@@ -348,22 +379,27 @@
 		COUNT(hydb.borrow_nid) AS total
 		FROM
 		ht_borrow hydb
-		LEFT JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
-		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
-		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
-		AND CASE WHEN hydb.borrow_style in ('endday','end')
-		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
-		END
-		<if test="repayStatus != null and repayStatus != ''">
-			LEFT JOIN
-			(select orgLog.del_flag,orgLog.borrow_nid from ht_bank_repay_org_freeze_log orgLog inner join ht_borrow hb ON orgLog.borrow_nid = hb.borrow_nid
-			AND orgLog.del_flag = 0 union all
-			select borLog.del_flag,borLog.borrow_nid from ht_bank_repay_freeze_log borLog inner join ht_borrow hb ON borLog.borrow_nid = hb.borrow_nid
-			AND borLog.del_flag = 0
-			) log on log.borrow_nid = hydb.borrow_nid
-		</if>
+        INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+        INNER JOIN ht_r_user u ON hbi.repay_org_user_id = u.user_id
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
+        LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
+        AND hba.api_type = 1
+        AND hba.`status` <![CDATA[<>]]> 6
+        AND CASE WHEN hydb.borrow_style in ('endday','end')
+        THEN hba.period_now = 1
+        ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+        END
+        LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
+        AND plan.repay_period = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+        <if test="repayStatus != null and repayStatus != ''">
+            LEFT JOIN
+            (select orgLog.del_flag,orgLog.borrow_nid from ht_bank_repay_org_freeze_log orgLog inner join ht_borrow hb ON orgLog.borrow_nid = hb.borrow_nid
+            AND orgLog.del_flag = 0 union all
+            select borLog.del_flag,borLog.borrow_nid from ht_bank_repay_freeze_log borLog inner join ht_borrow hb ON borLog.borrow_nid = hb.borrow_nid
+            AND borLog.del_flag = 0
+            ) log on log.borrow_nid = hydb.borrow_nid
+        </if>
 		<include refid="Where_Clause_Repay_Org_List" />
 	</select>
 	<sql id="Where_Clause_Repay_Org_List">
@@ -372,11 +408,15 @@
 			AND hbi.repay_org_user_id = #{userId,jdbcType=VARCHAR}
 			<if test="status == null or status =='' ">
 				AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+				<!-- 增加逾期中状态 add by hesy 2019-03-26-->
+				OR (hydb.`status` = 8 AND hydb.repay_full_status = 0)
 				OR ( hydb.`status` = 5))
 			</if>
 			<if test="status != null and status !=''">
 				<if test="status == '0'.toString()">
-					AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					<!-- 增加逾期中状态 add by hesy 2019-03-26-->
+					OR (hydb.`status` = 8 AND hydb.repay_full_status = 0))
 				</if>
 				<if test="status == '1'.toString()">
 					AND ( hydb.`status` = 5 )
@@ -403,25 +443,26 @@
 	<select id="searchOrgRepayedList" resultMap="repayListResultMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
+		hydb.account AS borrow_account,
 		hbi.`name` AS borrow_name,
 		hydbpt.borrow_name AS project_type,
 		hydb.borrow_style,
 		hydb.borrow_apr AS borrow_interest,
-		FROM_UNIXTIME(
-		hydbr.repay_time,
-		'%Y-%m-%d'
-		) AS repay_time,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_time,'%Y-%m-%d')
+        ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repay_time,
 		CASE WHEN hba.is_repay_org_flag = 1 THEN '机构垫付' ELSE '借款人还款' END AS repay_money_source,
-		FROM_UNIXTIME(
-		hydbr.repay_action_time,
-		'%Y-%m-%d'
-		) AS action_time,
-		hydbr.repay_capital_yes AS capital_yes,
-		hydbr.repay_account_yes AS account_yes,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_action_time,'%Y-%m-%d')
+        ELSE FROM_UNIXTIME(hbrp.repay_action_time,'%Y-%m-%d') END AS action_time,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN hydbr.repay_capital_yes
+        ELSE hbrp.repay_capital_yes END AS capital_yes,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN hydbr.repay_account_yes
+        ELSE hbrp.repay_account_yes END AS account_yes,
 		hba.period_now AS repay_period,
 		hba.batch_amount AS repay_total,
-		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_time,'%Y-%m-%d')
-		ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repayYesTime
+		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_action_time,'%Y-%m-%d')
+		ELSE FROM_UNIXTIME(hbrp.repay_action_time,'%Y-%m-%d') END AS repayYesTime,
+        hydb.borrow_period AS borrow_period_int,
+		hba.period_now AS current_period
 		FROM
 		ht_borrow_apicron hba
 		INNER JOIN ht_borrow hydb ON hba.borrow_nid = hydb.borrow_nid
@@ -433,6 +474,21 @@
 			hba.status = 6
 			AND hba.api_type = 1
 			AND hbi.repay_org_user_id = #{userId}
+			<!-- 只显示垫付机构还款-->
+			AND (
+			(
+			hydb.borrow_style != 'endday'
+			AND hydb.borrow_style != 'end'
+			AND hbrp.repay_user_id = hbi.repay_org_user_id
+			)
+			OR (
+			(
+			hydb.borrow_style = 'endday'
+			OR hydb.borrow_style = 'end'
+			)
+			AND hydbr.repay_user_id = hbi.repay_org_user_id
+			)
+			)
 			<if test="startDate != null and startDate != ''">
 				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
 			</if>
@@ -463,6 +519,21 @@
 			hba.status = 6
 			AND hba.api_type = 1
 			AND hbi.repay_org_user_id = #{userId}
+			<!-- 只显示垫付机构还款-->
+			AND (
+			(
+			hydb.borrow_style != 'endday'
+			AND hydb.borrow_style != 'end'
+			AND hbrp.repay_user_id = hbi.repay_org_user_id
+			)
+			OR (
+			(
+			hydb.borrow_style = 'endday'
+			OR hydb.borrow_style = 'end'
+			)
+			AND hydbr.repay_user_id = hbi.repay_org_user_id
+			)
+			)
 			<if test="startDate != null and startDate != ''">
 				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
 			</if>
@@ -502,18 +573,28 @@
 		AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
 	</select>
 	<!-- 待垫付总额 -->
-	<select id="selectRepayOrgRepaywait" resultType="java.math.BigDecimal" parameterType="java.lang.Integer">
+	<select id="selectRepayOrgRepaywait" resultType="Map" parameterType="java.lang.Integer">
 		SELECT
 		IF (
 			sum(b.repay_account_wait) IS NULL,
 			0,
 			sum(b.repay_account_wait)
-		)
+		) AS repay_account_wait,
+		IF (
+			sum(b.repay_account_interest_wait) IS NULL,
+			0,
+			sum(b.repay_account_interest_wait)
+		) AS repay_account_interest_wait,
+		IF (
+			sum(b.repay_account_capital_wait) IS NULL,
+			0,
+			sum(b.repay_account_capital_wait)
+		) AS repay_account_capital_wait
 		FROM
 			ht_borrow b
 		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
 		WHERE
-			b.`status` = 4
+			(b.`status` = 4 OR b.`status` = 8)
 		AND hbi.repay_org_user_id = #{userId}
 	</select>
 
@@ -564,5 +645,86 @@
 			) log on log.borrow_nid = hydb.borrow_nid
 		</if>
 		<include refid="Where_Clause_Repay_Org_List" />
+	</select>
+
+    <select id="selectUserBorrowAccountTotal" resultType="java.math.BigDecimal" parameterType="Map">
+		SELECT
+		IFNULL(SUM(IFNULL(hydb.account,0)),0) AS accountTotal
+		FROM
+		ht_borrow hydb
+		where
+		 hydb.user_id = #{userId,jdbcType=VARCHAR} AND (hydb.`status` = 4 OR hydb.`status` = 8  OR hydb.`status` = 5 )
+	</select>
+
+	<resultMap id="repayPlanListResultMap" type="com.hyjf.am.vo.trade.repay.RepayPlanListVO" >
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+		<result column="repay_capital" property="repayCapital" jdbcType="VARCHAR" />
+		<result column="repay_interest" property="repayInterest" jdbcType="VARCHAR" />
+		<result column="repay_fee" property="repayFee" jdbcType="VARCHAR" />
+		<result column="repay_account_yes" property="repayAccountYes" jdbcType="VARCHAR" />
+		<result column="repay_yestime" property="repayYestime" jdbcType="VARCHAR" />
+		<result column="period" property="period" jdbcType="VARCHAR" />
+		<result column="repay_status" property="repayStatus" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 还款期次列表（分期） -->
+	<select id="selectRepayPlanList" resultMap="repayPlanListResultMap" parameterType="Map">
+		SELECT
+			plan.borrow_nid,
+			FROM_UNIXTIME(plan.repay_time, '%Y-%m-%d') AS repay_time,
+			plan.repay_capital,
+			plan.repay_interest,
+			plan.repay_fee,
+			IF(plan.repay_status = 0,'--',plan.repay_account_yes) AS repay_account_yes,
+			IF(plan.repay_status = 0,'--',IFNULL(FROM_UNIXTIME(
+				IF(plan.repay_yestime=0,null,plan.repay_yestime),
+				'%Y-%m-%d'
+			),'')) AS repay_yestime,
+		  CONCAT(plan.repay_period,'/',b.borrow_period) AS period,
+		  <!-- 增加逾期中状态值，modify by hesy 2019-03-26-->
+			IF(plan.repay_status=0,IF(plan.advance_status=3,'逾期中','未还款'),'已还款') AS repay_status
+		FROM
+			ht_borrow_repay_plan plan
+		JOIN ht_borrow b ON plan.borrow_nid = b.borrow_nid
+		WHERE plan.borrow_nid = #{borrowNid}
+	</select>
+
+	<!-- 还款期次列表（不分期） -->
+	<select id="selectRepayNotPlanList" resultMap="repayPlanListResultMap" parameterType="Map">
+		SELECT
+			br.borrow_nid,
+			FROM_UNIXTIME(br.repay_time, '%Y-%m-%d') AS repay_time,
+			br.repay_capital,
+			br.repay_interest,
+			br.repay_fee,
+			IF(br.repay_status = 0,'--',br.repay_account_yes) AS repay_account_yes,
+			IF(br.repay_status = 0,'--',IFNULL(
+				FROM_UNIXTIME(
+					IF (
+						br.repay_yestime = 0,
+						NULL,
+						br.repay_yestime
+					),
+					'%Y-%m-%d'
+				),
+				''
+			)) AS repay_yestime,
+			1 AS period,
+
+		IF (
+			br.repay_status = 0,
+		IF (
+			br.advance_status = 3,
+			'逾期中',
+			'未还款'
+		),
+		 '已还款'
+		) AS repay_status
+		FROM
+			ht_borrow_repay br
+		JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
+		WHERE
+			br.borrow_nid = #{borrowNid}
 	</select>
 </mapper>

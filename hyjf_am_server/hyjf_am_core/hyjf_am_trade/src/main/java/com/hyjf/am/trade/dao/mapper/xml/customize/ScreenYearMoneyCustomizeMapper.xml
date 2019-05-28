@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ScreenYearMoneyCustomizeMapper">
+	<resultMap id="repayListResultMap" type="com.hyjf.am.vo.trade.RepaymentPlanVO" >
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		<result column="customer_group" property="customerGroup" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="repayment_time" property="repaymentTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryTenderList" resultType="java.lang.String" >
+		SELECT
+		CASE
+		WHEN bn.borrow_style = 'endday' THEN
+		CONCAT(bn.borrow_period, '天')
+		ELSE
+		CONCAT(bn.borrow_period, '个月')
+		END AS productStyle
+		FROM
+		ht_borrow_tender te
+		LEFT JOIN ht_borrow bn ON te.borrow_nid = bn.borrow_nid
+		WHERE
+		te.nid = #{orderId,jdbcType=VARCHAR} and te.user_id = #{userId,jdbcType=INTEGER};
+	</select>
+
+	<select id="queryPlanList" resultType="java.lang.String" >
+		SELECT
+			CASE
+		WHEN hdp.is_month = '0' THEN
+			CONCAT(hdpa.lock_period, '天')
+		WHEN hdp.is_month = '1' THEN
+			CONCAT(hdpa.lock_period, '个月')
+		END AS productStyle
+		FROM
+			ht_hjh_accede hdpa
+		LEFT JOIN ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+		WHERE
+			hdpa.user_id = #{userId,jdbcType=INTEGER}
+		AND hdpa.accede_order_id = #{orderId,jdbcType=VARCHAR};
+	</select>
+
+	<insert id="addRepayUserList">
+		insert into ht_repayment_plan
+		(`user_id`, `borrow_nid`, `accede_order_id`, `customer_name`, `customer_group`, `money`, `repayment_time`)
+		values
+		<foreach collection="repaymentPlanVOS" item="item" index="index" separator=",">
+			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.repaymentTime})
+		</foreach>
+	</insert>
+
+	<update id="updateRepayMoney">
+		update `ht_repayment_plan` set `money`=`money`-#{screenDataBean.money}
+		where (accede_order_id=#{screenDataBean.orderId} or borrow_nid=#{screenDataBean.orderId})
+				and repayment_time <![CDATA[>=]]> #{startTime}
+				and  repayment_time <![CDATA[<=]]> #{endTime}
+	</update>
+
+	<select id="findRepayUser" resultType="com.hyjf.am.trade.dao.model.auto.RepaymentPlan">
+		select * from  `ht_repayment_plan`
+		where borrow_nid=#{screenDataBean.orderId}
+				and repayment_time <![CDATA[>=]]> FROM_UNIXTIME(#{startTime},'%Y-%m-%d')
+				and  repayment_time <![CDATA[<=]]> FROM_UNIXTIME(#{endTime},'%Y-%m-%d')
+
+	</select>
+</mapper>

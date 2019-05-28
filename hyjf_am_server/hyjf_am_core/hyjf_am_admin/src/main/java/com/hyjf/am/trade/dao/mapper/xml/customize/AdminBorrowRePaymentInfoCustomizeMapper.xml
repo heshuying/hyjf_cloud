@@ -6,13 +6,23 @@
 
 	<select id="countBorrowRepaymentInfo" resultType="java.lang.Integer"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset">
-		SELECT
-		COUNT(1)
-		from ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		<include refid="Where_Clause" />
+		select sum(tmpcount) from  (
+				SELECT
+				COUNT(1) as tmpcount
+				from ht_borrow AS b
+				INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid and b.borrow_style in ('end','endday')
+				INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+				<include refid="Where_Clause" />
+				UNION ALL
+				SELECT
+				COUNT(1) as tmpcount
+				from ht_borrow AS b
+				INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
+				INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid=b.borrow_nid
+				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+				<include refid="Where_Clause" />
+			) t
 	</select>
 	<sql id="Where_Clause">
 		<where>
@@ -46,8 +56,23 @@
 			</if>
 			<!-- 还款状态 -->
 			<if test="status != null and status != ''">
-				AND br.recover_status = #{status}
+				
+				<if test="status ==0">
+					AND br.advance_status!=3
+					AND br.recover_status = #{status}
+				</if>
+				<if test="status ==2">
+					AND br.recover_status = 2
+				</if>
+				<if test="status ==1">
+					AND br.recover_status = #{status}
+				</if>
+				<if test="status ==3">
+					AND br.advance_status=3
+					AND br.recover_status = 0
+				</if>
 			</if>
+
 			<!-- 还款批次号 -->
 			<if test="repayBatchNo != null and repayBatchNo != ''">
 				AND br.repay_batch_no LIKE CONCAT( #{repayBatchNo}, '%')
@@ -73,6 +98,11 @@
 
 			<if test=" yesTimeEndSrch != null and yesTimeEndSrch != ''">
 				AND br.recover_yestime &lt; #{yesTimeEndSrch}
+			</if>
+			
+			<!-- 还款期数 -->
+			<if test="recoverPeriod != null and recoverPeriod != ''">
+				AND br.recover_period = #{recoverPeriod}
 			</if>
 		</where>
 	</sql>
@@ -135,63 +165,132 @@
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
 		<result column="instName" property="instName" jdbcType="VARCHAR" />
 		<result column="freezeOrderId" property="freezeOrderId" jdbcType="VARCHAR" />
+		<result column="repayAccountAll" property="repayAccountAll" jdbcType="VARCHAR" />
+		<result column="repayAccountCapital" property="repayAccountCapital" jdbcType="VARCHAR" />
+		<result column="repayAccountInterest" property="repayAccountInterest" jdbcType="VARCHAR" />
+		<result column="borrowManager" property="borrowManager" jdbcType="VARCHAR" />
+		<result column="chargeDays" property="chargeDays" jdbcType="VARCHAR" />
+		<result column="jianxi" property="jianxi" jdbcType="VARCHAR" />
+		<result column="chargeInterest" property="chargeInterest" jdbcType="VARCHAR" />
+		<result column="lateDays" property="lateDays" jdbcType="VARCHAR" />
+		<result column="lateInterest" property="lateInterest" jdbcType="VARCHAR" />
+		<result column="repayMoneySource" property="repayMoneySource" jdbcType="VARCHAR" />
+		<result column="repayUsername" property="repayUsername" jdbcType="VARCHAR" />
+		<result column="autoRepay" property="autoRepay" jdbcType="VARCHAR" />
+		<result column="submitter" property="submitter" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepaymentInfoListForView" resultMap="searchBorrowRepaymentInfoListResultMap"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset">
-		SELECT
-		br.nid AS nid,
-		br.borrow_nid AS borrowNid,
-		b.user_id AS userId,
-		b.borrow_user_name AS borrowUserName,
-		binfo.name AS borrowName,
-		binfo.repay_org_name as repayOrgName,
-		b.borrow_style AS borrowStyle,
-		binfo.project_Type AS projectType,
-		bpt.borrow_name AS projectTypeName,
-		b.borrow_Period AS borrowPeriod,
-		b.borrow_Apr AS borrowApr,
-		b.account AS borrowAccount,
-		b.borrow_account_yes AS borrowAccountYes,
-		bs.name AS repayType,
-		t.user_id AS recoverUserId,
-		t.user_name AS recoverUserName,
-		t.tender_user_attribute AS recover_user_attribute,
-		t.invite_user_name AS referrer_name,
-		t.invite_user_id AS referrer_user_id,
-		iu.truename AS referrer_true_name,
-		br.recover_period AS recoverPeriod,
-		t.account AS recoverTotal,
-		br.recover_capital AS recoverCapital,
-		br.recover_interest AS recoverInterest,
-		br.recover_Account AS recoverAccount,
-		br.recover_fee AS recoverFee,
-		br.recover_capital_yes AS recoverCapitalYes,
-		br.recover_interest_yes AS recoverInterestYes,
-		br.recover_Account_yes AS recoverAccountYes,
-		br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
-		br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
-		br.recover_Account-br.recover_Account_yes AS recoverAccountWait,
-		br.recover_status AS status,
-		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
-		b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
-		if(br.recover_yestime is null or br.recover_yestime='',
-		'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
-		br.repay_ordid AS repay_ordid,
-		br.repay_batch_no AS repay_batch_no,
-		hic.inst_name AS instName,
-		b.plan_nid
-		FROM
-		ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		LEFT JOIN ht_r_user AS iu ON t.user_id=iu.user_id
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		<include refid="Where_Clause" />
+		select * from (
+			SELECT
+			br.nid AS nid,
+			br.borrow_nid AS borrowNid,
+			b.user_id AS userId,
+			b.borrow_user_name AS borrowUserName,
+			binfo.name AS borrowName,
+			binfo.repay_org_name as repayOrgName,
+			b.borrow_style AS borrowStyle,
+			binfo.project_Type AS projectType,
+			bpt.borrow_name AS projectTypeName,
+			b.borrow_Period AS borrowPeriod,
+			b.borrow_Apr AS borrowApr,
+			t.account AS borrowAccount,
+			t.loan_amount AS borrowAccountYes,
+			bs.name AS repayType,
+			t.user_id AS recoverUserId,
+			t.user_name AS recoverUserName,
+			t.tender_user_attribute AS recover_user_attribute,
+			t.invite_user_name AS referrer_name,
+			t.invite_user_id AS referrer_user_id,
+			iu.truename AS referrer_true_name,
+			br.recover_period AS recoverPeriod,
+			t.account AS recoverTotal,
+			br.recover_capital AS recoverCapital,
+			br.recover_interest AS recoverInterest,
+			br.recover_Account AS recoverAccount,
+			br.recover_fee AS recoverFee,
+			br.recover_capital_yes AS recoverCapitalYes,
+			br.recover_interest_yes AS recoverInterestYes,
+			br.recover_Account_yes AS recoverAccountYes,
+			br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
+			br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
+			if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
+			if(br.recover_status=0 and br.advance_status=3 ,'3',br.recover_status) AS status,
+			if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
+			b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+			if(br.recover_yestime is null or br.recover_yestime='',
+			'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
+			br.repay_ordid AS repay_ordid,
+			br.repay_batch_no AS repay_batch_no,
+			hic.inst_name AS instName,
+			b.plan_nid,
+			br.id
+			FROM
+			ht_borrow AS b
+			INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid and b.borrow_style in ('end','endday')
+			INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+			LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+			LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+			LEFT JOIN ht_r_user AS iu ON t.user_id=iu.user_id
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
+			LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+			<include refid="Where_Clause" />
+			UNION ALL
+			SELECT
+			br.nid AS nid,
+			br.borrow_nid AS borrowNid,
+			b.user_id AS userId,
+			b.borrow_user_name AS borrowUserName,
+			binfo.name AS borrowName,
+			binfo.repay_org_name as repayOrgName,
+			b.borrow_style AS borrowStyle,
+			binfo.project_Type AS projectType,
+			bpt.borrow_name AS projectTypeName,
+			b.borrow_Period AS borrowPeriod,
+			b.borrow_Apr AS borrowApr,
+			t.account AS borrowAccount,
+			t.loan_amount AS borrowAccountYes,
+			bs.name AS repayType,
+			t.user_id AS recoverUserId,
+			t.user_name AS recoverUserName,
+			t.tender_user_attribute AS recover_user_attribute,
+			t.invite_user_name AS referrer_name,
+			t.invite_user_id AS referrer_user_id,
+			iu.truename AS referrer_true_name,
+			br.recover_period AS recoverPeriod,
+			t.account AS recoverTotal,
+			br.recover_capital AS recoverCapital,
+			br.recover_interest AS recoverInterest,
+			br.recover_Account AS recoverAccount,
+			br.recover_fee AS recoverFee,
+			br.recover_capital_yes AS recoverCapitalYes,
+			br.recover_interest_yes AS recoverInterestYes,
+			br.recover_Account_yes AS recoverAccountYes,
+			br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
+			br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
+			if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
+			if(br.recover_status=0 and br.advance_status=3 ,'3',br.recover_status) AS status,
+			if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
+			br.recover_time, '%Y-%m-%d' )) AS recoverLastTime,
+			if(br.recover_yestime is null or br.recover_yestime='',
+			'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
+			br.repay_order_id AS repay_ordid,
+			br.repay_batch_no AS repay_batch_no,
+			hic.inst_name AS instName,
+			b.plan_nid,
+			br.id
+			FROM
+			ht_borrow AS b
+			INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid 
+			INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid=b.borrow_nid
+			LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+			LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+			LEFT JOIN ht_r_user AS iu ON t.user_id=iu.user_id
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
+			LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+			<include refid="Where_Clause" />)t
 		ORDER BY
-		br.id DESC
+		id DESC
 		<if test="limitStart >= 0">
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
@@ -201,98 +300,233 @@
 	<select id="sumBorrowRepaymentInfo"
 			resultType="com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentInfoCustomize"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset">
-		SELECT
-		SUM(br.recover_capital) AS recoverCapital,
-		SUM(br.recover_interest) AS recoverInterest,
-		SUM(br.recover_Account) AS
-		recoverAccount,
-		SUM(br.recover_fee) AS recoverFee
-		from ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		<include refid="Where_Clause" />
+				SELECT
+					sum( recoverCapital ) AS recoverCapital,
+					sum( recoverInterest ) AS recoverInterest,
+					sum( recoverAccount ) AS recoverAccount,
+					sum( recoverFee ) AS recoverFee
+				FROM
+					(
+				SELECT
+					SUM( br.recover_capital ) AS recoverCapital,
+					SUM( br.recover_interest ) AS recoverInterest,
+					SUM( br.recover_Account ) AS recoverAccount,
+					SUM( br.recover_fee ) AS recoverFee 
+				FROM
+					ht_borrow AS b
+					INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid and b.borrow_style in ('end','endday')
+					INNER JOIN ht_borrow_recover AS br ON br.borrow_nid = b.borrow_nid
+					LEFT JOIN ht_borrow_tender AS t ON br.tender_id = t.id 
+					<include refid="Where_Clause" />
+					UNION ALL
+				SELECT
+					SUM( br.recover_capital ) AS recoverCapital,
+					SUM( br.recover_interest ) AS recoverInterest,
+					SUM( br.recover_Account ) AS recoverAccount,
+					SUM( br.recover_fee ) AS recoverFee 
+				FROM
+					ht_borrow AS b
+					INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
+					INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid = b.borrow_nid
+					LEFT JOIN ht_borrow_tender AS t ON br.tender_id = t.id 
+					<include refid="Where_Clause" />
+				) t
 	</select>
 
 
 	<select id="selectBorrowRepaymentInfoList" resultMap="searchBorrowRepaymentInfoListResultMap"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset">
-		SELECT
-		br.nid AS nid,
-		br.borrow_nid AS borrowNid,
-		u1.user_id AS userId,
-		u1.username AS borrowUserName,
-		hbi.name AS borrowName,
-		hbi.repay_org_name as repayOrgName,
-		b.borrow_style AS borrowStyle,
-		b.project_Type AS projectType,
-		bpt.borrow_name AS projectTypeName,
-		b.borrow_Period AS borrowPeriod,
-		b.borrow_Apr AS borrowApr,
-		b.account AS borrowAccount,
-		b.borrow_account_yes AS borrowAccountYes,
-		bs.name AS repayType,
-		u2.user_id AS recoverUserId,
-		u2.username AS recoverUserName,
-		u2.attribute AS recover_user_attribute,
-		CASE WHEN u2.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
-		CASE WHEN u2.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
-		CASE WHEN u2.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
-		u3.username AS referrer_name,
-		u3.user_id AS referrer_user_id,
-		u3.truename AS referrer_true_name,
-		`od6`.`name` AS `referrer_region_name`,
-		`od5`.`name` AS `referrer_branch_name`,
-		`od4`.`name` AS `referrer_department_name`,
-		br.recover_period AS recoverPeriod,
-		t.account AS recoverTotal,
-		br.recover_capital AS recoverCapital,
-		br.recover_interest AS recoverInterest,
-		br.recover_Account AS recoverAccount,
-		br.recover_fee AS recoverFee,
-		br.recover_capital_yes AS recoverCapitalYes,
-		br.recover_interest_yes AS recoverInterestYes,
-		br.recover_Account_yes AS recoverAccountYes,
-		br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
-		br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
-		br.recover_Account-br.recover_Account_yes AS recoverAccountWait,
-		br.recover_status AS status,
-		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
-		b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
-		if(br.recover_yestime is null or br.recover_yestime='',
-		'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
-		br.repay_ordid AS repay_ordid,
-		br.repay_batch_no AS repay_batch_no,
-		hic.inst_name AS instName,
-		b.plan_nid,
-		IFNULL(flg.order_id,rflg.order_id) AS freezeOrderId
-		FROM
-		ht_borrow AS b
-		INNER JOIN ht_borrow_info hbi ON hbi.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN ht_r_user AS u1 ON br.borrow_userid = u1.user_id
-		LEFT JOIN ht_r_user AS u2 ON br.user_id = u2.user_id
-
-		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = br.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
-		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-
-
-		LEFT JOIN ht_r_user AS u3 ON u2.spreads_user_id = u3.user_id
-		LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
-		LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
-		LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = hbi.inst_code
-		LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
-		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
-		<include refid="Where_Clause" />
+		select * from (
+			SELECT
+					br.nid AS nid,
+					br.borrow_nid AS borrowNid,
+					u1.user_id AS userId,
+					u1.username AS borrowUserName,
+					hbi.name AS borrowName,
+					hbi.repay_org_name as repayOrgName,
+					b.borrow_style AS borrowStyle,
+					b.project_Type AS projectType,
+					bpt.borrow_name AS projectTypeName,
+					b.borrow_Period AS borrowPeriod,
+					b.borrow_Apr AS borrowApr,
+					b.account AS borrowAccount,
+					b.borrow_account_yes AS borrowAccountYes,
+					bs.name AS repayType,
+					u2.user_id AS recoverUserId,
+					u2.username AS recoverUserName,
+					u2.attribute AS recover_user_attribute,
+					t.invite_region_name AS `recover_region_name`,
+					t.invite_branch_name AS  `recover_branch_name`,
+					t.invite_department_name AS `recover_department_name`,
+					u3.username AS referrer_name,
+					u3.user_id AS referrer_user_id,
+					u3.truename AS referrer_true_name,
+					`od6`.`name` AS `referrer_region_name`,
+					`od5`.`name` AS `referrer_branch_name`,
+					`od4`.`name` AS `referrer_department_name`,
+					br.recover_period AS recoverPeriod,
+					t.account AS recoverTotal,
+					br.recover_capital AS recoverCapital,
+					br.recover_interest AS recoverInterest,
+					br.recover_Account AS recoverAccount,
+					br.recover_fee AS recoverFee,
+					br.recover_capital_yes AS recoverCapitalYes,
+					br.recover_interest_yes AS recoverInterestYes,
+					br.recover_Account_yes AS recoverAccountYes,
+					br.recover_capital_wait AS recoverCapitalWait,
+					br.recover_interest_wait AS recoverInterestWait,
+					if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
+					br.recover_status AS status,
+					if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
+					b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+					if(br.recover_yestime is null or br.recover_yestime='',
+					'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
+					br.repay_ordid AS repay_ordid,
+					br.repay_batch_no AS repay_batch_no,
+					hic.inst_name AS instName,
+					b.plan_nid,
+					IFNULL(flg.order_id,rflg.order_id) AS freezeOrderId,
+					t.recover_account_all  as repayAccountAll,
+					t.account as repayAccountCapital,
+					t.recover_account_interest as repayAccountInterest,
+					b.borrow_manager as borrowManager,
+					br.charge_days as chargeDays,
+					br.repay_charge_interest-br.charge_interest as jianxi,
+					br.charge_penalty_interest as chargeInterest,
+					br.late_days as lateDays,
+					br.late_interest as lateInterest,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '' END  as repayMoneySource,
+					brr.repay_username as repayUsername,
+					CASE brr.auto_repay when 0
+					then '主动还款'
+					WHEN 1 THEN '系统自动'
+					else '' end as autoRepay,
+					ba.submitter as submitter,
+						br.id
+					FROM
+					ht_borrow AS b
+					INNER JOIN ht_borrow_info hbi ON hbi.borrow_nid=b.borrow_nid and b.borrow_style in ('end','endday')
+					INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid 
+					LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+					LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+					LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+					LEFT JOIN ht_r_user AS u1 ON br.borrow_userid = u1.user_id
+					LEFT JOIN ht_r_user AS u2 ON br.user_id = u2.user_id
+			
+					LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = br.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+					LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+					LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+					LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+			
+			
+					LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
+					LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+					LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+					LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
+					LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
+					LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = hbi.inst_code
+					LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
+					LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
+					Left join ht_borrow_apicron ba on br.borrow_nid=ba.borrow_nid and br.recover_period=ba.period_now and ba.api_type='1'
+					left join ht_borrow_repay brr on brr.borrow_nid=br.borrow_nid 
+					<include refid="Where_Clause" />
+			UNION ALL
+			SELECT
+					br.nid AS nid,
+					br.borrow_nid AS borrowNid,
+					u1.user_id AS userId,
+					u1.username AS borrowUserName,
+					hbi.name AS borrowName,
+					hbi.repay_org_name as repayOrgName,
+					b.borrow_style AS borrowStyle,
+					b.project_Type AS projectType,
+					bpt.borrow_name AS projectTypeName,
+					b.borrow_Period AS borrowPeriod,
+					b.borrow_Apr AS borrowApr,
+					b.account AS borrowAccount,
+					b.borrow_account_yes AS borrowAccountYes,
+					bs.name AS repayType,
+					u2.user_id AS recoverUserId,
+					u2.username AS recoverUserName,
+					u2.attribute AS recover_user_attribute,
+					t.invite_region_name AS `recover_region_name`,
+					t.invite_branch_name AS `recover_branch_name`,
+					t.invite_department_name AS `recover_department_name`,
+					u3.username AS referrer_name,
+					u3.user_id AS referrer_user_id,
+					u3.truename AS referrer_true_name,
+					`od6`.`name` AS `referrer_region_name`,
+					`od5`.`name` AS `referrer_branch_name`,
+					`od4`.`name` AS `referrer_department_name`,
+					br.recover_period AS recoverPeriod,
+					t.account AS recoverTotal,
+					br.recover_capital AS recoverCapital,
+					br.recover_interest AS recoverInterest,
+					br.recover_Account AS recoverAccount,
+					br.recover_fee AS recoverFee,
+					br.recover_capital_yes AS recoverCapitalYes,
+					br.recover_interest_yes AS recoverInterestYes,
+					br.recover_Account_yes AS recoverAccountYes,
+					br.recover_capital_wait AS recoverCapitalWait,
+					br.recover_interest_wait AS recoverInterestWait,
+					if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
+					br.recover_status AS status,
+					if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
+					br.recover_time, '%Y-%m-%d' )) AS recoverLastTime,
+					if(br.recover_yestime is null or br.recover_yestime='',
+					'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime,
+					br.repay_order_id AS repay_ordid,
+					br.repay_batch_no AS repay_batch_no,
+					hic.inst_name AS instName,
+					b.plan_nid,
+					IFNULL(flg.order_id,rflg.order_id) AS freezeOrderId,
+					t.recover_account_all  as repayAccountAll,
+					t.account as repayAccountCapital,
+					t.recover_account_interest as repayAccountInterest,
+					b.borrow_manager as borrowManager,
+					br.charge_days as chargeDays,
+					br.repay_charge_interest-br.charge_interest as jianxi,
+					br.charge_penalty_interest as chargeInterest,
+					br.late_days as lateDays,
+					br.late_interest as lateInterest,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '' END  as repayMoneySource,
+					brr.repay_username as repayUsername,
+					CASE brr.auto_repay when 0
+					then '主动还款'
+					WHEN 1 THEN '系统自动'
+					else '' end as autoRepay,
+					ba.submitter as submitter,
+						br.id
+					FROM
+					ht_borrow AS b
+					INNER JOIN ht_borrow_info hbi ON hbi.borrow_nid=b.borrow_nid
+					INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid=b.borrow_nid
+					LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+					LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+					LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+					LEFT JOIN ht_r_user AS u1 ON br.borrow_userid = u1.user_id
+					LEFT JOIN ht_r_user AS u2 ON br.user_id = u2.user_id
+			
+					LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = br.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+					LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+					LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+					LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+			
+			
+					LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
+					LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+					LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+					LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
+					LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
+					LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = hbi.inst_code
+					LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
+					LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
+					Left join ht_borrow_apicron ba on br.borrow_nid=ba.borrow_nid and br.recover_period=ba.period_now and ba.api_type='1'
+					left join ht_borrow_repay_plan brr on brr.borrow_nid=br.borrow_nid and br.recover_period=brr.repay_period 
+					<include refid="Where_Clause" />
+		) t
 		ORDER BY
-		br.id DESC
+		id DESC
 		<if test="limitStart >= 0">
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
@@ -300,20 +534,33 @@
 
 	<select id="countBorrowRepaymentInfoExport" resultType="java.lang.Integer"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset">
-		SELECT
-		COUNT(1)
-		from ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
-		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
-		<include refid="Where_Clause" />
-		ORDER BY
-		br.id DESC
+			select sum(tmpcount) from  (
+				SELECT
+				COUNT(1) as tmpcount
+				from ht_borrow AS b
+				INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
+				INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+				LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+				LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
+				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+				LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
+				LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
+				<include refid="Where_Clause" />
+				UNION ALL
+				SELECT
+				COUNT(1) as tmpcount
+				from ht_borrow AS b
+				INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
+				INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid=b.borrow_nid
+				LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+				LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
+				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+				LEFT JOIN ht_bank_repay_org_freeze_log flg on flg.borrow_nid = b.borrow_nid and flg.del_flag = 0
+				LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
+				<include refid="Where_Clause" />
+			) t
 	</select>
 
 </mapper>

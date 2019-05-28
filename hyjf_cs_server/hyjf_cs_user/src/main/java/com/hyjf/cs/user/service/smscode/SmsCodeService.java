@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.service.smscode;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
 /**
@@ -50,6 +51,7 @@ public interface SmsCodeService extends BaseUserService {
      * @param verificationType
      * @param mobile
      * @param ipAddr
+     * @param smsConfig
      */
-    JSONObject wechatCheckParam(String verificationType, String mobile, String ipAddr,JSONObject ret);
+    JSONObject wechatCheckParam(String verificationType, String mobile, String ipAddr, JSONObject ret, SmsConfigVO smsConfig);
 }

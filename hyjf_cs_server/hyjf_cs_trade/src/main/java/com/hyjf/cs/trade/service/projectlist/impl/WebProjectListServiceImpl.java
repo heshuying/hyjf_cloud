@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
@@ -176,7 +177,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchProjectListNew(ProjectListRequest request) {
-
+        logger.info("Web端项目列表 requestBean：{}", JSON.toJSONString(request));
         WebResult result = new WebResult();
         BorrowProjectListBean resultBean = new BorrowProjectListBean();
         // 初始化分页参数，并组合到请求参数
@@ -186,6 +187,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         List<BorrowProjectTypeVO> borrowTypes = amTradeClient.getProjectTypeList();
         String projectType = request.getProjectType();// 项目类型
         String borrowClass = request.getBorrowClass();// 项目子类型
+        Integer pageSize = request.getPageSize();
         // 校验相应的项目类型
         if (borrowTypes != null && borrowTypes.size() > 0) {
             boolean typeFlag = false;
@@ -210,42 +212,63 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 page.setTotal(0);
             }
             if (typeFlag && classFlag) {
+                ProjectListRequest requestCount = new ProjectListRequest();
+                requestCount.setProjectType(projectType);
+                requestCount.setBorrowClass(borrowClass);
+                requestCount.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
 
-                request.setProjectType(projectType);
-                request.setBorrowClass(borrowClass);
-                request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
-
-                // 统计相应的汇直投的数据记录数
-                int projectToal = amTradeClient.countProjectList(request);
-
-                Map<String, Object> params = new HashMap<String, Object>();
-                if (projectToal > 0) {
-
-                    //add by cwyang 项目列表显示2页
-                    int pageNum = 2;
-                    if(projectToal > request.getPageSize() * pageNum){
-                        projectToal = request.getPageSize() * pageNum;
-                    }
-
-                    page.setTotal(projectToal);
+                // 统计定时发标+出借中总记录数
+                requestCount.setStatus("21");
+                int projectTotal = amTradeClient.countProjectList(requestCount);
+                int defaultCount = pageSize * 2;
+                logger.info("defaultCount:" + defaultCount + " projectTotal:" + projectTotal);
+                if(projectTotal > defaultCount){
+                    ProjectListRequest requestList = new ProjectListRequest();
+                    requestList.setProjectType(projectType);
+                    requestList.setBorrowClass(borrowClass);
+                    requestList.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                    requestList.setStatus("21");
+                    // 只查询定时发标和出借中标的
+                    page.setTotal(projectTotal);
                     // 查询相应的汇直投列表数据
                     int limit = page.getLimit();
                     int offSet = page.getOffset();
 
                     if (offSet == 0 || offSet > 0) {
-                        request.setLimitStart(offSet);
+                        requestList.setLimitStart(offSet);
                     }
                     if (limit > 0) {
-                        request.setLimitEnd(limit);
+                        requestList.setLimitEnd(limit);
                     }
-                    List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
+                    List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(requestList);
                     resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
-                    //int nowTime = GetDate.getNowTime10();
-                    // result.setNowTime(nowTime);
-                } else {
-                    resultBean.setList(new ArrayList<WebProjectListCsVO>());
-                    page.setTotal(0);
+                }else{
+                    ProjectListRequest requestList2 = new ProjectListRequest();
+                    requestList2.setProjectType(projectType);
+                    requestList2.setBorrowClass(borrowClass);
+                    requestList2.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                    //查询所有标的
+                    int pageNum = 2;
+                    projectTotal = pageSize * pageNum;
+
+                    page.setTotal(projectTotal);
+                    // 查询相应的汇直投列表数据
+                    int limit = page.getLimit();
+                    int offSet = page.getOffset();
+
+                    if (offSet == 0 || offSet > 0) {
+                        requestList2.setLimitStart(offSet);
+                    }
+                    if (limit > 0) {
+                        requestList2.setLimitEnd(limit);
+                    }
+
+                    requestList2.setStatus(null);
+                    logger.info("requestBean:{}", JSON.toJSONString(requestList2));
+                    List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(requestList2);
+                    resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
                 }
+
             } else {
                 resultBean.setList(new ArrayList<WebProjectListCsVO>());
                 page.setTotal(0);
@@ -257,6 +280,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
+//        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 
@@ -290,6 +314,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
         if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
+            logger.info("进入老标逻辑detailCsVO.getType()：{}   isnew:{}",detailCsVO.getIsNew(),detailCsVO.getType());
+            getProjectDetailNew(other, projectCustomeDetail, userVO);
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
@@ -1385,7 +1411,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     public WebResult searchPlanList(ProjectListRequest request) {
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(0);
-        request.setLimitEnd(4);
+        request.setLimitEnd(100);
         request.setIsHome("1");
         Integer count = amTradeClient.countPlanList(request);
         WebResult webResult = new WebResult();

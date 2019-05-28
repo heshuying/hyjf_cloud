@@ -47,8 +47,8 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
      * @return void
      **/
     @Override
-    public void updateByPrimaryKeySelective(AppUtmReg entity) {
-        appUtmRegMapper.updateByPrimaryKeySelective(entity);
+    public int updateByPrimaryKeySelective(AppUtmReg entity) {
+        return  appUtmRegMapper.updateByPrimaryKeySelective(entity);
     }
 
     @Override

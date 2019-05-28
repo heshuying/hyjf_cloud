@@ -31,7 +31,7 @@
 	</resultMap>
 	<sql id="Where_Clause">
 		<where>
-		    cu.del_flag = 0
+		    cu.del_flag = 0 and cc.status = 2
 		    <if test="userId != null and userId != ''">
 				AND cu.user_id = #{userId}
 			</if>
@@ -209,12 +209,12 @@
 	</select>
 	
     <select id="countCouponUser" resultType="java.lang.Integer" parameterType="java.util.Map">
-	    SELECT
-			count(cu.id)
+		SELECT
+		count(cu.id)
 		FROM
-			ht_coupon_user cu
-		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
-		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
+		ht_coupon_user cu
+		INNER JOIN  ht_coupon_config  cc ON cu.coupon_code = cc.coupon_code
+		INNER JOIN ht_r_user u ON cu.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 
@@ -300,12 +300,13 @@
 	</select>
 
 	<select id="countCouponValid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-	    SELECT
+		SELECT
 			count(1)
 		FROM
-		    ht_coupon_user cu
+			ht_coupon_user cu
+			left join ht_coupon_config cf on cu.coupon_code = cf.coupon_code
 		WHERE
-		    cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0
+			cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0 and cf.`status` = 2
 	</select>
 	
 	<select id="selectLatestCouponValidList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">

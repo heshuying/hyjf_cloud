@@ -535,8 +535,10 @@ public class RedisConstants {
     /**合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报*/
     public static final String CERT_CAN_RUN= "CERT_CAN_RUN";
 
-    /**合规数据上报 CERT 已上报交易流水大Id*/
+    /**合规数据上报 CERT 已上报交易流水最大Id*/
     public static final String CERT_TRANSACT_OTHER_MAXID= "certTransactOtherMaxId";
+    /**合规数据上报 CERT 已上报投资明细最大Id*/
+    public static final String CERT_INVEST_DETAIL_MAXID= "certInvestDetailMaxId";
 
     /**
      * 推送表的消息唯一标识
@@ -552,4 +554,27 @@ public class RedisConstants {
      * 后台处理Aleve和eve文件增加redis锁控制、防止重复发送mq消息
      */
     public static final String DUAL_HISTORY_ALEVE = "DUAL_HISTORY_ALEVE:";
+
+
+    /**
+     * app端短信验证码登录   自动登录的key
+     */
+    public static final String APP_SMS_LOGIN_KEY = "APP_SMS_LOGIN_KEY:";
+
+
+
+
+
+    /**
+     * 投资异步执行三次问题  加一个锁校验一下
+     * 投资成功后  12小时以内不处理
+     */
+    public static final String BORROW_TENDER_ORDER_CHECK = "BORROW_TENDER_ORDER_CHECK:";
+
+
+    /**
+     * 清算,计算公允价值与自动投资并发处理
+     *
+     */
+    public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
 }

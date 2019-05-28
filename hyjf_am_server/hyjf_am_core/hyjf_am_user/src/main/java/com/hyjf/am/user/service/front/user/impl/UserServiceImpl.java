@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.ScreenDataCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
@@ -55,7 +56,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     QianleUserCustomizeMapper qianleUserCustomizeMapper;
     @Autowired
     protected LockedUserInfoMapper lockedUserInfoMapper;
-
+    @Autowired
+    ScreenDataCustomizeMapper screenDataCustomizeMapper;
     @Autowired
     private CommonProducer smsProducer;
 
@@ -281,32 +283,32 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public void updateUser(int userId, String ip,User user) {
-        UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
-        if (userLoginLog == null) {
-            userLoginLog = new UserLoginLog();
-            userLoginLog.setUserId(userId);
-            userLoginLog.setLoginIp(ip);
-            userLoginLog.setLoginTime(new Date());
-            userLoginLog.setLastIp(userLoginLog.getLoginIp());
-            userLoginLog.setLastTime(userLoginLog.getLoginTime());
-            userLoginLog.setLoginTimes(1);
-            userLoginLog.setCreateTime(new Date());
-            userLoginLogMapper.insertSelective(userLoginLog);
-        } else {
-            if (userLoginLog.getLoginIp() != null) {
-                userLoginLog.setLastIp(userLoginLog.getLoginIp());
-            }
-            if (userLoginLog.getLoginTime() != null) {
-                userLoginLog.setLastTime(userLoginLog.getLoginTime());
-            }
-            userLoginLog.setLoginIp(ip);
-            userLoginLog.setLoginTime(new Date());
-            // 登录次数
-            userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);
-            userLoginLog.setUpdateTime(new Date());
-            userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
-        }
+        updateLoginUser(userId, ip);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     *
+     * @param user
+     */
+    @Override
+    public void updateUnlockUser(User user) {
+        String key = RedisConstants.PASSWORD_ERR_COUNT_ALL+String.valueOf(user.getUserId());
+        if(RedisUtils.exists(key)){
+            RedisUtils.del(key);
+        }
+        LockedUserInfo lockedUser = new LockedUserInfo();
+        lockedUser.setUnlocked(1);
+        lockedUser.setUnlockTime(new Date());
+        lockedUser.setOperator(user.getUserId());
+        // 是否是前端锁定用户1：前端 0：后台
+        lockedUser.setFront(1);
+        LockedUserInfoExample example = new LockedUserInfoExample();
+        example.or().andUsernameEqualTo(user.getUsername()).andUseridEqualTo(user.getUserId());
+        int result = lockedUserInfoMapper.updateByExampleSelective(lockedUser, example);
+        String logInfo = "前端解除前台锁定用户【{}】成功！更新记录个数【{}】" ;
+        logger.info(logInfo, user.getUsername(), result);
     }
 
     /**
@@ -1676,7 +1678,25 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                 result.setUsersContact(userContactVO);
             }
         }
-
         return result;
+    }
+
+    @Override
+    public HashMap<String, String> findUserGroup(Integer userId) {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String taskTime = formatter.format(currentTime);
+        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
+    }
+    /**
+     * 获取现在时间
+     *
+     * @return 返回时间类型 yyyyMM
+     */
+    private  String getNowDateOfDay() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String dateString = formatter.format(currentTime);
+        return dateString;
     }
 }

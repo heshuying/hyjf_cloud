@@ -2,11 +2,12 @@ package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.MyCreditListQueryResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
@@ -25,9 +26,7 @@ import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
+import com.hyjf.am.vo.api.*;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -51,6 +50,10 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -63,6 +66,11 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.BatchCenterCustomize;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
+import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1483,6 +1491,8 @@ public interface AmTradeClient {
 
     List<RepayListCustomizeVO> repayList(RepayListRequest requestBean);
 
+    List<RepayPlanListVO> repayPlanList(String borrowNid);
+
     List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean);
@@ -1669,9 +1679,15 @@ public interface AmTradeClient {
 
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal getUserLateInterestWaitTotal(Integer userId);
+
+    BigDecimal getUserBorrowAccountTotal(Integer userId);
+
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
 
-    BigDecimal getOrgRepayWaitTotal(Integer userId);
+    BigDecimal getOrgLateInterestWaitTotal(Integer userId);
+
+    RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId);
 
     /**
      * 查询广告列表
@@ -2877,6 +2893,11 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhAccedeVO> selectCrmHjhAccedeList();
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    void updateBorrowRepayLateInfo();
     /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313
@@ -2890,5 +2911,148 @@ public interface AmTradeClient {
      * @return
      */
     AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean);
+    /**
+     * 统计最后三天的服务记录 add by nxl
+     * app和危险的统计计划加入数量
+     *  @author nxl
+     * @date 2019/3/25 14:11
+     */
+    Integer countPlanAccedeRecord(HjhAccedeRequest request);
+
+    /**
+     * 获取borrow对象
+     * @param userId
+     * @return
+     */
+    BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId);
+
+    /**
+     * 插入大屏数据
+     * @param screenDataBean
+     * @return
+     */
+    IntegerResponse insertScreenData(ScreenDataBean screenDataBean);
+
+    /**
+     * 查询用户站岗金额
+     * @param userId
+     * @return
+     */
+    BigDecimal findUserFreeMoney(Integer userId);
+
+    /**
+     * 查询年化金额
+     *
+     * @param userId
+     * @return
+     */
+    BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
+
+    /**
+     * 处理待回款金额
+     * @param screenDataBean
+     */
+    IntegerResponse dealRepayMoney(ScreenDataBean screenDataBean);
+
+    /**
+     * 规模业绩
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getScalePerformance();
+
+    /**
+     * 坐席月规模业绩
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getMonthScalePerformanceList();
+    /**
+     * 运营部总业绩（元）和 本月业绩完成率
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getTotalAmount();
+    /**
+     * 本月运营部业绩完成分布 - 饼图返回
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getAchievementDistributionList();
+
+    /**
+     * 坐席月回款情况
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO  getMonthReceivedPayments();
+
+    UserLargeScreenVO getUserCapitalDetails();
+
+    /**
+     * 屏幕二日业绩(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayScalePerformanceList();
+
+    /**
+     * 屏幕二日回款(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayReceivedPayments();
+
+    /**
+     * 本月数据统计(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getMonthDataStatistics();
+
+    /**
+     * 运营部月度业绩数据
+     * @return
+     */
+    UserLargeScreenTwoVO getOperMonthPerformanceData();
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId);
+    /**
+     * 获取线上所有智投信息
+     * @return
+     */
+    List<HjhPlanVO> selectAllPlan();
+    // 应急中心二期，历史数据上报 add by nxl start
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    List<CertClaimVO> selectCertBorrowByFlg();
+    List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO);
+    /**
+     * 根据原投资订单号查找转让信息
+     *
+     * @param sellOrderId
+     * @return add by nxl
+     */
+    List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId);
+    /**
+     * 查找未上报的产品信息
+     * @return
+     */
+    List<CertProductVO> selectCertProductList();
+    /**
+     * 批量更新产品信息
+     * @param updateVO
+     * @return
+     */
+    Integer updateCertProductBatch(CertProductUpdateVO updateVO);
+
+    List<String> getBorrowNidList();
+
+    // 应急中心二期，历史数据上报 add by nxl end
+
 }
 

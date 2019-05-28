@@ -2,17 +2,16 @@ package com.hyjf.cs.user.controller.wechat.smscode;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.impl.AmConfigClientImpl;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,8 @@ public class WeChatSmsCodeController extends BaseUserController {
 	@Autowired
 	private SmsCodeService sendSmsCode;
 
-
+	@Autowired
+	AmConfigClientImpl amConfigClient;
 	/**
 	 * 发送验证码
 	 *
@@ -58,16 +58,15 @@ public class WeChatSmsCodeController extends BaseUserController {
 		String verificationType = request.getParameter("verificationType");
 		// 手机号
 		String mobile = request.getParameter("mobile");
-		ret = sendSmsCode.wechatCheckParam(verificationType, mobile, GetCilentIP.getIpAddr(request),ret);
+
+		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
+		ret = sendSmsCode.wechatCheckParam(verificationType, mobile, GetCilentIP.getIpAddr(request),ret,smsConfig);
 		if (null!=ret.get("status")){
 			return ret;
 		}
 		// 业务逻辑
-
 		try {
 			if("TPL_ZHUCE".equals(verificationType)){
-				// 发送短信 标识
-				boolean success = false;
 				if ("register".equals(pageType)){
 					sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
 					ret.put("status", "000");
@@ -103,6 +102,12 @@ public class WeChatSmsCodeController extends BaseUserController {
 						return ret;
 					}
 				}
+			}else if(CommonConstant.PARAM_TPL_DUANXINDENGLU.equals(verificationType)){
+				logger.info("开始发送登录验证码  ，手机号：{}   IP  {}",mobile,GetCilentIP.getIpAddr(request));
+				// 发送登录短信验证码
+				sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
+				ret.put("status", "000");
+				ret.put("statusDesc", "发送验证码成功");
 			}
 		} catch (Exception e) {
 			ret.put("status", "99");
@@ -207,7 +212,8 @@ public class WeChatSmsCodeController extends BaseUserController {
 		String verificationCode = request.getParameter("verificationCode");
 		// 手机号
 		String mobile = request.getParameter("mobile");
-		ret = sendSmsCode.wechatCheckParam(verificationType, mobile, GetCilentIP.getIpAddr(request),ret);
+		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
+		ret = sendSmsCode.wechatCheckParam(verificationType, mobile, GetCilentIP.getIpAddr(request),ret, smsConfig);
 		if (Validator.isNull(verificationType)) {
 			ret.put("status", "99");
 			ret.put("statusDesc", "验证码类型不能为空");

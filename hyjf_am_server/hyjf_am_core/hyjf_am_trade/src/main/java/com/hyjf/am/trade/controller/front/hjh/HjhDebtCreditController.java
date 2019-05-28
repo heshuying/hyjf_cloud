@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
@@ -274,6 +275,25 @@ public class HjhDebtCreditController extends BaseController {
         List<ProjectUndertakeListVO> list = hjhDebtCreditService.selectProjectUndertakeList(params);
         if (CollectionUtils.isNotEmpty(list)){
             response.setResultList(list);
+        }
+        return response;
+    }
+
+    /**
+     * 根据原投资订单号查找转让信息
+     * @param sellOrderId
+     * @return
+     * add by nxl
+     */
+    @GetMapping("/selectCreditBySellOrderId/{sellOrderId}")
+    public HjhDebtCreditResponse selectCreditBySellOrderId(@PathVariable String sellOrderId){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        response.setRtn(Response.FAIL);
+        List<HjhDebtCredit> hjhDebtCreditList = hjhDebtCreditService.selectCreditBySellOrderId(sellOrderId);
+        if(CollectionUtils.isNotEmpty(hjhDebtCreditList)){
+            List<HjhDebtCreditVO> hjhDebtCreditVOList = CommonUtils.convertBeanList(hjhDebtCreditList,HjhDebtCreditVO.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(hjhDebtCreditVOList);
         }
         return response;
     }

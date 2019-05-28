@@ -2046,9 +2046,12 @@ public interface AmTradeClient {
      * @param userId
      * @param startTime
      * @param endTime
+     * @param ip
+     * @param payment
+     * @param cardId
      * @return
      */
-    String updateAccountCheck(Integer userId, String startTime, String endTime);
+    String updateAccountCheck(Integer userId, String startTime, String endTime, String ip, String payment, String cardId);
 
     /**
      * 查询配置中心平台账户配置 余额监控
@@ -3113,7 +3116,6 @@ public interface AmTradeClient {
     String getBorrowLevelAction(@Valid String borrowLevel);
 
 
-
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}
@@ -3362,5 +3364,14 @@ public interface AmTradeClient {
      * @param request
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
+
+    /**
+     * 未开户用户销户成功后,删除用户Account表
+     * @param userId
+     * @return
+     */
+    int deleteUserAccountAction(String userId);
+
+
 }
 

@@ -270,4 +270,19 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
         return borrowCredit;
     }
+
+    /**
+     * 根据原投资订单号查找转让信息
+     * @param sellOrderId
+     * @return
+     * add by nxl
+     */
+    @Override
+    public List<HjhDebtCredit> selectCreditBySellOrderId(String sellOrderId) {
+        HjhDebtCreditExample borrowCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andSellOrderIdEqualTo(sellOrderId);
+        List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCredit;
+    }
 }

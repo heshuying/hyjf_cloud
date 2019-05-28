@@ -8,6 +8,8 @@ import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.api.ApiAssetStatusCustomizeResponse;
+import com.hyjf.am.response.api.UserLargeScreenResponse;
+import com.hyjf.am.response.api.UserLargeScreenTwoResponse;
 import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
@@ -30,6 +32,8 @@ import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -53,9 +57,7 @@ import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
+import com.hyjf.am.vo.api.*;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -79,6 +81,10 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -91,6 +97,8 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -1280,7 +1288,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
+        logger.info("散标列表记录数，request：{}", JSON.toJSONString(request));
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
+        logger.info("散标列表记录数，response:{}", JSON.toJSONString(response));
         if (Response.isSuccess(response)){
             return response.getCount();
         }
@@ -3169,6 +3179,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public TenderToCreditAssignCustomizeVO getInterestInfo(String creditNid, String assignCapital, Integer userId) {
+        if(userId==null){
+            userId = 0;
+        }
         String url = "http://AM-TRADE/am-trade/creditTender/get_interest_info/" + creditNid + "/" + assignCapital + "/" + userId;
         CreditAssignCustomizeResponse response = restTemplate.getForEntity(url, CreditAssignCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -3381,6 +3394,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         RepayListResponse response = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/repay/repaylist",requestBean,
                 RepayListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 用户待还款/已还款列表
+     */
+    @Override
+    public List<RepayPlanListVO> repayPlanList(String borrowNid) {
+        RepayPlanListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/repay_plan_list/" + borrowNid,
+                RepayPlanListResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -3969,6 +3996,34 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 普通用户逾期利息总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserLateInterestWaitTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/lateinterest_total_user/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 借款人总借款金额
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserBorrowAccountTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/borrowaccount_total_user/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 担保机构管理费总待还
      * @param userId
      * @return
@@ -3983,17 +4038,31 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 担保机构逾期利息总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgLateInterestWaitTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/lateinterest_total_org/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 担保机构总待还
      * @param userId
      * @return
      */
     @Override
-    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
-        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, BigDecimalResponse.class).getBody();
+    public RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId) {
+        RepayWaitOrgResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, RepayWaitOrgResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResultDec();
+            return response.getResult();
         }
-        return BigDecimal.ZERO;
+        return null;
     }
 
 
@@ -4240,6 +4309,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         BigDecimalResponse response =restTemplate.postForEntity(url,requestBean,BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultDec();
+        } else if (response.getResult() != null && StringUtils.isNotBlank(response.getResult().toString())) {
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_BATCH, response.getResult().toString());
         }
         return BigDecimal.ZERO;
     }
@@ -6888,7 +6959,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * 累计借贷余额
-     * @param time
      * @return
      */
     @Override
@@ -6997,6 +7067,31 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 查询用户账户信息金额信息
+     *
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomizeResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrow/query_account_userMoney/" + userId ,
+                BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    @Override
+    public void updateBorrowRepayLateInfo() {
+        String url = "http://AM-TRADE/am-trade/batch/repaylate";
+        restTemplate.getForEntity(url, String.class).getBody();
+    }
+
+    /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313
      * PC 1.1.2
@@ -7027,4 +7122,342 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 统计最后三天的服务记录 add by nxl
+     * app和危险的统计计划加入数量
+     *  @author nxl
+     * @date 2019/3/25 14:11
+     */
+    @Override
+    public Integer countPlanAccedeRecord(HjhAccedeRequest request) {
+        IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlan/countPlanAccedeRecord/" + request.getPlanNid() ,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return null;
+    }
+
+
+    @Override
+    public IntegerResponse insertScreenData(ScreenDataBean screenDataBean) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/screen_data/insert_data",
+                screenDataBean, IntegerResponse.class);
+    }
+
+    @Override
+    public BigDecimal findUserFreeMoney(Integer userId) {
+        String url = "http://AM-TRADE/am-trade/screen_data/find_free_money/" + userId;
+        BigDecimalResponse body = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+        if (body != null) {
+          return body.getResultDec();
+        }
+        return null;
+
+    }
+
+    @Override
+    public BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney) {
+        String url = "http://AM-TRADE/am-trade/screen_data/find_year_money/" + userId+"/"+orderId+"/"+productType+"/"+investMoney;
+        BigDecimalResponse body = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+        if (body != null) {
+            return body.getResultDec();
+        }
+        return null;
+
+    }
+
+    @Override
+    public IntegerResponse dealRepayMoney(ScreenDataBean screenDataBean) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/screen_data/deal_repay_money",
+                screenDataBean, IntegerResponse.class);
+
+    }
+
+
+    @Override
+    public UserLargeScreenVO getScalePerformance(){
+        String url = "http://AM-TRADE/am-trade/user_large_screen/getscaleperformance";
+        UserLargeScreenResponse response = restTemplate.getForEntity(url, UserLargeScreenResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenVO();
+    }
+
+    @Override
+    public UserLargeScreenVO getMonthScalePerformanceList(){
+        String url = "http://AM-TRADE/am-trade/user_large_screen/getmonthscaleperformancelist";
+        UserLargeScreenResponse response = restTemplate.getForEntity(url, UserLargeScreenResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenVO();
+    }
+    @Override
+    public UserLargeScreenVO getTotalAmount(){
+        String url = "http://AM-TRADE/am-trade/user_large_screen/gettotalamount";
+        UserLargeScreenResponse response = restTemplate.getForEntity(url, UserLargeScreenResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenVO();
+    }
+    @Override
+    public UserLargeScreenVO getAchievementDistributionList(){
+        String url = "http://AM-TRADE/am-trade/user_large_screen/getachievementdistributionlist";
+        UserLargeScreenResponse response = restTemplate.getForEntity(url, UserLargeScreenResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenVO();
+    }
+    @Override
+    public UserLargeScreenVO getMonthReceivedPayments(){
+        String url = "http://AM-TRADE/am-trade/user_large_screen/getmonthreceivedpayments";
+        UserLargeScreenResponse response = restTemplate.getForEntity(url, UserLargeScreenResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenVO();
+    }
+    @Override
+    public UserLargeScreenVO getUserCapitalDetails(){
+        String url = "http://AM-TRADE/am-trade/user_large_screen/getusercapitaldetails";
+        UserLargeScreenResponse response = restTemplate.getForEntity(url, UserLargeScreenResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenVO();
+    }
+
+    /**
+     * 屏幕二日业绩(新客组、老客组)
+     * @return
+     */
+    @Override
+    public UserLargeScreenTwoVO getDayScalePerformanceList() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayscaleperformancelist";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        // 查到数据为空,显示初始化
+        List<EchartsResultVO> list = new ArrayList<>();
+        EchartsResultVO vo = new EchartsResultVO();
+        vo.setCurrentOwner("暂无数据");
+        vo.setMoney("0");
+        list.add(vo);
+
+        if (null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            result.setDayScalePerformanceListNew(list);
+            result.setDayScalePerformanceListOld(list);
+            return result;
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayScalePerformanceListNew())){
+            response.getResult().setDayScalePerformanceListNew(list);
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayScalePerformanceListOld())){
+            response.getResult().setDayScalePerformanceListOld(list);
+        }
+        return response.getResult();
+    }
+
+    /**
+     * 屏幕二日回款(新客组、老客组)
+     * @return
+     */
+    @Override
+    public UserLargeScreenTwoVO getDayReceivedPayments() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayreceivedpayments";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        // 查到数据为空,显示初始化
+        List<EchartsResultVO> list = new ArrayList<>();
+        EchartsResultVO vo = new EchartsResultVO();
+        vo.setCurrentOwner("暂无数据");
+        vo.setMoney2("0");
+        vo.setMoney("0");
+        list.add(vo);
+
+        if (null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            result.setDayReceivedPaymentsNew(list);
+            result.setDayReceivedPaymentsOld(list);
+            return result;
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsNew())){
+            response.getResult().setDayReceivedPaymentsNew(list);
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsOld())){
+            response.getResult().setDayReceivedPaymentsOld(list);
+        }
+        return response.getResult();
+    }
+
+    /**
+     * 本月数据统计(新客组、老客组)
+     * @return
+     */
+    @Override
+    public UserLargeScreenTwoVO getMonthDataStatistics() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        // 查到数据为空,显示初始化
+        List<MonthDataStatisticsVO> list = new ArrayList<>();
+        MonthDataStatisticsVO vo = new MonthDataStatisticsVO();
+        vo.setCurrentOwner("暂无数据");
+        list.add(vo);
+
+        if (null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            result.setMonthDataStatisticsNew(list);
+            result.setMonthDataStatisticsOld(list);
+            return result;
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getMonthDataStatisticsNew())){
+            response.getResult().setMonthDataStatisticsNew(list);
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getMonthDataStatisticsOld())){
+            response.getResult().setMonthDataStatisticsOld(list);
+        }
+        return response.getResult();
+    }
+
+    /**
+     * 运营部月度业绩数据
+     * @return
+     */
+    @Override
+    public UserLargeScreenTwoVO getOperMonthPerformanceData() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getopermonthperformancedata";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        // 查到数据为空,显示初始化
+        if(null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            OperMonthPerformanceDataVO vo = new OperMonthPerformanceDataVO();
+            result.setOperMonthPerformanceData(vo);
+            return result;
+        }
+        return response.getResult();
+    }
+
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByAccede/"+accedeOrderId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取线上所有智投信息
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> selectAllPlan(){
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectAllPlan";
+        HjhPlanVoResponse response = restTemplate.postForEntity(url,null,HjhPlanVoResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    // 应急中心二期，历史数据上报 add by nxl start
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    @Override
+    public List<CertClaimVO> selectCertBorrowByFlg(){
+        String url = urlBase+"cert/selectCertBorrowByFlg";
+        CertClaimResponse response = restTemplate.getForEntity(url,CertClaimResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest request) {
+        String url = urlBase + "cert/getCertAccountListCustomizeVO";
+        CertAccountListResponse response = restTemplate.postForEntity(url, request, CertAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    @Override
+    public Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO){
+        String url = "http://AM-TRADE/am-trade/cert/updateCertBorrowStatusBatch";
+        IntegerResponse response = restTemplate.postForEntity(url,updateVO,IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+    /**
+     * 查找未上报的产品信息
+     * @return
+     */
+    @Override
+    public List<CertProductVO> selectCertProductList(){
+        String url = urlBase+"cert/selectCertProductList";
+        CertProductResponse response = restTemplate.getForEntity(url,CertProductResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 批量更新产品信息
+     * @param updateVO
+     * @return
+     */
+    @Override
+    public Integer updateCertProductBatch(CertProductUpdateVO updateVO){
+        String url = "http://AM-TRADE/am-trade/cert/updateCertProductBatch";
+        IntegerResponse response = restTemplate.postForEntity(url,updateVO,IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+
+    /**
+     * 根据原投资订单号查找转让信息
+     *
+     * @param sellOrderId
+     * @return add by nxl
+     */
+    @Override
+    public List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/selectCreditBySellOrderId/"+sellOrderId;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url,  HjhDebtCreditResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getBorrowNidList() {
+        String url = "http://AM-TRADE/am-trade/cert/getBorrowNidList";
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
+    // 应急中心二期，历史数据上报 add by nxl end
 }

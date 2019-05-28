@@ -20,6 +20,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -58,7 +59,15 @@ public class AdminUserServiceImpl implements AdminUserService {
 	public List<AdminCustomize> getRecordList(AdminCustomize adminCustomize) {
 		return adminCustomizeMapper.selectAdminList(adminCustomize);
 	}
-
+	/**
+	 * 获取账户列表
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer selectAdminListCount(AdminCustomize adminCustomize) {
+		return adminCustomizeMapper.selectAdminListCount(adminCustomize);
+	}
 	/**
 	 * 获取单个账户
 	 *
@@ -312,4 +321,10 @@ public class AdminUserServiceImpl implements AdminUserService {
 		}
 		return null;
     }
+
+    @Override
+    public List<Admin> getAdminUser(Integer[] userId){
+
+		return adminCustomizeMapper.selectByUserId(userId);
+	}
 }

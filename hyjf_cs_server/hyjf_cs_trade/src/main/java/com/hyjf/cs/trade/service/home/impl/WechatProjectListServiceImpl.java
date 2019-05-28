@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.home.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
@@ -29,6 +30,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -236,16 +238,16 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
             borrowProjectInfoBean.setBorrowProgress(borrow.getBorrowSchedule());
             borrowProjectInfoBean.setOnTime(borrow.getOnTime());
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
-            borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
+            borrowProjectInfoBean.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr()));
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             if (StringUtils.isNotBlank(borrow.getIncreaseInterestFlag()) && borrow.getIncreaseInterestFlag().equals("1")){
-                borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
+                borrowProjectInfoBean.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(borrow.getBorrowExtraYield()));
             }else{
                 borrowProjectInfoBean.setBorrowExtraYield("");
             }
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
-            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
+            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权 8:逾期中
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
@@ -464,6 +466,8 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                         break;
                     case "7":
                         statusDescribe = "待授权";
+                    case "8":
+                        statusDescribe = "逾期中";
                         break;
                     default:
                         break;
@@ -629,7 +633,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                 WechatPlanBorrowResultBean.BorrowList borrow = null;
                 for (DebtPlanBorrowCustomizeVO entity : consumeList) {
                     borrow = new WechatPlanBorrowResultBean.BorrowList();
-                    borrow.setBorrowApr(entity.getBorrowApr());
+                    borrow.setBorrowApr(FormatRateUtil.formatBorrowApr(entity.getBorrowApr()));
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
                     borrow.setTrueName(entity.getTrueName());
@@ -673,7 +677,10 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
 
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(planNid);
-        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+        // mod by nxl 修改统计数量
+        // 统计最后三天的服务记录
+//        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+        int recordTotal = this.amTradeClient.countPlanAccedeRecord(request);
 
         // 加入总人次
         result.setUserCount(recordTotal);
@@ -1121,7 +1128,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
             projectInfo.setStatus("0");
         }
 
-        projectInfo.setPlanApr(customize.getPlanApr());
+        projectInfo.setPlanApr(FormatRateUtil.formatBorrowApr(customize.getPlanApr()));
         projectInfo.setPlanPeriod(customize.getPlanPeriod());
         projectInfo.setPlanPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(customize.getBorrowStyle()));
 
@@ -1256,6 +1263,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
         //WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
 
         List<WechatHomeProjectListVO> tempList  = amTradeClient.getWechatProjectList(projectMap);
+        logger.info("微信端首页数据 tempList：{}", JSON.toJSONString(tempList));
         List<WechatHomeProjectListVO> list = new ArrayList<>();
         WechatHomeProjectListVO temp ;
         for (WechatHomeProjectListVO vo1 : tempList){
@@ -1313,6 +1321,8 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
 
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         for (WechatHomeProjectListVO wechatHomeProjectListCustomize : list) {
+        	wechatHomeProjectListCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(wechatHomeProjectListCustomize.getBorrowApr()));
+        	wechatHomeProjectListCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(wechatHomeProjectListCustomize.getBorrowExtraYield()));
             if ("HJH".equals(wechatHomeProjectListCustomize.getBorrowType())) {
                 if ("1".equals(wechatHomeProjectListCustomize.getStatus())) {
                     wechatHomeProjectListCustomize.setStatus("20");
@@ -1338,6 +1348,8 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                         case "14":
                             wechatHomeProjectListCustomize.setOnTime("已退出");
                             break;
+                        case "16":
+                            wechatHomeProjectListCustomize.setOnTime("逾期中");
                     }
 
                 } else {
@@ -1352,6 +1364,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
         // 字段为null时，转为""
         CommonUtils.convertNullToEmptyString(list);
         vo.setHomeProjectList(list);
+        logger.info("微信端散标列表接口 VO:{}", JSON.toJSONString(vo));
         return vo;
     }
 
@@ -1374,10 +1387,10 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                 customize.setBorrowNid(project.getBorrowNid());
                 customize.setBorrowName(project.getBorrowName());
                 customize.setBorrowType(project.getBorrowType());
-                customize.setBorrowApr(project.getBorrowApr());
+                customize.setBorrowApr(FormatRateUtil.formatBorrowApr(project.getBorrowApr()));
                 customize.setBorrowPeriod(project.getBorrowPeriodInt() + "");
                 customize.setBorrowPeriodType(project.getBorrowPeriodType());
-                customize.setBorrowExtraYield(project.getBorrowExtraYield());
+                customize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(project.getBorrowExtraYield()));
                 if ("0".equals(project.getOnTime()) || "".equals(project.getOnTime())) {
                     switch (project.getStatus()) {
                         case "10":
@@ -1394,6 +1407,9 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                             break;
                         case "14":
                             customize.setOnTime("已退出");
+                            break;
+                        case "16":
+                            customize.setOnTime("逾期中");
                             break;
                     }
 

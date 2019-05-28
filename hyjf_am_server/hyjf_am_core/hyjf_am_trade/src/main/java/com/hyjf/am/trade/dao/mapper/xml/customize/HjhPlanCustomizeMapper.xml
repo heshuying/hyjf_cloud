@@ -656,6 +656,10 @@ ORDER BY
 		FROM
 			ht_hjh_accede
 			where plan_nid = #{planNid}
+			-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime !=null" >
+			AND ht_hjh_accede.create_time between #{startTime} and #{endTime}
+		</if>
 	</select>
 
 	<select id="getPlanAccedeList" resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO"  parameterType="Map">
@@ -677,6 +681,10 @@ ORDER BY
 		LEFT JOIN ht_r_user hui ON hui.user_id = dpa.user_id
 		-- LEFT JOIN ht_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
 		WHERE dpa.plan_nid=#{planNid}
+		-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime !=null" >
+			AND dpa.create_time between #{startTime} and #{endTime}
+		</if>
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -985,6 +993,10 @@ ORDER BY
 		FROM
 		ht_hjh_accede dpa
 		WHERE dpa.plan_nid=#{planNid}
+		-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime!=null" >
+			AND dpa.create_time between #{startTime} and #{endTime}
+		</if>
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -1120,7 +1132,7 @@ ORDER BY
 		AND hbrp.borrow_nid = hb.borrow_nid
 		AND hbrp.recover_period = hb.borrow_period
 		WHERE
-		hb.`status` in (3,4,5)
+		hb.`status` in (3,4,5,8)
 		AND
 		hbt.accede_order_id = #{accedeOrderId}
 		)
@@ -1195,11 +1207,38 @@ ORDER BY
 				LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
 				LEFT JOIN ht_borrow_recover hbr ON hbt.nid = hbr.nid
 				WHERE
-				hb.`status` in (3,4,5)
+				hb.`status` in (3,4,5,8)
 				AND
 				hbt.accede_order_id = #{accedeOrderId}
 				)
 		) AS a
 	</select>
 
+	<!-- 统计最后三天的服务记录 add by nxl-->
+	<select id="countPlanAccedeRecord" resultType="java.lang.Integer" parameterType="String">
+		SELECT count(dpa.accede_order_id)
+		FROM
+		ht_hjh_accede dpa
+		WHERE dpa.plan_nid=#{planNid}
+		-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime!=null" >
+			AND dpa.create_time between #{startTime} and #{endTime}
+		</if>
+	</select>
+
+    <!--获取计划的加入的最后三天日期-->
+    <!--add by nxl-->
+	<select id="selectLastThreeDate"  resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO" parameterType="String">
+		SELECT
+		  DATE_FORMAT(da.create_time, '%Y-%m-%d') as accedeTime
+		FROM
+			ht_hjh_accede da
+		WHERE
+			da.plan_nid = #{planNid}
+		GROUP BY
+			DATE_FORMAT(da.create_time, '%Y-%m-%d')
+		ORDER BY
+			da.create_time DESC
+		LIMIT 3
+	</select>
 </mapper>

@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -273,6 +274,36 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据sourceID 获取渠道信息
+	 * @param sourceId
+	 * @return
+	 */
+	@Override
+	public UtmVO selectUtmBySourceId(String sourceId) {
+
+		UtmVOResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/utm/selectUtmBySourceId/" + sourceId,
+						UtmVOResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 *
+	 * @param userId
+	 */
+	@Override
+	public void unlockUser(Integer userId) {
+		String url = userService+"/user/unlockUser/"+userId;
+		restTemplate.postForEntity(url, null, BooleanResponse.class);
+	}
+
 	/**
 	 * 保存验证码
 	 * @param mobile
