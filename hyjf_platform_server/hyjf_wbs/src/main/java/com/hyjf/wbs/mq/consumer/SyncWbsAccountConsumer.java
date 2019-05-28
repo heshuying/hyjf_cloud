@@ -80,8 +80,10 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
             List<Integer> utmId = new ArrayList<Integer>();
             utmId.add(wbsConfig.getUtmNami());//纳觅渠道编号
             utmId.add(wbsConfig.getUtmYufengrui());//纳觅渠道编号
-            utmId.add(wbsConfig.getUtmDatang());//纳觅渠道编号
-            utmId.add(wbsConfig.getUtmQianle());//纳觅渠道编号
+
+            //TODO:第一期只推送纳觅数据
+            //utmId.add(wbsConfig.getUtmDatang());//大唐渠道编号
+            //utmId.add(wbsConfig.getUtmQianle());//千乐渠道编号
 
 
             UtmReg utmReg = utmRegService.selectUtmInfo(Integer.valueOf(userId), utmId);
@@ -103,7 +105,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 } else {
                     customerSyncQO.setPlatformAccountOpeningTime(bankOpenAccountRecordCustomize.getOpenTime());
                     customerSyncQO.setName(bankOpenAccountRecordCustomize.getRealName());
-                    customerSyncQO.setDocumentNoMd5(bankOpenAccountRecordCustomize.getIdCard());
+                    customerSyncQO.setDocumentNo(bankOpenAccountRecordCustomize.getIdCard());
                 }
                 customerSyncQO.setAssetCustomerId(userId);
                 if (!getEntId(utmReg.getUtmId()).isEmpty()) {

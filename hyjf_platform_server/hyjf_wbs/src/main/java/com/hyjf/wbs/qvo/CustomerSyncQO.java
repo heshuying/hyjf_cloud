@@ -17,6 +17,8 @@ public class CustomerSyncQO {
 	private String name;
 	//客户证件号
 	private String documentNoMd5;
+	//客户明文证件号
+	private String documentNo;
 	// 资产端客户编号
 	private String assetCustomerId;
 	// 财富端客户id
@@ -41,6 +43,14 @@ public class CustomerSyncQO {
 	private Double precipitatedCapital;
 	// 待收资金
 	private Double fundsToBeCollected;
+
+	public String getDocumentNo() {
+		return documentNo;
+	}
+
+	public void setDocumentNo(String documentNo) {
+		this.documentNo = documentNo;
+	}
 
 	public String getName() {
 		return name;
