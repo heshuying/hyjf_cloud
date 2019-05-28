@@ -276,6 +276,7 @@
         where  t.order_by_status_name=1
         AND 1=2
         )
+        UNION ALL
         (SELECT
         hydbpt.borrow_class AS borrow_type,
         hydb.borrow_nid,
