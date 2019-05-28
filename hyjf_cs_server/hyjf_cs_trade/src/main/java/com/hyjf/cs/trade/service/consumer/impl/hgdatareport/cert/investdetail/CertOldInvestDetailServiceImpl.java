@@ -492,7 +492,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowTenderCpnList.get(0).getBorrowNid());
+		param.put("sourceFinancingCode", "-1");
 		//交易类型
 		param.put("transType", "41");
 		//交易金额
@@ -543,7 +543,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowTenderCpnList.get(0).getBorrowNid());
+		param.put("sourceFinancingCode", "-1");
 		//交易类型
 		param.put("transType", "10");
 		//交易金额
