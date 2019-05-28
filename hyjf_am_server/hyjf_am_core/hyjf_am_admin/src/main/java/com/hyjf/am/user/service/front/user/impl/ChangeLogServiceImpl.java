@@ -130,10 +130,10 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
                 changeLog.setUpdateTime(new Date());
                 ChangeLogCustomize changeLogByUser = new ChangeLogCustomize();
                 changeLogByUser.setUserId(logRecord.getUserId());
-                // 修改渠道
-                int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
                 // 判断是否为第一次修改
                 int userLogCount =  changeLogCustomizeMapper.queryChangeLogByUserIdCount(changeLogByUser);
+                // 修改渠道
+                int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
                 if(userLogCount < 1 && !("NoChannelInformation").equals(userChangeLog.getSourceIdWasName())){
                     // 原渠道记录
                     changeLog.setRemark("该记录为用户原渠道记录");

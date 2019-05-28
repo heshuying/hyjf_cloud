@@ -21,6 +21,7 @@
     <result column="idcard" property="idCard" jdbcType="VARCHAR" />
 	<result column="utm_type" property="utmType" jdbcType="VARCHAR" />
 	<result column="utm_source_id" property="utmSourceId" jdbcType="VARCHAR" />
+	<result column="utm_name" property="utmName" jdbcType="VARCHAR" />
   </resultMap>
 
 	<sql id="where-all-page-condition">
