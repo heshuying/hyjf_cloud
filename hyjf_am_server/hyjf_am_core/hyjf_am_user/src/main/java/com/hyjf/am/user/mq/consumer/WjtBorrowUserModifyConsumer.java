@@ -70,7 +70,7 @@ public class WjtBorrowUserModifyConsumer implements RocketMQListener<MessageExt>
         // 更新用户机构编号
         this.wjtBorrowUserModifyService.modifyUserInstCode(borrowUser);
         // 如果渠道不存在,插入将借款人插入渠道
-        if (!wjtBorrowUserModifyService.findUtmReg(userId)) {
+        if (!wjtBorrowUserModifyService.utmRegByUserId(userId)) {
             this.wjtBorrowUserModifyService.insertBorrowUserUtmReg(userId, wjtChannel);
         }
         return;

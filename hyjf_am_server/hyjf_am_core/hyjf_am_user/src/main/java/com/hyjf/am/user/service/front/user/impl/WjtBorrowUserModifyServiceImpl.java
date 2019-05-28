@@ -35,7 +35,7 @@ public class WjtBorrowUserModifyServiceImpl extends BaseServiceImpl implements W
      * @return
      */
     @Override
-    public boolean findUtmReg(String userId) {
+    public boolean utmRegByUserId(String userId) {
         UtmRegExample example = new UtmRegExample();
         UtmRegExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(Integer.parseInt(userId));

@@ -26,7 +26,7 @@ public interface WjtBorrowUserModifyService extends BaseService {
      * @param userId
      * @return
      */
-    boolean findUtmReg(String userId);
+    boolean utmRegByUserId(String userId);
 
     /**
      * ch'ru
