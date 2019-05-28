@@ -44,7 +44,7 @@ public class AemsOverdueController {
         Integer t = GetDate.getDayStart10(GetDate.getNowTime());
         params.put("repayTime",t);
         params.put("repayTimeStart",GetDate.getDayStart10(GetDate.countDate(new Date(),5,-1)));
-
+        //增加时间只查昨天的标的
         logger.info("判断当期是否逾期请求参数为params:" + JSONObject.toJSONString(params));
         AemsOverdueCustomizeResponse response = new AemsOverdueCustomizeResponse();
         //查询borrowRepay表
