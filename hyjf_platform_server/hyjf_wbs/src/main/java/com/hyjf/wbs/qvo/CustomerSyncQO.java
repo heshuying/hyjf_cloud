@@ -15,6 +15,7 @@ public class CustomerSyncQO {
 
 	//客户真实姓名
 	private String name;
+	private String mobile;
 	//客户md5证件号
 	private String documentNoMd5;
 	//客户明文证件号
@@ -44,7 +45,13 @@ public class CustomerSyncQO {
 	// 待收资金
 	private Double fundsToBeCollected;
 
+	public String getMobile() {
+		return mobile;
+	}
 
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
 	public String getName() {
 		return name;

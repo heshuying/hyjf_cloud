@@ -43,6 +43,9 @@
     <sql id="Bank_Where_Clause">
         <where>
             hydu.bank_open_account = 1
+            <if test="userId != null and userId !='' ">
+                AND hydu.user_id =  #{userId,jdbcType=INTEGER}
+            </if>
             <if test="userName != null and userName !='' ">
                 AND hydu.username LIKE CONCAT(#{userName,jdbcType=VARCHAR}, '%')
             </if>
