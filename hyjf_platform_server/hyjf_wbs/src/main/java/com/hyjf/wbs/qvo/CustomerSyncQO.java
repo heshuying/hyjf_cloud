@@ -44,13 +44,7 @@ public class CustomerSyncQO {
 	// 待收资金
 	private Double fundsToBeCollected;
 
-	public String getDocumentNo() {
-		return documentNo;
-	}
 
-	public void setDocumentNo(String documentNo) {
-		this.documentNo = documentNo;
-	}
 
 	public String getName() {
 		return name;
