@@ -143,7 +143,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void insertRefferUtmReg(User refferUser, Integer userId, String utmId, String platform, Integer attribute){
         Boolean refferUtmFlag = true;
         // 判断是否为线下线上员工（是员工走以下逻辑）
-        if(attribute == 1){
+        if(attribute!=null&&attribute == 1){
             // 推荐人不为空时
             if (refferUser != null) {
                 String regUtmid;
