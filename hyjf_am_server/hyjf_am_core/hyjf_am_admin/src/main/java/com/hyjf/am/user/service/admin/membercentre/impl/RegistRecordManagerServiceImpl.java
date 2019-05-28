@@ -41,9 +41,11 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
             //
             Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> userType = CacheUtil.getParamNameMap("USER_TYPE");
             for (RegistRecordCustomize registRecordCustomize : listRegistRecord) {
                 registRecordCustomize.setUserProperty(userProperty.getOrDefault(registRecordCustomize.getUserProperty(), null));
                 registRecordCustomize.setRegistPlat(client.getOrDefault(registRecordCustomize.getRegistPlat(), null));
+                registRecordCustomize.setUserType(userType.getOrDefault(registRecordCustomize.getUserType(), null));
             }
         }
         return listRegistRecord;
@@ -76,9 +78,11 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
         if (listRegistRecord!=null) {
             Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> userType = CacheUtil.getParamNameMap("USER_TYPE");
             listRegistRecord.setRegistPlatCode(listRegistRecord.getRegistPlat());
             listRegistRecord.setUserProperty(userProperty.getOrDefault(listRegistRecord.getUserProperty(), null));
             listRegistRecord.setRegistPlat(client.getOrDefault(listRegistRecord.getRegistPlat(), null));
+            listRegistRecord.setUserType(userType.getOrDefault(listRegistRecord.getUserType(), null));
         }
         return listRegistRecord;
     }
