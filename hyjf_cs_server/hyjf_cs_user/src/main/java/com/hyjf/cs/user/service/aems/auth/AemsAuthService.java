@@ -30,9 +30,11 @@ public interface AemsAuthService extends BaseUserService {
     /**
      * 校验用户角色和授权类型是否一致
      * @param authBean
+     * @param authTypeString
+     * @param paramMap
      * @return
      */
-    Map<String,String> checkUserRoleAndAuthType(AuthBean authBean, String authTypeString);
+    Map<String,String> checkUserRoleAndAuthType(AuthBean authBean, String authTypeString, Map<String, String> paramMap);
 
     /**
      * 补充数据，请求银行
