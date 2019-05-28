@@ -21,6 +21,8 @@ public class AdminInstConfigListRequest extends BasePage {
     private String instName;
     @ApiModelProperty(value = "机构类别")
     private Integer instType;
+    @ApiModelProperty(value = "担保公司名称")
+    private String cooperativeAgency;
     @ApiModelProperty(value = "额度上限")
     private BigDecimal capitalToplimit;
     @ApiModelProperty(value = "提现手续费")
@@ -117,5 +119,13 @@ public class AdminInstConfigListRequest extends BasePage {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getCooperativeAgency() {
+        return cooperativeAgency;
+    }
+
+    public void setCooperativeAgency(String cooperativeAgency) {
+        this.cooperativeAgency = cooperativeAgency;
     }
 }
