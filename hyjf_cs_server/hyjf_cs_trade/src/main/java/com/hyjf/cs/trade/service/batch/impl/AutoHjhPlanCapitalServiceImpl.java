@@ -225,13 +225,24 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             BigDecimal addReinvestAccount = sumReinvestAccount;
             // 计算当日新增复投额
             if(hjhPlanCapitalActualResponse != null){
+                // 判断有没有昨日planid对应的计划
+                boolean planFlag = true;
                 for(HjhPlanCapitalActualVO actualVOLs: hjhPlanCapitalActualResponse.getResultList()){
                     if(actualVO.getPlanNid().equals(actualVOLs.getPlanNid())){
                         // 当日新增复投额 实际值：当日可复投额-昨日未复投额
                         addReinvestAccount = addReinvestAccount.subtract(actualVOLs.getLeaveReinvestAccount());
                         // 将当日新增复投额set到list的bean中
                         actualVO.setAddReinvestAccount(addReinvestAccount);
+                        // 有取到前一天的计划
+                        planFlag = false;
                      }
+                }
+                // 没有取到前一天的计划（有数据但是没有对应的标的数据）
+                if(planFlag){
+                    // 如果没有取到前一天的计划（没有数据）且 当日可复投额不为零
+                    if(!BigDecimal.ZERO.equals(addReinvestAccount)){
+                        actualVO.setAddReinvestAccount(addReinvestAccount);
+                    }
                 }
             }else{
                 // 如果没有取到前一天的计划（没有数据）且 当日可复投额不为零
