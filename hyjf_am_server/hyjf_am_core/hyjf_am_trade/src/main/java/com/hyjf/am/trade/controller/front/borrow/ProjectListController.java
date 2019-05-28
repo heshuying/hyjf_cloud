@@ -64,7 +64,6 @@ public class ProjectListController extends BaseController {
         logger.info("web端散标列表 requestBean:{}", JSON.toJSONString(request));
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
-        logger.info("web端散标列表 list:{}", JSON.toJSONString(list));
         // add by nxl 判断是否为产品加息 start
         if(null!=list&&list.size()>0){
             for(WebProjectListCustomize webProjectListCustomize:list){
