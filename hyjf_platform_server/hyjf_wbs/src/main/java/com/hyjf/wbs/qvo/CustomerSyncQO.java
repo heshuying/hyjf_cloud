@@ -15,7 +15,7 @@ public class CustomerSyncQO {
 
 	//客户真实姓名
 	private String name;
-	//客户证件号
+	//客户md5证件号
 	private String documentNoMd5;
 	//客户明文证件号
 	private String documentNo;
@@ -66,6 +66,14 @@ public class CustomerSyncQO {
 
 	public void setDocumentNoMd5(String documentNoMd5) {
 		this.documentNoMd5 = documentNoMd5;
+	}
+
+	public String getDocumentNo() {
+		return documentNo;
+	}
+
+	public void setDocumentNo(String documentNo) {
+		this.documentNo = documentNo;
 	}
 
 	public String getAssetCustomerId() {
