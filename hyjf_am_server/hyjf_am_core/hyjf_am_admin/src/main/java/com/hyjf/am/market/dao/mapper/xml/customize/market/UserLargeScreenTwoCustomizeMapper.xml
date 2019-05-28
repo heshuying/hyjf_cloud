@@ -16,7 +16,7 @@
 			customer_group AS flag, current_owner AS customerName, CURDATE() AS queryTime, ROUND(add_share, 0) AS capitalIncrease,
 			ROUND(IFNULL(numerator / denominator, 0), 2) AS cashWithdrawalRate, ROUND(end_balance, 0) AS nowBalance
 		FROM(
-			SELECT sum(IFNULL(recharge - withdraw + start_balance - end_balance, 0)) AS add_share, sum(end_balance) AS end_balance,
+			SELECT sum(IF(recharge - withdraw + start_balance - end_balance &lt; 0, 0, recharge - withdraw + start_balance - end_balance)) AS add_share, sum(end_balance) AS end_balance,
 			sum(IF (
 			IF((withdraw - recharge) &lt; (start_balance + recover_account_yes), withdraw - recharge, start_balance + recover_account_yes) &lt; 0, 0,
 			IF((withdraw - recharge) &lt; (start_balance + recover_account_yes), withdraw - recharge, start_balance + recover_account_yes)
