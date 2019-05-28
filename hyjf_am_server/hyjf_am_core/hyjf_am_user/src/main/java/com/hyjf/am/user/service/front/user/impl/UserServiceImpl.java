@@ -158,22 +158,22 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                         this.insertUtmReg(userId, regUtmid);
                         // 不再进行默认渠道插入
                         refferUtmFlag = false;
-                        logger.error("插入推荐人渠道 如果有推荐人，用户注册渠道=推荐人注册渠道 userId：" + userId +"  regUtmid： "+ regUtmid);
+                        logger.info("插入推荐人渠道 如果有推荐人，用户注册渠道=推荐人注册渠道 userId：" + userId +"  regUtmid： "+ regUtmid);
                     }
                 }else{
-                    logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人渠道为空！ （走默认推广）");
+                    logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人渠道为空！ （走默认推广）");
                 }
             }else{
-                logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人为空！ （走默认推广）");
+                logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人为空！ （走默认推广）");
             }
         }else{
-            logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人非员工！ （走默认推广）");
+            logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人非员工！ （走默认推广）");
         }
         if(refferUtmFlag){
             // 默认推广，插入utmReg表
             if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
                 this.insertUtmReg(userId, utmId);
-                logger.error("插入推荐人渠道 默认推广 userId：" + userId +"  utmId： "+ utmId);
+                logger.info("插入推荐人渠道 默认推广 userId：" + userId +"  utmId： "+ utmId);
             }
         }
     }
