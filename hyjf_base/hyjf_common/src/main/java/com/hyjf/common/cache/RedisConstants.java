@@ -583,3 +583,9 @@ public class RedisConstants {
      */
     public static final String APP_RECHARGE = "app_recharge:";
 }
+
+    /**
+     * redis配置是否可修改手机号
+     */
+    public static final String BANK_MOBILE_MODIFY_FLAG = "BANK_MOBILE_MODIFY_FLAG";
+}

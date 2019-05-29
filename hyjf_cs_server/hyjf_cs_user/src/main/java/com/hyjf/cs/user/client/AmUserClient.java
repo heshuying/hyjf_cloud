@@ -648,4 +648,27 @@ public interface AmUserClient {
 	 * @param userId
 	 */
 	void unlockUser(Integer userId);
+
+	/**
+	 * 插入修改银行预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	boolean insertBankMobileModify(BankMobileModifyVO vo);
+
+	/**
+	 * 更新用户银行预留手机号
+	 *
+	 * @param userId
+	 * @param newBankMobile
+	 */
+    boolean updateBankMobileByUserId(int userId, String newBankMobile);
+
+	/**
+	 * 更新用户修改预留手机号日志表
+	 * @param vo
+	 * @return
+	 */
+	boolean updateBankMobileModify(BankMobileModifyVO vo);
 }

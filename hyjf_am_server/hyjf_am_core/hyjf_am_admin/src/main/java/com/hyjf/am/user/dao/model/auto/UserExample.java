@@ -325,6 +325,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andBankMobileIsNull() {
+            addCriterion("bank_mobile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileIsNotNull() {
+            addCriterion("bank_mobile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileEqualTo(String value) {
+            addCriterion("bank_mobile =", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotEqualTo(String value) {
+            addCriterion("bank_mobile <>", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileGreaterThan(String value) {
+            addCriterion("bank_mobile >", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileGreaterThanOrEqualTo(String value) {
+            addCriterion("bank_mobile >=", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileLessThan(String value) {
+            addCriterion("bank_mobile <", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileLessThanOrEqualTo(String value) {
+            addCriterion("bank_mobile <=", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileLike(String value) {
+            addCriterion("bank_mobile like", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotLike(String value) {
+            addCriterion("bank_mobile not like", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileIn(List<String> values) {
+            addCriterion("bank_mobile in", values, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotIn(List<String> values) {
+            addCriterion("bank_mobile not in", values, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileBetween(String value1, String value2) {
+            addCriterion("bank_mobile between", value1, value2, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotBetween(String value1, String value2) {
+            addCriterion("bank_mobile not between", value1, value2, "bankMobile");
+            return (Criteria) this;
+        }
+
         public Criteria andEmailIsNull() {
             addCriterion("email is null");
             return (Criteria) this;

@@ -33,4 +33,7 @@ public class UserOperationLogConstant {
     /** 风险测评  */
     public static final int USER_OPERATION_LOG_TYPE12 = 12;
 
+    /** */
+    public static final int USER_OPERATION_LOG_TYPE13 = 13;
+
 }

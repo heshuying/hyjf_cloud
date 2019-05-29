@@ -5,6 +5,7 @@
     <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="bank_mobile" property="bankMobile" jdbcType="CHAR" />
     <result column="role_id" property="roleId" jdbcType="TINYINT" />
     <result column="truename" property="truename" jdbcType="VARCHAR" />
     <result column="attribute" property="attribute" jdbcType="INTEGER" />
@@ -72,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, mobile, role_id, truename, `attribute`, spreads_user_id, user_type, 
-    create_time, update_time
+    user_id, username, mobile, bank_mobile, role_id, truename, `attribute`, spreads_user_id, 
+    user_type, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.RUserExample" >
     select
@@ -110,13 +111,13 @@
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.RUser" >
     insert into ht_r_user (user_id, username, mobile, 
-      role_id, truename, `attribute`, 
-      spreads_user_id, user_type, create_time, 
-      update_time)
+      bank_mobile, role_id, truename, 
+      `attribute`, spreads_user_id, user_type, 
+      create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, 
-      #{roleId,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, 
-      #{spreadsUserId,jdbcType=INTEGER}, #{userType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{bankMobile,jdbcType=CHAR}, #{roleId,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, 
+      #{attribute,jdbcType=INTEGER}, #{spreadsUserId,jdbcType=INTEGER}, #{userType,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.RUser" >
     insert into ht_r_user
@@ -129,6 +130,9 @@
       </if>
       <if test="mobile != null" >
         mobile,
+      </if>
+      <if test="bankMobile != null" >
+        bank_mobile,
       </if>
       <if test="roleId != null" >
         role_id,
@@ -161,6 +165,9 @@
       </if>
       <if test="mobile != null" >
         #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="bankMobile != null" >
+        #{bankMobile,jdbcType=CHAR},
       </if>
       <if test="roleId != null" >
         #{roleId,jdbcType=TINYINT},
@@ -203,6 +210,9 @@
       <if test="record.mobile != null" >
         mobile = #{record.mobile,jdbcType=CHAR},
       </if>
+      <if test="record.bankMobile != null" >
+        bank_mobile = #{record.bankMobile,jdbcType=CHAR},
+      </if>
       <if test="record.roleId != null" >
         role_id = #{record.roleId,jdbcType=TINYINT},
       </if>
@@ -234,6 +244,7 @@
     set user_id = #{record.userId,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
       mobile = #{record.mobile,jdbcType=CHAR},
+      bank_mobile = #{record.bankMobile,jdbcType=CHAR},
       role_id = #{record.roleId,jdbcType=TINYINT},
       truename = #{record.truename,jdbcType=VARCHAR},
       `attribute` = #{record.attribute,jdbcType=INTEGER},
@@ -253,6 +264,9 @@
       </if>
       <if test="mobile != null" >
         mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="bankMobile != null" >
+        bank_mobile = #{bankMobile,jdbcType=CHAR},
       </if>
       <if test="roleId != null" >
         role_id = #{roleId,jdbcType=TINYINT},
@@ -282,6 +296,7 @@
     update ht_r_user
     set username = #{username,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=CHAR},
+      bank_mobile = #{bankMobile,jdbcType=CHAR},
       role_id = #{roleId,jdbcType=TINYINT},
       truename = #{truename,jdbcType=VARCHAR},
       `attribute` = #{attribute,jdbcType=INTEGER},

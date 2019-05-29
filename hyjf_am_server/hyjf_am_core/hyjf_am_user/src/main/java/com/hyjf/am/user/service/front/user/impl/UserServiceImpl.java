@@ -1597,6 +1597,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if (StringUtils.isNotBlank(user.getMobile())) {
             result.setMobile(user.getMobile());
         }
+        // 获取用户信息时增加银行预留手机号获取
+        if (StringUtils.isNotBlank(user.getBankMobile())) {
+            result.setBankMobile(user.getBankMobile());
+        }
         if (StringUtils.isNotBlank(user.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);

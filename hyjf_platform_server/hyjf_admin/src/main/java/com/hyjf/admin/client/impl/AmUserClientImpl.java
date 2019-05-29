@@ -2959,4 +2959,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return result.getResultInt();
 	}
+
+	/**
+	 * 同步用户手机号
+	 *
+	 * @param userRequest
+	 * @return
+	 */
+	@Override
+	public boolean syncUserMobile(UserRequest userRequest) {
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/syncUserMobile", userRequest, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

@@ -211,6 +211,7 @@ public class ShiroConstants {
 	/** 用户销户权限 */
 	public static final String PERMISSION_BANK_CANCELLATION_ACCOUNT ="CANCELLATIONACCOUNT";
 
-
+	/** 同步用户预留手机号*/
+	public static final String PERMISSION_SYNC_USER_MOBILE = "syncUserMobile";
 
 }

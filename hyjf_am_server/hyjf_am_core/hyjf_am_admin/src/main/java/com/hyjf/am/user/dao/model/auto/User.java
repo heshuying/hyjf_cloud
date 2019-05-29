@@ -21,6 +21,13 @@ public class User implements Serializable {
     private String mobile;
 
     /**
+     * 银行预留手机号
+     *
+     * @mbggenerated
+     */
+    private String bankMobile;
+
+    /**
      * 邮箱
      *
      * @mbggenerated
@@ -84,7 +91,7 @@ public class User implements Serializable {
     private Integer ifReceiveNotice;
 
     /**
-     * 投标成功短信 0发送 1不发送
+     * 投资成功短信 0发送 1不发送
      *
      * @mbggenerated
      */
@@ -186,7 +193,7 @@ public class User implements Serializable {
     private Integer isCaFlag;
 
     /**
-     * 是否发送出借协议邮件 0发送 1不发送
+     * 是否发送投资协议邮件 0发送 1不发送
      *
      * @mbggenerated
      */
@@ -244,6 +251,14 @@ public class User implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile == null ? null : mobile.trim();
+    }
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile == null ? null : bankMobile.trim();
     }
 
     public String getEmail() {

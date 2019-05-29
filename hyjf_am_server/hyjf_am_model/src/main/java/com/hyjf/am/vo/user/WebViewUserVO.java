@@ -31,6 +31,11 @@ public class WebViewUserVO extends BaseVO implements Serializable {
 
     private String mobile = "";
 
+    /**
+     * 银行预留手机号
+     */
+    private String bankMobile = "";
+
     private String iconUrl ="";
 
     private Date evaluationExpiredTime;
@@ -371,5 +376,12 @@ public class WebViewUserVO extends BaseVO implements Serializable {
 	public void setPaymentAuthStatus(Integer paymentAuthStatus) {
 		this.paymentAuthStatus = paymentAuthStatus;
 	}
-    
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile;
+    }
 }

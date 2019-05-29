@@ -14,8 +14,12 @@ import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringUtil;
@@ -1742,5 +1746,42 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         example.setOrderByClause("create_time desc");
         return this.bankCancellationAccountMapper.selectByExample(example);
+    }
+
+
+    /**
+     * 更新用户手机号
+     *
+     * @param userId
+     * @param bankMobile
+     * @param ip
+     * @return
+     */
+    @Override
+    public boolean updateUserMobile(Integer userId, String bankMobile, String ip) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
+        User user = this.userMapper.selectByPrimaryKey(userId);
+        // 原手机号
+        String oldBankMobile = user.getBankMobile();
+        user.setBankMobile(bankMobile);
+        boolean isUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
+        if (!isUpdateFlag) {
+            throw new RuntimeException("更新用户银行预留手机号失败,用户ID:[" + userId + "].");
+        }
+        // 插入用户操作明细
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setIp(ip);
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("原手机号:" + oldBankMobile);
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
+        try {
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
+        return isUpdateFlag;
     }
 }

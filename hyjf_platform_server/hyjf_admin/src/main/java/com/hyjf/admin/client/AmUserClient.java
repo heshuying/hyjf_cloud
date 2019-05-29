@@ -1438,4 +1438,12 @@ public interface AmUserClient {
     void insertBatchSmsCount(ListRequest request);
 
     void updateOrDelectRepeatData();
+
+    /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    boolean syncUserMobile(UserRequest userRequest);
 }
