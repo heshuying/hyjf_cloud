@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
+import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.ScreenDataCustomizeMapper;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -59,8 +61,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Autowired
     ScreenDataCustomizeMapper screenDataCustomizeMapper;
     @Autowired
+    AppUtmRegMapper appUtmRegMapper;
+    @Autowired
     private CommonProducer smsProducer;
-
     @Autowired
     SystemConfig systemConfig;
     /**
@@ -116,7 +119,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         }
 
         // 5. 注册用户有推荐人并插入推荐人对应渠道信息 否则 有推广，插入utmReg表
-        this.insertRefferUtmReg(refferUser,userId,utmId,platform,attribute);
+        this.insertRefferUtmReg(refferUser,user,utmId,platform,attribute);
 
         // 5. 有推广，插入utmReg表
         //if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
@@ -140,27 +143,45 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * 前端回传客户端类型 ： platform
      * */
     @Override
-    public void insertRefferUtmReg(User refferUser, Integer userId, String utmId, String platform, Integer attribute){
+    public void insertRefferUtmReg(User refferUser, User user, String utmId, String platform, Integer attribute){
         Boolean refferUtmFlag = true;
         // 判断是否为线下线上员工（是员工走以下逻辑）
         if(attribute!=null&&attribute == 1){
             // 推荐人不为空时
             if (refferUser != null) {
                 String regUtmid;
-                // 查询推荐人渠道
+                // 查询推荐人渠道（PC）
                 UtmReg reg = this.findUtmRegByUserId(refferUser.getUserId());
+                // 查询推荐人渠道（APP）
+                AppUtmReg appUtmRegVO = this.findAppUtmRegByUserId(refferUser.getUserId());
+                // 判断推荐人渠道是pc还是app
                 if(reg != null){
+                    // 插入一条新数据 （PC）
                     // 类型转换
                     regUtmid = String.valueOf(reg.getUtmId());
                     // 是否为空
                     if (StringUtils.isNotEmpty(regUtmid) &&  Validator.isNumber(regUtmid) && !(platform.equals(String.valueOf(ClientConstants.APP_CLIENT)) || platform.equals(String.valueOf(ClientConstants.APP_CLIENT_IOS)))) {
                         // 插入推荐人渠道
-                        this.insertUtmReg(userId, regUtmid);
+                        this.insertUtmReg(user.getUserId(), regUtmid);
                         // 不再进行默认渠道插入
                         refferUtmFlag = false;
-                        logger.info("插入推荐人渠道 如果有推荐人，用户注册渠道=推荐人注册渠道 userId：" + userId +"  regUtmid： "+ regUtmid);
+                        logger.info("插入推荐人渠道 如果有推荐人（PC），用户注册渠道=推荐人注册渠道 userId：" + user.getUserId() +"  regUtmid： "+ regUtmid);
                     }
-                }else{
+                }else if(appUtmRegVO != null && !(platform.equals(String.valueOf(ClientConstants.APP_CLIENT)) || platform.equals(String.valueOf(ClientConstants.APP_CLIENT_IOS)))){
+                    // 插入一条新数据 （APP）
+                    AppUtmReg appUtmRegIns = new AppUtmReg();
+                    appUtmRegIns.setSourceId(appUtmRegVO.getSourceId());
+                    appUtmRegIns.setSourceName(appUtmRegVO.getSourceName());
+                    appUtmRegIns.setUserId(user.getUserId());
+                    appUtmRegIns.setUserName(user.getUsername());
+                    appUtmRegIns.setInvestAmount(new BigDecimal(0.00));
+                    appUtmRegIns.setFirstInvestTime(0);
+                    appUtmRegIns.setRegisterTime(new Date());
+                    appUtmRegIns.setCumulativeInvest(BigDecimal.ZERO);
+                    // app渠道
+                    this.insertAppUtmReg(appUtmRegIns);
+                    logger.info("插入推荐人渠道 如果有推荐人（APP），用户注册渠道=推荐人注册渠道 userId：" + user.getUserId() +"  regUtmid： "+ appUtmRegVO.getSourceName());
+                }else {
                     logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人渠道为空！ （走默认推广）");
                 }
             }else{
@@ -172,8 +193,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if(refferUtmFlag){
             // 默认推广，插入utmReg表
             if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
-                this.insertUtmReg(userId, utmId);
-                logger.info("插入推荐人渠道 默认推广 userId：" + userId +"  utmId： "+ utmId);
+                this.insertUtmReg(user.getUserId(), utmId);
+                logger.info("插入推荐人渠道 默认推广 userId：" + user.getUserId() +"  utmId： "+ utmId);
             }
         }
     }
@@ -561,7 +582,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @param userId
      * @param utmId
      */
-    private void insertUtmReg(int userId, String utmId) {
+    @Override
+    public void insertUtmReg(int userId, String utmId) {
         UtmReg utmReg = new UtmReg();
         utmReg.setCreateTime(new Date());
         utmReg.setUtmId(Integer.parseInt(utmId));
@@ -1747,5 +1769,22 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
         String dateString = formatter.format(currentTime);
         return dateString;
+    }
+
+    @Override
+    public AppUtmReg findAppUtmRegByUserId(Integer userId) {
+        AppUtmRegExample example = new AppUtmRegExample();
+        AppUtmRegExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        List<AppUtmReg> list = appUtmRegMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public void insertAppUtmReg(AppUtmReg entity) {
+        appUtmRegMapper.insertSelective(entity);
     }
 }

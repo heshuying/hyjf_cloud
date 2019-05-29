@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.dao.model.customize.AppUtmRegCustomize;
 import com.hyjf.am.user.service.front.user.AppUtmRegService;
 import com.hyjf.am.user.service.front.user.UserService;
@@ -151,8 +152,11 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			// 推荐人不为空时
 			if (refferUser != null) {
 				String regSourctId;
-				// 查询推荐人渠道
+				// 查询推荐人渠道（APP）
 				AppUtmReg appUtmReg = appUtmRegService.findByUserId(refferUser.getUserId());
+				// 查询推荐人渠道（PC）
+				UtmReg reg = userService.findUtmRegByUserId(refferUser.getUserId());
+				// 判断推荐人渠道是pc还是app
 				if (appUtmReg != null) {
 					// 类型转换
 					regSourctId = String.valueOf(appUtmReg.getSourceId());
@@ -166,9 +170,20 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 						appUtmRegService.insert(appUtmRegInsert);
 						// 不再进行默认渠道插入
 						refferUtmFlag = false;
-						logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道，插入推荐人渠道（覆盖MQ发送前拼装的推荐人数据，推荐人推广） entity：" + appUtmRegInsert.toString());
+						logger.error("用户自主注册时，如果有推荐人（APP），用户注册渠道=推荐人注册渠道，插入推荐人渠道（覆盖MQ发送前拼装的推荐人数据，推荐人推广） entity：" + appUtmRegInsert.toString());
 					}
-				} else {
+				} else if(reg != null){
+					// 类型转换
+					String regUtmid = String.valueOf(reg.getUtmId());
+					// 是否为空
+					if (StringUtils.isNotEmpty(regUtmid)) {
+						// 插入推荐人渠道
+						userService.insertUtmReg(entity.getUserId(), regUtmid);
+						// 不再进行默认渠道插入
+						refferUtmFlag = false;
+						logger.info("插入推荐人渠道 如果有推荐人（PC），用户注册渠道=推荐人注册渠道 userId：" + entity.getUserId() +"  regUtmid： "+ regUtmid);
+					}
+				}else {
 					logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道，查询推荐人渠道appUtmReg 结果为null（走默认推广） refferUserId ：refferUser.getUserId()");
 				}
 			} else {
