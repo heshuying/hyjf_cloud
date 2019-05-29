@@ -2915,6 +2915,18 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 兑吧积分账户查询列表
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public DuibaPointsResponse selectDuibaPoints(DuibaPointsRequest requestBean) {
+		String url = "http://AM-ADMIN/am-user/duiba/selectDuibaPoints";
+		return restTemplate.postForEntity(url,requestBean,DuibaPointsResponse.class).getBody();
+	}
+
+	/**
 	 * 短信验证码保存
 	 * @param mobile
 	 * @param checkCode
