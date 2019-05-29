@@ -224,7 +224,7 @@ public class CouponIssuanceController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertAction(@RequestBody CouponConfigRequest couponConfigRequest, HttpServletRequest request) {
-        logger.info("添加优惠券入参：{}", JSON.toJSONString(request));
+        logger.info("添加优惠券入参：{}", JSON.toJSONString(couponConfigRequest));
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
         Integer tenderQuotaType = couponConfigRequest.getTenderQuotaType();
