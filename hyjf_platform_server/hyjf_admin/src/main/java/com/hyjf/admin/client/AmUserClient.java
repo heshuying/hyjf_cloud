@@ -1438,4 +1438,12 @@ public interface AmUserClient {
     void insertBatchSmsCount(ListRequest request);
 
     void updateOrDelectRepeatData();
+
+    /**
+     * 兑吧积分账户查询列表
+     *
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsResponse selectDuibaPoints(DuibaPointsRequest requestBean);
 }

@@ -4,10 +4,20 @@
 package com.hyjf.admin.service.pointsshop.duiba.points;
 
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.response.admin.DuibaPointsResponse;
+import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
+import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 
 /**
  * @author PC-LIUSHOUYI
  * @version DuibaPointsService, v0.1 2019/5/29 9:48
  */
 public interface DuibaPointsService extends BaseService {
+    /**
+     * 兑吧积分账户查询列表
+     *
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsResponse selectDuibaPoints(DuibaPointsRequest requestBean);
 }
