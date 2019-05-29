@@ -8,17 +8,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.app.AppFindAdResponse;
+import com.hyjf.am.response.market.ActivityListResponse;
+import com.hyjf.am.response.market.AppAdsCustomizeResponse;
+import com.hyjf.am.response.market.SellDailyDistributionResponse;
+import com.hyjf.am.response.market.SellDailyResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.market.client.AmMarketClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: walter.limeng
@@ -208,5 +227,31 @@ public class AmMarketClientImpl implements AmMarketClient {
             return response.getRewardId();
         }
         return null;
+    }
+
+    @Override
+    @Cached(name="appFindModulesCache-", key="#requestBean.platformType", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<AppFindAdCustomizeVO> getFindModules(AdsRequest requestBean) {
+        AppFindAdResponse appFindAdResponse = restTemplate.postForEntity(
+                "http://AM-MARKET/am-market/find/getFindModules", requestBean,
+                AppFindAdResponse.class).getBody();
+        if (appFindAdResponse != null) {
+            return appFindAdResponse.getResultList();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    @Cached(name="appFindBannerCache-",key="#requestBean.platformType", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public AppFindAdCustomizeVO getFindBanner(AdsRequest requestBean) {
+        AppFindAdResponse appFindAdResponse = restTemplate.postForEntity(
+                "http://AM-MARKET/am-market/find/getFindBanner", requestBean,
+                AppFindAdResponse.class).getBody();
+        if (appFindAdResponse != null) {
+            return appFindAdResponse.getResult();
+        }
+        return new AppFindAdCustomizeVO();
     }
 }

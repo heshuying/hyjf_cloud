@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
@@ -19,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author fuqiang
@@ -113,6 +117,21 @@ public class CsMessageClientImpl implements CsMessageClient {
 				request, AppUtmRegResponse.class);
 
 		return response.getResultList();
+	}
+
+    /**
+     * app发现页运营报告信息
+     * @param isRelease
+     * @return
+     */
+	@Override
+	public List getReportList(Integer isRelease) {
+		JSONObject response = restTemplate.getForObject("http://CS-MESSAGE/hyjf-app/report/reportList?isRelease=" + isRelease, JSONObject.class);
+		if (response != null && "success".equals(response.get("success"))) {
+			List reportList = (List) response.get("recordList");
+			return (List) reportList.stream().limit(2).collect(toList());
+		}
+		return new ArrayList();
 	}
 
 }

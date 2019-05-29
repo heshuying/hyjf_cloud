@@ -2,9 +2,11 @@ package com.hyjf.am.market.service.impl;
 
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
 import com.hyjf.am.market.dao.mapper.customize.app.AppAdsCustomizeMapper;
+import com.hyjf.am.market.dao.mapper.customize.app.AppFindAdCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsExample;
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
+import com.hyjf.am.market.dao.model.customize.app.AppFindAdCustomize;
 import com.hyjf.am.market.service.AdsService;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.common.util.GetDate;
@@ -26,6 +28,8 @@ public class AdsServiceImpl implements AdsService {
 	AdsMapper adsMapper;
 	@Autowired
 	AppAdsCustomizeMapper adsCustomizeMapper;
+	@Autowired
+	AppFindAdCustomizeMapper appFindAdCustomizeMapper;
 
 	@Override
 	public void updateActivityEndStatus() {
@@ -101,6 +105,15 @@ public class AdsServiceImpl implements AdsService {
 		cra.andEndTimeGreaterThanOrEqualTo(GetDate.getDataString(GetDate.datetimeFormat));// 活动结束时间要大于当前时间
 		example.setOrderByClause(" `order` asc");
 		return adsMapper.selectByExample(example);
+	}
+
+	@Override
+	public AppFindAdCustomize searchAppFindAdCustomize(AdsRequest request) {
+		List<AppFindAdCustomize> appFindAdList = appFindAdCustomizeMapper.selectAppFindAdList(request);
+		if (appFindAdList != null && appFindAdList.size() > 0) {
+			return appFindAdList.get(0);
+		}
+		return new AppFindAdCustomize();
 	}
 
 }

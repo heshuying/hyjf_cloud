@@ -5,11 +5,15 @@ package com.hyjf.cs.market.service.impl;
 
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.cs.market.client.AmConfigClient;
+import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmTradeClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.service.AppFindService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,12 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
 
     @Autowired
     private AmTradeClient amTradeClient;
+
+    @Autowired
+    private AmMarketClient amMarketClient;
+
+    @Autowired
+    private CsMessageClient csMessageClient;
 
     /**
      * 查询文章条数
@@ -84,5 +94,24 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
     @Override
     public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form) {
         return amConfigClient.searchContentArticleList(form);
+    }
+
+    @Override
+    public List<AppFindAdCustomizeVO> getFindModules(AdsRequest request){
+        return amMarketClient.getFindModules(request);
+    }
+
+    @Override
+    public AppFindAdCustomizeVO getFindBanner(AdsRequest request){
+        return amMarketClient.getFindBanner(request);
+    }
+
+    /**
+     * app发现页运营报告信息
+     * @param isRelease
+     * @return
+     */
+    public List getReportList(Integer isRelease){
+        return csMessageClient.getReportList(isRelease);
     }
 }

@@ -62,6 +62,10 @@ public class AppRechargeRuleServiceImpl implements AppRechargeRuleService {
             //单月限额
             BigDecimal month = config.getMonthCardQuota()==null?BigDecimal.ZERO:config.getMonthCardQuota().divide(new BigDecimal(10000));
             bean.setMonth((BigDecimal.ZERO.compareTo(month)==0)?"不限":String.valueOf(month) + "万");
+            // app4.0添加银行ICON  Add by wgx
+            if (config.getBankIcon() != null){
+                bean.setBankIcon(config.getBankIcon());
+            }
             list.add(bean);
         }
     }

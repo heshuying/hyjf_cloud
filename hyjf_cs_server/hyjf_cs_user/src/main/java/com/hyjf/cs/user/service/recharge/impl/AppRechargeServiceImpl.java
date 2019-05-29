@@ -3,11 +3,15 @@
  */
 package com.hyjf.cs.user.service.recharge.impl;
 
+import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.recharge.AppRechargeService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -36,5 +40,23 @@ public class AppRechargeServiceImpl extends BaseUserServiceImpl implements AppRe
     @Override
     public JxBankConfigVO getJxBankConfigByBankId(Integer bankId) {
         return amConfigClient.getJxBankConfigById(bankId);
+    }
+
+    /**
+     * 获取充值规则
+     * @return
+     */
+    @Override
+    public List<AppRechargeRuleVO> getRechargeRule() {
+        return amConfigClient.getRechargeRule();
+    }
+
+    /**
+     * 获取充值限额说明
+     * @return
+     */
+    @Override
+    public List<AppRechargeLimitVO> getRechargeLimit() {
+        return amConfigClient.getRechargeLimit();
     }
 }

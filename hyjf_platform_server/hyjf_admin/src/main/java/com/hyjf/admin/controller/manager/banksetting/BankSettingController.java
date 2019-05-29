@@ -366,6 +366,8 @@ public class BankSettingController extends BaseController {
         map.put("singleQuota", "快捷充值单笔限额");
         map.put("singleCardQuota", "快捷充值单日限额");
         map.put("monthCardQuotaStr", "快捷充值单月限额");
+        map.put("androidMarket", "android应用市场链接");
+        map.put("iosMarket", "IOS应用市场链接");
         map.put("feeWithdraw", "提现手续费");
         return map;
     }

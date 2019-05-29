@@ -14,12 +14,11 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 优惠券Controller
@@ -55,6 +54,9 @@ public class CouponController extends BaseTradeController {
             Map<String,Object> resultMap = new HashMap<String,Object>();
             Integer count =  appCouponService.countMyCoupon(userId,couponStatus);
             List<CouponUserForAppCustomizeVO> couponList = appCouponService.getMyCoupon(userId,page,pageSize,couponStatus);
+            if(!CollectionUtils.isEmpty(couponList)){
+                couponList.sort(Comparator.comparing(CouponUserForAppCustomizeVO::getEndTimeStamp));
+            }
             result.put("couponTotal",count);
             result.put("couponStatus",couponStatus);
             result.put("couponList",couponList);
@@ -112,8 +114,8 @@ public class CouponController extends BaseTradeController {
      * @Author walter.limeng
      * @Description  APP,PC加入计划获取我的优惠券列表
      * @Date 17:15 2018/8/13
-     * @Param 
-     * @return 
+     * @Param
+     * @return
      */
     @ApiOperation(value = "APP加入计划获取我的优惠券列表", notes = "APP加入计划获取我的优惠券列表")
     @PostMapping("/getplancoupon")

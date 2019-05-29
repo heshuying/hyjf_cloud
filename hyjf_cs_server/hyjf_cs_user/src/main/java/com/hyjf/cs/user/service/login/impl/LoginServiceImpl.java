@@ -713,6 +713,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 风险测评结果
 			UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(userId);
+			// app4.0添加测评结果页 update by wgx 2019/05/06
+			int evaluation = 0;// 是否已经测评 0未测评 1已测评
 			if (userEvalationResult != null) {
 				//从user表获取用户测评到期日
 				UserVO user = amUserClient.findUserById(userId);
@@ -733,6 +735,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setFengxianDesc(userEvalationResult.getEvalType());
 					result.setEvalationSummary(userEvalationResult.getSummary());
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
+					evaluation = 1;// 已测评
 				}
 			} else {
 				result.setAnswerStatus("0");
@@ -749,7 +752,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			result.setAnswerUrl(
-					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST));
+					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST + evaluation));
 		}
 
 		{

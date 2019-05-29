@@ -5,6 +5,8 @@ package com.hyjf.cs.market.service;
 
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;
@@ -69,4 +71,24 @@ public interface AppFindService extends BaseMarketService {
      * @return
      */
     AppPushManageVO getAppPushManagerContentByID(Integer contentArticleId);
+
+    /**
+     * 获取app发现页顶部广告位
+     * @return
+     */
+    List<AppFindAdCustomizeVO> getFindModules(AdsRequest request);
+
+    /**
+     * 获取app发现页广告banner
+     * @return
+     */
+    AppFindAdCustomizeVO getFindBanner(AdsRequest request);
+
+    /**
+     * 获取app发现页运营报告列表
+     * @param isRelease
+     * @return
+     */
+    public List getReportList(Integer isRelease);
+
 }
