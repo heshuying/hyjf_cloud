@@ -19,6 +19,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
@@ -151,6 +152,10 @@ public class RegistRecordController extends BaseController {
     @PostMapping(value = "/registRecordUtmEdit")
     @ResponseBody
     public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
+        //获取登录用户Id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        registRcordRequestBean.setLoginUserId(adminSystemVO.getId());
+        registRcordRequestBean.setLoginUserName(adminSystemVO.getUsername());
         boolean registRecordResponse = registRecordService.editRegistRecordOne(registRcordRequestBean);
         if (!registRecordResponse) {
             return new AdminResult<>(FAIL, FAIL_DESC);

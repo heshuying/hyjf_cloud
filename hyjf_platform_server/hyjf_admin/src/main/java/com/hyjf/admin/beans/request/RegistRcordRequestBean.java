@@ -41,6 +41,8 @@ public class RegistRcordRequestBean extends BasePage {
 	@ApiModelProperty(value = "渠道名称")
 	private String sourceName;
 
+	private  String loginUserId;
+	private  String loginUserName;
 	public String getSourceName() {
 		return sourceName;
 	}
@@ -127,6 +129,22 @@ public class RegistRcordRequestBean extends BasePage {
 
 	public void setSourceIdWasId(String sourceIdWasId) {
 		this.sourceIdWasId = sourceIdWasId;
+	}
+
+	public String getLoginUserId() {
+		return loginUserId;
+	}
+
+	public void setLoginUserId(String loginUserId) {
+		this.loginUserId = loginUserId;
+	}
+
+	public String getLoginUserName() {
+		return loginUserName;
+	}
+
+	public void setLoginUserName(String loginUserName) {
+		this.loginUserName = loginUserName;
 	}
 }
 

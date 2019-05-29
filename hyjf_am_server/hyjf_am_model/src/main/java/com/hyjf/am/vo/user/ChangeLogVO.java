@@ -54,6 +54,10 @@ public class ChangeLogVO extends BaseVO implements Serializable {
 
     private String utmSourceId;
 
+    private  String loginUserId;
+
+    private  String loginUserName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -249,6 +253,22 @@ public class ChangeLogVO extends BaseVO implements Serializable {
 
     public void setUtmSourceId(String utmSourceId) {
         this.utmSourceId = utmSourceId;
+    }
+
+    public String getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
     }
 }
 

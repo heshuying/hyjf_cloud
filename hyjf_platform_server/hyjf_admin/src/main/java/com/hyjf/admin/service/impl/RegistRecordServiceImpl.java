@@ -262,6 +262,8 @@ public class RegistRecordServiceImpl implements RegistRecordService {
             changeLogVO.setRemark(registRcordRequestBean.getEditUtmCause());
             changeLogVO.setUtmType(utmType);
             changeLogVO.setUtmSourceId(sourceId);
+            changeLogVO.setLoginUserId(registRcordRequestBean.getLoginUserId());
+            changeLogVO.setLoginUserName(registRcordRequestBean.getLoginUserName());
             registRecordClient.insertChangeLogList(changeLogVO);
         }
         return true;

@@ -126,7 +126,8 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
             changeLog.setUtmSourceId(userChangeLog.getUtmSourceId());
             if (users != null && !users.isEmpty()) {
                 changeLog.setRemark("渠道修改");
-                changeLog.setUpdateUser("system");
+                changeLog.setUpdateUser(userChangeLog.getLoginUserName());
+                changeLog.setUpdateUserid(userChangeLog.getLoginUserId());
                 changeLog.setUpdateTime(new Date());
                 ChangeLogCustomize changeLogByUser = new ChangeLogCustomize();
                 changeLogByUser.setUserId(logRecord.getUserId());

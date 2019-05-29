@@ -88,6 +88,10 @@ public class ChangeLogCustomize {
 
     private String utmSourceId;
 
+    private  String loginUserId;
+
+    private  String loginUserName;
+
     public String getStartTime() {
 		return startTime;
 	}
@@ -355,6 +359,22 @@ public class ChangeLogCustomize {
 
     public void setUtmSourceId(String utmSourceId) {
         this.utmSourceId = utmSourceId;
+    }
+
+    public String getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
     }
 }
 
