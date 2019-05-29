@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.vip;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -223,13 +224,14 @@ public class CouponIssuanceController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertAction(@RequestBody CouponConfigRequest couponConfigRequest, HttpServletRequest request) {
+        logger.info("添加优惠券入参：{}", JSON.toJSONString(request));
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
         Integer tenderQuotaType = couponConfigRequest.getTenderQuotaType();
         if (tenderQuotaType != null) {
             if (tenderQuotaType == 0 || tenderQuotaType == 2) {
                 couponConfigRequest.setTenderQuotaMin(100);
-                couponConfigRequest.setTenderQuotaMin(1000000);
+                couponConfigRequest.setTenderQuotaMax(1000000);
             }
         }
         if (couponConfigRequest.getCouponType() != 1) {
