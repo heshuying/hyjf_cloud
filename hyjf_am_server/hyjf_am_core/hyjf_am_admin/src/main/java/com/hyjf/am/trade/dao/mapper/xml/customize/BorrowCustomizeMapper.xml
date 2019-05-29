@@ -474,7 +474,7 @@ WHERE
 	<sql id="Where_Clause">
 		  <where>
 		   <if test="borrowNidSrch != null and borrowNidSrch != ''">
-		    AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
+		    AND b.borrow_nid LIKE CONCAT( '%',#{borrowNidSrch}, '%')
 		   </if>
 		   <if test="borrowNameSrch != null and borrowNameSrch != ''">
 		    AND b.`name` LIKE CONCAT( #{borrowNameSrch}, '%')
