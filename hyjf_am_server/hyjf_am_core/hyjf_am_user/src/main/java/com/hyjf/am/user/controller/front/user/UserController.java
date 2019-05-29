@@ -6,6 +6,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.user.*;
@@ -19,6 +20,7 @@ import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
@@ -1137,4 +1139,41 @@ public class UserController extends BaseController {
         return response;
     }
 
+
+
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    @RequestMapping("/selectBeforeDayRegisterUserList")
+    public UserResponse selectBeforeDayRegisterUserList() {
+        UserResponse response = new UserResponse();
+        List<User> userList = userService.selectBeforeDayRegisterUserList();
+        if (!CollectionUtils.isEmpty(userList)) {
+            List<UserVO> resultList = CommonUtils.convertBeanList(userList, UserVO.class);
+            response.setResultList(resultList);
+        }
+        return response;
+    }
+
+
+
+
+    @GetMapping(value = "/selectUtmRegByUserId/{userId}")
+    public UtmRegResponse selectUtmRegByUserId(@PathVariable Integer userId){
+        UtmRegResponse userUtmInfoResponse = new UtmRegResponse();
+//        if (userId != null){
+//            UtmReg utmReg = userService.selectUtmRegByUserId(userId);
+//            logger.info("getUserUtmInfo run...user is :{}", userUtmInfo);
+//            if (userUtmInfo != null){
+//                UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = new UserUtmInfoCustomizeVO();
+//                BeanUtils.copyProperties(userUtmInfo, userUtmInfoCustomizeVO);
+//                userUtmInfoResponse.setResult(userUtmInfoCustomizeVO);
+//                userUtmInfoResponse.setRtn(Response.SUCCESS);
+//            }
+//            return userUtmInfoResponse;
+//        }
+        return null;
+    }
 }

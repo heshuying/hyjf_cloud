@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -1346,4 +1347,34 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.getForEntity(url, String.class);
 	}
 
+	/**
+	 * 获取前一天注册的用户
+	 *
+	 * @return
+	 */
+	@Override
+	public List<UserVO> selectBeforeDayRegisterUserList() {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectBeforeDayRegisterUserList", UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询PC注册渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmRegVO selectUtmRegByUserId(Integer userId) {
+		UtmRegResponse response = restTemplate
+				.getForEntity(userService + "/user/selectUtmRegByUserId/" + userId, UtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

@@ -3,8 +3,11 @@
  */
 package com.hyjf.cs.user.service.batch;
 
+import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
 import java.util.List;
@@ -34,4 +37,19 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * @return
      */
     List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig();
+
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    List<UserVO> selectBeforeDayRegisterUserList();
+
+    /**
+     * 根据用户ID查询PC注册渠道
+     *
+     * @param userId
+     * @return
+     */
+    UtmRegVO selectUtmRegByUserId(Integer userId);
 }

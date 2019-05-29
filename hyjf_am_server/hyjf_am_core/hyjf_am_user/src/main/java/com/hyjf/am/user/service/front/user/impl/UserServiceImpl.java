@@ -1699,4 +1699,41 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String dateString = formatter.format(currentTime);
         return dateString;
     }
+
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    @Override
+    public List<User> selectBeforeDayRegisterUserList() {
+        Date startDay = GetDate.getTodayBeforeOrAfter(-1);
+        String beforeDayStart = GetDate.getDayStart(startDay);
+        String beforeDayEnd = GetDate.getDayEnd(startDay);
+        UserExample example = new UserExample();
+        UserExample.Criteria cra = example.createCriteria();
+        cra.andRegTimeGreaterThanOrEqualTo(GetDate.str2Date(beforeDayStart, GetDate.datetimeFormat));
+        cra.andRegTimeLessThanOrEqualTo(GetDate.str2Date(beforeDayEnd, GetDate.datetimeFormat));
+        List<User> userList = this.userMapper.selectByExample(example);
+        return userList;
+    }
+
+
+    /**
+     * 根据用户ID查询PC注册渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmReg selectUtmRegByUserId(Integer userId) {
+        UtmRegExample example = new UtmRegExample();
+        UtmRegExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UtmReg> list = this.utmRegMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
 }
