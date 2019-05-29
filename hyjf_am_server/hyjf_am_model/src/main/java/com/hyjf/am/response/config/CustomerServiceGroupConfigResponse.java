@@ -18,6 +18,9 @@ public class CustomerServiceGroupConfigResponse extends Response<CustomerService
 
     private List<CustomerServiceGroupConfigVO> resultList;
 
+    // 客组总数
+    private int total = 0;
+
     @Override
     public List<CustomerServiceGroupConfigVO> getResultList() {
         return resultList;
@@ -26,5 +29,13 @@ public class CustomerServiceGroupConfigResponse extends Response<CustomerService
     @Override
     public void setResultList(List<CustomerServiceGroupConfigVO> resultList) {
         this.resultList = resultList;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

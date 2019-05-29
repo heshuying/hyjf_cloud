@@ -2474,6 +2474,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
     @Override
     public Integer insertBusinessName(BusinessNameMgRequest request) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/insert";
@@ -2641,6 +2642,49 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
+    /**
+     * 获取客组配置列表
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse getCustomerServiceGroupConfigList(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/getCustomerServiceGroupConfigList";
+        CustomerServiceGroupConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return response;
+    }
 
+    /**
+     * 添加客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse insertCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/insertCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 修改客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse updateCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/updateCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 删除客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/deleteCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return reponse;
+    }
 
 }

@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,70 +16,36 @@ import java.util.Date;
  * @author liuyang
  * @version CustomerServiceGroupConfigVO, v0.1 2019/5/29 10:30
  */
+@ApiModel(value="客组配置",description="电销数据-客组配置")
 public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = -143241833828005340L;
-    /**
-     * id
-     *
-     * @mbggenerated
-     */
+
+    @ApiModelProperty(value = "id")
     private Integer id;
 
-    /**
-     * 客组名称
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "客组名称")
     private String groupName;
 
-    /**
-     * 第三方用户唯一凭证
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "第三方用户唯一凭证")
     private String serviceUserCode;
 
-    /**
-     * 第三方用户账户编号
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "第三方用户账户编号")
     private String serviceUserNo;
 
-    /**
-     * 第三方用户唯一凭证密钥
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "第三方用户唯一凭证密钥")
     private String serviceUserKey;
 
-    /**
-     * 启用状态 1.启用2.禁用
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "启用状态 1.启用2.禁用")
     private Integer status;
 
-    /**
-     * 创建人
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "创建人")
     private Integer createUserId;
 
-    /**
-     * 创建时间
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    /**
-     * 修改时间
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
 
