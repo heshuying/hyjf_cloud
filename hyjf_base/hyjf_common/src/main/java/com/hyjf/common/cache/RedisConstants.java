@@ -582,7 +582,6 @@ public class RedisConstants {
      * app充值规则
      */
     public static final String APP_RECHARGE = "app_recharge:";
-}
 
     /**
      * redis配置是否可修改手机号
