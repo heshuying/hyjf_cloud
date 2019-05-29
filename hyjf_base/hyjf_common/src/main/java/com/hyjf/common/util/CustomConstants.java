@@ -1557,4 +1557,23 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static String NIFA_CREDIT_INFO_TYPE = "26EXPORTBUSINESSJINR";
     /**  互联网金融产品及收益权转让融资受让人信息  */
     public static String NIFA_CREDITER_INFO_TYPE = "26EXPORTBUSINESSJINR_INV";
+
+    /** 商品类型 */
+    public static String PRODUCT_TYPE = "PRODUCT_TYPE";
+    /** 订单状态 */
+    public static String ORDER_STATUS = "ORDER_STATUS";
+    /** 发货状态 */
+    public static String DELIVERY_STATUS = "DELIVERY_STATUS";
+    /** 处理状态 */
+    public static String PROCESSING_STATE = "PROCESSING_STATE";
+    /** 积分类型 */
+    public static String INTEGRAL_TYPE = "INTEGRAL_TYPE";
+    /** 积分业务名称 */
+    public static String INTEGRAL_BUSINESS_NAME = "INTEGRAL_BUSINESS_NAME";
+    /** 审核状态 */
+    public static String AUDIT_STATUS = "AUDIT_STATUS";
+    /** 操作类型 */
+    public static String OPERATION_TYPE = "OPERATION_TYPE";
+
+
 }
