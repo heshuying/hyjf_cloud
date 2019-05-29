@@ -3,8 +3,11 @@
  */
 package com.hyjf.cs.user.service.batch.Impl;
 
+import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -52,5 +55,26 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
     @Override
     public List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig() {
         return amConfigClient.selectCustomerServiceRepresentiveConfig();
+    }
+
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    @Override
+    public List<UserVO> selectBeforeDayRegisterUserList() {
+        return amUserClient.selectBeforeDayRegisterUserList();
+    }
+
+    /**
+     * 根据用户ID查询PC注册渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmRegVO selectUtmRegByUserId(Integer userId) {
+        return amUserClient.selectUtmRegByUserId(userId);
     }
 }

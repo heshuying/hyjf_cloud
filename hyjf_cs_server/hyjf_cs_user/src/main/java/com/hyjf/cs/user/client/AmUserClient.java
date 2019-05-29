@@ -653,4 +653,18 @@ public interface AmUserClient {
 	 * 电销数据推送生成
 	 */
     void generateElectricitySalesData();
+
+	/**
+	 * 获取前一天注册的用户
+	 * @return
+	 */
+	List<UserVO> selectBeforeDayRegisterUserList();
+
+	/**
+	 * 根据用户ID查询PC注册渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UtmRegVO selectUtmRegByUserId(Integer userId);
 }

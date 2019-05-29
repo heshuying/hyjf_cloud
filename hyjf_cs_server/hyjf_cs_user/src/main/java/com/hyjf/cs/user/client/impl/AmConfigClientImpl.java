@@ -296,9 +296,24 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig() {
-
         CustomerServiceRepresentiveConfigResponse response = restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectCustomerServiceGroupConfigList", CustomerServiceRepresentiveConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取推送禁用渠道
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceChannelVO> selectCustomerServiceChannelList() {
+        CustomerServiceChannelResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceChannel/selectCustomerServiceChannelList", CustomerServiceChannelResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

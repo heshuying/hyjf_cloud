@@ -164,4 +164,11 @@ public interface AmConfigClient {
      * @return
      */
     List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig();
+
+    /**
+     * 获取推送禁用渠道
+     *
+     * @return
+     */
+    List<CustomerServiceChannelVO> selectCustomerServiceChannelList();
 }
