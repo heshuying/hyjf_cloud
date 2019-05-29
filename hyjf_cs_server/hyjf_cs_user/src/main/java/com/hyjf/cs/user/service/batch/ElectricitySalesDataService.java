@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.batch;
 
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
+import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
 import java.util.List;
@@ -26,4 +27,11 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * @return
      */
     List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList();
+
+    /**
+     * 获取坐席配置
+     *
+     * @return
+     */
+    List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig();
 }

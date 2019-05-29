@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
+import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.batch.operationaldata.OperationalUserDataController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
@@ -39,7 +40,19 @@ public class ElectricitySalesDataController extends BaseUserController {
     public void generateElectricitySalesData() {
         logger.info("电销数据推送生成");
         // 获取客组配置
-        List<CustomerServiceGroupConfigVO>  customerServiceGroupConfigList = this.slectricitySalesDataService.selectCustomerServiceGroupConfigList();
+        List<CustomerServiceGroupConfigVO> customerServiceGroupConfigList = this.slectricitySalesDataService.selectCustomerServiceGroupConfigList();
+        if (customerServiceGroupConfigList == null || customerServiceGroupConfigList.size() == 0) {
+            logger.info("获取客组配置失败,不予生成");
+            return;
+        }
+        // 获取坐席配置
+        List<CustomerServiceRepresentiveConfigVO> customerServiceRepresentiveConfigList = this.slectricitySalesDataService.selectCustomerServiceRepresentiveConfig();
+
+        if (customerServiceRepresentiveConfigList == null || customerServiceRepresentiveConfigList.size() == 0){
+            logger.info("获取坐席配置失败,不予生成");
+            return;
+        }
+        // 获取
         slectricitySalesDataService.generateElectricitySalesData();
     }
 }

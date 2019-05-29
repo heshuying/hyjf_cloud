@@ -157,4 +157,11 @@ public interface AmConfigClient {
      * @return
      */
     List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList();
+
+    /**
+     * 获取坐席配置
+     *
+     * @return
+     */
+    List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig();
 }

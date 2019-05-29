@@ -15,6 +15,7 @@ import java.util.List;
  * @version CustomerServiceGroupConfigResponse, v0.1 2019/5/29 10:41
  */
 public class CustomerServiceGroupConfigResponse extends Response<CustomerServiceGroupConfigVO> {
+
     private List<CustomerServiceGroupConfigVO> resultList;
 
     @Override

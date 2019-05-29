@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.batch.Impl;
 
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
+import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -43,5 +44,13 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
         return amConfigClient.selectCustomerServiceGroupConfigList();
     }
 
-
+    /**
+     * 获取坐席配置
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig() {
+        return amConfigClient.selectCustomerServiceRepresentiveConfig();
+    }
 }
