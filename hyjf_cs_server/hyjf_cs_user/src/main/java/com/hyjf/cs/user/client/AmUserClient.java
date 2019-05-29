@@ -648,4 +648,9 @@ public interface AmUserClient {
 	 * @param userId
 	 */
 	void unlockUser(Integer userId);
+
+	/**
+	 * 电销数据推送生成
+	 */
+    void generateElectricitySalesData();
 }

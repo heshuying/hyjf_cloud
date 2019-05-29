@@ -274,5 +274,18 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-
+    /**
+     * 获取客组配置List
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList() {
+        CustomerServiceGroupConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceGroupConfig/selectCustomerServiceGroupConfigList", CustomerServiceGroupConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

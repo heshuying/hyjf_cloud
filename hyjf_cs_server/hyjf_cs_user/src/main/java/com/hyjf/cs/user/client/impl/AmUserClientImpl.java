@@ -1335,4 +1335,15 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
 		restTemplate.getForEntity(url, String.class).getBody();
 	}
+
+
+	/**
+	 * 电销数据推送
+	 */
+	@Override
+	public void generateElectricitySalesData() {
+		String url = "http://AM-USER/am-user/electricitysalesdata/generateElectricitySalesData";
+		restTemplate.getForEntity(url, String.class);
+	}
+
 }

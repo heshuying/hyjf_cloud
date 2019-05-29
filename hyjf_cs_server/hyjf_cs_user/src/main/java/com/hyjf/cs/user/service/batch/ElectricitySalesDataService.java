@@ -3,7 +3,10 @@
  */
 package com.hyjf.cs.user.service.batch;
 
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.cs.user.service.BaseUserService;
+
+import java.util.List;
 
 /**
  * 电销数据生成Service
@@ -16,4 +19,11 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * 生成电销数据
      */
     void generateElectricitySalesData();
+
+    /**
+     * 获取客组配置
+     *
+     * @return
+     */
+    List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList();
 }

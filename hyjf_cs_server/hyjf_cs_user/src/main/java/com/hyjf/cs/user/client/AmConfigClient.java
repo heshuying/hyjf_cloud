@@ -150,4 +150,11 @@ public interface AmConfigClient {
      * @return
      */
     List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request);
+
+    /**
+     * 获取客组配置
+     *
+     * @return
+     */
+    List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList();
 }

@@ -3,16 +3,20 @@
  */
 package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.batch.operationaldata.OperationalUserDataController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
 import com.hyjf.cs.user.service.batch.OperationalUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ListableBeanFactoryExtensionsKt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * 电销数据生成Controller
@@ -34,6 +38,8 @@ public class ElectricitySalesDataController extends BaseUserController {
     @RequestMapping("/generateElectricitySalesData")
     public void generateElectricitySalesData() {
         logger.info("电销数据推送生成");
+        // 获取客组配置
+        List<CustomerServiceGroupConfigVO>  customerServiceGroupConfigList = this.slectricitySalesDataService.selectCustomerServiceGroupConfigList();
         slectricitySalesDataService.generateElectricitySalesData();
     }
 }
