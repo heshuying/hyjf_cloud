@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.mq.base.CommonProducer;
@@ -4766,6 +4767,18 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<WebProjectRepayListCustomize> projectRepayList =
                 webUserInvestListCustomizeMapper.selectProjectRepayPlanList(params);
         return projectRepayList;
+    }
+
+    /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomize queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomize accountInfos = accountCustomizeMapper.queryAccountUserMoney(userId);
+        return accountInfos;
     }
 }
 

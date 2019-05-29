@@ -43,6 +43,12 @@ public interface MQConstant {
 	 */
 	String APP_MESSAGE_GROUP = "APP_MESSAGE_GROUP";
 	String APP_MESSAGE_TOPIC = "APP_MESSAGE_TOPIC";
+
+	/**
+	 * 发送短信统计 push group topic
+	 */
+	String SMS_COUNT_MESSAGE_GROUP = "SMS_COUNT_MESSAGE_GROUP";
+	String SMS_COUNT_MESSAGE_TOPIC = "SMS_COUNT_MESSAGE_TOPIC";
 	/** ------------------------------ 消息中心 end ------------------------------ */
 
 
@@ -706,7 +712,7 @@ public interface MQConstant {
 	// 产品信息异常重发
 	String CERT_REPAIR_LENDPRODUCT = "CERT_REPAIR_LENDPRODUCT";
 	// 产品信息异常、添加智投、修改智投时报送
-	String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG ;
+	String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG +"||"+MQConstant.BORROW_MODIFY_TAG;
 
 	/** 产品配置信息*/
 	String CERT_LENDPRODUCTCONFIG_GROUP = "CERT_LENDPRODUCTCONFIG_GROUP";
@@ -786,6 +792,8 @@ public interface MQConstant {
 	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
 	// TAG：修改智投 add by nxl
 	String HJHPLAN_MODIFY_TAG = "HJHPLAN_ADD_MODIFY";
+	// TAG：散标发标 add by nxl
+	String BORROW_MODIFY_TAG = "BORROW_MODIFY_TAG";
 	// TAG：同步余额
 	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
 	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";

@@ -320,6 +320,7 @@
 		LEFT JOIN (SELECT hbcc.tender_nid,
 		SUM(hbcc.credit_capital_assigned) credit_capital_assigned,
 		MIN(hbcc.credit_status) credit_status FROM ht_borrow_credit hbcc
+		WHERE hbcc.credit_user_id = #{userId}
 		GROUP BY hbcc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE

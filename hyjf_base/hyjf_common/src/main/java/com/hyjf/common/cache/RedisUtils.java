@@ -1097,4 +1097,88 @@ public class RedisUtils {
         }
     }
 
+    /**
+     * 锁竞争 等待
+     * @param key
+     * @param token
+     * @param waitTimeout 超时毫秒
+     * @return
+     */
+    public static boolean lockWithTimeout(String key, String token, long waitTimeout) {
+        JedisPool conn = null;
+        Jedis jedis = null;
+
+        long startTime = System.currentTimeMillis();
+        long now = 0L;
+        boolean isLocked = false;
+        try {
+            conn = getPool();
+            jedis = conn.getResource();
+
+            isLocked = dolock( key, token);
+            if (isLocked) {
+                return true;
+            }
+
+            while (!isLocked) {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    return false;
+                }
+                isLocked = dolock( key, token);
+                if (isLocked) {
+                    now = System.currentTimeMillis();
+                    return true;
+                }
+
+                now = System.currentTimeMillis();
+                if (now - startTime > waitTimeout) {
+                    //time out
+                    return false;
+                }
+            }
+        } finally {
+            // 释放redis对象
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+        return false;
+    }
+
+    private static boolean dolock(String key, String token) {
+        boolean acquired = setnx(key, token, 30);
+
+        return acquired;
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param key
+     * @param token
+     * @return
+     */
+    public static Long release(String key,String token) {
+        Long value = null;
+
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            if (token.equals(jedis.get(key))) {
+                value = jedis.del(key);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+
+        return value;
+    }
+
 }

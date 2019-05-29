@@ -1687,6 +1687,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 }
             }
         }
+        //资金支出校验-智投（userId/出借金额）
+        if(!this.capitalExpendituresCheck(request.getUser().getUserId(), accountBigDecimal)){
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
+        }
     }
 
     /**
