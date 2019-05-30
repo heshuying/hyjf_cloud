@@ -54,6 +54,7 @@
 		<result column="del_flag" property="delFlag" jdbcType="TINYINT" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="tender_user_utm_id" property="tenderUserUtmId" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List" >
 		id, accede_order_id, plan_nid, user_id, user_name, user_attribute, invite_user_id,
@@ -65,7 +66,7 @@
 		quit_time, last_payment_time, acctual_payment_time, should_pay_total, should_pay_capital,
 		should_pay_interest, expect_apr, fair_value, liquidation_fair_value, actual_apr,
 		invest_counts, match_dates, lqd_service_fee, lqd_service_apr, invest_service_apr,
-		lqd_progress, create_user, update_user, del_flag, create_time, update_time
+		lqd_progress, create_user, update_user, del_flag, create_time, update_time,tender_user_utm_id
 	</sql>
 	<select id="selectHjhAutoTenderList" resultMap="BaseResultMap" parameterType="java.util.Map">
 		<!--   	自动投标成功的回款复投 -->
