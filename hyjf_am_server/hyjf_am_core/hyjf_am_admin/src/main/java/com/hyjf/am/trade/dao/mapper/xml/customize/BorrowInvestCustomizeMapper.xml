@@ -305,7 +305,7 @@
 			FROM_UNIXTIME(hta.contract_sign_time, '%Y-%m-%d %H:%i:%s' )
 			ELSE '' END AS contractSignTime,
 			CASE WHEN bt.tender_type = 1 THEN '是' ELSE '否' END  AS  tender_type,
-			if(bt.create_time<![CDATA[<]]>'2019-5-30 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
+			if(bt.create_time<![CDATA[<]]>'2019-5-29 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
 			utm2.utm_source utmSource2
 		FROM
 			ht_borrow_tender bt
