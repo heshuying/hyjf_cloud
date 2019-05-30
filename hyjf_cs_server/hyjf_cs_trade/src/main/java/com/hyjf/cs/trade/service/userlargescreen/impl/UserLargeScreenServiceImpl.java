@@ -8,6 +8,7 @@ import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
 import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: tanyy
@@ -98,6 +101,35 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenTwoVO operMonthPerformanceDataVo = amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
+    }
+
+    @Override
+    public List<ScreenTransferVO> getAllUser(int start, int sizes) {
+        List<ScreenTransferVO> userList = amTradeClient.getAllUser(start,sizes);
+        if(null != userList && 0 < userList.size()){
+            return amUserClient.getScreenTransferData(userList);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void updateOperatieList(List<ScreenTransferVO> updateList) {
+        amTradeClient.updateOperatieList(updateList);
+    }
+
+    @Override
+    public void deleteOperatieList(List<ScreenTransferVO> deleteList) {
+        amTradeClient.deleteOperatieList(deleteList);
+    }
+
+    @Override
+    public void updateRepaymentPlan(List<ScreenTransferVO> updateList) {
+        amTradeClient.updateRepaymentPlan(updateList);
+    }
+
+    @Override
+    public void deleteRepaymentPlan(List<ScreenTransferVO> deleteList) {
+        amTradeClient.deleteRepaymentPlan(deleteList);
     }
 
     /**
