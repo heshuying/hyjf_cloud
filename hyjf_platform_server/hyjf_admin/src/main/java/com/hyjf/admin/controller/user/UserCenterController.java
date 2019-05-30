@@ -1038,12 +1038,25 @@ public class UserCenterController extends BaseController {
     //查询银联号
     @ResponseBody
     @PostMapping(value = "/searchPayAllianceCode")
-    @ApiOperation(value = "查找联行号", notes = "查找联行号")
-    public AdminResult<Response>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+    @ApiOperation(value = "查找银行卡信息", notes = "查找银行卡信息")
+    public AdminResult<SearchCompanyInfoResponseBean>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
         if(StringUtils.isBlank(userInfosUpdCustomizeRequestBean.getUserId()) || "null".equals(userInfosUpdCustomizeRequestBean.getUserId())){
             return new AdminResult<>(FAIL, "用户id不能为空");
         }
-        BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
+        SearchCompanyInfoResponseBean  searchCompanyInfoResponseBean = new  SearchCompanyInfoResponseBean();
+        //根据银行卡号查找银行信息
+        BankCardResponse bankCardResponse = userCenterService.getBankInfoByAccount(userInfosUpdCustomizeRequestBean.getCardNo(),userInfosUpdCustomizeRequestBean.getUserId());
+        if(null!=bankCardResponse){
+            BankCardVO bankCardVO =bankCardResponse.getResult();
+            CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
+            companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
+            companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
+            companyInfoCompanyInfoVO.setBankId(bankCardVO.getBankId().toString());
+            searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
+            return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
+        }
+
+       /* BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
         AdminResult<Response> result = new AdminResult<Response>();
         Response response = new Response();
         logger.info("=======用户修改银行卡,查找银联号返回结果为:"+JSONObject.toJSON(bankCallBean+"========="));
@@ -1071,8 +1084,8 @@ public class UserCenterController extends BaseController {
             } else {
                 return new AdminResult<>(FAIL, "未查询到联行号");
             }
-        }
-        return new AdminResult<>(FAIL, "调用银行接口和恁地未能查找到银联号！");
+        }*/
+        return new AdminResult<>(FAIL, "未能查找到银行卡信息！");
     }
 
 
