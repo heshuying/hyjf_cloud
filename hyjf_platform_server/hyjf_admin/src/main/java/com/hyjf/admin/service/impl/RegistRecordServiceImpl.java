@@ -112,9 +112,9 @@ public class RegistRecordServiceImpl implements RegistRecordService {
         // 原渠道id
         String sourceIdWasId = registRcordRequestBean.getSourceIdWasId();
         // 原渠道名称
-        String sourceName = "";
+        String sourceName = "无渠道";
         // 修改注册渠道名称
-        String utmNameLog = "";
+        String utmNameLog;
         // 注册渠道数据来源
         String utmType = "0";
         // 是否记录日志
@@ -145,12 +145,12 @@ public class RegistRecordServiceImpl implements RegistRecordService {
                     sourceName = utmPlatResponseWas.get(0).getSourceName();
                 }
                 utmType = "1";
-            } else {
-                sourceName = "NoChannelInformation";
-            }
-        } else {
-            sourceName = "NoChannelInformation";
-        }
+            } // else {
+              //   sourceName = "NoChannelInformation";
+              //}
+        } // else {
+          //  sourceName = "NoChannelInformation";
+          // }
         // 渠道信息,判断用户选择的是什么渠道
         List<UtmPlatVO> utmPlatResponseEdit = registRecordClient.getAllUtmPlat(hashMapEditSource).getResultList();
         if (utmPlatResponseEdit != null && utmPlatResponseEdit.get(0).getSourceType()==0) {

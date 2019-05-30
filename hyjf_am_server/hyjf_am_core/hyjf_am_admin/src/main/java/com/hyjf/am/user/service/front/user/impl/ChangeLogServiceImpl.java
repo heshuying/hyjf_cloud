@@ -135,7 +135,10 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
                 int userLogCount =  changeLogCustomizeMapper.queryChangeLogByUserIdCount(changeLogByUser);
                 // 修改渠道
                 int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
-                if(userLogCount < 1 && !("NoChannelInformation").equals(userChangeLog.getSourceIdWasName())){
+                // 没有过修改记录且用户有渠道的多增加一条原渠道记录
+                // if(userLogCount < 1 && !("NoChannelInformation").equals(userChangeLog.getSourceIdWasName())){
+                // 根据测试给的需求变动更改为没有过修改记录的多增加一条原渠道记录
+                if(userLogCount < 1){
                     // 原渠道记录
                     changeLog.setRemark("该记录为用户原渠道记录");
                     changeLog.setUtmName(userChangeLog.getSourceIdWasName());
