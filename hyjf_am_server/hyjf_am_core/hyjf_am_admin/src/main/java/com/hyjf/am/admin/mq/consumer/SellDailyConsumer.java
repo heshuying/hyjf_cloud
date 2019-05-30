@@ -146,7 +146,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
 			// 2.5 惠众-其它 排除 网络运营部,千乐，加上vip用户组
 			hzRecord = sellDailyService.addValue(operationSellDaily, hzRecord, column, SUBTRACT);
-			hzRecord = sellDailyService.addValue(qlSellDaily, hzRecord, column, SUBTRACT);
+//			hzRecord = sellDailyService.addValue(qlSellDaily, hzRecord, column, SUBTRACT);
 			list.add(hzRecord);
 
 			// 3. 批量更新
