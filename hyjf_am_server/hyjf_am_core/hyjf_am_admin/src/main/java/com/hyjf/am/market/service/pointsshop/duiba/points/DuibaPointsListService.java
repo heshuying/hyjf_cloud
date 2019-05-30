@@ -15,6 +15,7 @@ import java.util.List;
 public interface DuibaPointsListService {
     /**
      * 查询兑吧积分明细件数
+     *
      * @param request
      * @return
      */
@@ -22,6 +23,7 @@ public interface DuibaPointsListService {
 
     /**
      * 查询兑吧积分明细列表
+     *
      * @param request
      * @return
      */

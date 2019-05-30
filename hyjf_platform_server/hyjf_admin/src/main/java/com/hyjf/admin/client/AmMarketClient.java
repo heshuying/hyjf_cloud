@@ -166,4 +166,12 @@ public interface AmMarketClient {
      * @return
      */
     DuibaPointsResponse selectDuibaPointsList(DuibaPointsRequest requestBean);
+
+    /**
+     * 兑吧积分账户修改明细
+     *
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsModifyResponse selectDuibaPointsModifyList(DuibaPointsRequest requestBean);
 }

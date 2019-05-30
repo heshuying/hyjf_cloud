@@ -281,4 +281,16 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return response;
 	}
 
+	/**
+	 * 兑吧积分账户修改明细
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public DuibaPointsModifyResponse selectDuibaPointsModifyList(DuibaPointsRequest requestBean) {
+		DuibaPointsModifyResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/duibapointsmodify/selectDuibaPointsModifyList",requestBean,DuibaPointsModifyResponse.class).getBody();
+		return response;
+	}
+
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.DuibaPointsModifyCustomizeMapper">
+    <resultMap id="DuibaPointsList" type="com.hyjf.am.vo.admin.DuibaPointsModifyVO">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="true_name" property="trueName" jdbcType="VARCHAR" />
+        <result column="points" property="points" jdbcType="DECIMAL" />
+        <result column="total" property="total" jdbcType="DECIMAL" />
+        <result column="points_type" property="pointsType" jdbcType="TINYINT" />
+        <result column="modify_name" property="modifyName" jdbcType="VARCHAR" />
+        <result column="review_name" property="reviewName" jdbcType="VARCHAR" />
+        <result column="modify_reason" property="modifyReason" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, user_id, user_name, true_name, points, total, points_type, modify_name, review_name,
+    modify_reason, `status`, remark, create_by, create_time, update_by, update_time
+  </sql>
+
+    <select id="selectDuibaPointsModifyList" resultMap="DuibaPointsList"
+            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        ht_duiba_points_modify hdpm
+        WHERE 1=1
+        <if test="userNameSrch != null and userNameSrch != ''">
+            AND hdpm.user_name = #{userNameSrch}
+        </if>
+        <if test="trueNameSrch != null and trueNameSrch != ''">
+            AND hdpm.true_name = #{trueNameSrch}
+        </if>
+        <if test="modifyNameSrch != null and modifyNameSrch != ''">
+            AND hdpm.modify_name = #{modifyNameSrch}
+        </if>
+        <if test="businessNameSrch != null and businessNameSrch != ''">
+            AND hdpm.business_name = #{businessNameSrch}
+        </if>
+        <if test="typeSrch != null and typeSrch != ''">
+            AND hdpm.`type` = #{typeSrch}
+        </if>
+        <if test="statusSrch != null and statusSrch != ''">
+            AND hdpm.`status` = #{statusSrch}
+        </if>
+        <if test="startDateSrch != null and startDateSrch != ''">
+            AND hdpm.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDateSrch},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="endDateSrch != null and endDateSrch != ''">
+            AND hdpm.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectDuibaPointsModifyCount" resultMap="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+        SELECT
+        count(1)
+        FROM
+        ht_duiba_points hdp
+        WHERE 1=1
+        <if test="userNameSrch != null and userNameSrch != ''">
+            AND hdp.user_name = #{userNameSrch}
+        </if>
+        <if test="trueNameSrch != null and trueNameSrch != ''">
+            AND hdp.true_name = #{trueNameSrch}
+        </if>
+        <if test="businessNameSrch != null and businessNameSrch != ''">
+            AND hdp.business_name = #{businessNameSrch}
+        </if>
+        <if test="typeSrch != null and typeSrch != ''">
+            AND hdp.`type` = #{typeSrch}
+        </if>
+        <if test="startDateSrch != null and startDateSrch != ''">
+            AND hdp.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDateSrch},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="endDateSrch != null and endDateSrch != ''">
+            AND hdp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+    </select>
+</mapper>
