@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.SmsCountCustomizeMapper">
+
+    <!-- 统计注册人数 -->
+	<select id="querySmsCountLlist" parameterType="com.hyjf.am.resquest.user.SmsCountRequest" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
+       select
+        IFNULL(`od3`.`name`,'其他') AS `departmentName`,
+        IFNULL(od3.id,0) as departmentId,
+        sum(s.sms_number) as smsNumber,
+        s.posttime as posttime
+        from ht_sms_count s
+        LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        group by posttime,departmentName
+
+        <trim prefix="having" prefixOverrides="AND |OR ">
+        <if test="post_time_begin!=null">
+            AND posttime <![CDATA[>=]]>  STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
+        </if>
+        <if test="post_time_end!= null">
+            AND posttime  <![CDATA[<=]]> STR_TO_DATE(#{post_time_end},'%Y-%m-%d')
+        </if>
+        <if test="combotreeListSrch != null and combotreeListSrch != ''">
+            AND departmentId in
+            <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+                #{dep}
+            </foreach>
+        </if>
+        </trim>
+        ORDER BY s.posttime desc
+        <if test="limitStart >=0 and limitEnd > 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+    
+    <select id="querySmsCountNumberTotal" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize"
+            parameterType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
+        select ifnull(sum(sms_number),0) from ht_sms_count l
+        <where>
+            <if test="post_time_begin!=null">
+                AND l.posttime <![CDATA[>=]]> STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
+            </if>
+            <if test="post_time_end!= null">
+                AND l.posttime  <![CDATA[<=]]> STR_TO_DATE(#{post_time_end},'%Y-%m-%d')
+            </if>
+            <if test="departmentId!= null">
+                AND l.department_id = #{departmentId}
+            </if>
+            <if test="posttime!= null">
+                AND l.posttime =  STR_TO_DATE(#{posttime},'%Y-%m-%d')
+            </if>
+            <if test="combotreeListSrch != null and combotreeListSrch != ''">
+                AND l.department_id in
+                <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+                    #{dep}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <resultMap id="DepartmentInfoResultMap" type="com.hyjf.am.user.dao.model.customize.OADepartmentCustomize" >
+	  <id column="id" property="id" jdbcType="INTEGER" />
+	  <result column="parentid" property="parentid" jdbcType="INTEGER" />
+	  <result column="name" property="name" jdbcType="VARCHAR" />
+	  <result column="description" property="description" jdbcType="VARCHAR" />
+	  <result column="ishead" property="ishead" jdbcType="INTEGER" />
+	  <result column="ishr" property="ishr" jdbcType="INTEGER" />
+	  <result column="isfinance" property="isfinance" jdbcType="INTEGER" />
+	  <result column="cuttype" property="cuttype" jdbcType="INTEGER" />
+	  <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+	  <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+	  <result column="header" property="header" jdbcType="VARCHAR" />
+	  <result column="manager" property="manager" jdbcType="VARCHAR" />
+	  <result column="position_category" property="positionCategory" jdbcType="INTEGER" />
+	  <result column="listorder" property="listorder" jdbcType="INTEGER" />
+	</resultMap>
+    
+    <select id="queryDepartmentInfo" resultMap="DepartmentInfoResultMap">
+		SELECT
+			id,
+			parentid,
+			name,
+			description,
+			ishead,
+			ishr,
+			isfinance,
+			cuttype,
+			provinceid,
+			cityid,
+			header,
+			manager,
+			position_category,
+			listorder
+		FROM
+			ht_r_oa_department
+	</select>
+	
+	<select id="selectCount" parameterType="com.hyjf.am.resquest.user.SmsCountRequest" resultType="INTEGER">
+		select count(1) from (select
+        IFNULL(`od3`.`name`,'其他') AS `departmentName`,
+        IFNULL(od3.id,0) as departmentId,
+        sum(s.sms_number) as smsNumber,
+        s.posttime as posttime
+        from ht_sms_count s
+        LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        group by posttime,departmentName
+
+        <trim prefix="having" prefixOverrides="AND |OR ">
+        <if test="post_time_begin!=null">
+            AND posttime <![CDATA[>=]]>  STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
+        </if>
+        <if test="post_time_end!= null">
+            AND posttime  <![CDATA[<=]]> STR_TO_DATE(#{post_time_end},'%Y-%m-%d')
+        </if>
+        <if test="combotreeListSrch != null and combotreeListSrch != ''">
+            AND departmentId in
+            <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+                #{dep}
+            </foreach>
+        </if>
+        </trim>
+        ORDER BY s.posttime desc
+        ) t
+    </select>
+
+    <select id="queryUser" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+        mobile
+        FROM
+        ht_user
+        <where>
+            <if test="re_time_begin != null" >
+                AND create_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+            </if>
+            <if test="re_time_end != null" >
+                AND create_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+            </if>
+            <if test="open_account!= null and open_account == 1" >
+                AND bank_open_account = 1
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserByBirthday" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+            hu.mobile
+        FROM
+            ht_user hu
+        INNER JOIN ht_user_info hui ON hu.user_id = hui.user_id
+        <where>
+            bank_open_account = 1
+            <if test="birthday != null" >
+                AND hui.birthday LIKE #{birthday}
+            </if>
+        </where>
+    </select>
+	
+</mapper>

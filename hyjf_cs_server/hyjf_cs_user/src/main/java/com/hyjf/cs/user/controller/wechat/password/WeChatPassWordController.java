@@ -5,6 +5,8 @@ package com.hyjf.cs.user.controller.wechat.password;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.AppUserToken;
@@ -135,6 +137,11 @@ public class WeChatPassWordController {
             // 校验验证码
             passWordService.backCheck(sendSmsVo);
             passWordService.updatePassWd(user,newPassword);
+            RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
+            // pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+            passWordService.unlockUser(user.getUserId());
+            // pc1.1.3 新增 如果重置密码成功 就重新自动登陆  短信登录
+            RedisUtils.del(RedisConstants.APP_SMS_LOGIN_KEY+user.getUserId());
             ret.put("status", "000");
             ret.put("statusDesc", "修改密码成功");
         }catch (CheckException e){

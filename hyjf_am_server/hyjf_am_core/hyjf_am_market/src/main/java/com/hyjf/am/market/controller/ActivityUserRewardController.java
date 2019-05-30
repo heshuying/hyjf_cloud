@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,9 @@ import com.hyjf.am.market.service.ActivityUserRewardService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.market.ActivityUserRewardResponse;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -27,7 +31,7 @@ public class ActivityUserRewardController {
     @Autowired
     private ActivityUserRewardService activityUserRewardService;
     /**
-     * 保存领取记录
+     * 保存领取记录 (不支持重复保存)
      * @param vo
      * @return
      */
@@ -35,10 +39,12 @@ public class ActivityUserRewardController {
     public BooleanResponse insert(@RequestBody ActivityUserRewardVO vo) {
         logger.info("insert ActivityUserReward, vo is: {}", vo);
 
-        if (activityUserRewardService.selectByUserId(vo.getUserId(), vo.getActivityId(), vo.getGrade()) != null) {
-            logger.error("用户：{}在活动： {}已经领取奖励", vo.getUserId(), vo.getActivityId());
-            return new BooleanResponse(Boolean.FALSE);
-        }
+		List<ActivityUserReward> list = activityUserRewardService.selectByUserId(vo.getUserId(), vo.getActivityId(), vo.getGrade());
+		// logger.info("test, {}", list != null);
+		if (!CollectionUtils.isEmpty(list)) {
+			logger.error("用户：{}在活动： {}已经领取奖励", vo.getUserId(), vo.getActivityId());
+			return new BooleanResponse(Boolean.FALSE);
+		}
 
 		ActivityUserReward reward = new ActivityUserReward();
 		BeanUtils.copyProperties(vo, reward);
@@ -46,6 +52,23 @@ public class ActivityUserRewardController {
         logger.info("用户: {}竞猜成功， rewardId: {}", vo.getUserId(), rewardId);
         return new BooleanResponse(Boolean.TRUE);
     }
+
+	/**
+	 * 保存领取记录 支持重复复保存
+	 * @param vo
+	 * @return
+	 */
+	@RequestMapping("/save")
+	public ActivityUserRewardResponse saveReward(@RequestBody ActivityUserRewardVO vo) {
+		logger.info("insert ActivityUserReward, vo is: {}", vo);
+		ActivityUserRewardResponse response = new ActivityUserRewardResponse();
+		ActivityUserReward reward = new ActivityUserReward();
+		BeanUtils.copyProperties(vo, reward);
+		int rewardId = activityUserRewardService.insertActivityUserReward(reward);
+		logger.info("用户: {}参与活动成功， rewardId: {}", vo.getUserId(), rewardId);
+		response.setRewardId(rewardId);
+		return response;
+	}
 
     /**
      * 查询用户领取奖励信息
@@ -61,13 +84,18 @@ public class ActivityUserRewardController {
 		logger.info("select ActivityUserReward, activityId is: {}, userId is: {}, grade is: {}", activityId, userId,
 				grade);
 
-		ActivityUserReward reward = activityUserRewardService.selectByUserId(userId, activityId, grade);
+		List<ActivityUserReward> list = activityUserRewardService.selectByUserId(userId, activityId, grade);
 		ActivityUserRewardResponse rewardResponse = new ActivityUserRewardResponse();
 
-		if (reward != null) {
-			ActivityUserRewardVO vo = new ActivityUserRewardVO();
-			BeanUtils.copyProperties(reward, vo);
-			rewardResponse.setResult(vo);
+		if (!CollectionUtils.isEmpty(list)) {
+			List<ActivityUserRewardVO> vos = new ArrayList<>(list.size());
+			ActivityUserRewardVO vo = null;
+			for (ActivityUserReward reward : list) {
+				vo = new ActivityUserRewardVO();
+				BeanUtils.copyProperties(reward, vo);
+				vos.add(vo);
+			}
+			rewardResponse.setResultList(vos);
 		}
 		return rewardResponse;
 	}

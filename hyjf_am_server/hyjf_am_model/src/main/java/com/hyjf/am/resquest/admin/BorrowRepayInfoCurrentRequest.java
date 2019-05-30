@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,25 +13,40 @@ import java.io.Serializable;
  */
 public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializable{
     /** 项目编号*/
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
     /** 总记录数*/
+    @ApiModelProperty(value = "总记录数")
     private Integer count;
     /** 还款期数*/
+    @ApiModelProperty(value = "还款期数")
     private String repayPeriod;
     /** 出借订单号*/
+    @ApiModelProperty(value = "出借订单号")
     private String tenderOrderId;
     /** 承接订单号*/
+    @ApiModelProperty(value = "承接订单号")
     private String assignOrderId;
     /** 还款状态*/
+    @ApiModelProperty(value = "还款状态")
     private String repayStatus;
     /** 应还开始时间*/
+    @ApiModelProperty(value = "应还开始时间")
     private String repayTimeStart;
     /** 应还结束时间*/
+    @ApiModelProperty(value = "应还结束时间")
     private String repayTimeEnd;
     /** 实还开始时间*/
+    @ApiModelProperty(value = "实还开始时间")
     private String repayedTimeStart;
     /** 实还结束时间*/
+    @ApiModelProperty(value = "实还结束时间")
     private String repayedTimeEnd;
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+    /** 出借人用户名*/
+    @ApiModelProperty(value = "出借人用户名")
+    private String tenderUserName;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -110,5 +126,21 @@ public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializa
 
     public void setRepayedTimeEnd(String repayedTimeEnd) {
         this.repayedTimeEnd = repayedTimeEnd;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
+    }
+
+    public String getTenderUserName() {
+        return tenderUserName;
+    }
+
+    public void setTenderUserName(String tenderUserName) {
+        this.tenderUserName = tenderUserName;
     }
 }

@@ -156,7 +156,7 @@ public class BorrowRepaymentPlanController extends BaseController {
 //        map.put("yanqilixi","延期利息");
         map.put("yuqitianshu","逾期天数");
         map.put("yuqilixi","逾期违约金");
-        map.put("repayAccount","应还总额");
+        map.put("yanqilixi","应还总额");
         //实还本金 repayAccountCapitalYes
         //实还利息 repayAccountInterestYes
         //实还服务费 yihuanfuwufei
@@ -173,8 +173,8 @@ public class BorrowRepaymentPlanController extends BaseController {
         map.put("verifyTime","发标时间");
         map.put("borrowFullTime","满标时间");
         map.put("recoverLastTime","放款时间");
-        map.put("repayAccountCapitalWait","剩余待还本金");
-        map.put("repayAccountInterestWait","剩余待还利息");
+//        map.put("repayAccountCapitalWait","剩余待还本金");
+//        map.put("repayAccountInterestWait","剩余待还利息");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {

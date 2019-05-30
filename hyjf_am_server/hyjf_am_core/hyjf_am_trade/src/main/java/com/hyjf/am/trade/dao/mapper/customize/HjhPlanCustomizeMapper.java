@@ -172,9 +172,17 @@ public interface HjhPlanCustomizeMapper {
     /**
      * 统计最后三天的服务记录
      * app和危险的统计计划加入数量
+     * @param params
+     * @return
+     */
+    int countPlanAccedeRecord(Map<String,Object> params);
+
+    /**
+     *获取加入计划的最后三天日期
+     * add by nxl
      * @param planNid
      * @return
      */
-    int countPlanAccedeRecord(String  planNid);
+    List<HjhAccedeCustomizeVO> selectLastThreeDate(String  planNid);
 
 }

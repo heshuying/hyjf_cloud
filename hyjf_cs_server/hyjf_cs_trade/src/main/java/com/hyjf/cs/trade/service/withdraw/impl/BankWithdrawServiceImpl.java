@@ -3,9 +3,11 @@ package com.hyjf.cs.trade.service.withdraw.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -106,17 +108,17 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
-    public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
+    public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,WithdrawRuleConfigVO withdrawRuleConfigVO) {
 
 
         //检查用户信息
-        UserVO users = this.checkUserWithdrawMessage(user, transAmt, cardNo, payAllianceCode);
+        UserVO users = this.checkUserWithdrawMessage(user, transAmt, cardNo, payAllianceCode,withdrawRuleConfigVO);
 
         // 取得手续费 默认1
         String fee = this.getWithdrawFee(user.getUserId(), cardNo);
         // 组装发往江西银行参数
-        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl,forgotPwdUrl);
-        logger.debug("提现返回bean"+bean);
+        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl,forgotPwdUrl,withdrawRuleConfigVO);
+        logger.debug("提现返回bean" + bean);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(user.getUserId()));
@@ -130,7 +132,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         return bean;
     }
 
-    public BankCallBean fallBackWithdraw(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,Throwable e){
+    public BankCallBean fallBackWithdraw(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,WithdrawRuleConfigVO withdrawRuleConfigVO,Throwable e){
         logger.error("警告 ！！ fallBackWithdraw -->"+e.getMessage());
         return null;
     }
@@ -698,8 +700,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param transAmt
      * @param cardNo
      * @param payAllianceCode
+     * @param withdrawRuleConfigVO
      */
-    public UserVO checkUserWithdrawMessage(UserVO user, String transAmt, String cardNo, String payAllianceCode){
+    public UserVO checkUserWithdrawMessage(UserVO user, String transAmt, String cardNo, String payAllianceCode,WithdrawRuleConfigVO withdrawRuleConfigVO){
         if (user == null) {
             throw new CheckException(MsgEnum.ERR_USER_LOGIN_RETRY);
         }
@@ -735,9 +738,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if (users.getStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
-        if ((account.compareTo(new BigDecimal(50000)) > 0) && StringUtils.isBlank(payAllianceCode)) {
+        // mod by liuyang 20190422 节假日提现修改 start
+        if ( withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isBlank(payAllianceCode)) {
             throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
         }
+        // mod by liuyang 20190422 节假日提现修改 end
 
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard == null || Validator.isNull(bankCard.getCardNo())) {
@@ -753,6 +758,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 提现金额大于可用余额
         if(account.compareTo(accountVO.getBankBalance()) > 0){
             throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE);
+        }
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(users.getUserId(),account)) {
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
         }
         // 服务费授权状态
         if(!authService.checkPaymentAuthStatus(user.getUserId())){
@@ -846,9 +855,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param bgRetUrl
      * @param successfulUrl
      * @param forgotPwdUrl
+     * @param withdrawRuleConfigVO
      * @return
      */
-    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
+    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,WithdrawRuleConfigVO withdrawRuleConfigVO) {
         String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
@@ -887,22 +897,22 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
         // 提现金额大于五万,走人行通道,路由代码传2
-        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
-            routeCode = "2";// 路由代码
+        // mod by liuyang 20190422 节假日提现修改 start
+        if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isNotBlank(payAllianceCode)) {
             bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
+            bean.setRouteCode(withdrawRuleConfigVO.getRouteCode());
         }
-        if ("2".equals(routeCode)) {
-            bean.setRouteCode(routeCode);
-        }
+        //  mod by liuyang 20190422 节假日提现修改 end
         // 企业用户提现
         if (user.getUserType() == 1) { // 企业用户 传组织机构代码
-            CorpOpenAccountRecordVO
-                    record=amUserClient.selectCorpOpenAccountRecordByUserId(user.getUserId());
+            CorpOpenAccountRecordVO record=amUserClient.selectCorpOpenAccountRecordByUserId(user.getUserId());
             bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);// 证件类型 20：其他证件（组织机构代码）25：社会信用号
             bean.setIdNo(record.getBusiCode());
             bean.setName(record.getBusiName());
-            bean.setRouteCode("2");
-            bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
+            // del by liuyang 20190422 节假日提现修改 start
+//            bean.setRouteCode("2");
+//            bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
+            // del by liuyang 20190422 节假日提现修改 end
         }
 
         bean.setForgotPwdUrl(forgotPwdUrl);
@@ -1213,16 +1223,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 }
                 return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_ZC000004,"机构编号错误");
             }
-            // 大额提现判断银行联行号
-            if ((new BigDecimal(account).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
-                logger.info("大额提现时,银行联行号不能为空");
-                // 异步回调URL
-                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
-                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
-                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
-                }
-                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
-            }
+            // modify by liuyang 20190422 节假日提现修改 start
             // 根据电子账户号查询用户ID
             BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(accountId);
             if (bankOpenAccount == null) {
@@ -1247,6 +1248,29 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 }
                 return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
+            // 获取提现规则配置
+            WithdrawRuleConfigVO withdrawRuleConfigVO = this.getWithdrawRuleConfig(userId, account);
+            if (withdrawRuleConfigVO == null) {
+                logger.error("获取提现配置失败");
+                // 异步回调URL
+                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
+                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
+                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
+                }
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
+            }
+
+            // 提现规则配置需要联行号时,并且联行号为空时,报错
+            if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isBlank(payAllianceCode)) {
+                logger.info("大额提现时,银行联行号不能为空");
+                // 异步回调URL
+                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
+                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
+                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
+                }
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
+            }
+            // modify by liuyang 20190422 节假日提现修改 end
 
             // 检查是否设置交易密码
             Integer passwordFlag = user.getIsSetPassword();
@@ -1334,6 +1358,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 }
                 return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000010,"用户账户余额不足");
             }
+            // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+            if (!this.capitalExpendituresCheck(userId,new BigDecimal(account))) {
+                syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000011,"账户余额不同步");
+            }
             // 取得手续费 默认1
             // 11-23  改为从数据库中读取配置的手续费
             String fee = instConfig.getCommissionFee().toString();
@@ -1380,14 +1408,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bean.setCardNo(bankCard.getCardNo());// 银行卡号
             bean.setTxAmount(CustomUtil.formatAmount(account));
             bean.setTxFee(fee);
-
-            // 扣除手续费
-            if ((new BigDecimal(account).compareTo(new BigDecimal(50000)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
-                routeCode = "2";// 路由代码
-                bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
-            }
-            if (routeCode.equals("2")) {
-                bean.setRouteCode(routeCode);
+            // modify by liuyang 20190422 节假日提现修改 start
+            // 提现时需要联行号,并且提现前端传过来的联行号不为空
+            if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isNotBlank(payAllianceCode)){
+                bean.setRouteCode(withdrawRuleConfigVO.getRouteCode());
+                // 绑定银行联行号
+                bean.setCardBankCnaps(payAllianceCode);
                 LogAcqResBean logAcq = new LogAcqResBean();
                 logAcq.setPayAllianceCode(payAllianceCode);
                 bean.setLogAcqResBean(logAcq);
@@ -1398,9 +1424,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);// 证件类型
                 bean.setIdNo(record.getBusiCode());
                 bean.setName(record.getBusiName());
-                bean.setRouteCode("2");
-                bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
             }
+            // modify by liuyang 20190422 节假日提现修改 end
+
             bean.setForgotPwdUrl(systemConfig.getFrontHost()+systemConfig.getForgetpassword());
             bean.setForgotPwdUrl(userWithdrawRequestBean.getForgotPwdUrl());
             bean.setRetUrl(bankRetUrl+"&logOrderId="+bean.getLogOrderId());// 商户前台台应答地址(必须)
@@ -1776,4 +1802,5 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
+
 }

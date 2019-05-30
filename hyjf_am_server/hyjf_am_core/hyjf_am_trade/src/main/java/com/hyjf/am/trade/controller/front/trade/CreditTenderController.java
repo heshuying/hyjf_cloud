@@ -16,6 +16,8 @@ import com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.service.front.account.BankCreditTenderService;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.FormatRateUtil;
+
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -134,7 +137,14 @@ public class CreditTenderController extends BaseController {
         MyCreditListQueryResponse response = new MyCreditListQueryResponse();
         List<TenderCreditCustomize> list = bankCreditTenderService.searchCreditList(request);
         if (CollectionUtils.isNotEmpty(list)){
-            response.setResultList(CommonUtils.convertBeanList(list,TenderCreditCustomizeVO.class));
+        	List<TenderCreditCustomize> list2=new ArrayList<>();
+            //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）全部统一为：
+            // 小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+            for (TenderCreditCustomize tenderCreditCustomize : list) {
+            	tenderCreditCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(tenderCreditCustomize.getBorrowApr()));
+            	list2.add(tenderCreditCustomize);
+			}
+            response.setResultList(CommonUtils.convertBeanList(list2,TenderCreditCustomizeVO.class));
         }
         return response;
     }
@@ -148,6 +158,7 @@ public class CreditTenderController extends BaseController {
     public MyCreditListQueryResponse selectTenderToCreditDetail(@PathVariable Integer userId, @PathVariable String borrowNid, @PathVariable String tenderNid) {
         MyCreditListQueryResponse response = new MyCreditListQueryResponse();
         TenderCreditCustomize bean = bankCreditTenderService.selectTenderToCreditDetail(userId, borrowNid, tenderNid);
+        bean.setBorrowApr(FormatRateUtil.formatBorrowApr(bean.getBorrowApr()));
         if (bean != null) {
             response.setResult(CommonUtils.convertBean(bean, TenderCreditCustomizeVO.class));
         }

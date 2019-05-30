@@ -66,6 +66,17 @@ public class UserCouponBean implements Serializable {
      */
     private String remark;
 
+    public UserCouponBean(){
+
+    }
+
+    public UserCouponBean(Integer userId, Integer sendFlg, String couponCode, Integer activityId) {
+        this.userId = userId;
+        this.sendFlg = sendFlg;
+        this.couponCode = couponCode;
+        this.activityId = activityId;
+    }
+
     public Integer getUserId() {
         return userId;
     }

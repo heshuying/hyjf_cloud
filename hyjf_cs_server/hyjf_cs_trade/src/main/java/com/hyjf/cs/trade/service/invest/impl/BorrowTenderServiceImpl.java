@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
@@ -115,7 +116,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "100"),
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests", value = "100"),
             @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
@@ -209,9 +211,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         return result;
     }
 
-    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request){
-        logger.info("==================已进入 散标出借(三端) fallBackTender 方法================");
-        throw new CheckException(MsgEnum.STATUS_CE999999);
+    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request, Throwable e){
+        logger.info("==已进入 散标出借(三端) fallBackTender ===熔断原因: "+e.getMessage());
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setStatus("CE999999");
+        result.setStatusDesc("系统异常");
+        return result;
     }
 
     /**
@@ -379,6 +384,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 可用金额不足
         if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
+        }
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(request.getUserId(),accountBigDecimal)) {
+            // 账户余额不同步
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
         }
         // redis剩余金额不足
         // 出借金额不能大于项目剩余
@@ -740,7 +750,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else {
                 data.put("income", df.format(earnings.add(couponInterest)));
-                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
+                //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）全部统一为：
+                // 小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+                // add by nxl 加息券统一为小数点后一位
+//                String fromatCoupon = FormatRateUtil.formatBorrowApr(couponUser.getCouponQuota().toString());
+//                data.put("couponQuota", fromatCoupon+ "%");
+                data.put("couponQuota", couponUser.getFormatCouponQuota()+ "%");
             }
             data.put("couponInterest", df.format(couponInterest));
 
@@ -917,6 +932,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 设置产品加息 显示收益率
         if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
             investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield()));
+            //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+            // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+            // add by nxl 加息利率
+            String borrowExtraYield = FormatRateUtil.formatBorrowApr(investInfo.getBorrowExtraYield());
+            investInfo.setBorrowExtraYield(borrowExtraYield);
         }
 
         // 如果出借金额不为空
@@ -974,6 +994,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         WebResult<TenderInfoResult> result = new WebResult();
         result.setData(investInfo);
+        logger.info("result:" + JSON.toJSONString(result));
         return result;
     }
 
@@ -1104,7 +1125,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
             logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
-            investInfo.setBorrowApr(borrow.getBorrowApr() + "%");
+            investInfo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
             investInfo.setIsUsedCoupon("0");
@@ -1203,7 +1224,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             // 设置产品加息 显示收益率
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-                investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield())+"%");
+                investInfo.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(df.format(borrowInfo.getBorrowExtraYield()))+"%");
             }
 
             BigDecimal earnings = new BigDecimal("0");
@@ -1275,15 +1296,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setRealAmount("");
             investInfo.setCouponType("");
 
-            investInfo.setDesc("历史年回报率: " + borrow.getBorrowApr() + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
+            investInfo.setDesc("历史年回报率: " + FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
             /**
              * 产品加息
              */
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-                investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "% + "
-                        + borrowInfo.getBorrowExtraYield() + "%");
+                investInfo.setDesc0("历史年回报率: " + FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "% + "
+                        + FormatRateUtil.formatBorrowApr(borrowInfo.getBorrowExtraYield().toString()) + "%");
             }else{
-                investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
+                investInfo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString())+"%");
             }
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
@@ -1826,12 +1847,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-        vo.setBorrowApr(borrow.getBorrowApr() + "%");
+        vo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString())  + "%");
 
         // 产品加息
         if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-            vo.setBorrowApr(borrow.getBorrowApr() + "% + "
-                    + borrowInfo.getBorrowExtraYield() + "%");
+            vo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString())+ "% + "
+                    + FormatRateUtil.formatBorrowApr(borrowInfo.getBorrowExtraYield().toString()) + "%");
         }
 
         vo.setBorrowNid(tender.getBorrowNid());
@@ -1888,7 +1909,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         if (tender.getCouponGrantId()==null||tender.getCouponGrantId()-0==0) {
             //未选择优惠券
-            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings) + "元");
+            vo.setDesc("年化利率: " + FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%      预期收益: " + CommonUtils.formatAmount(null, earnings) + "元");
             vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings) + "元");
         } else {
             //选择优惠券计算优惠券收益
@@ -1896,7 +1917,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponConfig != null && couponConfig.getId() > 0) {
                 couponInterest = calculateCouponTenderInterest(couponConfig, money, borrow);
             }
-            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+            vo.setDesc("年化利率: " +FormatRateUtil.formatBorrowApr( borrow.getBorrowApr().toString()) + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
             earnings = earnings.add(couponInterest);
             vo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings ) + "元");
 
@@ -2539,6 +2560,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
+        AppUtmRegVO appUtmRegVO = null;
+        if(utmRegVO!=null){
+            tenderBg.setTenderUserUtmId(utmRegVO.getUtmId());
+        }else{
+            // 获取app渠道
+            appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
+            tenderBg.setTenderUserUtmId(utmRegVO.getUtmId());
+        }
+
         // 开始调用原子层操作主表
         logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
@@ -2547,7 +2579,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 投资成功后往redis里面放一个值
             RedisUtils.set(RedisConstants.BORROW_TENDER_ORDER_CHECK+bean.getLogOrderId(),bean.getLogOrderId(),12 * 60 * 60);
 
-            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
+            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow,utmRegVO,appUtmRegVO);
             // 网站累计出借追加
             // 出借、收益统计表
             JSONObject params = new JSONObject();
@@ -2668,7 +2700,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
     }
 
-    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
+    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow ,UtmRegVO utmRegVO,AppUtmRegVO appUtmRegVO) {
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计出借
         // 出借人信息
@@ -2690,8 +2722,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("investProjectPeriod", investProjectPeriod);
         params.put("investFlag", checkAppUtmInvestFlag(userId));
-        // 获取PC 渠道
-        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+
         if (utmRegVO != null ){
             // PC渠道用户
             try {
@@ -2701,8 +2732,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.error("PC渠道统计用户累计出借推送消息队列失败！！！");
             }
         }
-        // 获取app渠道
-        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+
         if (appUtmRegVO != null){
             //压入消息队列
             try {

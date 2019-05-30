@@ -32,6 +32,8 @@ import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -79,6 +81,10 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -97,10 +103,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import com.hyjf.cs.trade.bean.MyCreditDetailBean;
-import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
-import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -1285,7 +1288,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
+        logger.info("散标列表记录数，request：{}", JSON.toJSONString(request));
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
+        logger.info("散标列表记录数，response:{}", JSON.toJSONString(response));
         if (Response.isSuccess(response)){
             return response.getCount();
         }
@@ -7062,6 +7067,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 查询用户账户信息金额信息
+     *
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomizeResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrow/query_account_userMoney/" + userId ,
+                BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 更新还款逾期标的信息
      */
     @Override
@@ -7082,6 +7103,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean){
+        AemsOverdueResultBean aemsOverdueResultBean = new AemsOverdueResultBean();
+        AemsOverdueCustomizeResponse response=restTemplate.postForEntity("http://AM-TRADE/am-trade/aems/overdue/selectRepayOverdue",requestBean,AemsOverdueCustomizeResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            aemsOverdueResultBean.setAemsOverdueVO(response.getResultList());
+            aemsOverdueResultBean.setOverdue("overdue");
+            return aemsOverdueResultBean;
         }
         return null;
     }
@@ -7260,9 +7297,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds) {
+    public UserLargeScreenTwoVO getMonthDataStatistics() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
-        UserLargeScreenTwoResponse response = restTemplate.postForEntity(url, currentOwnersAndUserIds, UserLargeScreenTwoResponse.class).getBody();
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
         // 查到数据为空,显示初始化
         List<MonthDataStatisticsVO> list = new ArrayList<>();
         MonthDataStatisticsVO vo = new MonthDataStatisticsVO();
@@ -7301,4 +7338,126 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResult();
     }
+
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByAccede/"+accedeOrderId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取线上所有智投信息
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> selectAllPlan(){
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectAllPlan";
+        HjhPlanVoResponse response = restTemplate.postForEntity(url,null,HjhPlanVoResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    // 应急中心二期，历史数据上报 add by nxl start
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    @Override
+    public List<CertClaimVO> selectCertBorrowByFlg(){
+        String url = urlBase+"cert/selectCertBorrowByFlg";
+        CertClaimResponse response = restTemplate.getForEntity(url,CertClaimResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest request) {
+        String url = urlBase + "cert/getCertAccountListCustomizeVO";
+        CertAccountListResponse response = restTemplate.postForEntity(url, request, CertAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    @Override
+    public Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO){
+        String url = "http://AM-TRADE/am-trade/cert/updateCertBorrowStatusBatch";
+        IntegerResponse response = restTemplate.postForEntity(url,updateVO,IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+    /**
+     * 查找未上报的产品信息
+     * @return
+     */
+    @Override
+    public List<CertProductVO> selectCertProductList(){
+        String url = urlBase+"cert/selectCertProductList";
+        CertProductResponse response = restTemplate.getForEntity(url,CertProductResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 批量更新产品信息
+     * @param updateVO
+     * @return
+     */
+    @Override
+    public Integer updateCertProductBatch(CertProductUpdateVO updateVO){
+        String url = "http://AM-TRADE/am-trade/cert/updateCertProductBatch";
+        IntegerResponse response = restTemplate.postForEntity(url,updateVO,IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+
+    /**
+     * 根据原投资订单号查找转让信息
+     *
+     * @param sellOrderId
+     * @return add by nxl
+     */
+    @Override
+    public List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/selectCreditBySellOrderId/"+sellOrderId;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url,  HjhDebtCreditResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getBorrowNidList() {
+        String url = "http://AM-TRADE/am-trade/cert/getBorrowNidList";
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
+    // 应急中心二期，历史数据上报 add by nxl end
 }

@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.admin;
 
+import java.math.BigDecimal;
+
 /**
  * @author hesy
  */
@@ -126,6 +128,28 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
     private String repayActionTime;
     /** 记录类别 1 未分期原始出借 2 分期原始出借 3 汇转让承接 4 计划底层债转标的承接*/
     private String recordType;
+    /** 还款方式*/
+    private String borrowStyle;
+    /** 配置的管理费率*/
+    private BigDecimal feeRate;
+    /** 差异费率*/
+    private BigDecimal differentialRate;
+    /** 初审时间*/
+    private Integer verifyTime;
+    /** 当前还款期数*/
+    private Integer recoverPeriod;
+    /** 原始出借金额*/
+    private String account;
+    /** 借款期限*/
+    private Integer borrowPeriodInt;
+    /** 出借人用户属性（当前）*/
+    private String recoverUserAttributeNow;
+    /** 推荐人所属一级分部（当前）*/
+    private String referrerRegionNameNow;
+    /** 推荐人所属二级分部（当前）*/
+    private String referrerBranchNameNow;
+    /** 推荐人所属团队（当前）*/
+    private String referrerDepartmentNameNow;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -613,5 +637,93 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
 
     public void setPeriodTotal(String periodTotal) {
         this.periodTotal = periodTotal;
+    }
+
+    public String getBorrowStyle() {
+        return borrowStyle;
+    }
+
+    public void setBorrowStyle(String borrowStyle) {
+        this.borrowStyle = borrowStyle;
+    }
+
+    public BigDecimal getFeeRate() {
+        return feeRate;
+    }
+
+    public void setFeeRate(BigDecimal feeRate) {
+        this.feeRate = feeRate;
+    }
+
+    public BigDecimal getDifferentialRate() {
+        return differentialRate;
+    }
+
+    public void setDifferentialRate(BigDecimal differentialRate) {
+        this.differentialRate = differentialRate;
+    }
+
+    public Integer getVerifyTime() {
+        return verifyTime;
+    }
+
+    public void setVerifyTime(Integer verifyTime) {
+        this.verifyTime = verifyTime;
+    }
+
+    public Integer getRecoverPeriod() {
+        return recoverPeriod;
+    }
+
+    public void setRecoverPeriod(Integer recoverPeriod) {
+        this.recoverPeriod = recoverPeriod;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public Integer getBorrowPeriodInt() {
+        return borrowPeriodInt;
+    }
+
+    public void setBorrowPeriodInt(Integer borrowPeriodInt) {
+        this.borrowPeriodInt = borrowPeriodInt;
+    }
+
+    public String getRecoverUserAttributeNow() {
+        return recoverUserAttributeNow;
+    }
+
+    public void setRecoverUserAttributeNow(String recoverUserAttributeNow) {
+        this.recoverUserAttributeNow = recoverUserAttributeNow;
+    }
+
+    public String getReferrerRegionNameNow() {
+        return referrerRegionNameNow;
+    }
+
+    public void setReferrerRegionNameNow(String referrerRegionNameNow) {
+        this.referrerRegionNameNow = referrerRegionNameNow;
+    }
+
+    public String getReferrerBranchNameNow() {
+        return referrerBranchNameNow;
+    }
+
+    public void setReferrerBranchNameNow(String referrerBranchNameNow) {
+        this.referrerBranchNameNow = referrerBranchNameNow;
+    }
+
+    public String getReferrerDepartmentNameNow() {
+        return referrerDepartmentNameNow;
+    }
+
+    public void setReferrerDepartmentNameNow(String referrerDepartmentNameNow) {
+        this.referrerDepartmentNameNow = referrerDepartmentNameNow;
     }
 }
