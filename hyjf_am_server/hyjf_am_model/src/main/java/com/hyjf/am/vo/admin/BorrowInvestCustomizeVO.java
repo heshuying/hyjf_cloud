@@ -246,6 +246,25 @@ public class BorrowInvestCustomizeVO extends BaseVO implements Serializable {
      * 是否复投投标  1；是   0：否
      */
     private String tenderType;
+    private String utmSource1;
+    private String utmSource2;
+
+    
+    public String getUtmSource1() {
+		return utmSource1;
+	}
+
+	public void setUtmSource1(String utmSource1) {
+		this.utmSource1 = utmSource1;
+	}
+
+	public String getUtmSource2() {
+		return utmSource2;
+	}
+
+	public void setUtmSource2(String utmSource2) {
+		this.utmSource2 = utmSource2;
+	}
 
     public String getBorrowName() {
         return borrowName;

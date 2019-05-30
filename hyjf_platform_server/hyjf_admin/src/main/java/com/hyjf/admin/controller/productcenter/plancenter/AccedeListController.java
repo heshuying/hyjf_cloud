@@ -626,6 +626,8 @@ public class AccedeListController extends BaseController{
 		map.put("createTime", "授权服务时间");
 		map.put("endDate", "预计开始退出时间");
 		map.put("acctualPaymentTime", "实际退出时间");
+        map.put("utmSource1", "出借人渠道来源（出借时）");
+        map.put("utmSource2", "出借人渠道来源（当前）");
 		return map;
 	}
 	private Map<String, IValueFormatter> buildValueAdapter() {
