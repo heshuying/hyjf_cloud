@@ -1632,7 +1632,7 @@ public interface AmConfigClient {
 	Integer updateStatusBusinessName(BusinessNameMgRequest request);
 	/**
 	 * 查询业务名称
-	 * @param businessName
+	 * @param request
 	 * @return
 	 */
 	BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request);
@@ -1660,4 +1660,29 @@ public interface AmConfigClient {
 	 * @return
 	 */
     AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
+
+	/**
+	 * 获取客组配置列表
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceGroupConfigResponse getCustomerServiceGroupConfigList(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 添加客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse insertCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 修改客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse updateCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 删除客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
 }

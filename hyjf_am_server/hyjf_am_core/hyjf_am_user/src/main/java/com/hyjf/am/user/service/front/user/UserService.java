@@ -358,4 +358,19 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	HashMap<String, String> findUserGroup(Integer userId);
+
+	/**
+	 * 获取前一天注册的用户
+	 *
+	 * @return
+	 */
+	List<User> selectBeforeDayRegisterUserList();
+
+	/**
+	 * 根据用户ID查询PC注册渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UtmReg selectUtmRegByUserId(Integer userId);
 }
