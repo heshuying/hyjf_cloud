@@ -2564,7 +2564,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }else{
             // 获取app渠道
             appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
-            tenderBg.setTenderUserUtmId(utmRegVO.getUtmId());
+            if(appUtmRegVO!=null) {
+            	tenderBg.setTenderUserUtmId(appUtmRegVO.getSourceId());
+            }
         }
 
         // 开始调用原子层操作主表

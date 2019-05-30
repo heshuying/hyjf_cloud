@@ -1349,7 +1349,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }else{
             // 获取app渠道
             appChannelStatisticsDetails = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
-            planAccede.setTenderUserUtmId(utmRegVO.getUtmId());
+            if(appChannelStatisticsDetails!=null) {
+            	 planAccede.setTenderUserUtmId(appChannelStatisticsDetails.getSourceId());
+            }
         }
 
         // 插入汇计划加入明细表
