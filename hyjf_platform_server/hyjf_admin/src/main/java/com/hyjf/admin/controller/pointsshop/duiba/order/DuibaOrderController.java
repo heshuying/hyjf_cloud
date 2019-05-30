@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.pointsshop.duiba.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.vo.DuibaOrderCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -27,10 +28,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,6 +113,28 @@ public class DuibaOrderController  extends BaseController {
         return new AdminResult<ListResult<DuibaOrderCustomizeVO>>(ListResult.build(duibaOrderCustomizeVO, duibaOrderResponse.getRecordTotal())) ;
     }
 
+    /**
+     * 同步处理中的订单信息（订单列表）
+     *
+     * @param orderId
+     * @return
+     */
+    @ApiOperation(value = "同步")
+    @PostMapping("/synchronization")
+    public AdminResult synchronization(@RequestParam("orderId") String orderId){
+        logger.info("调用同步接口start,orderId:{}", orderId);
+        AdminResult adminResult = new AdminResult();
+        JSONObject data = new JSONObject();
+        String retMsg = duibaOrderListService.synchronization(orderId);
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(retMsg)){
+            data.put("error",retMsg);
+            adminResult.setStatus("同步失败！");
+        }else{
+            adminResult.setStatus("同步成功！");
+        }
+        adminResult.setData(data);
+        return adminResult;
+    }
 
     /**
      * 根据条件导出订单信息（订单列表，订单发货，异常订单）

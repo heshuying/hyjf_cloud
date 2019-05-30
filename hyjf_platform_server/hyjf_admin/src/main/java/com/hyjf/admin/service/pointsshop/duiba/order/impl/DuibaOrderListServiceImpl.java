@@ -56,4 +56,15 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
         }
         return paramNameVOList;
     }
+
+    /**
+     * 同步处理中的订单信息（订单列表）
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public String synchronization(String orderId){
+        return adminClient.orderSynchronization(orderId);
+    }
 }

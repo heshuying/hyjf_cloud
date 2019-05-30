@@ -1430,4 +1430,12 @@ public interface AmAdminClient {
      * @return
      */
     DuibaOrderResponse findOrderList(DuibaOrderRequest duibaOrderRequest);
+
+    /**
+     * 同步处理中的订单信息（订单列表）
+     *
+     * @param orderId
+     * @return
+     */
+    String orderSynchronization(String orderId);
 }

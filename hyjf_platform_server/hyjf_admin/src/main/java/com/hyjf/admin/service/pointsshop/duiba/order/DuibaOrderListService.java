@@ -32,4 +32,12 @@ public interface DuibaOrderListService extends BaseService {
      * @return
      */
     List<ParamNameVO> mapToParamNameVO(Map<String, String> map);
+
+    /**
+     * 同步处理中的订单信息（订单列表）
+     *
+     * @param orderId
+     * @return
+     */
+    String synchronization(String orderId);
 }
