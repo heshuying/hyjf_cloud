@@ -4,8 +4,7 @@
 package com.hyjf.admin.service.pointsshop.duiba.points;
 
 import com.hyjf.admin.common.service.BaseService;
-import com.hyjf.am.response.admin.DuibaPointsResponse;
-import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
+import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 
 /**
@@ -19,5 +18,5 @@ public interface DuibaPointsService extends BaseService {
      * @param requestBean
      * @return
      */
-    DuibaPointsResponse selectDuibaPoints(DuibaPointsRequest requestBean);
+    DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean);
 }

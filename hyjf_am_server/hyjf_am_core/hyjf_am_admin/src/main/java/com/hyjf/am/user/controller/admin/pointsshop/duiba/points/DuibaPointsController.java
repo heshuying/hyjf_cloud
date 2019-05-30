@@ -3,19 +3,15 @@
  */
 package com.hyjf.am.user.controller.admin.pointsshop.duiba.points;
 
-import com.hyjf.am.market.dao.model.auto.DuibaPoints;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.DuibaPointsResponse;
+import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
-import com.hyjf.am.trade.dao.model.auto.MerchantAccount;
+import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.admin.pointsshop.duiba.points.DuibaPointsService;
-import com.hyjf.am.vo.admin.DuibaPointsVO;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
+import com.hyjf.am.vo.admin.DuibaPointsUserVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,18 +37,26 @@ public class DuibaPointsController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/selectDuibaPoints")
-    public DuibaPointsResponse selectDuibaPoints(@RequestBody DuibaPointsRequest request) {
-        DuibaPointsResponse response = new DuibaPointsResponse();
+    @RequestMapping("/selectDuibaPointsUser")
+    public DuibaPointsUserResponse selectDuibaPointsUser(@RequestBody DuibaPointsRequest request) {
+        DuibaPointsUserResponse response = new DuibaPointsUserResponse();
         //查询条数
-        int recordTotal = this.duibaPointsService.selectDuibaPointsCount(request);
+        Integer recordTotal = this.duibaPointsService.selectDuibaPointsUserCount(request);
+
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(request.getCurrPage(), recordTotal, request.getPageSize() == 0 ? 10 : request.getPageSize());
-            //查询记录
-            List<DuibaPoints> recordList = duibaPointsService.selectDuibaPoints(request, paginator.getOffset(), paginator.getLimit());
-            if (!CollectionUtils.isEmpty(recordList)) {
-                List<DuibaPointsVO> voList = CommonUtils.convertBeanList(recordList, DuibaPointsVO.class);
-                response.setResultList(voList);
+            // 查询列表传入分页
+            Paginator paginator;
+            if(request.getPageSize() == 0){
+                // 前台传分页
+                paginator = new Paginator(request.getCurrPage(), recordTotal);
+            } else {
+                // 前台未传分页那默认 10
+                paginator = new Paginator(request.getCurrPage(), recordTotal,request.getPageSize());
+            }
+            request.setPaginator(paginator);
+            List<DuibaPointsUserVO> recordList = duibaPointsService.selectDuibaPointsUser(request);
+            if(CollectionUtils.isNotEmpty(recordList)){
+                response.setResultList(recordList);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
             }
