@@ -4,6 +4,7 @@
 package com.hyjf.am.market.service.pointsshop.duiba.order.impl;
 
 import com.hyjf.am.market.dao.mapper.auto.DuibaOrdersMapper;
+import com.hyjf.am.market.dao.mapper.customize.market.DuibaOrdersCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.DuibaOrders;
 import com.hyjf.am.market.dao.model.auto.DuibaOrdersExample;
 import com.hyjf.am.market.service.pointsshop.duiba.order.DuibaOrderListService;
@@ -25,6 +26,9 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
 
     @Autowired
     private DuibaOrdersMapper duibaOrdersMapper;
+
+    @Autowired
+    private DuibaOrdersCustomizeMapper duibaOrdersCustomizeMapper;
 
     @Override
     public Integer findOrderListCount(DuibaOrderRequest request){

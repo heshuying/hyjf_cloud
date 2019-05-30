@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.market.dao.mapper.auto.DuibaOrdersMapper" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.DuibaOrdersCustomizeMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="duiba_order_id" property="duibaOrderId" jdbcType="VARCHAR" />
@@ -26,474 +26,115 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
     id, duiba_order_id, hy_order_id, user_name, true_name, user_id, exchange_content, 
     product_type, selling_price, marking_price, cost, order_status, order_time, completion_time, 
     delivery_status, receiving_information, recharge_state, processing_state, create_by, 
     create_time, update_by, update_time, remark
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrdersExample" >
-    select
-    <if test="distinct" >
-      distinct
+
+  <select id="selectDuibaOrderList" resultMap="BaseResultMap"
+          parameterType="com.hyjf.am.resquest.admin.DuibaOrderRequest">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    ht_duiba_orders hdp
+    WHERE 1=1
+    <if test="duibaOrderIdSerach != null and duibaOrderIdSerach != ''">
+      AND hdp.duiba_order_id = #{duibaOrderIdSerach}
     </if>
-    <include refid="Base_Column_List" />
-    from ht_duiba_orders
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
+    <if test="hyOrderIdSerach != null and hyOrderIdSerach != ''">
+      AND hdp.hy_order_id = #{hyOrderIdSerach}
     </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
+    <if test="userNameSerach != null and userNameSerach != ''">
+      AND hdp.user_name = #{userNameSerach}
     </if>
-    <if test="limitStart >= 0" >
-      limit #{limitStart} , #{limitEnd}
+    <if test="trueNameSerach != null and trueNameSerach != ''">
+      AND hdp.true_name = #{trueNameSerach}
     </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from ht_duiba_orders
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ht_duiba_orders
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrdersExample" >
-    delete from ht_duiba_orders
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
+    <if test="exchangeContentSerach != null and exchangeContentSerach != ''">
+      AND hdp.exchange_content = #{exchangeContentSerach}
     </if>
-  </delete>
-  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_duiba_orders (duiba_order_id, hy_order_id, user_name, 
-      true_name, user_id, exchange_content, 
-      product_type, selling_price, marking_price, 
-      cost, order_status, order_time, 
-      completion_time, delivery_status, receiving_information, 
-      recharge_state, processing_state, create_by, 
-      create_time, update_by, update_time, 
-      remark)
-    values (#{duibaOrderId,jdbcType=VARCHAR}, #{hyOrderId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{trueName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{exchangeContent,jdbcType=VARCHAR}, 
-      #{productType,jdbcType=VARCHAR}, #{sellingPrice,jdbcType=DECIMAL}, #{markingPrice,jdbcType=DECIMAL}, 
-      #{cost,jdbcType=DECIMAL}, #{orderStatus,jdbcType=TINYINT}, #{orderTime,jdbcType=INTEGER}, 
-      #{completionTime,jdbcType=INTEGER}, #{deliveryStatus,jdbcType=TINYINT}, #{receivingInformation,jdbcType=VARCHAR}, 
-      #{rechargeState,jdbcType=VARCHAR}, #{processingState,jdbcType=TINYINT}, #{createBy,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_duiba_orders
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="duibaOrderId != null" >
-        duiba_order_id,
-      </if>
-      <if test="hyOrderId != null" >
-        hy_order_id,
-      </if>
-      <if test="userName != null" >
-        user_name,
-      </if>
-      <if test="trueName != null" >
-        true_name,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="exchangeContent != null" >
-        exchange_content,
-      </if>
-      <if test="productType != null" >
-        product_type,
-      </if>
-      <if test="sellingPrice != null" >
-        selling_price,
-      </if>
-      <if test="markingPrice != null" >
-        marking_price,
-      </if>
-      <if test="cost != null" >
-        cost,
-      </if>
-      <if test="orderStatus != null" >
-        order_status,
-      </if>
-      <if test="orderTime != null" >
-        order_time,
-      </if>
-      <if test="completionTime != null" >
-        completion_time,
-      </if>
-      <if test="deliveryStatus != null" >
-        delivery_status,
-      </if>
-      <if test="receivingInformation != null" >
-        receiving_information,
-      </if>
-      <if test="rechargeState != null" >
-        recharge_state,
-      </if>
-      <if test="processingState != null" >
-        processing_state,
-      </if>
-      <if test="createBy != null" >
-        create_by,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateBy != null" >
-        update_by,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="remark != null" >
-        remark,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="duibaOrderId != null" >
-        #{duibaOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="hyOrderId != null" >
-        #{hyOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null" >
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="trueName != null" >
-        #{trueName,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="exchangeContent != null" >
-        #{exchangeContent,jdbcType=VARCHAR},
-      </if>
-      <if test="productType != null" >
-        #{productType,jdbcType=VARCHAR},
-      </if>
-      <if test="sellingPrice != null" >
-        #{sellingPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="markingPrice != null" >
-        #{markingPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="cost != null" >
-        #{cost,jdbcType=DECIMAL},
-      </if>
-      <if test="orderStatus != null" >
-        #{orderStatus,jdbcType=TINYINT},
-      </if>
-      <if test="orderTime != null" >
-        #{orderTime,jdbcType=INTEGER},
-      </if>
-      <if test="completionTime != null" >
-        #{completionTime,jdbcType=INTEGER},
-      </if>
-      <if test="deliveryStatus != null" >
-        #{deliveryStatus,jdbcType=TINYINT},
-      </if>
-      <if test="receivingInformation != null" >
-        #{receivingInformation,jdbcType=VARCHAR},
-      </if>
-      <if test="rechargeState != null" >
-        #{rechargeState,jdbcType=VARCHAR},
-      </if>
-      <if test="processingState != null" >
-        #{processingState,jdbcType=TINYINT},
-      </if>
-      <if test="createBy != null" >
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null" >
-        #{updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrdersExample" resultType="java.lang.Integer" >
-    select count(*) from ht_duiba_orders
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
+    <if test="productTypeSerach != null and productTypeSerach != ''">
+      AND hdp.product_type = #{productTypeSerach}
+    </if>
+    <if test="orderStatusSerach != null and orderStatusSerach != ''">
+      AND hdp.order_status = #{orderStatusSerach}
+    </if>
+    <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
+      AND hdp.order_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
+      AND hdp.order_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
+      AND hdp.completion_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
+      AND hdp.completion_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
+      AND hdp.delivery_status = #{deliveryStatusSerach}
+    </if>
+    <if test="rechargeStateSerach != null and rechargeStateSerach != ''">
+      AND hdp.recharge_state = #{rechargeStateSerach}
+    </if>
+    <if test="processingStateSerach != null and processingStateSerach != ''">
+      AND hdp.processing_state = #{processingStateSerach}
+    </if>
+    <if test="limitStart >= 0">
+      LIMIT #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update ht_duiba_orders
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.duibaOrderId != null" >
-        duiba_order_id = #{record.duibaOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.hyOrderId != null" >
-        hy_order_id = #{record.hyOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.userName != null" >
-        user_name = #{record.userName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.trueName != null" >
-        true_name = #{record.trueName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.userId != null" >
-        user_id = #{record.userId,jdbcType=INTEGER},
-      </if>
-      <if test="record.exchangeContent != null" >
-        exchange_content = #{record.exchangeContent,jdbcType=VARCHAR},
-      </if>
-      <if test="record.productType != null" >
-        product_type = #{record.productType,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sellingPrice != null" >
-        selling_price = #{record.sellingPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="record.markingPrice != null" >
-        marking_price = #{record.markingPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="record.cost != null" >
-        cost = #{record.cost,jdbcType=DECIMAL},
-      </if>
-      <if test="record.orderStatus != null" >
-        order_status = #{record.orderStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.orderTime != null" >
-        order_time = #{record.orderTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.completionTime != null" >
-        completion_time = #{record.completionTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.deliveryStatus != null" >
-        delivery_status = #{record.deliveryStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.receivingInformation != null" >
-        receiving_information = #{record.receivingInformation,jdbcType=VARCHAR},
-      </if>
-      <if test="record.rechargeState != null" >
-        recharge_state = #{record.rechargeState,jdbcType=VARCHAR},
-      </if>
-      <if test="record.processingState != null" >
-        processing_state = #{record.processingState,jdbcType=TINYINT},
-      </if>
-      <if test="record.createBy != null" >
-        create_by = #{record.createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateBy != null" >
-        update_by = #{record.updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.remark != null" >
-        remark = #{record.remark,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
+
+  <select id="selectDuibaOrderCount" resultMap="java.lang.Integer"
+          parameterType="com.hyjf.am.resquest.admin.DuibaOrderRequest">
+    SELECT
+    count(1)
+    FROM
+    ht_duiba_orders hdp
+    WHERE 1=1
+    <if test="duibaOrderIdSerach != null and duibaOrderIdSerach != ''">
+      AND hdp.duiba_order_id = #{duibaOrderIdSerach}
     </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update ht_duiba_orders
-    set id = #{record.id,jdbcType=INTEGER},
-      duiba_order_id = #{record.duibaOrderId,jdbcType=VARCHAR},
-      hy_order_id = #{record.hyOrderId,jdbcType=VARCHAR},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      true_name = #{record.trueName,jdbcType=VARCHAR},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      exchange_content = #{record.exchangeContent,jdbcType=VARCHAR},
-      product_type = #{record.productType,jdbcType=VARCHAR},
-      selling_price = #{record.sellingPrice,jdbcType=DECIMAL},
-      marking_price = #{record.markingPrice,jdbcType=DECIMAL},
-      cost = #{record.cost,jdbcType=DECIMAL},
-      order_status = #{record.orderStatus,jdbcType=TINYINT},
-      order_time = #{record.orderTime,jdbcType=INTEGER},
-      completion_time = #{record.completionTime,jdbcType=INTEGER},
-      delivery_status = #{record.deliveryStatus,jdbcType=TINYINT},
-      receiving_information = #{record.receivingInformation,jdbcType=VARCHAR},
-      recharge_state = #{record.rechargeState,jdbcType=VARCHAR},
-      processing_state = #{record.processingState,jdbcType=TINYINT},
-      create_by = #{record.createBy,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_by = #{record.updateBy,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      remark = #{record.remark,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
+    <if test="hyOrderIdSerach != null and hyOrderIdSerach != ''">
+      AND hdp.hy_order_id = #{hyOrderIdSerach}
     </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
-    update ht_duiba_orders
-    <set >
-      <if test="duibaOrderId != null" >
-        duiba_order_id = #{duibaOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="hyOrderId != null" >
-        hy_order_id = #{hyOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null" >
-        user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="trueName != null" >
-        true_name = #{trueName,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="exchangeContent != null" >
-        exchange_content = #{exchangeContent,jdbcType=VARCHAR},
-      </if>
-      <if test="productType != null" >
-        product_type = #{productType,jdbcType=VARCHAR},
-      </if>
-      <if test="sellingPrice != null" >
-        selling_price = #{sellingPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="markingPrice != null" >
-        marking_price = #{markingPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="cost != null" >
-        cost = #{cost,jdbcType=DECIMAL},
-      </if>
-      <if test="orderStatus != null" >
-        order_status = #{orderStatus,jdbcType=TINYINT},
-      </if>
-      <if test="orderTime != null" >
-        order_time = #{orderTime,jdbcType=INTEGER},
-      </if>
-      <if test="completionTime != null" >
-        completion_time = #{completionTime,jdbcType=INTEGER},
-      </if>
-      <if test="deliveryStatus != null" >
-        delivery_status = #{deliveryStatus,jdbcType=TINYINT},
-      </if>
-      <if test="receivingInformation != null" >
-        receiving_information = #{receivingInformation,jdbcType=VARCHAR},
-      </if>
-      <if test="rechargeState != null" >
-        recharge_state = #{rechargeState,jdbcType=VARCHAR},
-      </if>
-      <if test="processingState != null" >
-        processing_state = #{processingState,jdbcType=TINYINT},
-      </if>
-      <if test="createBy != null" >
-        create_by = #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null" >
-        update_by = #{updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
-    update ht_duiba_orders
-    set duiba_order_id = #{duibaOrderId,jdbcType=VARCHAR},
-      hy_order_id = #{hyOrderId,jdbcType=VARCHAR},
-      user_name = #{userName,jdbcType=VARCHAR},
-      true_name = #{trueName,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER},
-      exchange_content = #{exchangeContent,jdbcType=VARCHAR},
-      product_type = #{productType,jdbcType=VARCHAR},
-      selling_price = #{sellingPrice,jdbcType=DECIMAL},
-      marking_price = #{markingPrice,jdbcType=DECIMAL},
-      cost = #{cost,jdbcType=DECIMAL},
-      order_status = #{orderStatus,jdbcType=TINYINT},
-      order_time = #{orderTime,jdbcType=INTEGER},
-      completion_time = #{completionTime,jdbcType=INTEGER},
-      delivery_status = #{deliveryStatus,jdbcType=TINYINT},
-      receiving_information = #{receivingInformation,jdbcType=VARCHAR},
-      recharge_state = #{rechargeState,jdbcType=VARCHAR},
-      processing_state = #{processingState,jdbcType=TINYINT},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <if test="userNameSerach != null and userNameSerach != ''">
+      AND hdp.user_name = #{userNameSerach}
+    </if>
+    <if test="trueNameSerach != null and trueNameSerach != ''">
+      AND hdp.true_name = #{trueNameSerach}
+    </if>
+    <if test="exchangeContentSerach != null and exchangeContentSerach != ''">
+      AND hdp.exchange_content = #{exchangeContentSerach}
+    </if>
+    <if test="productTypeSerach != null and productTypeSerach != ''">
+      AND hdp.product_type = #{productTypeSerach}
+    </if>
+    <if test="orderStatusSerach != null and orderStatusSerach != ''">
+      AND hdp.order_status = #{orderStatusSerach}
+    </if>
+    <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
+      AND hdp.order_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
+      AND hdp.order_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
+      AND hdp.completion_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
+      AND hdp.completion_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+    </if>
+    <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
+      AND hdp.delivery_status = #{deliveryStatusSerach}
+    </if>
+    <if test="rechargeStateSerach != null and rechargeStateSerach != ''">
+      AND hdp.recharge_state = #{rechargeStateSerach}
+    </if>
+    <if test="processingStateSerach != null and processingStateSerach != ''">
+      AND hdp.processing_state = #{processingStateSerach}
+    </if>
+  </select>
 </mapper>
