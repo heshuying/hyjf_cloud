@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.market.service.pointsshop.duiba.points.impl;
 
+import com.hyjf.am.market.dao.mapper.customize.market.DuibaPointsListCustomizeMapper;
 import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsListService;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.vo.admin.DuibaPointsVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.List;
 @Service
 public class DuibaPointsListServiceImpl implements DuibaPointsListService {
 
+    @Autowired
+    DuibaPointsListCustomizeMapper duibaPointsListCustomizeMapper;
+
     /**
      * 查询兑吧积分明细件数
      *
@@ -25,9 +30,8 @@ public class DuibaPointsListServiceImpl implements DuibaPointsListService {
      */
     @Override
     public Integer selectDuibaPointsCount(DuibaPointsRequest request) {
-        return null;
+        return duibaPointsListCustomizeMapper.selectDuibaPointsCount(request);
     }
-
 
     /**
      * 查询兑吧积分明细列表
@@ -37,6 +41,6 @@ public class DuibaPointsListServiceImpl implements DuibaPointsListService {
      */
     @Override
     public List<DuibaPointsVO> selectDuibaPointsList(DuibaPointsRequest request) {
-        return null;
+        return duibaPointsListCustomizeMapper.selectDuibaPointsList(request);
     }
 }
