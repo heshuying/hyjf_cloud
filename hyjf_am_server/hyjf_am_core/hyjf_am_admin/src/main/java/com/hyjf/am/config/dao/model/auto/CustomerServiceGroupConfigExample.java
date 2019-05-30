@@ -704,6 +704,66 @@ public class CustomerServiceGroupConfigExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andIsNewIsNull() {
+            addCriterion("is_new is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIsNotNull() {
+            addCriterion("is_new is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewEqualTo(Integer value) {
+            addCriterion("is_new =", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotEqualTo(Integer value) {
+            addCriterion("is_new <>", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewGreaterThan(Integer value) {
+            addCriterion("is_new >", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_new >=", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewLessThan(Integer value) {
+            addCriterion("is_new <", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewLessThanOrEqualTo(Integer value) {
+            addCriterion("is_new <=", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIn(List<Integer> values) {
+            addCriterion("is_new in", values, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotIn(List<Integer> values) {
+            addCriterion("is_new not in", values, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewBetween(Integer value1, Integer value2) {
+            addCriterion("is_new between", value1, value2, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_new not between", value1, value2, "isNew");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

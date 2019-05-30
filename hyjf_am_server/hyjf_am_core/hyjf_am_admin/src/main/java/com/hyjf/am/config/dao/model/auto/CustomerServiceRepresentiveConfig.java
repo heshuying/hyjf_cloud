@@ -67,6 +67,13 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 是否为新客 1新客组 0老客组
+     *
+     * @mbggenerated
+     */
+    private Integer isNew;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -139,5 +146,13 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
     }
 }
