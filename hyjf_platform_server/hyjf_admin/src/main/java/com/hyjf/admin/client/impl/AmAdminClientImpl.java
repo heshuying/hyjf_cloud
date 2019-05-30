@@ -2474,4 +2474,14 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return 0;
     }
+
+    /**
+     * 获取兑吧订单号列表
+     * @param duibaOrderRequest
+     * @return
+     */
+    @Override
+    public DuibaOrderResponse findOrderList(DuibaOrderRequest duibaOrderRequest){
+        return restTemplate.postForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/findOrderList", duibaOrderRequest, DuibaOrderResponse.class).getBody();
+    }
 }

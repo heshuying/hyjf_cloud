@@ -1423,4 +1423,11 @@ public interface AmAdminClient {
     BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean);
 
     Integer getRepayInfoCurrentExportCount(BorrowRepayInfoCurrentRequest requestBean);
+
+    /**
+     * 查询累计年华投资
+     * @param duibaOrderRequest
+     * @return
+     */
+    DuibaOrderResponse findOrderList(DuibaOrderRequest duibaOrderRequest);
 }

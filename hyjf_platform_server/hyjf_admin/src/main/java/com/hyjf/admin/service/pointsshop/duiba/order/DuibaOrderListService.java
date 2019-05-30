@@ -23,7 +23,7 @@ public interface DuibaOrderListService extends BaseService {
      * @param duibaOrderRequest
      * @return
      */
-    DuibaOrderResponse orderInfoAction(DuibaOrderRequest duibaOrderRequest);
+    DuibaOrderResponse findOrderList(DuibaOrderRequest duibaOrderRequest);
 
     /**
      * map转ParamNameVO

@@ -69,23 +69,39 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 	 * @mbggenerated
 	 */
 	@ApiModelProperty(value = "订单状态(检索用)")
-	private Integer orderStatusSerach;
+	private String orderStatusSerach;
 
 	/**
-	 * 下单时间
+	 * 下单时间（开始）
 	 *
 	 * @mbggenerated
 	 */
-	@ApiModelProperty(value = "下单时间(检索用)")
-	private Integer orderTimeSerach;
+	@ApiModelProperty(value = "下单时间(检索用开始)")
+	private String orderTimeSerachStart;
 
 	/**
-	 * 完成时间
+	 * 下单时间（结束）
 	 *
 	 * @mbggenerated
 	 */
-	@ApiModelProperty(value = "完成时间(检索用)")
-	private Integer completionTimeSerach;
+	@ApiModelProperty(value = "下单时间(检索用结束)")
+	private String orderTimeSerachEnd;
+
+	/**
+	 * 完成时间（开始）
+	 *
+	 * @mbggenerated
+	 */
+	@ApiModelProperty(value = "完成时间(检索用开始)")
+	private String completionTimeSerachStart;
+
+	/**
+	 * 完成时间（结束）
+	 *
+	 * @mbggenerated
+	 */
+	@ApiModelProperty(value = "完成时间(检索用结束)")
+	private String completionTimeSerachEnd;
 
 	/**
 	 * 发货状态
@@ -93,7 +109,7 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 	 * @mbggenerated
 	 */
 	@ApiModelProperty(value = "发货状态(检索用)")
-	private Integer deliveryStatusSerach;
+	private String deliveryStatusSerach;
 
 	/**
 	 * 虚拟商品充值状态
@@ -109,7 +125,7 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 	 * @mbggenerated
 	 */
 	@ApiModelProperty(value = "处理状态(检索用)")
-	private Integer processingStateSerach;
+	private String processingStateSerach;
 
 	/**
 	 * 页签状态
@@ -117,7 +133,7 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 	 * @mbggenerated
 	 */
 	@ApiModelProperty(value = "页签状态(检索用)1：订单查询，2.订单发货，3.异常订单")
-	private Integer orderTypeTab;
+	private String orderTypeTab;
 
 	private static final long serialVersionUID = 1L;
 
@@ -169,35 +185,19 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 		this.productTypeSerach = productTypeSerach;
 	}
 
-	public Integer getOrderStatusSerach() {
+	public String getOrderStatusSerach() {
 		return orderStatusSerach;
 	}
 
-	public void setOrderStatusSerach(Integer orderStatusSerach) {
+	public void setOrderStatusSerach(String orderStatusSerach) {
 		this.orderStatusSerach = orderStatusSerach;
 	}
 
-	public Integer getOrderTimeSerach() {
-		return orderTimeSerach;
-	}
-
-	public void setOrderTimeSerach(Integer orderTimeSerach) {
-		this.orderTimeSerach = orderTimeSerach;
-	}
-
-	public Integer getCompletionTimeSerach() {
-		return completionTimeSerach;
-	}
-
-	public void setCompletionTimeSerach(Integer completionTimeSerach) {
-		this.completionTimeSerach = completionTimeSerach;
-	}
-
-	public Integer getDeliveryStatusSerach() {
+	public String getDeliveryStatusSerach() {
 		return deliveryStatusSerach;
 	}
 
-	public void setDeliveryStatusSerach(Integer deliveryStatusSerach) {
+	public void setDeliveryStatusSerach(String deliveryStatusSerach) {
 		this.deliveryStatusSerach = deliveryStatusSerach;
 	}
 
@@ -209,15 +209,55 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 		this.rechargeStateSerach = rechargeStateSerach;
 	}
 
-	public Integer getProcessingStateSerach() {
+	public String getProcessingStateSerach() {
 		return processingStateSerach;
 	}
 
-	public void setProcessingStateSerach(Integer processingStateSerach) {
+	public void setProcessingStateSerach(String processingStateSerach) {
 		this.processingStateSerach = processingStateSerach;
+	}
+
+	public String getOrderTypeTab() {
+		return orderTypeTab;
+	}
+
+	public void setOrderTypeTab(String orderTypeTab) {
+		this.orderTypeTab = orderTypeTab;
 	}
 
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
+	}
+
+	public String getOrderTimeSerachStart() {
+		return orderTimeSerachStart;
+	}
+
+	public void setOrderTimeSerachStart(String orderTimeSerachStart) {
+		this.orderTimeSerachStart = orderTimeSerachStart;
+	}
+
+	public String getOrderTimeSerachEnd() {
+		return orderTimeSerachEnd;
+	}
+
+	public void setOrderTimeSerachEnd(String orderTimeSerachEnd) {
+		this.orderTimeSerachEnd = orderTimeSerachEnd;
+	}
+
+	public String getCompletionTimeSerachStart() {
+		return completionTimeSerachStart;
+	}
+
+	public void setCompletionTimeSerachStart(String completionTimeSerachStart) {
+		this.completionTimeSerachStart = completionTimeSerachStart;
+	}
+
+	public String getCompletionTimeSerachEnd() {
+		return completionTimeSerachEnd;
+	}
+
+	public void setCompletionTimeSerachEnd(String completionTimeSerachEnd) {
+		this.completionTimeSerachEnd = completionTimeSerachEnd;
 	}
 }

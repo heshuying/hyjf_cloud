@@ -34,8 +34,8 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
      * @return
      */
     @Override
-    public DuibaOrderResponse orderInfoAction(DuibaOrderRequest duibaOrderRequest){
-        return adminClient.orderInfoAction(duibaOrderRequest);
+    public DuibaOrderResponse findOrderList(DuibaOrderRequest duibaOrderRequest){
+        return adminClient.findOrderList(duibaOrderRequest);
     }
 
     /**

@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.response.admin;
 
-import com.hyjf.am.bean.admin.DuibaOrderBean;
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author dongzeshan
  * @version BorrowFirstCustomizeResponse, v0.1 2018/7/3 15:16
  */
-public class DuibaOrderResponse extends AdminResponse<DuibaOrderBean> {
+public class DuibaOrderResponse extends AdminResponse<DuibaOrderVO> {
 	private List<ParamNameVO> productTypeList;
 	private List<ParamNameVO> orderStatusList;
 	private List<ParamNameVO> deliveryStatusList;
