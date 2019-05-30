@@ -2569,7 +2569,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 获取app渠道
             appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
             if(appUtmRegVO!=null) {
-            	tenderBg.setTenderUserUtmId(appUtmRegVO.getSourceId());
+            	//tenderBg.setTenderUserUtmId(appUtmRegVO.getSourceId());
             }
         }
 

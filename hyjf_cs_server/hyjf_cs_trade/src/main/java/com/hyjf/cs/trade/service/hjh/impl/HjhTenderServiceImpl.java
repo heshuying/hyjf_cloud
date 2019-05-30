@@ -1350,7 +1350,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 获取app渠道
             appChannelStatisticsDetails = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
             if(appChannelStatisticsDetails!=null) {
-            	 planAccede.setTenderUserUtmId(appChannelStatisticsDetails.getSourceId());
+            	 //planAccede.setTenderUserUtmId(appChannelStatisticsDetails.getSourceId());
             }
         }
 
