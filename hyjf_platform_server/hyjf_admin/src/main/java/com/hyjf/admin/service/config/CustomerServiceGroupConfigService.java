@@ -34,4 +34,10 @@ public interface CustomerServiceGroupConfigService {
      * @param request
      */
     CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+    /**
+     * 校验客组配置
+     * @param request
+     */
+    CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
 }

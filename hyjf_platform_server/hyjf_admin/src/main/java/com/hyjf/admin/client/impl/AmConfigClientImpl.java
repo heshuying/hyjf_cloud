@@ -2686,6 +2686,76 @@ public class AmConfigClientImpl implements AmConfigClient {
         CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
         return reponse;
     }
+
+    /**
+     * 校验客组配置
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/checkCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return response;
+    }
+
+    /**
+     * 获取坐席配置列表
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse getCustomerServiceRepresentiveConfigList(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/getCustomerServiceRepresentiveConfigList";
+        CustomerServiceRepresentiveConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return response;
+    }
+
+    /**
+     * 添加坐席配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse insertCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/insertCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 修改坐席配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse updateCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/updateCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 删除坐席配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse deleteCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/deleteCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 校验坐席配置
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/checkCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return response;
+    }
+
 	@Override
 	public CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request) {
         String url = "http://AM-ADMIN/am-config/channel/getCustomerChannelList";
@@ -2704,5 +2774,4 @@ public class AmConfigClientImpl implements AmConfigClient {
         CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
         return reponse;
 	}
-
 }

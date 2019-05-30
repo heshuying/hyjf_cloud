@@ -53,4 +53,13 @@ public class CustomerServiceGroupConfigServiceImpl implements CustomerServiceGro
     public CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
         return amConfigClient.deleteCustomerServiceGroupConfig(request);
     }
+
+    /**
+     * 校验客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        return amConfigClient.checkCustomerServiceGroupConfig(request);
+    }
 }

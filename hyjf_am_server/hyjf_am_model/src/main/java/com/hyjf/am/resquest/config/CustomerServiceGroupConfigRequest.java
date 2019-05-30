@@ -56,6 +56,13 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
      */
     private Integer createUserId;
 
+    /**
+     * 是否为新客 1新客组 0老客组
+     *
+     * @mbggenerated
+     */
+    private Integer isNew;
+
     public Integer getId() {
         return id;
     }
@@ -110,5 +117,13 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
     }
 }

@@ -1686,6 +1686,45 @@ public interface AmConfigClient {
 	 */
 	CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
 
+	/**
+	 * 校验客组配置
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 获取坐席配置列表
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceRepresentiveConfigResponse getCustomerServiceRepresentiveConfigList(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 添加坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse insertCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 修改坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse updateCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 删除坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse deleteCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 校验坐席配置
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
 	CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request);
 
 	CustomerChannelResponse insetCustomerChannel(CustomerChannelRequest request);

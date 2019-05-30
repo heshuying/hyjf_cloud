@@ -58,6 +58,14 @@ public class CustomerServiceGroupConfigController extends BaseController {
     @PostMapping("/insertCustomerServiceGroupConfig")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<CustomerServiceGroupConfigResponse> insertCustomerServiceGroupConfig(HttpServletRequest request, @RequestBody CustomerServiceGroupConfigRequest groupRequest) {
+        // 校验客组信息
+        CustomerServiceGroupConfigResponse checkResponse = customerServiceGroupConfigService.checkCustomerServiceGroupConfig(groupRequest);
+        if (checkResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(checkResponse)) {
+            return new AdminResult<>(FAIL, checkResponse.getMessage());
+        }
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
         groupRequest.setCreateUserId(Integer.parseInt(adminSystemVO.getId()));// 设置
@@ -77,6 +85,14 @@ public class CustomerServiceGroupConfigController extends BaseController {
     public AdminResult<CustomerServiceGroupConfigResponse> updateCustomerServiceGroupConfig(HttpServletRequest request, @RequestBody CustomerServiceGroupConfigRequest groupRequest) {
         if (groupRequest.getId() == null) {
             return new AdminResult<>(FAIL, "id不能为空！");
+        }
+        // 校验客组信息
+        CustomerServiceGroupConfigResponse checkResponse = customerServiceGroupConfigService.checkCustomerServiceGroupConfig(groupRequest);
+        if (checkResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(checkResponse)) {
+            return new AdminResult<>(FAIL, checkResponse.getMessage());
         }
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);

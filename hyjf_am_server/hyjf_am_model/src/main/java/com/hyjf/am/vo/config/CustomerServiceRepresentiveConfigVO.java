@@ -24,7 +24,7 @@ public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Seria
     @ApiModelProperty(value = "id")
     private Integer id;
 
-    @ApiModelProperty(value = "后台系统的用户名")
+    @ApiModelProperty(value = "姓名")
     private String userName;
 
     @ApiModelProperty(value = "客组ID")
