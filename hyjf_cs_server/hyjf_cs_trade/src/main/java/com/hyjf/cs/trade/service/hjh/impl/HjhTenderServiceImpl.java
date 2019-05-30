@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.hjh.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
@@ -108,7 +107,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "100"),
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests", value = "100"),
             @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
@@ -192,8 +192,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      * @return
      */
-    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
-        logger.info("==================已进入 加入计划(三端) fallBackJoinPlan 方法================");
+    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request,Throwable e){
+        logger.info("==================已进入 加入计划(三端) fallBackJoinPlan 方法========熔断原因: "+e.getMessage());
         WebResult<Map<String,Object>> result = new WebResult<>();
         result.setStatus(AppResult.FAIL);
         result.setStatusDesc("加入失败，请重试！");

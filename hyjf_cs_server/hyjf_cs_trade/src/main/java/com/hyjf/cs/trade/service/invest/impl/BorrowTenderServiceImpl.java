@@ -116,7 +116,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "100"),
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests", value = "100"),
             @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
@@ -210,9 +211,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         return result;
     }
 
-    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request){
-        logger.info("==================已进入 散标出借(三端) fallBackTender 方法================");
-        throw new CheckException(MsgEnum.STATUS_CE999999);
+    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request, Throwable e){
+        logger.info("==已进入 散标出借(三端) fallBackTender ===熔断原因: "+e.getMessage());
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setStatus("CE999999");
+        result.setStatusDesc("系统异常");
+        return result;
     }
 
     /**

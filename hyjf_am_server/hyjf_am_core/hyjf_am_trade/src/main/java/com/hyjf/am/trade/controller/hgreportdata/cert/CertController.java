@@ -229,7 +229,7 @@ public class CertController extends BaseController {
     public CertClaimResponse selectCertBorrowByFlg(){
         CertClaimResponse response = new CertClaimResponse();
         response.setRtn(Response.FAIL);
-        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig();
+        List<CertClaim> certBorrowList =certService.insertCertBorrowConfig();
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
             List<CertClaimVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertClaimVO.class);
             response.setResultList(borrowVOList);
@@ -263,7 +263,7 @@ public class CertController extends BaseController {
     public CertProductResponse selectCertProduct(){
         CertProductResponse response = new CertProductResponse();
         response.setRtn(Response.FAIL);
-        List<CertProduct> certProductList =certService.selectCertProductList();
+        List<CertProduct> certProductList =certService.insertCertProductList();
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certProductList)){
             List<CertProductVO> borrowVOList = CommonUtils.convertBeanList(certProductList,CertProductVO.class);
             response.setResultList(borrowVOList);
