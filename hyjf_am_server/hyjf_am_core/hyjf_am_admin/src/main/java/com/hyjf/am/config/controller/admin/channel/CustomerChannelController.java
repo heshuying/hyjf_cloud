@@ -13,7 +13,6 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
 import com.hyjf.am.config.service.CustomerChannelService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminAuthConfigResponse;
 import com.hyjf.am.response.admin.CustomerChannelResponse;
 import com.hyjf.am.resquest.admin.CustomerChannelRequest;
 import com.hyjf.am.vo.admin.CustomerServiceChannelVO;
@@ -59,8 +58,8 @@ public class CustomerChannelController extends BaseConfigController {
      * @return
      */
     @PostMapping("/insetCustomerChannel")
-    public AdminAuthConfigResponse getAuthConfigById(@RequestBody CustomerChannelRequest request){
-        AdminAuthConfigResponse response = new AdminAuthConfigResponse();
+    public CustomerChannelResponse getAuthConfigById(@RequestBody CustomerChannelRequest request){
+    	CustomerChannelResponse response = new CustomerChannelResponse();
         int i = customerChannelService.insetCustomerChannel(request);
         if (i==1){
             response.setMessage(Response.SUCCESS_MSG);
@@ -74,10 +73,10 @@ public class CustomerChannelController extends BaseConfigController {
      * @param form
      * @return
      */
-    @PostMapping("/updateAuthConfig")
-    public AdminAuthConfigResponse updateAuthConfig(@RequestBody CustomerChannelRequest request){
-      AdminAuthConfigResponse response = new AdminAuthConfigResponse();
-      int i = customerChannelService.updateAuthConfig(request);
+    @PostMapping("/updateCustomerChannel")
+    public CustomerChannelResponse updateCustomerChannel(@RequestBody CustomerChannelRequest request){
+    	CustomerChannelResponse response = new CustomerChannelResponse();
+      int i = customerChannelService.updateCustomerChannel(request);
       if (i==1){
           response.setMessage(Response.SUCCESS_MSG);
           response.setRtn(Response.SUCCESS);

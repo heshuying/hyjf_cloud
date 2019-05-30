@@ -13,6 +13,6 @@ public interface CustomerChannelService {
 
 	int insetCustomerChannel(CustomerChannelRequest request);
 
-	int updateAuthConfig(CustomerChannelRequest request);
+	int updateCustomerChannel(CustomerChannelRequest request);
 
 }

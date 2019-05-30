@@ -1,8 +1,7 @@
 package com.hyjf.admin.controller.channel;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,13 +13,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.CustomerChannelService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminAuthConfigResponse;
 import com.hyjf.am.response.admin.CustomerChannelResponse;
 import com.hyjf.am.resquest.admin.CustomerChannelRequest;
-import com.hyjf.am.vo.admin.CustomerServiceChannelVO;
-
-import com.hyjf.common.util.CommonUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,9 +54,9 @@ public class CustomerChannelController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     @PostMapping("/insetCustomerChannel")
-    public AdminAuthConfigResponse getAuthConfigById(@RequestBody CustomerChannelRequest request){
+    public CustomerChannelResponse getAuthConfigById(HttpServletRequest request,@RequestBody CustomerChannelRequest cRequest){
 
-        return customerChannelService.insetCustomerChannel(request);
+        return customerChannelService.insetCustomerChannel(cRequest);
     }
 
     /**
@@ -73,9 +67,9 @@ public class CustomerChannelController extends BaseController {
 	@ApiOperation(value = "修改授权配置", notes = "修改授权配置")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    @PostMapping("/updateAuthConfig")
-    public AdminAuthConfigResponse updateAuthConfig(@RequestBody CustomerChannelRequest request){
-      return customerChannelService.updateAuthConfig(request);
+    @PostMapping("/updateCustomerChannel")
+    public CustomerChannelResponse updateCustomerChannel(HttpServletRequest request,@RequestBody CustomerChannelRequest cRequest){
+      return customerChannelService.updateCustomerChannel(cRequest);
     }
 
 }

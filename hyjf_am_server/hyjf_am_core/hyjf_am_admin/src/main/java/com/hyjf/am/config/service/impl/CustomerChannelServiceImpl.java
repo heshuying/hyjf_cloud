@@ -47,7 +47,7 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
 	}
 
 	@Override
-	public int updateAuthConfig(CustomerChannelRequest request) {
+	public int updateCustomerChannel(CustomerChannelRequest request) {
     	CustomerServiceChannel record=new CustomerServiceChannel();
     	record.setId(request.getId());
     	record.setStatus(request.getStatus());

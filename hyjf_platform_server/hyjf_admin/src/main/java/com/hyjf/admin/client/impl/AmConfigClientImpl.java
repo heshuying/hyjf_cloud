@@ -2686,5 +2686,23 @@ public class AmConfigClientImpl implements AmConfigClient {
         CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
         return reponse;
     }
+	@Override
+	public CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request) {
+        String url = "http://AM-ADMIN/am-config/channel/getCustomerChannelList";
+        CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
+        return reponse;
+	}
+	@Override
+	public CustomerChannelResponse insetCustomerChannel(CustomerChannelRequest request) {
+        String url = "http://AM-ADMIN/am-config/channel/insetCustomerChannel";
+        CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
+        return reponse;
+	}
+	@Override
+	public CustomerChannelResponse updateCustomerChannel(CustomerChannelRequest request) {
+        String url = "http://AM-ADMIN/am-config/channel/updateCustomerChannel";
+        CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
+        return reponse;
+	}
 
 }

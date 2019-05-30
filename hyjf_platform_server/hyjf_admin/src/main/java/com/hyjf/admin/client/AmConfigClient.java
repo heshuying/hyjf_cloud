@@ -1685,4 +1685,10 @@ public interface AmConfigClient {
 	 * @param request
 	 */
 	CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request);
+
+	CustomerChannelResponse insetCustomerChannel(CustomerChannelRequest request);
+
+	CustomerChannelResponse updateCustomerChannel(CustomerChannelRequest request);
 }
