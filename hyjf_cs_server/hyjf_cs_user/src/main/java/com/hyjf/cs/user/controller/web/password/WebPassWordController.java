@@ -309,7 +309,9 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "找回密码",notes = "找回密码")
     @PostMapping(value = "/recover", produces = "application/json; charset=utf-8")
-    public WebResult recover(@RequestBody PasswordRequest request) {
+    public WebResult recover(@RequestBody PasswordRequest request,
+                             @RequestHeader(value = "wjtClient",required = false) String wjtClient) {
+
         WebResult result = new WebResult();
         // 密码1
         String password1 = request.getNewPassword();
@@ -330,6 +332,11 @@ public class WebPassWordController extends BaseUserController{
         CheckUtil.check(checkStatus==1,MsgEnum.STATUS_ZC000015);
         UserVO user = passWordService.getUsersByMobile(mobile);
         CheckUtil.check(null!=user,MsgEnum.STATUS_CE000006);
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+            throw new CheckException(MsgEnum.ERR_USER_WJT_OPT_ERR);
+        }
         int cnt = passWordService.updatePassword(user, password1);
         CheckUtil.check(cnt>0,MsgEnum.ERR_PASSWORD_MODIFY);
         RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
@@ -374,11 +381,19 @@ public class WebPassWordController extends BaseUserController{
     @ApiOperation(value = "跳转到找回密码第二步",notes = "跳转到找回密码第二步")
     @ApiImplicitParam(name = "param",value = "{telnum:String,code:String}",dataType = "Map")
     @RequestMapping(value = "/senCodePage", method = RequestMethod.POST)
-    public WebResult sencodPage(@RequestBody Map<String,String> param){
+    public WebResult sencodPage(@RequestBody Map<String,String> param,@RequestHeader(value = "wjtClient",required = false) String wjtClient){
+
         WebResult result = new WebResult();
         JSONObject ret = new JSONObject();
         String telnum = param.get("telnum");
         String code = param.get("code");
+        UserVO user = passWordService.getUsersByMobile(telnum);
+        CheckUtil.check(null!=user,MsgEnum.STATUS_CE000006);
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+            throw new CheckException(MsgEnum.ERR_USER_WJT_OPT_ERR);
+        }
         ret.put("telnum", telnum);
         ret.put("code", code);
         ret.put("pubexponent", "10001");
