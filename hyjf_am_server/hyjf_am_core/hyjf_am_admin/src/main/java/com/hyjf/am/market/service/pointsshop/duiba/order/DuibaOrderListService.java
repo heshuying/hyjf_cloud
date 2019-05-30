@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.market.service.pointsshop.duiba.order;
 
-
 import com.hyjf.am.market.dao.model.auto.DuibaOrders;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.admin.DuibaOrderVO;
 
 import java.util.List;
 
@@ -19,4 +19,8 @@ public interface DuibaOrderListService extends BaseService {
     Integer findOrderListCount(DuibaOrderRequest request);
 
     List<DuibaOrders> findOrderList(DuibaOrderRequest request);
+
+    Integer selectOrderListCount(DuibaOrderRequest request);
+
+    List<DuibaOrderVO> selectOrderList(DuibaOrderRequest request);
 }

@@ -173,6 +173,8 @@ public class DuibaOrderVO implements Serializable {
      */
     private String remark;
 
+    private String orderTypeTab;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -357,5 +359,13 @@ public class DuibaOrderVO implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getOrderTypeTab() {
+        return orderTypeTab;
+    }
+
+    public void setOrderTypeTab(String orderTypeTab) {
+        this.orderTypeTab = orderTypeTab;
     }
 }

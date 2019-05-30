@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.DuibaOrdersCustomizeMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.DuibaOrderVO" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="duiba_order_id" property="duibaOrderId" jdbcType="VARCHAR" />
     <result column="hy_order_id" property="hyOrderId" jdbcType="VARCHAR" />
@@ -25,6 +25,7 @@
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="orderTypeTab" property="orderTypeTab" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, duiba_order_id, hy_order_id, user_name, true_name, user_id, exchange_content, 
@@ -62,16 +63,16 @@
       AND hdp.order_status = #{orderStatusSerach}
     </if>
     <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
-      AND hdp.order_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.order_time <![CDATA[>=]]> #{orderTimeSerachStart}
     </if>
     <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
-      AND hdp.order_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.order_time <![CDATA[<=]]> #{orderTimeSerachEnd}
     </if>
     <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
-      AND hdp.completion_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.completion_time <![CDATA[>=]]> #{completionTimeSerachStart}
     </if>
     <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
-      AND hdp.completion_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.completion_time <![CDATA[<=]]> #{completionTimeSerachEnd}
     </if>
     <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
       AND hdp.delivery_status = #{deliveryStatusSerach}
@@ -81,6 +82,11 @@
     </if>
     <if test="processingStateSerach != null and processingStateSerach != ''">
       AND hdp.processing_state = #{processingStateSerach}
+    </if>
+    <if test="orderTypeTab != null and orderTypeTab != ''">
+      <if test="orderTypeTab == '3'">
+        AND hdp.recharge_state IS NOT NULL
+      </if>
     </if>
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
@@ -116,16 +122,16 @@
       AND hdp.order_status = #{orderStatusSerach}
     </if>
     <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
-      AND hdp.order_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.order_time <![CDATA[>=]]> #{orderTimeSerachStart}
     </if>
     <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
-      AND hdp.order_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{orderTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.order_time <![CDATA[<=]]> #{orderTimeSerachEnd}
     </if>
     <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
-      AND hdp.completion_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachStart},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.completion_time <![CDATA[>=]]> #{completionTimeSerachStart}
     </if>
     <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
-      AND hdp.completion_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{completionTimeSerachEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+      AND hdp.completion_time <![CDATA[<=]]> #{completionTimeSerachEnd}
     </if>
     <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
       AND hdp.delivery_status = #{deliveryStatusSerach}
@@ -135,6 +141,11 @@
     </if>
     <if test="processingStateSerach != null and processingStateSerach != ''">
       AND hdp.processing_state = #{processingStateSerach}
+    </if>
+    <if test="orderTypeTab != null and orderTypeTab != ''">
+      <if test="orderTypeTab == '3'">
+        AND hdp.recharge_state IS NOT NULL
+      </if>
     </if>
   </select>
 </mapper>
