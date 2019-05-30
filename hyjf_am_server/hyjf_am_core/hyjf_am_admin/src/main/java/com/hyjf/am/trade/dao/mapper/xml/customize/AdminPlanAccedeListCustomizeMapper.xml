@@ -299,7 +299,7 @@
 		case when hdpa.end_date is not null then date_format(hdpa.end_date, '%Y-%m-%d') else '' end as end_date,
 		CASE WHEN hdpa.acctual_payment_time =0 OR hdpa.acctual_payment_time is null THEN ''
 		ELSE FROM_UNIXTIME(hdpa.acctual_payment_time,'%Y-%m-%d %H:%i:%s') END AS acctual_payment_time,
-		if(hdpa.create_time<![CDATA[<]]>'2019-5-31 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
+		if(hdpa.create_time<![CDATA[<]]>'2019-5-30 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
 		utm2.utm_source utmSource2
 		FROM
 		ht_hjh_accede hdpa
