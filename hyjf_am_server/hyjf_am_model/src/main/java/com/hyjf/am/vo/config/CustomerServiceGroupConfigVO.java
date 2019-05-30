@@ -36,6 +36,9 @@ public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "第三方用户唯一凭证密钥")
     private String serviceUserKey;
 
+    @ApiModelProperty(value = "是否为新客 1.新客组 0.老客组")
+    private Integer isNew;
+
     @ApiModelProperty(value = "启用状态 1.启用2.禁用")
     private Integer status;
 
@@ -87,6 +90,14 @@ public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable
 
     public void setServiceUserKey(String serviceUserKey) {
         this.serviceUserKey = serviceUserKey == null ? null : serviceUserKey.trim();
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
     }
 
     public Integer getStatus() {
