@@ -3,13 +3,11 @@
  */
 package com.hyjf.am.market.controller.admin.pointsshop.duiba.order;
 
-import com.hyjf.am.market.dao.model.auto.DuibaOrders;
 import com.hyjf.am.market.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
-import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +36,16 @@ public class DuibaOrderListController {
     @PostMapping("/findOrderList")
     public DuibaOrderResponse findOrderList(@RequestBody DuibaOrderRequest request){
         DuibaOrderResponse response = new DuibaOrderResponse();
-        Integer count = duibaOrderListService.findOrderListCount(request);
+        // Integer count = duibaOrderListService.findOrderListCount(request);
+        Integer count = duibaOrderListService.selectOrderListCount(request);
         if (count > 0) {
-            List<DuibaOrders> list = this.duibaOrderListService.findOrderList(request);
+            //List<DuibaOrders> list = this.duibaOrderListService.findOrderList(request);
+            List<DuibaOrderVO> list = this.duibaOrderListService.selectOrderList(request);
             if (!CollectionUtils.isEmpty(list)) {
                 // 拷贝list
-                List<DuibaOrderVO> duibaOrderVOS = CommonUtils.convertBeanList(list, DuibaOrderVO.class);
-                response.setResultList(duibaOrderVOS);
+                // List<DuibaOrderVO> duibaOrderVOS = CommonUtils.convertBeanList(list, DuibaOrderVO.class);
+                // response.setResultList(duibaOrderVOS);
+                response.setResultList(list);
                 response.setCount(count);
             }else {
                 response.setRtn(Response.FAIL);
