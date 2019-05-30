@@ -5,10 +5,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.resquest.admin.ContentAdsRequest;
-import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
-import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
-import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -271,5 +268,17 @@ public class AmMarketClientImpl implements AmMarketClient {
     	BooleanResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/updateStatus", request, BooleanResponse.class);
         return response;
     }
+
+	/**
+	 * 查询兑吧积分明细
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public DuibaPointsResponse selectDuibaPointsList(DuibaPointsRequest requestBean) {
+		DuibaPointsResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/duibapoints/selectDuibaPointsList",requestBean,DuibaPointsResponse.class).getBody();
+		return response;
+	}
 
 }

@@ -3,8 +3,13 @@
  */
 package com.hyjf.admin.service.pointsshop.duiba.points.impl;
 
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsListService;
+import com.hyjf.am.response.admin.DuibaPointsResponse;
+import com.hyjf.am.response.admin.DuibaPointsUserResponse;
+import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,4 +18,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DuibaPointsListServiceImpl extends BaseServiceImpl implements DuibaPointsListService {
+
+    @Autowired
+    AmMarketClient amMarketClient;
+
+    /**
+     * 查询兑吧积分明细
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public DuibaPointsResponse selectDuibaPointsList(DuibaPointsRequest requestBean) {
+        DuibaPointsResponse response = amMarketClient.selectDuibaPointsList(requestBean);
+        return response;
+    }
 }

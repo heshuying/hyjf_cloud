@@ -8,7 +8,7 @@ import com.hyjf.am.vo.admin.DuibaPointsVO;
 
 /**
  * @author PC-LIUSHOUYI
- * @version DuibaPointsResponse, v0.1 2019/5/29 10:44
+ * @version DuibaPointsResponse, v0.1 2019/5/30 10:26
  */
 public class DuibaPointsResponse extends AdminResponse<DuibaPointsVO> {
 }

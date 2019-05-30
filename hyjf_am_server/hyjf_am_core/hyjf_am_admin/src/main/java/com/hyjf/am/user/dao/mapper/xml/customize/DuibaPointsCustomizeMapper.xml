@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.DuibaPointsCustomizeMapper">
+    <resultMap id="DuibaPointsUser" type="com.hyjf.am.vo.admin.DuibaPointsUserVO">
+        <id column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
+        <result column="points_total" property="pointsTotal" jdbcType="INTEGER"/>
+        <result column="points_current" property="pointsCurrent" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectDuibaPointsUser" resultMap="DuibaPointsUser"
+            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+        SELECT
+        hu.user_id,
+        hu.username AS user_name,
+        hui.truename AS real_name,
+        hu.points_total,
+        hu.points_current
+        FROM
+        ht_user hu
+        LEFT JOIN ht_user_info hui ON hu.user_id = hui.user_id
+        WHERE 1=1
+        <if test="userNameSrch != null and userNameSrch != ''">
+            AND hu.username = #{userNameSrch}
+        </if>
+        <if test="trueNameSrch != null and trueNameSrch != ''">
+            AND hu.username = #{trueNameSrch}
+        </if>
+        <if test="limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectDuibaPointsUserCount" resultMap="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+        SELECT
+        count(1)
+        FROM
+        ht_user hu
+        LEFT JOIN ht_user_info hui ON hu.user_id = hui.user_id
+        WHERE 1=1
+        <if test="userNameSrch != null and userNameSrch != ''">
+            AND hu.username = #{userNameSrch}
+        </if>
+        <if test="trueNameSrch != null and trueNameSrch != ''">
+            AND hu.username = #{trueNameSrch}
+        </if>
+    </select>
+</mapper>

@@ -45,6 +45,7 @@ public interface AmUserClient {
      * @auth sunpeikai
      */
     List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId);
+
     /**
      * 根据userId查询用户信息
      *
@@ -388,6 +389,7 @@ public interface AmUserClient {
 
     /**
      * 开户掉单更新用户信息
+     *
      * @param userInfoVO
      * @return
      */
@@ -430,7 +432,8 @@ public interface AmUserClient {
     UserVO selectUserByRecommendName(String recommendName);
 
     SpreadsUserVO selectSpreadsUsersByUserId(String userId);
-      /**
+
+    /**
      * 修改推荐人信息
      *
      * @param request
@@ -554,7 +557,7 @@ public interface AmUserClient {
      * @return
      * @author nxl
      */
-    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo,String userName);
+    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo, String userName);
 
     /**
      * 更新记录
@@ -860,6 +863,7 @@ public interface AmUserClient {
 
     /**
      * 获取vip用户管理列表
+     *
      * @param vipManageRequest
      * @return
      */
@@ -867,6 +871,7 @@ public interface AmUserClient {
 
     /**
      * 获取vip用户详情列表
+     *
      * @param detailListRequest
      * @return
      */
@@ -874,20 +879,24 @@ public interface AmUserClient {
 
     /**
      * 获取vip用户升级列表
+     *
      * @param vgl
      * @return
      */
     VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl);
+
     /**
      * 根据id查找用户测评的问题与答案
+     *
      * @param evalationId
-     * @author nxl
      * @return
+     * @author nxl
      */
     List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId);
 
     /**
-     *  分账名单配置添加  查询用户名信息
+     * 分账名单配置添加  查询用户名信息
+     *
      * @param request
      * @return
      */
@@ -895,112 +904,139 @@ public interface AmUserClient {
 
     /**
      * 查询用户画像评分列表
+     *
      * @param request
      * @return
      */
     UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request);
 
-   	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse infoAction();
-	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse download(MspApplytRequest mspApplytRequest);
-	public MspResponse searchAction(MspRequest mspRequest);
-	public MspResponse infoAction(MspRequest mspRequest);
-	public MspResponse insertAction(MspRequest mspRequest);
-	public MspResponse updateAction(MspRequest mspRequest);
-	public MspResponse configureNameError(MspRequest mspRequest);
-	public MspResponse deleteAction(MspRequest mspRequest);
-	public MspResponse checkAction(MspRequest mspRequest);
+    public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse infoAction();
+
+    public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest);
+
+    public MspApplytResponse download(MspApplytRequest mspApplytRequest);
+
+    public MspResponse searchAction(MspRequest mspRequest);
+
+    public MspResponse infoAction(MspRequest mspRequest);
+
+    public MspResponse insertAction(MspRequest mspRequest);
+
+    public MspResponse updateAction(MspRequest mspRequest);
+
+    public MspResponse configureNameError(MspRequest mspRequest);
+
+    public MspResponse deleteAction(MspRequest mspRequest);
+
+    public MspResponse checkAction(MspRequest mspRequest);
 
     UtmResponse getChannelNameByUserId(Integer userId);
 
     /**
      * 查询手机号同步数量  用于前端分页显示
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     int countBankOpenAccountUser(MobileSynchronizeRequest request);
 
     /**
      * 查询手机号同步列表
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     List<MobileSynchronizeCustomizeVO> selectBankOpenAccountUserList(MobileSynchronizeRequest request);
 
     /**
      * 同步手机号
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     boolean updateMobile(MobileSynchronizeRequest request);
 
     /**
      * 银行卡异常count
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     int getBankCardExceptionCount(BankCardExceptionRequest request);
 
     /**
      * 银行卡异常列表
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request);
 
     /**
      * 更新银行卡(admin后台异常中心-银行卡异常用)
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     String updateAccountBankByUserId(BankCardExceptionRequest request);
 
     /**
      * 线下修改信息同步查询列表count
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     int getModifyInfoCount(AccountMobileSynchRequest request);
 
     /**
      * 线下修改信息同步查询列表list
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request);
 
     /**
      * 添加信息
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     Integer insertAccountMobileSynch(AccountMobileSynchRequest request);
 
     /**
      * 根据主键id删除一条信息
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     Integer deleteAccountMobileSynch(AccountMobileSynchRequest request);
 
     /**
      * 根据号码查询用户
+     *
      * @param mobile
      * @return
      */
@@ -1008,6 +1044,7 @@ public interface AmUserClient {
 
     /**
      * 获取CA认证异常列表
+     *
      * @param aprlr
      * @return
      */
@@ -1015,6 +1052,7 @@ public interface AmUserClient {
 
     /**
      * 查询短信统计，通过分公司显示
+     *
      * @param request
      * @return
      */
@@ -1022,6 +1060,7 @@ public interface AmUserClient {
 
     /**
      * 获取部门列表
+     *
      * @param o
      * @return
      */
@@ -1029,130 +1068,150 @@ public interface AmUserClient {
 
     /**
      * 在筛选条件下查询出用户
+     *
      * @param requestBean
      * @return
      */
     List<String> queryUser(SmsCodeRequestBean requestBean);
 
-	/**
+    /**
      * 获取用户账户信息byaccountId
-     * @auth libin
+     *
      * @param accountId
      * @return
+     * @auth libin
      */
     BankOpenAccountVO getBankOpenAccountByAccountId(String accountId);
+
     /**
      * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+     *
      * @param userId
-     * @auth nxl
      * @return
+     * @auth nxl
      */
     UserUpdateParamCustomizeResponse queryUserAndDepartment(Integer userId);
+
     /**
      * 获取所有用户信息
-     * @auth nxl
+     *
      * @return
+     * @auth nxl
      */
     UserResponse selectAllUser();
 
     /**
      * 查询此段时间的用户推荐人的修改记录
+     *
      * @param userId
      * @param repairStartDate
      * @param repairEndDate
-     * @auth nxl
      * @return
+     * @auth nxl
      */
     SpreadsUserLogResponse searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate);
 
     /**
      * 查找员工信息
+     *
      * @param userId
-     * @auth nxl
      * @return
+     * @auth nxl
      */
     EmployeeCustomizeResponse selectEmployeeInfoByUserId(Integer userId);
+
     /**
      * 根据用户id获取离职信息
+     *
      * @param userId
-     * @auth nxl
      * @return
+     * @auth nxl
      */
     AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId);
 
     /**
      * 通过手机号和身份证查询掉单信息
+     *
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
      * @author Zha Daojian
      * @date 2018/8/21 13:54
-     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
      **/
     List<BankOpenAccountLogVO> bankOpenAccountLogSelect(BankOpenAccountLogRequest request);
 
     /**
      * 通过手机号和身份证查询用户信息
-     * @author Zha Daojian
-     * @date 2018/8/21 13:54
+     *
      * @param request
      * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
      **/
     OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request);
 
     /**
      * 根据订单号查询用户的开户记录
-     * @author Zha Daojian
-     * @date 2018/8/21 13:54
+     *
      * @param orderId
      * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
      **/
-    BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String  orderId);
+    BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String orderId);
 
     /**
      * 删除用户开户日志
-    * @author Zha Daojian
-    * @date 2018/8/22 11:30
-    * @param userId
-    * @return java.lang.Boolean
-    **/
-    Boolean deleteBankOpenAccountLogByUserId(Integer  userId);
+     *
+     * @param userId
+     * @return java.lang.Boolean
+     * @author Zha Daojian
+     * @date 2018/8/22 11:30
+     **/
+    Boolean deleteBankOpenAccountLogByUserId(Integer userId);
 
     /**
      * 查询返回的电子账号是否已开户
-    * @author Zha Daojian
-    * @date 2018/8/22 13:38
-    * @param accountId
-    * @return java.lang.Boolean
-    **/
+     *
+     * @param accountId
+     * @return java.lang.Boolean
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
+     **/
     Boolean checkAccountByAccountId(String accountId);
 
     /**
      * 查询开户渠道
-     * @author Zha Daojian
-     * @date 2018/8/22 13:38
+     *
      * @param userId
      * @return java.lang.Boolean
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
      **/
     AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId);
 
     /**
      * 开户更新开户渠道统计开户时间
-     * @author Zha Daojian
-     * @date 2018/8/22 13:38
+     *
      * @param appUtmRegVO
      * @return java.lang.Boolean
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
      **/
     Boolean updateByPrimaryKeySelective(AppUtmRegVO appUtmRegVO);
 
-	int isExistsUser(String userId);
+    int isExistsUser(String userId);
+
     /**
      * 根据推荐人id查找用信息
+     *
      * @param userId
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
 
     /**
      * 校验手机号
+     *
      * @param mobile
      * @return
      * @auth nxl
@@ -1161,6 +1220,7 @@ public interface AmUserClient {
 
     /**
      * 着落页配置查询
+     *
      * @param form
      * @return
      * @auth
@@ -1169,20 +1229,17 @@ public interface AmUserClient {
 
     /**
      * 检查渠道
-     *
-     *
      */
     public StringResponse checkUtmId(Integer utmId);
 
     /**
      * 检查渠道
-     *
-     *
      */
     public StringResponse checkReferrer(String referrer);
 
     /**
      * 根据部门id查找是否有自级菜单
+     *
      * @param deptId
      * @return
      * @auther: nxl
@@ -1190,111 +1247,132 @@ public interface AmUserClient {
     List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId);
 
     /**
+     * @return
      * @Author walter.limeng
-     * @Description  获取所有得UtmPlat
+     * @Description 获取所有得UtmPlat
      * @Date 18:38 2018/10/9
      * @Param map
-     * @return
      */
-    UtmPlatResponse getAllUtmPlat(Map<String,Object> map);
+    UtmPlatResponse getAllUtmPlat(Map<String, Object> map);
 
     /**
      * 新增操作
+     *
      * @param voList
      */
     void insertUtmList(List<ChannelCustomizeVO> voList);
+
     /**
      * 根据用户id获取开户信息
      *
-     * @auther: nxl
      * @param userId
      * @return
+     * @auther: nxl
      */
     BankCardVO getBankCardByUserId(int userId);
+
     /**
      * 更新用户信息(基本信息,手机号,邮箱,用户角色)
      *
      * @param request
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     int updateUserBaseInfo(UserInfosUpdCustomizeRequest request);
+
     /**
      * 更新银行卡信息
      *
      * @param request
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
 
     void updateUserAuth(UserAuthRequest request);
 
     HjhUserAuthLogVO selectByExample(String orderId);
+
     /**
      * 根据用户的查询条件查询用户缴费授权列表
+     *
      * @param request
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     UserPayAuthResponse selectUserPayAuthList(UserPayAuthRequest request);
+
     /**
      * 根据用户id查询用户签约授权信息
+     *
      * @param userId
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     HjhUserAuthResponse selectUserPayAuthByUserId(int userId);
+
     /**
      * 查看该用户在出借表和标的放款记录中是否存在
+     *
      * @param userId
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     int isDismissPay(int userId);
+
     /**
      * 查看该用户在投标的还款记录中是否存在
+     *
      * @param userId
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     int isDismissRePay(int userId);
+
     /**
      * 缴费授权解约
+     *
      * @param userId
      * @return
      * @auther: nxl
      */
-   boolean updateCancelPayAuth(int userId);
+    boolean updateCancelPayAuth(int userId);
+
     /**
      * 插入授权记录表
+     *
      * @param hjhUserAuthLogRequest
      * @return
      * @auther: nxl
      */
     boolean insertUserAuthLog2(HjhUserAuthLogRequest hjhUserAuthLogRequest);
+
     /**
      * 根据用户的查询条件查询用户还款授权列表
+     *
      * @param request
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request);
+
     /**
      * 还款授权解约
+     *
      * @param userId
      * @return
      * @auther: nxl
      */
     int updateCancelRePayAuth(int userId);
 
-	CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName);
+    CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName);
 
     /**
      * 渠道管理检查编号唯一性
-     * @Author cwyang 2018-10-22
+     *
      * @param sourceId
      * @return
+     * @Author cwyang 2018-10-22
      */
     int sourceIdIsExists(Integer sourceId);
 
@@ -1303,28 +1381,28 @@ public interface AmUserClient {
 
     /**
      * 根据用户Id查询开户信息
+     *
      * @param userId
      * @return
      */
-    List<BankOpenAccountLogVO>  getBankOpenAccountLogVOByUserId(Integer userId);
-
-
+    List<BankOpenAccountLogVO> getBankOpenAccountLogVOByUserId(Integer userId);
 
 
     int onlyCheckMobileCode(String mobile, String code);
 
     /**
+     * @return
      * @Author walter.limeng
-     * @Description  根据渠道和关键字查询总条数
+     * @Description 根据渠道和关键字查询总条数
      * @Date 15:17 2018/11/14
      * @Param sourceId
      * @Param utmTerm
-     * @return
      */
-    Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm);
+    Integer getBySourceIdAndTerm(String utmId, String sourceId, String utmTerm);
 
     /**
      * 查询短信统计导出条数
+     *
      * @param request
      * @return
      */
@@ -1332,6 +1410,7 @@ public interface AmUserClient {
 
     /**
      * 查询满足条件的服务费授权的条数
+     *
      * @param userPayAuthRequest
      * @return
      */
@@ -1339,6 +1418,7 @@ public interface AmUserClient {
 
     /**
      * 在筛选条件下查询出用户数量
+     *
      * @param requestBean
      * @return
      */
@@ -1346,6 +1426,7 @@ public interface AmUserClient {
 
     /**
      * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     *
      * @param userId
      * @return
      * @Author : huanghui
@@ -1372,6 +1453,7 @@ public interface AmUserClient {
 
     /**
      * 查询用户名不在表中数量
+     *
      * @param request
      * @return
      */
@@ -1379,6 +1461,7 @@ public interface AmUserClient {
 
     /**
      * 批量插入用户画像表
+     *
      * @param request
      * @return
      */
@@ -1388,8 +1471,8 @@ public interface AmUserClient {
      * 企业信息补录时查询，根据对公账号查找银行信息
      *
      * @param updCompanyRequest
-     * @auther: nxl
      * @return
+     * @auther: nxl
      */
     BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest);
 
@@ -1406,6 +1489,7 @@ public interface AmUserClient {
 
     /**
      * 验证验证码
+     *
      * @param mobile
      * @param code
      * @param validCodeType
@@ -1414,7 +1498,8 @@ public interface AmUserClient {
      * @param ckcodeYiyan1
      * @return
      */
-    int checkMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
+    int checkMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1, boolean isUpdate);
+
     /**
      * 用户销户成功后,保存销户记录表
      *
@@ -1431,7 +1516,7 @@ public interface AmUserClient {
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
 
-    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
+    List<SmsCountCustomizeVO> getuserIdAnddepartmentName();
 
     List<UserVO> selectUserListByMobile(ListRequest request);
 
@@ -1445,5 +1530,5 @@ public interface AmUserClient {
      * @param requestBean
      * @return
      */
-    DuibaPointsResponse selectDuibaPoints(DuibaPointsRequest requestBean);
+    DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean);
 }

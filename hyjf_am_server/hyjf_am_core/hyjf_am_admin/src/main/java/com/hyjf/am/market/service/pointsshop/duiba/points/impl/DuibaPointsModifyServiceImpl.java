@@ -3,8 +3,7 @@
  */
 package com.hyjf.am.market.service.pointsshop.duiba.points.impl;
 
-import com.hyjf.admin.common.service.BaseServiceImpl;
-import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsModifyService;
+import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,5 +11,5 @@ import org.springframework.stereotype.Service;
  * @version DuibaPointsModifyServiceImpl, v0.1 2019/5/29 9:50
  */
 @Service
-public class DuibaPointsModifyServiceImpl extends BaseServiceImpl implements DuibaPointsModifyService {
+public class DuibaPointsModifyServiceImpl implements DuibaPointsModifyService {
 }

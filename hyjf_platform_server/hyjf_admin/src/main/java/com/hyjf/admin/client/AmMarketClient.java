@@ -4,10 +4,7 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.resquest.admin.ContentAdsRequest;
-import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
-import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
-import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -162,4 +159,11 @@ public interface AmMarketClient {
      * @return
      */
     BooleanResponse updateStatus(NewYearNineteenRequestBean request);
+
+    /**
+     * 查询兑吧积分明细
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsResponse selectDuibaPointsList(DuibaPointsRequest requestBean);
 }

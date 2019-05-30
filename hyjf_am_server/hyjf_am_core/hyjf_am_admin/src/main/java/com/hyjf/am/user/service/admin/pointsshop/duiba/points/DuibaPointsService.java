@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.user.service.admin.pointsshop.duiba.points;
 
-import com.hyjf.am.market.dao.model.auto.DuibaPoints;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.admin.DuibaPointsUserVO;
 
 import java.util.List;
 
@@ -21,14 +21,13 @@ public interface DuibaPointsService extends BaseService {
      * @param request
      * @return
      */
-    Integer selectDuibaPointsCount(DuibaPointsRequest request);
+    Integer selectDuibaPointsUserCount(DuibaPointsRequest request);
 
     /**
      * 查询记录
+     *
      * @param request
-     * @param offset
-     * @param limit
      * @return
      */
-    List<DuibaPoints> selectDuibaPoints(DuibaPointsRequest request, int offset, int limit);
+    List<DuibaPointsUserVO> selectDuibaPointsUser(DuibaPointsRequest request);
 }

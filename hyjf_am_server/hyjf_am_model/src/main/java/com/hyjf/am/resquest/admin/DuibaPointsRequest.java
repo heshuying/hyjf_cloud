@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import com.hyjf.am.vo.admin.DuibaPointsVO;
 
 import java.io.Serializable;
@@ -15,11 +16,49 @@ import java.util.List;
  */
 public class DuibaPointsRequest extends BasePage implements Serializable {
 
+    /**
+     * 用户名查询
+     */
     private String userNameSrch;
 
+    /**
+     * 姓名查询
+     */
     private String trueNameSrch;
 
+    /**
+     * 调整人查询
+     */
+    private String modifyNameSrch;
+
+    /**
+     * 积分业务名称查询
+     */
+    private Integer businessNameSrch;
+
+    /**
+     * 类型查询
+     */
+    private Integer typeSrch;
+
+    /**
+     * 状态查询
+     */
+    private Integer statusSrch;
+
+    /**
+     * 发生时间开始查询
+     */
+    private String startDateSrch;
+
+    /**
+     * 发生时间结束查询
+     */
+    private String endDateSrch;
+
     private List<DuibaPointsVO> recordList;
+
+    private List<DuibaPointsModifyVO> recordModifyList;
 
     /**
      * 翻页机能用的隐藏变量
@@ -71,5 +110,61 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
 
     public void setRecordList(List<DuibaPointsVO> recordList) {
         this.recordList = recordList;
+    }
+
+    public String getModifyNameSrch() {
+        return modifyNameSrch;
+    }
+
+    public void setModifyNameSrch(String modifyNameSrch) {
+        this.modifyNameSrch = modifyNameSrch;
+    }
+
+    public Integer getBusinessNameSrch() {
+        return businessNameSrch;
+    }
+
+    public void setBusinessNameSrch(Integer businessNameSrch) {
+        this.businessNameSrch = businessNameSrch;
+    }
+
+    public Integer getTypeSrch() {
+        return typeSrch;
+    }
+
+    public void setTypeSrch(Integer typeSrch) {
+        this.typeSrch = typeSrch;
+    }
+
+    public Integer getStatusSrch() {
+        return statusSrch;
+    }
+
+    public void setStatusSrch(Integer statusSrch) {
+        this.statusSrch = statusSrch;
+    }
+
+    public String getStartDateSrch() {
+        return startDateSrch;
+    }
+
+    public void setStartDateSrch(String startDateSrch) {
+        this.startDateSrch = startDateSrch;
+    }
+
+    public String getEndDateSrch() {
+        return endDateSrch;
+    }
+
+    public void setEndDateSrch(String endDateSrch) {
+        this.endDateSrch = endDateSrch;
+    }
+
+    public List<DuibaPointsModifyVO> getRecordModifyList() {
+        return recordModifyList;
+    }
+
+    public void setRecordModifyList(List<DuibaPointsModifyVO> recordModifyList) {
+        this.recordModifyList = recordModifyList;
     }
 }
