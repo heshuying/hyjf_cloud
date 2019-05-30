@@ -88,8 +88,8 @@ public class ScreenDataTransferController {
                             //此为千乐数据，删除
                             deleteList.add(new ScreenTransferVO(screenTransferVO.getUserId(),null,null));
                         }else{
-                            String oener = screenTransferVO.getCurrentOwner();
-                            if(StringUtils.isNotBlank(oener)){
+                            String owner = screenTransferVO.getCurrentOwner();
+                            if(StringUtils.isNotBlank(owner)){
                                 //数据为其他，设置数据拥有人为null，坐席分组为 0
                                 ScreenTransferVO screenTransfer = new ScreenTransferVO(screenTransferVO.getUserId(),screenTransferVO.getCurrentOwner(),screenTransferVO.getGroups());
                                 updateList.add(screenTransfer);
