@@ -999,6 +999,7 @@ public class UserManagerController extends BaseController {
         logger.info("==============企业信息查询,获取的bankId值为: "+bankId+" ==============");
         String bankName = null;
         String payAllianceCode = null;
+        String jxPayAllianceCode =null;
         if (StringUtils.isNotBlank(bankId)) {
             List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
             if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
@@ -1006,26 +1007,23 @@ public class UserManagerController extends BaseController {
                 bankCardVO = new BankCardVO();
                 bankCardVO.setBank(bankName);
                 bankCardVO.setBankId(Integer.parseInt(bankId));
+                jxPayAllianceCode = jxBankConfigList.get(0).getPayAllianceCode();
             }
         }
         BankCallBean callBean = userManagerService.payAllianceCodeQuery(updCompanyRequest.getAccount(), Integer.parseInt(updCompanyRequest.getUserId()));
         if (null!=callBean&&BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
             payAllianceCode = callBean.getPayAllianceCode();
-            if (StringUtils.isBlank(payAllianceCode)) {
-                if (StringUtils.isNotBlank(bankId)) {
-                    List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
-                    if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
-                        payAllianceCode = jxBankConfigList.get(0).getPayAllianceCode();
-                    }
-                }
-            }
-            if(StringUtils.isNotBlank(payAllianceCode)){
-                if(null!=bankCardVO){
-                    bankCardVO.setPayAllianceCode(payAllianceCode);
-                }else{
-                    bankCardVO = new BankCardVO();
-                    bankCardVO.setPayAllianceCode(payAllianceCode);
-                }
+        }
+        if (StringUtils.isBlank(payAllianceCode)) {
+            //调用银行接口没有查到所属银行的情况下，银联号为数据库银联号
+            payAllianceCode = jxPayAllianceCode;
+        }
+        if(StringUtils.isNotBlank(payAllianceCode)){
+            if(null!=bankCardVO){
+                bankCardVO.setPayAllianceCode(payAllianceCode);
+            }else{
+                bankCardVO = new BankCardVO();
+                bankCardVO.setPayAllianceCode(payAllianceCode);
             }
         }
         response.setResult(bankCardVO);
