@@ -1632,7 +1632,7 @@ public interface AmConfigClient {
 	Integer updateStatusBusinessName(BusinessNameMgRequest request);
 	/**
 	 * 查询业务名称
-	 * @param businessName
+	 * @param request
 	 * @return
 	 */
 	BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request);
@@ -1660,4 +1660,74 @@ public interface AmConfigClient {
 	 * @return
 	 */
     AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
+
+	/**
+	 * 获取客组配置列表
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceGroupConfigResponse getCustomerServiceGroupConfigList(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 添加客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse insertCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 修改客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse updateCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 删除客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 校验客组配置
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 获取坐席配置列表
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceRepresentiveConfigResponse getCustomerServiceRepresentiveConfigList(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 添加坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse insertCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 修改坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse updateCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 删除坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse deleteCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 校验坐席配置
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request);
+
+	CustomerChannelResponse insetCustomerChannel(CustomerChannelRequest request);
+
+	CustomerChannelResponse updateCustomerChannel(CustomerChannelRequest request);
 }

@@ -1,9 +1,13 @@
-package com.hyjf.am.config.dao.model.auto;
+package com.hyjf.am.resquest.config;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.hyjf.am.vo.BasePage;
 
-public class CustomerServiceRepresentiveConfig implements Serializable {
+/**
+ * @author wgx
+ * @date 2019/5/30
+ */
+public class CustomerServiceRepresentiveConfigRequest extends BasePage {
+
     /**
      * id
      *
@@ -52,29 +56,6 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
      * @mbggenerated
      */
     private Integer createUserId;
-
-    /**
-     * 创建时间
-     *
-     * @mbggenerated
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     *
-     * @mbggenerated
-     */
-    private Date updateTime;
-
-    /**
-     * 是否为新客 1新客组 0老客组
-     *
-     * @mbggenerated
-     */
-    private Integer isNew;
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -130,29 +111,5 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getIsNew() {
-        return isNew;
-    }
-
-    public void setIsNew(Integer isNew) {
-        this.isNew = isNew;
     }
 }

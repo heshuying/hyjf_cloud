@@ -1,9 +1,12 @@
-package com.hyjf.am.config.dao.model.auto;
+package com.hyjf.am.resquest.config;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.hyjf.am.vo.BasePage;
 
-public class CustomerServiceGroupConfig implements Serializable {
+/**
+ * @author wgx
+ * @date 2019/5/29
+ */
+public class CustomerServiceGroupConfigRequest extends BasePage{
     /**
      * id
      *
@@ -54,27 +57,11 @@ public class CustomerServiceGroupConfig implements Serializable {
     private Integer createUserId;
 
     /**
-     * 创建时间
-     *
-     * @mbggenerated
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     *
-     * @mbggenerated
-     */
-    private Date updateTime;
-
-    /**
      * 是否为新客 1新客组 0老客组
      *
      * @mbggenerated
      */
     private Integer isNew;
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -89,7 +76,7 @@ public class CustomerServiceGroupConfig implements Serializable {
     }
 
     public void setGroupName(String groupName) {
-        this.groupName = groupName == null ? null : groupName.trim();
+        this.groupName = groupName;
     }
 
     public String getServiceUserCode() {
@@ -97,7 +84,7 @@ public class CustomerServiceGroupConfig implements Serializable {
     }
 
     public void setServiceUserCode(String serviceUserCode) {
-        this.serviceUserCode = serviceUserCode == null ? null : serviceUserCode.trim();
+        this.serviceUserCode = serviceUserCode;
     }
 
     public String getServiceUserNo() {
@@ -105,7 +92,7 @@ public class CustomerServiceGroupConfig implements Serializable {
     }
 
     public void setServiceUserNo(String serviceUserNo) {
-        this.serviceUserNo = serviceUserNo == null ? null : serviceUserNo.trim();
+        this.serviceUserNo = serviceUserNo;
     }
 
     public String getServiceUserKey() {
@@ -113,7 +100,7 @@ public class CustomerServiceGroupConfig implements Serializable {
     }
 
     public void setServiceUserKey(String serviceUserKey) {
-        this.serviceUserKey = serviceUserKey == null ? null : serviceUserKey.trim();
+        this.serviceUserKey = serviceUserKey;
     }
 
     public Integer getStatus() {
@@ -130,22 +117,6 @@ public class CustomerServiceGroupConfig implements Serializable {
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getIsNew() {

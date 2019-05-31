@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,70 +16,39 @@ import java.util.Date;
  * @author liuyang
  * @version CustomerServiceRepresentiveConfigVO, v0.1 2019/5/29 14:02
  */
+@ApiModel(value="坐席配置",description="电销数据-坐席配置")
 public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 620638216013595980L;
-    /**
-     * id
-     *
-     * @mbggenerated
-     */
+
+    @ApiModelProperty(value = "id")
     private Integer id;
 
-    /**
-     * 后台系统的用户名
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "姓名")
     private String userName;
 
-    /**
-     * 客组ID
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "客组ID")
     private Integer groupId;
 
-    /**
-     * 客组名称
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "客组名称")
     private String groupName;
 
-    /**
-     * 坐席名称
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "坐席名称")
     private String repName;
 
-    /**
-     * 启用状态 1.启用2.禁用
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "是否为新客 1.新客组 0.老客组")
+    private Integer isNew;
+
+    @ApiModelProperty(value = "启用状态 1.启用2.禁用")
     private Integer status;
 
-    /**
-     * 创建人
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "创建人")
     private Integer createUserId;
 
-    /**
-     * 创建时间
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    /**
-     * 修改时间
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
 
@@ -119,6 +90,14 @@ public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Seria
 
     public void setRepName(String repName) {
         this.repName = repName == null ? null : repName.trim();
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
     }
 
     public Integer getStatus() {

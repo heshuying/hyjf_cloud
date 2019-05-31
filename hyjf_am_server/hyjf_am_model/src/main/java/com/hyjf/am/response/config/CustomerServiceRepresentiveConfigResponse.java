@@ -4,6 +4,7 @@
 package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 
 import java.util.List;
@@ -16,8 +17,13 @@ import java.util.List;
  */
 public class CustomerServiceRepresentiveConfigResponse extends Response<CustomerServiceRepresentiveConfigVO> {
 
-
     private List<CustomerServiceRepresentiveConfigVO> resultList;
+
+    // 坐席总数
+    private int total = 0;
+
+    // 客组列表
+    private List<CustomerServiceGroupConfigVO> groupList;
 
     @Override
     public List<CustomerServiceRepresentiveConfigVO> getResultList() {
@@ -27,5 +33,21 @@ public class CustomerServiceRepresentiveConfigResponse extends Response<Customer
     @Override
     public void setResultList(List<CustomerServiceRepresentiveConfigVO> resultList) {
         this.resultList = resultList;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public List<CustomerServiceGroupConfigVO> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<CustomerServiceGroupConfigVO> groupList) {
+        this.groupList = groupList;
     }
 }
