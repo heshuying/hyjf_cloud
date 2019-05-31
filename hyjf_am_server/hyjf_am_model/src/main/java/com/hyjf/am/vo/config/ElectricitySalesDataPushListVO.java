@@ -114,14 +114,14 @@ public class ElectricitySalesDataPushListVO extends BaseVO implements Serializab
      *
      * @mbggenerated
      */
-    private Integer pcUtmId;
+    private Integer pcSourceId;
 
     /**
      * PC渠道来源
      *
      * @mbggenerated
      */
-    private String pcUtmName;
+    private String pcSourceName;
 
     /**
      * APP渠道编号
@@ -304,20 +304,20 @@ public class ElectricitySalesDataPushListVO extends BaseVO implements Serializab
         this.regTime = regTime;
     }
 
-    public Integer getPcUtmId() {
-        return pcUtmId;
+    public Integer getPcSourceId() {
+        return pcSourceId;
     }
 
-    public void setPcUtmId(Integer pcUtmId) {
-        this.pcUtmId = pcUtmId;
+    public void setPcSourceId(Integer pcSourceId) {
+        this.pcSourceId = pcSourceId;
     }
 
-    public String getPcUtmName() {
-        return pcUtmName;
+    public String getPcSourceName() {
+        return pcSourceName;
     }
 
-    public void setPcUtmName(String pcUtmName) {
-        this.pcUtmName = pcUtmName;
+    public void setPcSourceName(String pcSourceName) {
+        this.pcSourceName = pcSourceName;
     }
 
     public Integer getAppSourceId() {
