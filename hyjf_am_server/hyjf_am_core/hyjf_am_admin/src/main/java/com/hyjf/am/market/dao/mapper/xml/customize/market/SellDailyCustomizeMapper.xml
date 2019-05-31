@@ -1135,6 +1135,7 @@
         FROM (
         <include refid="countTotalCreditSql"/>
         ) AS t
+        GROUP BY t.primary_division, t.two_division
     </select>
 
     <insert id="batchInsert" parameterType="java.util.List">

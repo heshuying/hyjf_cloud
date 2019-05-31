@@ -41,7 +41,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 	private static final int ADD = 1;
 	private static final int SUBTRACT = -1;
 
-	private static final List<String> NONE_REFFER_PRIMARY_DIVISION = Arrays.asList("杭州分公司", "特殊一级分部（勿动）");
+	private static final List<String> NONE_REFFER_PRIMARY_DIVISION = Arrays.asList("杭州分公司");
 	private static final String VIP_PRIMARY_DIVISION = "VIP用户组";
 	private static final List<String> HZ_PRIMARY_DIVISION = Arrays.asList("惠众商务", "VIP用户组");
 	private static int MAX_RE_CONSUME_TIME = 3;
@@ -80,7 +80,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			SellDailyVO operationSellDaily = dto.getOperationSellDaily();
 			//List<SellDailyVO> appSellDailyList = dto.getAppSellDailyList();
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
-			SellDailyVO creditSellDaily = dto.getCreditSellDaily();
+            List<SellDailyVO> creditSellDailyList = dto.getCreditSellDailyList();
 
 			// 2. 处理drawOrder=2特殊分部的数据
 			SellDailyVO noneRefferRecord = new SellDailyVO(YYZX_PRIMARY_DIVISION_NAME, YYZX_TWO_DIVISION_NAME);
@@ -93,7 +93,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				list.add(operationSellDaily);
 			}
 
-			// 2.2 运营中心 - 无主单   计算： 一级部门空 + 杭州分部 + 特殊一级分部（勿动) - 千乐 - vip用户组
+			// 2.2 运营中心 - 无主单   计算： 一级部门空 + 杭州分部 - 千乐
 			for (SellDailyVO entity : list) {
 				if (StringUtils.isEmpty(entity.getPrimaryDivision())
 						|| NONE_REFFER_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
@@ -105,21 +105,35 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				}
 
 				///无主单扣除VIP用户组
-				if(VIP_PRIMARY_DIVISION.equals(entity.getPrimaryDivision())){
-					noneRefferRecord = sellDailyService.addValue(entity, noneRefferRecord, column, SUBTRACT);
-				}
+//				if(VIP_PRIMARY_DIVISION.equals(entity.getPrimaryDivision())){
+//					noneRefferRecord = sellDailyService.addValue(entity, noneRefferRecord, column, SUBTRACT);
+//				}
 			}
 			//无主单扣除千乐
 			noneRefferRecord = sellDailyService.addValue(qlSellDaily, noneRefferRecord, column, SUBTRACT);
-			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
-			if (column == 17 || column == 2) {
-				if (creditSellDaily != null) {
-					logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
-					logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
-					noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
-                    logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
-				}
-			}
+
+            // U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
+            if (column == 17 || column == 2) {
+                //无主单 - 债转 计算：一级部门空 + 杭州分部
+                for (SellDailyVO creditSellDaily : creditSellDailyList) {
+                    if (StringUtils.isEmpty(creditSellDaily.getPrimaryDivision())
+                            || NONE_REFFER_PRIMARY_DIVISION.contains(creditSellDaily.getPrimaryDivision())) {
+                        logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
+                        logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                        noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+                        logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                    }
+                }
+            }
+//			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
+//			if (column == 17 || column == 2) {
+//				if (creditSellDaily != null) {
+//					logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
+//					logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+//					noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+//                    logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+//				}
+//			}
 			list.add(noneRefferRecord);
 
 

@@ -2,7 +2,6 @@ package com.hyjf.am.market.service;
 
 import com.hyjf.am.vo.market.SellDailyVO;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -349,7 +348,7 @@ public interface SellDailyService {
      * @param endTime
      * @return
      */
-    SellDailyVO countTotalCredit(Date startTime, Date endTime);
+    List<SellDailyVO> countTotalCredit(Date startTime, Date endTime);
 
     /**
      * 批量更新

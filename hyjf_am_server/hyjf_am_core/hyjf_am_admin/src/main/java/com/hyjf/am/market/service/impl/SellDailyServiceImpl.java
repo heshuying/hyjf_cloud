@@ -197,7 +197,7 @@ public class SellDailyServiceImpl implements SellDailyService {
     }
 
     @Override
-    public SellDailyVO countTotalCredit(Date startTime, Date endTime) {
+    public List<SellDailyVO> countTotalCredit(Date startTime, Date endTime) {
         return sellDailyCustomizeMapper.countTotalCredit(startTime, endTime);
     }
 

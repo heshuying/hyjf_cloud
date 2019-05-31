@@ -408,7 +408,7 @@ public interface SellDailyCustomizeMapper {
      * @param endTime
      * @return
      */
-    SellDailyVO countTotalCredit(@Param("startTime") Date startTime,
+    List<SellDailyVO> countTotalCredit(@Param("startTime") Date startTime,
                                  @Param("endTime") Date endTime);
 
 

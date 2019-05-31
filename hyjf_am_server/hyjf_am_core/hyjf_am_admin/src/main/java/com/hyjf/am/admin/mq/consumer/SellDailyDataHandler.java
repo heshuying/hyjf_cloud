@@ -58,7 +58,7 @@ public class SellDailyDataHandler {
 		// 千乐数据
 		SellDailyVO qlSellDaily = null;
 		// 债转数
-		SellDailyVO creditSellDaily = null;
+		List<SellDailyVO> creditSellDailyList = null;
 
 		// 辅助参数
 		List<SellDailyVO> operSellDailyList = null;
@@ -82,7 +82,7 @@ public class SellDailyDataHandler {
 			qlSellDaily = sellDailyService.countTotalRepayOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 
-			creditSellDaily = sellDailyService.countTotalCredit(startTime, endTime);
+            creditSellDailyList = sellDailyService.countTotalCredit(startTime, endTime);
 			break;
 		case 3:
 			list = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
@@ -199,7 +199,7 @@ public class SellDailyDataHandler {
 			qlSellDaily = sellDailyService.countNoneRepayTodayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 
-			creditSellDaily = sellDailyService.countTotalCredit(startTime, endTime);
+			creditSellDailyList = sellDailyService.countTotalCredit(startTime, endTime);
 			break;
 		case 18:
 			list = sellDailyService.countRegisterTotalYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
@@ -252,7 +252,7 @@ public class SellDailyDataHandler {
 		SellDailyDataDto dto = new SellDailyDataDto();
 		dto.setList(list);
 		//dto.setAppSellDailyList(appSellDailyList);
-		dto.setCreditSellDaily(creditSellDaily);
+		dto.setCreditSellDaily(creditSellDailyList);
 
 		if (operationSellDaily != null) {
 			dto.setOperationSellDaily(setValue(operationSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
