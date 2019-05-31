@@ -15,8 +15,8 @@
     <result column="age" property="age" jdbcType="INTEGER" />
     <result column="birthday" property="birthday" jdbcType="VARCHAR" />
     <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
-    <result column="pc_utm_id" property="pcUtmId" jdbcType="INTEGER" />
-    <result column="pc_utm_name" property="pcUtmName" jdbcType="VARCHAR" />
+    <result column="pc_source_id" property="pcSourceId" jdbcType="INTEGER" />
+    <result column="pc_source_name" property="pcSourceName" jdbcType="VARCHAR" />
     <result column="app_source_id" property="appSourceId" jdbcType="INTEGER" />
     <result column="app_source_name" property="appSourceName" jdbcType="VARCHAR" />
     <result column="recharge_money" property="rechargeMoney" jdbcType="DECIMAL" />
@@ -89,7 +89,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, user_name, group_id, group_name, bank_account, role_id, true_name, mobile, 
-    sex, age, birthday, reg_time, pc_utm_id, pc_utm_name, app_source_id, app_source_name, 
+    sex, age, birthday, reg_time, pc_source_id, pc_source_name, app_source_id, app_source_name, 
     recharge_money, recharge_time, channel, upload_type, `status`, remark, create_user_id, 
     create_time, update_time
   </sql>
@@ -134,7 +134,7 @@
       group_name, bank_account, role_id, 
       true_name, mobile, sex, 
       age, birthday, reg_time, 
-      pc_utm_id, pc_utm_name, app_source_id, 
+      pc_source_id, pc_source_name, app_source_id, 
       app_source_name, recharge_money, recharge_time, 
       channel, upload_type, `status`, 
       remark, create_user_id, create_time, 
@@ -143,7 +143,7 @@
       #{groupName,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, #{roleId,jdbcType=TINYINT}, 
       #{trueName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{sex,jdbcType=TINYINT}, 
       #{age,jdbcType=INTEGER}, #{birthday,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, 
-      #{pcUtmId,jdbcType=INTEGER}, #{pcUtmName,jdbcType=VARCHAR}, #{appSourceId,jdbcType=INTEGER}, 
+      #{pcSourceId,jdbcType=INTEGER}, #{pcSourceName,jdbcType=VARCHAR}, #{appSourceId,jdbcType=INTEGER}, 
       #{appSourceName,jdbcType=VARCHAR}, #{rechargeMoney,jdbcType=DECIMAL}, #{rechargeTime,jdbcType=TIMESTAMP}, 
       #{channel,jdbcType=TINYINT}, #{uploadType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
       #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -191,11 +191,11 @@
       <if test="regTime != null" >
         reg_time,
       </if>
-      <if test="pcUtmId != null" >
-        pc_utm_id,
+      <if test="pcSourceId != null" >
+        pc_source_id,
       </if>
-      <if test="pcUtmName != null" >
-        pc_utm_name,
+      <if test="pcSourceName != null" >
+        pc_source_name,
       </if>
       <if test="appSourceId != null" >
         app_source_id,
@@ -268,11 +268,11 @@
       <if test="regTime != null" >
         #{regTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="pcUtmId != null" >
-        #{pcUtmId,jdbcType=INTEGER},
+      <if test="pcSourceId != null" >
+        #{pcSourceId,jdbcType=INTEGER},
       </if>
-      <if test="pcUtmName != null" >
-        #{pcUtmName,jdbcType=VARCHAR},
+      <if test="pcSourceName != null" >
+        #{pcSourceName,jdbcType=VARCHAR},
       </if>
       <if test="appSourceId != null" >
         #{appSourceId,jdbcType=INTEGER},
@@ -357,11 +357,11 @@
       <if test="record.regTime != null" >
         reg_time = #{record.regTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.pcUtmId != null" >
-        pc_utm_id = #{record.pcUtmId,jdbcType=INTEGER},
+      <if test="record.pcSourceId != null" >
+        pc_source_id = #{record.pcSourceId,jdbcType=INTEGER},
       </if>
-      <if test="record.pcUtmName != null" >
-        pc_utm_name = #{record.pcUtmName,jdbcType=VARCHAR},
+      <if test="record.pcSourceName != null" >
+        pc_source_name = #{record.pcSourceName,jdbcType=VARCHAR},
       </if>
       <if test="record.appSourceId != null" >
         app_source_id = #{record.appSourceId,jdbcType=INTEGER},
@@ -416,8 +416,8 @@
       age = #{record.age,jdbcType=INTEGER},
       birthday = #{record.birthday,jdbcType=VARCHAR},
       reg_time = #{record.regTime,jdbcType=TIMESTAMP},
-      pc_utm_id = #{record.pcUtmId,jdbcType=INTEGER},
-      pc_utm_name = #{record.pcUtmName,jdbcType=VARCHAR},
+      pc_source_id = #{record.pcSourceId,jdbcType=INTEGER},
+      pc_source_name = #{record.pcSourceName,jdbcType=VARCHAR},
       app_source_id = #{record.appSourceId,jdbcType=INTEGER},
       app_source_name = #{record.appSourceName,jdbcType=VARCHAR},
       recharge_money = #{record.rechargeMoney,jdbcType=DECIMAL},
@@ -472,11 +472,11 @@
       <if test="regTime != null" >
         reg_time = #{regTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="pcUtmId != null" >
-        pc_utm_id = #{pcUtmId,jdbcType=INTEGER},
+      <if test="pcSourceId != null" >
+        pc_source_id = #{pcSourceId,jdbcType=INTEGER},
       </if>
-      <if test="pcUtmName != null" >
-        pc_utm_name = #{pcUtmName,jdbcType=VARCHAR},
+      <if test="pcSourceName != null" >
+        pc_source_name = #{pcSourceName,jdbcType=VARCHAR},
       </if>
       <if test="appSourceId != null" >
         app_source_id = #{appSourceId,jdbcType=INTEGER},
@@ -528,8 +528,8 @@
       age = #{age,jdbcType=INTEGER},
       birthday = #{birthday,jdbcType=VARCHAR},
       reg_time = #{regTime,jdbcType=TIMESTAMP},
-      pc_utm_id = #{pcUtmId,jdbcType=INTEGER},
-      pc_utm_name = #{pcUtmName,jdbcType=VARCHAR},
+      pc_source_id = #{pcSourceId,jdbcType=INTEGER},
+      pc_source_name = #{pcSourceName,jdbcType=VARCHAR},
       app_source_id = #{appSourceId,jdbcType=INTEGER},
       app_source_name = #{appSourceName,jdbcType=VARCHAR},
       recharge_money = #{rechargeMoney,jdbcType=DECIMAL},
