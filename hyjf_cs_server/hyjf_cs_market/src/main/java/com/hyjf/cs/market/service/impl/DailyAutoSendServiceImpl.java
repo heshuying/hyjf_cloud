@@ -72,7 +72,8 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         if (toEmail == null || toEmail.length == 0) {
             return;
         }
-        String dateStr = GetDate.getFormatDateStr();
+//        String dateStr = GetDate.getFormatDateStr();
+        String dateStr = "2019.05.24";
         String fileName = "销售日报-" + dateStr + ".xls";
         String[] fileNames = {fileName};
         // 将excel作为附件

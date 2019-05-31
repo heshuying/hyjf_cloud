@@ -36,7 +36,7 @@ public class HolidaysConfigNewController extends BaseConfigController{
     @RequestMapping("/is_workdate")
     public BooleanResponse queryIsWorkdate() {
         BooleanResponse response = new BooleanResponse();
-        boolean result = holidaysConfigNewService.isWorkdateOnSomeDay(new Date());
+        boolean result = holidaysConfigNewService.isWorkdateOnSomeDay(GetDate.stringToDate("2019-05-24 00:00:00"));
         response.setResultBoolean(result);
         return response;
     }

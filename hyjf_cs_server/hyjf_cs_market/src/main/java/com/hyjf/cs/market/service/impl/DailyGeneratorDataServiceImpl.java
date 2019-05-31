@@ -61,7 +61,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
 
     @Override
     public void generatorSellDaily() {
-        Date currentDate = new Date();
+        Date currentDate = GetDate.stringToDate("2019-05-24 00:00:00");
         String currentDateStr = GetDate.formatDate(currentDate);
         // 休息日、节假日不执行
         if (!amConfigClient.isWorkdateOnSomeDay()) {
