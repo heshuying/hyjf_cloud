@@ -173,6 +173,20 @@ public class DuibaOrders implements Serializable {
      */
     private String commodityCode;
 
+    /**
+     * 汇率
+     *
+     * @mbggenerated
+     */
+    private BigDecimal exchangeRate;
+
+    /**
+     * 积分
+     *
+     * @mbggenerated
+     */
+    private BigDecimal integralPrice;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -365,5 +379,21 @@ public class DuibaOrders implements Serializable {
 
     public void setCommodityCode(String commodityCode) {
         this.commodityCode = commodityCode;
+    }
+
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public BigDecimal getIntegralPrice() {
+        return integralPrice;
+    }
+
+    public void setIntegralPrice(BigDecimal integralPrice) {
+        this.integralPrice = integralPrice;
     }
 }

@@ -27,12 +27,16 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="orderTypeTab" property="orderTypeTab" jdbcType="VARCHAR" />
     <result column="commodity_code" property="commodityCode" jdbcType="VARCHAR" />
+    <!-- 汇率 -->
+    <result column="exchange_rate" property="exchangeRate" jdbcType="DECIMAL" />
+    <!-- 兑吧返回积分（计算售价的基础数据） -->
+    <result column="integral_price" property="integralPrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, duiba_order_id, hy_order_id, user_name, true_name, user_id, exchange_content, 
     product_type, selling_price, marking_price, cost, order_status, order_time, completion_time, 
     delivery_status, receiving_information, recharge_state, processing_state, create_by, 
-    create_time, update_by, update_time, remark, commodity_code
+    create_time, update_by, update_time, remark, commodity_code, exchange_rate, integral_price
   </sql>
 
   <select id="selectDuibaOrderList" resultMap="BaseResultMap"
