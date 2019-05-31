@@ -67,7 +67,7 @@ public class ScreenDataTransferController {
      * @Author walter.limeng
      * @Description //执行划转
      * @Date 15:01 2019-05-29
-     * @Param [flag, step]
+     * @Param [flag]
      * @return void
      **/
     public void screenTransfer(int flag){
