@@ -482,7 +482,7 @@
         SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalNoneRepaySql"/>
         ) AS t
@@ -497,7 +497,7 @@
         SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalNoneRepaySqlQL"/>
         ) AS t
@@ -508,7 +508,7 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSql"/>
         ) AS t
@@ -526,7 +526,7 @@
         select ROUND(SUM(account)/10000) AS invest_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSqlQL"/>
         ) AS t
@@ -537,7 +537,7 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSql"/>
         ) AS t
@@ -555,7 +555,7 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSqlQL"/>
         ) AS t
@@ -566,7 +566,7 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSql"/>
         ) AS t
@@ -584,7 +584,7 @@
        SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
        '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSqlQL"/>
         ) AS t
@@ -595,7 +595,7 @@
         SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRepaySql"/>
         ) AS t
@@ -610,7 +610,7 @@
         SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRepaySqlQL"/>
         ) AS t
@@ -621,7 +621,7 @@
         SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRepaySql"/>
         ) AS t
@@ -636,7 +636,7 @@
         SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRepaySqlQL"/>
         ) AS t
@@ -647,7 +647,7 @@
         SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalWithdrawSql"/>
         ) AS t
@@ -662,7 +662,7 @@
         SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalWithdrawSqlQL"/>
         ) AS t
@@ -673,7 +673,7 @@
         SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalWithdrawSql"/>
         ) AS t
@@ -688,7 +688,7 @@
         SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalWithdrawSqlQL"/>
         ) AS t
@@ -699,7 +699,7 @@
         SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRechargeSql"/>
         ) AS t
@@ -714,7 +714,7 @@
         SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRechargeSqlQL"/>
         ) AS t
@@ -725,7 +725,7 @@
         SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRechargeSql"/>
         ) AS t
@@ -740,7 +740,7 @@
         SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalRechargeSqlQL"/>
         ) AS t
@@ -751,7 +751,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -777,7 +777,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -795,7 +795,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -821,7 +821,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -838,7 +838,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -864,7 +864,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -952,7 +952,7 @@
         SELECT count(1) AS register_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countRegisterTotalYesterday"/>
         ) AS t
@@ -970,7 +970,7 @@
        SELECT count(1) AS register_total_yesterday,
        '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countRegisterTotalYesterdayQL"/>
         ) AS t
@@ -981,7 +981,7 @@
         SELECT count(1) AS recharge_gt3000_user_num,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countRegisterTotalYesterday"/>
         ) AS t
@@ -1000,7 +1000,7 @@
         SELECT count(1) AS recharge_gt3000_user_num,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countRegisterTotalYesterdayQL"/>
         ) AS t
@@ -1069,7 +1069,7 @@
         SELECT count(1) AS invest_gt3000_user_num,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countInvestGt3000User"/>
         ) AS t
@@ -1088,7 +1088,7 @@
         SELECT count(1) AS invest_gt3000_user_num,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countInvestGt3000UserQL"/>
         ) AS t
@@ -1100,7 +1100,7 @@
         SELECT count(1) AS invest_gt3000_month_user_num,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countInvestGt3000User"/>
         ) AS t
@@ -1119,7 +1119,7 @@
         SELECT count(1) AS invest_gt3000_month_user_num,
         '渠道' AS primary_division,
         '千乐' AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countInvestGt3000UserQL"/>
         ) AS t
@@ -1131,7 +1131,7 @@
         SELECT ROUND(SUM(credit_amount)/10000) AS credit_amount,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        DATE_FORMAT(STR_TO_DATE('2019-05-24','%Y-%m-%d %H:%i:%s'),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalCreditSql"/>
         ) AS t
