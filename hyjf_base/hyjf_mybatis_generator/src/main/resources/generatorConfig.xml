@@ -2057,7 +2057,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2068,7 +2068,7 @@
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
@@ -2096,10 +2096,12 @@
 
         <table tableName="ht_customer_service_group_config" domainObjectName="CustomerServiceGroupConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <table tableName="ht_customer_service_representive_config" domainObjectName="CustomerServiceRepresentiveConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
     </context>

@@ -53,6 +53,7 @@ public class CustomerServiceGroupConfigServiceImpl implements CustomerServiceGro
     @Override
     public List<CustomerServiceGroupConfig> getCustomerServiceGroupConfigList(CustomerServiceGroupConfigRequest request, int total) {
         CustomerServiceGroupConfigExample example = new CustomerServiceGroupConfigExample();
+        example.setOrderByClause("id");
         if (request.getPageSize() >= 0) {
             Paginator paginator = new Paginator(request.getCurrPage(), total, request.getPageSize() == 0 ? 10 : request.getPageSize());
             example.setLimitStart(paginator.getOffset());
