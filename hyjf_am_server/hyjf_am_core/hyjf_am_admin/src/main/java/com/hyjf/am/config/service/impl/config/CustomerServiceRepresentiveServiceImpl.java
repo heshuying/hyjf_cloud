@@ -60,6 +60,7 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
         Paginator paginator = new Paginator(request.getCurrPage(), total, request.getPageSize() == 0 ? 10 : request.getPageSize());
         example.setLimitStart(paginator.getOffset());
         example.setLimitEnd(paginator.getLimit());
+        example.setOrderByClause("id");
         CustomerServiceRepresentiveConfigExample.Criteria criteria = example.createCriteria();
         String userName = request.getUserName(); //用户名
         Integer groupId = request.getGroupId();//客服组
