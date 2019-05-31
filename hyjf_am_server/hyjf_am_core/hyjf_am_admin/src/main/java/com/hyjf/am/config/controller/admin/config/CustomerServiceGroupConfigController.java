@@ -110,7 +110,7 @@ public class CustomerServiceGroupConfigController {
             if (StringUtils.isNotBlank(request.getGroupName()) || request.getIsNew() != null) {// 更新坐席配置冗余字段 客组名，是否新客
                 CustomerServiceRepresentiveConfig groupConfig = new CustomerServiceRepresentiveConfig();
                 BeanUtils.copyProperties(request, groupConfig);
-                customerServiceRepresentiveConfigService.updateGroupNameAndIsNew(request.getId(), request.getGroupName(), request.getIsNew());
+                customerServiceRepresentiveConfigService.updateGroupNameAndIsNew(request.getId(), request.getGroupName(), request.getIsNew(), request.getUpdateUserId());
             }
             customerServiceGroupConfigService.updateCustomerServiceGroupConfig(config);
         } catch (Exception e) {

@@ -33,11 +33,11 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
     private String groupName;
 
     /**
-     * 坐席名称
+     * 是否为新客 1新客组 0老客组
      *
      * @mbggenerated
      */
-    private String repName;
+    private Integer isNew;
 
     /**
      * 启用状态 1.启用2.禁用
@@ -54,6 +54,13 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
     private Integer createUserId;
 
     /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
+    private Integer updateUserId;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -66,13 +73,6 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
      * @mbggenerated
      */
     private Date updateTime;
-
-    /**
-     * 是否为新客 1新客组 0老客组
-     *
-     * @mbggenerated
-     */
-    private Integer isNew;
 
     private static final long serialVersionUID = 1L;
 
@@ -108,12 +108,12 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
         this.groupName = groupName == null ? null : groupName.trim();
     }
 
-    public String getRepName() {
-        return repName;
+    public Integer getIsNew() {
+        return isNew;
     }
 
-    public void setRepName(String repName) {
-        this.repName = repName == null ? null : repName.trim();
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
     }
 
     public Integer getStatus() {
@@ -132,6 +132,14 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
         this.createUserId = createUserId;
     }
 
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -146,13 +154,5 @@ public class CustomerServiceRepresentiveConfig implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getIsNew() {
-        return isNew;
-    }
-
-    public void setIsNew(Integer isNew) {
-        this.isNew = isNew;
     }
 }

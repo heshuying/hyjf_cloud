@@ -385,73 +385,63 @@ public class CustomerServiceRepresentiveConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andRepNameIsNull() {
-            addCriterion("rep_name is null");
+        public Criteria andIsNewIsNull() {
+            addCriterion("is_new is null");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameIsNotNull() {
-            addCriterion("rep_name is not null");
+        public Criteria andIsNewIsNotNull() {
+            addCriterion("is_new is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameEqualTo(String value) {
-            addCriterion("rep_name =", value, "repName");
+        public Criteria andIsNewEqualTo(Integer value) {
+            addCriterion("is_new =", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameNotEqualTo(String value) {
-            addCriterion("rep_name <>", value, "repName");
+        public Criteria andIsNewNotEqualTo(Integer value) {
+            addCriterion("is_new <>", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameGreaterThan(String value) {
-            addCriterion("rep_name >", value, "repName");
+        public Criteria andIsNewGreaterThan(Integer value) {
+            addCriterion("is_new >", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameGreaterThanOrEqualTo(String value) {
-            addCriterion("rep_name >=", value, "repName");
+        public Criteria andIsNewGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_new >=", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameLessThan(String value) {
-            addCriterion("rep_name <", value, "repName");
+        public Criteria andIsNewLessThan(Integer value) {
+            addCriterion("is_new <", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameLessThanOrEqualTo(String value) {
-            addCriterion("rep_name <=", value, "repName");
+        public Criteria andIsNewLessThanOrEqualTo(Integer value) {
+            addCriterion("is_new <=", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameLike(String value) {
-            addCriterion("rep_name like", value, "repName");
+        public Criteria andIsNewIn(List<Integer> values) {
+            addCriterion("is_new in", values, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameNotLike(String value) {
-            addCriterion("rep_name not like", value, "repName");
+        public Criteria andIsNewNotIn(List<Integer> values) {
+            addCriterion("is_new not in", values, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameIn(List<String> values) {
-            addCriterion("rep_name in", values, "repName");
+        public Criteria andIsNewBetween(Integer value1, Integer value2) {
+            addCriterion("is_new between", value1, value2, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andRepNameNotIn(List<String> values) {
-            addCriterion("rep_name not in", values, "repName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepNameBetween(String value1, String value2) {
-            addCriterion("rep_name between", value1, value2, "repName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepNameNotBetween(String value1, String value2) {
-            addCriterion("rep_name not between", value1, value2, "repName");
+        public Criteria andIsNewNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_new not between", value1, value2, "isNew");
             return (Criteria) this;
         }
 
@@ -575,6 +565,66 @@ public class CustomerServiceRepresentiveConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andUpdateUserIdIsNull() {
+            addCriterion("update_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdIsNotNull() {
+            addCriterion("update_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdEqualTo(Integer value) {
+            addCriterion("update_user_id =", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdNotEqualTo(Integer value) {
+            addCriterion("update_user_id <>", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdGreaterThan(Integer value) {
+            addCriterion("update_user_id >", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("update_user_id >=", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdLessThan(Integer value) {
+            addCriterion("update_user_id <", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("update_user_id <=", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdIn(List<Integer> values) {
+            addCriterion("update_user_id in", values, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdNotIn(List<Integer> values) {
+            addCriterion("update_user_id not in", values, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("update_user_id between", value1, value2, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("update_user_id not between", value1, value2, "updateUserId");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
@@ -692,66 +742,6 @@ public class CustomerServiceRepresentiveConfigExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewIsNull() {
-            addCriterion("is_new is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewIsNotNull() {
-            addCriterion("is_new is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewEqualTo(Integer value) {
-            addCriterion("is_new =", value, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewNotEqualTo(Integer value) {
-            addCriterion("is_new <>", value, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewGreaterThan(Integer value) {
-            addCriterion("is_new >", value, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_new >=", value, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewLessThan(Integer value) {
-            addCriterion("is_new <", value, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewLessThanOrEqualTo(Integer value) {
-            addCriterion("is_new <=", value, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewIn(List<Integer> values) {
-            addCriterion("is_new in", values, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewNotIn(List<Integer> values) {
-            addCriterion("is_new not in", values, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewBetween(Integer value1, Integer value2) {
-            addCriterion("is_new between", value1, value2, "isNew");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsNewNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_new not between", value1, value2, "isNew");
             return (Criteria) this;
         }
     }

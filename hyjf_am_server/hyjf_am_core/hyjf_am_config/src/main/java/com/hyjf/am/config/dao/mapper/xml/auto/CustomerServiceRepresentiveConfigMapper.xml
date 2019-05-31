@@ -6,12 +6,12 @@
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
-    <result column="rep_name" property="repName" jdbcType="VARCHAR" />
+    <result column="is_new" property="isNew" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="is_new" property="isNew" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_name, group_id, group_name, rep_name, `status`, create_user_id, create_time, 
-    update_time, is_new
+    id, user_name, group_id, group_name, is_new, `status`, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfigExample" >
     select
@@ -113,12 +113,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_customer_service_representive_config (user_name, group_id, group_name, 
-      rep_name, `status`, create_user_id, 
-      create_time, update_time, is_new
+      is_new, `status`, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{userName,jdbcType=VARCHAR}, #{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, 
-      #{repName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isNew,jdbcType=TINYINT}
+      #{isNew,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig" >
@@ -136,8 +136,8 @@
       <if test="groupName != null" >
         group_name,
       </if>
-      <if test="repName != null" >
-        rep_name,
+      <if test="isNew != null" >
+        is_new,
       </if>
       <if test="status != null" >
         `status`,
@@ -145,14 +145,14 @@
       <if test="createUserId != null" >
         create_user_id,
       </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
       <if test="createTime != null" >
         create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="isNew != null" >
-        is_new,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -165,8 +165,8 @@
       <if test="groupName != null" >
         #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="repName != null" >
-        #{repName,jdbcType=VARCHAR},
+      <if test="isNew != null" >
+        #{isNew,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -174,14 +174,14 @@
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isNew != null" >
-        #{isNew,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -206,8 +206,8 @@
       <if test="record.groupName != null" >
         group_name = #{record.groupName,jdbcType=VARCHAR},
       </if>
-      <if test="record.repName != null" >
-        rep_name = #{record.repName,jdbcType=VARCHAR},
+      <if test="record.isNew != null" >
+        is_new = #{record.isNew,jdbcType=TINYINT},
       </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
@@ -215,14 +215,14 @@
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.isNew != null" >
-        is_new = #{record.isNew,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -235,12 +235,12 @@
       user_name = #{record.userName,jdbcType=VARCHAR},
       group_id = #{record.groupId,jdbcType=INTEGER},
       group_name = #{record.groupName,jdbcType=VARCHAR},
-      rep_name = #{record.repName,jdbcType=VARCHAR},
+      is_new = #{record.isNew,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      is_new = #{record.isNew,jdbcType=TINYINT}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -257,8 +257,8 @@
       <if test="groupName != null" >
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="repName != null" >
-        rep_name = #{repName,jdbcType=VARCHAR},
+      <if test="isNew != null" >
+        is_new = #{isNew,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
@@ -266,14 +266,14 @@
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isNew != null" >
-        is_new = #{isNew,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -283,12 +283,12 @@
     set user_name = #{userName,jdbcType=VARCHAR},
       group_id = #{groupId,jdbcType=INTEGER},
       group_name = #{groupName,jdbcType=VARCHAR},
-      rep_name = #{repName,jdbcType=VARCHAR},
+      is_new = #{isNew,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      is_new = #{isNew,jdbcType=TINYINT}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
