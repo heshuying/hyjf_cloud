@@ -18,6 +18,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -42,14 +43,17 @@ import java.util.Map;
 
 /**
  * 兑吧订单（订单查询,订单发货,异常订单）列表
+ *
  * @author WENXIN
  * @version DuibaOrderController, v0.1 2019/5/29 9:46
  */
-@Api(value = "产品中心-兑吧订单管理",tags ="产品中心-兑吧订单管理")
+@Api(value = "产品中心-兑吧订单管理", tags = "产品中心-兑吧订单管理")
 @RestController
 @RequestMapping("/hyjf-admin/pointsshop/duiba/order")
-public class DuibaOrderController  extends BaseController {
-    /** 查看权限 */
+public class DuibaOrderController extends BaseController {
+    /**
+     * 查看权限
+     */
     public static final String PERMISSIONS = "pointsshoporder";
     @Autowired
     private DuibaOrderListService duibaOrderListService;
@@ -65,7 +69,7 @@ public class DuibaOrderController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<DuibaOrderResponse> orderInfoAction(@RequestBody @Valid DuibaOrderRequest duibaOrderRequest) {
         DuibaOrderResponse duibaOrderResponse = duibaOrderListService.findOrderList(duibaOrderRequest);
-        if(duibaOrderResponse==null) {
+        if (duibaOrderResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(duibaOrderResponse)) {
@@ -73,17 +77,25 @@ public class DuibaOrderController  extends BaseController {
 
         }
         // 商品类型
-        Map<String ,String> productTypeMap = CacheUtil.getParamNameMap(CustomConstants.PRODUCT_TYPE);
-        duibaOrderResponse.setProductTypeList(duibaOrderListService.mapToParamNameVO(productTypeMap));
+        List<ParamNameVO> productTypeList = duibaOrderListService.getParamNameList(CustomConstants.PRODUCT_TYPE);
+        if (null != productTypeList && productTypeList.size() > 0) {
+            duibaOrderResponse.setProductTypeList(productTypeList);
+        }
         // 订单状态
-        Map<String ,String> orderStatusMap = CacheUtil.getParamNameMap(CustomConstants.ORDER_STATUS);
-        duibaOrderResponse.setOrderStatusList(duibaOrderListService.mapToParamNameVO(orderStatusMap));
+        List<ParamNameVO> orderStatusList = duibaOrderListService.getParamNameList(CustomConstants.ORDER_STATUS);
+        if (null != orderStatusList && orderStatusList.size() > 0) {
+            duibaOrderResponse.setProductTypeList(orderStatusList);
+        }
         // 发货状态
-        Map<String ,String> deliveryStatusMap = CacheUtil.getParamNameMap(CustomConstants.DELIVERY_STATUS);
-        duibaOrderResponse.setDeliveryStatusList(duibaOrderListService.mapToParamNameVO(deliveryStatusMap));
+        List<ParamNameVO> deliveryStatusList = duibaOrderListService.getParamNameList(CustomConstants.DELIVERY_STATUS);
+        if (null != deliveryStatusList && deliveryStatusList.size() > 0) {
+            duibaOrderResponse.setProductTypeList(deliveryStatusList);
+        }
         // 处理状态
-        Map<String ,String> processingStateMap = CacheUtil.getParamNameMap(CustomConstants.PROCESSING_STATE);
-        duibaOrderResponse.setProcessingStateList(duibaOrderListService.mapToParamNameVO(processingStateMap));
+        List<ParamNameVO> processingStateList = duibaOrderListService.getParamNameList(CustomConstants.PROCESSING_STATE);
+        if (null != processingStateList && processingStateList.size() > 0) {
+            duibaOrderResponse.setProductTypeList(processingStateList);
+        }
         return new AdminResult<DuibaOrderResponse>(duibaOrderResponse);
     }
 
@@ -98,7 +110,7 @@ public class DuibaOrderController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<DuibaOrderCustomizeVO>> orderList(@RequestBody @Valid DuibaOrderRequest duibaOrderRequest) {
         DuibaOrderResponse duibaOrderResponse = duibaOrderListService.findOrderList(duibaOrderRequest);
-        if(duibaOrderResponse==null) {
+        if (duibaOrderResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(duibaOrderResponse)) {
@@ -107,10 +119,10 @@ public class DuibaOrderController  extends BaseController {
         }
         List<DuibaOrderVO> duibaOrderCustomizeVOList = duibaOrderResponse.getResultList();
         List<DuibaOrderCustomizeVO> duibaOrderCustomizeVO = new ArrayList<DuibaOrderCustomizeVO>();
-        if(null!=duibaOrderCustomizeVOList&&duibaOrderCustomizeVOList.size()>0){
+        if (null != duibaOrderCustomizeVOList && duibaOrderCustomizeVOList.size() > 0) {
             duibaOrderCustomizeVO = CommonUtils.convertBeanList(duibaOrderCustomizeVOList, DuibaOrderCustomizeVO.class);
         }
-        return new AdminResult<ListResult<DuibaOrderCustomizeVO>>(ListResult.build(duibaOrderCustomizeVO, duibaOrderResponse.getRecordTotal())) ;
+        return new AdminResult<ListResult<DuibaOrderCustomizeVO>>(ListResult.build(duibaOrderCustomizeVO, duibaOrderResponse.getRecordTotal()));
     }
 
     /**
@@ -121,15 +133,15 @@ public class DuibaOrderController  extends BaseController {
      */
     @ApiOperation(value = "同步")
     @PostMapping("/synchronization")
-    public AdminResult synchronization(@RequestParam("orderId") String orderId){
+    public AdminResult synchronization(@RequestParam("orderId") String orderId) {
         logger.info("调用同步接口start,orderId:{}", orderId);
         AdminResult adminResult = new AdminResult();
         JSONObject data = new JSONObject();
         String retMsg = duibaOrderListService.synchronization(orderId);
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(retMsg)){
-            data.put("error",retMsg);
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(retMsg)) {
+            data.put("error", retMsg);
             adminResult.setStatus("同步失败！");
-        }else{
+        } else {
             adminResult.setStatus("同步成功！");
         }
         adminResult.setData(data);
@@ -150,11 +162,11 @@ public class DuibaOrderController  extends BaseController {
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "";
-        if("1".equals(duibaOrderRequest.getOrderTypeTab())){
+        if ("1".equals(duibaOrderRequest.getOrderTypeTab())) {
             sheetName = "订单列表明细";
-        }else if("2".equals(duibaOrderRequest.getOrderTypeTab())){
+        } else if ("2".equals(duibaOrderRequest.getOrderTypeTab())) {
             sheetName = "订单发货明细";
-        }else if("3".equals(duibaOrderRequest.getOrderTypeTab())){
+        } else if ("3".equals(duibaOrderRequest.getOrderTypeTab())) {
             sheetName = "异常订单明细";
         }
         // 文件名称
@@ -166,35 +178,35 @@ public class DuibaOrderController  extends BaseController {
         String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        if("1".equals(duibaOrderRequest.getOrderTypeTab())){
+        if ("1".equals(duibaOrderRequest.getOrderTypeTab())) {
             beanPropertyColumnMap = buildMap();
-        }else if("2".equals(duibaOrderRequest.getOrderTypeTab())){
+        } else if ("2".equals(duibaOrderRequest.getOrderTypeTab())) {
             beanPropertyColumnMap = buildMap1();
-        }else if("3".equals(duibaOrderRequest.getOrderTypeTab())){
+        } else if ("3".equals(duibaOrderRequest.getOrderTypeTab())) {
             beanPropertyColumnMap = buildMap2();
         }
         duibaOrderRequest.setCurrPage(1);
         duibaOrderRequest.setPageSize(defaultRowMaxCount);
 
         DuibaOrderRequest duibaOrderRequest1 = new DuibaOrderRequest();
-        BeanUtils.copyProperties(duibaOrderRequest,duibaOrderRequest1);
+        BeanUtils.copyProperties(duibaOrderRequest, duibaOrderRequest1);
         //查找全部数据
         //requestAccountDetail.setLimitFlg(true);
         DuibaOrderResponse duibaOrderResponse = duibaOrderListService.findOrderList(duibaOrderRequest1);
-        if (duibaOrderResponse == null || duibaOrderResponse.getRecordTotal() <= 0){
+        if (duibaOrderResponse == null || duibaOrderResponse.getRecordTotal() <= 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else{
+        } else {
             int totalCount = duibaOrderResponse.getRecordTotal();
             sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, duibaOrderResponse.getResultList());
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            duibaOrderRequest1.setCurrPage(i+1);
+            duibaOrderRequest1.setCurrPage(i + 1);
             DuibaOrderResponse DuibaOrderResponse2 = duibaOrderListService.findOrderList(duibaOrderRequest1);
-            if (DuibaOrderResponse2 != null && DuibaOrderResponse2.getResultList().size()> 0) {
+            if (DuibaOrderResponse2 != null && DuibaOrderResponse2.getResultList().size() > 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  DuibaOrderResponse2.getResultList());
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, DuibaOrderResponse2.getResultList());
             } else {
                 break;
             }
@@ -317,18 +329,17 @@ public class DuibaOrderController  extends BaseController {
                 return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(completionTime));
             }
         };
-        mapAdapter.put("productType",productTypeAdapter);
-        mapAdapter.put("orderStatus",orderStatusAdapter);
-        mapAdapter.put("deliveryStatus",deliveryStatusAdapter);
-        mapAdapter.put("processingState",processingStateAdapter);
-        mapAdapter.put("sellingPrice",sellingPriceAdapter);
-        mapAdapter.put("markingPrice",markingPriceAdapter);
-        mapAdapter.put("cost",costAdapter);
-        mapAdapter.put("orderTime",orderTimeAdapter);
-        mapAdapter.put("completionTime",completionTimeAdapter);
+        mapAdapter.put("productType", productTypeAdapter);
+        mapAdapter.put("orderStatus", orderStatusAdapter);
+        mapAdapter.put("deliveryStatus", deliveryStatusAdapter);
+        mapAdapter.put("processingState", processingStateAdapter);
+        mapAdapter.put("sellingPrice", sellingPriceAdapter);
+        mapAdapter.put("markingPrice", markingPriceAdapter);
+        mapAdapter.put("cost", costAdapter);
+        mapAdapter.put("orderTime", orderTimeAdapter);
+        mapAdapter.put("completionTime", completionTimeAdapter);
         return mapAdapter;
     }
-
 
 
 }

@@ -40,9 +40,6 @@ public class DuibaPointsListController extends BaseController {
     @Autowired
     DuibaPointsListService duibaPointsListService;
 
-    @Autowired
-    private AdminCommonService adminCommonService;
-
     private static final String PERMISSIONS = "dbpointslist";
 
     @ApiOperation(value = "兑吧积分账户明细查询", notes = "兑吧积分账户明细查询")
