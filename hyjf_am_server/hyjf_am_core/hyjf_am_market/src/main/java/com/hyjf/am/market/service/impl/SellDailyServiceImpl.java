@@ -92,8 +92,7 @@ public class SellDailyServiceImpl implements SellDailyService {
     public boolean hasGeneratorDataToday() {
         SellDailyExample example = new SellDailyExample();
         SellDailyExample.Criteria criteria = example.createCriteria();
-//        criteria.andDateStrEqualTo(GetDate.getFormatDateStr());
-        criteria.andDateStrEqualTo("2019.05.24");
+        criteria.andDateStrEqualTo(GetDate.getFormatDateStr());
         List<SellDaily> list = sellDailyMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(list)) {
             return false;
