@@ -101,7 +101,13 @@ public class SystemConfig {
 	@Value("${hyjf.fdd.url}")
 	public String fddUrl;
 
-
+	/**
+	 * 兑吧相关
+	 */
+	@Value("${hyjf.duiba.appkey}")
+	public String duiBaAppKey;
+	@Value("${hyjf.duiba.appsecret}")
+	public String duiBaAppSecret;
 
 
 	/** 商户客户号 **/
@@ -373,5 +379,21 @@ public class SystemConfig {
 
 	public void setFddUrl(String fddUrl) {
 		this.fddUrl = fddUrl;
+	}
+
+	public String getDuiBaAppKey() {
+		return duiBaAppKey;
+	}
+
+	public void setDuiBaAppKey(String duiBaAppKey) {
+		this.duiBaAppKey = duiBaAppKey;
+	}
+
+	public String getDuiBaAppSecret() {
+		return duiBaAppSecret;
+	}
+
+	public void setDuiBaAppSecret(String duiBaAppSecret) {
+		this.duiBaAppSecret = duiBaAppSecret;
 	}
 }

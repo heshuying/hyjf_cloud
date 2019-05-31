@@ -20,6 +20,9 @@ public class URLSystemConfig {
     // 安融接口调用地址hyjf.pay.anrong.url
     @Value("${hyjf.pay.anrong.url}")
     public String anrongUrl;
+    /** 内部服务调用兑吧接口请求地址*/
+    @Value("${hyjf.duiba.call.url}")
+    public String duiBaUrl;
     
 //    @Value("${hyjf.chinapnr.return.url}")
 //    public  String chinapnrReturnUril;
@@ -61,5 +64,13 @@ public class URLSystemConfig {
 
     public void setFddPayUrl(String fddPayUrl) {
         this.fddPayUrl = fddPayUrl;
+    }
+
+    public String getDuiBaUrl() {
+        return duiBaUrl;
+    }
+
+    public void setDuiBaUrl(String duiBaUrl) {
+        this.duiBaUrl = duiBaUrl;
     }
 }
