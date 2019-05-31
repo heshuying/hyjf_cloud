@@ -216,13 +216,13 @@ public class AppLoginController extends BaseUserController {
                 }else{
                     SecretUtil.clearToken(sign);
                 }
-                //清除alias start
+                //清除alias start add by nxl
                 UserAliasVO userAliasVO = amUserClient.findAliasesByUserId(userId);
                 if(userAliasVO != null){
                     userAliasVO.setAlias(null);
                     amUserClient.updateAliases(userAliasVO);
                 }
-                //清除alias end
+                //清除alias end add by nxl
                 ret.put("status", "0");
                 ret.put("statusDesc", "退出登录成功");
             } else {
