@@ -52,6 +52,11 @@ public class DuibaPointsModifyVO implements Serializable {
     private Integer pointsType;
 
     /**
+     * 转换实义的操作类型
+     */
+    private String pointsTypeStr;
+
+    /**
      * 调整人用户名
      *
      * @mbggenerated
@@ -78,6 +83,11 @@ public class DuibaPointsModifyVO implements Serializable {
      * @mbggenerated
      */
     private Integer status;
+
+    /**
+     * 转换实义的审核状态
+     */
+    private Integer statusStr;
 
     /**
      * 备注
@@ -242,5 +252,21 @@ public class DuibaPointsModifyVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPointsTypeStr() {
+        return pointsTypeStr;
+    }
+
+    public void setPointsTypeStr(String pointsTypeStr) {
+        this.pointsTypeStr = pointsTypeStr;
+    }
+
+    public Integer getStatusStr() {
+        return statusStr;
+    }
+
+    public void setStatusStr(Integer statusStr) {
+        this.statusStr = statusStr;
     }
 }
