@@ -577,4 +577,9 @@ public class RedisConstants {
      *
      */
     public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
+    /**
+     * 老带新活动状态
+     *
+     */
+    public static final String  CUSTOMER_SERVICE_SWITCH ="CUSTOMER_SERVICE_SWITCH:";
 }

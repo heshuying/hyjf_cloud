@@ -1,5 +1,7 @@
 package com.hyjf.admin.controller.channel;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.CustomerChannelService;
 import com.hyjf.am.response.admin.CustomerChannelResponse;
 import com.hyjf.am.resquest.admin.CustomerChannelRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,7 +59,10 @@ public class CustomerChannelController extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     @PostMapping("/insetCustomerChannel")
     public CustomerChannelResponse getAuthConfigById(HttpServletRequest request,@RequestBody CustomerChannelRequest cRequest){
-
+		cRequest.setUpdateUser(this.getUser(request).getUsername());
+		cRequest.setCreateUser(this.getUser(request).getUsername());
+		cRequest.setCreateTime(new Date());
+		cRequest.setUpdateTime(new Date());
         return customerChannelService.insetCustomerChannel(cRequest);
     }
 
@@ -69,7 +76,26 @@ public class CustomerChannelController extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @PostMapping("/updateCustomerChannel")
     public CustomerChannelResponse updateCustomerChannel(HttpServletRequest request,@RequestBody CustomerChannelRequest cRequest){
+		cRequest.setUpdateUser(this.getUser(request).getUsername());
+		cRequest.setUpdateTime(new Date());
       return customerChannelService.updateCustomerChannel(cRequest);
+    }
+    /**
+     * 老带新配置
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "老带新配置", notes = "老带新配置")
+	@ResponseBody
+    @PostMapping("/updateStatus")
+    public CustomerChannelResponse updateStatus(HttpServletRequest request,@RequestBody CustomerChannelRequest cRequest){
+		if(cRequest.getStatus()!=null) {
+			RedisUtils.set(RedisConstants.CUSTOMER_SERVICE_SWITCH, cRequest.getStatus().toString());
+		}
+			
+		CustomerChannelResponse ccr=new CustomerChannelResponse();
+		ccr.setStatus(Integer.valueOf(RedisUtils.get(RedisConstants.CUSTOMER_SERVICE_SWITCH)));
+      return ccr;
     }
 
 }
