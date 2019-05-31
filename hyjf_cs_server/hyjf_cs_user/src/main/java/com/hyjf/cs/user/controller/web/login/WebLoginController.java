@@ -96,10 +96,18 @@ public class WebLoginController extends BaseUserController {
         //判断用户输入的密码错误次数---结束
         long start1 = System.currentTimeMillis();
         // 汇盈的用户不能登录温金投
-        if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
-                && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
-            throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+        if(wjtClient!=null ){
+            if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                    && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
+            UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+            if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                //借款人不让登录
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
         }
+
 
         WebViewUserVO webViewUserVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC,userVO);
         logger.info("web登录操作===================:"+(System.currentTimeMillis()-start1));

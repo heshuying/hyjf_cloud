@@ -95,10 +95,23 @@ public class WeChatLoginController extends BaseUserController {
         }
         //判断用户输入的密码错误次数---开始
         UserVO user = loginService.getUser(userName);
+        if(user==null){
+            logger.error("weChat端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
+            return result;
+        }
         // 汇盈的用户不能登录温金投
-        if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
-                && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
-            throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+        if(wjtClient!=null ){
+            if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                    && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
+            UserInfoVO userInfoVO = loginService.getUserInfo(user.getUserId());
+            if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                //借款人不让登录
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
         }
         Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI,user);
         if (!errorInfo.isEmpty()){

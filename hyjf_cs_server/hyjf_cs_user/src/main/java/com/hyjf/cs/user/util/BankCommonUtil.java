@@ -85,16 +85,10 @@ public class BankCommonUtil {
     public static String getWjtForgotPwdUrl(String platform, String sign, SystemConfig sysConfig) {
 
         Integer client = Integer.parseInt(platform);
-        if (ClientConstants.WEB_CLIENT == client) {
-            return sysConfig.getFrontHost()+"/user/setTradePassword";
-        }
-        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
-            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
-                    "&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
-                    "&platform="+platform;
-        }
-        if (ClientConstants.WECHAT_CLIENT == client) {
-            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
         }
         return "";
     }

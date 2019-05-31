@@ -217,6 +217,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 request.setProjectType(projectType);
                 request.setBorrowClass(borrowClass);
                 request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                request.setWjtInstCode(systemConfig.getWjtInstCode());
                 // 统计定时发标+出借中总记录数
                 request.setStatus("21");
                 int projectTotal = amTradeClient.countProjectList(request);
@@ -247,6 +248,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     requestList2.setProjectType(projectType);
                     requestList2.setBorrowClass(borrowClass);
                     requestList2.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                    requestList2.setWjtInstCode(systemConfig.getWjtInstCode());
                     //查询所有标的
                     int pageNum = 2;
                     projectTotal = pageSize * pageNum;
