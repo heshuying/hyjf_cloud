@@ -51,11 +51,21 @@ public class DuibaPointsVO implements Serializable {
     private Integer type;
 
     /**
+     * 转换实义的类型
+     */
+    private String typeStr;
+
+    /**
      * 积分业务名称: 0出借 1商品兑换 2订单取消
      *
      * @mbggenerated
      */
     private Integer businessName;
+
+    /**
+     * 转换实义的积分业务名称
+     */
+    private String businessNameStr;
 
     /**
      * 兑吧订单号
@@ -226,5 +236,21 @@ public class DuibaPointsVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTypeStr() {
+        return typeStr;
+    }
+
+    public void setTypeStr(String typeStr) {
+        this.typeStr = typeStr;
+    }
+
+    public String getBusinessNameStr() {
+        return businessNameStr;
+    }
+
+    public void setBusinessNameStr(String businessNameStr) {
+        this.businessNameStr = businessNameStr;
     }
 }
