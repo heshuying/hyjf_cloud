@@ -68,7 +68,7 @@ public class CustomerServiceGroupConfigController extends BaseController {
         }
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
-        groupRequest.setCreateUserId(Integer.parseInt(adminSystemVO.getId()));// 设置
+        groupRequest.setCreateUserId(Integer.parseInt(adminSystemVO.getId()));// 创建人
         CustomerServiceGroupConfigResponse response = customerServiceGroupConfigService.insertCustomerServiceGroupConfig(groupRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -97,6 +97,7 @@ public class CustomerServiceGroupConfigController extends BaseController {
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
         logger.info("【客组配置】{}开始修改客组配置，request：{}", adminSystemVO.getUsername(), JSON.toJSONString(groupRequest));
+        groupRequest.setUpdateUserId(Integer.parseInt(adminSystemVO.getId()));// 修改人
         CustomerServiceGroupConfigResponse response = customerServiceGroupConfigService.updateCustomerServiceGroupConfig(groupRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

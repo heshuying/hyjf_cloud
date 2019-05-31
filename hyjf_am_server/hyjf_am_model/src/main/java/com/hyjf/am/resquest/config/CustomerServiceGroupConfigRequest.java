@@ -7,6 +7,7 @@ import com.hyjf.am.vo.BasePage;
  * @date 2019/5/29
  */
 public class CustomerServiceGroupConfigRequest extends BasePage{
+
     /**
      * id
      *
@@ -43,6 +44,13 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
     private String serviceUserKey;
 
     /**
+     * 是否为新客 1新客组 0老客组
+     *
+     * @mbggenerated
+     */
+    private Integer isNew;
+
+    /**
      * 启用状态 1.启用2.禁用
      *
      * @mbggenerated
@@ -57,11 +65,11 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
     private Integer createUserId;
 
     /**
-     * 是否为新客 1新客组 0老客组
+     * 修改人
      *
      * @mbggenerated
      */
-    private Integer isNew;
+    private Integer updateUserId;
 
     public Integer getId() {
         return id;
@@ -103,6 +111,14 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
         this.serviceUserKey = serviceUserKey;
     }
 
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -119,11 +135,11 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
         this.createUserId = createUserId;
     }
 
-    public Integer getIsNew() {
-        return isNew;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setIsNew(Integer isNew) {
-        this.isNew = isNew;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }

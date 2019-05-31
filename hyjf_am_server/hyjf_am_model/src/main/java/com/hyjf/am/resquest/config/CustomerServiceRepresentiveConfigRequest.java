@@ -16,7 +16,7 @@ public class CustomerServiceRepresentiveConfigRequest extends BasePage {
     private Integer id;
 
     /**
-     * 后台系统的用户名
+     * 姓名
      *
      * @mbggenerated
      */
@@ -37,11 +37,11 @@ public class CustomerServiceRepresentiveConfigRequest extends BasePage {
     private String groupName;
 
     /**
-     * 坐席名称
+     * 是否为新客 1新客组 0老客组
      *
      * @mbggenerated
      */
-    private String repName;
+    private String isNew;
 
     /**
      * 启用状态 1.启用2.禁用
@@ -56,6 +56,13 @@ public class CustomerServiceRepresentiveConfigRequest extends BasePage {
      * @mbggenerated
      */
     private Integer createUserId;
+
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
+    private Integer updateUserId;
 
     public Integer getId() {
         return id;
@@ -89,12 +96,12 @@ public class CustomerServiceRepresentiveConfigRequest extends BasePage {
         this.groupName = groupName == null ? null : groupName.trim();
     }
 
-    public String getRepName() {
-        return repName;
+    public String getIsNew() {
+        return isNew;
     }
 
-    public void setRepName(String repName) {
-        this.repName = repName == null ? null : repName.trim();
+    public void setIsNew(String isNew) {
+        this.isNew = isNew;
     }
 
     public Integer getStatus() {
@@ -111,5 +118,13 @@ public class CustomerServiceRepresentiveConfigRequest extends BasePage {
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }

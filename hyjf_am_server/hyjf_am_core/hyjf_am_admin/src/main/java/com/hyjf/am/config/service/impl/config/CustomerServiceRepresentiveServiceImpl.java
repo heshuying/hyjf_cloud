@@ -105,13 +105,13 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
 
     /**
      * 根据id修改冗余客组名称和是否新客
-     *
-     * @param groupId
+     *  @param groupId
      * @param groupName
      * @param isNew
+     * @param updateUserId
      */
     @Override
-    public void updateGroupNameAndIsNew(Integer groupId, String groupName, Integer isNew) {
+    public void updateGroupNameAndIsNew(Integer groupId, String groupName, Integer isNew, Integer updateUserId) {
         CustomerServiceRepresentiveConfigExample example = new CustomerServiceRepresentiveConfigExample();
         CustomerServiceRepresentiveConfigExample.Criteria criteria = example.createCriteria();
         criteria.andGroupIdEqualTo(groupId);
@@ -122,6 +122,7 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
         if(isNew != null){
             config.setIsNew(isNew);
         }
+        config.setUpdateUserId(updateUserId);
         customerServiceRepresentiveConfigMapper.updateByExampleSelective(config, example);
     }
 

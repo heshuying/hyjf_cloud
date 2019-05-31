@@ -53,11 +53,12 @@ public interface CustomerServiceRepresentiveConfigService {
 
     /**
      * 根据id修改冗余客组名称和是否新客
-     *
-     * @param groupId
+     *  @param groupId
      * @param groupName
+     * @param isNew
+     * @param updateUserId
      */
-    void updateGroupNameAndIsNew(Integer groupId, String groupName, Integer isNew);
+    void updateGroupNameAndIsNew(Integer groupId, String groupName, Integer isNew, Integer updateUserId);
 
     /**
      * 校验坐席配置信息

@@ -91,7 +91,7 @@ public class CustomerServiceRepresentiveConfigController extends BaseController 
         }
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
-        groupRequest.setCreateUserId(Integer.parseInt(adminSystemVO.getId()));// 设置
+        groupRequest.setCreateUserId(Integer.parseInt(adminSystemVO.getId()));// 创建人
         CustomerServiceRepresentiveConfigResponse response = customerServiceRepresentiveConfigService.insertCustomerServiceRepresentiveConfig(groupRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -120,6 +120,7 @@ public class CustomerServiceRepresentiveConfigController extends BaseController 
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
         logger.info("【坐席配置】{}开始修改坐席配置，request：{}", adminSystemVO.getUsername(), JSON.toJSONString(groupRequest));
+        groupRequest.setUpdateUserId(Integer.parseInt(adminSystemVO.getId()));// 修改人
         CustomerServiceRepresentiveConfigResponse response = customerServiceRepresentiveConfigService.updateCustomerServiceRepresentiveConfig(groupRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

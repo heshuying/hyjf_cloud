@@ -33,9 +33,6 @@ public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Seria
     @ApiModelProperty(value = "客组名称")
     private String groupName;
 
-    @ApiModelProperty(value = "坐席名称")
-    private String repName;
-
     @ApiModelProperty(value = "是否为新客 1.新客组 0.老客组")
     private Integer isNew;
 
@@ -44,6 +41,9 @@ public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Seria
 
     @ApiModelProperty(value = "创建人")
     private Integer createUserId;
+
+    @ApiModelProperty(value = "修改人")
+    private Integer updateUserId;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
@@ -84,14 +84,6 @@ public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Seria
         this.groupName = groupName == null ? null : groupName.trim();
     }
 
-    public String getRepName() {
-        return repName;
-    }
-
-    public void setRepName(String repName) {
-        this.repName = repName == null ? null : repName.trim();
-    }
-
     public Integer getIsNew() {
         return isNew;
     }
@@ -114,6 +106,14 @@ public class CustomerServiceRepresentiveConfigVO extends BaseVO implements Seria
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

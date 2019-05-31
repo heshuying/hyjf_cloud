@@ -45,6 +45,9 @@ public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "创建人")
     private Integer createUserId;
 
+    @ApiModelProperty(value = "修改人")
+    private Integer updateUserId;
+
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
@@ -114,6 +117,14 @@ public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {
