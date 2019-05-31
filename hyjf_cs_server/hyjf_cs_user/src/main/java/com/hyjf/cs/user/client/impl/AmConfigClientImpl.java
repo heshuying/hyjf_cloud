@@ -306,16 +306,33 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 
     /**
-     * 获取推送禁用渠道
+     * 根据sourceId查询该渠道是否被禁用
      *
+     * @param sourceId
      * @return
      */
     @Override
-    public List<CustomerServiceChannelVO> selectCustomerServiceChannelList() {
+    public CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId) {
         CustomerServiceChannelResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/customerServiceChannel/selectCustomerServiceChannelList", CustomerServiceChannelResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceChannel/selectCustomerServiceChannelBySourceId", CustomerServiceChannelResponse.class).getBody();
         if (response != null) {
-            return response.getResultList();
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner) {
+        CustomerServiceRepresentiveConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectCustomerServiceRepresentiveConfigByUserName/"+currentOwner, CustomerServiceRepresentiveConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }

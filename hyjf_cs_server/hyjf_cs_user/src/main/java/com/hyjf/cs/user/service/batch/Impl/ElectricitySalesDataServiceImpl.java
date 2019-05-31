@@ -6,8 +6,8 @@ package com.hyjf.cs.user.service.batch.Impl;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -68,7 +68,7 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
     }
 
     /**
-     * 根据用户ID查询PC注册渠道
+     * 根据用户ID查询PC推广渠道
      *
      * @param userId
      * @return
@@ -76,5 +76,73 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
     @Override
     public UtmRegVO selectUtmRegByUserId(Integer userId) {
         return amUserClient.selectUtmRegByUserId(userId);
+    }
+
+    /**
+     * 根据utmId查询用户推广渠道
+     *
+     * @param utmId
+     * @return
+     */
+    @Override
+    public UtmPlatVO selectUtmPlatByUtmId(Integer utmId) {
+        return amUserClient.selectUtmPlatByUtmId(String.valueOf(utmId));
+    }
+
+
+    /**
+     * 根据sourceId查询该渠道是否被禁用
+     *
+     * @param sourceId
+     * @return
+     */
+    @Override
+    public CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId) {
+        return amConfigClient.selectCustomerServiceChannelBySourceId(sourceId);
+    }
+
+    /**
+     * 根据用户Id查询用户App推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AppUtmRegVO selectAppUtmRegByUserId(Integer userId) {
+        return amUserClient.selectAppUtmRegByUserId(userId);
+    }
+
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUserVO selectSpreadsUserByUserId(Integer userId) {
+        return amUserClient.selectSpreadsUserByUserId(userId);
+    }
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPortraitVO selectUserPortraitByUserId(Integer userId) {
+        return amUserClient.selectUserPortraitByUserId(userId);
+    }
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner) {
+        return amConfigClient.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
     }
 }

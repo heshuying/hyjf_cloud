@@ -166,9 +166,18 @@ public interface AmConfigClient {
     List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig();
 
     /**
-     * 获取推送禁用渠道
+     * 根据sourceId查询该渠道是否被禁用
      *
+     * @param sourceId
      * @return
      */
-    List<CustomerServiceChannelVO> selectCustomerServiceChannelList();
+    CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId);
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner);
 }

@@ -32,4 +32,25 @@ public class CustomerServiceRepresentiveConfigServiceImpl extends BaseServiceImp
         cra.andStatusEqualTo(1);
         return this.customerServiceRepresentiveConfigMapper.selectByExample(example);
     }
+
+
+    /**
+     * 根据用户当前所属人姓名获取坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfig selectCustomerServiceRepresentiveConfigByUserName(String currentOwner) {
+        CustomerServiceRepresentiveConfigExample example = new CustomerServiceRepresentiveConfigExample();
+        CustomerServiceRepresentiveConfigExample.Criteria cra = example.createCriteria();
+        // 启用状态 1.启用2.禁用
+        cra.andStatusEqualTo(1);
+        cra.andUserNameEqualTo(currentOwner);
+        List<CustomerServiceRepresentiveConfig> list = this.customerServiceRepresentiveConfigMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

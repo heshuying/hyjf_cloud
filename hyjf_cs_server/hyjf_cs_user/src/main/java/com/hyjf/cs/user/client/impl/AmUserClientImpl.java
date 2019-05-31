@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -16,6 +17,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -1363,7 +1365,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 根据用户ID查询PC注册渠道
+	 * 根据用户ID查询PC推广渠道
 	 *
 	 * @param userId
 	 * @return
@@ -1372,6 +1374,54 @@ public class AmUserClientImpl implements AmUserClient {
 	public UtmRegVO selectUtmRegByUserId(Integer userId) {
 		UtmRegResponse response = restTemplate
 				.getForEntity(userService + "/user/selectUtmRegByUserId/" + userId, UtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户Id查询APP推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public AppUtmRegVO selectAppUtmRegByUserId(Integer userId) {
+		AppUtmRegResponse response = restTemplate
+				.getForEntity(userService + "/user/selectAppUtmRegByUserId/" + userId, AppUtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public SpreadsUserVO selectSpreadsUserByUserId(Integer userId) {
+		SpreadsUserResponse response = restTemplate
+				.getForEntity(userService + "/user/selectSpreadsUserByUserId/" + userId, SpreadsUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserPortraitVO selectUserPortraitByUserId(Integer userId) {
+		UserPortraitResponse response = restTemplate
+				.getForEntity(userService + "/user/selectUserPortraitByUserId/" + userId, UserPortraitResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

@@ -1720,7 +1720,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 
     /**
-     * 根据用户ID查询PC注册渠道
+     * 根据用户ID查询PC推广渠道
      *
      * @param userId
      * @return
@@ -1732,6 +1732,62 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         cra.andUserIdEqualTo(userId);
         List<UtmReg> list = this.utmRegMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询App推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AppUtmReg selectAppUtmRegByUserId(Integer userId) {
+        AppUtmRegExample example = new AppUtmRegExample();
+        AppUtmRegExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<AppUtmReg> list = this.appUtmRegMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUser selectSpreadsUserByUserId(Integer userId) {
+        SpreadsUserExample example = new SpreadsUserExample();
+        SpreadsUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<SpreadsUser> list = this.spreadsUserMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPortrait selectUserPortraitByUserId(Integer userId) {
+        UserPortraitExample example = new UserPortraitExample();
+        UserPortraitExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UserPortrait> list = this.userPortraitMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
             return list.get(0);
         }
         return null;

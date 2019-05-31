@@ -6,14 +6,14 @@ package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.batch.operationaldata.OperationalUserDataController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
 import com.hyjf.cs.user.service.batch.OperationalUserService;
 import com.jcraft.jsch.UserInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ListableBeanFactoryExtensionsKt;
@@ -84,7 +84,86 @@ public class ElectricitySalesDataController extends BaseUserController {
                 continue;
             }
             // 判断用户渠道是否是推送禁用
+            // 判断用户是否是PC推广渠道用户
             UtmRegVO utmReg = this.electricitySalesDataService.selectUtmRegByUserId(userId);
+            if (utmReg != null) {
+                // 如果是PC推广渠道,判断渠道是否是推送禁用
+                Integer utmId = utmReg.getUtmId();
+                // 根据utmId查询推广渠道
+                UtmPlatVO utmPlatVO = this.electricitySalesDataService.selectUtmPlatByUtmId(utmId);
+                if (utmPlatVO != null) {
+                    // 渠道ID
+                    Integer sourceId = utmPlatVO.getSourceId();
+                    // 根据sourceId查询该渠道是否被禁用
+                    CustomerServiceChannelVO customerServiceChannel = this.electricitySalesDataService.selectCustomerServiceChannelBySourceId(sourceId);
+                    if (customerServiceChannel != null) {
+                        // 如果被禁用了,continue
+                        continue;
+                    }
+                }
+            }
+            // 判断用户是否是App推广渠道用户
+            AppUtmRegVO appUtmReg = this.electricitySalesDataService.selectAppUtmRegByUserId(userId);
+            if (appUtmReg != null) {
+                // 如果是App推广渠道的用户
+                Integer sourceId = appUtmReg.getSourceId();
+                // 根据sourceId查询该渠道是否被禁用
+                CustomerServiceChannelVO customerServiceChannel = this.electricitySalesDataService.selectCustomerServiceChannelBySourceId(sourceId);
+                if (customerServiceChannel != null) {
+                    // 如果被禁用了,continue
+                    continue;
+                }
+            }
+            // 判断老带新活动是否开启
+            if (true) {
+                // 如果老带新活动开启
+                // 用户属性
+                Integer attribute = userInfo.getAttribute();
+                if (attribute != 0) {
+                    // 用户不是无主单
+                    // 获取用户推荐人信息
+                    SpreadsUserVO spreadsUser = this.electricitySalesDataService.selectSpreadsUserByUserId(userId);
+                    if (spreadsUser != null) {
+                        // 有推荐人
+                        Integer spreadsUserId = spreadsUser.getSpreadsUserId();
+                        // 根据推荐人获取用户信息
+                        UserVO spreadsUserVO = this.electricitySalesDataService.getUsersById(spreadsUserId);
+                        if (spreadsUserVO == null) {
+                            logger.error("推荐人的用户信息不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            continue;
+                        }
+                        // 获取推荐人用户详情信息
+                        UserInfoVO spreadsUserInfoVO = this.electricitySalesDataService.getUserInfo(spreadsUserId);
+                        if (spreadsUserInfoVO == null) {
+                            logger.error("推荐人用户详情信息不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            continue;
+                        }
+                        // 查询用户推荐人的用户画像
+                        UserPortraitVO userPortraitVO = this.electricitySalesDataService.selectUserPortraitByUserId(spreadsUserId);
+                        if (userPortraitVO != null) {
+                            // 推荐人用户画像的当前拥有人
+                            String currentOwner = userPortraitVO.getCurrentOwner();
+                            if (StringUtils.isNotBlank(currentOwner)) {
+                                // 根据推荐人当前拥有人姓名 去坐席配置表里查询是否存在
+                                CustomerServiceRepresentiveConfigVO representiveConfigVO = this.electricitySalesDataService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
+                                if (representiveConfigVO == null) {
+                                    logger.error("用户推荐人的当前拥有人姓名在坐席配置表中不存在,不予生成,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].推荐人当前拥有人姓名:[" + currentOwner + "].");
+                                    continue;
+                                }
+                                // 如果有，将此用户分配给该坐席
+
+
+
+                            }
+                        }
+
+
+                    }
+                }
+
+            } else {
+
+            }
 
 
         }
