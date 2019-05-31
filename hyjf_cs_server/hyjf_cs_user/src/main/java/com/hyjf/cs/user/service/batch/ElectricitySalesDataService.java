@@ -6,8 +6,8 @@ package com.hyjf.cs.user.service.batch;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.user.service.BaseUserService;
 
 import java.util.List;
@@ -46,10 +46,59 @@ public interface ElectricitySalesDataService extends BaseUserService {
     List<UserVO> selectBeforeDayRegisterUserList();
 
     /**
-     * 根据用户ID查询PC注册渠道
+     * 根据用户ID查询PC推广渠道
      *
      * @param userId
      * @return
      */
     UtmRegVO selectUtmRegByUserId(Integer userId);
+
+    /**
+     * 根据utmId查询用户推广渠道
+     *
+     * @param utmId
+     * @return
+     */
+    UtmPlatVO selectUtmPlatByUtmId(Integer utmId);
+
+    /**
+     * 根据sourceId查询该渠道是否被禁用
+     *
+     * @param sourceId
+     * @return
+     */
+    CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId);
+
+    /**
+     * 根据用户Id查询用户App推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    AppUtmRegVO selectAppUtmRegByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    SpreadsUserVO selectSpreadsUserByUserId(Integer userId);
+
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    UserPortraitVO selectUserPortraitByUserId(Integer userId);
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner);
 }

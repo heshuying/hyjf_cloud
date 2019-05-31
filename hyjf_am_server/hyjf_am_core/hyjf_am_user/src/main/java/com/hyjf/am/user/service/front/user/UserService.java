@@ -367,10 +367,34 @@ public interface UserService extends BaseService {
 	List<User> selectBeforeDayRegisterUserList();
 
 	/**
-	 * 根据用户ID查询PC注册渠道
+	 * 根据用户ID查询PC推广渠道
 	 *
 	 * @param userId
 	 * @return
 	 */
 	UtmReg selectUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询App推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppUtmReg selectAppUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUser selectSpreadsUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID获取用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserPortrait selectUserPortraitByUserId(Integer userId);
 }

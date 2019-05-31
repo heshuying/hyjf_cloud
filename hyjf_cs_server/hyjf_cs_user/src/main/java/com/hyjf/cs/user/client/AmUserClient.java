@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -661,10 +662,34 @@ public interface AmUserClient {
 	List<UserVO> selectBeforeDayRegisterUserList();
 
 	/**
-	 * 根据用户ID查询PC注册渠道
+	 * 根据用户ID查询PC推广渠道
 	 *
 	 * @param userId
 	 * @return
 	 */
 	UtmRegVO selectUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询APP推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppUtmRegVO selectAppUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUserVO selectSpreadsUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserPortraitVO selectUserPortraitByUserId(Integer userId);
 }

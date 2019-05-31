@@ -12,7 +12,10 @@ import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +46,24 @@ public class CustomerServiceRepresentiveConfigController extends BaseConfigContr
         if (!CollectionUtils.isEmpty(customerServiceGroupConfigList)) {
             List<CustomerServiceRepresentiveConfigVO> resultList = CommonUtils.convertBeanList(customerServiceGroupConfigList, CustomerServiceRepresentiveConfigVO.class);
             response.setResultList(resultList);
+        }
+        return response;
+    }
+
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @return
+     */
+    @GetMapping("/selectCustomerServiceRepresentiveConfigByUserName/{currentOwner}")
+    public CustomerServiceRepresentiveConfigResponse selectCustomerServiceRepresentiveConfigByUserName(@PathVariable String currentOwner) {
+        CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
+        CustomerServiceRepresentiveConfig customerServiceGroupConfig = customerServiceRepresentiveConfigService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
+        if (customerServiceGroupConfig != null) {
+            CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = new CustomerServiceRepresentiveConfigVO();
+            BeanUtils.copyProperties(customerServiceGroupConfig, CustomerServiceRepresentiveConfigVO.class);
+            response.setResult(customerServiceRepresentiveConfig);
         }
         return response;
     }

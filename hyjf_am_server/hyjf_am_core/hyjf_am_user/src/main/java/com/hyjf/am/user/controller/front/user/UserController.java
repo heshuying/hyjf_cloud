@@ -6,6 +6,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
@@ -21,6 +22,7 @@ import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
@@ -1158,22 +1160,93 @@ public class UserController extends BaseController {
     }
 
 
-
-
+    /**
+     * 根据用户ID查询用户PC推广渠道
+     *
+     * @param userId
+     * @return
+     */
     @GetMapping(value = "/selectUtmRegByUserId/{userId}")
-    public UtmRegResponse selectUtmRegByUserId(@PathVariable Integer userId){
-        UtmRegResponse userUtmInfoResponse = new UtmRegResponse();
-//        if (userId != null){
-//            UtmReg utmReg = userService.selectUtmRegByUserId(userId);
-//            logger.info("getUserUtmInfo run...user is :{}", userUtmInfo);
-//            if (userUtmInfo != null){
-//                UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = new UserUtmInfoCustomizeVO();
-//                BeanUtils.copyProperties(userUtmInfo, userUtmInfoCustomizeVO);
-//                userUtmInfoResponse.setResult(userUtmInfoCustomizeVO);
-//                userUtmInfoResponse.setRtn(Response.SUCCESS);
-//            }
-//            return userUtmInfoResponse;
-//        }
+    public UtmRegResponse selectUtmRegByUserId(@PathVariable Integer userId) {
+        UtmRegResponse response = new UtmRegResponse();
+        if (userId != null) {
+            UtmReg utmReg = userService.selectUtmRegByUserId(userId);
+            if (utmReg != null) {
+                UtmRegVO umRegVO = new UtmRegVO();
+                BeanUtils.copyProperties(utmReg, umRegVO);
+                response.setResult(umRegVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户APP推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectAppUtmRegByUserId/{userId}")
+    public AppUtmRegResponse selectAppUtmRegByUserId(@PathVariable Integer userId) {
+        AppUtmRegResponse response = new AppUtmRegResponse();
+        if (userId != null) {
+            AppUtmReg appUtmReg = userService.selectAppUtmRegByUserId(userId);
+            if (appUtmReg != null) {
+                AppUtmRegVO appUtmRegVO = new AppUtmRegVO();
+                BeanUtils.copyProperties(appUtmReg, appUtmRegVO);
+                response.setResult(appUtmRegVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectSpreadsUserByUserId/{userId}")
+    public SpreadsUserResponse selectSpreadsUserByUserId(@PathVariable Integer userId) {
+        SpreadsUserResponse response = new SpreadsUserResponse();
+        if (userId != null) {
+            SpreadsUser spreadsUser = userService.selectSpreadsUserByUserId(userId);
+            if (spreadsUser != null) {
+                SpreadsUserVO spreadsUserVO = new SpreadsUserVO();
+                BeanUtils.copyProperties(spreadsUser, spreadsUserVO);
+                response.setResult(spreadsUserVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectUserPortraitByUserId/{userId}")
+    public UserPortraitResponse selectUserPortraitByUserId(@PathVariable Integer userId) {
+        UserPortraitResponse response = new UserPortraitResponse();
+        if (userId != null) {
+            UserPortrait userPortrait = userService.selectUserPortraitByUserId(userId);
+            if (userPortrait != null) {
+                UserPortraitVO userPortraitVO = new UserPortraitVO();
+                BeanUtils.copyProperties(userPortrait, userPortraitVO);
+                response.setResult(userPortraitVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
         return null;
     }
 }
