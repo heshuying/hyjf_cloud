@@ -26,12 +26,13 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="orderTypeTab" property="orderTypeTab" jdbcType="VARCHAR" />
+    <result column="commodity_code" property="commodityCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, duiba_order_id, hy_order_id, user_name, true_name, user_id, exchange_content, 
     product_type, selling_price, marking_price, cost, order_status, order_time, completion_time, 
     delivery_status, receiving_information, recharge_state, processing_state, create_by, 
-    create_time, update_by, update_time, remark
+    create_time, update_by, update_time, remark, commodity_code
   </sql>
 
   <select id="selectDuibaOrderList" resultMap="BaseResultMap"
@@ -82,6 +83,9 @@
     </if>
     <if test="processingStateSerach != null and processingStateSerach != ''">
       AND hdp.processing_state = #{processingStateSerach}
+    </if>
+    <if test="commodityCode != null and commodityCode != ''">
+      AND hdp.commodity_code = #{commodityCode}
     </if>
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
@@ -141,6 +145,9 @@
     </if>
     <if test="processingStateSerach != null and processingStateSerach != ''">
       AND hdp.processing_state = #{processingStateSerach}
+    </if>
+    <if test="commodityCode != null and commodityCode != ''">
+      AND hdp.commodity_code = #{commodityCode}
     </if>
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">

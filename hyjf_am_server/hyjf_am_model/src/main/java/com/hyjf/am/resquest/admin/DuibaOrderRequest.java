@@ -135,6 +135,14 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 	@ApiModelProperty(value = "页签状态(检索用)1：订单查询，2.订单发货，3.异常订单")
 	private String orderTypeTab;
 
+	/**
+	 * 商品编码
+	 *
+	 * @mbggenerated
+	 */
+	@ApiModelProperty(value = "处理状态(检索用)")
+	private String commodityCode;
+
 	private static final long serialVersionUID = 1L;
 
 	public String getDuibaOrderIdSerach() {
@@ -259,5 +267,13 @@ public class DuibaOrderRequest extends BasePage implements Serializable {
 
 	public void setCompletionTimeSerachEnd(String completionTimeSerachEnd) {
 		this.completionTimeSerachEnd = completionTimeSerachEnd;
+	}
+
+	public String getCommodityCode() {
+		return commodityCode;
+	}
+
+	public void setCommodityCode(String commodityCode) {
+		this.commodityCode = commodityCode;
 	}
 }

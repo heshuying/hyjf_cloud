@@ -166,6 +166,13 @@ public class DuibaOrders implements Serializable {
      */
     private String remark;
 
+    /**
+     * 商品编码
+     *
+     * @mbggenerated
+     */
+    private String commodityCode;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -350,5 +357,13 @@ public class DuibaOrders implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getCommodityCode() {
+        return commodityCode;
+    }
+
+    public void setCommodityCode(String commodityCode) {
+        this.commodityCode = commodityCode;
     }
 }

@@ -175,6 +175,13 @@ public class DuibaOrderVO implements Serializable {
 
     private String orderTypeTab;
 
+    /**
+     * 商品编码
+     *
+     * @mbggenerated
+     */
+    private String commodityCode;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -367,5 +374,13 @@ public class DuibaOrderVO implements Serializable {
 
     public void setOrderTypeTab(String orderTypeTab) {
         this.orderTypeTab = orderTypeTab;
+    }
+
+    public String getCommodityCode() {
+        return commodityCode;
+    }
+
+    public void setCommodityCode(String commodityCode) {
+        this.commodityCode = commodityCode;
     }
 }
