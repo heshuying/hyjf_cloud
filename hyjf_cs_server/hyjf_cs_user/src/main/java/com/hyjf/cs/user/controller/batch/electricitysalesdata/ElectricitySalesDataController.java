@@ -6,8 +6,13 @@ package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.batch.operationaldata.OperationalUserDataController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -58,6 +64,8 @@ public class ElectricitySalesDataController extends BaseUserController {
             return;
         }
 
+        // 老带新活动开启标志位 1启用 0禁用
+        String customerServiceSwitch = RedisUtils.get(RedisConstants.CUSTOMER_SERVICE_SWITCH);
         // 分配坐席数量
         Integer customerServiceRepresentiveCount = customerServiceRepresentiveConfigList.size();
         // 查询前一天注册用户
@@ -76,6 +84,9 @@ public class ElectricitySalesDataController extends BaseUserController {
                 logger.error("获取用户详情信息失败,用户ID:[" + userId + "].");
                 continue;
             }
+            // 获取用户开户信息
+            BankOpenAccountVO bankOpenAccountVO = this.electricitySalesDataService.getBankOpenAccount(userId);
+
             // 用户角色1投资人2借款人3担保机构
             Integer roleId = userInfo.getRoleId();
             if (roleId != 1) {
@@ -115,7 +126,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                 }
             }
             // 判断老带新活动是否开启
-            if (true) {
+            if ("1".equals(customerServiceSwitch)) {
                 // 如果老带新活动开启
                 // 用户属性
                 Integer attribute = userInfo.getAttribute();
@@ -139,10 +150,10 @@ public class ElectricitySalesDataController extends BaseUserController {
                             continue;
                         }
                         // 查询用户推荐人的用户画像
-                        UserPortraitVO userPortraitVO = this.electricitySalesDataService.selectUserPortraitByUserId(spreadsUserId);
-                        if (userPortraitVO != null) {
+                        UserPortraitVO spreadsUserPortraitVO = this.electricitySalesDataService.selectUserPortraitByUserId(spreadsUserId);
+                        if (spreadsUserPortraitVO != null) {
                             // 推荐人用户画像的当前拥有人
-                            String currentOwner = userPortraitVO.getCurrentOwner();
+                            String currentOwner = spreadsUserPortraitVO.getCurrentOwner();
                             if (StringUtils.isNotBlank(currentOwner)) {
                                 // 根据推荐人当前拥有人姓名 去坐席配置表里查询是否存在
                                 CustomerServiceRepresentiveConfigVO representiveConfigVO = this.electricitySalesDataService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
@@ -151,7 +162,46 @@ public class ElectricitySalesDataController extends BaseUserController {
                                     continue;
                                 }
                                 // 如果有，将此用户分配给该坐席
-
+                                ElectricitySalesDataPushListVO electricitySalesDataPushListVO = new ElectricitySalesDataPushListVO();
+                                electricitySalesDataPushListVO.setUserId(userId);
+                                electricitySalesDataPushListVO.setUserName(user.getUsername());
+                                electricitySalesDataPushListVO.setGroupId(representiveConfigVO.getGroupId());
+                                electricitySalesDataPushListVO.setGroupName(representiveConfigVO.getGroupName());
+                                electricitySalesDataPushListVO.setBankAccount(bankOpenAccountVO == null ? "" : bankOpenAccountVO.getAccount());
+                                electricitySalesDataPushListVO.setRoleId(roleId);
+                                electricitySalesDataPushListVO.setTrueName(StringUtils.isBlank(userInfo.getTruename()) ? null : userInfo.getTruename());
+                                electricitySalesDataPushListVO.setMobile(user.getMobile());
+                                // 性别
+                                electricitySalesDataPushListVO.setSex(userInfo.getSex());
+                                // 赋值年龄
+                                if (StringUtils.isNotBlank(userInfo.getIdcard())) {
+                                    try {
+                                        String idcard = userInfo.getIdcard();
+                                        SimpleDateFormat sdf = GetDate.date_sdf;
+                                        boolean isIdCard = IdCard15To18.isValid(idcard);
+                                        if (isIdCard) {
+                                            if (idcard.length() == 15) {
+                                                idcard = IdCard15To18.getEighteenIDCard(idcard);
+                                            }
+                                            String birthday = idcard.substring(6, 10) + "-" + idcard.substring(10, 12) + "-" + idcard.substring(12, 14);
+                                            String age = GetDate.getAge(GetDate.str2Date(birthday, sdf));
+                                            electricitySalesDataPushListVO.setAge(Integer.valueOf(age));
+                                            electricitySalesDataPushListVO.setBirthday(birthday);
+                                        } else {
+                                            electricitySalesDataPushListVO.setAge(null);
+                                            electricitySalesDataPushListVO.setBirthday(null);
+                                        }
+                                    } catch (Exception e) {
+                                        continue;
+                                    }
+                                } else {
+                                    electricitySalesDataPushListVO.setAge(null);
+                                    electricitySalesDataPushListVO.setBirthday(null);
+                                }
+                                //注册时间
+                                electricitySalesDataPushListVO.setRegTime(user.getRegTime());
+//                                appUtmReg
+//                                        electricitySalesDataPushListVO.setPcUtmId();
 
 
                             }
