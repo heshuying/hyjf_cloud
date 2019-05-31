@@ -18,6 +18,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
@@ -145,7 +146,8 @@ public class WjtWechatProjectListServiceImpl extends BaseTradeServiceImpl implem
         }
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         for (WechatHomeProjectListVO wechatHomeProjectListCustomize : list) {
-
+            wechatHomeProjectListCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(wechatHomeProjectListCustomize.getBorrowApr()));
+            wechatHomeProjectListCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(wechatHomeProjectListCustomize.getBorrowExtraYield()));
             if ("0".equals(wechatHomeProjectListCustomize.getOnTime()) || "".equals(wechatHomeProjectListCustomize.getOnTime())) {
                 switch (wechatHomeProjectListCustomize.getStatus()) {
                     case "10":

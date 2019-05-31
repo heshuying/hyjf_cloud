@@ -30,6 +30,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -70,6 +71,16 @@ public class WjtProjectListController extends BaseController {
                 BigDecimal dbYield=new BigDecimal(StringUtils.isNotBlank(webProjectListCustomize.getBorrowExtraYield())?webProjectListCustomize.getBorrowExtraYield():"0");
                 boolean booleanVal = Validator.isIncrease(intFlg,dbYield);
                 webProjectListCustomize.setIncrease(String.valueOf(booleanVal));
+                //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+                // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+                // mod by nxl 20190409 start
+                //历史年回报率
+                String fromatBorr= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowApr());
+                webProjectListCustomize.setBorrowApr(fromatBorr);
+                //加息利率
+                String fromatExtraYield= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowExtraYield());
+                webProjectListCustomize.setBorrowExtraYield(fromatExtraYield);
+                // mod by nxl 20190409 end
             }
         }
         // add by nxl 判断是否为产品加息 end
