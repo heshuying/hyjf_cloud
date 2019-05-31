@@ -61,7 +61,6 @@
 		<org.apache.commons.version>1.6</org.apache.commons.version>
 
 		<swagger.version>1.5.21</swagger.version>
-		<duiba.version>0.0.14</duiba.version>
 
 		<eureka.serviceUrl.default>http://microserver1:1111/eureka,http://microserver2:1111/eureka</eureka.serviceUrl.default>
 	</properties>
@@ -221,12 +220,6 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-text</artifactId>
 				<version>${org.apache.commons.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>cn.com.duiba.credits</groupId>
-				<artifactId>duiba-java-sdk</artifactId>
-				<version>${duiba.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
