@@ -290,14 +290,14 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     /**
-     * 获取坐席配置List
+     * 获取客组类型为新客组的坐席配置
      *
      * @return
      */
     @Override
     public List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig() {
         CustomerServiceRepresentiveConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectCustomerServiceGroupConfigList", CustomerServiceRepresentiveConfigResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectCustomerServiceRepresentiveConfig", CustomerServiceRepresentiveConfigResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

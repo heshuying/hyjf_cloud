@@ -10,6 +10,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UnderLineRechargeResponse;
 import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -27,6 +28,7 @@ import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -902,6 +904,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         EvaluationConfigResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/tradedetail/selectEvaluationConfig/", record, EvaluationConfigResponse.class).getBody();
         if (response != null && Response.isSuccess(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户Id查询用户第一笔充值记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountRechargeVO selectAccountRechargeByUserId(Integer userId) {
+        AccountRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/selectAccountRechargeByUserId/", userId, AccountRechargeResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)) {
+            return response.getResult();
         }
         return null;
     }

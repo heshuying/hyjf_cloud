@@ -3,12 +3,9 @@
  */
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.CustomerServiceGroupConfig;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.config.service.CustomerServiceRepresentiveConfigService;
-import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.config.CustomerServiceRepresentiveConfigResponse;
-import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,7 +32,7 @@ public class CustomerServiceRepresentiveConfigController extends BaseConfigContr
     private CustomerServiceRepresentiveConfigService customerServiceRepresentiveConfigService;
 
     /**
-     * 获取坐席配置
+     * 获取客组类型为新客组的坐席配置
      *
      * @return
      */

@@ -8,26 +8,27 @@ import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.batch.operationaldata.OperationalUserDataController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
-import com.hyjf.cs.user.service.batch.OperationalUserService;
-import com.jcraft.jsch.UserInfo;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ListableBeanFactoryExtensionsKt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +47,6 @@ public class ElectricitySalesDataController extends BaseUserController {
     @Autowired
     private ElectricitySalesDataService electricitySalesDataService;
 
-
     @RequestMapping("/generateElectricitySalesData")
     public void generateElectricitySalesData() {
         logger.info("电销数据推送生成");
@@ -56,11 +56,11 @@ public class ElectricitySalesDataController extends BaseUserController {
             logger.info("获取客组配置失败,不予生成");
             return;
         }
-        // 获取坐席配置
+        // 获取客组类型为新客组的坐席配置
         List<CustomerServiceRepresentiveConfigVO> customerServiceRepresentiveConfigList = this.electricitySalesDataService.selectCustomerServiceRepresentiveConfig();
 
         if (customerServiceRepresentiveConfigList == null || customerServiceRepresentiveConfigList.size() == 0) {
-            logger.info("获取坐席配置失败,不予生成");
+            logger.info("获取客组类型为新客组的坐席配置配置失败,不予生成");
             return;
         }
 
@@ -74,6 +74,8 @@ public class ElectricitySalesDataController extends BaseUserController {
             logger.info("前一天注册用户数为0,不予生成");
             return;
         }
+        // 筛选后需要分配的用户List
+        List<UserVO> userList = new ArrayList<>();
         // 循环用户列表,对前一天注册的用户进行筛选
         for (UserVO user : beforeDayRegisterList) {
             // 用户ID
@@ -86,7 +88,6 @@ public class ElectricitySalesDataController extends BaseUserController {
             }
             // 获取用户开户信息
             BankOpenAccountVO bankOpenAccountVO = this.electricitySalesDataService.getBankOpenAccount(userId);
-
             // 用户角色1投资人2借款人3担保机构
             Integer roleId = userInfo.getRoleId();
             if (roleId != 1) {
@@ -97,11 +98,13 @@ public class ElectricitySalesDataController extends BaseUserController {
             // 判断用户渠道是否是推送禁用
             // 判断用户是否是PC推广渠道用户
             UtmRegVO utmReg = this.electricitySalesDataService.selectUtmRegByUserId(userId);
+            // 推广渠道
+            UtmPlatVO utmPlatVO = null;
             if (utmReg != null) {
                 // 如果是PC推广渠道,判断渠道是否是推送禁用
                 Integer utmId = utmReg.getUtmId();
                 // 根据utmId查询推广渠道
-                UtmPlatVO utmPlatVO = this.electricitySalesDataService.selectUtmPlatByUtmId(utmId);
+                utmPlatVO = this.electricitySalesDataService.selectUtmPlatByUtmId(utmId);
                 if (utmPlatVO != null) {
                     // 渠道ID
                     Integer sourceId = utmPlatVO.getSourceId();
@@ -130,8 +133,13 @@ public class ElectricitySalesDataController extends BaseUserController {
                 // 如果老带新活动开启
                 // 用户属性
                 Integer attribute = userInfo.getAttribute();
+                // 用户是无主单,直接添加到需要分组用户List
+                if (attribute == 0) {
+                    userList.add(user);
+                    continue;
+                }
+                // 用户不是无主单
                 if (attribute != 0) {
-                    // 用户不是无主单
                     // 获取用户推荐人信息
                     SpreadsUserVO spreadsUser = this.electricitySalesDataService.selectSpreadsUserByUserId(userId);
                     if (spreadsUser != null) {
@@ -140,20 +148,32 @@ public class ElectricitySalesDataController extends BaseUserController {
                         // 根据推荐人获取用户信息
                         UserVO spreadsUserVO = this.electricitySalesDataService.getUsersById(spreadsUserId);
                         if (spreadsUserVO == null) {
-                            logger.error("推荐人的用户信息不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            logger.info("推荐人的用户信息不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            userList.add(user);
                             continue;
                         }
                         // 获取推荐人用户详情信息
                         UserInfoVO spreadsUserInfoVO = this.electricitySalesDataService.getUserInfo(spreadsUserId);
                         if (spreadsUserInfoVO == null) {
-                            logger.error("推荐人用户详情信息不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            logger.info("推荐人用户详情信息不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            userList.add(user);
                             continue;
                         }
                         // 查询用户推荐人的用户画像
                         UserPortraitVO spreadsUserPortraitVO = this.electricitySalesDataService.selectUserPortraitByUserId(spreadsUserId);
+                        if (spreadsUserPortraitVO == null) {
+                            logger.info("用户推荐人的用户画像不存在,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].");
+                            userList.add(user);
+                            continue;
+                        }
                         if (spreadsUserPortraitVO != null) {
                             // 推荐人用户画像的当前拥有人
                             String currentOwner = spreadsUserPortraitVO.getCurrentOwner();
+                            // 如果推荐人没有当前拥有人
+                            if (StringUtils.isBlank(currentOwner)) {
+                                userList.add(user);
+                                continue;
+                            }
                             if (StringUtils.isNotBlank(currentOwner)) {
                                 // 根据推荐人当前拥有人姓名 去坐席配置表里查询是否存在
                                 CustomerServiceRepresentiveConfigVO representiveConfigVO = this.electricitySalesDataService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
@@ -198,26 +218,72 @@ public class ElectricitySalesDataController extends BaseUserController {
                                     electricitySalesDataPushListVO.setAge(null);
                                     electricitySalesDataPushListVO.setBirthday(null);
                                 }
-                                //注册时间
+                                // 注册时间
                                 electricitySalesDataPushListVO.setRegTime(user.getRegTime());
-//                                appUtmReg
-//                                        electricitySalesDataPushListVO.setPcUtmId();
-
-
+                                // PC推广渠道
+                                electricitySalesDataPushListVO.setPcSourceId(utmPlatVO == null ? null : utmPlatVO.getSourceId());
+                                // PC推广渠道
+                                electricitySalesDataPushListVO.setPcSourceName(utmPlatVO == null ? null : utmPlatVO.getSourceName());
+                                // App推广渠道
+                                electricitySalesDataPushListVO.setAppSourceId(appUtmReg == null ? null : appUtmReg.getSourceId());
+                                // App推广渠道
+                                electricitySalesDataPushListVO.setAppSourceName(appUtmReg == null ? null : appUtmReg.getSourceName());
+                                // 获取用户充值记录
+                                AccountRechargeVO accountRecharge = this.electricitySalesDataService.selectAccountRechargeByUserId(userId);
+                                if (accountRecharge != null) {
+                                    // 充值金额
+                                    electricitySalesDataPushListVO.setRechargeMoney(accountRecharge.getMoney());
+                                    // 充值时间
+                                    electricitySalesDataPushListVO.setRechargeTime(accountRecharge.getCreateTime());
+                                } else {
+                                    // 充值金额
+                                    electricitySalesDataPushListVO.setRechargeMoney(BigDecimal.ZERO);
+                                    // 充值时间
+                                    electricitySalesDataPushListVO.setRechargeTime(null);
+                                }
+                                // 是否是渠道:固定0:非渠道
+                                electricitySalesDataPushListVO.setChannel(0);
+                                electricitySalesDataPushListVO.setUploadType(0);
+                                electricitySalesDataPushListVO.setStatus(0);
+                                // TODO 保存电销推送数据
+                                // this.electricitySalesDataService.saveElectricitySalesDataPushList(electricitySalesDataPushListVO);
                             }
                         }
-
-
                     }
                 }
-
             } else {
+                // 老带新活动关闭
+                userList.add(user);
+                continue;
+            }
+        }
+        // 筛选后需要组的用户List为空
+        if (CollectionUtils.isEmpty(userList)) {
+            logger.info("经筛选后，需要分组的用户为空，不需要生成数据");
+            return;
+        }
+        // 需要分组的用户数
+        Integer totalCount = userList.size();
+        // 需要分组的用户数<= 客组类型为新客组的坐席数
+        if (customerServiceRepresentiveCount >= totalCount) {
+            for (int i = 0; i < totalCount; i++) {
+                CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = customerServiceRepresentiveConfigList.get(i);
+                UserVO userVO = userList.get(i);
+                ElectricitySalesDataPushListVO electricitySalesDataPushListVO = this.electricitySalesDataService.generateCustomerServiceRepresentiveConfig(userVO, customerServiceRepresentiveConfig);
+                // TODO 保存电销推送数据
+                // this.electricitySalesDataService.saveElectricitySalesDataPushList(electricitySalesDataPushListVO);
 
             }
-
-
         }
+        // 需要分组的用户数 > 客组类型为新客组的坐席数
+        if (customerServiceRepresentiveCount < totalCount) {
+            List<List<UserVO>> list = CommonUtils.averageAssign(userList, customerServiceRepresentiveCount);
+            for (int i = 0; i < list.size(); i++) {
+                List<UserVO> userVOList = list.get(i);
+                CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = customerServiceRepresentiveConfigList.get(i);
 
+            }
+        }
         electricitySalesDataService.generateElectricitySalesData();
     }
 }

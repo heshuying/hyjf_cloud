@@ -33,4 +33,12 @@ public interface AccountRecharge {
      * @return
      */
     List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> selectRechargeListByUserId(Integer userId);
+
+    /**
+     * 根据用户Id查询用户第一笔充值记录
+     *
+     * @param userId
+     * @return
+     */
+    com.hyjf.am.trade.dao.model.auto.AccountRecharge selectAccountRechargeByUserId(Integer userId);
 }

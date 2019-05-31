@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface CustomerServiceRepresentiveConfigService extends BaseService {
     /**
-     * 获取坐席配置
+     * 获取客组类型为新客组的坐席配置
      *
      * @return
      */

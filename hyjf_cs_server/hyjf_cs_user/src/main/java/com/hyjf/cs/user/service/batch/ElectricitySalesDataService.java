@@ -6,7 +6,9 @@ package com.hyjf.cs.user.service.batch;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.user.service.BaseUserService;
 
@@ -32,7 +34,7 @@ public interface ElectricitySalesDataService extends BaseUserService {
     List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList();
 
     /**
-     * 获取坐席配置
+     * 获取客组类型为新客组的坐席配置
      *
      * @return
      */
@@ -101,4 +103,21 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * @return
      */
     CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner);
+
+    /**
+     * 根据用户ID查询用户充值记录
+     *
+     * @param userId
+     * @return
+     */
+    AccountRechargeVO selectAccountRechargeByUserId(Integer userId);
+
+    /**
+     * 生成电销推送数据VO
+     *
+     * @param userVO
+     * @param customerServiceRepresentiveConfig
+     * @return
+     */
+    ElectricitySalesDataPushListVO generateCustomerServiceRepresentiveConfig(UserVO userVO, CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig);
 }

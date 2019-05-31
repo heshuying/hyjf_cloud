@@ -6,14 +6,21 @@ package com.hyjf.cs.user.service.batch.Impl;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -48,7 +55,7 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
     }
 
     /**
-     * 获取坐席配置
+     * 获取客组类型为新客组的坐席配置
      *
      * @return
      */
@@ -144,5 +151,113 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
     @Override
     public CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner) {
         return amConfigClient.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
+    }
+
+    /**
+     * 根据用户ID查询用户充值记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountRechargeVO selectAccountRechargeByUserId(Integer userId) {
+        return this.amTradeClient.selectAccountRechargeByUserId(userId);
+    }
+
+    /**
+     * 生成电销推送数据VO
+     *
+     * @param userVO
+     * @param customerServiceRepresentiveConfig
+     * @return
+     */
+    @Override
+    public ElectricitySalesDataPushListVO generateCustomerServiceRepresentiveConfig(UserVO userVO, CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig) {
+        // 用户ID
+        Integer userId = userVO.getUserId();
+        // 用户详情
+        UserInfoVO userInfo = this.getUserInfo(userId);
+        // 获取用户开户信息
+        BankOpenAccountVO bankOpenAccountVO = this.getBankOpenAccount(userId);
+        // 用户角色
+        Integer roleId = userInfo.getRoleId();
+        // 判断用户渠道是否是推送禁用
+        // 判断用户是否是PC推广渠道用户
+        UtmRegVO utmReg = this.selectUtmRegByUserId(userId);
+        // 推广渠道
+        UtmPlatVO utmPlatVO = null;
+        if (utmReg != null) {
+            // 如果是PC推广渠道,判断渠道是否是推送禁用
+            Integer utmId = utmReg.getUtmId();
+            // 根据utmId查询推广渠道
+            utmPlatVO = this.selectUtmPlatByUtmId(utmId);
+        }
+        // 判断用户是否是App推广渠道用户
+        AppUtmRegVO appUtmReg = this.selectAppUtmRegByUserId(userId);
+
+        ElectricitySalesDataPushListVO electricitySalesDataPushListVO = new ElectricitySalesDataPushListVO();
+        electricitySalesDataPushListVO.setUserId(userId);
+        electricitySalesDataPushListVO.setUserName(userVO.getUsername());
+        electricitySalesDataPushListVO.setGroupId(customerServiceRepresentiveConfig.getGroupId());
+        electricitySalesDataPushListVO.setGroupName(customerServiceRepresentiveConfig.getGroupName());
+        electricitySalesDataPushListVO.setBankAccount(bankOpenAccountVO == null ? "" : bankOpenAccountVO.getAccount());
+        electricitySalesDataPushListVO.setRoleId(roleId);
+        electricitySalesDataPushListVO.setTrueName(StringUtils.isBlank(userInfo.getTruename()) ? null : userInfo.getTruename());
+        electricitySalesDataPushListVO.setMobile(userVO.getMobile());
+        // 性别
+        electricitySalesDataPushListVO.setSex(userInfo.getSex());
+        // 赋值年龄
+        if (StringUtils.isNotBlank(userInfo.getIdcard())) {
+            try {
+                String idcard = userInfo.getIdcard();
+                SimpleDateFormat sdf = GetDate.date_sdf;
+                boolean isIdCard = IdCard15To18.isValid(idcard);
+                if (isIdCard) {
+                    if (idcard.length() == 15) {
+                        idcard = IdCard15To18.getEighteenIDCard(idcard);
+                    }
+                    String birthday = idcard.substring(6, 10) + "-" + idcard.substring(10, 12) + "-" + idcard.substring(12, 14);
+                    String age = GetDate.getAge(GetDate.str2Date(birthday, sdf));
+                    electricitySalesDataPushListVO.setAge(Integer.valueOf(age));
+                    electricitySalesDataPushListVO.setBirthday(birthday);
+                } else {
+                    electricitySalesDataPushListVO.setAge(null);
+                    electricitySalesDataPushListVO.setBirthday(null);
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        } else {
+            electricitySalesDataPushListVO.setAge(null);
+            electricitySalesDataPushListVO.setBirthday(null);
+        }
+        // 注册时间
+        electricitySalesDataPushListVO.setRegTime(userVO.getRegTime());
+        // PC推广渠道
+        electricitySalesDataPushListVO.setPcSourceId(utmPlatVO == null ? null : utmPlatVO.getSourceId());
+        // PC推广渠道
+        electricitySalesDataPushListVO.setPcSourceName(utmPlatVO == null ? null : utmPlatVO.getSourceName());
+        // App推广渠道
+        electricitySalesDataPushListVO.setAppSourceId(appUtmReg == null ? null : appUtmReg.getSourceId());
+        // App推广渠道
+        electricitySalesDataPushListVO.setAppSourceName(appUtmReg == null ? null : appUtmReg.getSourceName());
+        // 获取用户充值记录
+        AccountRechargeVO accountRecharge = this.selectAccountRechargeByUserId(userId);
+        if (accountRecharge != null) {
+            // 充值金额
+            electricitySalesDataPushListVO.setRechargeMoney(accountRecharge.getMoney());
+            // 充值时间
+            electricitySalesDataPushListVO.setRechargeTime(accountRecharge.getCreateTime());
+        } else {
+            // 充值金额
+            electricitySalesDataPushListVO.setRechargeMoney(BigDecimal.ZERO);
+            // 充值时间
+            electricitySalesDataPushListVO.setRechargeTime(null);
+        }
+        // 是否是渠道:固定0:非渠道
+        electricitySalesDataPushListVO.setChannel(0);
+        electricitySalesDataPushListVO.setUploadType(0);
+        electricitySalesDataPushListVO.setStatus(0);
+        return electricitySalesDataPushListVO;
     }
 }
