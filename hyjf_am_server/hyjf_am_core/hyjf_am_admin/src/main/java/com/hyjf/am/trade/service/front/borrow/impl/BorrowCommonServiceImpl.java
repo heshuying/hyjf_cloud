@@ -614,9 +614,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrow.setIsShow(1);
 		}
 		// 定向发标平台
-		if(wjtInstCode.equals(borrowBean.getPublishInstCode())){
-			borrow.setPublishInstCode(borrowBean.getPublishInstCode());
-		}
+		borrow.setPublishInstCode(borrowBean.getPublishInstCode());
+
 		borrow.setIsMonth(borrowBean.getIsMonth());
 		// 新建标的有标签的先打上标签
 		borrow.setLabelId(borrowBean.getLabelId());
