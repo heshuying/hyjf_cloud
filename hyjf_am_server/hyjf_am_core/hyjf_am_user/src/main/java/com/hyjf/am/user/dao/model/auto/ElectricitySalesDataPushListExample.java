@@ -966,133 +966,133 @@ public class ElectricitySalesDataPushListExample {
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdIsNull() {
-            addCriterion("pc_utm_id is null");
+        public Criteria andPcSourceIdIsNull() {
+            addCriterion("pc_source_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdIsNotNull() {
-            addCriterion("pc_utm_id is not null");
+        public Criteria andPcSourceIdIsNotNull() {
+            addCriterion("pc_source_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdEqualTo(Integer value) {
-            addCriterion("pc_utm_id =", value, "pcUtmId");
+        public Criteria andPcSourceIdEqualTo(Integer value) {
+            addCriterion("pc_source_id =", value, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdNotEqualTo(Integer value) {
-            addCriterion("pc_utm_id <>", value, "pcUtmId");
+        public Criteria andPcSourceIdNotEqualTo(Integer value) {
+            addCriterion("pc_source_id <>", value, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdGreaterThan(Integer value) {
-            addCriterion("pc_utm_id >", value, "pcUtmId");
+        public Criteria andPcSourceIdGreaterThan(Integer value) {
+            addCriterion("pc_source_id >", value, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("pc_utm_id >=", value, "pcUtmId");
+        public Criteria andPcSourceIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("pc_source_id >=", value, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdLessThan(Integer value) {
-            addCriterion("pc_utm_id <", value, "pcUtmId");
+        public Criteria andPcSourceIdLessThan(Integer value) {
+            addCriterion("pc_source_id <", value, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdLessThanOrEqualTo(Integer value) {
-            addCriterion("pc_utm_id <=", value, "pcUtmId");
+        public Criteria andPcSourceIdLessThanOrEqualTo(Integer value) {
+            addCriterion("pc_source_id <=", value, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdIn(List<Integer> values) {
-            addCriterion("pc_utm_id in", values, "pcUtmId");
+        public Criteria andPcSourceIdIn(List<Integer> values) {
+            addCriterion("pc_source_id in", values, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdNotIn(List<Integer> values) {
-            addCriterion("pc_utm_id not in", values, "pcUtmId");
+        public Criteria andPcSourceIdNotIn(List<Integer> values) {
+            addCriterion("pc_source_id not in", values, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdBetween(Integer value1, Integer value2) {
-            addCriterion("pc_utm_id between", value1, value2, "pcUtmId");
+        public Criteria andPcSourceIdBetween(Integer value1, Integer value2) {
+            addCriterion("pc_source_id between", value1, value2, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("pc_utm_id not between", value1, value2, "pcUtmId");
+        public Criteria andPcSourceIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("pc_source_id not between", value1, value2, "pcSourceId");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameIsNull() {
-            addCriterion("pc_utm_name is null");
+        public Criteria andPcSourceNameIsNull() {
+            addCriterion("pc_source_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameIsNotNull() {
-            addCriterion("pc_utm_name is not null");
+        public Criteria andPcSourceNameIsNotNull() {
+            addCriterion("pc_source_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameEqualTo(String value) {
-            addCriterion("pc_utm_name =", value, "pcUtmName");
+        public Criteria andPcSourceNameEqualTo(String value) {
+            addCriterion("pc_source_name =", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameNotEqualTo(String value) {
-            addCriterion("pc_utm_name <>", value, "pcUtmName");
+        public Criteria andPcSourceNameNotEqualTo(String value) {
+            addCriterion("pc_source_name <>", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameGreaterThan(String value) {
-            addCriterion("pc_utm_name >", value, "pcUtmName");
+        public Criteria andPcSourceNameGreaterThan(String value) {
+            addCriterion("pc_source_name >", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameGreaterThanOrEqualTo(String value) {
-            addCriterion("pc_utm_name >=", value, "pcUtmName");
+        public Criteria andPcSourceNameGreaterThanOrEqualTo(String value) {
+            addCriterion("pc_source_name >=", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameLessThan(String value) {
-            addCriterion("pc_utm_name <", value, "pcUtmName");
+        public Criteria andPcSourceNameLessThan(String value) {
+            addCriterion("pc_source_name <", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameLessThanOrEqualTo(String value) {
-            addCriterion("pc_utm_name <=", value, "pcUtmName");
+        public Criteria andPcSourceNameLessThanOrEqualTo(String value) {
+            addCriterion("pc_source_name <=", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameLike(String value) {
-            addCriterion("pc_utm_name like", value, "pcUtmName");
+        public Criteria andPcSourceNameLike(String value) {
+            addCriterion("pc_source_name like", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameNotLike(String value) {
-            addCriterion("pc_utm_name not like", value, "pcUtmName");
+        public Criteria andPcSourceNameNotLike(String value) {
+            addCriterion("pc_source_name not like", value, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameIn(List<String> values) {
-            addCriterion("pc_utm_name in", values, "pcUtmName");
+        public Criteria andPcSourceNameIn(List<String> values) {
+            addCriterion("pc_source_name in", values, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameNotIn(List<String> values) {
-            addCriterion("pc_utm_name not in", values, "pcUtmName");
+        public Criteria andPcSourceNameNotIn(List<String> values) {
+            addCriterion("pc_source_name not in", values, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameBetween(String value1, String value2) {
-            addCriterion("pc_utm_name between", value1, value2, "pcUtmName");
+        public Criteria andPcSourceNameBetween(String value1, String value2) {
+            addCriterion("pc_source_name between", value1, value2, "pcSourceName");
             return (Criteria) this;
         }
 
-        public Criteria andPcUtmNameNotBetween(String value1, String value2) {
-            addCriterion("pc_utm_name not between", value1, value2, "pcUtmName");
+        public Criteria andPcSourceNameNotBetween(String value1, String value2) {
+            addCriterion("pc_source_name not between", value1, value2, "pcSourceName");
             return (Criteria) this;
         }
 
