@@ -39,6 +39,66 @@ public class AdminInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		logger.debug("admin接收到请求,请求接口为:" + request.getRequestURI());
+		try {
+			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
+			String val = RedisUtils.get(RedisConstants.ADMIN_UNIQUE_ID + username);
+			if (val != null && !val.equals(request.getHeader("Cookies"))) {
+				request.getSession().removeAttribute("user");
+				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+			} else {
+				if(val!=null) {
+					RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, val, 3600);
+				}
+			}
+
+//		} catch (NullPointerException e) {
+//			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+		}catch(Exception e) {
+			logger.info("AdminInterceptor发生异常:登陆失效");
+			response.setContentType("application/json; charset=utf-8");
+			JSONObject res = new JSONObject();
+			res.put("status", "EUS000010");
+			res.put("statusDesc", "登录失效，请重新登陆");
+			PrintWriter out = response.getWriter();
+			out.append(res.toString());
+			return false;
+		}
+
+		if (handler instanceof HandlerMethod) {
+			AuthorityAnnotation authorityAnnotation = ((HandlerMethod) handler)
+					.getMethodAnnotation(AuthorityAnnotation.class);
+			// controller没有添加authorityAnnotation注解
+			if (authorityAnnotation == null) {
+				return true;
+			}
+			// 获取该角色 权限列表
+			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+			if(perm.isEmpty()){
+				return false;
+			}
+
+			for(String value : authorityAnnotation.value()){
+
+				if(!perm.contains(authorityAnnotation.key() + ":" + value)){
+					throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
+					//return false;
+				}
+			}
+			return true;
+//			for (String string : perm) {
+//				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
+//					return true;
+//				}
+//			}
+
+//			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
+//			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
+			//		return false;
+
+		}
+
+
 		return true;
 
 	}
