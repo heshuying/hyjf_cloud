@@ -386,6 +386,76 @@ public class DuibaPointsModifyExample {
             return (Criteria) this;
         }
 
+        public Criteria andModifyOrderIdIsNull() {
+            addCriterion("modify_order_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdIsNotNull() {
+            addCriterion("modify_order_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdEqualTo(String value) {
+            addCriterion("modify_order_id =", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdNotEqualTo(String value) {
+            addCriterion("modify_order_id <>", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdGreaterThan(String value) {
+            addCriterion("modify_order_id >", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdGreaterThanOrEqualTo(String value) {
+            addCriterion("modify_order_id >=", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdLessThan(String value) {
+            addCriterion("modify_order_id <", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdLessThanOrEqualTo(String value) {
+            addCriterion("modify_order_id <=", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdLike(String value) {
+            addCriterion("modify_order_id like", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdNotLike(String value) {
+            addCriterion("modify_order_id not like", value, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdIn(List<String> values) {
+            addCriterion("modify_order_id in", values, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdNotIn(List<String> values) {
+            addCriterion("modify_order_id not in", values, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdBetween(String value1, String value2) {
+            addCriterion("modify_order_id between", value1, value2, "modifyOrderId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifyOrderIdNotBetween(String value1, String value2) {
+            addCriterion("modify_order_id not between", value1, value2, "modifyOrderId");
+            return (Criteria) this;
+        }
+
         public Criteria andPointsIsNull() {
             addCriterion("points is null");
             return (Criteria) this;
@@ -773,6 +843,66 @@ public class DuibaPointsModifyExample {
 
         public Criteria andModifyReasonNotBetween(String value1, String value2) {
             addCriterion("modify_reason not between", value1, value2, "modifyReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderIsNull() {
+            addCriterion("flow_order is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderIsNotNull() {
+            addCriterion("flow_order is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderEqualTo(Integer value) {
+            addCriterion("flow_order =", value, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderNotEqualTo(Integer value) {
+            addCriterion("flow_order <>", value, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderGreaterThan(Integer value) {
+            addCriterion("flow_order >", value, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderGreaterThanOrEqualTo(Integer value) {
+            addCriterion("flow_order >=", value, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderLessThan(Integer value) {
+            addCriterion("flow_order <", value, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderLessThanOrEqualTo(Integer value) {
+            addCriterion("flow_order <=", value, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderIn(List<Integer> values) {
+            addCriterion("flow_order in", values, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderNotIn(List<Integer> values) {
+            addCriterion("flow_order not in", values, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderBetween(Integer value1, Integer value2) {
+            addCriterion("flow_order between", value1, value2, "flowOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowOrderNotBetween(Integer value1, Integer value2) {
+            addCriterion("flow_order not between", value1, value2, "flowOrder");
             return (Criteria) this;
         }
 

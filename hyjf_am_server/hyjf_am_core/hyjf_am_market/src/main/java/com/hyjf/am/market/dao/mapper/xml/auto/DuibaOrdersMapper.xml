@@ -20,6 +20,9 @@
     <result column="receiving_information" property="receivingInformation" jdbcType="VARCHAR" />
     <result column="recharge_state" property="rechargeState" jdbcType="VARCHAR" />
     <result column="processing_state" property="processingState" jdbcType="TINYINT" />
+    <result column="commodity_code" property="commodityCode" jdbcType="VARCHAR" />
+    <result column="exchange_rate" property="exchangeRate" jdbcType="DECIMAL" />
+    <result column="integral_price" property="integralPrice" jdbcType="DECIMAL" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
@@ -87,8 +90,8 @@
   <sql id="Base_Column_List" >
     id, duiba_order_id, hy_order_id, user_name, true_name, user_id, exchange_content, 
     product_type, selling_price, marking_price, cost, order_status, order_time, completion_time, 
-    delivery_status, receiving_information, recharge_state, processing_state, create_by, 
-    create_time, update_by, update_time, remark
+    delivery_status, receiving_information, recharge_state, processing_state, commodity_code, 
+    exchange_rate, integral_price, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrdersExample" >
     select
@@ -132,7 +135,8 @@
       product_type, selling_price, marking_price, 
       cost, order_status, order_time, 
       completion_time, delivery_status, receiving_information, 
-      recharge_state, processing_state, create_by, 
+      recharge_state, processing_state, commodity_code, 
+      exchange_rate, integral_price, create_by, 
       create_time, update_by, update_time, 
       remark)
     values (#{duibaOrderId,jdbcType=VARCHAR}, #{hyOrderId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
@@ -140,7 +144,8 @@
       #{productType,jdbcType=VARCHAR}, #{sellingPrice,jdbcType=DECIMAL}, #{markingPrice,jdbcType=DECIMAL}, 
       #{cost,jdbcType=DECIMAL}, #{orderStatus,jdbcType=TINYINT}, #{orderTime,jdbcType=INTEGER}, 
       #{completionTime,jdbcType=INTEGER}, #{deliveryStatus,jdbcType=TINYINT}, #{receivingInformation,jdbcType=VARCHAR}, 
-      #{rechargeState,jdbcType=VARCHAR}, #{processingState,jdbcType=TINYINT}, #{createBy,jdbcType=VARCHAR}, 
+      #{rechargeState,jdbcType=VARCHAR}, #{processingState,jdbcType=TINYINT}, #{commodityCode,jdbcType=VARCHAR}, 
+      #{exchangeRate,jdbcType=DECIMAL}, #{integralPrice,jdbcType=DECIMAL}, #{createBy,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
@@ -200,6 +205,15 @@
       </if>
       <if test="processingState != null" >
         processing_state,
+      </if>
+      <if test="commodityCode != null" >
+        commodity_code,
+      </if>
+      <if test="exchangeRate != null" >
+        exchange_rate,
+      </if>
+      <if test="integralPrice != null" >
+        integral_price,
       </if>
       <if test="createBy != null" >
         create_by,
@@ -268,6 +282,15 @@
       </if>
       <if test="processingState != null" >
         #{processingState,jdbcType=TINYINT},
+      </if>
+      <if test="commodityCode != null" >
+        #{commodityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exchangeRate != null" >
+        #{exchangeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="integralPrice != null" >
+        #{integralPrice,jdbcType=DECIMAL},
       </if>
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
@@ -349,6 +372,15 @@
       <if test="record.processingState != null" >
         processing_state = #{record.processingState,jdbcType=TINYINT},
       </if>
+      <if test="record.commodityCode != null" >
+        commodity_code = #{record.commodityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exchangeRate != null" >
+        exchange_rate = #{record.exchangeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.integralPrice != null" >
+        integral_price = #{record.integralPrice,jdbcType=DECIMAL},
+      </if>
       <if test="record.createBy != null" >
         create_by = #{record.createBy,jdbcType=VARCHAR},
       </if>
@@ -389,6 +421,9 @@
       receiving_information = #{record.receivingInformation,jdbcType=VARCHAR},
       recharge_state = #{record.rechargeState,jdbcType=VARCHAR},
       processing_state = #{record.processingState,jdbcType=TINYINT},
+      commodity_code = #{record.commodityCode,jdbcType=VARCHAR},
+      exchange_rate = #{record.exchangeRate,jdbcType=DECIMAL},
+      integral_price = #{record.integralPrice,jdbcType=DECIMAL},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
@@ -452,6 +487,15 @@
       <if test="processingState != null" >
         processing_state = #{processingState,jdbcType=TINYINT},
       </if>
+      <if test="commodityCode != null" >
+        commodity_code = #{commodityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exchangeRate != null" >
+        exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="integralPrice != null" >
+        integral_price = #{integralPrice,jdbcType=DECIMAL},
+      </if>
       <if test="createBy != null" >
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
@@ -489,6 +533,9 @@
       receiving_information = #{receivingInformation,jdbcType=VARCHAR},
       recharge_state = #{rechargeState,jdbcType=VARCHAR},
       processing_state = #{processingState,jdbcType=TINYINT},
+      commodity_code = #{commodityCode,jdbcType=VARCHAR},
+      exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
+      integral_price = #{integralPrice,jdbcType=DECIMAL},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},

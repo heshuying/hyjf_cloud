@@ -1286,6 +1286,196 @@ public class DuibaOrdersExample {
             return (Criteria) this;
         }
 
+        public Criteria andCommodityCodeIsNull() {
+            addCriterion("commodity_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeIsNotNull() {
+            addCriterion("commodity_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeEqualTo(String value) {
+            addCriterion("commodity_code =", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeNotEqualTo(String value) {
+            addCriterion("commodity_code <>", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeGreaterThan(String value) {
+            addCriterion("commodity_code >", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("commodity_code >=", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeLessThan(String value) {
+            addCriterion("commodity_code <", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeLessThanOrEqualTo(String value) {
+            addCriterion("commodity_code <=", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeLike(String value) {
+            addCriterion("commodity_code like", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeNotLike(String value) {
+            addCriterion("commodity_code not like", value, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeIn(List<String> values) {
+            addCriterion("commodity_code in", values, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeNotIn(List<String> values) {
+            addCriterion("commodity_code not in", values, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeBetween(String value1, String value2) {
+            addCriterion("commodity_code between", value1, value2, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCommodityCodeNotBetween(String value1, String value2) {
+            addCriterion("commodity_code not between", value1, value2, "commodityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateIsNull() {
+            addCriterion("exchange_rate is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateIsNotNull() {
+            addCriterion("exchange_rate is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateEqualTo(BigDecimal value) {
+            addCriterion("exchange_rate =", value, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateNotEqualTo(BigDecimal value) {
+            addCriterion("exchange_rate <>", value, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateGreaterThan(BigDecimal value) {
+            addCriterion("exchange_rate >", value, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("exchange_rate >=", value, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateLessThan(BigDecimal value) {
+            addCriterion("exchange_rate <", value, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("exchange_rate <=", value, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateIn(List<BigDecimal> values) {
+            addCriterion("exchange_rate in", values, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateNotIn(List<BigDecimal> values) {
+            addCriterion("exchange_rate not in", values, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("exchange_rate between", value1, value2, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExchangeRateNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("exchange_rate not between", value1, value2, "exchangeRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceIsNull() {
+            addCriterion("integral_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceIsNotNull() {
+            addCriterion("integral_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceEqualTo(BigDecimal value) {
+            addCriterion("integral_price =", value, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceNotEqualTo(BigDecimal value) {
+            addCriterion("integral_price <>", value, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceGreaterThan(BigDecimal value) {
+            addCriterion("integral_price >", value, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("integral_price >=", value, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceLessThan(BigDecimal value) {
+            addCriterion("integral_price <", value, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("integral_price <=", value, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceIn(List<BigDecimal> values) {
+            addCriterion("integral_price in", values, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceNotIn(List<BigDecimal> values) {
+            addCriterion("integral_price not in", values, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("integral_price between", value1, value2, "integralPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andIntegralPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("integral_price not between", value1, value2, "integralPrice");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;
