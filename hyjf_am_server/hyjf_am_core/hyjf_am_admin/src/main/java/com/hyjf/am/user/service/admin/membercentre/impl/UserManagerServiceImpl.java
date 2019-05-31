@@ -1549,7 +1549,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog) {
         if (null != bankCard && null != bankAccountLog) {
             //修改银行卡信息
-            bankCardMapper.updateByPrimaryKeySelective(bankCard);
+            bankCardMapper.updateByPrimaryKey(bankCard);
             bankCardLogMapper.insertSelective(bankAccountLog);
 
             // add 合规数据上报 埋点 liubin 20181122 start

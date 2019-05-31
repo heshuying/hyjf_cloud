@@ -994,7 +994,7 @@ public class UserManagerController extends BaseController {
     @RequestMapping("/getBankInfoByAccount")
     public BankCardResponse getBankInfoByAccount(@RequestBody UpdCompanyRequest updCompanyRequest){
         BankCardResponse response = new BankCardResponse();
-        BankCardVO bankCardVO = new BankCardVO();
+        BankCardVO bankCardVO = null;
         String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
         logger.info("==============企业信息查询,获取的bankId值为: "+bankId+" ==============");
         String bankName = null;
@@ -1003,6 +1003,7 @@ public class UserManagerController extends BaseController {
             List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
             if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
                 bankName = jxBankConfigList.get(0).getBankName();
+                bankCardVO = new BankCardVO();
                 bankCardVO.setBank(bankName);
                 bankCardVO.setBankId(Integer.parseInt(bankId));
             }
@@ -1018,7 +1019,14 @@ public class UserManagerController extends BaseController {
                     }
                 }
             }
-            bankCardVO.setPayAllianceCode(payAllianceCode);
+            if(StringUtils.isNotBlank(payAllianceCode)){
+                if(null!=bankCardVO){
+                    bankCardVO.setPayAllianceCode(payAllianceCode);
+                }else{
+                    bankCardVO = new BankCardVO();
+                    bankCardVO.setPayAllianceCode(payAllianceCode);
+                }
+            }
         }
         response.setResult(bankCardVO);
         return response;

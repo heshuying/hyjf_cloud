@@ -883,7 +883,7 @@ public class UserCenterController extends BaseController {
             //企业信息补录时，企业名称若含有英文括号，自动替换成中文括号再保存 add by nxl end
             // 后台优化 add by nxl start 根据对公账号查找银行卡信息
             BankCardResponse bankCardResponse = userCenterService.getBankInfoByAccount(infoVO.getAccount(),userId);
-            if(null!=bankCardResponse){
+            if (null != bankCardResponse && null != bankCardResponse.getResult()) {
                 BankCardVO bankCardVO =bankCardResponse.getResult();
                 companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
                 companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
@@ -1046,8 +1046,8 @@ public class UserCenterController extends BaseController {
         SearchCompanyInfoResponseBean  searchCompanyInfoResponseBean = new  SearchCompanyInfoResponseBean();
         //根据银行卡号查找银行信息
         BankCardResponse bankCardResponse = userCenterService.getBankInfoByAccount(userInfosUpdCustomizeRequestBean.getCardNo(),userInfosUpdCustomizeRequestBean.getUserId());
-        if(null!=bankCardResponse){
-            BankCardVO bankCardVO =bankCardResponse.getResult();
+        if (null != bankCardResponse && null != bankCardResponse.getResult()) {
+            BankCardVO bankCardVO = bankCardResponse.getResult();
             CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
             companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
             companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
@@ -1100,7 +1100,7 @@ public class UserCenterController extends BaseController {
         if(null!=adminSystemVO){
             userInfosUpdCustomizeRequest.setLoginUserName(adminSystemVO.getUsername());
             userInfosUpdCustomizeRequest.setLoginUserId(Integer.parseInt(adminSystemVO.getId()));
-            if(userInfosUpdCustomizeRequestBean.getUpdFlg().equals("bankCard")){
+             if(userInfosUpdCustomizeRequestBean.getUpdFlg().equals("bankCard")){
                 instFlg = userCenterService.updateUserBankInfo(userInfosUpdCustomizeRequest);
             }else{
                 //修改用户基本信息(电话,邮箱,用户角色)
