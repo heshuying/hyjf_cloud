@@ -35,7 +35,7 @@ public class CustomerServiceGroupConfigController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceGroupConfigController.class);
 
-    private static final String PERMISSIONS = "customerServiceGroupConfig";
+    private static final String PERMISSIONS = "customerServiceGroup";
 
     @Autowired
     private CustomerServiceGroupConfigService customerServiceGroupConfigService;

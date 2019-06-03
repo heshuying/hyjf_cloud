@@ -40,7 +40,7 @@ public class CustomerServiceRepresentiveConfigController extends BaseController 
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceRepresentiveConfigController.class);
 
-    private static final String PERMISSIONS = "customerServiceRepresentiveConfig";
+    private static final String PERMISSIONS = "customerServiceRep";
 
     @Autowired
     private CustomerServiceRepresentiveConfigService customerServiceRepresentiveConfigService;
