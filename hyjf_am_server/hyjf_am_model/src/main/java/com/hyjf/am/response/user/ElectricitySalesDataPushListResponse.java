@@ -3,14 +3,14 @@
  */
 package com.hyjf.am.response.user;
 
-import com.hyjf.am.response.Response;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 
+
 /**
- * 电销推送数据Response
- *
- * @author liuyang
- * @version ElectricitySalesDataPushListResponse, v0.1 2019/6/3 9:44
+ * @author dzs
+ * @version ElectricitySalesDataPushListResponse, v0.1 2018/6/22 14:30
  */
-public class ElectricitySalesDataPushListResponse extends Response<ElectricitySalesDataPushListVO> {
+public class ElectricitySalesDataPushListResponse extends AdminResponse<ElectricitySalesDataPushListVO> {
+   
 }
