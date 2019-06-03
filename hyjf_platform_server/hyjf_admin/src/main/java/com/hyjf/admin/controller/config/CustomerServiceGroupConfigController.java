@@ -107,24 +107,4 @@ public class CustomerServiceGroupConfigController extends BaseController {
         }
         return new AdminResult<>(response);
     }
-
-    @ApiOperation(value = "删除客组配置信息", notes = "删除客组配置信息")
-    @PostMapping("/deleteCustomerServiceGroupConfig")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult<CustomerServiceGroupConfigResponse> deleteCustomerServiceGroupConfig(HttpServletRequest request, @RequestBody CustomerServiceGroupConfigRequest groupRequest) {
-        if (groupRequest.getId() == null) {
-            return new AdminResult<>(FAIL, "id不能为空！");
-        }
-        //获取登录用户Id
-        AdminSystemVO adminSystemVO = this.getUser(request);
-        logger.info("【客组配置】{}开始删除客组配置，request：{}", adminSystemVO.getUsername(), JSON.toJSONString(groupRequest));
-        CustomerServiceGroupConfigResponse response = customerServiceGroupConfigService.deleteCustomerServiceGroupConfig(groupRequest);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(response);
-    }
 }
