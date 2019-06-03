@@ -233,4 +233,20 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     WithdrawRuleConfigVO getWithdrawRuleConfig(int userId, String withdrawMoney);
+    /**
+     * 资金支出校验共通方法
+     * @param userId
+     * @param accountMoney
+     * @return boolean
+     */
+    boolean capitalExpendituresCheck(Integer userId, BigDecimal accountMoney);
+
+    /**
+     * 获得江西银行的账面余额  调用江西银行接口
+     * @param userId
+     * @param accountId
+     * @return bigDecimal
+     */
+    BigDecimal getBankCurrBal(Integer userId, String accountId);
+
 }

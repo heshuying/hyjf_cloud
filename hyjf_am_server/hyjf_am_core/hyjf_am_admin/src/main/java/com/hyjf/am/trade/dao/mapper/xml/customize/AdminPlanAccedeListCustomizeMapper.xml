@@ -193,7 +193,10 @@
 		<result column="end_date" property="endDate"/>
 		<!-- 实际退出时间 -->
 		<result column="acctual_payment_time" property="acctualPaymentTime"/>
-
+		<!--当时渠道来源-->
+		<result column="utmSource1" property="utmSource1" jdbcType="VARCHAR"/>
+		<!--当前渠道来源-->
+		<result column="utmSource2" property="utmSource2" jdbcType="VARCHAR"/>
 	</resultMap>
 	<select id="selectAccedeRecordList" resultMap="BaseResultMap" parameterType="Map">
 		SELECT
@@ -295,7 +298,9 @@
 		hdpa.match_dates AS matchDates,
 		case when hdpa.end_date is not null then date_format(hdpa.end_date, '%Y-%m-%d') else '' end as end_date,
 		CASE WHEN hdpa.acctual_payment_time =0 OR hdpa.acctual_payment_time is null THEN ''
-		ELSE FROM_UNIXTIME(hdpa.acctual_payment_time,'%Y-%m-%d %H:%i:%s') END AS acctual_payment_time
+		ELSE FROM_UNIXTIME(hdpa.acctual_payment_time,'%Y-%m-%d %H:%i:%s') END AS acctual_payment_time,
+		if(hdpa.create_time<![CDATA[<]]>'2019-5-27 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
+		utm2.utm_source utmSource2
 		FROM
 		ht_hjh_accede hdpa
 		LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id
@@ -314,6 +319,9 @@
 		LEFT JOIN ht_r_oa_department odx ON odx.id = oux.departmentid AND odx.id IS NOT NULL
 		LEFT JOIN ht_r_oa_department odx2 ON odx2.id = odx.parentid
 		LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
+		left join hyjf_user.ht_utm utm on utm.utm_id=hdpa.tender_user_utm_id
+		left join hyjf_user.ht_utm_reg reg on hdpa.user_id=reg.user_id
+		left join hyjf_user.ht_utm utm2 on utm2.utm_id=reg.utm_id
 		<where>
 			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
 				AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')

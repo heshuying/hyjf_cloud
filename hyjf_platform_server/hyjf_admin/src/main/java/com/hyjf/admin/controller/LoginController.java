@@ -262,10 +262,11 @@ public class LoginController extends BaseController {
 		String uuid=UUID.randomUUID().toString();
 		if (!hyjfEnvTest) {
 			// 生产环境   单点登录
-			RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, uuid, 3600);
+			RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + prs.getResult().getUsername(), uuid, 3600);
 		}
 		// 1. 登录成功将登陆密码错误次数的key删除
-		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + username);
+		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + prs.getResult().getUsername());
+
 		this.setUser(request, prs.getResult());
 		Map<String,Object> result =new HashMap<String, Object>();;
 		result.put("uuid", uuid);

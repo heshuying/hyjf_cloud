@@ -7,6 +7,7 @@
     <result column="inst_name" property="instName" jdbcType="VARCHAR" />
     <result column="inst_type" property="instType" jdbcType="TINYINT" />
     <result column="capital_toplimit" property="capitalToplimit" jdbcType="DECIMAL" />
+    <result column="cooperative_agency" property="cooperativeAgency" jdbcType="VARCHAR" />
     <result column="commission_fee" property="commissionFee" jdbcType="DECIMAL" />
     <result column="repay_capital_type" property="repayCapitalType" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -75,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, inst_code, inst_name, inst_type, capital_toplimit, commission_fee, repay_capital_type, 
-    remark, del_flag, create_user, update_user, create_time, update_time
+    id, inst_code, inst_name, inst_type, capital_toplimit, cooperative_agency, commission_fee, 
+    repay_capital_type, remark, del_flag, create_user, update_user, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" >
     select
@@ -116,15 +117,15 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_hjh_inst_config (inst_code, inst_name, inst_type, 
-      capital_toplimit, commission_fee, repay_capital_type, 
-      remark, del_flag, create_user, 
-      update_user, create_time, update_time
-      )
+      capital_toplimit, cooperative_agency, commission_fee, 
+      repay_capital_type, remark, del_flag, 
+      create_user, update_user, create_time, 
+      update_time)
     values (#{instCode,jdbcType=VARCHAR}, #{instName,jdbcType=VARCHAR}, #{instType,jdbcType=TINYINT}, 
-      #{capitalToplimit,jdbcType=DECIMAL}, #{commissionFee,jdbcType=DECIMAL}, #{repayCapitalType,jdbcType=TINYINT}, 
-      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
-      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{capitalToplimit,jdbcType=DECIMAL}, #{cooperativeAgency,jdbcType=VARCHAR}, #{commissionFee,jdbcType=DECIMAL}, 
+      #{repayCapitalType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -143,6 +144,9 @@
       </if>
       <if test="capitalToplimit != null" >
         capital_toplimit,
+      </if>
+      <if test="cooperativeAgency != null" >
+        cooperative_agency,
       </if>
       <if test="commissionFee != null" >
         commission_fee,
@@ -181,6 +185,9 @@
       </if>
       <if test="capitalToplimit != null" >
         #{capitalToplimit,jdbcType=DECIMAL},
+      </if>
+      <if test="cooperativeAgency != null" >
+        #{cooperativeAgency,jdbcType=VARCHAR},
       </if>
       <if test="commissionFee != null" >
         #{commissionFee,jdbcType=DECIMAL},
@@ -232,6 +239,9 @@
       <if test="record.capitalToplimit != null" >
         capital_toplimit = #{record.capitalToplimit,jdbcType=DECIMAL},
       </if>
+      <if test="record.cooperativeAgency != null" >
+        cooperative_agency = #{record.cooperativeAgency,jdbcType=VARCHAR},
+      </if>
       <if test="record.commissionFee != null" >
         commission_fee = #{record.commissionFee,jdbcType=DECIMAL},
       </if>
@@ -268,6 +278,7 @@
       inst_name = #{record.instName,jdbcType=VARCHAR},
       inst_type = #{record.instType,jdbcType=TINYINT},
       capital_toplimit = #{record.capitalToplimit,jdbcType=DECIMAL},
+      cooperative_agency = #{record.cooperativeAgency,jdbcType=VARCHAR},
       commission_fee = #{record.commissionFee,jdbcType=DECIMAL},
       repay_capital_type = #{record.repayCapitalType,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -294,6 +305,9 @@
       </if>
       <if test="capitalToplimit != null" >
         capital_toplimit = #{capitalToplimit,jdbcType=DECIMAL},
+      </if>
+      <if test="cooperativeAgency != null" >
+        cooperative_agency = #{cooperativeAgency,jdbcType=VARCHAR},
       </if>
       <if test="commissionFee != null" >
         commission_fee = #{commissionFee,jdbcType=DECIMAL},
@@ -328,6 +342,7 @@
       inst_name = #{instName,jdbcType=VARCHAR},
       inst_type = #{instType,jdbcType=TINYINT},
       capital_toplimit = #{capitalToplimit,jdbcType=DECIMAL},
+      cooperative_agency = #{cooperativeAgency,jdbcType=VARCHAR},
       commission_fee = #{commissionFee,jdbcType=DECIMAL},
       repay_capital_type = #{repayCapitalType,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},

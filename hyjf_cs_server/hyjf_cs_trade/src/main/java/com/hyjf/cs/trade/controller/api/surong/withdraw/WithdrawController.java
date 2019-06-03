@@ -343,6 +343,10 @@ public class WithdrawController extends BaseController {
         if (account == null || transAmt.compareTo(account.getBankBalance()) > 0) {
             return jsonMessage("提现金额大于可用余额，请确认后再次提现。", "1");
         }
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.bankWithdrawService.capitalExpendituresCheck(userId,transAmt)) {
+            return jsonMessage("账户余额不同步。", "1");
+        }
         /*// 检查参数(银行卡ID是否数字)
         if (Validator.isNotNull(bankId) && !NumberUtils.isNumber(bankId)) {
             return jsonMessage("银行卡号不正确，请确认后再次提现。", "1");

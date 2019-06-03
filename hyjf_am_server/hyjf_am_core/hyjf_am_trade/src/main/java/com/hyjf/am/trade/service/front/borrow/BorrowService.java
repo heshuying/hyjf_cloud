@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.service.BaseService;
@@ -257,4 +258,12 @@ public interface BorrowService extends BaseService {
     int countProjectRepayPlanRecordTotal(String borrowNid, String userId, String nid);
 
 	List<WebProjectRepayListCustomize> selectProjectRepayPlanList(String userId, String borrowNid, String nid);
+
+	/**
+	 * 查询用户账户信息金额信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public BankAccountManageCustomize queryAccountUserMoney(Integer userId);
 }

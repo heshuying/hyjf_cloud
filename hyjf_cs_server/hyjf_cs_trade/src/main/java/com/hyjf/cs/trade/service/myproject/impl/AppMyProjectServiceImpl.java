@@ -1047,7 +1047,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 Integer creditNid = borrowCredit.getCreditNid();
                 js.put("date", GetDate.date2Str(borrowCredit.getCreateTime(), GetDate.date_sdf));
                 js.put("transferPrice", CommonUtils.formatAmount(borrowCredit.getCreditCapital()));
-                js.put("discount", CommonUtils.formatAmount(borrowCredit.getCreditDiscount()));
+                js.put("discount", FormatRateUtil.formatBorrowApr(borrowCredit.getCreditDiscount().toString()));
                 js.put("remainTime", borrowCredit.getCreditTerm());
                 js.put("realAmount", CommonUtils.formatAmount(borrowCredit.getCreditPrice()));
                 String fee = amTradeClient.getBorrowCreditTenderServiceFee(String.valueOf(creditNid));

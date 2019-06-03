@@ -18,10 +18,7 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -84,6 +81,22 @@ public class AdminBankAccountManageController extends BaseController {
         if (null != bankAccountManageCustomizes && bankAccountManageCustomizes.size() > 0) {
             List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVOS = CommonUtils.convertBeanList(bankAccountManageCustomizes, BankAccountManageCustomizeVO.class);
             response.setResultList(bankAccountManageCustomizeVOS);
+        }
+        return response;
+    }
+
+    /**
+     * @Author: wenxin
+     * @Desc :查询用户账户信息金额信息
+     */
+    @ApiOperation(value = "银行账户管理查询列表")
+    @GetMapping("/query_account_userMoney/{userId}")
+    public BankAccountManageCustomizeResponse queryAccountUserMoney(@PathVariable Integer userId) {
+        BankAccountManageCustomizeResponse response = new BankAccountManageCustomizeResponse();
+        BankAccountManageCustomize bankAccountManageCustomizes = bankAccountManageService.queryAccountUserMoney(userId);
+        if(bankAccountManageCustomizes != null){
+            BankAccountManageCustomizeVO bankAccountManageCustomizeVOS = CommonUtils.convertBean(bankAccountManageCustomizes, BankAccountManageCustomizeVO.class);
+            response.setResult(bankAccountManageCustomizeVOS);
         }
         return response;
     }

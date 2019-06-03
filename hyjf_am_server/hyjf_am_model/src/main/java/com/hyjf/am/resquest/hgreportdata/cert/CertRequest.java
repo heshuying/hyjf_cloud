@@ -14,6 +14,7 @@ public class CertRequest implements Serializable {
 
     private List<String> tradeList;
     private String borrowNid;
+    private List<String> borrowNidList;
     private String nid;
     private Date repayYestime;
     private String transferId;
@@ -145,5 +146,13 @@ public class CertRequest implements Serializable {
 
     public void setTrade(String trade) {
         this.trade = trade;
+    }
+
+    public List<String> getBorrowNidList() {
+        return borrowNidList;
+    }
+
+    public void setBorrowNidList(List<String> borrowNidList) {
+        this.borrowNidList = borrowNidList;
     }
 }

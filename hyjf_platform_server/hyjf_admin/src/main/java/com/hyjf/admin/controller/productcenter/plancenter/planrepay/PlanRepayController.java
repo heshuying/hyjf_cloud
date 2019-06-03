@@ -297,7 +297,8 @@ public class PlanRepayController extends BaseController {
         map.put("lastQuitTime", "最晚退出时间");
         map.put("joinTime", "授权服务时间");
         map.put("orderLockTime", "开始计息时间");
-
+        map.put("utmSource1", "出借人渠道来源（出借时）");
+        map.put("utmSource2", "出借人渠道来源（当前）");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter(Map<String, String> attr) {

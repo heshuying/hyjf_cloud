@@ -1,8 +1,9 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProductConfig;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -54,7 +55,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
      * @return
      */
     @Override
-    public JSONArray productConfigInfo(String orderId, String flag) {
+    public JSONArray productConfigInfo(String orderId, String isTender, String flag) {
         JSONArray json = new JSONArray();
         try {
             //产品信息编号
@@ -63,65 +64,84 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             String finClaimID = "";
             //借款人id
             Integer userId = 0;
-            // flag  1:承接智投，2：加入智投
-            if (flag.equals("2")) {
+            // isTender  1:承接债权，2：原始债权
+            Map<String,Object> mapParam = new HashMap<String,Object>();
+            if (isTender.equals("2")) {
+                //原始债权
                 logger.info(logHeader + "智投发生出借推送数据，标的编号：" + orderId);
-                BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(orderId);
-                if (null == borrowVO) {
+                RightBorrowVO rightBorrowVO = amTradeClient.getRightBorrowByNid(orderId);
+                if (null == rightBorrowVO) {
                     throw new Exception(logHeader + "标的信息为空！！borrowNid:" + orderId);
                 }
                 //如果标的信息不为空,而且标的状态为放款中,即标的放款成功
-                if (borrowVO.getStatus() != 4) {
+                if (rightBorrowVO.getStatus() != 4) {
                     throw new Exception(logHeader + "标的未放款成功！！borrowNid:" + orderId);
                 }
                 List<BorrowTenderVO> borrowTenderList = amTradeClient.getBorrowTenderListByBorrowNid(orderId);
                 if (null != borrowTenderList && borrowTenderList.size() > 0) {
                     for (BorrowTenderVO borrowTenderVO : borrowTenderList) {
-                        if (StringUtils.isBlank(borrowTenderVO.getAccedeOrderId())) {
-                            continue;
+                        if (StringUtils.isNotBlank(borrowTenderVO.getAccedeOrderId())) {
+                            //加入智投信息
+                            HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
+                            if (null == hjhAccedeVO) {
+                                throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + borrowTenderVO.getAccedeOrderId());
+                            }
+                            userId = hjhAccedeVO.getUserId();
+                            sourceFinancingcode = hjhAccedeVO.getPlanNid();
+                            finClaimID = borrowTenderVO.getNid();
+                        } else {
+                            //散标债权信息
+                            userId = borrowTenderVO.getUserId();
+                            sourceFinancingcode = borrowTenderVO.getBorrowNid();
+                            finClaimID = borrowTenderVO.getNid();
                         }
-                        //加入智投信息
-                        HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
-                        if (null == hjhAccedeVO) {
-                            throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + borrowTenderVO.getAccedeOrderId());
-                        }
-                        userId = hjhAccedeVO.getUserId();
-                        sourceFinancingcode = hjhAccedeVO.getPlanNid();
-                        finClaimID = borrowTenderVO.getNid();
                         String idCardHash = getIdCard(userId);
-                        json = putParam(sourceFinancingcode, finClaimID, idCardHash, json, false, null);
+                        mapParam.put("sourceFinancingcode",sourceFinancingcode);
+                        mapParam.put("finClaimID", finClaimID);
+                        mapParam.put("idCardHash",idCardHash);
+                        mapParam.put("strDate",null);
+                        mapParam.put("isOld","false");
+                        json = putParamMap(mapParam, json);
                     }
                 }
-                //加入智投
-                //根据投资订单号查找标的投资详情信息
-                /*BorrowTenderVO borrowTenderVO = selectBorrowTenderByOrderId(orderId);
-                if (null == borrowTenderVO) {
-                    throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！出借订单号为:" + orderId);
+            } else if (isTender.equals("1")) {
+                //承接债权
+                if (flag.equals("1")) {
+                    //散标承接
+                    logger.info(logHeader + "散标承接后推送数据，承接单号为：" + orderId);
+                    List<CreditTenderVO> creditTenderList = amTradeClient.selectCreditTender(orderId);
+                    if (!CollectionUtils.isNotEmpty(creditTenderList)) {
+                        throw new Exception("产品配置信息推送,获取散标承接信息为空！！承接单号为:" + orderId);
+                    }
+                    CreditTenderVO creditTenderVO = creditTenderList.get(0);
+                    //产品信息编号 报送散标编号
+                    sourceFinancingcode = creditTenderVO.getBidNid();
+                    //债权来源承接转让时，填写承接转让编号
+                    finClaimID = creditTenderVO.getAssignNid();
+                    //承接用户id
+                    userId = creditTenderVO.getUserId();
+                } else if (flag.equals("2")) {
+                    //计划承接
+                    logger.info(logHeader + "智投承接后推送数据，承接单号为：" + orderId);
+                    List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(orderId);
+                    if (!CollectionUtils.isNotEmpty(hjhDebtCreditTenderList)) {
+                        throw new Exception("产品配置信息推送,获取计划承接信息为空！！承接单号为:" + orderId);
+                    }
+                    HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditTenderList.get(0);
+                    //产品信息编号 报送智投编码
+                    sourceFinancingcode = hjhDebtCreditTenderVO.getAssignPlanNid();
+                    //债权来源承接转让时，填写承接转让编号
+                    finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
+                    //承接用户id
+                    userId = hjhDebtCreditTenderVO.getUserId();
                 }
-                //加入智投信息
-                HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
-                if (null == hjhAccedeVO) {
-                    throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + borrowTenderVO.getAccedeOrderId());
-                }
-                userId = hjhAccedeVO.getUserId();
-                sourceFinancingcode = hjhAccedeVO.getPlanNid();
-                finClaimID = borrowTenderVO.getNid();*/
-            } else if (flag.equals("1")) {
-                //计划承接
-                logger.info(logHeader + "智投承接后推送数据，承接单号为：" + orderId);
-                List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(orderId);
-                if (!CollectionUtils.isNotEmpty(hjhDebtCreditTenderList)) {
-                    throw new Exception("产品配置信息推送,获取计划承接信息为空！！承接单号为:" + orderId);
-                }
-                HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditTenderList.get(0);
-                //智投编码
-                sourceFinancingcode = hjhDebtCreditTenderVO.getAssignPlanNid();
-                //债权来源承接转让时，填写承接转让编号
-                finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
-                //承接用户id
-                userId = hjhDebtCreditTenderVO.getUserId();
                 String idCardHash = getIdCard(userId);
-                json = putParam(sourceFinancingcode, finClaimID, idCardHash, json, false, null);
+                mapParam.put("sourceFinancingcode",sourceFinancingcode);
+                mapParam.put("finClaimID", finClaimID);
+                mapParam.put("idCardHash",idCardHash);
+                mapParam.put("strDate",null);
+                mapParam.put("isOld","false");
+                json = putParamMap(mapParam,json);
             }
 
         } catch (Exception e) {
@@ -130,25 +150,30 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         return json;
     }
 
-    public JSONArray putParam(String sourceFinancingcode, String finClaimID, String userIdcardHash, JSONArray json, Boolean isOld, String date) {
+    public JSONArray putParamMap(Map<String,Object> mapParam,JSONArray json) {
         Map<String, Object> param = new HashMap<String, Object>();
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //产品信息编号
-        param.put("sourceFinancingCode", sourceFinancingcode);
-        //债权编号
-        param.put("finClaimId", finClaimID);
-        //产品配置编号
-        param.put("configId", finClaimID);
-        //智投出借人哈希
-        param.put("userIdcardHash", userIdcardHash);
-        if (isOld) {
-            param.put("groupByDate", date);
+        if(null!=mapParam&&mapParam.size()>0){
+            //接口版本号
+            param.put("version", CertCallConstant.CERT_CALL_VERSION);
+            //平台编号
+            param.put("sourceCode", systemConfig.getCertSourceCode());
+            //产品信息编号
+            param.put("sourceFinancingCode", mapParam.get("sourceFinancingcode"));
+            //债权编号
+            param.put("finClaimId", mapParam.get("finClaimID"));
+            //产品配置编号
+            param.put("configId", mapParam.get("finClaimID"));
+            //智投出借人哈希
+            param.put("userIdcardHash", mapParam.get("idCardHash"));
+            String isOld = mapParam.get("isOld").toString();
+            if (isOld.equals("true")) {
+                String date = mapParam.get("strDate").toString();
+                param.put("groupByDate", date);
+            }
+            json.add(param);
+            return json;
         }
-        json.add(param);
-        return json;
+       return null;
     }
 
     public String getIdCard(Integer userId) {
@@ -177,87 +202,161 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
      * @return
      */
     @Override
-    public JSONArray getHistoryDate(){
+    public JSONArray getHistoryDate() {
         JSONArray jsonArray = new JSONArray();
+        try {
+            List<CertClaimVO> listCredit = getCertBorrowNoConfig();
+            if (CollectionUtils.isNotEmpty(listCredit)) {
+                for (CertClaimVO certClaimVO : listCredit) {
+                    String nid = certClaimVO.getClaimNid();
+                    if (certClaimVO.getCreditFlg() == 1) {
+                        //承接债权
+                        Map<String,Object> mapParam =creditInfo(certClaimVO, nid);
+                        if (null == mapParam || mapParam.size() < 0) {
+                            continue;
+                        }
+                        jsonArray= putParamMap(mapParam, jsonArray);
+                    }
+                    if (certClaimVO.getCreditFlg() == 2) {
+                        //原始债权
+                        Map<String,Object> mapParam =tenderInfo(certClaimVO, nid);
+                        if (null == mapParam || mapParam.size() < 0) {
+                            continue;
+                        }
+                        jsonArray= putParamMap(mapParam, jsonArray);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return jsonArray;
+    }
+
+    /**
+     * 承接债权
+     *
+     * @param certClaimVO
+     * @param nid
+     * @return
+     */
+    public Map<String,Object> creditInfo(CertClaimVO certClaimVO, String nid) {
         //产品信息编号
         String sourceFinancingcode = "";
         //债权编号
         String finClaimID = "";
         //借款人id
         Integer userId = 0;
-        try {
-            //未还款的标的
-            List<CertClaimVO> listJoin = amTradeClient.selectCertBorrowByFlg("2");
-            if(CollectionUtils.isNotEmpty(listJoin)){
-                for(CertClaimVO certClaimVO:listJoin){
-                    String nid = certClaimVO.getClaimNid();
-//                    logger.info("产品配置信息历史数据推送日志 原始债权编号："+nid);
-                    List<BorrowTenderVO> borrowTenderVOList = amTradeClient.getBorrowTenderListByNid(nid);
-                    if(CollectionUtils.isEmpty(borrowTenderVOList)){
-                        logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】债权编号："+nid+" ,暂无投资信息！！");
-                        continue;
-                    }
-                    BorrowTenderVO borrowTenderVO = borrowTenderVOList.get(0);
-                    HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
-                    if (null==hjhAccedeVO){
-                        logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】债权编码："+borrowTenderVO.getNid()+" ,查询智投计入明细为空！！");
-                        logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】根据智投加入订单号："+borrowTenderVO.getAccedeOrderId()+" ,查询智投计入明细为空！！");
-                        continue;
-                    }
-                    //根据原投资订单号查找转让信息
-                    List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(borrowTenderVO.getNid());
-                    if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
-                        //完全承接后就不能发起转让了
-                        List<HjhDebtCreditVO> filterList = hjhDebtCreditVOList.stream().filter(t -> t.getCreditStatus() == 2).collect(Collectors.toList());
-                        if(filterList.size()>=1) {
-                            logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】初始债权编号：" + nid + " ,完全承接！！");
-                            continue;
-                        }
-                    }
-//                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】初始债权编号：" + nid  +"组装数据");
-                    sourceFinancingcode = hjhAccedeVO.getPlanNid();
-                    finClaimID = borrowTenderVO.getNid();
-                    userId = hjhAccedeVO.getUserId();
-                    String idCardHash = getIdCard(userId);
-                    String strDate = fromatDate(borrowTenderVO.getCreateTime());
-                    jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,strDate);
-                }
+        String strDate ="";
+        String idCardHash="";
+        Map<String,Object> mapParam = new HashMap<String,Object>();
+        if (certClaimVO.getIsPlan() == 0) {
+            //散标承接债权
+            CreditTenderVO creditTenderVO = amTradeClient.getCreditTenderByAssignNid(certClaimVO.getClaimNid());
+            if (null == creditTenderVO) {
+                logger.info("【产品配置信息历史数据推送】散标承接债转编码：" + nid + " ,查询承接信息为空！！");
+                return null;
             }
-            // 承接债权（未还款）
-            List<CertClaimVO> listCredit = amTradeClient.selectCertBorrowByFlg("1");
-            if(CollectionUtils.isNotEmpty(listCredit)){
-                for(CertClaimVO certClaimVO:listCredit){
-                    String nid = certClaimVO.getClaimNid();
-//                    logger.info("产品配置信息历史数据推送日志 承接债权编号："+nid);
-                    List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOLists = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);
-                    if(CollectionUtils.isEmpty(hjhDebtCreditTenderVOLists)){
-                        logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码："+nid+" ,查询智投债转投资信息为空！！");
-                        continue;
-                    }
-                    HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditTenderVOLists.get(0);
-                    //根据原投资订单号查找转让信息
-                    List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(hjhDebtCreditTenderVO.getAssignOrderId());
-                    if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
-                        List<HjhDebtCreditVO> filterList = hjhDebtCreditVOList.stream().filter(t -> t.getCreditStatus() == 2).collect(Collectors.toList());
-                        if(filterList.size()>=1) {
-                            logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码：" + nid + " ,完全承接！！");
-                            continue;
-                        }
-                    }
-//                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码：" + nid +"组装数据");
-                    sourceFinancingcode = hjhDebtCreditTenderVO.getAssignPlanNid();
-                    finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
-                    userId = hjhDebtCreditTenderVO.getUserId();
-                    String strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
-                    String idCardHash = getIdCard(userId);
-                    jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,strDate);
-                }
-            }
-
-        }catch (Exception e) {
-            logger.error(e.getMessage());
+            sourceFinancingcode = creditTenderVO.getBidNid();
+            finClaimID = creditTenderVO.getAssignNid();
+            userId = creditTenderVO.getUserId();
+            strDate = fromatDate(creditTenderVO.getCreateTime());
+            idCardHash = getIdCard(userId);
         }
-        return jsonArray;
+        if (certClaimVO.getIsPlan() == 1) {
+            //智投承接债权
+            List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOLists = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);
+            if (CollectionUtils.isEmpty(hjhDebtCreditTenderVOLists)) {
+                logger.info("【产品配置信息历史数据推送】承接债转编码：" + nid + " ,查询智投债转投资信息为空！！");
+                return null;
+            }
+            HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditTenderVOLists.get(0);
+            //根据原投资订单号查找转让信息
+            List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(hjhDebtCreditTenderVO.getAssignOrderId());
+            if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                List<HjhDebtCreditVO> filterList = hjhDebtCreditVOList.stream().filter(t -> t.getCreditStatus() == 2).collect(Collectors.toList());
+                if (filterList.size() >= 1) {
+                    //完全承接就不报送
+                    logger.info("【产品配置信息历史数据推送】承接债转编码：" + nid + " ,完全承接！！");
+                    return null;
+                }
+            }
+            sourceFinancingcode = hjhDebtCreditTenderVO.getAssignPlanNid();
+            finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
+            userId = hjhDebtCreditTenderVO.getUserId();
+            strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
+            idCardHash = getIdCard(userId);
+        }
+        mapParam.put("sourceFinancingcode",sourceFinancingcode);
+        mapParam.put("finClaimID", finClaimID);
+        mapParam.put("idCardHash",idCardHash);
+        mapParam.put("strDate",strDate);
+        mapParam.put("isOld","true");
+        return mapParam;
+    }
+
+    /**
+     * 原始债权信息
+     *
+     * @param certClaimVO
+     * @param nid
+     * @return
+     */
+    public Map<String,Object> tenderInfo(CertClaimVO certClaimVO, String nid) {
+        //产品信息编号
+        String sourceFinancingcode = "";
+        //债权编号
+        String finClaimID = "";
+        //借款人id
+        Integer userId = 0;
+        String idCardHash="";
+        String strDate ="";
+        Map<String,Object> mapParam = new HashMap<String,Object>();
+        //初始债券
+        List<BorrowTenderVO> borrowTenderVOList = amTradeClient.getBorrowTenderListByNid(nid);
+        if (CollectionUtils.isEmpty(borrowTenderVOList)) {
+            logger.info("【产品配置信息历史数据推送】债权编号：" + nid + " ,暂无投资信息！！");
+            return null;
+        }
+        BorrowTenderVO borrowTenderVO = borrowTenderVOList.get(0);
+        if (certClaimVO.getIsPlan() == 0) {
+            //散标原始债权
+            sourceFinancingcode = borrowTenderVO.getBorrowNid();
+            finClaimID = borrowTenderVO.getNid();
+            userId = borrowTenderVO.getUserId();
+            strDate = fromatDate(borrowTenderVO.getCreateTime());
+            idCardHash = getIdCard(userId);
+        }
+        if (certClaimVO.getIsPlan() == 1) {
+            //计划承接债权
+            HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
+            if (null == hjhAccedeVO) {
+                logger.info("【产品配置信息历史数据推送】债权编码：" + borrowTenderVO.getNid() + " ,查询智投计入明细为空！！");
+                logger.info("【产品配置信息历史数据推送】根据智投加入订单号：" + borrowTenderVO.getAccedeOrderId() + " ,查询智投计入明细为空！！");
+                return null;
+            }
+            //根据原投资订单号查找转让信息
+            List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(borrowTenderVO.getNid());
+            if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                //完全承接后就不能发起转让了
+                List<HjhDebtCreditVO> filterList = hjhDebtCreditVOList.stream().filter(t -> t.getCreditStatus() == 2).collect(Collectors.toList());
+                if (filterList.size() >= 1) {
+                    logger.info("【产品配置信息历史数据推送】初始债权编号：" + nid + " ,完全承接！！");
+                    return null;
+                }
+            }
+            sourceFinancingcode = hjhAccedeVO.getPlanNid();
+            finClaimID = borrowTenderVO.getNid();
+            userId = hjhAccedeVO.getUserId();
+            idCardHash = getIdCard(userId);
+            strDate = fromatDate(borrowTenderVO.getCreateTime());
+        }
+        mapParam.put("sourceFinancingcode",sourceFinancingcode);
+        mapParam.put("finClaimID", finClaimID);
+        mapParam.put("idCardHash",idCardHash);
+        mapParam.put("strDate",strDate);
+        mapParam.put("isOld","true");
+        return mapParam;
     }
 
     private String fromatDate(Date date) {
@@ -267,39 +366,14 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
     }
 
     /**
-     * 未还款的标的
+     * 未上报的债权信息
      *
      * @return
      */
-    @Override
-    public List<CertClaimVO> getBorrowNoRepay() {
-        List<CertClaimVO> listJoin = amTradeClient.selectCertBorrowByFlg("2");
-        return listJoin;
-    }
-
-    /**
-     * 未完全转让的标的
-     *
-     * @return
-     */
-    @Override
-    public List<CertClaimVO> getBorrowNoTransferred() {
-        List<CertClaimVO> listCredit = amTradeClient.selectCertBorrowByFlg("1");
-        return listCredit;
-    }
-
     @Override
     public List<CertClaimVO> getCertBorrowNoConfig() {
-        List<CertClaimVO> listCredit = getBorrowNoTransferred();
-        List<CertClaimVO> listJoin = getBorrowNoRepay();
-        if (CollectionUtils.isEmpty(listCredit)) {
-            listCredit = new ArrayList<CertClaimVO>();
-        }
-        if (CollectionUtils.isEmpty(listJoin)) {
-            listJoin = new ArrayList<CertClaimVO>();
-        }
-        listJoin.addAll(listCredit);
-        return listJoin;
+        List<CertClaimVO> listCredit = amTradeClient.selectCertBorrowByFlg();
+        return listCredit;
     }
 
     /**

@@ -204,7 +204,10 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 		case CustomConstants.HJH_PROCESS_H:
 			// 汇计划清算-债权回款（承接和还款，不复投）
 			// amount=回款总额=h
-			accountBean.setPlanFrost(amount); // 汇计划冻结金额 +h
+			// modify by liuyang 20190410 资金校验修改 start
+			// accountBean.setPlanFrost(amount); // 汇计划冻结金额 +h
+			accountBean.setPlanBalance(amount); // 汇计划可用金额 +h
+			// modify by liuyang 20190410 资金校验修改 end
 			break;
 		default:
 			break;
@@ -276,7 +279,10 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 		case CustomConstants.HJH_PROCESS_H:
 			// 汇计划清算-债权回款（承接和还款，不复投）
 			// amount=回款总额=h
-			hjhAccede.setFrostAccount(amount); // 计划订单冻结金额 +h
+			// modify by liuyang 20190410 资金校验修改 start
+			// hjhAccede.setFrostAccount(amount); // 计划订单冻结金额 +h
+			hjhAccede.setAvailableInvestAccount(amount); // 计划订单可用余额 +h
+			// modify by liuyang 20190410 资金校验修改 end
 			// add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
 			hjhAccede.setLqdServiceFee(serviceFee); // 债转服务费累计
 			// add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end

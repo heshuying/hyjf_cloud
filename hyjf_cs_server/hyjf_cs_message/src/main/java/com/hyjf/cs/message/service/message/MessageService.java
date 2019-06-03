@@ -26,4 +26,9 @@ public interface MessageService {
 	 * @param apicron
 	 */
 	void sendMessage(SmsOntime apicron) throws Exception;
+
+	/**
+	 * 群发生日祝福短信
+	 */
+	void sendBirthdayBlessSms() throws Exception ;
 }

@@ -21,7 +21,7 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
      * @param flag（1代表加入智投，2代表承接智投）
      * @return
      */
-    JSONArray productConfigInfo(String orderId, String flag);
+    JSONArray productConfigInfo(String orderId, String isTender,String flag);
     /**
      * 查找产品配置信息历史数据
      * @return
@@ -29,18 +29,6 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
     JSONArray getHistoryDate();
 
     BorrowTenderVO selectBorrowTenderByOrderId(String orderId);
-
-    /**
-     * 未还款的标的
-     * @return
-     */
-     List<CertClaimVO> getBorrowNoRepay();
-
-    /**
-     * 未完全转让的标的
-     * @return
-     */
-     List<CertClaimVO> getBorrowNoTransferred();
 
      List<CertClaimVO> getCertBorrowNoConfig();
     /**

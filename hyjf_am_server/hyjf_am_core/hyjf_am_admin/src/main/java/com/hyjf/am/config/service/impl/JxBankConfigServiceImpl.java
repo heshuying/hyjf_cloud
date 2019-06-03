@@ -66,13 +66,13 @@ public class JxBankConfigServiceImpl implements JxBankConfigService {
      * @Author : nxl
      */
     @Override
-    public JxBankConfig selectBankConfigByName(String bankName){
+    public List<JxBankConfig> selectBankConfigByName(String bankName){
         JxBankConfigExample example = new JxBankConfigExample();
         JxBankConfigExample.Criteria cra = example.createCriteria();
         cra.andBankNameLike("%"+bankName+"%");
         List<JxBankConfig> banks = jxBankConfigMapper.selectByExample(example);
         if(CollectionUtils.isNotEmpty(banks)){
-            return banks.get(0);
+            return banks;
         }
         return null;
     }
