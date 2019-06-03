@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 
+import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataPushService;
@@ -29,8 +30,24 @@ public class ElectricitySalesDataPushController extends BaseUserController {
 
     @RequestMapping("/electricitySalesDataPush")
     public void electricitySalesDataPush() {
-        // 获取需要推送的数据列表
-        List<ElectricitySalesDataPushListVO> list = this.electricitySalesDataPushService.selectElectricitySalesDataPushDataList();
+        // 查询开启状态的坐席
+        List<CustomerServiceRepresentiveConfigVO> representiveConfigList = this.electricitySalesDataPushService.selectRepresentiveConfig();
+
+        if (representiveConfigList == null || representiveConfigList.size() == 0) {
+            logger.error("没有开启的坐席配置,不予推送.");
+            return;
+        }
+        // 循环处理,按坐席姓名分组上传推送数据
+        for (CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfigVO : representiveConfigList) {
+            // 坐席姓名
+            String ownerUserName = customerServiceRepresentiveConfigVO.getUserName();
+
+            // 获取需要推送的数据列表
+            List<ElectricitySalesDataPushListVO> list = this.electricitySalesDataPushService.selectElectricitySalesDataPushDataList();
+            if (list != null && list.size() > 0) {
+
+            }
+        }
 
     }
 }

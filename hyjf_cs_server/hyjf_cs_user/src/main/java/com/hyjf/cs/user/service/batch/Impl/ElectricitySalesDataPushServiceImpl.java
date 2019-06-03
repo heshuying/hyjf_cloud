@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.batch.Impl;
 
+import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataPushService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -27,5 +28,16 @@ public class ElectricitySalesDataPushServiceImpl extends BaseUserServiceImpl imp
     @Override
     public List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList() {
         return this.amUserClient.selectElectricitySalesDataPushDataList();
+    }
+
+
+    /**
+     * 获取状态为开启的坐席配置
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig() {
+        return this.amConfigClient.selectRepresentiveConfig();
     }
 }

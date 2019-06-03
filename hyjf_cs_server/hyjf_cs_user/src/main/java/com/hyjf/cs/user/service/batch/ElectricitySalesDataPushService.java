@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.batch;
 
+import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
@@ -21,4 +22,11 @@ public interface ElectricitySalesDataPushService extends BaseUserService {
      * @return
      */
     List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList();
+
+    /**
+     * 获取状态为开启的坐席配置
+     *
+     * @return
+     */
+    List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig();
 }

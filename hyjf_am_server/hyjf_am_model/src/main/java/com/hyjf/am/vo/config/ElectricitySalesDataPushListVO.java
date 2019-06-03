@@ -40,6 +40,13 @@ public class ElectricitySalesDataPushListVO extends BaseVO implements Serializab
     private String userName;
 
     /**
+     * 坐席姓名
+     *
+     * @mbggenerated
+     */
+    private String ownerUserName;
+
+    /**
      * 所属客组ID
      *
      * @mbggenerated
@@ -199,6 +206,7 @@ public class ElectricitySalesDataPushListVO extends BaseVO implements Serializab
      * @mbggenerated
      */
     private Date updateTime;
+
 
     public Integer getId() {
         return id;
@@ -406,5 +414,13 @@ public class ElectricitySalesDataPushListVO extends BaseVO implements Serializab
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getOwnerUserName() {
+        return ownerUserName;
+    }
+
+    public void setOwnerUserName(String ownerUserName) {
+        this.ownerUserName = ownerUserName;
     }
 }

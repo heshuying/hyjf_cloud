@@ -295,6 +295,7 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
                 ElectricitySalesDataPushListVO electricitySalesDataPushListVO = new ElectricitySalesDataPushListVO();
                 electricitySalesDataPushListVO.setUserId(userId);
                 electricitySalesDataPushListVO.setUserName(userVO.getUsername());
+                electricitySalesDataPushListVO.setOwnerUserName(customerServiceRepresentiveConfig.getUserName());
                 electricitySalesDataPushListVO.setGroupId(customerServiceRepresentiveConfig.getGroupId());
                 electricitySalesDataPushListVO.setGroupName(customerServiceRepresentiveConfig.getGroupName());
                 electricitySalesDataPushListVO.setBankAccount(bankOpenAccountVO == null ? "" : bankOpenAccountVO.getAccount());

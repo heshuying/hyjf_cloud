@@ -188,6 +188,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                                 ElectricitySalesDataPushListVO electricitySalesDataPushListVO = new ElectricitySalesDataPushListVO();
                                 electricitySalesDataPushListVO.setUserId(userId);
                                 electricitySalesDataPushListVO.setUserName(user.getUsername());
+                                electricitySalesDataPushListVO.setOwnerUserName(representiveConfigVO.getUserName());
                                 electricitySalesDataPushListVO.setGroupId(representiveConfigVO.getGroupId());
                                 electricitySalesDataPushListVO.setGroupName(representiveConfigVO.getGroupName());
                                 electricitySalesDataPushListVO.setBankAccount(bankOpenAccountVO == null ? "" : bankOpenAccountVO.getAccount());
@@ -276,7 +277,6 @@ public class ElectricitySalesDataController extends BaseUserController {
                 // 生成电销数据
                 // 需要分组的用户数<= 客组类型为新客组的坐席数时,
                 result.add(electricitySalesDataPushListVO);
-                // this.electricitySalesDataService.generateElectricitySalesData(result);
             }
         }
         // 需要分组的用户数 > 客组类型为新客组的坐席数

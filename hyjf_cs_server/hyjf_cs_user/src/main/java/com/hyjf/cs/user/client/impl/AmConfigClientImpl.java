@@ -336,4 +336,19 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+    /**
+     * 获取状态为开启的坐席配置
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig() {
+        CustomerServiceRepresentiveConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectRepresentiveConfig", CustomerServiceRepresentiveConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
