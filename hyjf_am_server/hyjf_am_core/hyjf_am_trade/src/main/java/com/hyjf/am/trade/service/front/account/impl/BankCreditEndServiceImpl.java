@@ -60,7 +60,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         record.setOrderId(orderId);
         record.setBorrowNid(borrowNid);
         record.setAuthCode(tenderAuthCode);
-        record.setCreditEndType(2); // 结束债权类型（1:还款，2:散标债转，3:计划债转）
+        record.setCreditEndType(3); // 结束债权类型（1:还款，2:散标债转，3:计划债转）
         record.setStatus(0);
         record.setOrgOrderId(hjhDebtCredit.getSellOrderId());
 
