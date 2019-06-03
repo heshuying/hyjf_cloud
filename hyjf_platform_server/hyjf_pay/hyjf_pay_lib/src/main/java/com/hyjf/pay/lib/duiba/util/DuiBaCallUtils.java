@@ -40,7 +40,8 @@ public class DuiBaCallUtils {
         }
         logger.info("内部服务调用兑吧接口开始：类型:{},兑吧订单号:{}", bean.getMsgType(), bean.getOrderNum());
         // 拼接url并请求
-        String url = URLSystemConfig.getDuiBaUrl() + REQUEST_DUIBA;
+        // todo wangjun 这个暂时考虑写死，放在配置文件需要把用到URLSystemConfig的工程全部加上，感觉没必要，维护性也不好
+        String url = "http://PAY/duiba" + REQUEST_DUIBA;
         try {
             String result = restTemplate.postForEntity(url, bean, String.class).getBody();
             if(StringUtils.isNotBlank(result)){
