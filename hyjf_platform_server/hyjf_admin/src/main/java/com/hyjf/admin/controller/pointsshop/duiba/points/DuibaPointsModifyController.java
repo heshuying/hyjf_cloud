@@ -4,18 +4,14 @@
 package com.hyjf.admin.controller.pointsshop.duiba.points;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
-import com.hyjf.am.response.admin.DuibaPointsResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
-import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,26 +50,28 @@ public class DuibaPointsModifyController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-
+        // 积分类型
         List<ParamNameVO> integralTypeList = duibaPointsModifyService.getParamNameList(CustomConstants.INTEGRAL_TYPE);
         if (null != integralTypeList && integralTypeList.size() > 0) {
             response.setIntegralTypeList(integralTypeList);
         }
+        // 积分业务名称
         List<ParamNameVO> integralBusinessNameList = duibaPointsModifyService.getParamNameList(CustomConstants.INTEGRAL_BUSINESS_NAME);
         if (null != integralBusinessNameList && integralBusinessNameList.size() > 0) {
             response.setIntegralBusinessNameList(integralBusinessNameList);
         }
+        // 审核状态
         List<ParamNameVO> auditStatusList = duibaPointsModifyService.getParamNameList(CustomConstants.AUDIT_STATUS);
         if (null != auditStatusList && auditStatusList.size() > 0) {
             response.setAuditStatusList(auditStatusList);
         }
+        // 操作类型
         List<ParamNameVO> operationTypeList = duibaPointsModifyService.getParamNameList(CustomConstants.OPERATION_TYPE);
         if (null != operationTypeList && operationTypeList.size() > 0) {
             response.setOperationTypeList(operationTypeList);
         }
         return new AdminResult<DuibaPointsModifyResponse>(response);
     }
-
 
 
 }
