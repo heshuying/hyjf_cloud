@@ -21,4 +21,20 @@ public interface DuibaOrdersCustomizeMapper {
      * @return
      */
     Integer selectDuibaOrderCount(DuibaOrderRequest request);
+
+    /**
+     * 查询兑吧订单（根据订单表id）
+     *
+     * @param orderId
+     * @return
+     */
+    DuibaOrderVO findOneOrder(Integer orderId);
+
+    /**
+     * 更新兑吧订单（根据订单表id）
+     *
+     * @param duibaOrderVO
+     * @return
+     */
+    int updateOneOrderByPrimaryKey(DuibaOrderVO duibaOrderVO);
 }

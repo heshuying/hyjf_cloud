@@ -64,7 +64,7 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
      * @return
      */
     @Override
-    public String synchronization(String orderId){
+    public String synchronization(Integer orderId){
         return adminClient.orderSynchronization(orderId);
     }
 }

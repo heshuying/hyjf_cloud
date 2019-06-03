@@ -27,12 +27,16 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="orderTypeTab" property="orderTypeTab" jdbcType="VARCHAR" />
     <result column="commodity_code" property="commodityCode" jdbcType="VARCHAR" />
+    <!-- 汇率 -->
+    <result column="exchange_rate" property="exchangeRate" jdbcType="DECIMAL" />
+    <!-- 兑吧返回积分（计算售价的基础数据） -->
+    <result column="integral_price" property="integralPrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, duiba_order_id, hy_order_id, user_name, true_name, user_id, exchange_content, 
     product_type, selling_price, marking_price, cost, order_status, order_time, completion_time, 
     delivery_status, receiving_information, recharge_state, processing_state, create_by, 
-    create_time, update_by, update_time, remark, commodity_code
+    create_time, update_by, update_time, remark, commodity_code, exchange_rate, integral_price
   </sql>
 
   <select id="selectDuibaOrderList" resultMap="BaseResultMap"
@@ -90,6 +94,9 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
+      </if>
+      <if test="orderTypeTab == '2'">
+        AND hdp.delivery_status IS NOT NULL
       </if>
     </if>
     <if test="limitStart >= 0">
@@ -153,6 +160,99 @@
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
       </if>
+      <if test="orderTypeTab == '2'">
+        AND hdp.delivery_status IS NOT NULL
+      </if>
     </if>
   </select>
+
+  <select id="findOneOrder" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    ht_duiba_orders hdp
+    WHERE id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <update id="updateOneOrderByPrimaryKey" parameterType="com.hyjf.am.vo.admin.DuibaOrderVO" >
+    update ht_duiba_orders
+    <set >
+      <if test="duibaOrderId != null" >
+        duiba_order_id = #{duibaOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="hyOrderId != null" >
+        hy_order_id = #{hyOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="trueName != null" >
+        true_name = #{trueName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeContent != null" >
+        exchange_content = #{exchangeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="sellingPrice != null" >
+        selling_price = #{sellingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="markingPrice != null" >
+        marking_price = #{markingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=INTEGER},
+      </if>
+      <if test="completionTime != null" >
+        completion_time = #{completionTime,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryStatus != null" >
+        delivery_status = #{deliveryStatus,jdbcType=TINYINT},
+      </if>
+      <if test="receivingInformation != null" >
+        receiving_information = #{receivingInformation,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeState != null" >
+        recharge_state = #{rechargeState,jdbcType=VARCHAR},
+      </if>
+      <if test="processingState != null" >
+        processing_state = #{processingState,jdbcType=TINYINT},
+      </if>
+      <if test="commodityCode != null" >
+        commodity_code = #{commodityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exchangeRate != null" >
+        exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="integralPrice != null" >
+        integral_price = #{integralPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

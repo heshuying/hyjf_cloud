@@ -19,15 +19,7 @@ public class DuibaOrderResponse extends AdminResponse<DuibaOrderVO> {
 	private List<ParamNameVO> orderStatusList;
 	private List<ParamNameVO> deliveryStatusList;
 	private List<ParamNameVO> processingStateList;
-	private int count;
 
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
 	public List<ParamNameVO> getProductTypeList() {
 		return productTypeList;
 	}

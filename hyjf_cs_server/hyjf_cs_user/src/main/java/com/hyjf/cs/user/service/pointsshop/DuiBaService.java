@@ -12,5 +12,5 @@ import javax.servlet.http.HttpServletRequest;
  * @version DuiBaService, v0.1 2019/5/29 16:36
  */
 public interface DuiBaService {
-    JSONObject getUrl(HttpServletRequest request);
+    JSONObject getUrl(Integer userId, HttpServletRequest request);
 }
