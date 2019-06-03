@@ -313,7 +313,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             userOperationLogEntity.setPlatform(0);
             logger.info("格式化操作平台失败,平台编号：{}", modifyClient);
         }
-        userOperationLogEntity.setRemark("原手机号:" + oldMobile);
+        userOperationLogEntity.setRemark("原手机号:" + oldMobile + ",新手机号:" + newBankMobile);
         userOperationLogEntity.setOperationTime(new Date());
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
