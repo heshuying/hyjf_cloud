@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.mapper.auto.ScreenTwoParamMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AccountListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.ScreenTwoParam;
@@ -11,14 +12,6 @@ import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
 import com.hyjf.am.vo.screen.ScreenTransferVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.GetDate;
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +105,10 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         cal.set(Calendar.MINUTE,2);*/
         List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails();
         vo.setUserCapitalDetailList(userCapitalDetailsVOList);
+        logger.info("am-trade层-----环境发版测试日志");
+        if (!CollectionUtils.isEmpty(userCapitalDetailsVOList)){
+            logger.info("查询结果为:{}", JSON.toJSONString(userCapitalDetailsVOList));
+        }
         return vo;
     }
 
