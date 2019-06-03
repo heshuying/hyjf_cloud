@@ -26,6 +26,8 @@ public class BankCreditEndListRequest extends BasePage {
     private String commitTimeStartSrch;
     @ApiModelProperty(value = "提交结束时间")
     private String commitTimeEndSrch;
+    @ApiModelProperty(value = "总记录数")
+    private Integer count;
 
     /**
      * 检索条件 limitStart
@@ -122,5 +124,13 @@ public class BankCreditEndListRequest extends BasePage {
 
     public void setCommitTimeEndSrch(String commitTimeEndSrch) {
         this.commitTimeEndSrch = commitTimeEndSrch;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
