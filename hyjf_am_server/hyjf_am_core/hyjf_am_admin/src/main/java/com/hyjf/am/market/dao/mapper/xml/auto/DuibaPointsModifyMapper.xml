@@ -6,12 +6,14 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="true_name" property="trueName" jdbcType="VARCHAR" />
+    <result column="modify_order_id" property="modifyOrderId" jdbcType="VARCHAR" />
     <result column="points" property="points" jdbcType="DECIMAL" />
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="points_type" property="pointsType" jdbcType="TINYINT" />
     <result column="modify_name" property="modifyName" jdbcType="VARCHAR" />
     <result column="review_name" property="reviewName" jdbcType="VARCHAR" />
     <result column="modify_reason" property="modifyReason" jdbcType="VARCHAR" />
+    <result column="flow_order" property="flowOrder" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
@@ -78,8 +80,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, user_name, true_name, points, total, points_type, modify_name, review_name, 
-    modify_reason, `status`, remark, create_by, create_time, update_by, update_time
+    id, user_id, user_name, true_name, modify_order_id, points, total, points_type, modify_name, 
+    review_name, modify_reason, flow_order, `status`, remark, create_by, create_time, 
+    update_by, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.DuibaPointsModifyExample" >
     select
@@ -119,17 +122,17 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_duiba_points_modify (user_id, user_name, true_name, 
-      points, total, points_type, 
-      modify_name, review_name, modify_reason, 
-      `status`, remark, create_by, 
-      create_time, update_by, update_time
-      )
+      modify_order_id, points, total, 
+      points_type, modify_name, review_name, 
+      modify_reason, flow_order, `status`, 
+      remark, create_by, create_time, 
+      update_by, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{trueName,jdbcType=VARCHAR}, 
-      #{points,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{pointsType,jdbcType=TINYINT}, 
-      #{modifyName,jdbcType=VARCHAR}, #{reviewName,jdbcType=VARCHAR}, #{modifyReason,jdbcType=VARCHAR}, 
-      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{modifyOrderId,jdbcType=VARCHAR}, #{points,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, 
+      #{pointsType,jdbcType=TINYINT}, #{modifyName,jdbcType=VARCHAR}, #{reviewName,jdbcType=VARCHAR}, 
+      #{modifyReason,jdbcType=VARCHAR}, #{flowOrder,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.DuibaPointsModify" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -145,6 +148,9 @@
       </if>
       <if test="trueName != null" >
         true_name,
+      </if>
+      <if test="modifyOrderId != null" >
+        modify_order_id,
       </if>
       <if test="points != null" >
         points,
@@ -163,6 +169,9 @@
       </if>
       <if test="modifyReason != null" >
         modify_reason,
+      </if>
+      <if test="flowOrder != null" >
+        flow_order,
       </if>
       <if test="status != null" >
         `status`,
@@ -193,6 +202,9 @@
       <if test="trueName != null" >
         #{trueName,jdbcType=VARCHAR},
       </if>
+      <if test="modifyOrderId != null" >
+        #{modifyOrderId,jdbcType=VARCHAR},
+      </if>
       <if test="points != null" >
         #{points,jdbcType=DECIMAL},
       </if>
@@ -210,6 +222,9 @@
       </if>
       <if test="modifyReason != null" >
         #{modifyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="flowOrder != null" >
+        #{flowOrder,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -252,6 +267,9 @@
       <if test="record.trueName != null" >
         true_name = #{record.trueName,jdbcType=VARCHAR},
       </if>
+      <if test="record.modifyOrderId != null" >
+        modify_order_id = #{record.modifyOrderId,jdbcType=VARCHAR},
+      </if>
       <if test="record.points != null" >
         points = #{record.points,jdbcType=DECIMAL},
       </if>
@@ -269,6 +287,9 @@
       </if>
       <if test="record.modifyReason != null" >
         modify_reason = #{record.modifyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flowOrder != null" >
+        flow_order = #{record.flowOrder,jdbcType=INTEGER},
       </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
@@ -299,12 +320,14 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
       true_name = #{record.trueName,jdbcType=VARCHAR},
+      modify_order_id = #{record.modifyOrderId,jdbcType=VARCHAR},
       points = #{record.points,jdbcType=DECIMAL},
       total = #{record.total,jdbcType=DECIMAL},
       points_type = #{record.pointsType,jdbcType=TINYINT},
       modify_name = #{record.modifyName,jdbcType=VARCHAR},
       review_name = #{record.reviewName,jdbcType=VARCHAR},
       modify_reason = #{record.modifyReason,jdbcType=VARCHAR},
+      flow_order = #{record.flowOrder,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=VARCHAR},
@@ -327,6 +350,9 @@
       <if test="trueName != null" >
         true_name = #{trueName,jdbcType=VARCHAR},
       </if>
+      <if test="modifyOrderId != null" >
+        modify_order_id = #{modifyOrderId,jdbcType=VARCHAR},
+      </if>
       <if test="points != null" >
         points = #{points,jdbcType=DECIMAL},
       </if>
@@ -344,6 +370,9 @@
       </if>
       <if test="modifyReason != null" >
         modify_reason = #{modifyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="flowOrder != null" >
+        flow_order = #{flowOrder,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
@@ -371,12 +400,14 @@
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       true_name = #{trueName,jdbcType=VARCHAR},
+      modify_order_id = #{modifyOrderId,jdbcType=VARCHAR},
       points = #{points,jdbcType=DECIMAL},
       total = #{total,jdbcType=DECIMAL},
       points_type = #{pointsType,jdbcType=TINYINT},
       modify_name = #{modifyName,jdbcType=VARCHAR},
       review_name = #{reviewName,jdbcType=VARCHAR},
       modify_reason = #{modifyReason,jdbcType=VARCHAR},
+      flow_order = #{flowOrder,jdbcType=INTEGER},
       `status` = #{status,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=VARCHAR},

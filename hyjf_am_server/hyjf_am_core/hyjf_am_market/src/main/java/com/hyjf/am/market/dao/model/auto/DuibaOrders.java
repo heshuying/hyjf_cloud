@@ -132,6 +132,27 @@ public class DuibaOrders implements Serializable {
     private Integer processingState;
 
     /**
+     * 商品编码
+     *
+     * @mbggenerated
+     */
+    private String commodityCode;
+
+    /**
+     * 汇率
+     *
+     * @mbggenerated
+     */
+    private BigDecimal exchangeRate;
+
+    /**
+     * 兑吧返回积分（计算售价的基础数据）
+     *
+     * @mbggenerated
+     */
+    private BigDecimal integralPrice;
+
+    /**
      * 创建人
      *
      * @mbggenerated
@@ -310,6 +331,30 @@ public class DuibaOrders implements Serializable {
 
     public void setProcessingState(Integer processingState) {
         this.processingState = processingState;
+    }
+
+    public String getCommodityCode() {
+        return commodityCode;
+    }
+
+    public void setCommodityCode(String commodityCode) {
+        this.commodityCode = commodityCode == null ? null : commodityCode.trim();
+    }
+
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public BigDecimal getIntegralPrice() {
+        return integralPrice;
+    }
+
+    public void setIntegralPrice(BigDecimal integralPrice) {
+        this.integralPrice = integralPrice;
     }
 
     public String getCreateBy() {

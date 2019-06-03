@@ -24,6 +24,13 @@ public class DuibaPointsModify implements Serializable {
     private String trueName;
 
     /**
+     * 申请订单号
+     *
+     * @mbggenerated
+     */
+    private String modifyOrderId;
+
+    /**
      * 调整积分数
      *
      * @mbggenerated
@@ -64,6 +71,13 @@ public class DuibaPointsModify implements Serializable {
      * @mbggenerated
      */
     private String modifyReason;
+
+    /**
+     * 当前审批节点
+     *
+     * @mbggenerated
+     */
+    private Integer flowOrder;
 
     /**
      * 审核状态: 0待审核 1审核通过 2审核不通过 
@@ -141,6 +155,14 @@ public class DuibaPointsModify implements Serializable {
         this.trueName = trueName == null ? null : trueName.trim();
     }
 
+    public String getModifyOrderId() {
+        return modifyOrderId;
+    }
+
+    public void setModifyOrderId(String modifyOrderId) {
+        this.modifyOrderId = modifyOrderId == null ? null : modifyOrderId.trim();
+    }
+
     public BigDecimal getPoints() {
         return points;
     }
@@ -187,6 +209,14 @@ public class DuibaPointsModify implements Serializable {
 
     public void setModifyReason(String modifyReason) {
         this.modifyReason = modifyReason == null ? null : modifyReason.trim();
+    }
+
+    public Integer getFlowOrder() {
+        return flowOrder;
+    }
+
+    public void setFlowOrder(Integer flowOrder) {
+        this.flowOrder = flowOrder;
     }
 
     public Integer getStatus() {

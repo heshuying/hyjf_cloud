@@ -31,6 +31,13 @@ public class DuibaPointsModifyVO implements Serializable {
     private String trueName;
 
     /**
+     * 申请订单号
+     *
+     * @mbggenerated
+     */
+    private String modifyOrderId;
+
+    /**
      * 调整积分数
      *
      * @mbggenerated
@@ -76,6 +83,13 @@ public class DuibaPointsModifyVO implements Serializable {
      * @mbggenerated
      */
     private String modifyReason;
+
+    /**
+     * 当前审批节点
+     *
+     * @mbggenerated
+     */
+    private Integer flowOrder;
 
     /**
      * 审核状态: 0待审核 1审核通过 2审核不通过
@@ -268,5 +282,21 @@ public class DuibaPointsModifyVO implements Serializable {
 
     public void setStatusStr(Integer statusStr) {
         this.statusStr = statusStr;
+    }
+
+    public String getModifyOrderId() {
+        return modifyOrderId;
+    }
+
+    public void setModifyOrderId(String modifyOrderId) {
+        this.modifyOrderId = modifyOrderId;
+    }
+
+    public Integer getFlowOrder() {
+        return flowOrder;
+    }
+
+    public void setFlowOrder(Integer flowOrder) {
+        this.flowOrder = flowOrder;
     }
 }

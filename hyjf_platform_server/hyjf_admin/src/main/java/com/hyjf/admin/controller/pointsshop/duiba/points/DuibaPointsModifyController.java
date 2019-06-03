@@ -11,9 +11,12 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
+import com.hyjf.am.response.admin.DuibaPointsResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,7 @@ public class DuibaPointsModifyController extends BaseController {
     @ApiOperation(value = "兑吧积分账户修改明细", notes = "兑吧积分账户修改明细")
     @PostMapping("/selectDuibaPointsModifyList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<DuibaPointsModifyVO>> selectDuibaPointsModifyList(@RequestBody DuibaPointsRequest requestBean) {
+    public AdminResult<DuibaPointsModifyResponse> selectDuibaPointsModifyList(@RequestBody DuibaPointsRequest requestBean) {
         DuibaPointsModifyResponse response = duibaPointsModifyService.selectDuibaPointsModifyList(requestBean);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -52,11 +55,24 @@ public class DuibaPointsModifyController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        List<DuibaPointsModifyVO> vos = new ArrayList<DuibaPointsModifyVO>();
-        if (null != response.getResultList() && response.getResultList().size() > 0) {
-            vos = CommonUtils.convertBeanList(response.getResultList(), DuibaPointsModifyVO.class);
+
+        List<ParamNameVO> integralTypeList = duibaPointsModifyService.getParamNameList(CustomConstants.INTEGRAL_TYPE);
+        if (null != integralTypeList && integralTypeList.size() > 0) {
+            response.setIntegralTypeList(integralTypeList);
         }
-        return new AdminResult<>(ListResult.build(vos, response.getRecordTotal()));
+        List<ParamNameVO> integralBusinessNameList = duibaPointsModifyService.getParamNameList(CustomConstants.INTEGRAL_BUSINESS_NAME);
+        if (null != integralBusinessNameList && integralBusinessNameList.size() > 0) {
+            response.setIntegralBusinessNameList(integralBusinessNameList);
+        }
+        List<ParamNameVO> auditStatusList = duibaPointsModifyService.getParamNameList(CustomConstants.AUDIT_STATUS);
+        if (null != auditStatusList && auditStatusList.size() > 0) {
+            response.setAuditStatusList(auditStatusList);
+        }
+        List<ParamNameVO> operationTypeList = duibaPointsModifyService.getParamNameList(CustomConstants.OPERATION_TYPE);
+        if (null != operationTypeList && operationTypeList.size() > 0) {
+            response.setOperationTypeList(operationTypeList);
+        }
+        return new AdminResult<DuibaPointsModifyResponse>(response);
     }
 
 
