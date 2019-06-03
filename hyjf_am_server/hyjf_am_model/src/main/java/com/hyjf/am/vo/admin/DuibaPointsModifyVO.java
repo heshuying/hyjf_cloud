@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.vo.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,6 +23,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
     /**
@@ -28,6 +31,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "真实姓名")
     private String trueName;
 
     /**
@@ -35,6 +39,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "申请订单号")
     private String modifyOrderId;
 
     /**
@@ -42,6 +47,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "调整积分数")
     private BigDecimal points;
 
     /**
@@ -49,6 +55,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "当时调整后总积分数")
     private BigDecimal total;
 
     /**
@@ -56,11 +63,13 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "操作类型：0调增 1调减")
     private Integer pointsType;
 
     /**
      * 转换实义的操作类型
      */
+    @ApiModelProperty(value = "转换实义的操作类型")
     private String pointsTypeStr;
 
     /**
@@ -68,6 +77,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "调整人用户名")
     private String modifyName;
 
     /**
@@ -75,6 +85,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "审批人用户名")
     private String reviewName;
 
     /**
@@ -82,6 +93,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "调整原因")
     private String modifyReason;
 
     /**
@@ -89,6 +101,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "当前审批节点")
     private Integer flowOrder;
 
     /**
@@ -96,11 +109,13 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "审核状态: 0待审核 1审核通过 2审核不通过")
     private Integer status;
 
     /**
      * 转换实义的审核状态
      */
+    @ApiModelProperty(value = "转换实义的审核状态")
     private Integer statusStr;
 
     /**
@@ -108,6 +123,7 @@ public class DuibaPointsModifyVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     /**

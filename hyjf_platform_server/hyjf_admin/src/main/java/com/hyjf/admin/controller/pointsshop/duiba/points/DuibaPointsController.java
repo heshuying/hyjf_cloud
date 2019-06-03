@@ -13,6 +13,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.vo.admin.DuibaPointsUserVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,44 @@ public class DuibaPointsController extends BaseController {
             vos = CommonUtils.convertBeanList(response.getResultList(), DuibaPointsUserVO.class);
         }
         return new AdminResult<>(ListResult.build(vos, response.getRecordTotal()));
+    }
+
+    @ApiOperation(value = "兑吧批量调整积分", notes = "兑吧批量调整积分")
+    @PostMapping("/modifyPointsByUserList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult modifyPointsByUserList(HttpServletRequest request, @RequestBody DuibaPointsRequest requestBean) {
+
+        // 获取操作人id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        requestBean.setModifyName(adminSystemVO.getUsername());
+
+        // 判断参数
+        if (null == requestBean.getModifyType()) {
+            return new AdminResult<>(FAIL, "请勾选调整类型！");
+        }
+        if (null == requestBean.getModifyPoints() || 0 == requestBean.getModifyPoints()) {
+            return new AdminResult<>(FAIL, "请填写调整积分数额！");
+        }
+        if(null == requestBean.getUserIdList() || requestBean.getUserIdList().size() <= 0) {
+            return new AdminResult<>(FAIL, "请勾选调整用户！");
+        }
+
+        // 调减的情况
+        if (1 == requestBean.getModifyType()) {
+            // 查询这些用户是否够扣分的
+            boolean re = this.duibaPointsService.selectRemainPoints(requestBean);
+            if (!re) {
+                return new AdminResult<>(FAIL, "批量调整积分记录生成失败（存在用户积分不足）！");
+            }
+        }
+
+        // 记录到积分调整列表
+        // 后期接入工作流后、在审批表创建相应审批节点
+        boolean re = this.duibaPointsService.insertPointsModifyList(requestBean);
+        if (!re) {
+            return new AdminResult<>(FAIL, "批量调整积分记录生成失败！");
+        }
+        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
 }

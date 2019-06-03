@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.vo.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,6 +22,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
     /**
@@ -27,6 +30,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "真实姓名")
     private String trueName;
 
     /**
@@ -34,6 +38,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "当前操作积分数")
     private Integer points;
 
     /**
@@ -41,6 +46,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "当前操作后总积分数")
     private Integer total;
 
     /**
@@ -48,11 +54,13 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "类型 0:获取 1:使用")
     private Integer type;
 
     /**
      * 转换实义的类型
      */
+    @ApiModelProperty(value = "转换实义的类型")
     private String typeStr;
 
     /**
@@ -60,11 +68,13 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "积分业务名称: 0出借 1商品兑换 2订单取消")
     private Integer businessName;
 
     /**
      * 转换实义的积分业务名称
      */
+    @ApiModelProperty(value = "转换实义的积分业务名称")
     private String businessNameStr;
 
     /**
@@ -72,6 +82,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "兑吧订单号")
     private String duibaOrderId;
 
     /**
@@ -79,6 +90,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "汇盈订单号")
     private String hyOrderId;
 
     /**
@@ -86,6 +98,7 @@ public class DuibaPointsVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     /**

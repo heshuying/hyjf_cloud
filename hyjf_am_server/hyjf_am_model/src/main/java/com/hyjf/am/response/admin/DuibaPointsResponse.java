@@ -14,9 +14,21 @@ import java.util.List;
  * @version DuibaPointsResponse, v0.1 2019/5/30 10:26
  */
 public class DuibaPointsResponse extends AdminResponse<DuibaPointsVO> {
+    /**
+     * 积分类型
+     */
     private List<ParamNameVO> integralTypeList;
+    /**
+     * 积分业务名称
+     */
     private List<ParamNameVO> integralBusinessNameList;
+    /**
+     * 审核状态
+     */
     private List<ParamNameVO> auditStatusList;
+    /**
+     * 操作类型
+     */
     private List<ParamNameVO> operationTypeList;
 
     public List<ParamNameVO> getIntegralTypeList() {

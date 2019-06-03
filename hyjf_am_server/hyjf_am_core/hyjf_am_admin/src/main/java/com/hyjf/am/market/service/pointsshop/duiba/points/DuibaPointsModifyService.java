@@ -29,4 +29,12 @@ public interface DuibaPointsModifyService {
      * @return
      */
     List<DuibaPointsModifyVO> selectDuibaPointsModifyList(DuibaPointsRequest request);
+
+    /**
+     * 插入积分审批表
+     *
+     * @param request
+     * @return
+     */
+    boolean insertPointsModifyList(DuibaPointsRequest request);
 }

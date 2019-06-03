@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.admin.pointsshop.duiba.points.impl;
 
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.service.admin.pointsshop.duiba.points.DuibaPointsService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.DuibaPointsUserVO;
@@ -39,5 +40,23 @@ public class DuibaPointsServiceImpl extends BaseServiceImpl implements DuibaPoin
     @Override
     public List<DuibaPointsUserVO> selectDuibaPointsUser(DuibaPointsRequest request) {
         return this.duibaPointsCustomizeMapper.selectDuibaPointsUser(request);
+    }
+
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public boolean selectRemainPoints(DuibaPointsRequest request) {
+        UserExample example = new UserExample();
+        // 查询用户中剩余积分比调整积分少的
+        example.createCriteria().andUserIdIn(request.getUserIdList()).andPointsCurrentLessThan(request.getModifyPoints());
+        Integer count = this.userMapper.countByExample(example);
+        if(count > 0) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,7 +1,6 @@
 package com.hyjf.am.market.dao.model.auto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class DuibaPointsModify implements Serializable {
@@ -35,14 +34,14 @@ public class DuibaPointsModify implements Serializable {
      *
      * @mbggenerated
      */
-    private BigDecimal points;
+    private Integer points;
 
     /**
      * 当时调整后总积分数
      *
      * @mbggenerated
      */
-    private BigDecimal total;
+    private Integer total;
 
     /**
      * 操作类型：0调增 1调减
@@ -163,19 +162,19 @@ public class DuibaPointsModify implements Serializable {
         this.modifyOrderId = modifyOrderId == null ? null : modifyOrderId.trim();
     }
 
-    public BigDecimal getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(BigDecimal points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 
-    public BigDecimal getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 
