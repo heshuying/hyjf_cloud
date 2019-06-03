@@ -372,6 +372,5 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
         ElectricitySalesDataPushListRequest request = new ElectricitySalesDataPushListRequest();
         request.setElectricitySalesDataPushList(electricitySalesDataPushListVOList);
         amUserClient.generateElectricitySalesData(request);
-
     }
 }

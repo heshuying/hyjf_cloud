@@ -316,6 +316,76 @@ public class ElectricitySalesDataPushListExample {
             return (Criteria) this;
         }
 
+        public Criteria andOwnerUserNameIsNull() {
+            addCriterion("owner_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameIsNotNull() {
+            addCriterion("owner_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameEqualTo(String value) {
+            addCriterion("owner_user_name =", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameNotEqualTo(String value) {
+            addCriterion("owner_user_name <>", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameGreaterThan(String value) {
+            addCriterion("owner_user_name >", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("owner_user_name >=", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameLessThan(String value) {
+            addCriterion("owner_user_name <", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameLessThanOrEqualTo(String value) {
+            addCriterion("owner_user_name <=", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameLike(String value) {
+            addCriterion("owner_user_name like", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameNotLike(String value) {
+            addCriterion("owner_user_name not like", value, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameIn(List<String> values) {
+            addCriterion("owner_user_name in", values, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameNotIn(List<String> values) {
+            addCriterion("owner_user_name not in", values, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameBetween(String value1, String value2) {
+            addCriterion("owner_user_name between", value1, value2, "ownerUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerUserNameNotBetween(String value1, String value2) {
+            addCriterion("owner_user_name not between", value1, value2, "ownerUserName");
+            return (Criteria) this;
+        }
+
         public Criteria andGroupIdIsNull() {
             addCriterion("group_id is null");
             return (Criteria) this;

@@ -18,6 +18,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -1429,5 +1430,20 @@ public class AmUserClientImpl implements AmUserClient {
 	public void generateElectricitySalesData(ElectricitySalesDataPushListRequest request) {
 		restTemplate
 				.put(userService + "/electricitySalesDataPushList/generateElectricitySalesData", request);
+	}
+
+	/**
+	 * 获取需要推送的电销数据
+	 *
+	 * @return
+	 */
+	@Override
+	public List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList() {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.getForEntity(userService + "/am-user/electricitySalesDataPushList/selectElectricitySalesDataPushDataList", ElectricitySalesDataPushListResponse.class).getBody();
+		if (response != null && Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
 	}
 }

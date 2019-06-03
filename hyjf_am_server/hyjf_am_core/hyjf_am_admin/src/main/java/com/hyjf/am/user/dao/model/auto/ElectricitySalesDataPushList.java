@@ -27,6 +27,13 @@ public class ElectricitySalesDataPushList implements Serializable {
     private String userName;
 
     /**
+     * 坐席姓名
+     *
+     * @mbggenerated
+     */
+    private String ownerUserName;
+
+    /**
      * 所属客组ID
      *
      * @mbggenerated
@@ -211,6 +218,14 @@ public class ElectricitySalesDataPushList implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
+    }
+
+    public String getOwnerUserName() {
+        return ownerUserName;
+    }
+
+    public void setOwnerUserName(String ownerUserName) {
+        this.ownerUserName = ownerUserName == null ? null : ownerUserName.trim();
     }
 
     public Integer getGroupId() {

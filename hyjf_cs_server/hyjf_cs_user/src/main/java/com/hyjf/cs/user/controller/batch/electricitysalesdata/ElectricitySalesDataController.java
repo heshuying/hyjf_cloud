@@ -39,7 +39,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-user/batch")
+@RequestMapping("/cs-user/batch/electricitysalesdata")
 public class ElectricitySalesDataController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(ElectricitySalesDataController.class);

@@ -18,5 +18,12 @@ public interface ElectricitySalesDataService extends BaseService {
     /**
      * 电销推送数据生成
      */
-    void generateElectricitySalesData(  List<ElectricitySalesDataPushList> result);
+    void generateElectricitySalesData(List<ElectricitySalesDataPushList> result);
+
+    /**
+     * 获取需要推送的电销数据
+     *
+     * @return
+     */
+    List<ElectricitySalesDataPushList> selectElectricitySalesDataPushDataList();
 }

@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -695,4 +696,11 @@ public interface AmUserClient {
 	 * @param request
 	 */
 	void generateElectricitySalesData(ElectricitySalesDataPushListRequest request);
+
+	/**
+	 * 获取需要推送的电销数据
+	 *
+	 * @return
+	 */
+	List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList();
 }

@@ -4,10 +4,14 @@
 package com.hyjf.am.user.controller.front.user;
 
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
+import com.hyjf.am.response.user.UserEvalationQuestionResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
+import com.hyjf.am.user.dao.model.customize.ChangeLogCustomize;
 import com.hyjf.am.user.service.front.electricitysalesdata.ElectricitySalesDataService;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.user.UserEvalationQuestionVO;
@@ -49,5 +53,24 @@ public class ElectricitySalesDataPushListController extends BaseController {
             // 插入数据
             this.electricitySalesDataService.generateElectricitySalesData(result);
         }
+    }
+
+
+    /**
+     * 获取需要推送的电销数据
+     *
+     * @return
+     */
+    @PostMapping("/selectElectricitySalesDataPushDataList")
+    public ElectricitySalesDataPushListResponse selectElectricitySalesDataPushDataList() {
+        ElectricitySalesDataPushListResponse response = new ElectricitySalesDataPushListResponse();
+        List<ElectricitySalesDataPushList> recordList = this.electricitySalesDataService.selectElectricitySalesDataPushDataList();
+        if (recordList != null && recordList.size() > 0) {
+            List<ElectricitySalesDataPushListVO> dataPushDataList = CommonUtils.convertBeanList(recordList, ElectricitySalesDataPushListVO.class);
+            response.setResultList(dataPushDataList);
+            response.setRtn(Response.SUCCESS);
+            return response;
+        }
+        return response;
     }
 }

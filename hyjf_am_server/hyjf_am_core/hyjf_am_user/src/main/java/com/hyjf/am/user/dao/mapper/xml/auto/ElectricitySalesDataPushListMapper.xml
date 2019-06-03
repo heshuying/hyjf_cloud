@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="owner_user_name" property="ownerUserName" jdbcType="VARCHAR" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
     <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
@@ -88,10 +89,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, user_name, group_id, group_name, bank_account, role_id, true_name, mobile, 
-    sex, age, birthday, reg_time, pc_source_id, pc_source_name, app_source_id, app_source_name, 
-    recharge_money, recharge_time, channel, upload_type, `status`, remark, create_user_id, 
-    create_time, update_time
+    id, user_id, user_name, owner_user_name, group_id, group_name, bank_account, role_id, 
+    true_name, mobile, sex, age, birthday, reg_time, pc_source_id, pc_source_name, app_source_id, 
+    app_source_name, recharge_money, recharge_time, channel, upload_type, `status`, remark, 
+    create_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushListExample" >
     select
@@ -130,24 +131,24 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_electricity_sales_data_push_list (user_id, user_name, group_id, 
-      group_name, bank_account, role_id, 
-      true_name, mobile, sex, 
-      age, birthday, reg_time, 
-      pc_source_id, pc_source_name, app_source_id, 
-      app_source_name, recharge_money, recharge_time, 
-      channel, upload_type, `status`, 
-      remark, create_user_id, create_time, 
-      update_time)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{groupId,jdbcType=INTEGER}, 
-      #{groupName,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, #{roleId,jdbcType=TINYINT}, 
-      #{trueName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{sex,jdbcType=TINYINT}, 
-      #{age,jdbcType=INTEGER}, #{birthday,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, 
-      #{pcSourceId,jdbcType=INTEGER}, #{pcSourceName,jdbcType=VARCHAR}, #{appSourceId,jdbcType=INTEGER}, 
-      #{appSourceName,jdbcType=VARCHAR}, #{rechargeMoney,jdbcType=DECIMAL}, #{rechargeTime,jdbcType=TIMESTAMP}, 
-      #{channel,jdbcType=TINYINT}, #{uploadType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
-      #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_electricity_sales_data_push_list (user_id, user_name, owner_user_name, 
+      group_id, group_name, bank_account, 
+      role_id, true_name, mobile, 
+      sex, age, birthday, 
+      reg_time, pc_source_id, pc_source_name, 
+      app_source_id, app_source_name, recharge_money, 
+      recharge_time, channel, upload_type, 
+      `status`, remark, create_user_id, 
+      create_time, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{ownerUserName,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, 
+      #{roleId,jdbcType=TINYINT}, #{trueName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, 
+      #{sex,jdbcType=TINYINT}, #{age,jdbcType=INTEGER}, #{birthday,jdbcType=VARCHAR}, 
+      #{regTime,jdbcType=TIMESTAMP}, #{pcSourceId,jdbcType=INTEGER}, #{pcSourceName,jdbcType=VARCHAR}, 
+      #{appSourceId,jdbcType=INTEGER}, #{appSourceName,jdbcType=VARCHAR}, #{rechargeMoney,jdbcType=DECIMAL}, 
+      #{rechargeTime,jdbcType=TIMESTAMP}, #{channel,jdbcType=TINYINT}, #{uploadType,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -160,6 +161,9 @@
       </if>
       <if test="userName != null" >
         user_name,
+      </if>
+      <if test="ownerUserName != null" >
+        owner_user_name,
       </if>
       <if test="groupId != null" >
         group_id,
@@ -237,6 +241,9 @@
       </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerUserName != null" >
+        #{ownerUserName,jdbcType=VARCHAR},
       </if>
       <if test="groupId != null" >
         #{groupId,jdbcType=INTEGER},
@@ -327,6 +334,9 @@
       <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
+      <if test="record.ownerUserName != null" >
+        owner_user_name = #{record.ownerUserName,jdbcType=VARCHAR},
+      </if>
       <if test="record.groupId != null" >
         group_id = #{record.groupId,jdbcType=INTEGER},
       </if>
@@ -406,6 +416,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
+      owner_user_name = #{record.ownerUserName,jdbcType=VARCHAR},
       group_id = #{record.groupId,jdbcType=INTEGER},
       group_name = #{record.groupName,jdbcType=VARCHAR},
       bank_account = #{record.bankAccount,jdbcType=VARCHAR},
@@ -441,6 +452,9 @@
       </if>
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerUserName != null" >
+        owner_user_name = #{ownerUserName,jdbcType=VARCHAR},
       </if>
       <if test="groupId != null" >
         group_id = #{groupId,jdbcType=INTEGER},
@@ -518,6 +532,7 @@
     update ht_electricity_sales_data_push_list
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
+      owner_user_name = #{ownerUserName,jdbcType=VARCHAR},
       group_id = #{groupId,jdbcType=INTEGER},
       group_name = #{groupName,jdbcType=VARCHAR},
       bank_account = #{bankAccount,jdbcType=VARCHAR},
