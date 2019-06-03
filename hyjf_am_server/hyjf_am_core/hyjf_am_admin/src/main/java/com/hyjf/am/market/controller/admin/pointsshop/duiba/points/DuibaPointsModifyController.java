@@ -5,6 +5,7 @@ package com.hyjf.am.market.controller.admin.pointsshop.duiba.points;
 
 import com.hyjf.am.market.controller.admin.activity.ActivityController;
 import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsModifyService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
@@ -67,6 +68,17 @@ public class DuibaPointsModifyController {
         return response;
     }
 
-
-
+    /**
+     * 插入积分审批表
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/insertPointsModifyList")
+    public BooleanResponse insertPointsModifyList(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = duibaPointsModifyService.insertPointsModifyList(request);
+        response.setResultBoolean(result);
+        return response;
+    }
 }

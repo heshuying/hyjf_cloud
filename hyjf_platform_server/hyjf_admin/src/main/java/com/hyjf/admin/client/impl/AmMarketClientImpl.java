@@ -293,4 +293,20 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return response;
 	}
 
+	/**
+	 * 插入积分审批表
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public boolean insertPointsModifyList(DuibaPointsRequest requestBean) {
+		String url = "http://AM-ADMIN/am-admin/duibapointsmodify/insertPointsModifyList";
+		BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+
 }
