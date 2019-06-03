@@ -23,11 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 public class DuiBaServiceImpl implements DuiBaService {
 	private static final Logger logger = LoggerFactory.getLogger(DuiBaServiceImpl.class);
 
+	private static String NOT_LOGIN = "not_login";
+
 	@Autowired
 	SystemConfig systemConfig;
 
 	@Override
-	public JSONObject getUrl(HttpServletRequest request) {
+	public JSONObject getUrl(Integer userId, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		try {
 			// 平台
@@ -40,6 +42,13 @@ public class DuiBaServiceImpl implements DuiBaService {
 			String redirect = request.getParameter("redirect");
 			// 校验参数
 			if (StringUtils.isBlank(uid) || StringUtils.isBlank(credits)) {
+				ret.put("status", "1");
+				ret.put("statusDesc", "参数错误");
+				ret.put("duiBaUrl", "");
+				return ret;
+			}
+			// 非游客模式下，判断网关传的userId是否为空
+			if (!NOT_LOGIN.equals(uid) && null == userId){
 				ret.put("status", "1");
 				ret.put("statusDesc", "参数错误");
 				ret.put("duiBaUrl", "");
