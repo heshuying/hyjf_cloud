@@ -130,24 +130,4 @@ public class CustomerServiceRepresentiveConfigController extends BaseController 
         }
         return new AdminResult<>(response);
     }
-
-    @ApiOperation(value = "删除坐席配置信息", notes = "删除坐席配置信息")
-    @PostMapping("/deleteCustomerServiceRepresentiveConfig")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult<CustomerServiceRepresentiveConfigResponse> deleteCustomerServiceRepresentiveConfig(HttpServletRequest request, @RequestBody CustomerServiceRepresentiveConfigRequest groupRequest) {
-        if (groupRequest.getId() == null) {
-            return new AdminResult<>(FAIL, "id不能为空！");
-        }
-        //获取登录用户Id
-        AdminSystemVO adminSystemVO = this.getUser(request);
-        logger.info("【坐席配置】{}开始删除坐席配置，request：{}", adminSystemVO.getUsername(), JSON.toJSONString(groupRequest));
-        CustomerServiceRepresentiveConfigResponse response = customerServiceRepresentiveConfigService.deleteCustomerServiceRepresentiveConfig(groupRequest);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(response);
-    }
 }

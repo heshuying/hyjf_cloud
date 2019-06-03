@@ -108,9 +108,12 @@ public class CustomerServiceGroupConfigController {
             CustomerServiceGroupConfig config = new CustomerServiceGroupConfig();
             BeanUtils.copyProperties(request, config);
             if (StringUtils.isNotBlank(request.getGroupName()) || request.getIsNew() != null) {// 更新坐席配置冗余字段 客组名，是否新客
-                CustomerServiceRepresentiveConfig groupConfig = new CustomerServiceRepresentiveConfig();
-                BeanUtils.copyProperties(request, groupConfig);
                 customerServiceRepresentiveConfigService.updateGroupNameAndIsNew(request.getId(), request.getGroupName(), request.getIsNew(), request.getUpdateUserId());
+            }
+            if (request.getStatus() == 2) {// 客组禁用后同时禁用客组下的坐席
+                CustomerServiceRepresentiveConfig representiveConfig = new CustomerServiceRepresentiveConfig();
+                representiveConfig.setStatus(2);
+                customerServiceRepresentiveConfigService.updateCustomerServiceRepresentiveConfig(representiveConfig);
             }
             customerServiceGroupConfigService.updateCustomerServiceGroupConfig(config);
         } catch (Exception e) {

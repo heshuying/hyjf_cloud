@@ -112,6 +112,12 @@ public class CustomerServiceRepresentiveConfigController {
             CustomerServiceGroupConfig groupConfig = customerServiceGroupConfigService.getCustomerServiceGroupConfigById(request.getGroupId());
             config.setGroupName(groupConfig.getGroupName());
             config.setIsNew(groupConfig.getIsNew());
+            if (config.getStatus() == 2) {
+                logger.error("【坐席配置】客组配置为禁用状态！");
+                response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+                response.setMessage("所选客组配置为禁用状态！");
+                return response;
+            }
             customerServiceRepresentiveConfigService.updateCustomerServiceRepresentiveConfig(config);
         } catch (Exception e) {
             logger.error("【坐席配置】修改坐席配置信息失败！", e);
