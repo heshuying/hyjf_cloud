@@ -1770,7 +1770,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         // 插入用户操作明细
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE13);
         userOperationLogEntity.setIp(ip);
         userOperationLogEntity.setPlatform(0);
         userOperationLogEntity.setRemark("原手机号:" + oldBankMobile);

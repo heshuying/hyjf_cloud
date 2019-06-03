@@ -305,7 +305,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         // 会员操作日志表更新
         // 插入用户操作明细
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE13);
         userOperationLogEntity.setIp(ip);
         try {
             userOperationLogEntity.setPlatform(Integer.parseInt(modifyClient));
