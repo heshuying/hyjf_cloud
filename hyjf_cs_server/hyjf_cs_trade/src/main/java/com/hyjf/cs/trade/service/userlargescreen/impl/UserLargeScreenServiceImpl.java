@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.userlargescreen.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
@@ -43,6 +44,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
 
     @Override
     public UserLargeScreenResultBean getOnePage(){
+        logger.info("cs-trade层-----屏幕一接口已调用");
         UserLargeScreenResultBean bean = new UserLargeScreenResultBean();
         UserLargeScreenRequest request = new UserLargeScreenRequest();
         String dateString = getNowDateOfDay();
@@ -73,6 +75,10 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
         bean.setUserCapitalDetailList(userCapitalDetailsVo.getUserCapitalDetailList());
         bean.setCustomerTaskConfigVOList(taskConfigResponse.getResultList());
+        logger.info("cs-trade层-----环境发版测试日志");
+        if (userCapitalDetailsVo != null){
+            logger.info("查询结果为:{}", JSON.toJSONString(userCapitalDetailsVo.getUserCapitalDetailList()));
+        }
         return bean;
     }
 
