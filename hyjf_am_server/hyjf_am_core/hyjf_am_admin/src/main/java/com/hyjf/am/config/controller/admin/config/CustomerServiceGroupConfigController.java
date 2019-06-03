@@ -1,7 +1,6 @@
 package com.hyjf.am.config.controller.admin.config;
 
 import com.hyjf.am.config.dao.model.auto.CustomerServiceGroupConfig;
-import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.config.service.config.CustomerServiceGroupConfigService;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
 import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
@@ -77,6 +76,36 @@ public class CustomerServiceGroupConfigController {
     @RequestMapping("/insertCustomerServiceGroupConfig")
     public CustomerServiceGroupConfigResponse insertCustomerServiceGroupConfig(@RequestBody CustomerServiceGroupConfigRequest request) {
         CustomerServiceGroupConfigResponse response = new CustomerServiceGroupConfigResponse();
+        if (StringUtils.isBlank(request.getGroupName())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("客组名为不能为空！");
+            return response;
+        }
+        if (StringUtils.isBlank(request.getServiceUserNo())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("第三方用户账户编号不能为空！");
+            return response;
+        }
+        if (StringUtils.isBlank(request.getServiceUserCode())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("第三方用户唯一凭证不能为空！");
+            return response;
+        }
+        if (StringUtils.isBlank(request.getServiceUserKey())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("第三方用户唯一凭证密钥不能为空！");
+            return response;
+        }
+        if (request.getIsNew() == null) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("是否新客不能为空！");
+            return response;
+        }
+        if (request.getStatus() == null) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("启用状态为不能为空！");
+            return response;
+        }
         try {
             CustomerServiceGroupConfig config = new CustomerServiceGroupConfig();
             BeanUtils.copyProperties(request, config);
@@ -101,7 +130,7 @@ public class CustomerServiceGroupConfigController {
         CustomerServiceGroupConfigResponse response = new CustomerServiceGroupConfigResponse();
         if (request.getId() == null) {
             response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
-            response.setMessage("id为不能为空！");
+            response.setMessage("id不能为空！");
             return response;
         }
         try {
@@ -111,9 +140,7 @@ public class CustomerServiceGroupConfigController {
                 customerServiceRepresentiveConfigService.updateGroupNameAndIsNew(request.getId(), request.getGroupName(), request.getIsNew(), request.getUpdateUserId());
             }
             if (request.getStatus() == 2) {// 客组禁用后同时禁用客组下的坐席
-                CustomerServiceRepresentiveConfig representiveConfig = new CustomerServiceRepresentiveConfig();
-                representiveConfig.setStatus(2);
-                customerServiceRepresentiveConfigService.updateCustomerServiceRepresentiveConfig(representiveConfig);
+                customerServiceRepresentiveConfigService.updateCustomerServiceRepresentiveConfigByGroup(request.getId(), request.getUpdateUserId());
             }
             customerServiceGroupConfigService.updateCustomerServiceGroupConfig(config);
         } catch (Exception e) {
@@ -136,7 +163,7 @@ public class CustomerServiceGroupConfigController {
         CustomerServiceGroupConfigResponse response = new CustomerServiceGroupConfigResponse();
         if (request.getId() == null) {
             response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
-            response.setMessage("id为不能为空！");
+            response.setMessage("id不能为空！");
             return response;
         }
         try {

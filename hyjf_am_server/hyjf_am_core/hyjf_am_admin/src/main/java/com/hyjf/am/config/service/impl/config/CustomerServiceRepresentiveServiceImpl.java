@@ -115,14 +115,34 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
     public void updateGroupNameAndIsNew(Integer groupId, String groupName, Integer isNew, Integer updateUserId) {
         CustomerServiceRepresentiveConfigExample example = new CustomerServiceRepresentiveConfigExample();
         CustomerServiceRepresentiveConfigExample.Criteria criteria = example.createCriteria();
-        criteria.andGroupIdEqualTo(groupId);
+        criteria.andIdEqualTo(0);// 客组名和是否新客未修改，不修改相应的坐席信息
         CustomerServiceRepresentiveConfig config = new CustomerServiceRepresentiveConfig();
-        if(StringUtils.isNotBlank(groupName)){
+        if (StringUtils.isNotBlank(groupName)) {
             config.setGroupName(groupName);
+            config.setUpdateUserId(updateUserId);
+            example.or().andGroupIdEqualTo(groupId).andGroupNameNotEqualTo(groupName);
         }
-        if(isNew != null){
+        if (isNew != null) {
             config.setIsNew(isNew);
+            config.setUpdateUserId(updateUserId);
+            example.or().andGroupIdEqualTo(groupId).andIsNewNotEqualTo(isNew);
         }
+        customerServiceRepresentiveConfigMapper.updateByExampleSelective(config, example);
+    }
+
+    /**
+     * 根据客组禁用坐席配置
+     * @param groupId
+     * @param updateUserId
+     */
+    @Override
+    public void updateCustomerServiceRepresentiveConfigByGroup(Integer groupId, Integer updateUserId) {
+        CustomerServiceRepresentiveConfigExample example = new CustomerServiceRepresentiveConfigExample();
+        CustomerServiceRepresentiveConfigExample.Criteria criteria = example.createCriteria();
+        criteria.andGroupIdEqualTo(groupId);
+        criteria.andStatusNotEqualTo(2);
+        CustomerServiceRepresentiveConfig config = new CustomerServiceRepresentiveConfig();
+        config.setStatus(2);
         config.setUpdateUserId(updateUserId);
         customerServiceRepresentiveConfigMapper.updateByExampleSelective(config, example);
     }

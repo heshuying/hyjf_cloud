@@ -6,10 +6,10 @@ import com.hyjf.am.config.service.config.CustomerServiceGroupConfigService;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
 import com.hyjf.am.response.config.CustomerServiceRepresentiveConfigResponse;
 import com.hyjf.am.resquest.config.CustomerServiceRepresentiveConfigRequest;
-import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -76,12 +76,33 @@ public class CustomerServiceRepresentiveConfigController {
     @RequestMapping("/insertCustomerServiceRepresentiveConfig")
     public CustomerServiceRepresentiveConfigResponse insertCustomerServiceRepresentiveConfig(@RequestBody CustomerServiceRepresentiveConfigRequest request) {
         CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
+        if (StringUtils.isBlank(request.getUserName())) {
+            response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+            response.setMessage("姓名为不能为空！");
+            return response;
+        }
+        if (request.getGroupId() == null) {
+            response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+            response.setMessage("客服组不能为空！");
+            return response;
+        }
+        if (request.getStatus() == null) {
+            response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+            response.setMessage("启用状态为不能为空！");
+            return response;
+        }
         try {
             CustomerServiceRepresentiveConfig config = new CustomerServiceRepresentiveConfig();
             BeanUtils.copyProperties(request, config);
             CustomerServiceGroupConfig groupConfig = customerServiceGroupConfigService.getCustomerServiceGroupConfigById(request.getGroupId());
             config.setGroupName(groupConfig.getGroupName());
             config.setIsNew(groupConfig.getIsNew());
+            if (groupConfig.getStatus() == 2 && config.getStatus() == 1) {
+                logger.error("【坐席配置】客组配置为禁用状态！");
+                response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+                response.setMessage("所选客组配置为禁用状态！");
+                return response;
+            }
             customerServiceRepresentiveConfigService.insertCustomerServiceRepresentiveConfig(config);
         } catch (Exception e) {
             logger.error("【坐席配置】添加坐席配置信息失败！", e);
@@ -103,7 +124,7 @@ public class CustomerServiceRepresentiveConfigController {
         CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
         if (request.getId() == null) {
             response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
-            response.setMessage("id为不能为空！");
+            response.setMessage("id不能为空！");
             return response;
         }
         try {
@@ -112,7 +133,7 @@ public class CustomerServiceRepresentiveConfigController {
             CustomerServiceGroupConfig groupConfig = customerServiceGroupConfigService.getCustomerServiceGroupConfigById(request.getGroupId());
             config.setGroupName(groupConfig.getGroupName());
             config.setIsNew(groupConfig.getIsNew());
-            if (config.getStatus() == 2) {
+            if (groupConfig.getStatus() == 2 && config.getStatus() == 1) {
                 logger.error("【坐席配置】客组配置为禁用状态！");
                 response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
                 response.setMessage("所选客组配置为禁用状态！");
@@ -139,7 +160,7 @@ public class CustomerServiceRepresentiveConfigController {
         CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
         if (request.getId() == null) {
             response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
-            response.setMessage("id为不能为空！");
+            response.setMessage("id不能为空！");
             return response;
         }
         try {

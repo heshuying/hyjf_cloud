@@ -61,6 +61,14 @@ public interface CustomerServiceRepresentiveConfigService {
     void updateGroupNameAndIsNew(Integer groupId, String groupName, Integer isNew, Integer updateUserId);
 
     /**
+     * 根据客组禁用坐席配置
+     *
+     * @param groupId
+     * @param updateUserId
+     */
+    void updateCustomerServiceRepresentiveConfigByGroup(Integer groupId, Integer updateUserId);
+
+    /**
      * 校验坐席配置信息
      *
      * @param request
