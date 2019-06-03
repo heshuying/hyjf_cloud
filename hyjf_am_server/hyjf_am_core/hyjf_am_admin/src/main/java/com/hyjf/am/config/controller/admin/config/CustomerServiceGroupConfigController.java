@@ -97,14 +97,10 @@ public class CustomerServiceGroupConfigController {
             return response;
         }
         if (request.getIsNew() == null) {
-            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
-            response.setMessage("是否新客不能为空！");
-            return response;
+            request.setIsNew(1);// 默认非新客
         }
         if (request.getStatus() == null) {
-            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
-            response.setMessage("启用状态为不能为空！");
-            return response;
+            request.setStatus(2);// 默认禁用
         }
         try {
             CustomerServiceGroupConfig config = new CustomerServiceGroupConfig();

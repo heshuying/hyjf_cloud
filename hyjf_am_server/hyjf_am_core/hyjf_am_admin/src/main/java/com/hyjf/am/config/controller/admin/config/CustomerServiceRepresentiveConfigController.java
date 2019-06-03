@@ -87,9 +87,7 @@ public class CustomerServiceRepresentiveConfigController {
             return response;
         }
         if (request.getStatus() == null) {
-            response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
-            response.setMessage("启用状态为不能为空！");
-            return response;
+            request.setStatus(2);// 默认禁用
         }
         try {
             CustomerServiceRepresentiveConfig config = new CustomerServiceRepresentiveConfig();
