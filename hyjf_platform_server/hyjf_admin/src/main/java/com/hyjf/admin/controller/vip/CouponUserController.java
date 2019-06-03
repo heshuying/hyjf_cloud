@@ -122,7 +122,6 @@ public class CouponUserController extends BaseController {
         return new AdminResult<>(response);
     }
 
-
     @ApiOperation(value = "发放优惠券", notes = "发放优惠券")
     @PostMapping("/distributeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)

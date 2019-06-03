@@ -79,4 +79,8 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
         return duibaOrdersCustomizeMapper.updateOneOrderByPrimaryKey(duibaOrderVO);
     }
 
+    @Override
+    public DuibaOrderVO selectOrderByOrderId(String duibaOrderId){
+        return duibaOrdersCustomizeMapper.selectOrderByOrderId(duibaOrderId);
+    }
 }

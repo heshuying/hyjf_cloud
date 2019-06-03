@@ -22,4 +22,6 @@ public interface DuibaOrderListService extends BaseService {
     DuibaOrderVO findOneOrder(Integer orderId);
 
     Integer updateOneOrderByPrimaryKey(DuibaOrderVO duibaOrderVO);
+
+    DuibaOrderVO selectOrderByOrderId(String duibaOrderId);
 }
