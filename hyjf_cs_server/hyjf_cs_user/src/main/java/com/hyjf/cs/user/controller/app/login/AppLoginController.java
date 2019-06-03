@@ -219,7 +219,7 @@ public class AppLoginController extends BaseUserController {
                 //清除alias start add by nxl
                 UserAliasVO userAliasVO = amUserClient.findAliasesByUserId(userId);
                 if(userAliasVO != null){
-                    userAliasVO.setAlias(null);
+                    userAliasVO.setAlias("");
                     amUserClient.updateAliases(userAliasVO);
                 }
                 //清除alias end add by nxl
