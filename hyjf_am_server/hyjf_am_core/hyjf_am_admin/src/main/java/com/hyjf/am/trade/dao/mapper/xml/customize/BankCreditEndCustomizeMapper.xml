@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BankCreditEndCustomizeMapper" >
+    <resultMap id="BankCreditEndResultMap" type="com.hyjf.am.vo.trade.BankCreditEndVO" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="batch_no" property="batchNo" jdbcType="CHAR" />
+        <result column="tx_date" property="txDate" jdbcType="CHAR" />
+        <result column="tx_time" property="txTime" jdbcType="CHAR" />
+        <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
+        <result column="tx_counts" property="txCounts" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="tender_user_id" property="tenderUserId" jdbcType="INTEGER" />
+        <result column="tender_username" property="tenderUsername" jdbcType="VARCHAR" />
+        <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+        <result column="tender_account_id" property="tenderAccountId" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="org_order_id" property="orgOrderId" jdbcType="VARCHAR" />
+        <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <result column="auth_code" property="authCode" jdbcType="VARCHAR" />
+        <result column="credit_end_type" property="creditEndType" jdbcType="TINYINT" />
+        <result column="received" property="received" jdbcType="TINYINT" />
+        <result column="check_retcode" property="checkRetcode" jdbcType="VARCHAR" />
+        <result column="check_retmsg" property="checkRetmsg" jdbcType="VARCHAR" />
+        <result column="retcode" property="retcode" jdbcType="VARCHAR" />
+        <result column="retmsg" property="retmsg" jdbcType="VARCHAR" />
+        <result column="suc_counts" property="sucCounts" jdbcType="INTEGER" />
+        <result column="fail_counts" property="failCounts" jdbcType="INTEGER" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="stateDesc" property="stateDesc" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="failmsg" property="failmsg" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="commit_time" property="commitTime" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="where-list">
+        <if test="borrowNidSrch != null and borrowNidSrch != ''">
+            AND bce.borrow_nid = #{borrowNidSrch}
+        </if>
+        <if test="orgOrderIdSrch != null and orgOrderIdSrch != ''">
+            AND bce.org_order_id = #{orgOrderIdSrch}
+        </if>
+        <if test="borrowUserNameSrch != null and borrowUserNameSrch != ''">
+            AND u1.username = #{borrowUserNameSrch}
+        </if>
+        <if test="tenderUsernameSrch != null and tenderUsernameSrch != ''">
+            AND u2.username = #{tenderUsernameSrch}
+        </if>
+        <if test="batchNoSrch != null and batchNoSrch != ''">
+            AND bce.batch_no = #{batchNoSrch}
+        </if>
+        <if test="creditEndTypeSrch != null and creditEndTypeSrch != ''">
+            AND bce.credit_end_type = #{creditEndTypeSrch}
+        </if>
+        <if test="stateSrch != null and stateSrch != ''">
+            AND bce.state = #{stateSrch}
+        </if>
+        <if test="commitTimeStartSrch != null and commitTimeStartSrch != ''">
+            AND bce.tx_date <![CDATA[>=]]> REPLACE(#{commitTimeStartSrch},'-','')
+        </if>
+        <if test="commitTimeEndSrch != null and commitTimeEndSrch != ''">
+            AND bce.tx_date <![CDATA[<=]]> REPLACE(#{repayTimeEndSrch},'-','')
+        </if>
+    </sql>
+	<select id="selectCreditEndList" parameterType="com.hyjf.am.resquest.trade.BankCreditEndListRequest" resultMap="BankCreditEndResultMap">
+        SELECT
+        bce.id,
+        bce.batch_no,
+        bce.tx_date,
+        bce.tx_time,
+        bce.seq_no,
+        bce.tx_counts,
+        bce.user_id,
+        u1.username,
+        bce.tender_user_id,
+        u2.username AS tender_username,
+        bce.account_id,
+        bce.tender_account_id,
+        bce.order_id,
+        bce.org_order_id,
+        bce.borrow_nid,
+        bce.auth_code,
+        bce.credit_end_type,
+        bce.received,
+        bce.check_retcode,
+        bce.check_retmsg,
+        bce.retcode,
+        bce.retmsg,
+        bce.suc_counts,
+        bce.fail_counts,
+        bce.`state`,
+        CASE bce.`state`
+        WHEN 'A' THEN
+        '初始'
+        WHEN 'S' THEN
+        '成功'
+        WHEN 'F' THEN
+        '失败'
+        ELSE
+        ''
+        END stateDesc,
+        bce.`status`,
+        bce.failmsg,
+        bce.create_user,
+        bce.create_time,
+        bce.update_user,
+        bce.update_time,
+        date_format(str_to_date(CONCAT(bce.tx_date, bce.tx_time), '%Y%m%d%H%i%s'),'%Y-%m-%d %H:%i:%s') AS commit_time
+        FROM
+        ht_bank_credit_end bce
+        JOIN ht_r_user u1 ON bce.user_id = u1.user_id
+        JOIN ht_r_user u2 ON bce.tender_user_id = u2.user_id
+        WHERE 1=1
+        <include refid="where-list"/>
+		<if test="limitStart != null and limitStart >= 0">
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+	<select id="selectCreditEndCount" parameterType="com.hyjf.am.resquest.trade.BankCreditEndListRequest" resultType="int">
+        SELECT
+        count(bce.id) AS totalCount
+        FROM
+        ht_bank_credit_end bce
+        JOIN ht_r_user u1 ON bce.user_id = u1.user_id
+        JOIN ht_r_user u2 ON bce.tender_user_id = u2.user_id
+        WHERE 1=1
+        <include refid="where-list"/>
+  </select>
+
+</mapper>

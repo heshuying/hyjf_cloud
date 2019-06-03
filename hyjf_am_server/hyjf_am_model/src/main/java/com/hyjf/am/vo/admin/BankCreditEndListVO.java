@@ -1,82 +1,226 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.trade;
+package com.hyjf.am.vo.admin;
 
-import com.hyjf.am.vo.BaseVO;
-import io.swagger.annotations.ApiModelProperty;
-
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author liubin
- * @version BankCreditEndVO, v0.1 2018/7/10 19:30
+ * 结束债权列表VO
+ * @author hesy
  */
-public class BankCreditEndVO extends BaseVO implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class BankCreditEndListVO {
     private Integer id;
-    @ApiModelProperty(value = "批次号（批次号当日必须唯一）")
+
+    /**
+     * 批次号（批次号当日必须唯一）
+     *
+     * @mbggenerated
+     */
     private String batchNo;
-    @ApiModelProperty(value = "本批次交易日期")
+
+    /**
+     * 本批次交易日期
+     *
+     * @mbggenerated
+     */
     private String txDate;
-    @ApiModelProperty(value = "本批次交易时间")
+
+    /**
+     * 本批次交易时间
+     *
+     * @mbggenerated
+     */
     private String txTime;
-    @ApiModelProperty(value = "本批次交易流水号")
+
+    /**
+     * 本批次交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
-    @ApiModelProperty(value = "本批次所有交易笔数")
+
+    /**
+     * 本批次所有交易笔数
+     *
+     * @mbggenerated
+     */
     private Integer txCounts;
-    @ApiModelProperty(value = "融资人用户ID")
+
+    /**
+     * 融资人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
-    @ApiModelProperty(value = "融资人用户名")
+
+    /**
+     * 融资人用户名
+     *
+     * @mbggenerated
+     */
     private String username;
-    @ApiModelProperty(value = "出借人用户ID")
+
+    /**
+     * 投资人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer tenderUserId;
-    @ApiModelProperty(value = "出借人用户名")
+
+    /**
+     * 投资人用户名
+     *
+     * @mbggenerated
+     */
     private String tenderUsername;
-    @ApiModelProperty(value = "融资人电子账号")
+
+    /**
+     * 融资人电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
-    @ApiModelProperty(value = "出借人电子账号")
+
+    /**
+     * 投资人电子账号
+     *
+     * @mbggenerated
+     */
     private String tenderAccountId;
-    @ApiModelProperty(value = "订单号")
+
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
-    @ApiModelProperty(value = "原始出借订单号")
+
+    /**
+     * 原始投资订单号
+     *
+     * @mbggenerated
+     */
     private String orgOrderId;
-    @ApiModelProperty(value = "标的号")
+
+    /**
+     * 标的号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
-    @ApiModelProperty(value = "授权码")
+
     private String authCode;
-    @ApiModelProperty(value = "结束债权类型（1:还款，2:散标债转，3:计划债转）")
+
+    /**
+     * 结束债权类型（1:还款，2:散标债转，3:计划债转）
+     *
+     * @mbggenerated
+     */
     private Integer creditEndType;
-    @ApiModelProperty(value = "银行接受结果（0：fail接收失败，1：success接收成功）")
+
+    /**
+     * 银行接受结果（0：fail接收失败，1：success接收成功）
+     *
+     * @mbggenerated
+     */
     private Integer received;
-    @ApiModelProperty(value = "异步检查响应代码")
+
+    /**
+     * 异步检查响应代码
+     *
+     * @mbggenerated
+     */
     private String checkRetcode;
-    @ApiModelProperty(value = "异步检查响应描述")
+
+    /**
+     * 异步检查响应描述
+     *
+     * @mbggenerated
+     */
     private String checkRetmsg;
-    @ApiModelProperty(value = "响应代码")
+
+    /**
+     * 响应代码
+     *
+     * @mbggenerated
+     */
     private String retcode;
-    @ApiModelProperty(value = "响应描述")
+
+    /**
+     * 响应描述
+     *
+     * @mbggenerated
+     */
     private String retmsg;
-    @ApiModelProperty(value = "成功笔数")
+
+    /**
+     * 成功笔数
+     *
+     * @mbggenerated
+     */
     private Integer sucCounts;
-    @ApiModelProperty(value = "失败笔数")
+
+    /**
+     * 失败笔数
+     *
+     * @mbggenerated
+     */
     private Integer failCounts;
-    @ApiModelProperty(value = "银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）")
+
+    /**
+     * 银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）
+     *
+     * @mbggenerated
+     */
     private String state;
-    @ApiModelProperty(value = "0初始 1待请求 2请求成功 3请求失败 4校验成功 5业务全部成功  10校验失败 11业务部分成功 12业务失败 ")
+
+    /**
+     * 0初始 1待请求 2请求成功 3请求失败 4校验成功 5业务全部成功  10校验失败 11业务部分成功 12业务失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
-    @ApiModelProperty(value = "失败原因")
+
+    /**
+     * 失败描述
+     *
+     * @mbggenerated
+     */
     private String failmsg;
+
+    /**
+     * 添加人
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
+
+    /**
+     * 更新人
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
-    @ApiModelProperty(value = "债权结束状态描述")
+
+    /** 债权结束状态描述*/
     private String stateDesc;
-    @ApiModelProperty(value = "提交时间")
+
+    /** 提交时间*/
     private String commitTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -91,7 +235,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setBatchNo(String batchNo) {
-        this.batchNo = batchNo;
+        this.batchNo = batchNo == null ? null : batchNo.trim();
     }
 
     public String getTxDate() {
@@ -99,7 +243,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setTxDate(String txDate) {
-        this.txDate = txDate;
+        this.txDate = txDate == null ? null : txDate.trim();
     }
 
     public String getTxTime() {
@@ -107,7 +251,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setTxTime(String txTime) {
-        this.txTime = txTime;
+        this.txTime = txTime == null ? null : txTime.trim();
     }
 
     public String getSeqNo() {
@@ -115,7 +259,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo;
+        this.seqNo = seqNo == null ? null : seqNo.trim();
     }
 
     public Integer getTxCounts() {
@@ -139,7 +283,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username == null ? null : username.trim();
     }
 
     public Integer getTenderUserId() {
@@ -155,7 +299,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setTenderUsername(String tenderUsername) {
-        this.tenderUsername = tenderUsername;
+        this.tenderUsername = tenderUsername == null ? null : tenderUsername.trim();
     }
 
     public String getAccountId() {
@@ -163,7 +307,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setAccountId(String accountId) {
-        this.accountId = accountId;
+        this.accountId = accountId == null ? null : accountId.trim();
     }
 
     public String getTenderAccountId() {
@@ -171,7 +315,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setTenderAccountId(String tenderAccountId) {
-        this.tenderAccountId = tenderAccountId;
+        this.tenderAccountId = tenderAccountId == null ? null : tenderAccountId.trim();
     }
 
     public String getOrderId() {
@@ -179,7 +323,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId;
+        this.orderId = orderId == null ? null : orderId.trim();
     }
 
     public String getOrgOrderId() {
@@ -187,7 +331,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setOrgOrderId(String orgOrderId) {
-        this.orgOrderId = orgOrderId;
+        this.orgOrderId = orgOrderId == null ? null : orgOrderId.trim();
     }
 
     public String getBorrowNid() {
@@ -195,7 +339,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setBorrowNid(String borrowNid) {
-        this.borrowNid = borrowNid;
+        this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
     public String getAuthCode() {
@@ -203,7 +347,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setAuthCode(String authCode) {
-        this.authCode = authCode;
+        this.authCode = authCode == null ? null : authCode.trim();
     }
 
     public Integer getCreditEndType() {
@@ -227,7 +371,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setCheckRetcode(String checkRetcode) {
-        this.checkRetcode = checkRetcode;
+        this.checkRetcode = checkRetcode == null ? null : checkRetcode.trim();
     }
 
     public String getCheckRetmsg() {
@@ -235,7 +379,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setCheckRetmsg(String checkRetmsg) {
-        this.checkRetmsg = checkRetmsg;
+        this.checkRetmsg = checkRetmsg == null ? null : checkRetmsg.trim();
     }
 
     public String getRetcode() {
@@ -243,7 +387,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setRetcode(String retcode) {
-        this.retcode = retcode;
+        this.retcode = retcode == null ? null : retcode.trim();
     }
 
     public String getRetmsg() {
@@ -251,7 +395,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setRetmsg(String retmsg) {
-        this.retmsg = retmsg;
+        this.retmsg = retmsg == null ? null : retmsg.trim();
     }
 
     public Integer getSucCounts() {
@@ -275,7 +419,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setState(String state) {
-        this.state = state;
+        this.state = state == null ? null : state.trim();
     }
 
     public Integer getStatus() {
@@ -291,7 +435,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     }
 
     public void setFailmsg(String failmsg) {
-        this.failmsg = failmsg;
+        this.failmsg = failmsg == null ? null : failmsg.trim();
     }
 
     public Integer getCreateUser() {

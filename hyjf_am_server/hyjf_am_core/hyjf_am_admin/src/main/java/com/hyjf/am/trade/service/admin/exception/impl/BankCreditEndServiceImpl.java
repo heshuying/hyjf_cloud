@@ -8,12 +8,14 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.exception.BankCreditEndService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,34 +72,11 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      * @date: 2018/7/12
      */
     @Override
-    public List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean){
-        BankCreditEndExample example = new BankCreditEndExample();
-        BankCreditEndExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
-            criteria.andUserIdEqualTo(Integer.parseInt(requestBean.getUserIdSrch()));
+    public List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean){
+        if(requestBean == null){
+            return new ArrayList<>();
         }
-        if(StringUtils.isNotBlank(requestBean.getTenderUserIdSrch())){
-            criteria.andTenderUserIdEqualTo(Integer.parseInt(requestBean.getTenderUserIdSrch()));
-        }
-        if(StringUtils.isNotBlank(requestBean.getBatchNoSrch())){
-            criteria.andBatchNoEqualTo(requestBean.getBatchNoSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getOrderIdSrch())){
-            criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
-            criteria.andStatusEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
-        }
-        if(requestBean.getLimitStart() != null && requestBean.getLimitStart() >=0){
-            example.setLimitStart(requestBean.getLimitStart());
-        }
-        if(requestBean.getLimitEnd() != null && requestBean.getLimitEnd() >=0){
-            example.setLimitEnd(requestBean.getLimitEnd());
-        }
-
-        example.setOrderByClause("tx_date desc");
-
-        return bankCreditEndMapper.selectByExample(example);
+        return bankCreditEndCustomizeMapper.selectCreditEndList(requestBean);
     }
 
     /**
@@ -107,25 +86,10 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public Integer getCreditEndCount(BankCreditEndListRequest requestBean){
-        BankCreditEndExample example = new BankCreditEndExample();
-        BankCreditEndExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
-            criteria.andUserIdEqualTo(Integer.parseInt(requestBean.getUserIdSrch()));
+        if(requestBean == null){
+            return 0;
         }
-        if(StringUtils.isNotBlank(requestBean.getTenderUserIdSrch())){
-            criteria.andTenderUserIdEqualTo(Integer.parseInt(requestBean.getTenderUserIdSrch()));
-        }
-        if(StringUtils.isNotBlank(requestBean.getBatchNoSrch())){
-            criteria.andBatchNoEqualTo(requestBean.getBatchNoSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getOrderIdSrch())){
-            criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
-            criteria.andStatusEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
-        }
-
-        return bankCreditEndMapper.countByExample(example);
+        return bankCreditEndCustomizeMapper.selectCreditEndCount(requestBean);
     }
 
     /**

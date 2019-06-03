@@ -49,9 +49,9 @@ public class BankCreditEndController extends BaseController {
     @RequestMapping("/getlist")
     public BankCreditEndResponse getCreditEndList(@RequestBody BankCreditEndListRequest requestBean){
         BankCreditEndResponse response = new BankCreditEndResponse();
-        List<BankCreditEnd> recordList = bankCreditEndService.getCreditEndList(requestBean);
+        List<BankCreditEndVO> recordList = bankCreditEndService.getCreditEndList(requestBean);
         if (Validator.isNotNull(recordList)){
-            response.setResultList(CommonUtils.convertBeanList(recordList,BankCreditEndVO.class));
+            response.setResultList(recordList);
         }
         return response;
     }

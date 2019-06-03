@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface BankCreditEndService extends BaseService {
      */
     int insertBankCreditEndForCreditEnd(HjhDebtCredit hjhDebtCredit, String tenderAccountId, String tenderAuthCode);
 
-    List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean);
+    List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean);
 
     Integer getCreditEndCount(BankCreditEndListRequest requestBean);
 
