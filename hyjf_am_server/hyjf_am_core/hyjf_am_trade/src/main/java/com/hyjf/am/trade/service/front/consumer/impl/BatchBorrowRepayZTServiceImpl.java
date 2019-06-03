@@ -1476,6 +1476,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest, advance_status);
             }
             //发送大屏统计数据
+			logger.info("tenderOrderId:{},assignAccount:{}",tenderOrderId,assignAccount);
             ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,assignUserId,creditRepay.getUserName(),assignAccount,3);
             this.sendScreenDataMQ(screenDataBean);
         } catch (Exception e) {
@@ -2710,7 +2711,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest,advance_status);
             }
             //发送大屏统计数据
-            ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,tenderUserId,borrowRecover.getUserName(),repayCapital,3);
+			logger.info("tenderOrderId:{},repayAccount:{}",tenderOrderId,repayAccount);
+            ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,tenderUserId,borrowRecover.getUserName(),repayAccount,3);
             this.sendScreenDataMQ(screenDataBean);
         } catch (Exception e) {
             logger.error("【直投还款/出借人】发送短信和推送消息时发生系统异常！", e);
