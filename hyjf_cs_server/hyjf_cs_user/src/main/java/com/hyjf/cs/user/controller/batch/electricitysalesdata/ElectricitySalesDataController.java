@@ -74,6 +74,9 @@ public class ElectricitySalesDataController extends BaseUserController {
             logger.info("前一天注册用户数为0,不予生成");
             return;
         }
+
+        // 最终保存数据list
+        List<ElectricitySalesDataPushListVO> result = new ArrayList<>();
         // 筛选后需要分配的用户List
         List<UserVO> userList = new ArrayList<>();
         // 循环用户列表,对前一天注册的用户进行筛选
@@ -245,8 +248,8 @@ public class ElectricitySalesDataController extends BaseUserController {
                                 electricitySalesDataPushListVO.setChannel(0);
                                 electricitySalesDataPushListVO.setUploadType(0);
                                 electricitySalesDataPushListVO.setStatus(0);
-                                // TODO 保存电销推送数据
-                                // this.electricitySalesDataService.saveElectricitySalesDataPushList(electricitySalesDataPushListVO);
+                                //保存老带新活动的电销数据
+                                result.add(electricitySalesDataPushListVO);
                             }
                         }
                     }
@@ -270,9 +273,10 @@ public class ElectricitySalesDataController extends BaseUserController {
                 CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = customerServiceRepresentiveConfigList.get(i);
                 UserVO userVO = userList.get(i);
                 ElectricitySalesDataPushListVO electricitySalesDataPushListVO = this.electricitySalesDataService.generateCustomerServiceRepresentiveConfig(userVO, customerServiceRepresentiveConfig);
-                // TODO 保存电销推送数据
-                // this.electricitySalesDataService.saveElectricitySalesDataPushList(electricitySalesDataPushListVO);
-
+                // 生成电销数据
+                // 需要分组的用户数<= 客组类型为新客组的坐席数时,
+                result.add(electricitySalesDataPushListVO);
+                // this.electricitySalesDataService.generateElectricitySalesData(result);
             }
         }
         // 需要分组的用户数 > 客组类型为新客组的坐席数
@@ -282,10 +286,15 @@ public class ElectricitySalesDataController extends BaseUserController {
                 List<UserVO> userVOList = list.get(i);
                 CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = customerServiceRepresentiveConfigList.get(i);
                 // 将该组用户全都分配给相对应的坐席
-                List<ElectricitySalesDataPushListVO> electricitySalesDataPushListVOList = this.electricitySalesDataService.generateCustomerServiceRepresentiveConfigList(userVOList,customerServiceRepresentiveConfig);
+                List<ElectricitySalesDataPushListVO> electricitySalesDataPushListVOList = this.electricitySalesDataService.generateCustomerServiceRepresentiveConfigList(userVOList, customerServiceRepresentiveConfig);
                 //  插入数据
-                this.electricitySalesDataService.generateElectricitySalesData(electricitySalesDataPushListVOList);
+                result.addAll(electricitySalesDataPushListVOList);
             }
+        }
+
+        // 保存电销数据
+        if (result != null && result.size() > 0) {
+            this.electricitySalesDataService.generateElectricitySalesData(result);
         }
     }
 }
