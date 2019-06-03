@@ -133,7 +133,7 @@ public class DuibaOrderController extends BaseController {
      */
     @ApiOperation(value = "同步")
     @PostMapping("/synchronization")
-    public AdminResult synchronization(@RequestParam("orderId") String orderId) {
+    public AdminResult synchronization(@RequestParam("orderId") Integer orderId){
         logger.info("调用同步接口start,orderId:{}", orderId);
         AdminResult adminResult = new AdminResult();
         JSONObject data = new JSONObject();

@@ -1437,5 +1437,5 @@ public interface AmAdminClient {
      * @param orderId
      * @return
      */
-    String orderSynchronization(String orderId);
+    String orderSynchronization(Integer orderId);
 }

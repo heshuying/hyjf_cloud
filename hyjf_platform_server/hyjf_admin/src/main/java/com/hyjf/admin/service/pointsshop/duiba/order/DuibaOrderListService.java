@@ -39,5 +39,5 @@ public interface DuibaOrderListService extends BaseService {
      * @param orderId
      * @return
      */
-    String synchronization(String orderId);
+    String synchronization(Integer orderId);
 }
