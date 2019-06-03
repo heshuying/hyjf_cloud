@@ -90,7 +90,7 @@ public class ScreenDataTransferController {
                         }else{
                             String owner = screenTransferVO.getCurrentOwner();
                             if(StringUtils.isNotBlank(owner)){
-                                //数据为其他，设置数据拥有人为null，坐席分组为 0
+                                //数据为新老客组，设置数据拥有人为用户画像拥有人，坐席分组为 拥有人坐席组
                                 ScreenTransferVO screenTransfer = new ScreenTransferVO(screenTransferVO.getUserId(),screenTransferVO.getCurrentOwner(),screenTransferVO.getGroups());
                                 updateList.add(screenTransfer);
                             }else{
@@ -103,7 +103,7 @@ public class ScreenDataTransferController {
                         //处理一级部门为惠众商务
                         String deptName = screenTransferVO.getDeptName();
                         if("电销部".equals(deptName) || "网络运营部".equals(deptName)){
-                            //数据为其他，设置数据拥有人为null，坐席分组为 0
+                            //数据为惠众数据，设置数据拥有人为null，坐席分组为 3
                             ScreenTransferVO screenTransfer = new ScreenTransferVO(screenTransferVO.getUserId(),null,3);
                             updateList.add(screenTransfer);
                         }else{
