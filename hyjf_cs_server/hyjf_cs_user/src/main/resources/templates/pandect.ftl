@@ -32,6 +32,7 @@
                     </#if>
                   "iconUrl": "${user.iconUrl!''}",
                   "isSetPassword": "${user.isSetPassword!'0'}"
+                  "pointsCurrent": "${user.pointsCurrent!'0'}"
         },
          "account": {
                     <#if datas.data.account??>
