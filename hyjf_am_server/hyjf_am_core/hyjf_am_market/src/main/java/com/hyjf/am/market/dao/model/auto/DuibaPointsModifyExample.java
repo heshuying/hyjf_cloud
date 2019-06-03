@@ -1,6 +1,5 @@
 package com.hyjf.am.market.dao.model.auto;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -466,52 +465,52 @@ public class DuibaPointsModifyExample {
             return (Criteria) this;
         }
 
-        public Criteria andPointsEqualTo(BigDecimal value) {
+        public Criteria andPointsEqualTo(Integer value) {
             addCriterion("points =", value, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsNotEqualTo(BigDecimal value) {
+        public Criteria andPointsNotEqualTo(Integer value) {
             addCriterion("points <>", value, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsGreaterThan(BigDecimal value) {
+        public Criteria andPointsGreaterThan(Integer value) {
             addCriterion("points >", value, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andPointsGreaterThanOrEqualTo(Integer value) {
             addCriterion("points >=", value, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsLessThan(BigDecimal value) {
+        public Criteria andPointsLessThan(Integer value) {
             addCriterion("points <", value, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andPointsLessThanOrEqualTo(Integer value) {
             addCriterion("points <=", value, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsIn(List<BigDecimal> values) {
+        public Criteria andPointsIn(List<Integer> values) {
             addCriterion("points in", values, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsNotIn(List<BigDecimal> values) {
+        public Criteria andPointsNotIn(List<Integer> values) {
             addCriterion("points not in", values, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andPointsBetween(Integer value1, Integer value2) {
             addCriterion("points between", value1, value2, "points");
             return (Criteria) this;
         }
 
-        public Criteria andPointsNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andPointsNotBetween(Integer value1, Integer value2) {
             addCriterion("points not between", value1, value2, "points");
             return (Criteria) this;
         }
@@ -526,52 +525,52 @@ public class DuibaPointsModifyExample {
             return (Criteria) this;
         }
 
-        public Criteria andTotalEqualTo(BigDecimal value) {
+        public Criteria andTotalEqualTo(Integer value) {
             addCriterion("total =", value, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalNotEqualTo(BigDecimal value) {
+        public Criteria andTotalNotEqualTo(Integer value) {
             addCriterion("total <>", value, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalGreaterThan(BigDecimal value) {
+        public Criteria andTotalGreaterThan(Integer value) {
             addCriterion("total >", value, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andTotalGreaterThanOrEqualTo(Integer value) {
             addCriterion("total >=", value, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalLessThan(BigDecimal value) {
+        public Criteria andTotalLessThan(Integer value) {
             addCriterion("total <", value, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andTotalLessThanOrEqualTo(Integer value) {
             addCriterion("total <=", value, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalIn(List<BigDecimal> values) {
+        public Criteria andTotalIn(List<Integer> values) {
             addCriterion("total in", values, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalNotIn(List<BigDecimal> values) {
+        public Criteria andTotalNotIn(List<Integer> values) {
             addCriterion("total not in", values, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andTotalBetween(Integer value1, Integer value2) {
             addCriterion("total between", value1, value2, "total");
             return (Criteria) this;
         }
 
-        public Criteria andTotalNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andTotalNotBetween(Integer value1, Integer value2) {
             addCriterion("total not between", value1, value2, "total");
             return (Criteria) this;
         }

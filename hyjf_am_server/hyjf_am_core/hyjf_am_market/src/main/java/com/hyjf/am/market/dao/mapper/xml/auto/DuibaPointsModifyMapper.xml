@@ -7,8 +7,8 @@
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="true_name" property="trueName" jdbcType="VARCHAR" />
     <result column="modify_order_id" property="modifyOrderId" jdbcType="VARCHAR" />
-    <result column="points" property="points" jdbcType="DECIMAL" />
-    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="points" property="points" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="INTEGER" />
     <result column="points_type" property="pointsType" jdbcType="TINYINT" />
     <result column="modify_name" property="modifyName" jdbcType="VARCHAR" />
     <result column="review_name" property="reviewName" jdbcType="VARCHAR" />
@@ -128,7 +128,7 @@
       remark, create_by, create_time, 
       update_by, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{trueName,jdbcType=VARCHAR}, 
-      #{modifyOrderId,jdbcType=VARCHAR}, #{points,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, 
+      #{modifyOrderId,jdbcType=VARCHAR}, #{points,jdbcType=INTEGER}, #{total,jdbcType=INTEGER}, 
       #{pointsType,jdbcType=TINYINT}, #{modifyName,jdbcType=VARCHAR}, #{reviewName,jdbcType=VARCHAR}, 
       #{modifyReason,jdbcType=VARCHAR}, #{flowOrder,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
       #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -206,10 +206,10 @@
         #{modifyOrderId,jdbcType=VARCHAR},
       </if>
       <if test="points != null" >
-        #{points,jdbcType=DECIMAL},
+        #{points,jdbcType=INTEGER},
       </if>
       <if test="total != null" >
-        #{total,jdbcType=DECIMAL},
+        #{total,jdbcType=INTEGER},
       </if>
       <if test="pointsType != null" >
         #{pointsType,jdbcType=TINYINT},
@@ -271,10 +271,10 @@
         modify_order_id = #{record.modifyOrderId,jdbcType=VARCHAR},
       </if>
       <if test="record.points != null" >
-        points = #{record.points,jdbcType=DECIMAL},
+        points = #{record.points,jdbcType=INTEGER},
       </if>
       <if test="record.total != null" >
-        total = #{record.total,jdbcType=DECIMAL},
+        total = #{record.total,jdbcType=INTEGER},
       </if>
       <if test="record.pointsType != null" >
         points_type = #{record.pointsType,jdbcType=TINYINT},
@@ -321,8 +321,8 @@
       user_name = #{record.userName,jdbcType=VARCHAR},
       true_name = #{record.trueName,jdbcType=VARCHAR},
       modify_order_id = #{record.modifyOrderId,jdbcType=VARCHAR},
-      points = #{record.points,jdbcType=DECIMAL},
-      total = #{record.total,jdbcType=DECIMAL},
+      points = #{record.points,jdbcType=INTEGER},
+      total = #{record.total,jdbcType=INTEGER},
       points_type = #{record.pointsType,jdbcType=TINYINT},
       modify_name = #{record.modifyName,jdbcType=VARCHAR},
       review_name = #{record.reviewName,jdbcType=VARCHAR},
@@ -354,10 +354,10 @@
         modify_order_id = #{modifyOrderId,jdbcType=VARCHAR},
       </if>
       <if test="points != null" >
-        points = #{points,jdbcType=DECIMAL},
+        points = #{points,jdbcType=INTEGER},
       </if>
       <if test="total != null" >
-        total = #{total,jdbcType=DECIMAL},
+        total = #{total,jdbcType=INTEGER},
       </if>
       <if test="pointsType != null" >
         points_type = #{pointsType,jdbcType=TINYINT},
@@ -401,8 +401,8 @@
       user_name = #{userName,jdbcType=VARCHAR},
       true_name = #{trueName,jdbcType=VARCHAR},
       modify_order_id = #{modifyOrderId,jdbcType=VARCHAR},
-      points = #{points,jdbcType=DECIMAL},
-      total = #{total,jdbcType=DECIMAL},
+      points = #{points,jdbcType=INTEGER},
+      total = #{total,jdbcType=INTEGER},
       points_type = #{pointsType,jdbcType=TINYINT},
       modify_name = #{modifyName,jdbcType=VARCHAR},
       review_name = #{reviewName,jdbcType=VARCHAR},
