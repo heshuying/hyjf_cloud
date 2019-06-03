@@ -6,6 +6,7 @@ package com.hyjf.am.resquest.admin;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import com.hyjf.am.vo.admin.DuibaPointsVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,48 +17,40 @@ import java.util.List;
  */
 public class DuibaPointsRequest extends BasePage implements Serializable {
 
-    /**
-     * 用户名查询
-     */
+    @ApiModelProperty(value = "用户名查询")
     private String userNameSrch;
 
-    /**
-     * 姓名查询
-     */
+    @ApiModelProperty(value = "姓名查询")
     private String trueNameSrch;
 
-    /**
-     * 调整人查询
-     */
+    @ApiModelProperty(value = "调整人查询")
     private String modifyNameSrch;
 
-    /**
-     * 积分业务名称查询
-     */
+    @ApiModelProperty(value = "积分业务名称查询")
     private Integer businessNameSrch;
 
-    /**
-     * 类型查询
-     */
+    @ApiModelProperty(value = "类型查询")
     private Integer typeSrch;
 
-    /**
-     * 状态查询
-     */
+    @ApiModelProperty(value = "状态查询")
     private Integer statusSrch;
 
-    /**
-     * 发生时间开始查询
-     */
+    @ApiModelProperty(value = "发生时间开始查询")
     private String startDateSrch;
 
-    /**
-     * 发生时间结束查询
-     */
+    @ApiModelProperty(value = "调整积分数")
+    private Integer modifyPoints;
+
+    @ApiModelProperty(value = "批量调整用户积分")
+    private List<Integer> userIdList;
+
+    @ApiModelProperty(value = "发生时间结束查询")
     private String endDateSrch;
 
+    @ApiModelProperty(value = "积分明细列表相关")
     private List<DuibaPointsVO> recordList;
 
+    @ApiModelProperty(value = "积分调整明细列表相关")
     private List<DuibaPointsModifyVO> recordModifyList;
 
     /**
@@ -166,5 +159,13 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
 
     public void setRecordModifyList(List<DuibaPointsModifyVO> recordModifyList) {
         this.recordModifyList = recordModifyList;
+    }
+
+    public List<Integer> getUserIdList() {
+        return userIdList;
+    }
+
+    public void setUserIdList(List<Integer> userIdList) {
+        this.userIdList = userIdList;
     }
 }

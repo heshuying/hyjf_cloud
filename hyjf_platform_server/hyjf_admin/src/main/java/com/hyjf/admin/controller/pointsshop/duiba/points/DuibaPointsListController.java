@@ -3,13 +3,10 @@
  */
 package com.hyjf.admin.controller.pointsshop.duiba.points;
 
-import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsResponse;
@@ -53,18 +50,22 @@ public class DuibaPointsListController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+        // 积分类型
         List<ParamNameVO> integralTypeList = duibaPointsListService.getParamNameList(CustomConstants.INTEGRAL_TYPE);
         if (null != integralTypeList && integralTypeList.size() > 0) {
             response.setIntegralTypeList(integralTypeList);
         }
+        // 积分业务名称
         List<ParamNameVO> integralBusinessNameList = duibaPointsListService.getParamNameList(CustomConstants.INTEGRAL_BUSINESS_NAME);
         if (null != integralBusinessNameList && integralBusinessNameList.size() > 0) {
             response.setIntegralBusinessNameList(integralBusinessNameList);
         }
+        // 审核状态
         List<ParamNameVO> auditStatusList = duibaPointsListService.getParamNameList(CustomConstants.AUDIT_STATUS);
         if (null != auditStatusList && auditStatusList.size() > 0) {
             response.setAuditStatusList(auditStatusList);
         }
+        // 操作类型
         List<ParamNameVO> operationTypeList = duibaPointsListService.getParamNameList(CustomConstants.OPERATION_TYPE);
         if (null != operationTypeList && operationTypeList.size() > 0) {
             response.setOperationTypeList(operationTypeList);
