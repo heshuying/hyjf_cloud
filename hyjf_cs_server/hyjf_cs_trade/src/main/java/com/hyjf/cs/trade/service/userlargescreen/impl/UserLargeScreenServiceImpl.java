@@ -44,6 +44,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
 
     @Override
     public UserLargeScreenResultBean getOnePage(){
+        logger.info("cs-trade层-----屏幕一接口已调用");
         UserLargeScreenResultBean bean = new UserLargeScreenResultBean();
         UserLargeScreenRequest request = new UserLargeScreenRequest();
         String dateString = getNowDateOfDay();
