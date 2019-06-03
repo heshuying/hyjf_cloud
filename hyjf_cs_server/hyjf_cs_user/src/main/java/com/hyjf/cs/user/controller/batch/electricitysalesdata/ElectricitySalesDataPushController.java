@@ -30,19 +30,13 @@ public class ElectricitySalesDataPushController extends BaseUserController {
 
     @RequestMapping("/electricitySalesDataPush")
     public void electricitySalesDataPush() {
-        // 查询开启状态的坐席
-        List<CustomerServiceRepresentiveConfigVO> representiveConfigList = this.electricitySalesDataPushService.selectRepresentiveConfig();
 
-        if (representiveConfigList == null || representiveConfigList.size() == 0) {
-            logger.error("没有开启的坐席配置,不予推送.");
-            return;
+
+        // 获取需要推送的数据列表
+        List<ElectricitySalesDataPushListVO> list = this.electricitySalesDataPushService.selectElectricitySalesDataPushDataList();
+        if (list != null && list.size() > 0) {
+
         }
-
-            // 获取需要推送的数据列表
-            List<ElectricitySalesDataPushListVO> list = this.electricitySalesDataPushService.selectElectricitySalesDataPushDataList();
-            if (list != null && list.size() > 0) {
-
-            }
 
 
     }
