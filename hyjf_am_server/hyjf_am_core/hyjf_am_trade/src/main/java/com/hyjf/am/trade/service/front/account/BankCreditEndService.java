@@ -26,10 +26,6 @@ public interface BankCreditEndService extends BaseService {
      */
     int insertBankCreditEndForCreditEnd(HjhDebtCredit hjhDebtCredit, String tenderAccountId, String tenderAuthCode);
 
-    List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean);
-
-    Integer getCreditEndCount(BankCreditEndListRequest requestBean);
-
     int updateBankCreditEnd(BankCreditEnd bankCreditEnd);
 
     BankCreditEnd selectByOrderId(String orderId);
