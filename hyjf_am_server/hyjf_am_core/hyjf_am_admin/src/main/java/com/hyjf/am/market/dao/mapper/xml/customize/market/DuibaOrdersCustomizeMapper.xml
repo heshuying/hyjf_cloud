@@ -95,6 +95,9 @@
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
       </if>
+      <if test="orderTypeTab == '2'">
+        AND hdp.delivery_status IS NOT NULL
+      </if>
     </if>
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
@@ -156,6 +159,9 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
+      </if>
+      <if test="orderTypeTab == '2'">
+        AND hdp.delivery_status IS NOT NULL
       </if>
     </if>
   </select>
