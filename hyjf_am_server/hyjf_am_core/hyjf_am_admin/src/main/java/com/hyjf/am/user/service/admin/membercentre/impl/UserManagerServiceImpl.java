@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
@@ -16,6 +17,7 @@ import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringUtil;
@@ -27,12 +29,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -754,6 +754,15 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 int deleteFlg = spreadsUserMapper.deleteByPrimaryKey(spreadsUserVO.getId());
                 if (deleteFlg > 0) {
                     logger.info("==================删除用户的推荐人成功!======");
+                    SpreadsUser rUser = new SpreadsUser();
+                    rUser.setUserId(Integer.parseInt(userId));
+                    rUser.setSpreadsUserId(0);
+                    try {
+                        commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, "ht_spreads_user", UUID.randomUUID().toString(), rUser));
+                        logger.info("【删除推荐人】am-admin发送用户信息同步,同步信息：{}", JSON.toJSON(rUser).toString());
+                    } catch (MQException e) {
+                        logger.error("【删除推荐人】am-admin发送用户信息同步失败！用户userId：{}", userId, e);
+                    }
                 } else {
                     throw new RuntimeException("============删除用户的推荐人失败!========");
                 }

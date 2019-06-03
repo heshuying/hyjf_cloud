@@ -63,6 +63,8 @@ public class SyncRUserConsumer implements RocketMQListener<MessageExt>, RocketMQ
                     syncRUserService.insertUser(jsonObj);
                 } else if ("ht_user_info_referrer".equals(tagName)) {
                     syncRUserService.updateUserInfoByReferrer(jsonObj);
+                } else if ("del_ht_user".equals(tagName)) {
+                    syncRUserService.deleteRUser(jsonObj);
                 }
             } catch (Exception e) {
                 logger.error("【RUser同步】消费失败!", e);

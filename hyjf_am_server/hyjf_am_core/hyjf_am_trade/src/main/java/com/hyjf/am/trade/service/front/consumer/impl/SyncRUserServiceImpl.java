@@ -161,4 +161,20 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
             logger.info("rid:{},am_trade.ht_r_user更新ht_user_info完毕。成功条数：{}", referrerInt, upRet);
         }
     }
+
+    /**
+     * 删除用户(未开户销户)
+     * @param jsonObj
+     * @author wgx
+     * @date 2019/05/31
+     */
+    @Override
+    public void deleteRUser(JSONObject jsonObj) {
+        String userId = jsonObj.getString("userId");
+        if (StringUtils.isNotBlank(userId)) {
+            int userIdInt = Integer.parseInt(userId);
+            int upRet = rUserMapper.deleteByPrimaryKey(userIdInt);
+            logger.info("uid:{},am_trade.ht_r_user删除{}", userIdInt, upRet > 0 ? "成功" : "失败");
+        }
+    }
 }

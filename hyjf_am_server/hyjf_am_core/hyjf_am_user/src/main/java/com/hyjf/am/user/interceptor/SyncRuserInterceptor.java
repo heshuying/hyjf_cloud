@@ -1,5 +1,6 @@
 package com.hyjf.am.user.interceptor;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -128,6 +129,10 @@ public class SyncRuserInterceptor implements Interceptor {
 
                 sendToMq(paramObj, methodName, "up_ht_user");
 
+            } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.deleteByPrimaryKey")) {
+                Map<String,Object> userMap = new HashMap<>();
+                userMap.put("userId",paramObj);
+                sendToMq(userMap, methodName, "del_ht_user");// 未开户用户销户
             } else if (StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user")) {
                 sendToMq(paramObj, methodName, "ht_spreads_user");
             } else if (StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {

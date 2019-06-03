@@ -15,4 +15,5 @@ import com.hyjf.am.trade.service.BaseService;
 
     void updateUserInfoByReferrer(JSONObject jsonObj);
 
+     void deleteRUser(JSONObject jsonObj);
 }
