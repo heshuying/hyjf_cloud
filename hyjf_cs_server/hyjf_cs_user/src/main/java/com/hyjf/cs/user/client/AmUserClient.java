@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
@@ -651,11 +652,6 @@ public interface AmUserClient {
 	void unlockUser(Integer userId);
 
 	/**
-	 * 电销数据推送生成
-	 */
-    void generateElectricitySalesData();
-
-	/**
 	 * 获取前一天注册的用户
 	 * @return
 	 */
@@ -692,4 +688,11 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserPortraitVO selectUserPortraitByUserId(Integer userId);
+
+	/**
+	 * 生成电销数据
+	 *
+	 * @param request
+	 */
+	void generateElectricitySalesData(ElectricitySalesDataPushListRequest request);
 }

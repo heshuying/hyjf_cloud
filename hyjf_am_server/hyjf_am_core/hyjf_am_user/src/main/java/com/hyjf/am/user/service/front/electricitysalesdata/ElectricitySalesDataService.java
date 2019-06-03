@@ -3,7 +3,10 @@
  */
 package com.hyjf.am.user.service.front.electricitysalesdata;
 
+import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
 
 /**
  * 电销推送数据生成Service
@@ -15,5 +18,5 @@ public interface ElectricitySalesDataService extends BaseService {
     /**
      * 电销推送数据生成
      */
-    void generateElectricitySalesData();
+    void generateElectricitySalesData(  List<ElectricitySalesDataPushList> result);
 }

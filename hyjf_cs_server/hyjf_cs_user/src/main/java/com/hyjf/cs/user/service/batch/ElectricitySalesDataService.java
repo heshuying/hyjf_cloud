@@ -21,10 +21,6 @@ import java.util.List;
  * @version ElectricitySalesDataService, v0.1 2019/5/28 15:31
  */
 public interface ElectricitySalesDataService extends BaseUserService {
-    /**
-     * 生成电销数据
-     */
-    void generateElectricitySalesData();
 
     /**
      * 获取客组配置
@@ -120,4 +116,20 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * @return
      */
     ElectricitySalesDataPushListVO generateCustomerServiceRepresentiveConfig(UserVO userVO, CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig);
+
+    /**
+     * 生成电销推送数据VO
+     *
+     * @param userVOList
+     * @param customerServiceRepresentiveConfig
+     * @return
+     */
+    List<ElectricitySalesDataPushListVO> generateCustomerServiceRepresentiveConfigList(List<UserVO> userVOList, CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig);
+
+    /**
+     * 生成电销数据
+     *
+     * @param electricitySalesDataPushListVOList
+     */
+    void generateElectricitySalesData(List<ElectricitySalesDataPushListVO> electricitySalesDataPushListVOList);
 }

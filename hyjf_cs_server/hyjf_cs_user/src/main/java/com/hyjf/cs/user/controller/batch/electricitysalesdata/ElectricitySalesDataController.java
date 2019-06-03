@@ -281,9 +281,11 @@ public class ElectricitySalesDataController extends BaseUserController {
             for (int i = 0; i < list.size(); i++) {
                 List<UserVO> userVOList = list.get(i);
                 CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = customerServiceRepresentiveConfigList.get(i);
-
+                // 将该组用户全都分配给相对应的坐席
+                List<ElectricitySalesDataPushListVO> electricitySalesDataPushListVOList = this.electricitySalesDataService.generateCustomerServiceRepresentiveConfigList(userVOList,customerServiceRepresentiveConfig);
+                //  插入数据
+                this.electricitySalesDataService.generateElectricitySalesData(electricitySalesDataPushListVOList);
             }
         }
-        electricitySalesDataService.generateElectricitySalesData();
     }
 }

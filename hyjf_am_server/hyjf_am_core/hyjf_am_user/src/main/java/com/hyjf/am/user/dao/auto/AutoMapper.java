@@ -224,5 +224,8 @@ public class AutoMapper {
     @Autowired
     protected AppUtmRegMapper appUtmRegMapper;
 
+    @Autowired
+    protected ElectricitySalesDataPushListMapper electricitySalesDataPushListMapper;
+
 }
 

@@ -11,6 +11,7 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
@@ -1339,16 +1340,6 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.getForEntity(url, String.class).getBody();
 	}
 
-
-	/**
-	 * 电销数据推送
-	 */
-	@Override
-	public void generateElectricitySalesData() {
-		String url = "http://AM-USER/am-user/electricitysalesdata/generateElectricitySalesData";
-		restTemplate.getForEntity(url, String.class);
-	}
-
 	/**
 	 * 获取前一天注册的用户
 	 *
@@ -1426,5 +1417,17 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+
+	/**
+	 * 生成电销数据
+	 *
+	 * @param request
+	 */
+	@Override
+	public void generateElectricitySalesData(ElectricitySalesDataPushListRequest request) {
+		restTemplate
+				.put(userService + "/electricitySalesDataPushList/generateElectricitySalesData", request);
 	}
 }
