@@ -1977,6 +1977,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             vo.setDurationUnit("月");
         }
         // add by liuyang 神策数据统计 20180820 end
+
+        // 是否绑卡
+        if (tender.getUserId() != null) {
+            BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(tender.getUserId());
+            if (bankCard!=null &&bankCard.getId()!=null) {
+                vo.setIsBindCard(true);
+            } else {
+                vo.setIsBindCard(false);
+            }
+        }
         return vo;
     }
 
