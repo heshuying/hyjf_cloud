@@ -27,7 +27,7 @@
     LEFT JOIN ht_utm_reg r ON r.user_id = i.user_id
     LEFT JOIN ht_utm u1 ON u1.utm_id = r.utm_id
     left JOIN ht_user_portrait p on i.user_id = p.user_id
-    left join ht_customer_task_config tc on p.current_owner = tc.customer_name
+    left join ht_customer_task_config tc on p.current_owner = tc.customer_name and task_time = DATE_FORMAT(NOW(),'%Y-%m')
     where 1=1
     AND i.role_id = 1
     and i.user_id in
