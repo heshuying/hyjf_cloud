@@ -65,20 +65,4 @@ public class CustomerServiceRepresentiveConfigController extends BaseConfigContr
         return response;
     }
 
-
-    /**
-     * 获取状态为开启的坐席
-     *
-     * @return
-     */
-    @RequestMapping("/selectRepresentiveConfig")
-    public CustomerServiceRepresentiveConfigResponse selectRepresentiveConfig() {
-        CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
-        List<CustomerServiceRepresentiveConfig> customerServiceGroupConfigList = customerServiceRepresentiveConfigService.selectRepresentiveConfig();
-        if (!CollectionUtils.isEmpty(customerServiceGroupConfigList)) {
-            List<CustomerServiceRepresentiveConfigVO> resultList = CommonUtils.convertBeanList(customerServiceGroupConfigList, CustomerServiceRepresentiveConfigVO.class);
-            response.setResultList(resultList);
-        }
-        return response;
-    }
 }

@@ -29,10 +29,4 @@ public interface CustomerServiceRepresentiveConfigService extends BaseService {
      */
     CustomerServiceRepresentiveConfig selectCustomerServiceRepresentiveConfigByUserName(String currentOwner);
 
-    /**
-     * 获取状态为开启的坐席配置
-     *
-     * @return
-     */
-    List<CustomerServiceRepresentiveConfig> selectRepresentiveConfig();
 }

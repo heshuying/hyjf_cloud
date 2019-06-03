@@ -23,10 +23,4 @@ public interface ElectricitySalesDataPushService extends BaseUserService {
      */
     List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList();
 
-    /**
-     * 获取状态为开启的坐席配置
-     *
-     * @return
-     */
-    List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig();
 }

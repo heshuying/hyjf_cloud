@@ -55,18 +55,4 @@ public class CustomerServiceRepresentiveConfigServiceImpl extends BaseServiceImp
         }
         return null;
     }
-
-    /**
-     * 获取状态为开启的坐席配置
-     *
-     * @return
-     */
-    @Override
-    public List<CustomerServiceRepresentiveConfig> selectRepresentiveConfig() {
-        CustomerServiceRepresentiveConfigExample example = new CustomerServiceRepresentiveConfigExample();
-        CustomerServiceRepresentiveConfigExample.Criteria cra = example.createCriteria();
-        // 启用状态 1.启用2.禁用
-        cra.andStatusEqualTo(1);
-        return this.customerServiceRepresentiveConfigMapper.selectByExample(example);
-    }
 }

@@ -31,13 +31,5 @@ public class ElectricitySalesDataPushServiceImpl extends BaseUserServiceImpl imp
     }
 
 
-    /**
-     * 获取状态为开启的坐席配置
-     *
-     * @return
-     */
-    @Override
-    public List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig() {
-        return this.amConfigClient.selectRepresentiveConfig();
-    }
+
 }
