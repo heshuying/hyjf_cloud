@@ -42,31 +42,6 @@ public class BankCreditEndController {
     private BankCreditEndService bankCreditEndService;
 
     /**
-     * 结束债权列表
-     * @auther: hesy
-     * @date: 2018/7/12
-     */
-    @RequestMapping("/getlist")
-    public BankCreditEndResponse getCreditEndList(@RequestBody BankCreditEndListRequest requestBean){
-        BankCreditEndResponse response = new BankCreditEndResponse();
-        List<BankCreditEnd> recordList = bankCreditEndService.getCreditEndList(requestBean);
-        if (Validator.isNotNull(recordList)){
-            response.setResultList(CommonUtils.convertBeanList(recordList,BankCreditEndVO.class));
-        }
-        return response;
-    }
-
-    /**
-     * 结束债权总记录数
-     * @auther: hesy
-     * @date: 2018/7/12
-     */
-    @RequestMapping("/getcount")
-    public Integer getCreditEndCount(@RequestBody BankCreditEndListRequest requestBean){
-        return bankCreditEndService.getCreditEndCount(requestBean);
-    }
-
-    /**
      * 根据orderId获取
      * @auther: hesy
      * @date: 2018/7/12

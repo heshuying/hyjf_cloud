@@ -4,7 +4,10 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.BankCreditEndService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -12,7 +15,10 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -242,8 +248,10 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         exampleLimit.setOrderByClause("id desc");
         List<BankCreditEnd> ends = this.bankCreditEndMapper.selectByExample(exampleLimit);
         logger.info(bean.getBatchNo()+"  "+ends.size());
+        Integer txCounts = 1;
         if(ends != null && ends.size() > 0) {
             BankCreditEnd oneCredit = ends.get(0);
+            txCounts = oneCredit.getTxCounts();
             if(oneCredit.getStatus() == 11 || oneCredit.getStatus() == 5) {
                 logger.info(bean.getBatchNo()+" 业务处理已经成功 ");
                 return 0;
@@ -274,6 +282,88 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         newEnd.setUpdateUser(1);
         newEnd.setUpdateTime(GetDate.getDate());
 
-        return this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+        int result = this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+
+        // 如果批次部分成功，请求批次明细接口更新失败原因及状态
+        if(result > 0 && failCnt >0){
+            logger.info("结束债权批次号batchNO:{},部分成功，开始请求批次交易明细接口", bean.getBatchNo());
+            List<BankCallBean> resultBeans = queryBatchDetails(bean.getBatchNo(), txCounts, bean.getTxDate(), bean.getBatchNo());
+            logger.info("结束债权批次号batchNO:{},部分成功，请求批次交易明细接口resultBeans:{}", bean.getBatchNo(), JSON.toJSONString(resultBeans));
+            if(resultBeans != null){
+                for (BankCallBean bankCallBean : resultBeans) {
+                    String subPacks = bankCallBean.getSubPacks();
+                    JSONArray array = JSONObject.parseArray(subPacks);
+                    if (array != null && array.size() != 0) {
+                        for (int j = 0; j < array.size(); j++) {
+                            JSONObject obj = array.getJSONObject(j);
+                            String txState = obj.getString("txState");
+                            String failMsg = obj.getString("failMsg");
+                            logger.info("结束债权批次号batchNO:{}，txState:{} failMsg:" + failMsg, bean.getBatchNo(), txState);
+                            // 更新对应债权状态及失败描述
+                            example = new BankCreditEndExample();
+                            example.createCriteria().andBatchNoEqualTo(bean.getBatchNo()).andOrderIdEqualTo(obj.getString("orderId"));
+
+                            newEnd = new BankCreditEnd();
+                            newEnd.setState(txState);
+                            newEnd.setFailmsg(failMsg);
+                            result = bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+                        }
+                    }
+                }
+            }else{
+                logger.error("调用批次交易明细接口返回结果为null");
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 查询批次交易明细
+     * @param batchNo
+     * @param txCounts
+     * @param batchTxDate
+     * @param userId
+     * @return
+     */
+    public List<BankCallBean> queryBatchDetails(String batchNo, Integer txCounts, String batchTxDate, String userId) {
+
+        int pageSize = 50;// 每页笔数
+        int pageTotal = txCounts / pageSize + 1;// 总页数
+        String type = BankCallConstant.DEBT_BATCH_TYPE_FAIL; //只查失败类型
+        List<BankCallBean> results = new ArrayList<>();
+        for (int i = 1; i <= pageTotal; i++) {
+            String logOrderId = GetOrderIdUtils.getOrderId2(Integer.parseInt(userId));
+            String orderDate = GetOrderIdUtils.getOrderDate();
+            BankCallBean bean = new BankCallBean();
+            // 消息类型(批次结束债权)
+            bean.setTxCode(BankCallConstant.TXCODE_BATCH_DETAILS_QUERY);
+            bean.setBatchTxDate(batchTxDate);
+            bean.setBatchNo(batchNo);
+            bean.setType(type);
+            bean.setPageNum(String.valueOf(i));
+            bean.setPageSize(String.valueOf(pageSize));
+            bean.setLogOrderId(logOrderId);
+            bean.setLogOrderDate(orderDate);
+            bean.setLogRemark("查询批次交易明细(批次结束债权)");
+            bean.setLogClient(0);
+            // 调用放款接口
+            BankCallBean result = BankCallUtils.callApiBg(bean);
+            logger.info("调用银行接口返回：" + JSON.toJSONString(result));
+            if (Validator.isNotNull(result)) {
+                String retCode = StringUtils.isNotBlank(result.getRetCode()) ? result.getRetCode() : "";
+                if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+                    results.add(result);
+                    break;
+                } else {
+                    logger.error("批次交易明细接口查询失败retCode：" + retCode);
+                    continue;
+                }
+            } else {
+                logger.error("批次交易明细接口查询失败, 返回null");
+                continue;
+            }
+        }
+        return results;
     }
 }
