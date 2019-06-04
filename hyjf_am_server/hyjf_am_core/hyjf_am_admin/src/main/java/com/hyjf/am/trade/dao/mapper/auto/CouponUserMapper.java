@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CouponUserMapper {
     int countByExample(CouponUserExample example);
@@ -15,6 +16,8 @@ public interface CouponUserMapper {
     int insert(CouponUser record);
 
     int insertSelective(CouponUser record);
+
+    int insertByDuibaOrder(CouponUser record);
 
     List<CouponUser> selectByExample(CouponUserExample example);
 
