@@ -195,12 +195,10 @@ public class DuiBaCallController extends BaseController {
 			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 			if (couponUserStr != null) {
 				// 优惠卷成功或异常处理
-				if(status.equals(couponUserStr)){
-					// 发放成功
-
-				}else{
+				if(!status.equals(couponUserStr)){
 					// 发放失败
-
+                    status = "fail";
+                    logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
 				}
 			}
 		} catch (Exception e) {
