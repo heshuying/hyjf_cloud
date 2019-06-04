@@ -202,6 +202,11 @@ public class CustomerServiceGroupConfigController {
     @RequestMapping("/checkCustomerServiceGroupConfig")
     public CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(@RequestBody CustomerServiceGroupConfigRequest request) {
         CustomerServiceGroupConfigResponse response = new CustomerServiceGroupConfigResponse();
+        if (StringUtils.isBlank(request.getGroupName())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("客组名为不能为空！");
+            return response;
+        }
         try {
             Map<String, Object> result = customerServiceGroupConfigService.checkCustomerServiceGroupConfig(request);
             if (!"success".equals(result.get("success"))) {

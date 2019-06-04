@@ -183,6 +183,11 @@ public class CustomerServiceRepresentiveConfigController {
     @RequestMapping("/checkCustomerServiceRepresentiveConfig")
     public CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(@RequestBody CustomerServiceRepresentiveConfigRequest request) {
         CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
+        if (StringUtils.isBlank(request.getUserName())) {
+            response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+            response.setMessage("姓名为不能为空！");
+            return response;
+        }
         try {
             Map<String,Object> result = customerServiceRepresentiveConfigService.checkCustomerServiceRepresentiveConfig(request);
             if(!"success".equals(result.get("success"))){
