@@ -1164,14 +1164,17 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 客户端已读 */
     public static final int USER_COUPON_READ_FLAG_YES = 1;
 
-    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 */
+    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 4 积分兑换*/
     public static final int USER_COUPON_SOURCE_MANUAL = 1;
 
-    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 */
+    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 4 积分兑换*/
     public static final int USER_COUPON_SOURCE_ACTIVE = 2;
 
-    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 */
+    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 4 积分兑换*/
     public static final int USER_COUPON_SOURCE_VIP = 3;
+
+    /** 优惠券来源 1 手动发放 2 活动发放 3 VIP礼包 4 积分兑换*/
+    public static final int USER_COUPON_SOURCE_INTEGRAL = 4;
 
     // ==================消息推送状态==================
     /** 消息推送-消息的发送状态-待发送 */

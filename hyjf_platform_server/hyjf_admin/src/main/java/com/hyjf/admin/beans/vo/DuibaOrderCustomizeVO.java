@@ -194,6 +194,13 @@ public class DuibaOrderCustomizeVO implements Serializable {
      */
     private BigDecimal integralPrice;
 
+    /**
+     * 订单激活状态
+     *
+     * @mbggenerated
+     */
+    private Integer activationType;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -402,5 +409,13 @@ public class DuibaOrderCustomizeVO implements Serializable {
 
     public void setIntegralPrice(BigDecimal integralPrice) {
         this.integralPrice = integralPrice;
+    }
+
+    public Integer getActivationType() {
+        return activationType;
+    }
+
+    public void setActivationType(Integer activationType) {
+        this.activationType = activationType;
     }
 }

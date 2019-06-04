@@ -77,7 +77,12 @@ public class DuibaPointsModifyController {
     @RequestMapping("/insertPointsModifyList")
     public BooleanResponse insertPointsModifyList(@RequestBody DuibaPointsRequest request) {
         BooleanResponse response = new BooleanResponse();
-        boolean result = duibaPointsModifyService.insertPointsModifyList(request);
+        boolean result = false;
+        try {
+            result = duibaPointsModifyService.insertPointsModifyList(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         response.setResultBoolean(result);
         return response;
     }

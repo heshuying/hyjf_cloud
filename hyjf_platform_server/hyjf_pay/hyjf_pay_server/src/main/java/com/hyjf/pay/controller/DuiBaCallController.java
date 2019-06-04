@@ -139,6 +139,18 @@ public class DuiBaCallController extends BaseController {
 				// 兑换成功
 			} else {
 				// 兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
+
+				// 兑换失败将对应的"订单"设置成无效并给出失败信息
+				String status = "success";
+				// 传兑吧订单号
+				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum();
+				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
+				if (couponUserStr != null) {
+					if(!status.equals(couponUserStr)){
+						// 订单状态设置失败
+						logger.error("订单状态设置失败！orderNum："+params.getOrderNum());
+					}
+				}
 			}
 		} catch (Exception e) {
 			logger.error("兑吧兑换结果通知接口发生错误：", e);
@@ -195,12 +207,10 @@ public class DuiBaCallController extends BaseController {
 			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 			if (couponUserStr != null) {
 				// 优惠卷成功或异常处理
-				if(status.equals(couponUserStr)){
-					// 发放成功
-
-				}else{
+				if(!status.equals(couponUserStr)){
 					// 发放失败
-
+                    status = "fail";
+                    logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
 				}
 			}
 		} catch (Exception e) {

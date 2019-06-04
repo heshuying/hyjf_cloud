@@ -108,6 +108,8 @@
 			'活动发放'
 		WHEN cu.coupon_source = 3 THEN
 			'会员礼包'
+		WHEN cu.coupon_source = 4 THEN
+			'积分兑换'
 		ELSE
 			''
 		END AS coupon_source,

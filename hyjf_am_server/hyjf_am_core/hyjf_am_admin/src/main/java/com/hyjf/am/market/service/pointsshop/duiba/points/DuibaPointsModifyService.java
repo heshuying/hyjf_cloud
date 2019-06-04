@@ -36,5 +36,5 @@ public interface DuibaPointsModifyService {
      * @param request
      * @return
      */
-    boolean insertPointsModifyList(DuibaPointsRequest request);
+    boolean insertPointsModifyList(DuibaPointsRequest request) throws Exception;
 }

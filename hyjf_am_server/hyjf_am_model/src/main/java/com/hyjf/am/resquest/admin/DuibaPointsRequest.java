@@ -47,6 +47,9 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "批量调整用户积分")
     private List<Integer> userIdList;
 
+    @ApiModelProperty(value = "调整原因")
+    private String reason;
+
     @ApiModelProperty(value = "发生时间结束查询")
     private String endDateSrch;
 
@@ -60,6 +63,8 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
      * 修改人账号
      */
     private String modifyName;
+
+    private String modifyId;
 
     /**
      * 翻页机能用的隐藏变量
@@ -199,5 +204,21 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
 
     public void setModifyName(String modifyName) {
         this.modifyName = modifyName;
+    }
+
+    public String getModifyId() {
+        return modifyId;
+    }
+
+    public void setModifyId(String modifyId) {
+        this.modifyId = modifyId;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

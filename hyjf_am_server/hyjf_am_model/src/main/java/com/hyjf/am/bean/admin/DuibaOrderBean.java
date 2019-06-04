@@ -173,6 +173,13 @@ public class DuibaOrderBean implements Serializable {
 	 */
 	private String remark;
 
+	/**
+	 * 订单激活状态
+	 *
+	 * @mbggenerated
+	 */
+	private Integer activationType;
+
 	private static final long serialVersionUID = 1L;
 
 	public Integer getId() {
@@ -359,4 +366,11 @@ public class DuibaOrderBean implements Serializable {
 		this.remark = remark == null ? null : remark.trim();
 	}
 
+	public Integer getActivationType() {
+		return activationType;
+	}
+
+	public void setActivationType(Integer activationType) {
+		this.activationType = activationType;
+	}
 }

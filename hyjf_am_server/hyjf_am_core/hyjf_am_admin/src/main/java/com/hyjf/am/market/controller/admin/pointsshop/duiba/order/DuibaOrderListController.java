@@ -166,7 +166,7 @@ public class DuibaOrderListController {
                 couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
                 couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
                 couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
-                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_MANUAL);
+                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_INTEGRAL);
                 couponUserRequest.setAttribute(userInfo.getAttribute());
                 couponUserRequest.setChannel(channelName);
                 int remain = couponConfigService.checkCouponSendExcess(duibaOrderVO.getCommodityCode());
@@ -211,5 +211,31 @@ public class DuibaOrderListController {
             logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷兑吧订单号为空！ orderNum:" + orderNum);
             return "error";
         }
+    }
+
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/activation/{orderNum}")
+    public String activation(@PathVariable String orderNum) {
+        int res;
+        DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
+        // 根据兑吧订单号查询订单信息
+        DuibaOrderVO duibaOrderVOStr = duibaOrderListService.selectOrderByOrderId(orderNum);
+        if(duibaOrderVOStr!=null){
+            duibaOrderVO.setId(duibaOrderVOStr.getId());
+            duibaOrderVO.setActivationType(1);
+            duibaOrderVO.setRemark("兑吧兑换结果通知接口-兑吧兑换失败！");
+            // 根据订单信息更新订单状态
+            res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
+            if(res > 0){
+                return "success";
+            }
+        }
+        return "error";
     }
 }
