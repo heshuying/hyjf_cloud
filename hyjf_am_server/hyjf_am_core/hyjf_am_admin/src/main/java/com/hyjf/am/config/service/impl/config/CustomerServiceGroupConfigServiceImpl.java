@@ -112,9 +112,9 @@ public class CustomerServiceGroupConfigServiceImpl implements CustomerServiceGro
         Map<String, Object> result = new HashMap<>();
         result.put("success", "success");
         String groupName = request.getGroupName();
-        String serviceUserCode = request.getServiceUserCode();
-        String serviceUserKey = request.getServiceUserKey();
-        String serviceUserNo = request.getServiceUserNo();
+        //String serviceUserCode = request.getServiceUserCode();
+        //String serviceUserKey = request.getServiceUserKey();
+        //String serviceUserNo = request.getServiceUserNo();
         CustomerServiceGroupConfigExample example = new CustomerServiceGroupConfigExample();
         boolean needCheck = false;
         if (StringUtils.isNotBlank(groupName)) {
@@ -125,7 +125,7 @@ public class CustomerServiceGroupConfigServiceImpl implements CustomerServiceGro
                 groupNameCriteria.andIdNotEqualTo(request.getId());
             }
         }
-        if (StringUtils.isNotBlank(serviceUserCode)) {
+        /*if (StringUtils.isNotBlank(serviceUserCode)) {
             needCheck = true;
             CustomerServiceGroupConfigExample.Criteria serviceUserCodeCriteria = example.or();
             serviceUserCodeCriteria.andServiceUserCodeEqualTo(serviceUserCode);
@@ -148,7 +148,7 @@ public class CustomerServiceGroupConfigServiceImpl implements CustomerServiceGro
             if (request.getId() != null) {
                 serviceUserNoCriteria.andIdNotEqualTo(request.getId());
             }
-        }
+        }*/
         if (!needCheck) {
             return result;
         }
@@ -159,13 +159,13 @@ public class CustomerServiceGroupConfigServiceImpl implements CustomerServiceGro
             result.put("message", "数据重复，请重新输入");
             if (StringUtils.isNotBlank(groupName) && groupName.equals(groupConfig.getGroupName())) {
                 result.put("message", "客组名称已存在，请重新输入");
-            } else if (StringUtils.isNotBlank(serviceUserCode) && serviceUserCode.equals(groupConfig.getServiceUserCode())) {
+            } /*else if (StringUtils.isNotBlank(serviceUserCode) && serviceUserCode.equals(groupConfig.getServiceUserCode())) {
                 result.put("message", "第三方用户唯一凭证已存在，请重新输入");
             } else if (StringUtils.isNotBlank(serviceUserKey) && serviceUserKey.equals(groupConfig.getServiceUserKey())) {
                 result.put("message", "第三方用户唯一凭证秘钥已存在，请重新输入");
             } else if (StringUtils.isNotBlank(serviceUserNo) && serviceUserNo.equals(groupConfig.getServiceUserNo())) {
                 result.put("message", "第三方用户账户编号已存在，请重新输入");
-            }
+            }*/
             return result;
         }
         return result;
