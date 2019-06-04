@@ -43,18 +43,21 @@ public class CertLogServiceImpl implements CertLogService {
     public List<CertLog> selectCertLog() {
         CertLogExample example = new CertLogExample();
         CertLogExample.Criteria creteria = example.createCriteria();
+        //查询结果 0初始  1成功  8批次号无效 9入库失败  2等待处理  99 无响应
         // 查询上报结果成功
         creteria.andSendStatusEqualTo(1);
         // 查询结果为初始
         List<Integer> resultIn = new ArrayList<>();
         // 初始  等待处理   无响应
         resultIn.add(0);
-        resultIn.add(2);
-        resultIn.add(99);
+        /*resultIn.add(2);
+        resultIn.add(99);*/
+        //入库失败
+        resultIn.add(9);
         creteria.andQueryResultIn(resultIn);
-        //一次查找 300 条数据
+        //一次查找 100 条数据
         example.setLimitStart(0);
-        example.setLimitEnd(300);
+        example.setLimitEnd(100);
 
         example.setOrderByClause(" id asc");
         List<CertLog> certLogList = certLogMapper.selectByExample(example);
