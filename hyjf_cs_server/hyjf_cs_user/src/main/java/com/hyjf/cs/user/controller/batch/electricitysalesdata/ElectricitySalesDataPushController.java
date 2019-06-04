@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 import com.hyjf.am.bean.electricitysalesdatapush.ElectricitySalesDataPushBean;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
+import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataPushService;
@@ -82,6 +83,15 @@ public class ElectricitySalesDataPushController extends BaseUserController {
             // 获取accessToken
             String url = systemConfig.getCallCentreUrl() + "accessToken?account=" + systemConfig.getAccount() + "&appid=" + systemConfig.getAppId() + "&secret=" + systemConfig.getSecret();
             logger.info("获取accessToken请求URL:[" + url + "].");
+            String accessToken = HttpClientUtils.get(url);
+            if (StringUtils.isBlank(accessToken)) {
+                logger.error("获取accessToken失败");
+                return;
+            }
+
+
+
+
 
         }
 
