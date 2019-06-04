@@ -27,15 +27,6 @@ public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "客组名称")
     private String groupName;
 
-    @ApiModelProperty(value = "第三方用户唯一凭证")
-    private String serviceUserCode;
-
-    @ApiModelProperty(value = "第三方用户账户编号")
-    private String serviceUserNo;
-
-    @ApiModelProperty(value = "第三方用户唯一凭证密钥")
-    private String serviceUserKey;
-
     @ApiModelProperty(value = "是否为新客 1.新客组 0.老客组")
     private Integer isNew;
 
@@ -69,30 +60,6 @@ public class CustomerServiceGroupConfigVO extends BaseVO implements Serializable
 
     public void setGroupName(String groupName) {
         this.groupName = groupName == null ? null : groupName.trim();
-    }
-
-    public String getServiceUserCode() {
-        return serviceUserCode;
-    }
-
-    public void setServiceUserCode(String serviceUserCode) {
-        this.serviceUserCode = serviceUserCode == null ? null : serviceUserCode.trim();
-    }
-
-    public String getServiceUserNo() {
-        return serviceUserNo;
-    }
-
-    public void setServiceUserNo(String serviceUserNo) {
-        this.serviceUserNo = serviceUserNo == null ? null : serviceUserNo.trim();
-    }
-
-    public String getServiceUserKey() {
-        return serviceUserKey;
-    }
-
-    public void setServiceUserKey(String serviceUserKey) {
-        this.serviceUserKey = serviceUserKey == null ? null : serviceUserKey.trim();
     }
 
     public Integer getIsNew() {

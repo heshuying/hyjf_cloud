@@ -19,27 +19,6 @@ public class CustomerServiceGroupConfig implements Serializable {
     private String groupName;
 
     /**
-     * 第三方用户唯一凭证
-     *
-     * @mbggenerated
-     */
-    private String serviceUserCode;
-
-    /**
-     * 第三方用户账户编号
-     *
-     * @mbggenerated
-     */
-    private String serviceUserNo;
-
-    /**
-     * 第三方用户唯一凭证密钥
-     *
-     * @mbggenerated
-     */
-    private String serviceUserKey;
-
-    /**
      * 是否为新客 1新客组 0老客组
      *
      * @mbggenerated
@@ -97,30 +76,6 @@ public class CustomerServiceGroupConfig implements Serializable {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName == null ? null : groupName.trim();
-    }
-
-    public String getServiceUserCode() {
-        return serviceUserCode;
-    }
-
-    public void setServiceUserCode(String serviceUserCode) {
-        this.serviceUserCode = serviceUserCode == null ? null : serviceUserCode.trim();
-    }
-
-    public String getServiceUserNo() {
-        return serviceUserNo;
-    }
-
-    public void setServiceUserNo(String serviceUserNo) {
-        this.serviceUserNo = serviceUserNo == null ? null : serviceUserNo.trim();
-    }
-
-    public String getServiceUserKey() {
-        return serviceUserKey;
-    }
-
-    public void setServiceUserKey(String serviceUserKey) {
-        this.serviceUserKey = serviceUserKey == null ? null : serviceUserKey.trim();
     }
 
     public Integer getIsNew() {

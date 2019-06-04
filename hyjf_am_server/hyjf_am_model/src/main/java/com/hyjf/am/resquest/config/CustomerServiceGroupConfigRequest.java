@@ -23,27 +23,6 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
     private String groupName;
 
     /**
-     * 第三方用户唯一凭证
-     *
-     * @mbggenerated
-     */
-    private String serviceUserCode;
-
-    /**
-     * 第三方用户账户编号
-     *
-     * @mbggenerated
-     */
-    private String serviceUserNo;
-
-    /**
-     * 第三方用户唯一凭证密钥
-     *
-     * @mbggenerated
-     */
-    private String serviceUserKey;
-
-    /**
      * 是否为新客 1新客组 0老客组
      *
      * @mbggenerated
@@ -85,30 +64,6 @@ public class CustomerServiceGroupConfigRequest extends BasePage{
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-    public String getServiceUserCode() {
-        return serviceUserCode;
-    }
-
-    public void setServiceUserCode(String serviceUserCode) {
-        this.serviceUserCode = serviceUserCode;
-    }
-
-    public String getServiceUserNo() {
-        return serviceUserNo;
-    }
-
-    public void setServiceUserNo(String serviceUserNo) {
-        this.serviceUserNo = serviceUserNo;
-    }
-
-    public String getServiceUserKey() {
-        return serviceUserKey;
-    }
-
-    public void setServiceUserKey(String serviceUserKey) {
-        this.serviceUserKey = serviceUserKey;
     }
 
     public Integer getIsNew() {
