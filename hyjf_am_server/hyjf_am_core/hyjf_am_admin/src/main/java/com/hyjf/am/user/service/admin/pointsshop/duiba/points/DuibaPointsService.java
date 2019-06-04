@@ -30,4 +30,12 @@ public interface DuibaPointsService extends BaseService {
      * @return
      */
     List<DuibaPointsUserVO> selectDuibaPointsUser(DuibaPointsRequest request);
+
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param request
+     * @return
+     */
+    boolean selectRemainPoints(DuibaPointsRequest request);
 }

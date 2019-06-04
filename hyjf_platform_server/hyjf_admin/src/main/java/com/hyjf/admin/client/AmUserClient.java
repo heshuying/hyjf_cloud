@@ -1531,4 +1531,12 @@ public interface AmUserClient {
      * @return
      */
     DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean);
+
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean selectRemainPoints(DuibaPointsRequest requestBean);
 }

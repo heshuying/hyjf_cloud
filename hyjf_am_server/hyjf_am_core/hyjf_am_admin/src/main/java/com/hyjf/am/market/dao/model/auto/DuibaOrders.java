@@ -333,6 +333,14 @@ public class DuibaOrders implements Serializable {
         this.processingState = processingState;
     }
 
+    public String getCommodityCode() {
+        return commodityCode;
+    }
+
+    public void setCommodityCode(String commodityCode) {
+        this.commodityCode = commodityCode == null ? null : commodityCode.trim();
+    }
+
     public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
@@ -387,13 +395,5 @@ public class DuibaOrders implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
-    }
-
-    public String getCommodityCode() {
-        return commodityCode;
-    }
-
-    public void setCommodityCode(String commodityCode) {
-        this.commodityCode = commodityCode;
     }
 }

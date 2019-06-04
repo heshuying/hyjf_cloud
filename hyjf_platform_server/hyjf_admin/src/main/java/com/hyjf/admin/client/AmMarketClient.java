@@ -174,4 +174,12 @@ public interface AmMarketClient {
      * @return
      */
     DuibaPointsModifyResponse selectDuibaPointsModifyList(DuibaPointsRequest requestBean);
+
+    /**
+     * 插入积分审批表
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean insertPointsModifyList(DuibaPointsRequest requestBean);
 }

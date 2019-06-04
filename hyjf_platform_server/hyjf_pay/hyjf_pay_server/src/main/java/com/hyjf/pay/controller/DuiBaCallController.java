@@ -186,16 +186,27 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getDevelopBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
-
 			// todo wangjun 业务处理
 			status = "success";
 			credits = Long.valueOf(1000);
+			// 发放优惠卷 需要的参数 优惠券编码  couponCode 用户id  userId 备注  content
+			// 传兑吧订单号
+			String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/releaseCoupons/" + params.getOrderNum();
+			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
+			if (couponUserStr != null) {
+				// 优惠卷成功或异常处理
+				if(status.equals(couponUserStr)){
+					// 发放成功
 
+				}else{
+					// 发放失败
+
+				}
+			}
 		} catch (Exception e) {
 			status = "fail";
 			errorMessage = e.getMessage();
 			logger.error("兑吧兑换结果通知接口发生错误：", e);
-
 		}
 		VirtualResult result = new VirtualResult(status);
 		result.setErrorMessage(errorMessage);

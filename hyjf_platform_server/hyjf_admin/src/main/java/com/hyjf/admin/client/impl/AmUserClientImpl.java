@@ -2973,6 +2973,22 @@ public class AmUserClientImpl implements AmUserClient {
     }
 
     /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean selectRemainPoints(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/selectRemainPoints";
+        BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return false;
+        }
+        return response.getResultBoolean().booleanValue();
+    }
+
+    /**
      * 短信验证码保存
      *
      * @param mobile

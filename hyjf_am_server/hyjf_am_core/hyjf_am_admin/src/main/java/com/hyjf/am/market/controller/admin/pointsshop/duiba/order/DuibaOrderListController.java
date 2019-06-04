@@ -3,22 +3,42 @@
  */
 package com.hyjf.am.market.controller.admin.pointsshop.duiba.order;
 
+import com.hyjf.am.admin.mq.base.CommonProducer;
+import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.market.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
+import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
+import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
+import com.hyjf.am.trade.service.front.coupon.CouponUserService;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.service.admin.promotion.ChannelService;
+import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.duiba.bean.DuiBaCallBean;
 import com.hyjf.pay.lib.duiba.bean.DuiBaCallResultBean;
 import com.hyjf.pay.lib.duiba.util.DuiBaCallConstant;
 import com.hyjf.pay.lib.duiba.util.DuiBaCallUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 兑吧订单（订单查询,订单发货,异常订单）列表
@@ -33,6 +53,21 @@ public class DuibaOrderListController {
 
     @Autowired
     private DuibaOrderListService duibaOrderListService;
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Autowired
+    private ChannelService channelService;
+
+    @Autowired
+    private CouponConfigService couponConfigService;
+
+    @Autowired
+    private CouponUserService couponUserService;
+
+    @Autowired
+    private CommonProducer commonProducer;
 
     @PostMapping("/findOrderList")
     public DuibaOrderResponse findOrderList(@RequestBody DuibaOrderRequest request){
@@ -87,4 +122,94 @@ public class DuibaOrderListController {
         return "订单同步成功！";
     }
 
+
+    /**
+     * 根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/releaseCoupons/{orderNum}")
+    public String selectCouponUserById(@PathVariable String orderNum) {
+        if(StringUtils.isNotEmpty(orderNum)){
+            // 根据兑吧订单号查询订单信息
+            DuibaOrderVO duibaOrderVO = duibaOrderListService.selectOrderByOrderId(orderNum);
+            // 发放优惠卷 需要的参数 优惠券编码  couponCode 用户id  userId 备注  content
+            if(duibaOrderVO != null && duibaOrderVO.getUserId() != null) {
+                // 根据用户id获取用户详情信息
+                UserInfo userInfo = userInfoService.findUserInfoById(duibaOrderVO.getUserId());
+                // 根据用户id获取注册时渠道名
+                String channelName = channelService.selectChannelName(duibaOrderVO.getUserId());
+                // 根据优惠券编码查询优惠券
+                CouponConfigVO configVO = couponConfigService.getCouponConfigByOrderId(duibaOrderVO.getCommodityCode());
+                CouponUserRequest couponUserRequest = new CouponUserRequest();
+                // 截止日
+                if (configVO.getExpirationType() == 1) {
+                    couponUserRequest.setEndTime(configVO.getExpirationDate());
+                } else if (configVO.getExpirationType() == 2) {
+                    Date endDate = GetDate.countDate(GetDate.getDate(), 2, configVO.getExpirationLength());
+                    couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
+                } else if (configVO.getExpirationType() == 3) {
+                    Date endDate = GetDate.countDate(GetDate.getDate(), 5, configVO.getExpirationLengthDay());
+                    couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
+                }
+                couponUserRequest.setUserId(duibaOrderVO.getUserId());
+                couponUserRequest.setCouponCode(configVO.getCouponCode());
+                couponUserRequest.setContent("兑吧积分兑换优惠卷");
+                couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
+                // 优惠卷 的发放信息创建人是用户自己本身记录用户的userid
+                couponUserRequest.setCreateUserId(duibaOrderVO.getUserId());
+                couponUserRequest.setCreateTime(GetDate.getDate());
+                // 优惠卷 的发放信息修改人是用户自己本身记录用户的userid
+                couponUserRequest.setUpdateUserId(duibaOrderVO.getUserId());
+                couponUserRequest.setUpdateTime(GetDate.getDate());
+                couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
+                couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
+                couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
+                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_MANUAL);
+                couponUserRequest.setAttribute(userInfo.getAttribute());
+                couponUserRequest.setChannel(channelName);
+                int remain = couponConfigService.checkCouponSendExcess(duibaOrderVO.getCommodityCode());
+                boolean countType = remain > 0 ? true : false;
+                if (!countType) {
+                    logger.info("优惠券发行数量超出上限，不再发放！");
+                    return "error";
+                }
+                try {
+                    // 插入审核状态并确认优惠卷状态
+                    couponUserRequest.setAuditContent("兑吧积分兑换优惠卷");
+                    couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_UNUSED);
+                    // 推送通知消息
+                    Map<String, String> param = new HashMap<String, String>();
+                    param.put("val_number", String.valueOf(1));
+                    param.put("val_coupon_type", configVO.getCouponType() == 1 ? "体验金" : configVO.getCouponType() == 2 ? "加息券" : configVO.getCouponType() == 3 ? "代金券" : "");
+                    AppMsMessage appMsMessage = new AppMsMessage(couponUserRequest.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_SUCCESS);
+                    try {
+                        commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequest.getUserId()),
+                                appMsMessage));
+                    } catch (MQException e) {
+                        logger.error(e.getMessage());
+                    }
+                    // 插入优惠卷信息
+                    int count = couponUserService.insertCouponUser(couponUserRequest);
+                    if (count > 0) {
+                        // 优惠卷发放成功
+                        return "success";
+                    }else{
+                        logger.error("优惠插入失败！，请检查插入数据 couponUserRequest：" + couponUserRequest.toString());
+                        return "error";
+                    }
+                } catch (Exception e) {
+                    logger.error("优惠券发放失败！异常如下：" + e.getMessage());
+                    return "error";
+                }
+            }else{
+                logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷，订单信息为空！ duibaOrderVO:" + duibaOrderVO.toString());
+                return "error";
+            }
+        }else{
+            logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷兑吧订单号为空！ orderNum:" + orderNum);
+            return "error";
+        }
+    }
 }

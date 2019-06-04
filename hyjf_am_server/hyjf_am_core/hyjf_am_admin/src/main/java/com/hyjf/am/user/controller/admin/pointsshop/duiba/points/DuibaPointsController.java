@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.admin.pointsshop.duiba.points;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
@@ -61,6 +62,20 @@ public class DuibaPointsController extends BaseController {
                 response.setRtn(Response.SUCCESS);
             }
         }
+        return response;
+    }
+
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/selectRemainPoints")
+    public BooleanResponse selectRemainPoints(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = duibaPointsService.selectRemainPoints(request);
+        response.setResultBoolean(result);
         return response;
     }
 }
