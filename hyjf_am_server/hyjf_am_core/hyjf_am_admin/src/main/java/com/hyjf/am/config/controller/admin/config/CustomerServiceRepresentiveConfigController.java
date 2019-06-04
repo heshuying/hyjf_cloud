@@ -128,14 +128,16 @@ public class CustomerServiceRepresentiveConfigController {
         try {
             CustomerServiceRepresentiveConfig config = new CustomerServiceRepresentiveConfig();
             BeanUtils.copyProperties(request, config);
-            CustomerServiceGroupConfig groupConfig = customerServiceGroupConfigService.getCustomerServiceGroupConfigById(request.getGroupId());
-            config.setGroupName(groupConfig.getGroupName());
-            config.setIsNew(groupConfig.getIsNew());
-            if (groupConfig.getStatus() == 2 && config.getStatus() == 1) {
-                logger.error("【坐席配置】客组配置为禁用状态！");
-                response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
-                response.setMessage("所选客组配置为禁用状态！");
-                return response;
+            if(request.getGroupId() != null) {
+                CustomerServiceGroupConfig groupConfig = customerServiceGroupConfigService.getCustomerServiceGroupConfigById(request.getGroupId());
+                config.setGroupName(groupConfig.getGroupName());
+                config.setIsNew(groupConfig.getIsNew());
+                if (groupConfig.getStatus() == 2 && config.getStatus() == 1) {
+                    logger.error("【坐席配置】客组配置为禁用状态！");
+                    response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+                    response.setMessage("所选客组配置为禁用状态！");
+                    return response;
+                }
             }
             customerServiceRepresentiveConfigService.updateCustomerServiceRepresentiveConfig(config);
         } catch (Exception e) {

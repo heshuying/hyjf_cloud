@@ -81,7 +81,7 @@ public class CustomerServiceGroupConfigController {
             response.setMessage("客组名为不能为空！");
             return response;
         }
-        if (StringUtils.isBlank(request.getServiceUserNo())) {
+        /*if (StringUtils.isBlank(request.getServiceUserNo())) {
             response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
             response.setMessage("第三方用户账户编号不能为空！");
             return response;
@@ -95,7 +95,7 @@ public class CustomerServiceGroupConfigController {
             response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
             response.setMessage("第三方用户唯一凭证密钥不能为空！");
             return response;
-        }
+        }*/
         if (request.getIsNew() == null) {
             request.setIsNew(1);// 默认非新客
         }
@@ -129,6 +129,26 @@ public class CustomerServiceGroupConfigController {
             response.setMessage("id不能为空！");
             return response;
         }
+        if ("".equals(request.getGroupName())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("客组名为不能为空！");
+            return response;
+        }
+        /*if ("".equals(request.getServiceUserNo())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("第三方用户账户编号不能为空！");
+            return response;
+        }
+        if ("".equals(request.getServiceUserCode())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("第三方用户唯一凭证不能为空！");
+            return response;
+        }
+        if ("".equals(request.getServiceUserKey())) {
+            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+            response.setMessage("第三方用户唯一凭证密钥不能为空！");
+            return response;
+        }*/
         try {
             CustomerServiceGroupConfig config = new CustomerServiceGroupConfig();
             BeanUtils.copyProperties(request, config);

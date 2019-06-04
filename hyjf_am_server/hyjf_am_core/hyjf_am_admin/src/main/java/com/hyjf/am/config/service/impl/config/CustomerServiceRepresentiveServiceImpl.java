@@ -154,9 +154,11 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
         CustomerServiceRepresentiveConfigExample example = new CustomerServiceRepresentiveConfigExample();
         CustomerServiceRepresentiveConfigExample.Criteria criteria = example.createCriteria();
         String userName = request.getUserName(); //用户名
-        if(StringUtils.isBlank(userName)){
-            result.put("success","fail");
-            result.put("message","用户名不能为空！");
+        if (userName == null) {// 未修改姓名，不需校验
+            return result;
+        } else if ("".equals(userName)) {
+            result.put("success", "fail");
+            result.put("message", "姓名不能为空！");
             return result;
         }
         if (request.getId() != null) {

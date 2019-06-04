@@ -15,9 +15,9 @@ import com.hyjf.am.resquest.config.CustomerServiceGroupConfigRequest;
 import com.hyjf.am.resquest.config.CustomerServiceRepresentiveConfigRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
-import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +35,12 @@ import java.util.List;
  */
 @Api(tags = "配置中心-电销配置-坐席配置")
 @RestController
-@RequestMapping("/hyjf-admin/tsrConfig/group")
+@RequestMapping("/hyjf-admin/tsrConfig/rep")
 public class CustomerServiceRepresentiveConfigController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceRepresentiveConfigController.class);
 
-    private static final String PERMISSIONS = "customerServiceRepresentiveConfig";
+    private static final String PERMISSIONS = "customerServiceRep";
 
     @Autowired
     private CustomerServiceRepresentiveConfigService customerServiceRepresentiveConfigService;
@@ -110,12 +110,14 @@ public class CustomerServiceRepresentiveConfigController extends BaseController 
             return new AdminResult<>(FAIL, "id不能为空！");
         }
         // 校验坐席信息
-        CustomerServiceRepresentiveConfigResponse checkResponse = customerServiceRepresentiveConfigService.checkCustomerServiceRepresentiveConfig(groupRequest);
-        if (checkResponse == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(checkResponse)) {
-            return new AdminResult<>(FAIL, checkResponse.getMessage());
+        if (StringUtils.isNotBlank(groupRequest.getUserName())) {// 姓名为空，不须校验
+            CustomerServiceRepresentiveConfigResponse checkResponse = customerServiceRepresentiveConfigService.checkCustomerServiceRepresentiveConfig(groupRequest);
+            if (checkResponse == null) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            if (!Response.isSuccess(checkResponse)) {
+                return new AdminResult<>(FAIL, checkResponse.getMessage());
+            }
         }
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);

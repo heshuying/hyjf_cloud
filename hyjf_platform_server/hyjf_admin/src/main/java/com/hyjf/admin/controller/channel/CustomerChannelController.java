@@ -92,7 +92,6 @@ public class CustomerChannelController extends BaseController {
 		if(cRequest.getStatus()!=null) {
 			RedisUtils.set(RedisConstants.CUSTOMER_SERVICE_SWITCH, cRequest.getStatus().toString());
 		}
-			
 		CustomerChannelResponse ccr=new CustomerChannelResponse();
 		ccr.setStatus(Integer.valueOf(RedisUtils.get(RedisConstants.CUSTOMER_SERVICE_SWITCH)));
       return ccr;
