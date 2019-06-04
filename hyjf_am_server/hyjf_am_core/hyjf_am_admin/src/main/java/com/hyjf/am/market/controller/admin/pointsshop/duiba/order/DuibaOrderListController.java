@@ -212,4 +212,29 @@ public class DuibaOrderListController {
             return "error";
         }
     }
+
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/activation/{orderNum}")
+    public String activation(@PathVariable String orderNum) {
+        int res;
+        DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
+        // 根据兑吧订单号查询订单信息
+        DuibaOrderVO duibaOrderVOStr = duibaOrderListService.selectOrderByOrderId(orderNum);
+        if(duibaOrderVOStr!=null){
+            duibaOrderVO.setId(duibaOrderVOStr.getId());
+            duibaOrderVO.setActivationType(1);
+            // 根据订单信息更新订单状态
+            res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
+            if(res > 0){
+                return "success";
+            }
+        }
+        return "error";
+    }
 }
