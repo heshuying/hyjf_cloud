@@ -59,7 +59,11 @@ public class DuiBaServiceImpl implements DuiBaService {
 			// 生成url
 			String url = tool.buildAutoLoginRequest(uid, Long.valueOf(credits), redirect);
 			if (StringUtils.isNotBlank(url)) {
-				ret.put("status", "0");
+				if("1".equals(platform)){
+					ret.put("status", "000");
+				} else {
+					ret.put("status", "0");
+				}
 				ret.put("statusDesc", "成功");
 				ret.put("duiBaUrl", url);
 			} else {
