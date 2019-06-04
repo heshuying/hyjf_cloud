@@ -887,7 +887,8 @@ public class UserCenterController extends BaseController {
                 BankCardVO bankCardVO =bankCardResponse.getResult();
                 companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
                 companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
-                companyInfoCompanyInfoVO.setBankId(bankCardVO.getBankId().toString());
+                String strBankId = bankCardVO.getBankId() != null ? bankCardVO.getBankId().toString() : "";
+                companyInfoCompanyInfoVO.setBankId(strBankId);
             }
 
             //后台优化 add by nxl end
