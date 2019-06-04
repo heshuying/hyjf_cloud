@@ -125,7 +125,8 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
     protected CertReportEntityVO setResult(CertReportEntityVO bean, String rtnMsg,CertLogRequestBean certLog) {
 
         // 上报结果  0初始，1成功，9失败 99 无响应
-        // 返回结果  例  {"resultMsg": {"code": "0000","message": "[调试]数据已成功上报，正在等待处理，请使用对账接口查看数据状态"}
+        // 返回结果  例  成功：{ "code": "0000", "message": "查询成功!", "result": [{ "dataType": "正式数据", "batchNum":"CERT20171201008_20180111_1515661656914", "errorMsg": "success"}]}
+        //失败：{ "code": "1005","message": "[正式] 接口, 拼接 token 错误！"}
         JSONObject resp = CertCallUtil.parseResultQuery(rtnMsg);
         if(null == rtnMsg||rtnMsg.equals("")){
             //请求失败  无响应
@@ -138,6 +139,7 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
             logger.info("[查询批次数据入库消息] message："+errorMsg);
             if(CertCallConstant.CERT_RESPONSE_SUCCESS.equals(code)){
                 //代表入库成功
+                //解析result
                 JSONArray arrReturn =(JSONArray)resp.get("result");
                 JSONObject resultRet= (JSONObject)arrReturn.get(0);
                 String msg  = resultRet.getString("errorMsg");
