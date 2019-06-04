@@ -577,4 +577,6 @@ public class RedisConstants {
      *
      */
     public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
+
+    public static final String POINTS_SHOP_SWITCH = "points_shop_switch";
 }
