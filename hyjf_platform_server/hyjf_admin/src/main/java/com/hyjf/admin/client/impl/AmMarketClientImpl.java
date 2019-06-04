@@ -309,4 +309,36 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return response.getResultBoolean().booleanValue();
 	}
 
+	/**
+	 * 更新兑吧积分调整审批状态
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public boolean updatePointsModifyStatus(DuibaPointsRequest requestBean) {
+		String url = "http://AM-ADMIN/am-admin/duibapointsmodify/updatePointsModifyStatus";
+		BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+
+	/**
+	 * 插入兑吧交易明细表
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public boolean insertDuibaPoints(DuibaPointsRequest requestBean) {
+		String url = "http://AM-ADMIN/am-admin/duibapoints/insertDuibaPoints";
+		BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+
 }

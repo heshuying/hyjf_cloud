@@ -28,4 +28,12 @@ public interface DuibaPointsCustomizeMapper {
      * @return
      */
     Integer selectDuibaPointsUserCount(DuibaPointsRequest request);
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param request
+     * @return
+     */
+    Integer updateDuibaPoints(DuibaPointsRequest request);
 }

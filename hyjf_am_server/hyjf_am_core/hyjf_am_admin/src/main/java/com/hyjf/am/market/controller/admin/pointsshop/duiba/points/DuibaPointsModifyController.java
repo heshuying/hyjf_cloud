@@ -86,4 +86,23 @@ public class DuibaPointsModifyController {
         response.setResultBoolean(result);
         return response;
     }
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updatePointsModifyStatus")
+    public BooleanResponse updatePointsModifyStatus(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = false;
+        try {
+            result = duibaPointsModifyService.updatePointsModifyStatus(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.setResultBoolean(result);
+        return response;
+    }
 }

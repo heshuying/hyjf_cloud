@@ -37,4 +37,12 @@ public interface DuibaPointsModifyService {
      * @return
      */
     boolean insertPointsModifyList(DuibaPointsRequest request) throws Exception;
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param request
+     * @return
+     */
+    boolean updatePointsModifyStatus(DuibaPointsRequest request);
 }

@@ -1539,4 +1539,12 @@ public interface AmUserClient {
      * @return
      */
     boolean selectRemainPoints(DuibaPointsRequest requestBean);
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean updateDuibaPoints(DuibaPointsRequest requestBean);
 }

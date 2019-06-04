@@ -182,4 +182,20 @@ public interface AmMarketClient {
      * @return
      */
     boolean insertPointsModifyList(DuibaPointsRequest requestBean);
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean updatePointsModifyStatus(DuibaPointsRequest requestBean);
+
+    /**
+     * 插入兑吧交易明细表
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean insertDuibaPoints(DuibaPointsRequest requestBean);
 }

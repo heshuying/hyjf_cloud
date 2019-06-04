@@ -28,4 +28,12 @@ public interface DuibaPointsListService {
      * @return
      */
     List<DuibaPointsVO> selectDuibaPointsList(DuibaPointsRequest request);
+
+    /**
+     * 插入明细表
+     *
+     * @param request
+     * @return
+     */
+    boolean insertDuibaPoints(DuibaPointsRequest request);
 }

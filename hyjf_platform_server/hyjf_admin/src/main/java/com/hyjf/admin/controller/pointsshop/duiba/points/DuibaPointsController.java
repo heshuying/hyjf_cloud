@@ -86,7 +86,7 @@ public class DuibaPointsController extends BaseController {
             // 查询这些用户是否够扣分的
             boolean re = this.duibaPointsService.selectRemainPoints(requestBean);
             if (!re) {
-                return new AdminResult<>(FAIL, "批量调整积分记录生成失败（存在用户积分不足）！");
+                return new AdminResult<>(FAIL, "批量调整积分记录生成失败（存在用户积分不足）");
             }
         }
 

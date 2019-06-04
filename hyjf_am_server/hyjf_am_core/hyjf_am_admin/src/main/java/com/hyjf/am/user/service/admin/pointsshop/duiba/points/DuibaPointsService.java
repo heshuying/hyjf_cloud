@@ -38,4 +38,12 @@ public interface DuibaPointsService extends BaseService {
      * @return
      */
     boolean selectRemainPoints(DuibaPointsRequest request);
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param request
+     * @return
+     */
+    boolean updateDuibaPoints(DuibaPointsRequest request);
 }

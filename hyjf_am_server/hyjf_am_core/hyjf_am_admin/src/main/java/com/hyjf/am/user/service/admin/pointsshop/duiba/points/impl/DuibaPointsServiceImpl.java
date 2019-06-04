@@ -54,9 +54,21 @@ public class DuibaPointsServiceImpl extends BaseServiceImpl implements DuibaPoin
         // 查询用户中剩余积分比调整积分少的
         example.createCriteria().andUserIdIn(request.getUserIdList()).andPointsCurrentLessThan(request.getModifyPoints());
         Integer count = this.userMapper.countByExample(example);
-        if(count > 0) {
+        if (count > 0) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public boolean updateDuibaPoints(DuibaPointsRequest request) {
+        request.setUserId(request.getUserIdList().get(0));
+        return this.duibaPointsCustomizeMapper.updateDuibaPoints(request) > 0 ? true : false;
     }
 }
