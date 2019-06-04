@@ -1325,7 +1325,7 @@ public class UserCenterController extends BaseController {
         Response response = new Response();
         List<JxBankConfigVO> bankConfigVOList = userCenterService.getBankConfigByBankName(bankName);
         if(CollectionUtils.isEmpty(bankConfigVOList)) {
-            return new AdminResult<>(FAIL, "未查询到配置信息");
+            return new AdminResult<>(FAIL, "暂无匹配银行，可联系产品增加！");
         }
         List<JxBankConfigCustomizeVO> jxBankConfigCustomizeVO =CommonUtils.convertBeanList(bankConfigVOList,JxBankConfigCustomizeVO.class);
         return new AdminResult<ListResult<JxBankConfigCustomizeVO>>(ListResult.build(jxBankConfigCustomizeVO,jxBankConfigCustomizeVO.size())) ;
