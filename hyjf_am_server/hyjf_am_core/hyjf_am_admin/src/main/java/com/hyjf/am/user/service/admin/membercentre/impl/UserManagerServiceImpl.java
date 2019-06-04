@@ -673,7 +673,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                     spreadsUserId = spreadsUserOld.getSpreadsUserId();
                 }
                 // 更新userInfo的主单与非主单信息
-                updateUserParam(user.getUserId(), spreadsUserId);
+                updateUserParam(user.getUserId(), userRecommendNew.getUserId());
 
                 SpreadsUser spreadsUser = this.selectSpreadsUsersByUserId(Integer.parseInt(userId));
                 Integer oldSpreadUserId = null;
