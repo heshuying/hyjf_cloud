@@ -1,5 +1,9 @@
 package com.hyjf.cs.message.service.hgreportdata.caijing;
 
+import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
+
+import java.util.List;
+
 /**
  * @Author: yinhui
  * @Date: 2019/6/3 10:32

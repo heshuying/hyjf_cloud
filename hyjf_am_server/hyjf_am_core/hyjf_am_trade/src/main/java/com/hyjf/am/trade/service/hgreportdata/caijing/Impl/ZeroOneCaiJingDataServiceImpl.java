@@ -40,7 +40,7 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
                 zeroOneDataVO.setId(vo.getBorrowNid());
                 //标的链接
                 if("tender".equals(vo.getFlag())){
-                    zeroOneDataVO.setLink("/borrow/borrowDetail?borrowNid="+vo.getBorrowNid());
+                    zeroOneDataVO.setLink("borrow/borrowList");
                 }else{
                     zeroOneDataVO.setLink("borrow/creditList");
                 }
@@ -56,11 +56,12 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
                 //出借时间
                 zeroOneDataVO.setAdd_time(vo.getCreateTime());
                 //出借来源
-                if("PC".equals(clientMap.getOrDefault(vo.getClient(), null))){
-                    zeroOneDataVO.setBid_source("PC端");
-                }else{
-                    zeroOneDataVO.setBid_source("移动端");
-                }
+                zeroOneDataVO.setBid_source(clientMap.getOrDefault(vo.getClient(), null));
+//                if("PC".equals(clientMap.getOrDefault(vo.getClient(), null))){
+//                    zeroOneDataVO.setBid_source("PC端");
+//                }else{
+//                    zeroOneDataVO.setBid_source("移动端");
+//                }
 
                 dataVOList.add(zeroOneDataVO);
             }

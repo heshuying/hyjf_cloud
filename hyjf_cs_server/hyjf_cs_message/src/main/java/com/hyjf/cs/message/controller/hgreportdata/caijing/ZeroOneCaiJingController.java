@@ -26,6 +26,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("/investRecordSub")
     public void investRecordSub(){
 
+        // 出借记录报送
         zeroOneCaiJingService.investRecordSub();
 
     }

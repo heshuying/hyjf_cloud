@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -78,7 +80,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Boolean sendStatus = sendDataReport(list);
+        Boolean sendStatus = sendDataReport("invest",String.valueOf(JSONObject.toJSON(list)));
         if(sendStatus){
             //报送成功
             logger.info("借款记录接口报送成功");
@@ -105,24 +107,30 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     }
 
     /**
-     * 数据报送
+     * 数据推送
+     * @param type 类型，借款=lend ,出借=invest ,提前还款=advanced-repay
+     * @param json 数据json
      * @return
      */
-    private Boolean sendDataReport(List<ZeroOneDataEntity> dataVOList){
+    public Boolean sendDataReport(String type,String json){
 
-        String url = "http://data.01caijing.com/hub/p2p/invest/commit.json";
+        String url = "http://data.01caijing.com/hub/p2p/";
+
+        StringBuilder stbuUrl = new StringBuilder();
+        stbuUrl.append(url);
+        stbuUrl.append(type);
+        stbuUrl.append("/commit.json");
 
         Map<String,String> sendMap = new HashMap<>();
 
         try{
-            String json = String.valueOf(JSONObject.toJSON(dataVOList));
-
-            sendMap.put("visit_key","frontweb1.hyjf.com");
+            sendMap.put("visit_key","www.hyjf.com");
             sendMap.put("time",String.valueOf(System.currentTimeMillis()));
             sendMap.put("data",json);
 
             //Sige md5(密钥&visit_key=域名&time=时间戳&data=data字符串的byte长度)
             StringBuilder stringBuilder = new StringBuilder();
+            //生产密钥
             stringBuilder.append("5A25DD85BD76829D537C7E59AA5DA766");
             stringBuilder.append("&visit_key=");
             stringBuilder.append(sendMap.get("visit_key"));

@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.bean.hgreportdata.caijing;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 零壹财经报送实体类
@@ -25,9 +26,9 @@ public class ZeroOneDataEntity implements Serializable {
     //出借方式
     private String type;
     //出借金额
-    private String money;
+    private BigDecimal money;
     //有效金额
-    private String account;
+    private BigDecimal account;
     //出借状态
     private String status;
     //出借时间
@@ -85,19 +86,19 @@ public class ZeroOneDataEntity implements Serializable {
         this.type = type;
     }
 
-    public String getMoney() {
+    public BigDecimal getMoney() {
         return money;
     }
 
-    public void setMoney(String money) {
+    public void setMoney(BigDecimal money) {
         this.money = money;
     }
 
-    public String getAccount() {
+    public BigDecimal getAccount() {
         return account;
     }
 
-    public void setAccount(String account) {
+    public void setAccount(BigDecimal account) {
         this.account = account;
     }
 

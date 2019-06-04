@@ -2,6 +2,8 @@ package com.hyjf.am.trade.dao.model.customize;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.math.BigDecimal;
+
 /**
  * @Author: yinhui
  * @Date: 2019/6/3 14:22
@@ -16,7 +18,7 @@ public class ZeroOneCaiJingCustomize {
     //标的号
     private String borrowNid;
     //出借金额
-    private String account;
+    private BigDecimal account;
     //操作平台
     private String client;
     //投资时间or债转时间
@@ -40,11 +42,11 @@ public class ZeroOneCaiJingCustomize {
         this.borrowNid = borrowNid;
     }
 
-    public String getAccount() {
+    public BigDecimal getAccount() {
         return account;
     }
 
-    public void setAccount(String account) {
+    public void setAccount(BigDecimal account) {
         this.account = account;
     }
 
