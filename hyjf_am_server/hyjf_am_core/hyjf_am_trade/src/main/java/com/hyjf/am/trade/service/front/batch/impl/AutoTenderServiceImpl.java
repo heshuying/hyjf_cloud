@@ -404,6 +404,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             borrowTender.setAuthCode(authCode);
         }
         borrowTender.setRemark("自动出借");
+        // 出借时渠道
+        borrowTender.setTenderUserUtmId(hjhAccede.getTenderUserUtmId());
         boolean trenderFlag = borrowTenderMapper.insertSelective(borrowTender) > 0 ? true : false;
         if (!trenderFlag) {
             throw new RuntimeException("borrowtender表更新失败 " + orderId);
