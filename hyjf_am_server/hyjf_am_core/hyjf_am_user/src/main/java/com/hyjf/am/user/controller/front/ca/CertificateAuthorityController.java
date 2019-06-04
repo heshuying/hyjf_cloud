@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.front.ca;
 
+import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.front.ca.CertificateAuthorityService;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author: sunpeikai
@@ -48,5 +52,20 @@ public class CertificateAuthorityController extends BaseController {
     @PostMapping(value = "/insertcertificateauthority")
     public Integer insertCertificateAuthority(@RequestBody CertificateAuthorityVO certificateAuthorityVO){
         return certificateAuthorityService.insertCertificateAuthority(certificateAuthorityVO);
+    }
+
+    /**
+     * 通过用户id查询 ca客户编号
+     * @return
+     */
+    @ApiOperation(value = "查询ca客户编号",notes = "查询ca客户编号")
+    @PostMapping(value = "/queryCustomerId")
+    public CertificateAuthorityResponse queryCustomerId(@RequestBody Set<Integer> userId){
+        CertificateAuthorityResponse response = new CertificateAuthorityResponse();
+        List<CertificateAuthorityVO> list = certificateAuthorityService.queryCustomerId(userId);
+        if(list != null && list.size() > 0){
+            response.setResultList(list);
+        }
+        return response;
     }
 }

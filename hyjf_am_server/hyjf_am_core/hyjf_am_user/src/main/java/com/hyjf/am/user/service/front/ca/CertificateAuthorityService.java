@@ -5,6 +5,9 @@ package com.hyjf.am.user.service.front.ca;
 
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author: sunpeikai
  * @version: CertificateAuthorityService, v0.1 2018/7/17 10:11
@@ -26,4 +29,6 @@ public interface CertificateAuthorityService {
      * @return
      */
     Integer insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
+
+    List<CertificateAuthorityVO> queryCustomerId(Set<Integer> userId);
 }

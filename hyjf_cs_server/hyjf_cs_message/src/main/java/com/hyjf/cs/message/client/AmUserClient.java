@@ -6,13 +6,11 @@ import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiasq
@@ -170,4 +168,11 @@ public interface AmUserClient {
 	AppUtmRegResponse getAppUtmRegResponse(AppChannelStatisticsRequest request);
 
 	List<String> queryUserByBirthday(SmsCodeUserRequest request);
+
+	/**
+	 * 通过用户id查询 ca客户编号
+	 * @param request
+	 * @return
+	 */
+	List<CertificateAuthorityVO> queryCustomerId(Set<Integer> request);
 }

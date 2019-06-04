@@ -5,10 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
-import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.response.user.UserInfoCustomizeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
@@ -16,10 +13,7 @@ import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -313,6 +307,21 @@ public class AmUserClientImpl implements AmUserClient {
 	public List<String> queryUserByBirthday(SmsCodeUserRequest request) {
 		Response response = restTemplate
 				.postForEntity("http://AM-USER/am-user/smsCode/queryUserByBirthday", request, Response.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	/**
+	 * 通过用户id查询 ca客户编号
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<CertificateAuthorityVO> queryCustomerId(Set<Integer> request) {
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/certificateauthority/queryCustomerId", request, CertificateAuthorityResponse.class).getBody();
 		if (response != null && response.getResultList() != null) {
 			return response.getResultList();
 		}

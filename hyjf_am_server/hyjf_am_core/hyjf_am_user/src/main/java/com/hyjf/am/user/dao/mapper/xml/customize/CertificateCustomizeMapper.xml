@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.CertificateCustomizeMapper">
+	<resultMap id="certificateMapResult" type="com.hyjf.am.vo.user.CertificateAuthorityVO">
+		<!-- 用户ID -->
+		<result column="userId" property="userId" />
+		<!-- 客户编号 -->
+		<result column="customerId" property="customerId" />
+	</resultMap>
+
+	<select id="queryCustomerId" resultMap="certificateMapResult" parameterType="java.lang.Integer">
+		SELECT
+			user_id AS userId,
+			customer_id AS customerId
+		FROM
+			ht_certificate_authority
+		WHERE
+			user_id IN
+		<foreach collection="set" index="index"  item="listItem" open="(" close=")" separator="," >
+			#{listItem, jdbcType=INTEGER}
+		</foreach>
+	</select>
+
+
+</mapper>
+

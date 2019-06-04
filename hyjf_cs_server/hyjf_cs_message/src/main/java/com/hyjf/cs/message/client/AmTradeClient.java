@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -145,4 +146,12 @@ public interface AmTradeClient {
 	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request);
 
 	List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(AppChannelStatisticsRequest request);
+
+	/**
+	 * 查询指定日期的出借记录
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate);
 }

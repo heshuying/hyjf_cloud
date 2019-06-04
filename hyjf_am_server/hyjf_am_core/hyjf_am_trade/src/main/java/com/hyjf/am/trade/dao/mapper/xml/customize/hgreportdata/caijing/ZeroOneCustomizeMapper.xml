@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.caijing.ZeroOneCustomizeMapper">
+
+	<resultMap id="caijingMapResult" type="com.hyjf.am.trade.dao.model.customize.ZeroOneCaiJingCustomize">
+		<result column="userIds" property="userIds" /> <!-- 用户id -->
+		<result column="nid" property="nid" /> <!-- 出借订单号 -->
+		<result column="borrowNid" property="borrowNid" /> <!-- 标的号-->
+		<result column="account" property="account" /> <!-- 出借金额-->
+		<result column="client" property="client" /><!-- 操作平台 -->
+		<result column="createTime" property="createTime" /><!-- 时间 -->
+		<result column="flag" property="flag" /><!-- 标识 -->
+	</resultMap>
+	<select id="queryInvestRecordSub" resultMap="caijingMapResult" parameterType="Map">
+		SELECT
+			user_id as userIds,
+			nid,
+			borrow_nid AS borrowNid,
+			account,
+			client,
+			date_format(create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+			'tender' as flag
+		FROM
+		ht_borrow_tender
+		<where>
+			<if test="searchStartDate != null and searchStartDate !='' ">
+				AND create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
+			</if>
+			<if test="searchEndDate != null and searchEndDate !='' ">
+				AND create_time <![CDATA[<=]]> CONCAT(#{searchEndDate},' 23:59:59')
+			</if>
+		</where>
+
+		union all
+
+		SELECT
+			user_id as userIds,
+			assign_nid as nid,
+			credit_tender_nid AS borrowNid,
+			assign_pay as account,
+			client,
+			date_format(create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+			'credit' as flag
+		FROM
+		ht_credit_tender
+		<where>
+			<if test="searchStartDate != null and searchStartDate !='' ">
+				AND create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
+			</if>
+			<if test="searchEndDate != null and searchEndDate !='' ">
+				AND create_time <![CDATA[<=]]> CONCAT(#{searchEndDate},' 23:59:59')
+			</if>
+		</where>
+    </select>
+</mapper>

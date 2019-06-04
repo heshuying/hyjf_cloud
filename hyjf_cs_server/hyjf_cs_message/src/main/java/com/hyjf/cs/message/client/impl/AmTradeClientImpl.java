@@ -5,11 +5,13 @@ import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -243,4 +245,15 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
 	}
+
+	@Override
+	public List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate) {
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getBorrowUserInfo/"+startDate+"/"+endDate;
+		ZeroOneCaiJingResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
 }
