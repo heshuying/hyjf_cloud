@@ -12,6 +12,7 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertSendUtils;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.getyibumessage.CertGetYiBuMessageService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -145,7 +146,8 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
                 certLog.setQueryMsg(errorMsg);
             }else{
                 // 请求失败
-                certLog.setQueryResult(Integer.parseInt(code));
+                Integer intCode= StringUtils.isNotBlank(code)?Integer.parseInt(code):99;
+                certLog.setQueryResult(intCode);
                 certLog.setQueryMsg(errorMsg);
             }
 
