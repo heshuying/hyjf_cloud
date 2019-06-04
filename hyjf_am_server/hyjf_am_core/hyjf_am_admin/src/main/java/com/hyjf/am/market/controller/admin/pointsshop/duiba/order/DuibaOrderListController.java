@@ -229,6 +229,7 @@ public class DuibaOrderListController {
         if(duibaOrderVOStr!=null){
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             duibaOrderVO.setActivationType(1);
+            duibaOrderVO.setRemark("兑吧兑换结果通知接口-兑吧兑换失败！");
             // 根据订单信息更新订单状态
             res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
             if(res > 0){
