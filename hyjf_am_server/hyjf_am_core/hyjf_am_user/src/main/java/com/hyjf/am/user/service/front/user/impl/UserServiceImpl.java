@@ -386,6 +386,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         user.setIsInstFlag(0);
         user.setUsername(userName);
         user.setMobile(mobile);
+        // 该方法两个地方调用均为注册插入用户信息、注册时用户平台手机号与银行预留手机号相同 add by liushouyi
+        user.setBankMobile(mobile);
         user.setRechargeSms(0);
         user.setWithdrawSms(0);
         user.setInvestSms(0);

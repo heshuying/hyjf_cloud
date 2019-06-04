@@ -305,7 +305,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         // 会员操作日志表更新
         // 插入用户操作明细
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE13);
         userOperationLogEntity.setIp(ip);
         try {
             userOperationLogEntity.setPlatform(Integer.parseInt(modifyClient));
@@ -313,7 +313,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             userOperationLogEntity.setPlatform(0);
             logger.info("格式化操作平台失败,平台编号：{}", modifyClient);
         }
-        userOperationLogEntity.setRemark("原手机号:" + oldMobile);
+        userOperationLogEntity.setRemark("原手机号:" + oldMobile + ", 新手机号:" + newBankMobile);
         userOperationLogEntity.setOperationTime(new Date());
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));

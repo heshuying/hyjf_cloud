@@ -241,6 +241,7 @@
         <result column="email" property="email" jdbcType="VARCHAR" />
         <result column="email_status" property="emailStatus" jdbcType="INTEGER" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR" />
         <result column="mobile_status" property="mobileStatus" jdbcType="INTEGER" />
         <result column="real_name" property="realName" jdbcType="VARCHAR" />
         <result column="real_name_status" property="realNameStatus" jdbcType="INTEGER" />
