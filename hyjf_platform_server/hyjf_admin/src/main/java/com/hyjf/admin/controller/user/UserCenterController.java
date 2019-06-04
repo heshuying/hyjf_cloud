@@ -1323,6 +1323,9 @@ public class UserCenterController extends BaseController {
     public  AdminResult<ListResult<JxBankConfigCustomizeVO>> selectBankConfigByName(HttpServletRequest request, @RequestParam String bankName) {
         AdminResult<JxBankConfigCustomizeVO> result = new AdminResult<JxBankConfigCustomizeVO>();
         Response response = new Response();
+        if(StringUtils.isBlank(bankName)){
+            return new AdminResult<>(FAIL, "请输入所属银行！");
+        }
         List<JxBankConfigVO> bankConfigVOList = userCenterService.getBankConfigByBankName(bankName);
         if(CollectionUtils.isEmpty(bankConfigVOList)) {
             return new AdminResult<>(FAIL, "暂无匹配银行，可联系产品增加！");
