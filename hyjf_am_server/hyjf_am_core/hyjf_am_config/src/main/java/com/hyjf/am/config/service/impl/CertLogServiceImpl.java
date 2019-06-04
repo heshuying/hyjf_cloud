@@ -50,16 +50,15 @@ public class CertLogServiceImpl implements CertLogService {
         List<Integer> resultIn = new ArrayList<>();
         // 初始  等待处理   无响应
         resultIn.add(0);
-        /*resultIn.add(2);
-        resultIn.add(99);*/
-        //入库失败
-        resultIn.add(9);
+        /*resultIn.add(2); */
+        //无响应
+        resultIn.add(99);
         creteria.andQueryResultIn(resultIn);
         //一次查找 100 条数据
         example.setLimitStart(0);
         example.setLimitEnd(100);
 
-        example.setOrderByClause(" id asc");
+        example.setOrderByClause(" id asc ,query_result ASC ");
         List<CertLog> certLogList = certLogMapper.selectByExample(example);
         if (null != certLogList && certLogList.size() > 0) {
             return certLogList;
