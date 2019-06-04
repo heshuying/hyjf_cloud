@@ -1052,7 +1052,8 @@ public class UserCenterController extends BaseController {
             CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
             companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
             companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
-            companyInfoCompanyInfoVO.setBankId(bankCardVO.getBankId().toString());
+            String strBankId = bankCardVO.getBankId() != null ? bankCardVO.getBankId().toString() : "";
+            companyInfoCompanyInfoVO.setBankId(strBankId);
             searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
             return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
         }
