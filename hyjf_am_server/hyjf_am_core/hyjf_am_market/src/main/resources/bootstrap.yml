@@ -30,7 +30,6 @@ management:
     health:
       show-details: ALWAYS
 
-
 info:
   name: am_market
   version: '@project.version@'

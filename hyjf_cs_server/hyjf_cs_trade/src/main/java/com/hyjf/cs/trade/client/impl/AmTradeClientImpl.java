@@ -103,10 +103,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import com.hyjf.cs.trade.bean.MyCreditDetailBean;
-import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
-import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
@@ -7071,15 +7067,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 更新还款逾期标的信息
-     */
-    @Override
-    public void updateBorrowRepayLateInfo() {
-        String url = "http://AM-TRADE/am-trade/batch/repaylate";
-        restTemplate.getForEntity(url, String.class).getBody();
-    }
-
-    /**
      * 查询用户账户信息金额信息
      *
      * @return
@@ -7096,6 +7083,15 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 更新还款逾期标的信息
+     */
+    @Override
+    public void updateBorrowRepayLateInfo() {
+        String url = "http://AM-TRADE/am-trade/batch/repaylate";
+        restTemplate.getForEntity(url, String.class).getBody();
+    }
+
+    /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313
      * PC 1.1.2
@@ -7107,6 +7103,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean){
+        AemsOverdueResultBean aemsOverdueResultBean = new AemsOverdueResultBean();
+        AemsOverdueCustomizeResponse response=restTemplate.postForEntity("http://AM-TRADE/am-trade/aems/overdue/selectRepayOverdue",requestBean,AemsOverdueCustomizeResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            aemsOverdueResultBean.setAemsOverdueVO(response.getResultList());
+            aemsOverdueResultBean.setOverdue("overdue");
+            return aemsOverdueResultBean;
         }
         return null;
     }
@@ -7448,20 +7460,4 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResultList();
     }
     // 应急中心二期，历史数据上报 add by nxl end
-    /**
-     * 查询逾期相关数据
-     * @param requestBean
-     * @return
-     */
-    @Override
-    public AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean){
-        AemsOverdueResultBean aemsOverdueResultBean = new AemsOverdueResultBean();
-        AemsOverdueCustomizeResponse response=restTemplate.postForEntity("http://AM-TRADE/am-trade/aems/overdue/selectRepayOverdue",requestBean,AemsOverdueCustomizeResponse.class).getBody();
-        if (Response.SUCCESS.equals(response.getRtn())){
-            aemsOverdueResultBean.setAemsOverdueVO(response.getResultList());
-            aemsOverdueResultBean.setOverdue("overdue");
-            return aemsOverdueResultBean;
-        }
-        return null;
-    }
 }

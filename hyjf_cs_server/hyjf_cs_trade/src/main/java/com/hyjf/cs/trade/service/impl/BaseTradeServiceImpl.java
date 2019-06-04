@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
