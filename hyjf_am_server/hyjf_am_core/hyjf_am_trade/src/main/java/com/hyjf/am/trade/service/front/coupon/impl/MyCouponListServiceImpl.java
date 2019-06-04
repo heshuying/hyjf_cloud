@@ -16,12 +16,9 @@ import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -475,6 +472,12 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             //处理选中的操作平台
             String clientString = BestCouponUtil.dealOperation(myCouponListCustomizeVO.getCouponSystem());
             couponUserForAppCustomizeVO.setOperationPlatform(clientString);
+            // app4.0需求，如果支持全部类型，修改显示字样
+            if ("2".equals(requestBean.getPlatform()) || "3".equals(requestBean.getPlatform())){
+                if("散标,新手,智投".equals(couponUserForAppCustomizeVO.getProjectType())){
+                    couponUserForAppCustomizeVO.setProjectType("项目类型不限");
+                }
+            }
             //处理优惠券面额
             couponUserForAppCustomizeVO.setCouponQuota(myCouponListCustomizeVO.getCouponQuota() + BestCouponUtil.dealCouponQuota(myCouponListCustomizeVO.getCouponType()));
             couponUserForAppCustomizeVO.setId(myCouponListCustomizeVO.getId());
