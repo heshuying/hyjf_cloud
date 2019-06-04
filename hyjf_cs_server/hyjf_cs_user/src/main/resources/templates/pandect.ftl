@@ -32,7 +32,7 @@
                         <#assign user = datas.data.user >
                     </#if>
                   "iconUrl": "${user.iconUrl!''}",
-                  "isSetPassword": "${user.isSetPassword!'0'}"
+                  "isSetPassword": "${user.isSetPassword!'0'}",
                   "pointsCurrent": "${user.pointsCurrent!'0'}"
         },
          "account": {
