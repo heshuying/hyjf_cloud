@@ -106,7 +106,7 @@ public class BorrowRepaymentPlanController extends BaseController {
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
-            for (int i = 1; i < sheetCount; i++) {
+            for (int i = 1; i < sheetCount + 1; i++) {
                 copyForm.setPageSize(defaultRowMaxCount);
                 copyForm.setCurrPage(i);
                 // 添加分页信息  add by wgx 2019/06/04
