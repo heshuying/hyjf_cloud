@@ -148,8 +148,7 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
                 certLog.setQueryMsg(errorMsg);
             }else{
                 // 请求失败
-                Integer intCode= StringUtils.isNotBlank(code)?Integer.parseInt(code):99;
-                certLog.setQueryResult(intCode);
+                certLog.setQueryResult(CertCallUtil.convertQueryResult("NO"));
                 certLog.setQueryMsg(errorMsg);
             }
 
