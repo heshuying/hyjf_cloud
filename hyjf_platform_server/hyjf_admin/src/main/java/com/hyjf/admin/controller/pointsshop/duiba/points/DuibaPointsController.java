@@ -69,7 +69,7 @@ public class DuibaPointsController extends BaseController {
         // 获取操作人id
         AdminSystemVO adminSystemVO = this.getUser(request);
         requestBean.setModifyName(adminSystemVO.getUsername());
-
+        requestBean.setModifyId(adminSystemVO.getId());
         // 判断参数
         if (null == requestBean.getModifyType()) {
             return new AdminResult<>(FAIL, "请勾选调整类型！");
