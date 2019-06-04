@@ -166,7 +166,7 @@ public class DuibaOrderListController {
                 couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
                 couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
                 couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
-                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_MANUAL);
+                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_INTEGRAL);
                 couponUserRequest.setAttribute(userInfo.getAttribute());
                 couponUserRequest.setChannel(channelName);
                 int remain = couponConfigService.checkCouponSendExcess(duibaOrderVO.getCommodityCode());
