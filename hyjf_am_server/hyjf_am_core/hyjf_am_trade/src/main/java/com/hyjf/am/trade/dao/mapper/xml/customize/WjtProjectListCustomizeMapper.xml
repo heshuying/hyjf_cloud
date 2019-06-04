@@ -51,6 +51,12 @@
                 <if test="status == '4'.toString()">
                     AND ( htb.`status` = 4)
                 </if>
+                <!-- 获取 复审中+还款中+逾期中 -->
+                <if test="status == '22'.toString()">
+                    AND ((htb.`status` = 3)
+                    OR ( htb.`status` = 4)
+                    OR ( htb.`status` = 8))
+                </if>
             </if>
             AND htb.is_show <![CDATA[<>]]> 1
             <if test="publishInstCode != null and publishInstCode != ''">
