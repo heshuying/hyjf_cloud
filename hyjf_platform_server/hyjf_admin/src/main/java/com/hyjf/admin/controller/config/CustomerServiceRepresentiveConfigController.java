@@ -132,4 +132,17 @@ public class CustomerServiceRepresentiveConfigController extends BaseController 
         }
         return new AdminResult<>(response);
     }
+
+    @ApiOperation(value = "校验坐席配置信息", notes = "校验坐席配置信息")
+    @PostMapping("/checkCustomerServiceRepresentiveConfig")
+    public AdminResult<CustomerServiceRepresentiveConfigResponse> updateCustomerServiceRepresentiveConfig(@RequestBody CustomerServiceRepresentiveConfigRequest groupRequest) {
+        CustomerServiceRepresentiveConfigResponse checkResponse = customerServiceRepresentiveConfigService.checkCustomerServiceRepresentiveConfig(groupRequest);
+        if (checkResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(checkResponse)) {
+            return new AdminResult<>(FAIL, checkResponse.getMessage());
+        }
+        return new AdminResult<>(checkResponse);
+    }
 }

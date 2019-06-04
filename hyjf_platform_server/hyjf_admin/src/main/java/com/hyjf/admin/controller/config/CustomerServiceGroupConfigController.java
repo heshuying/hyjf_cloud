@@ -107,4 +107,17 @@ public class CustomerServiceGroupConfigController extends BaseController {
         }
         return new AdminResult<>(response);
     }
+
+    @ApiOperation(value = "校验客组配置信息", notes = "校验客组配置信息")
+    @PostMapping("/checkCustomerServiceGroupConfig")
+    public AdminResult<CustomerServiceGroupConfigResponse> updateCustomerServiceRepresentiveConfig(@RequestBody CustomerServiceGroupConfigRequest groupRequest) {
+        CustomerServiceGroupConfigResponse checkResponse = customerServiceGroupConfigService.checkCustomerServiceGroupConfig(groupRequest);
+        if (checkResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(checkResponse)) {
+            return new AdminResult<>(FAIL, checkResponse.getMessage());
+        }
+        return new AdminResult<>(checkResponse);
+    }
 }
