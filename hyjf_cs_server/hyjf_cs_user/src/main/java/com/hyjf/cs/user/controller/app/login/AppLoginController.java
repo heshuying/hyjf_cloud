@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -22,6 +23,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
@@ -70,6 +72,9 @@ public class AppLoginController extends BaseUserController {
 
     @Autowired
     private PassWordService passWordService;
+
+    @Autowired
+    AmUserClient amUserClient;
     /**
      * 登录
      *
@@ -211,6 +216,13 @@ public class AppLoginController extends BaseUserController {
                 }else{
                     SecretUtil.clearToken(sign);
                 }
+                //清除alias start add by nxl
+                UserAliasVO userAliasVO = amUserClient.findAliasesByUserId(userId);
+                if(userAliasVO != null){
+                    userAliasVO.setAlias("");
+                    amUserClient.updateAliases(userAliasVO);
+                }
+                //清除alias end add by nxl
                 ret.put("status", "0");
                 ret.put("statusDesc", "退出登录成功");
             } else {
