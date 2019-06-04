@@ -2038,7 +2038,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 是定向标
             if(!borrowInfoVO.getPublishInstCode().equals(user.getInstCode())){
                 // 机构编号不相等 不让投资
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BIND_PLAN_ERROR);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_WJT_ERROR);
             }
         }
         // 检查用户状态  角色  授权状态等  是否允许出借
