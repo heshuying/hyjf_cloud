@@ -465,19 +465,24 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         for (MyCouponListCustomizeVO myCouponListCustomizeVO : list) {
             CouponUserForAppCustomizeVO couponUserForAppCustomizeVO = new CouponUserForAppCustomizeVO();
 
+            String projectString = "";
+            String clientString = "";
+
+            if ("2".equals(requestBean.getPlatform()) || "3".equals(requestBean.getPlatform())){
+                projectString = BestCouponUtil.dealProjectTypeNew(myCouponListCustomizeVO.getProjectType());
+                if(!"项目类型不限".equals(projectString)){
+                    projectString = "限" + projectString + "可用";
+                }
+                clientString = BestCouponUtil.dealOperationNew(myCouponListCustomizeVO.getCouponSystem());
+            } else {
+                projectString = BestCouponUtil.dealProjectType(myCouponListCustomizeVO.getProjectType());
+                clientString = BestCouponUtil.dealOperation(myCouponListCustomizeVO.getCouponSystem());
+            }
             //根据项目类型处理转换项目
-            String projectString = BestCouponUtil.dealProjectType(myCouponListCustomizeVO.getProjectType());
             couponUserForAppCustomizeVO.setProjectType(projectString);
 
             //处理选中的操作平台
-            String clientString = BestCouponUtil.dealOperation(myCouponListCustomizeVO.getCouponSystem());
             couponUserForAppCustomizeVO.setOperationPlatform(clientString);
-            // app4.0需求，如果支持全部类型，修改显示字样
-            if ("2".equals(requestBean.getPlatform()) || "3".equals(requestBean.getPlatform())){
-                if("散标,新手,智投".equals(couponUserForAppCustomizeVO.getProjectType())){
-                    couponUserForAppCustomizeVO.setProjectType("项目类型不限");
-                }
-            }
             //处理优惠券面额
             couponUserForAppCustomizeVO.setCouponQuota(myCouponListCustomizeVO.getCouponQuota() + BestCouponUtil.dealCouponQuota(myCouponListCustomizeVO.getCouponType()));
             couponUserForAppCustomizeVO.setId(myCouponListCustomizeVO.getId());
@@ -569,17 +574,17 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目金额
             Integer tenderQuotaType = bestCoupon.getTenderQuotaType();
-
+            // app4.0描述文案修改
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                            bestCoupon.getTenderQuota(),platform, moneyBigDecimal);
+                            "金额不符",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             } else if (tenderQuotaType == 2) {
                 if (bestCoupon.getTenderQuotaAmount() != null && (new Double(bestCoupon.getTenderQuotaAmount()) > new Double(money))) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota(),platform, moneyBigDecimal);
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"金额不符",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -712,18 +717,19 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (!ifcouponSystem) {
                 // 验证项目金额
                 Integer tenderQuotaType = userCouponConfigCustomize.getTenderQuotaType();
+                // app4.0描述文案修改
                 if (1 == tenderQuotaType) {
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform,moneyBigDecimal);
+                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,"金额不符",platform,moneyBigDecimal);
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
                     }
                 } else if (2 == tenderQuotaType) {
                     if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
                         if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
-                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform,moneyBigDecimal);
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,"金额不符",platform,moneyBigDecimal);
                             notAvailableCouponList.add(couponBeanVo);
                             continue;
                         }
