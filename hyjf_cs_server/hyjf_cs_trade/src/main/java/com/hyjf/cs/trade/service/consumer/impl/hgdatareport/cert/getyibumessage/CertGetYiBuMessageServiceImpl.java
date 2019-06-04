@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.getyibumessage;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
@@ -11,6 +12,7 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertSendUtils;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.getyibumessage.CertGetYiBuMessageService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -123,23 +125,31 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
     protected CertReportEntityVO setResult(CertReportEntityVO bean, String rtnMsg,CertLogRequestBean certLog) {
 
         // 上报结果  0初始，1成功，9失败 99 无响应
-        // 返回结果  例  {"resultMsg": {"code": "0000","message": "[调试]数据已成功上报，正在等待处理，请使用对账接口查看数据状态"}
+        // 返回结果  例  成功：{ "code": "0000", "message": "查询成功!", "result": [{ "dataType": "正式数据", "batchNum":"CERT20171201008_20180111_1515661656914", "errorMsg": "success"}]}
+        //失败：{ "code": "1005","message": "[正式] 接口, 拼接 token 错误！"}
         JSONObject resp = CertCallUtil.parseResultQuery(rtnMsg);
-        String errorMsg = resp.getString("message");
-        String code = resp.getString("code");
         if(null == rtnMsg||rtnMsg.equals("")){
             //请求失败  无响应
-            certLog.setQueryResult(CertCallUtil.convertQueryResult(errorMsg));
+            certLog.setQueryResult(CertCallUtil.convertQueryResult("NO"));
             certLog.setQueryMsg("请求失败,无响应");
         }else{
+            String errorMsg = resp.getString("message");
+            String code = resp.getString("code");
+            logger.info("[查询批次数据入库消息] code："+code);
+            logger.info("[查询批次数据入库消息] message："+errorMsg);
             if(CertCallConstant.CERT_RESPONSE_SUCCESS.equals(code)){
                 //代表入库成功
-                certLog.setQueryResult(CertCallConstant.CERT_QUERY_RETURN_STATUS_SUCCESS);
+                //解析result
+                JSONArray arrReturn =(JSONArray)resp.get("result");
+                JSONObject resultRet= (JSONObject)arrReturn.get(0);
+                String msg  = resultRet.getString("errorMsg");
+//                certLog.setQueryResult(CertCallConstant.CERT_QUERY_RETURN_STATUS_SUCCESS);
+                certLog.setQueryResult(CertCallUtil.convertQueryResult(msg));
                 certLog.setQueryMsg(errorMsg);
-
             }else{
                 // 请求失败
-                certLog.setQueryResult(CertCallUtil.convertQueryResult(errorMsg));
+                Integer intCode= StringUtils.isNotBlank(code)?Integer.parseInt(code):99;
+                certLog.setQueryResult(intCode);
                 certLog.setQueryMsg(errorMsg);
             }
 
