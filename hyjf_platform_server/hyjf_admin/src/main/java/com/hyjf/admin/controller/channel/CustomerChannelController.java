@@ -71,7 +71,7 @@ public class CustomerChannelController extends BaseController {
 		cRequest.setCreateTime(new Date());
 		cRequest.setUpdateTime(new Date());
 		CustomerChannelResponse re = customerChannelService.insetCustomerChannel(cRequest);
-		if(Response.isSuccess(re)) {
+		if(!Response.isSuccess(re)) {
 			return new AdminResult<>(AdminResult.FAIL, re.getMessage());
 		}
       return new AdminResult<CustomerChannelResponse>();
@@ -102,7 +102,7 @@ public class CustomerChannelController extends BaseController {
 		cRequest.setUpdateUser(this.getUser(request).getUsername());
 		cRequest.setUpdateTime(new Date());
 		CustomerChannelResponse re = customerChannelService.updateCustomerChannel(cRequest);
-		if(Response.isSuccess(re)) {
+		if(!Response.isSuccess(re)) {
 			return new AdminResult<>(AdminResult.FAIL, re.getMessage());
 		}
       return new AdminResult<CustomerChannelResponse>();
