@@ -1078,6 +1078,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			record.setAuthCode(authCode);
 			record.setCreditEndType(1); // 结束债权类型（1:还款，2:散标债转，3:智投债转）'
 			record.setStatus(0);
+			record.setState("A"); // 初始化为A：待处理状态
 			record.setOrgOrderId(orgOrderId);
 			record.setCreateUser(userId);
 			record.setUpdateUser(userId);
