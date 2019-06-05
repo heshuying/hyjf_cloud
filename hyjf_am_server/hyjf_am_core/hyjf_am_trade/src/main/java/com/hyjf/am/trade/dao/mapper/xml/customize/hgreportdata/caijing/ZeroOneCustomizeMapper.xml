@@ -78,7 +78,7 @@
 				flg.amount_freeze
 			ELSE
 				rflg.amount
-			END AS amount
+			END AS account
 		FROM
 			ht_borrow_repay ry
 		LEFT JOIN ht_borrow hw ON ry.borrow_nid = hw.borrow_nid
