@@ -99,8 +99,8 @@
 			ry.repay_status = 1
 			AND ry.repay_period > 1
 
-		AND ry.repay_yestime <![CDATA[>=]]> hw.repay_last_time
-		AND hw.recover_last_time > unix_timestamp('2018-04-01 00:00:00')
+		AND ry.repay_yestime <![CDATA[ < ]]> hw.repay_last_time
+		AND hw.recover_last_time <![CDATA[>]]> unix_timestamp('2018-04-01 00:00:00')
 		<if test="searchStartDate != null and searchStartDate !='' ">
 		AND ry.repay_yestime  <![CDATA[>=]]> unix_timestamp(CONCAT(#{searchStartDate},' 00:00:00'))
 		</if>
