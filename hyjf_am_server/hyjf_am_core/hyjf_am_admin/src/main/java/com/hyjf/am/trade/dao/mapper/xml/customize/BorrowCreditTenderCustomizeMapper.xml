@@ -210,12 +210,23 @@
 		ct.credit_tender_nid as creditTenderNid,
 		hta.download_url AS downloadUrl,
 		hta.viewpdf_url AS viewUrl,
-		hta.img_url AS imgUrl
-
+		hta.img_url AS imgUrl,
+		bce.`state`,
+		CASE bce.`state`
+		WHEN 'A' THEN
+		'初始'
+		WHEN 'S' THEN
+		'成功'
+		WHEN 'F' THEN
+		'失败'
+		ELSE
+		'未开始'
+		END stateDesc
 
 		FROM
 		ht_credit_tender ct
 		INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = ct.assign_nid
 		LEFT JOIN ht_r_user pna_u ON pna_u.user_id = ct.user_id
 		-- LEFT JOIN huiyingdai_users_info hui ON u.user_id = hui.user_id
 		-- LEFT JOIN hyjf_param_name pna_u ON cast(hui.attribute AS CHAR) = pna_u.name_cd AND pna_u.name_class = 'USER_PROPERTY'
@@ -306,6 +317,13 @@
 			<!-- 客户端-->
 			<if test="client != null and client != ''">
 				AND ct.client=#{client}
+			</if>
+			<if test="stateSrch != null and stateSrch != '' and stateSrch != 'W'">
+				AND bce.state = #{stateSrch}
+			</if>
+			<!-- 查询未开始 -->
+			<if test="stateSrch != null and stateSrch != '' and stateSrch == 'W'">
+				AND bce.id is null
 			</if>
 			<!-- 时间 -->
 			<if test="addTimeStart != null and addTimeStart != ''">

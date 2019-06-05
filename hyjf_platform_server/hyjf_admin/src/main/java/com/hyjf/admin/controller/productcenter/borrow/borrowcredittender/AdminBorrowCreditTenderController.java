@@ -120,13 +120,13 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队",
                     "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性", "承接人当前的推荐人的分公司", "承接人当前的推荐人的部门", "承接人当前的推荐人的团队",
                     "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队",
-                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间","债权结束状态"};
         }else {
             titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "出让人当前的推荐人的用户名", "出让人当前的推荐人的用户属性",
                     "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性",
                     "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性",
                     "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性",
-                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间","债权结束状态"};
         }
         // 生成一个表格
         SXSSFSheet sheet = workbook.createSheet(sheetNameTmp);
@@ -332,6 +332,8 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     // 承接时间
                     else if (celLength == 33) {
                         cell.setCellValue(borrowCommonCustomize.getAddTime());
+                    }else if (celLength == 34) {
+                        cell.setCellValue(borrowCommonCustomize.getStateDesc());
                     }
                 }else {
                     if (celLength == 0) {
@@ -452,6 +454,8 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     // 承接时间
                     else if (celLength == 21) {
                         cell.setCellValue(borrowCommonCustomize.getAddTime());
+                    }else if (celLength == 22) {
+                        cell.setCellValue(borrowCommonCustomize.getStateDesc());
                     }
                 }
             }

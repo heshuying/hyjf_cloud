@@ -1,6 +1,8 @@
 package com.hyjf.am.resquest.admin;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 public class BorrowCreditRepayAmRequest  implements Serializable {
@@ -41,6 +43,9 @@ public class BorrowCreditRepayAmRequest  implements Serializable {
 
     /* 平台 */
     private String client;
+
+    /** 债权结束状态 S-成功;F-失败;A-初始:W-未开始*/
+    private String stateSrch;
 
     public String getUserName() {
         return userName;
@@ -144,5 +149,13 @@ public class BorrowCreditRepayAmRequest  implements Serializable {
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public String getStateSrch() {
+        return stateSrch;
+    }
+
+    public void setStateSrch(String stateSrch) {
+        this.stateSrch = stateSrch;
     }
 }
