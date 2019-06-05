@@ -54,11 +54,10 @@
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
         left join ht_borrow_tender bt ON br.nid = bt.nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
-        LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
         WHERE br.status=1 and br.accede_order_id is null
         <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
         <if test="utmIds != null">
-            AND ur.utm_id in
+            AND bt.tender_user_utm_id in
             <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
                 #{item}
             </foreach>
@@ -96,11 +95,10 @@
         FROM ht_hjh_accede ha
         LEFT JOIN ht_hjh_plan hp ON ha.plan_nid=hp.plan_nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = ha.accede_order_id
-        LEFT JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
         WHERE ha.order_status in (0,2,3)
         <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
         <if test="utmIds != null">
-            AND ur.utm_id in
+            AND ha.tender_user_utm_id in
             <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
                 #{item}
             </foreach>
