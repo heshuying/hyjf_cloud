@@ -29,7 +29,7 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
 	public List<CustomerServiceChannel> getCustomerChannelList(CustomerChannelRequest request,int count) {
 		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
-			Paginator paginator = new Paginator(request.getCurrPage(), (int) count,request.getPageSize());
+			Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             example.setLimitStart(paginator.getOffset());
             example.setLimitEnd(paginator.getLimit());
 		}
@@ -43,6 +43,12 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
 		BeanUtils.copyProperties(request,record );
 		record.setCreateTime(new Date());
 		record.setUpdateTime(new Date());
+		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
+		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
+		example.or().andChannelIdEqualTo(request.getChannelId());
+		if(list!=null&&list.isEmpty()) {
+			return 0;
+		}
 		return customerServiceChannelMapper.insert(record);
 	}
 
@@ -53,7 +59,17 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
     	record.setStatus(request.getStatus());
     	record.setUpdateUser(request.getUpdateUser());
     	record.setUpdateTime(new Date());
-		return customerServiceChannelMapper.updateByPrimaryKey(record);
+    	if(request.getChannelId()!=null&&request.getChannelId()!=record.getChannelId()) {
+    		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
+    		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
+    		example.or().andChannelIdEqualTo(request.getChannelId());
+    		if(list!=null&&list.isEmpty()) {
+    			record.setChannelName(request.getChannelName());
+    			record.setChannelId(request.getChannelId());
+    		}
+			
+    	}
+		return customerServiceChannelMapper.updateByPrimaryKeySelective(record);
 	}
 
 

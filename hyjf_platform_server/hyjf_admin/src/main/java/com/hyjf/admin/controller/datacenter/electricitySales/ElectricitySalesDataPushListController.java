@@ -63,7 +63,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/hyjf-admin/electricitySales")
 public class ElectricitySalesDataPushListController  extends BaseController {
 	/** 权限 */
-	//public static final String PERMISSIONS = "DATACENTERCOUPON";
+	//public static final String PERMISSIONS = "electricitySales";
     @Autowired
     private  ElectricitySalesDataPushListService electricitySalesDataPushListService;
 

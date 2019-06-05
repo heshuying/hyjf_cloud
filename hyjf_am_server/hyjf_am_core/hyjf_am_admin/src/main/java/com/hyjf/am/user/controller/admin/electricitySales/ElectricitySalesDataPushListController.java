@@ -21,33 +21,25 @@ import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.AccountMobileSynchResponse;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
-import com.hyjf.am.trade.service.admin.finance.impl.RechargeManagementServiceImpl;
+import com.hyjf.am.trade.service.admin.finance.RechargeManagementService;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.service.admin.bank.BankOpenService;
 import com.hyjf.am.user.service.admin.electricitySales.ElectricitySalesDataPushListService;
 import com.hyjf.am.user.service.admin.exception.BorrowRegistRepairService;
 import com.hyjf.am.user.service.admin.promotion.UtmRegService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
-import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 
@@ -76,7 +68,7 @@ public class ElectricitySalesDataPushListController extends BaseController {
     @Autowired
     private UtmPlatService utmPlatService;
     @Autowired
-    private RechargeManagementServiceImpl rechargeManagementService;
+    private RechargeManagementService rechargeManagementService;
     /**
      * 线下修改信息同步查询列表list
      * @auth dzs
