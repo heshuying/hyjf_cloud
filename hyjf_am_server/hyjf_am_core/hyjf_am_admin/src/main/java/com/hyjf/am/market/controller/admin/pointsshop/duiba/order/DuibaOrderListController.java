@@ -14,9 +14,11 @@ import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.trade.service.front.coupon.CouponUserService;
+import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.admin.promotion.ChannelService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
+import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
@@ -58,6 +60,9 @@ public class DuibaOrderListController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ChannelService channelService;
@@ -140,6 +145,8 @@ public class DuibaOrderListController {
             if(duibaOrderVO != null && duibaOrderVO.getUserId() != null) {
                 // 根据用户id获取用户详情信息
                 UserInfo userInfo = userInfoService.findUserInfoById(duibaOrderVO.getUserId());
+                // 根据用户id获取用户信息
+                User user = userService.findUserByUserId(duibaOrderVO.getUserId());
                 // 根据用户id获取注册时渠道名
                 String channelName = channelService.selectChannelName(duibaOrderVO.getUserId());
                 // 根据优惠券编码查询优惠券
@@ -204,15 +211,19 @@ public class DuibaOrderListController {
                         int uocount = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO1);
                         // 有更新数据返回成功
                         if(uocount > 0){
-                            // 优惠卷发放成功
-                            return "success";
+                            // 获取用户最新积分
+                            if(user!=null){
+                                String points = String.valueOf(user.getPointsCurrent());
+                                // 优惠卷发放成功
+                                return points;
+                            }else{
+                                throw new Exception("优惠券发放失败！根据用户id获取用户表信息为空！userid：" + duibaOrderVO.getUserId());
+                            }
                         }else{
-                            logger.error("优惠券发放失败！更新“订单表”信息插入“优惠卷用户表主键”失败：duibaOrder 表主键 ID：" + duibaOrderVO.getId());
-                            return "error";
+                            throw new Exception("优惠券发放失败！更新“订单表”信息插入“优惠卷用户表主键”失败：duibaOrder 表主键 ID：" + duibaOrderVO.getId());
                         }
                     }else{
-                        logger.error("优惠插入失败！，返回优惠卷用户表的主键id为空：" + couponUser.getId());
-                        return "error";
+                        throw new Exception("优惠插入失败！，返回优惠卷用户表的主键id为空：" + couponUser.getId());
                     }
                 } catch (Exception e) {
                     logger.error("优惠券发放失败！异常如下：" + e.getMessage());

@@ -183,9 +183,9 @@ public class DuiBaCallController extends BaseController {
 	public String recharge(HttpServletRequest request) {
 		logger.info("兑吧自有商品充值接口开始");
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
-
 		String status = "";
 		String errorMessage = "";
+		String releaseCouponsType = "";
 		Long credits = null;
 		try {
 			VirtualParams params = tool.virtualConsume(request);
@@ -200,17 +200,18 @@ public class DuiBaCallController extends BaseController {
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			// todo wangjun 业务处理
 			status = "success";
-			credits = Long.valueOf(1000);
-			// 发放优惠卷 需要的参数 优惠券编码  couponCode 用户id  userId 备注  content
-			// 传兑吧订单号
+			releaseCouponsType = "error";
+			// 发放优惠卷， 传兑吧订单号
 			String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/releaseCoupons/" + params.getOrderNum();
 			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 			if (couponUserStr != null) {
 				// 优惠卷成功或异常处理
-				if(!status.equals(couponUserStr)){
+				if(releaseCouponsType.equals(couponUserStr)){
 					// 发放失败
                     status = "fail";
                     logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
+				}else{
+					credits = Long.valueOf(couponUserStr);
 				}
 			}
 		} catch (Exception e) {
