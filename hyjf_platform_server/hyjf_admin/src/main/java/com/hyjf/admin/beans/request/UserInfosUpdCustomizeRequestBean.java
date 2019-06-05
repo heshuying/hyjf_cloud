@@ -47,6 +47,8 @@ public class UserInfosUpdCustomizeRequestBean {
     //银行名
     @ApiModelProperty(value = "银行名")
     private String bank;
+    @ApiModelProperty(value = "银行Id")
+    private int bankId;
 
     public String getUserId() {
         return userId;
@@ -142,6 +144,14 @@ public class UserInfosUpdCustomizeRequestBean {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public int getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
     }
 }
 

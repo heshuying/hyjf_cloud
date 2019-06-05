@@ -2927,6 +2927,27 @@ public interface AmTradeClient {
     BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId);
 
     /**
+     * 统计预计新增复投额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date);
+
+    /**
+     * 统计预计新增债转额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
+
+    /**
+     * 统计实际资金计划
+     *  @author wenxin
+     * @date 2019/4/23 11:48
+     */
+    List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date);
+
+    /**
      * 插入大屏数据
      * @param screenDataBean
      * @return

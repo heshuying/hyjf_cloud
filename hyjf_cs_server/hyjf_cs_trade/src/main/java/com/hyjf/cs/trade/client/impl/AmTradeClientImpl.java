@@ -38,10 +38,7 @@ import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.BorrowApicronRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
@@ -7134,6 +7131,51 @@ public class AmTradeClientImpl implements AmTradeClient {
         IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlan/countPlanAccedeRecord/" + request.getPlanNid() ,IntegerResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultInt();
+        }
+        return null;
+    }
+
+    /**
+     * 统计预计新增复投额
+     * @param date
+     * @return List<HjhPlanCapitalPredictionVO>
+     */
+    @Override
+    public List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalPredictionForProformaList/"+date;
+        HjhPlanCapitalPredictionResponse response = restTemplate.getForEntity(url, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 统计预计新增债转额
+     * @param date
+     * @return List<HjhPlanCapitalPredictionVO>
+     */
+    @Override
+    public List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForCreditList/"+date+"/"+dualDate;
+        HjhPlanCapitalPredictionResponse response = restTemplate.getForEntity(url, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 统计实际资金计划
+     * @param date
+     * @return List<HjhPlanCapitalActualVO>
+     */
+    @Override
+    public List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalActualformaList/"+date;
+        HjhPlanCapitalActualResponse response = restTemplate.getForEntity(url, HjhPlanCapitalActualResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
         }
         return null;
     }

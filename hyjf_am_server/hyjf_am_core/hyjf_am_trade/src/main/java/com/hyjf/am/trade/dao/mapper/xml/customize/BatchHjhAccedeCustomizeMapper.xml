@@ -153,4 +153,16 @@
 								STR_TO_DATE(CONCAT(#{endTime}, '23:59:59'), '%Y-%m-%d %H:%i:%s')
     </update>
 	<!-- add 获取发生异常且开始计息时间为空的的数据并更新其匹配期 huanghui 20181129 end-->
+
+	<!-- 根据投资人的用户名检索相应的 “计划订单” ht_hjh_accede  （1.计划订单开始发起退出的时间小于T，大于T+3日）-->
+	<select id="selectHjhAccedeList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM
+		ht_hjh_accede
+		WHERE
+		accede_order_id = #{planOrderId}
+		and order_status = 3
+		and user_id = #{userId}
+	</select>
 </mapper>
