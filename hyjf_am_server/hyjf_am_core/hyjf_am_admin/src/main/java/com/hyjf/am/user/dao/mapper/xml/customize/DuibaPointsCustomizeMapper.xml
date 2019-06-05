@@ -31,7 +31,7 @@
         </if>
     </select>
 
-    <select id="selectDuibaPointsUserCount" resultMap="java.lang.Integer"
+    <select id="selectDuibaPointsUserCount" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         SELECT
         count(1)
@@ -47,7 +47,7 @@
         </if>
     </select>
 
-    <select id="updateDuibaPoints" resultMap="java.lang.Integer"
+    <select id="updateDuibaPoints" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         UPDATE ht_user
         SET

@@ -109,7 +109,7 @@
     </if>
   </select>
 
-  <select id="selectDuibaOrderCount" resultMap="java.lang.Integer"
+  <select id="selectDuibaOrderCount" resultType="java.lang.Integer"
           parameterType="com.hyjf.am.resquest.admin.DuibaOrderRequest">
     SELECT
     count(1)

@@ -74,6 +74,15 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
 
     private String modifyId;
 
+    /*
+     * 页码
+     */
+    protected int limitStart = -1;
+    /*
+     * 页码
+     */
+    protected int limitEnd = -1;
+
     /**
      * 翻页机能用的隐藏变量
      */
@@ -88,6 +97,22 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
             paginatorPage = 1;
         }
         return paginatorPage;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 
     public void setPaginatorPage(int paginatorPage) {

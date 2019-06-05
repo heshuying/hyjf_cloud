@@ -58,6 +58,8 @@ public class DuibaPointsListController {
                 // 前台未传分页那默认 10
                 paginator = new Paginator(request.getCurrPage(), recordTotal, request.getPageSize());
             }
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             request.setPaginator(paginator);
             List<DuibaPointsVO> recordList = duibaPointsListService.selectDuibaPointsList(request);
             if (CollectionUtils.isNotEmpty(recordList)) {
