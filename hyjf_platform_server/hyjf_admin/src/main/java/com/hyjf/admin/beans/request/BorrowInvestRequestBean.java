@@ -67,6 +67,9 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     @ApiModelProperty(value = "是否具有组织架构查看权限")
     private String isOrganizationView;
 
+    @ApiModelProperty(value = "债权结束状态 S-成功;F-失败;A-初始:W-未开始")
+    private String stateSrch;
+
     public String getBorrowNidSrch() {
         return borrowNidSrch;
     }
@@ -209,5 +212,13 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
 
     public void setIsOrganizationView(String isOrganizationView) {
         this.isOrganizationView = isOrganizationView;
+    }
+
+    public String getStateSrch() {
+        return stateSrch;
+    }
+
+    public void setStateSrch(String stateSrch) {
+        this.stateSrch = stateSrch;
     }
 }

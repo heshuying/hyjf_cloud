@@ -39,6 +39,8 @@ public class BorrowInvestResponseBean {
 
     @ApiModelProperty(value = "产品类型下拉框")
     private List<DropDownVO> borrowProjectTypeList;
+    @ApiModelProperty(value = "债权结束状态下拉框")
+    private List<DropDownVO> creditendStateList;
 
     @ApiModelProperty(value = "出借人债券明细")
     List<InvestorDebtBean> detailList;
@@ -135,5 +137,13 @@ public class BorrowInvestResponseBean {
 
     public void setBorrowProjectTypeList(List<DropDownVO> borrowProjectTypeList) {
         this.borrowProjectTypeList = borrowProjectTypeList;
+    }
+
+    public List<DropDownVO> getCreditendStateList() {
+        return creditendStateList;
+    }
+
+    public void setCreditendStateList(List<DropDownVO> creditendStateList) {
+        this.creditendStateList = creditendStateList;
     }
 }

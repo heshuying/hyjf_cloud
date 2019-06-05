@@ -249,6 +249,11 @@ public class BorrowInvestCustomizeVO extends BaseVO implements Serializable {
     private String utmSource1;
     private String utmSource2;
 
+    /** 银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）*/
+    private String state;
+    /** 债权结束状态描述*/
+    private String stateDesc;
+
     
     public String getUtmSource1() {
 		return utmSource1;
@@ -672,5 +677,21 @@ public class BorrowInvestCustomizeVO extends BaseVO implements Serializable {
 
     public void setTenderType(String tenderType) {
         this.tenderType = tenderType;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getStateDesc() {
+        return stateDesc;
+    }
+
+    public void setStateDesc(String stateDesc) {
+        this.stateDesc = stateDesc;
     }
 }

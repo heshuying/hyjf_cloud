@@ -92,6 +92,9 @@ public class BorrowInvestController extends BaseController {
         //产品类型
         List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
         responseBean.setBorrowProjectTypeList(ConvertUtils.convertListToDropDown(borrowProjectTypeList,"borrowCd","borrowName"));
+        //债权结束状态
+        List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
+        responseBean.setCreditendStateList(creditendStateList);
         return new AdminResult(responseBean);
     }
 
