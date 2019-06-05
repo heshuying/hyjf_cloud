@@ -12,6 +12,7 @@ import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
+import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.trade.service.front.coupon.CouponUserService;
@@ -86,6 +87,18 @@ public class DuibaOrderListController {
         DuibaOrderResponse response = new DuibaOrderResponse();
         Integer count = duibaOrderListService.selectOrderListCount(request);
         if (count > 0) {
+            // 查询列表传入分页
+            Paginator paginator;
+            if (request.getPageSize() == 0) {
+                // 前台传分页
+                paginator = new Paginator(request.getCurrPage(), count);
+            } else {
+                // 前台未传分页那默认 10
+                paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
+            }
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+            request.setPaginator(paginator);
             List<DuibaOrderVO> list = this.duibaOrderListService.selectOrderList(request);
             if (!CollectionUtils.isEmpty(list)) {
                 response.setResultList(list);
