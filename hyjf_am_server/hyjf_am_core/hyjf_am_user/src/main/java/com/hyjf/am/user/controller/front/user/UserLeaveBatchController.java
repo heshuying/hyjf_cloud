@@ -21,6 +21,6 @@ public class UserLeaveBatchController extends BaseController {
     @RequestMapping("/leaveupdate")
     public void leaveUpdate(){
         logger.info("员工离职修改客户属性...");
-        userLeaveBatchService.updateUserLeaveInfo();
+        userLeaveBatchService.updUserLeaveInfo();
     }
 }
