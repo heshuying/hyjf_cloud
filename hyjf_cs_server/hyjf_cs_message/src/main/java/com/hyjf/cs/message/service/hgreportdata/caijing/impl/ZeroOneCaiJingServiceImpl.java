@@ -1,9 +1,7 @@
 package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
-import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.security.util.MD5;
@@ -17,10 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -51,6 +45,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
 
         if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
+            logger.info("借款记录接口无数据报送结束");
             return;
         }
         logger.info("借款记录接口报送条数="+zeroOneDataVOList.size());
@@ -86,6 +81,31 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("借款记录接口报送成功");
         }
         logger.info("借款记录接口报送结束");
+    }
+
+    /**
+     * 提前还款接口报送
+     */
+    @Override
+    public void advancedRepay() {
+        logger.info("提前还款接口报送开始");
+        String startdate = "2019-05-07";
+        String enddate = "2019-05-09";
+
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startdate, enddate);
+
+        if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
+            logger.info("提前还款接口无数据报送结束");
+            return;
+        }
+        List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
+
+        Boolean sendStatus = sendDataReport("advanced-repay",String.valueOf(JSONObject.toJSON(list)));
+        if(sendStatus){
+            //报送成功
+            logger.info("提前还款接口报送成功");
+        }
+        logger.info("提前还款接口报送结束");
     }
 
     /**

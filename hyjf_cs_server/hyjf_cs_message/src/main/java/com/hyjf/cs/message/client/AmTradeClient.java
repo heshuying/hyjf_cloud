@@ -154,4 +154,6 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate);
+
+	List<ZeroOneDataVO> queryAdvancedRepay(String startDate, String endDate);
 }

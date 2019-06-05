@@ -10,6 +10,9 @@
 		<result column="client" property="client" /><!-- 操作平台 -->
 		<result column="createTime" property="createTime" /><!-- 时间 -->
 		<result column="flag" property="flag" /><!-- 标识 -->
+		<result column="freezeOrderId" property="freezeOrderId" /><!-- 冻结订单号 -->
+		<result column="spentday" property="spentday" /><!-- 实际借款天数 -->
+		<result column="repayTime" property="repayTime" /><!-- 还款日期 -->
 	</resultMap>
 	<select id="queryInvestRecordSub" resultMap="caijingMapResult" parameterType="Map">
 		SELECT
@@ -52,4 +55,57 @@
 			</if>
 		</where>
     </select>
+
+	<select id="queryAdvancedRepaySub" resultMap="caijingMapResult" parameterType="Map">
+		SELECT
+			IFNULL(flg.order_id, rflg.order_id) AS freezeOrderId,
+			ry.borrow_nid AS borrowNid,
+			from_unixtime(ry.repay_yestime,'%Y-%m-%d %H:%i:%s') AS repayTime,
+			CASE
+			WHEN hw.borrow_style = 'endday' THEN
+				DATEDIFF(
+				from_unixtime(ry.repay_yestime),
+				from_unixtime(hw.recover_last_time)
+				)
+			ELSE
+				DATEDIFF(
+				from_unixtime(ry.repay_yestime),
+				from_unixtime(hw.recover_last_time)
+				)
+			END AS spentday,
+			CASE
+			WHEN flg.order_id != '' THEN
+				flg.amount_freeze
+			ELSE
+				rflg.amount
+			END AS amount
+		FROM
+			ht_borrow_repay ry
+		LEFT JOIN ht_borrow hw ON ry.borrow_nid = hw.borrow_nid
+		LEFT JOIN ht_bank_repay_org_freeze_log flg ON flg.borrow_nid = ry.borrow_nid
+			AND FROM_UNIXTIME(
+			ry.repay_yestime,
+			'%Y-%m-%d'
+			) = date_format(flg.create_time, '%Y-%m-%d')  AND flg.del_flag = 0
+		LEFT JOIN ht_bank_repay_freeze_log rflg ON rflg.borrow_nid = ry.borrow_nid
+			AND FROM_UNIXTIME(
+			ry.repay_yestime,
+			'%Y-%m-%d'
+			) = date_format(
+			rflg.create_time,
+			'%Y-%m-%d'
+			)  AND rflg.del_flag = 0
+		WHERE
+			ry.repay_status = 1
+			AND ry.repay_period > 1
+
+		AND ry.repay_yestime <![CDATA[>=]]> hw.repay_last_time
+		AND hw.recover_last_time > unix_timestamp('2018-04-01 00:00:00')
+		<if test="searchStartDate != null and searchStartDate !='' ">
+		AND ry.repay_yestime  <![CDATA[>=]]> unix_timestamp(CONCAT(#{searchStartDate},' 00:00:00'))
+		</if>
+		<if test="searchEndDate != null and searchEndDate !='' ">
+		AND ry.repay_yestime <![CDATA[<=]]> unix_timestamp(CONCAT(#{searchEndDate},' 23:59:59'))
+		</if>
+	</select>
 </mapper>

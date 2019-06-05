@@ -16,4 +16,9 @@ public interface ZeroOneCaiJingService {
      */
     void investRecordSub();
 
+    /**
+     * 提前还款接口报送
+     */
+    void advancedRepay();
+
 }
