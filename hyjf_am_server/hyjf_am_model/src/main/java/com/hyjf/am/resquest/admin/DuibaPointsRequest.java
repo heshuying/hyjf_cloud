@@ -38,6 +38,9 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "发生时间开始查询")
     private String startDateSrch;
 
+    @ApiModelProperty(value = "发生时间结束查询")
+    private String endDateSrch;
+
     @ApiModelProperty(value = "调整积分数")
     private Integer modifyPoints;
 
@@ -47,11 +50,16 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "批量调整用户积分")
     private List<Integer> userIdList;
 
+    private Integer userId;
+
     @ApiModelProperty(value = "调整原因")
     private String reason;
 
-    @ApiModelProperty(value = "发生时间结束查询")
-    private String endDateSrch;
+    @ApiModelProperty(value = "审核结果 1通过 2不通过")
+    private Integer auditStatus;
+
+    @ApiModelProperty(value = "当前审批订单号")
+    private String orderId;
 
     @ApiModelProperty(value = "积分明细列表相关")
     private List<DuibaPointsVO> recordList;
@@ -220,5 +228,29 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public Integer getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(Integer auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

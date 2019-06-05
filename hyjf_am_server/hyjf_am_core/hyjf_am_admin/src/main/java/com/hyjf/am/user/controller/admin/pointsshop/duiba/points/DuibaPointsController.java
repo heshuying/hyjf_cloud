@@ -78,4 +78,18 @@ public class DuibaPointsController extends BaseController {
         response.setResultBoolean(result);
         return response;
     }
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateDuibaPoints")
+    public BooleanResponse updateDuibaPoints(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = duibaPointsService.updateDuibaPoints(request);
+        response.setResultBoolean(result);
+        return response;
+    }
 }

@@ -2989,6 +2989,22 @@ public class AmUserClientImpl implements AmUserClient {
     }
 
     /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean updateDuibaPoints(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/updateDuibaPoints";
+        BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return false;
+        }
+        return response.getResultBoolean().booleanValue();
+    }
+
+    /**
      * 短信验证码保存
      *
      * @param mobile
