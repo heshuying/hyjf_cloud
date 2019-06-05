@@ -3,6 +3,7 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.EvaluationConfigVO;
@@ -139,4 +140,22 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	BigDecimal getUserTender(int userId, Date from, Date from1);
+
+	/**
+	 * 查询用户活动期间投资金额
+	 * @param userId
+	 * @param activityStartDate
+	 * @param activityEndDate
+	 * @param client    不传查询所有端
+	 * @return
+	 */
+	BigDecimal getTenderAmount(int userId, Date activityStartDate, Date activityEndDate, Integer client);
+
+	/**
+	 * 查询用户投资top5
+	 * @param activityStartDate
+	 * @param activityEndDate
+	 * @return
+	 */
+    List<UserTenderVO> getLeaderboard(Date activityStartDate, Date activityEndDate);
 }

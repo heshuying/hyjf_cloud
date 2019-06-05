@@ -29,13 +29,13 @@
 			<!-- 还款状态0还款中,1已还款 -->
 			<if test="statusSrch != null and statusSrch != ''">
 				<if test="statusSrch ==0">
-					AND b.status= 4
+					and br.repay_status=0 and br.advance_status!=3
 				</if>
 				<if test="statusSrch ==1">
-					 and br.repay_status=0 and br.advance_status!=3
+					 and br.repay_status=1
 				</if>
 				<if test="statusSrch ==2">
-					AND b.status= 8
+					and br.repay_status=0 and br.advance_status=3
 				</if>
 			</if>
 			<!-- 最后还款日 -->
@@ -127,6 +127,7 @@
 		<result column="repayAccountCapitalWaitAll" property="repayAccountCapitalWaitAll" jdbcType="VARCHAR" />
 		<result column="repayAccountInterestWaitAll" property="repayAccountInterestWaitAll" jdbcType="VARCHAR" />
 		<result column="repayFeeWaitAll" property="repayFeeWaitAll" jdbcType="VARCHAR" />
+		<result column="webName" property="webName" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
@@ -150,7 +151,8 @@
 		b.regist_user_name,
 		b.repay_account_capital AS repayAccountCapital,
 		b.repay_account_interest AS repayAccountInterest,
-		b.repay_account_all repayAccountAll,
+		b.repay_account_all+br.repay_fee AS repayAccountAll,
+		b.repay_account_all AS repayFeeWaitAll,
 		b.borrow_manager AS borrowManager,
 		br.repay_fee AS repayFee,
 		b.repay_account_capital_yes AS repayAccountCapitalYes,
@@ -166,7 +168,7 @@
 		if(br.repay_time='' OR br.repay_time='0' OR br.repay_time='null','',FROM_UNIXTIME(
 		br.repay_time, '%Y-%m-%d' )) AS repayNextTime,
 		IF ( br.repay_status=1 AND br.repay_action_time <![CDATA[ > ]]> 0 ,
-		CASE br.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ,
+		CASE br.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ,
 		''
 		) AS repayMoneySource,
 		CASE WHEN br.repay_action_time  <![CDATA[ > ]]>  0 AND br.repay_status=1 THEN FROM_UNIXTIME(br.repay_action_time,'%Y-%m-%d %H:%i:%s') ELSE '' END as repayActionTime,
@@ -174,7 +176,7 @@
 
 		hic.inst_name as instName,
 
-		binfo.borrow_measures_instit as webName,
+		binfo.repay_org_name as webName,
 		rflg.order_id AS freezeOrderId,
 		br.repay_fee-b.repay_fee_normal as repayFeeWait,
 		b.repay_fee_normal as repayFeeYes,
@@ -404,17 +406,7 @@
 				hic.inst_name AS instName,
 				b.project_Type AS
 				projectType,
-				CASE
-				WHEN b.project_Type = 0 THEN '汇保贷'
-				WHEN b.project_Type
-				= 1 THEN '汇典贷'
-				WHEN
-				b.project_Type = 2 THEN '汇小贷'
-				WHEN b.project_Type = 3
-				THEN '汇车贷'
-				WHEN
-				b.project_Type = 4 THEN '新手标'
-				END AS projectTypeName,
+				bpt.borrow_name AS projectTypeName,
 				b.borrow_Period AS borrowPeriod,
 				b.borrow_Apr AS borrowApr,
 				b.account AS
@@ -426,18 +418,18 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				'' AS yanqilixi,
+				rp.repay_account+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
-				rp.repay_account_yes AS yinghuanzonge,
+				if(rp.repay_status='1',rp.repay_account_yes+rp.repay_fee,rp.repay_account_yes) AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
 				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
@@ -446,7 +438,7 @@
 				if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
 				'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
 				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
-				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
@@ -478,6 +470,7 @@
 				u.user_id
 				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 			 	<include refid="Borrow_Repayment_Plan_Where_Clause" />
 			 	UNION ALL
 			 	select
@@ -489,17 +482,7 @@
 				hic.inst_name AS instName,
 				b.project_Type AS
 				projectType,
-				CASE
-				WHEN b.project_Type = 0 THEN '汇保贷'
-				WHEN b.project_Type
-				= 1 THEN '汇典贷'
-				WHEN
-				b.project_Type = 2 THEN '汇小贷'
-				WHEN b.project_Type = 3
-				THEN '汇车贷'
-				WHEN
-				b.project_Type = 4 THEN '新手标'
-				END AS projectTypeName,
+				bpt.borrow_name AS projectTypeName,
 				b.borrow_Period AS borrowPeriod,
 				b.borrow_Apr AS borrowApr,
 				b.account AS
@@ -511,18 +494,18 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				'' AS yanqilixi,
+				rp.repay_account+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
-				rp.repay_account_yes AS yinghuanzonge,
+				if(rp.repay_status='1',rp.repay_account_yes+rp.repay_fee,rp.repay_account_yes) AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
 				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
@@ -531,7 +514,7 @@
 				if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
 				'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
 				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
-				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
@@ -563,6 +546,7 @@
 				u.user_id
 				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 				<include refid="Borrow_Repayment_Plan_Where_Clause" />
 			 ) tt
 			ORDER BY
@@ -576,17 +560,36 @@
 	<select id="sumBorrowRepaymentPlanInfo"
 			resultType="com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
-		select
-		SUM(rp.repay_capital) AS repayCapital,
-		SUM(rp.repay_interest) AS
-		repayInterest,
-		SUM(rp.repay_account) AS repayAccount,
-		SUM(rp.repay_fee) AS repayFee
-		from
-		ht_borrow_repay_plan AS rp
-		INNER JOIN ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
-		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
-		<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			SELECT
+				SUM( repayCapital ) AS repayCapital,
+				SUM( repayInterest ) AS repayInterest,
+				SUM( repayAccount ) AS repayAccount,
+				SUM( repayFee ) AS repayFee 
+			FROM
+				(
+			SELECT
+				SUM( rp.repay_capital ) AS repayCapital,
+				SUM( rp.repay_interest ) AS repayInterest,
+				SUM( rp.repay_account ) AS repayAccount,
+				SUM( rp.repay_fee ) AS repayFee 
+			FROM
+				ht_borrow_repay_plan AS rp
+				INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+				INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			UNION ALL
+			SELECT
+				SUM( rp.repay_capital ) AS repayCapital,
+				SUM( rp.repay_interest ) AS repayInterest,
+				SUM( rp.repay_account ) AS repayAccount,
+				SUM( rp.repay_fee ) AS repayFee 
+			FROM
+				ht_borrow_repay AS rp
+				INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid 
+				AND b.borrow_style IN ( 'end', 'endday' )
+				INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+				) t
 	</select>
 
 	<select id="exportRepayClkActBorrowRepaymentInfoListOld" resultMap="searchBorrowRepaymentPlanListResultMap"
@@ -660,7 +663,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -747,7 +750,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -979,7 +982,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -991,7 +994,7 @@
 		b.repay_account_interest_wait AS repayAccountInterestWait
         FROM
         ht_borrow AS b
-        INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid
+        INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid AND b.borrow_style in ('end','endday')
         INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
         LEFT JOIN ht_r_user u ON b.user_id = u.user_id
         LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
@@ -999,7 +1002,6 @@
         LEFT JOIN ht_borrow_apicron as ba ON b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
         LEFT JOIN ht_hjh_inst_config hic ON hbi.inst_code = hic.inst_code
 		<include refid="Where_Clause_New" />
-		AND b.borrow_style in ('end','endday')
 		UNION ALL
 		SELECT
 		b.plan_nid as planNid,
@@ -1066,7 +1068,7 @@
 		WHEN 1 THEN
 		'借款人还款'
 		WHEN 2 THEN
-		'机构垫付'
+		'第三方保障'
 		WHEN 3 THEN
 		'保证金垫付'
 		ELSE
@@ -1145,13 +1147,14 @@
             b.repay_account_interest_wait+repay_account_capital_wait as  interestCapitalWait,
             binfo.repay_org_name,
             b.recover_last_time as recoverLastTime,
-            b.repay_account_all+b.borrow_service repayAccountAll,
+            b.repay_account_all+br.repay_fee repayAccountAll,
              b.repay_account_all as principalInterest
 		FROM
 		    ht_borrow b
 			INNER JOIN ht_borrow_info binfo ON b.borrow_nid = binfo.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
+			Left join ht_borrow_repay br on br.borrow_nid=b.borrow_nid 
 		WHERE
 			b.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>

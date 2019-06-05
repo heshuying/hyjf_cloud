@@ -106,6 +106,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_WITHDRAW_CARD("EAM000103","银行卡号不正确，请确认后再次提现"),
 	ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED("EAM000104","大额提现时,开户行号不能为空"),
 	ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE("EAM000105","提现金额大于可用余额，请确认后再次提现"),
+	ERR_GET_WITHDRAW_CONFIG("EAM000106","获取提现配置失败"),
 
 
 	// 资金-出借相关错误信息ERR_AMT_TENDER_

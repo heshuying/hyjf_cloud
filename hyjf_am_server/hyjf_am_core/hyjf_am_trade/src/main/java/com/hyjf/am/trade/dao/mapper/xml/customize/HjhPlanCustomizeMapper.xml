@@ -656,9 +656,10 @@ ORDER BY
 		FROM
 			ht_hjh_accede
 			where plan_nid = #{planNid}
-			-- add by nxl 显示最后三天的服务记录
-		    AND create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
-		    AND create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
+			-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime !=null" >
+			AND ht_hjh_accede.create_time between #{startTime} and #{endTime}
+		</if>
 	</select>
 
 	<select id="getPlanAccedeList" resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO"  parameterType="Map">
@@ -680,9 +681,10 @@ ORDER BY
 		LEFT JOIN ht_r_user hui ON hui.user_id = dpa.user_id
 		-- LEFT JOIN ht_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
 		WHERE dpa.plan_nid=#{planNid}
-		-- add by nxl 显示最后三天的服务记录
-		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
-		AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
+		-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime !=null" >
+			AND dpa.create_time between #{startTime} and #{endTime}
+		</if>
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -991,9 +993,10 @@ ORDER BY
 		FROM
 		ht_hjh_accede dpa
 		WHERE dpa.plan_nid=#{planNid}
-		-- add by nxl 显示最后三天的服务记录
-		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
-		AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
+		-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime!=null" >
+			AND dpa.create_time between #{startTime} and #{endTime}
+		</if>
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -1217,8 +1220,25 @@ ORDER BY
 		FROM
 		ht_hjh_accede dpa
 		WHERE dpa.plan_nid=#{planNid}
-		-- add by nxl 显示最后三天的服务记录
-		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
-		AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
+		-- add by nxl 加入计划最后三天的记录
+		<if test="startTime != null and endTime!=null" >
+			AND dpa.create_time between #{startTime} and #{endTime}
+		</if>
+	</select>
+
+    <!--获取计划的加入的最后三天日期-->
+    <!--add by nxl-->
+	<select id="selectLastThreeDate"  resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO" parameterType="String">
+		SELECT
+		  DATE_FORMAT(da.create_time, '%Y-%m-%d') as accedeTime
+		FROM
+			ht_hjh_accede da
+		WHERE
+			da.plan_nid = #{planNid}
+		GROUP BY
+			DATE_FORMAT(da.create_time, '%Y-%m-%d')
+		ORDER BY
+			da.create_time DESC
+		LIMIT 3
 	</select>
 </mapper>

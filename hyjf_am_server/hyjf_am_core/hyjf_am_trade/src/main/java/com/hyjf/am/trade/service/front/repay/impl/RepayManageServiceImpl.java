@@ -20,6 +20,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
@@ -358,6 +359,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+            	//格式化利率
+            	 list.get(i).setBorrowInterest( FormatRateUtil.formatBorrowApr(list.get(i).getBorrowInterest()));
                 RepayListCustomizeVO info = list.get(i);
                 //获得标的类型
                 String borrowStyle = info.getBorrowStyle();
@@ -3886,6 +3889,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
                                 if(hjhDebtCreditRepayBean.getAdvanceStatus() == 3){
                                     oldCreditRepay.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
                                 }
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
@@ -3917,6 +3922,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
                                 if(creditRepay.getAdvanceStatus() == 3){
                                     creditRepayOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
                                 }
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
@@ -3994,15 +4001,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             }
                         }
                         manageFee = manageFee.add(repayRecover.getRecoverFee());
+                        if(repayRecover.getAdvanceStatus() == 3){
+                            borrowRecoverOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                        } else {// 提前还款更新状态
+                            borrowRecoverOld.setAdvanceStatus(repayRecover.getAdvanceStatus());
+                        }
                         borrowRecoverOld.setChargeDays(repayRecover.getChargeDays());
                         BigDecimal chargeInterest = repayRecover.getChargeInterest() != null ? repayRecover.getChargeInterest() : BigDecimal.ZERO;
                         BigDecimal chargePenaltyInterest = repayRecover.getChargePenaltyInterest() != null ? repayRecover.getChargePenaltyInterest() : BigDecimal.ZERO;
                         borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(chargeInterest));
                         borrowRecoverOld.setChargePenaltyInterest(borrowRecoverOld.getChargePenaltyInterest().add(chargePenaltyInterest));
                         borrowRecoverOld.setRecoverFee(manageFee);
-                        if(repayRecover.getAdvanceStatus() == 3){
-                            borrowRecoverOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
-                        }
                         boolean flag = borrowRecoverMapper.updateByPrimaryKey(borrowRecoverOld) > 0 ? true : false;
                         if (!flag) {
                             errorCount = errorCount + 1;
@@ -4314,6 +4323,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
                                 if(creditRepay.getAdvanceStatus() == 3){
                                     creditRepayOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
                                 }
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
@@ -4346,6 +4357,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
                                 if(hjhDebtCreditRepayBean.getAdvanceStatus() == 3){
                                     oldCreditRepay.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                                } else {// 提前还款更新状态
+                                    oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
                                 }
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
@@ -4420,15 +4433,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             }
                         }
                         manageFee = manageFee.add(repayRecoverPlan.getRecoverFee());
+                        if(repayRecoverPlan.getAdvanceStatus() == 3){
+                            borrowRecoverPlanOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                        } else {// 提前还款更新状态
+                            borrowRecoverPlanOld.setAdvanceStatus(repayRecoverPlan.getAdvanceStatus());
+                        }
                         borrowRecoverPlanOld.setChargeDays(repayRecoverPlan.getChargeDays());
                         BigDecimal chargeInterest = repayRecoverPlan.getChargeInterest() != null ? repayRecoverPlan.getChargeInterest() : BigDecimal.ZERO;
                         BigDecimal chargePenaltyInterest = repayRecoverPlan.getChargePenaltyInterest() != null ? repayRecoverPlan.getChargePenaltyInterest() : BigDecimal.ZERO;
                         borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(chargeInterest));
                         borrowRecoverPlanOld.setChargePenaltyInterest(borrowRecoverPlanOld.getChargePenaltyInterest().add(chargePenaltyInterest));
                         borrowRecoverPlanOld.setRecoverFee(manageFee);
-                        if(repayRecoverPlan.getAdvanceStatus() == 3){
-                            borrowRecoverPlanOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
-                        }
                         boolean flag = borrowRecoverPlanMapper.updateByPrimaryKey(borrowRecoverPlanOld) > 0 ? true : false;
                         if (!flag) {
                             errorCount = errorCount + 1;

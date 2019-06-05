@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -157,6 +158,39 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setStatusDesc("您的账户信息存在异常，请联系客服人员处理。");
             return result;
         }
+
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        logger.info("提现金额:[" + getcash + "].");
+        String withdrawMoney = "0";
+        if (!StringUtils.isBlank(getcash)) {
+            withdrawMoney = getcash;
+        }
+        // 投标金额大于可用余额
+        if (new BigDecimal(withdrawMoney).compareTo(account.getBankBalance()) > 0) {
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("提现金额大于可用金额，请确认后再次提现。");
+            return result;
+        }
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, withdrawMoney);
+        if (withdrawRuleConfigVO == null){
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(withdrawMoney).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
+
+            result.setStatusDesc(statusDesc);
+            return result;
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         result.setTotal(CommonUtils.formatAmount(version, account.getBankBalance()));
         logger.info("提现可用余额："+result.getTotal());
         String phoneNum = "";
@@ -206,7 +240,7 @@ public class AppBankWithdrawController extends BaseTradeController {
                     balance = CommonUtils.formatAmount(version, transAmt);
 
                     // 大额支付需要传开户行号
-                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50001)) >= 0)) {
+                    if (withdrawRuleConfigVO.getPayAllianceCode() == 1) {
                         // 是否是大额提现表示 0:非 1:是
                         result.setIsDisplay("1");
                         // 开户行号
@@ -319,6 +353,30 @@ public class AppBankWithdrawController extends BaseTradeController {
             ret.put("request", requestStr);
             return ret;
         }
+        // 取得用户iD
+        WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, total);
+        if (withdrawRuleConfigVO == null){
+            ret.put("status", CustomConstants.APP_STATUS_FAIL);
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 &&
+//                    new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(total).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
+            ret.put("statusDesc",statusDesc);
+            ret.put("request", requestStr);
+            return ret;
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         //可用金额
         BigDecimal total2 = account.getBankBalance();
         //可提现金额
@@ -346,19 +404,22 @@ public class AppBankWithdrawController extends BaseTradeController {
         }
 
         logger.info("开户行号openCardBankCode is :{}", openCardBankCode);
+
         // 人行通道 提现校验
-
+        // modify by liuyang 20190422 节假日提现修改 start
         String routeCode = "";
-        if (new BigDecimal(total).compareTo(new BigDecimal(50000)) > 0) {
-            routeCode = "2";// 路由代码
+        if (withdrawRuleConfigVO.getPayAllianceCode() == 1) {
+            // 路由代码
+            routeCode = withdrawRuleConfigVO.getRouteCode();
         }
-
-        if ("2".equals(routeCode) && StringUtils.isBlank(openCardBankCode)) {
+        // 如果提现规则配置需要联行号时,判断前端传过来的联行号是否为空
+        if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isBlank(openCardBankCode)){
             ret.put("status", "1");
             ret.put("statusDesc", "大额提现时,开户行号不能为空");
             ret.put("request", requestStr);
             return ret;
         }
+        // modify by liuyang 20190422  节假日提现修改 end
 
         // 取得加密用的Key
         String key = SecretUtil.getKey(sign);
@@ -431,7 +492,13 @@ public class AppBankWithdrawController extends BaseTradeController {
         if (!this.authService.checkPaymentAuthStatus(userId)) {
             throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
-
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, transAmt);
+        if (withdrawRuleConfigVO == null){ ;
+            throw new ReturnMessageException(MsgEnum.ERR_GET_WITHDRAW_CONFIG);
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
@@ -443,7 +510,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
         successfulUrl +="?token=1&sign=" +sign;
         String forgotPwdUrl=super.getForgotPwdUrl(platform,request,systemConfig);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ipAddr,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ipAddr,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl,withdrawRuleConfigVO);
         if (null == bean) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }

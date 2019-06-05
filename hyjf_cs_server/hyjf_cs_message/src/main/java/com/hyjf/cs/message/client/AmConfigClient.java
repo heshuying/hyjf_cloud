@@ -125,4 +125,5 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
+
 }

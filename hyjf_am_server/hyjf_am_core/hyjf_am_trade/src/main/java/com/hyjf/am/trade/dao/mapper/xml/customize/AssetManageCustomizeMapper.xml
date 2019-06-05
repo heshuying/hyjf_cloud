@@ -432,9 +432,9 @@
 		END AS capital,
 		3 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) total_wait,
@@ -929,9 +929,9 @@
 		MAX(hcr.recover_yestime) orderby_repay_orddate,
 		3 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type,
 		'' groupaccount
@@ -1272,9 +1272,9 @@
 		hcr.recover_time orderby_quit_time,
 		2 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type
 		FROM
@@ -1442,9 +1442,9 @@
 		MAX(hcr.recover_yestime) orderby_repay_orddate,
 		2 type,
 		CASE hcc.coupon_type
-		WHEN 1 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元体验金')
-		WHEN 2 THEN CONCAT(hcc.coupon_quota,'%加息券')
-		WHEN 3 THEN CONCAT(FORMAT(hcc.coupon_quota, 2),'元代金券')
+		WHEN 1 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元体验金')
+		WHEN 2 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'%加息券')
+		WHEN 3 THEN CONCAT(IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),'元代金券')
 		END AS DATA,
 		hcc.coupon_type coupon_type
 		FROM
@@ -2553,7 +2553,7 @@
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
-		borrow.`status` = 4
+		(borrow.`status` = 4 OR borrow.`status` = 8)
 		AND ten.user_id= #{userId}
 		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
 		AND borrow.plan_nid IS NULL
@@ -2571,7 +2571,7 @@
 		ht_credit_tender ten
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
 		WHERE ten.user_id= #{userId}
-		AND borrow.`status` = 4
+		AND (borrow.`status` = 4 OR borrow.`status` = 8)
 		AND ten.assign_interest>0
 		AND borrow.plan_nid IS NULL
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2612,7 +2612,7 @@
 		) hiil ON hiil.invest_order_id=hiii.order_id
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
-		WHERE borrow.`status` = 4
+		WHERE (borrow.`status` = 4 OR borrow.`status` = 8)
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2672,6 +2672,7 @@
 		<result column="coupon_type" property="couponType" />
 		<result column="assign_nid" property="assignNid" />
 		<result column="order_status" property="orderStatus"/>
+		<result column="borrowStatus" property="borrowStatus"/>
 	</resultMap>
 
 	<select id="selectRepaymentCalendar" resultMap="repayCalendarMap" parameterType="java.util.Map">
@@ -2702,7 +2703,8 @@
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		ten.nid as order_id,
 		'' as assign_nid,
-		'' as order_status
+		'' as order_status,
+		borrow.`status` AS borrowStatus
 		FROM
 		ht_borrow_tender ten
 		LEFT JOIN ht_borrow_recover_plan rec
@@ -2719,7 +2721,7 @@
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
-		borrow.`status` = 4
+		(borrow.`status` = 4 OR borrow.`status` = 8)
 		AND ten.user_id= #{userId}
 		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
 		AND borrow.plan_nid IS NULL
@@ -2745,12 +2747,13 @@
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		ten.credit_tender_nid as order_id,
 		ten.assign_nid,
-		'' as order_status
+		'' as order_status,
+		borrow.`status` AS borrowStatus
 		FROM
 		ht_credit_tender ten
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
 		WHERE ten.user_id= #{userId}
-		AND borrow.`status` = 4
+		AND (borrow.`status` = 4 OR borrow.`status` = 8)
 		AND ten.assign_interest>0
 		AND borrow.plan_nid IS NULL
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2788,7 +2791,8 @@
 		ELSE CONCAT(hb.borrow_period, '个月') END borrow_period,
 		hbtc.nid AS order_id,
 		'' AS assign_nid,
-		'' as order_status
+		'' as order_status,
+		hb.`status` AS borrowStatus
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
@@ -2823,7 +2827,8 @@
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		hiii.tender_nid as order_id,
 		'' as assign_nid,
-		'' as order_status
+		'' as order_status,
+		borrow.`status` AS borrowStatus
 		FROM
 		ht_increase_interest_invest hiii
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
@@ -2831,7 +2836,7 @@
 		) hiil ON hiil.invest_order_id=hiii.order_id
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
-		WHERE borrow.`status` = 4
+		WHERE (borrow.`status` = 4 OR borrow.`status` = 8)
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2857,7 +2862,8 @@
 		ELSE CONCAT(hhp.lock_period, '个月') END borrow_period,
 		hha.accede_order_id as order_id,
 		'' as assign_nid,
-		hha.order_status order_status
+		hha.order_status order_status,
+		'' AS borrowStatus
 		FROM ht_hjh_accede hha
 		LEFT JOIN ht_hjh_plan hhp
 		ON hha.plan_nid=hhp.plan_nid
@@ -2898,7 +2904,8 @@
 		ELSE CONCAT(hhp.lock_period, '个月') END borrow_period,
 		hbtc.nid as order_id,
 		'' as assign_nid,
-		hha.order_status order_status
+		hha.order_status order_status,
+		'' AS borrowStatus
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
