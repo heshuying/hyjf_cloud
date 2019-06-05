@@ -119,7 +119,12 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 customerSyncQO.setUserName(account.getUserName());
                 customerSyncQO.setPrecipitatedCapital(account.getBankBalance().doubleValue());
                 customerSyncQO.setFundsToBeCollected(account.getBankAwait().add(account.getPlanAccountWait()).doubleValue());
-                syncCustomerService.sync(customerSyncQO);
+                //读取配置文件，0:不推送数据  1:推送数据
+                if(wbsConfig.getPushDataFlag().equals(1)) {
+                    syncCustomerService.sync(customerSyncQO);
+                }else{
+                    logger.info("====" + CONSUMER_NAME + "不推送数据");
+                }
 
             } else {
                 logger.error("=====" + CONSUMER_NAME + " 查不到渠道信息, utmId = [{}]=====userId = " + userId, utmId);

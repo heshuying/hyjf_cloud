@@ -52,6 +52,17 @@ public class WbsConfig {
     @Value("${utmid.qianle}")
     private Integer utmQianle;
 
+    @Value("${pushdata.flag}")
+    private Integer pushDataFlag;
+
+    public Integer getPushDataFlag() {
+        return pushDataFlag;
+    }
+
+    public void setPushDataFlag(Integer pushDataFlag) {
+        this.pushDataFlag = pushDataFlag;
+    }
+
     public Integer getUtmNami() {
         return utmNami;
     }

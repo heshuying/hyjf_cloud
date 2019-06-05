@@ -3,6 +3,7 @@ package com.hyjf.wbs.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.ProductInfoQO;
 import com.hyjf.wbs.trade.dao.model.auto.HjhPlan;
@@ -50,6 +51,9 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
 
     @Value("${hyjf.web.h5.zhitou.host}")
     private String H5_ZHITOU_URL;
+
+    @Autowired
+    private WbsConfig wbsConfig;
     @Autowired
     private SynProductInfoService synProductInfoService;
     @Autowired
@@ -153,13 +157,18 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             productInfoQO.setH5linkUrl(H5linkUrl);
             productInfoQO.setLinkUrl(linkUrl);
 
-            //TODO:方便测试使用，将产品编号用作产品名称，方便测试传数据区分 上线前删除此行
-            productInfoQO.setProductName(productNo);
+
             productInfoQO.setProductNo(productNo);
             productInfoQO.setProductStatus(Integer.valueOf(productStatus));
 
+            //读取配置文件，0:不推送数据  1:推送数据
+            if(wbsConfig.getPushDataFlag().equals(1)) {
+                synProductInfoService.sync(productInfoQO);
+            }else{
+                logger.info("====" + CONSUMER_NAME + "不推送数据");
+            }
 
-            synProductInfoService.sync(productInfoQO);
+
 
         } catch (Exception e1) {
             logger.error("=====" + CONSUMER_NAME + "异常=====");
