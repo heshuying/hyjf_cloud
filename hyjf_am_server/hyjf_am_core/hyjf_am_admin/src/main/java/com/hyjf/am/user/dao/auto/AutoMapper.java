@@ -205,6 +205,8 @@ public class AutoMapper {
 
     @Autowired
     protected  BankCancellationAccountMapper bankCancellationAccountMapper;
+    @Autowired
+    protected AppUtmRegMapper appUtmRegMapper;
 
 }
 
