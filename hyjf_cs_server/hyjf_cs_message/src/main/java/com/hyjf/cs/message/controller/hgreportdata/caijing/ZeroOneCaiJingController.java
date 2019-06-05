@@ -30,4 +30,13 @@ public class ZeroOneCaiJingController {
         zeroOneCaiJingService.investRecordSub();
 
     }
+
+    /**
+     * 借款记录报送
+     */
+    @RequestMapping("/borrowRecordSub")
+    public void borrowRecordSub() {
+        //借款记录报送
+        zeroOneCaiJingService.borrowRecordSub();
+    }
 }

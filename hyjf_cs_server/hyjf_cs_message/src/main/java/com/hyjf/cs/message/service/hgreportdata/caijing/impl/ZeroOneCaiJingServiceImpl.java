@@ -2,17 +2,20 @@ package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneResponse;
 import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.service.hgreportdata.caijing.ZeroOneCaiJingService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,38 +43,38 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     private AmUserClient amUserClient;
 
     /**
-     * 借款记录接口报送
+     * 出借记录接口报送
      */
     @Override
-    public void investRecordSub(){
-        logger.info("借款记录接口报送开始");
+    public void investRecordSub() {
+        logger.info("出借记录接口报送开始");
 //        String date = "2019-02-02";
         String date = "2018-4-24";
 
-        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date, date);
 
-        if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
+        if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             return;
         }
-        logger.info("借款记录接口报送条数="+zeroOneDataVOList.size());
+        logger.info("出借记录接口报送条数=" + zeroOneDataVOList.size());
 
         Set<Integer> listUserId = new HashSet<>();
-        for(ZeroOneDataVO voList : zeroOneDataVOList){
+        for (ZeroOneDataVO voList : zeroOneDataVOList) {
             listUserId.add(voList.getUserIds());
         }
 
-        Map<Integer,String> mapUserId =queryCustomerId(listUserId);
-        if(mapUserId == null || mapUserId.size() == 0){
-            logger.info("借款记录接口报送结束,报送用户id为空");
+        Map<Integer, String> mapUserId = queryCustomerId(listUserId);
+        if (mapUserId == null || mapUserId.size() == 0) {
+            logger.info("出借记录接口报送结束,报送用户id为空");
             return;
         }
 
-        for(ZeroOneDataVO voList : zeroOneDataVOList){
-            if(mapUserId.get(voList.getUserIds()) != null){
+        for (ZeroOneDataVO voList : zeroOneDataVOList) {
+            if (mapUserId.get(voList.getUserIds()) != null) {
                 voList.setUsername(mapUserId.get(voList.getUserIds()));
                 voList.setUserid(mapUserId.get(voList.getUserIds()));
-            }else{
-                logger.info("借款记录接口报送 当前用户编号为空,userId="+voList.getUserIds());
+            } else {
+                logger.info("出借记录接口报送 当前用户编号为空,userId=" + voList.getUserIds());
                 voList.setUserid(null);
                 voList.setUsername(null);
             }
@@ -80,39 +83,84 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Boolean sendStatus = sendDataReport("invest",String.valueOf(JSONObject.toJSON(list)));
-        if(sendStatus){
+        Boolean sendStatus = sendDataReport("invest", String.valueOf(JSONObject.toJSON(list)));
+        if (sendStatus) {
             //报送成功
-            logger.info("借款记录接口报送成功");
+            logger.info("出借记录接口报送成功");
         }
-        logger.info("借款记录接口报送结束");
+        logger.info("出借记录接口报送结束");
+    }
+
+
+    /**
+     * 借款记录接口报送
+     */
+    @Override
+    public void borrowRecordSub() {
+        logger.info("借款记录接口报送开始");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        String yesterday = GetDate.date_sdf.format(cal.getTime());
+        String dateStart = GetDate.getDayStart(yesterday);
+        String dateEnd = GetDate.getDayEnd(yesterday);
+        logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
+        List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
+        if (borrowDataVOList == null || borrowDataVOList.size() == 0) {
+            return;
+        }
+        logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
+
+        Set<Integer> listUserId = new HashSet<>();
+        for (ZeroOneBorrowDataVO voList : borrowDataVOList) {
+            listUserId.add(voList.getUserIds());
+        }
+
+        Map<Integer, String> mapUserId = queryCustomerCAId(listUserId);
+        if (mapUserId == null || mapUserId.size() == 0) {
+            logger.info("借款记录接口报送结束,报送用户id为空");
+            return;
+        }
+    }
+
+    /**
+     * 获取借款用户编号
+     * @param listUserId
+     * @return
+     */
+    private Map<Integer,String> queryCustomerCAId(Set<Integer> listUserId) {
+        if (listUserId == null || listUserId.size() == 0) {
+            return null;
+        }
+        return null;
     }
 
     /**
      * 获得用户编号
+     *
      * @param userId
      * @return
      */
-    private Map<Integer,String> queryCustomerId(Set<Integer> userId){
-        if(userId == null || userId.size() == 0){
+    private Map<Integer, String> queryCustomerId(Set<Integer> userId) {
+        if (userId == null || userId.size() == 0) {
             return null;
         }
-        Map<Integer,String> mapUserId = new HashMap<>();
+        Map<Integer, String> mapUserId = new HashMap<>();
 
         List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userId);
-        for(CertificateAuthorityVO vo : voList){
-            mapUserId.put(vo.getUserId(),vo.getCustomerId());
+        for (CertificateAuthorityVO vo : voList) {
+            mapUserId.put(vo.getUserId(), vo.getCustomerId());
         }
         return mapUserId;
     }
 
     /**
      * 数据推送
+     *
      * @param type 类型，借款=lend ,出借=invest ,提前还款=advanced-repay
      * @param json 数据json
      * @return
      */
-    public Boolean sendDataReport(String type,String json){
+    public Boolean sendDataReport(String type, String json) {
 
         String url = "http://data.01caijing.com/hub/p2p/";
 
@@ -121,12 +169,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         stbuUrl.append(type);
         stbuUrl.append("/commit.json");
 
-        Map<String,String> sendMap = new HashMap<>();
+        Map<String, String> sendMap = new HashMap<>();
 
-        try{
-            sendMap.put("visit_key","www.hyjf.com");
-            sendMap.put("time",String.valueOf(System.currentTimeMillis()));
-            sendMap.put("data",json);
+        try {
+            sendMap.put("visit_key", "www.hyjf.com");
+            sendMap.put("time", String.valueOf(System.currentTimeMillis()));
+            sendMap.put("data", json);
 
             //Sige md5(密钥&visit_key=域名&time=时间戳&data=data字符串的byte长度)
             StringBuilder stringBuilder = new StringBuilder();
@@ -141,19 +189,19 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
             String sign = MD5.toMD5CodeCaps(stringBuilder.toString());
 
-            sendMap.put("sign",sign);
+            sendMap.put("sign", sign);
 
             //Post请求
-            String response = HttpDeal.post(url,sendMap);
+            String response = HttpDeal.post(url, sendMap);
 
-            ZeroOneResponse zeroOneResponse = JSONObject.parseObject(response,ZeroOneResponse.class);
+            ZeroOneResponse zeroOneResponse = JSONObject.parseObject(response, ZeroOneResponse.class);
 
-            if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
+            if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                 return true;
             }
 
-        }catch (Exception e){
-            logger.error("零壹财经数据报送错误 error:",e);
+        } catch (Exception e) {
+            logger.error("零壹财经数据报送错误 error:", e);
         }
 
         return false;

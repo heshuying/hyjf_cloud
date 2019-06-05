@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -255,5 +256,10 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+
+    @Override
+    public List<ZeroOneBorrowDataVO> queryBorrowRecordSub(String dateStart, String dateEnd) {
+        return null;
+    }
 
 }
