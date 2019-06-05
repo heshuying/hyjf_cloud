@@ -5,7 +5,7 @@
 
     <!-- 引入配置文件 -->
 
-    <properties resource="init_market.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -2050,6 +2050,8 @@
         </table>
 
         <table tableName="ht_workflow_node" domainObjectName="WorkFlowNode">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
 
         <table tableName="ht_workname" domainObjectName="WorkName">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
@@ -2071,6 +2073,10 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
+        <table tableName="ht_coupon_send_fail" domainObjectName="CouponSendFail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
     </context>
 </generatorConfiguration>

@@ -54,6 +54,7 @@
 		<result column="del_flag" property="delFlag" jdbcType="TINYINT" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="tender_user_utm_id" property="tenderUserUtmId" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List" >
 		id, accede_order_id, plan_nid, user_id, user_name, user_attribute, invite_user_id,
@@ -65,7 +66,7 @@
 		quit_time, last_payment_time, acctual_payment_time, should_pay_total, should_pay_capital,
 		should_pay_interest, expect_apr, fair_value, liquidation_fair_value, actual_apr,
 		invest_counts, match_dates, lqd_service_fee, lqd_service_apr, invest_service_apr,
-		lqd_progress, create_user, update_user, del_flag, create_time, update_time
+		lqd_progress, create_user, update_user, del_flag, create_time, update_time,tender_user_utm_id
 	</sql>
 	<select id="selectHjhAutoTenderList" resultMap="BaseResultMap" parameterType="java.util.Map">
 		<!--   	自动投标成功的回款复投 -->
@@ -152,4 +153,16 @@
 								STR_TO_DATE(CONCAT(#{endTime}, '23:59:59'), '%Y-%m-%d %H:%i:%s')
     </update>
 	<!-- add 获取发生异常且开始计息时间为空的的数据并更新其匹配期 huanghui 20181129 end-->
+
+	<!-- 根据投资人的用户名检索相应的 “计划订单” ht_hjh_accede  （1.计划订单开始发起退出的时间小于T，大于T+3日）-->
+	<select id="selectHjhAccedeList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM
+		ht_hjh_accede
+		WHERE
+		accede_order_id = #{planOrderId}
+		and order_status = 3
+		and user_id = #{userId}
+	</select>
 </mapper>

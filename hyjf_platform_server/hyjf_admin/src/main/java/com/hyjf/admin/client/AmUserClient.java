@@ -1021,13 +1021,6 @@ public interface AmUserClient {
     SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
 
     /**
-     * 查询短信总条数+总费用
-     * @param request
-     * @return
-     */
-    Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
-
-    /**
      * 获取部门列表
      * @param o
      * @return
@@ -1338,13 +1331,6 @@ public interface AmUserClient {
     Integer getSmsCountForExport(SmsCountRequest request);
 
     /**
-     * 查询短信统计导出列表
-     * @param request
-     * @return
-     */
-    List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
-
-    /**
      * 查询满足条件的服务费授权的条数
      * @param userPayAuthRequest
      * @return
@@ -1416,6 +1402,19 @@ public interface AmUserClient {
      */
     int cancellationAccountAction(String userId, Integer bankOpenAccount);
 
+    int saveSmsCode(String mobile, String checkCode, String verificationType, Integer ckcodeNew, int clientPc);
+
+    /**
+     * 验证验证码
+     * @param mobile
+     * @param code
+     * @param validCodeType
+     * @param clientPc
+     * @param ckcodeYiyan
+     * @param ckcodeYiyan1
+     * @return
+     */
+    int checkMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
     /**
      * 用户销户成功后,保存销户记录表
      *
@@ -1431,4 +1430,12 @@ public interface AmUserClient {
      * @return
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
+
+    List<UserVO> selectUserListByMobile(ListRequest request);
+
+    void insertBatchSmsCount(ListRequest request);
+
+    void updateOrDelectRepeatData();
 }

@@ -52,6 +52,10 @@
         <result column="joinTime" property="joinTime" />
         <result column="orderLockTime" property="orderLockTime" />
         <result column="planName" property="planName" />
+        <!--当时渠道来源-->
+		<result column="utmSource1" property="utmSource1" jdbcType="VARCHAR"/>
+		<!--当前渠道来源-->
+		<result column="utmSource2" property="utmSource2" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Where_Clause_Repay">
@@ -177,7 +181,9 @@
         DATE_ADD(FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d'),INTERVAL 3 DAY) AS lastQuitTime,
         IFNULL(DATE_FORMAT(hha.create_time,  '%Y-%m-%d'),0) AS joinTime,
         IFNULL(hha.count_interest_time,0) AS orderLockTime,
-        hhp.plan_name AS planName
+        hhp.plan_name AS planName,
+        if(hha.create_time<![CDATA[<]]>'2019-5-31 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
+		utm2.utm_source utmSource2
         FROM
         ht_hjh_repay hhr
         LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = hhr.accede_order_id
@@ -189,6 +195,9 @@
         --         AND pna.name_class = 'USER_PROPERTY'
         --         LEFT JOIN ht_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
         --         AND pna_tender.name_class = 'USER_PROPERTY'
+		left join hyjf_user.ht_utm utm on utm.utm_id=hha.tender_user_utm_id
+		left join hyjf_user.ht_utm_reg reg on hha.user_id=reg.user_id
+		left join hyjf_user.ht_utm utm2 on utm2.utm_id=reg.utm_id
         <include refid="Where_Clause_Repay" />
         ORDER BY repay_should_time desc
         <if test="limitStart != null and limitEnd !=null" >

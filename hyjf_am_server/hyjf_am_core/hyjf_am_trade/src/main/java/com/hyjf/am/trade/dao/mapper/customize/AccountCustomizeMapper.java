@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author xiasq
@@ -31,4 +33,12 @@ public interface AccountCustomizeMapper {
      * @return
      */
     Integer updateAccountOfTender(Account accountBean);
+
+    /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    BankAccountManageCustomize queryAccountUserMoney(@Param("user_id") Integer userId);
 }

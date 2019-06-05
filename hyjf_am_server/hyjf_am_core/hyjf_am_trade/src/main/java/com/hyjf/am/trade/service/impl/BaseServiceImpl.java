@@ -204,7 +204,10 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 		case CustomConstants.HJH_PROCESS_H:
 			// 汇计划清算-债权回款（承接和还款，不复投）
 			// amount=回款总额=h
-			accountBean.setPlanFrost(amount); // 汇计划冻结金额 +h
+			// modify by liuyang 20190410 资金校验修改 start
+			// accountBean.setPlanFrost(amount); // 汇计划冻结金额 +h
+			accountBean.setPlanBalance(amount); // 汇计划可用金额 +h
+			// modify by liuyang 20190410 资金校验修改 end
 			break;
 		default:
 			break;
@@ -276,7 +279,10 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 		case CustomConstants.HJH_PROCESS_H:
 			// 汇计划清算-债权回款（承接和还款，不复投）
 			// amount=回款总额=h
-			hjhAccede.setFrostAccount(amount); // 计划订单冻结金额 +h
+			// modify by liuyang 20190410 资金校验修改 start
+			// hjhAccede.setFrostAccount(amount); // 计划订单冻结金额 +h
+			hjhAccede.setAvailableInvestAccount(amount); // 计划订单可用余额 +h
+			// modify by liuyang 20190410 资金校验修改 end
 			// add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
 			hjhAccede.setLqdServiceFee(serviceFee); // 债转服务费累计
 			// add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
@@ -681,6 +687,178 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 	@Override
 	public String getSystemEmailList() {
 		return env_test ? emailList1 : emailList2;
+	}
+
+	/**
+	 * 根据债转信息获取标签共通方法提取
+	 *
+	 * @param credit
+	 * @return
+	 */
+	@Override
+	public HjhLabel getLabelIdCommon(HjhDebtCredit credit) {
+		HjhLabel resultLabel = null;
+
+		List<HjhLabel> list = this.getLabelListByBorrowStyle(credit.getBorrowStyle());
+		if (org.springframework.util.CollectionUtils.isEmpty(list)) {
+			logger.info(credit.getBorrowStyle() + " 该债转还款方式 没有一个标签");
+			return resultLabel;
+		}
+
+		// continue过滤输入了但是不匹配的标签，如果找到就是第一个
+		for (HjhLabel hjhLabel : list) {
+
+			// 标的是否逾期 ,此为必须字段
+			if (hjhLabel.getIsLate() != null && hjhLabel.getIsLate().intValue() == 1) {
+				if (credit.getIsLateCredit() != null && credit.getIsLateCredit() == 1) {
+					;
+				} else {
+					continue;
+				}
+			} else if (hjhLabel.getIsLate() != null && hjhLabel.getIsLate().intValue() == 0) {
+				if (credit.getIsLateCredit() != null && credit.getIsLateCredit() == 0) {
+					;
+				} else {
+					continue;
+				}
+			}
+			// 标的期限
+			// int score = 0;
+			if (hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue() > 0
+					&& hjhLabel.getLabelTermStart() != null && hjhLabel.getLabelTermStart().intValue() > 0) {
+				if (credit.getBorrowPeriod() >= hjhLabel.getLabelTermStart()
+						&& credit.getBorrowPeriod() <= hjhLabel.getLabelTermEnd()) {
+					// score = score+1;
+				} else {
+					continue;
+				}
+			} else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue() > 0)
+					|| (hjhLabel.getLabelTermStart() != null && hjhLabel.getLabelTermStart().intValue() > 0)) {
+				if (credit.getBorrowPeriod().equals(hjhLabel.getLabelTermStart())
+						|| credit.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())) {
+					// score = score+1;
+				} else {
+					continue;
+				}
+			}
+			// 标的实际利率
+			if (hjhLabel.getLabelAprStart() != null && hjhLabel.getLabelAprStart().compareTo(BigDecimal.ZERO) > 0
+					&& hjhLabel.getLabelAprEnd() != null && hjhLabel.getLabelAprEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (credit.getActualApr().compareTo(hjhLabel.getLabelAprStart()) >= 0
+						&& credit.getActualApr().compareTo(hjhLabel.getLabelAprEnd()) <= 0) {
+					;
+				} else {
+					continue;
+				}
+			} else if (hjhLabel.getLabelAprStart() != null
+					&& hjhLabel.getLabelAprStart().compareTo(BigDecimal.ZERO) > 0) {
+				if (credit.getActualApr().compareTo(hjhLabel.getLabelAprStart()) == 0) {
+					// score = score+1;
+				} else {
+					continue;
+				}
+
+			} else if (hjhLabel.getLabelAprEnd() != null && hjhLabel.getLabelAprEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (credit.getActualApr().compareTo(hjhLabel.getLabelAprEnd()) == 0) {
+					;
+				} else {
+					continue;
+				}
+			}
+			// 标的实际支付金额
+			if (hjhLabel.getLabelPaymentAccountStart() != null
+					&& hjhLabel.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO) > 0
+					&& hjhLabel.getLabelPaymentAccountEnd() != null
+					&& hjhLabel.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (credit.getLiquidationFairValue().compareTo(hjhLabel.getLabelPaymentAccountStart()) >= 0
+						&& credit.getLiquidationFairValue().compareTo(hjhLabel.getLabelPaymentAccountEnd()) <= 0) {
+					;
+				} else {
+					continue;
+				}
+			} else if (hjhLabel.getLabelPaymentAccountStart() != null
+					&& hjhLabel.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO) > 0) {
+				if (credit.getLiquidationFairValue().compareTo(hjhLabel.getLabelPaymentAccountStart()) == 0) {
+					;
+				} else {
+					continue;
+				}
+
+			} else if (hjhLabel.getLabelPaymentAccountEnd() != null
+					&& hjhLabel.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (credit.getLiquidationFairValue().compareTo(hjhLabel.getLabelPaymentAccountEnd()) == 0) {
+					;
+				} else {
+					continue;
+				}
+			}
+			// 资产来源
+			if (StringUtils.isNotBlank(hjhLabel.getInstCode())) {
+				if (hjhLabel.getInstCode().equals(credit.getInstCode())) {
+					// score = score+1;
+				} else {
+					continue;
+				}
+			}
+			// 产品类型
+			if (hjhLabel.getAssetType() != null && hjhLabel.getAssetType().intValue() >= 0) {
+				if (hjhLabel.getAssetType().equals(credit.getAssetType())) {
+					;
+				} else {
+					continue;
+				}
+			}
+			// 项目类型
+			if (hjhLabel.getProjectType() != null && hjhLabel.getProjectType().intValue() >= 0) {
+				if (hjhLabel.getProjectType().equals(credit.getProjectType())) {
+					;
+				} else {
+					continue;
+				}
+			}
+
+			// 剩余天数
+			if (hjhLabel.getRemainingDaysEnd() != null && hjhLabel.getRemainingDaysEnd().intValue() >= 0
+					&& hjhLabel.getRemainingDaysStart() != null && hjhLabel.getRemainingDaysStart().intValue() >= 0) {
+				if (credit.getRemainDays() != null && credit.getRemainDays() >= hjhLabel.getRemainingDaysStart()
+						&& credit.getRemainDays() <= hjhLabel.getRemainingDaysEnd()) {
+					;
+				} else {
+					continue;
+				}
+			} else if ((hjhLabel.getRemainingDaysEnd() != null && hjhLabel.getRemainingDaysEnd().intValue() >= 0)
+					|| (hjhLabel.getRemainingDaysStart() != null && hjhLabel.getRemainingDaysStart().intValue() >= 0)) {
+				if (credit.getRemainDays() != null && credit.getRemainDays().equals(hjhLabel.getRemainingDaysStart())
+						|| credit.getRemainDays().equals(hjhLabel.getRemainingDaysEnd())) {
+					;
+				} else {
+					continue;
+				}
+			}
+
+			// 找出即为最新的标签
+			return hjhLabel;
+
+		}
+
+		return resultLabel;
+	}
+
+	/**
+	 * 债转标-根据还款方式获取标签列表
+	 * @param borrowStyle
+	 * @return
+	 */
+	private List<HjhLabel> getLabelListByBorrowStyle(String borrowStyle){
+		HjhLabelExample example = new HjhLabelExample();
+		HjhLabelExample.Criteria cra = example.createCriteria();
+
+		cra.andDelFlagEqualTo(0);
+		cra.andLabelStateEqualTo(1);
+		cra.andBorrowStyleEqualTo(borrowStyle);
+		cra.andIsCreditEqualTo(1); // 债转标
+		example.setOrderByClause(" update_time desc ");
+		return this.hjhLabelMapper.selectByExample(example);
 	}
 
 	@Override

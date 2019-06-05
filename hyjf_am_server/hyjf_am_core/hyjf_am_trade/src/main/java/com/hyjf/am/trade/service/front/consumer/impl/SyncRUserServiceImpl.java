@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 同步用户信息服务类
- * 
+ *
  * @author dxj
  * @version SyncRUserServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserService {
 
     @Override
-    public void updateUserInfo(JSONObject jsonObj) {
+    public void updateUserInfo(JSONObject jsonObj) throws RuntimeException {
 
         String attribute = jsonObj.getString("attribute");
         String userId = jsonObj.getString("userId");
@@ -54,6 +54,9 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
 
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
             logger.info("uid:{},am_trade.ht_r_user更新ht_user_info{}", userIdInt, upRet > 0 ? "成功" : "失败");
+            if (upRet == 0) {
+                throw new RuntimeException("【RUser同步】用户信息更新同步失败！用户id：" + userIdInt);
+            }
         }
     }
 
@@ -90,7 +93,7 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
      * @date 2018/10/08
      */
     @Override
-    public void updateUser(JSONObject jsonObj) {
+    public void updateUser(JSONObject jsonObj) throws RuntimeException {
         String userId = jsonObj.getString("userId");
         String userType = jsonObj.getString("userType");
         String mobile = jsonObj.getString("mobile");
@@ -107,11 +110,14 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
             }
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
             logger.info("uid:{},am_trade.ht_r_user更新ht_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
+            if (upRet == 0) {
+                throw new RuntimeException("【RUser同步】用户更新同步失败！用户id：" + userIdInt);
+            }
         }
     }
 
     @Override
-    public void updateSpreadUser(JSONObject jsonObj) {
+    public void updateSpreadUser(JSONObject jsonObj) throws RuntimeException {
 
         String userId = jsonObj.getString("userId");
         String spreadUserId = jsonObj.getString("spreadsUserId");
@@ -127,6 +133,9 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
 
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
             logger.info("uid:{},am_trade.ht_r_user更新ht_spreads_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
+            if (upRet == 0) {
+                throw new RuntimeException("【RUser同步】用户推荐人更新同步失败！用户id：" + userIdInt);
+            }
         }
     }
 
@@ -149,7 +158,7 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
             RUser rUser = new RUser();
             rUser.setAttribute(attributeInt);
             int upRet = rUserMapper.updateByExampleSelective(rUser, example);
-            logger.info("rid:{},am_trade.ht_r_user更新ht_user_info{}", referrerInt, upRet > 0 ? "成功" : "失败");
+            logger.info("rid:{},am_trade.ht_r_user更新ht_user_info完毕。成功条数：{}", referrerInt, upRet);
         }
     }
 }

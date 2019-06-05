@@ -322,6 +322,13 @@ public class BorrowTender implements Serializable {
      */
     private Date createTime;
 
+    /**
+     * 出借人渠道来源（出借时）
+     *
+     * @mbggenerated
+     */
+    private Integer tenderUserUtmId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -690,5 +697,13 @@ public class BorrowTender implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getTenderUserUtmId() {
+        return tenderUserUtmId;
+    }
+
+    public void setTenderUserUtmId(Integer tenderUserUtmId) {
+        this.tenderUserUtmId = tenderUserUtmId;
     }
 }

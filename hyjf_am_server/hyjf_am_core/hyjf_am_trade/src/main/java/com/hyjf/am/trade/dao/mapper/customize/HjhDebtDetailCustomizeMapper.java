@@ -5,7 +5,9 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +41,23 @@ public interface HjhDebtDetailCustomizeMapper {
     public HjhDebtDetail selectDebtDetailCurRepayPeriod(String orderId);
 
     /**
+     * 查询当前计息周期的债权详情
+     *
+     * @param orderId
+     * @return
+     */
+    HjhDebtDetail selectDebtDetailCurRepayPeriodByDate(@Param("orderId") String orderId, @Param("dualDate") String dualDate);
+
+    /**
+     * 查询小于T-3日还款的债权详情
+     *
+     * @param orderId
+     * @param dualDateT3
+     * @return
+     */
+    HjhDebtDetail selectHjhDebtCreditAssignT3(@Param("orderId") String orderId, @Param("dualDateT3") String dualDateT3);
+
+    /**
      * 根据出借订单号和还款期数 查询债权详情
      * @param orderId
      * @param repayPeriod
@@ -61,6 +80,13 @@ public interface HjhDebtDetailCustomizeMapper {
     HjhDebtDetail selectDebtDetailCurPeriod(String orderId);
 
     /**
+     * 检索应还时间>当前时间的债权
+     * @param orderId
+     * @return
+     */
+    HjhDebtDetail selectDebtDetailCurPeriodByDate(@Param("orderId") String orderId,@Param("dualDate") String dualDate);
+
+    /**
      * 更新计划加入订单的清算进度,清算服务费,清算时公允价值,计划订单的当前公允价值
      * @param hjhAccede
      * @return
@@ -73,4 +99,20 @@ public interface HjhDebtDetailCustomizeMapper {
      * @return
      */
     int updateCalculateHjhAccede(HjhAccede hjhAccede);
+
+    /**
+     * 检索还款日为T日（预估日）  当前有效的债权
+     * @param expectTime
+     * @return
+     */
+    List<HjhDebtDetail> selectDebtDetailToDate(@Param("expectTime") String expectTime);
+
+    /**
+     * 查询当前期到最后一期的债权信息
+     *
+     * @param orderId
+     * @param dualDate
+     * @return
+     */
+    List<HjhDebtDetail> selectDebtDetailAfterDateNoRepay(@Param("orderId") String orderId, @Param("dualDate") String dualDate);
 }

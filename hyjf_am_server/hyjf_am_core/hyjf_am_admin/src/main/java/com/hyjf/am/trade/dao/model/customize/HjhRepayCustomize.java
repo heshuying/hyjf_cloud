@@ -138,6 +138,24 @@ public class HjhRepayCustomize implements Serializable {
      * 计划名称
      */
     private String planName;
+    private String utmSource1;
+    private String utmSource2;
+
+    
+    public String getUtmSource1() {
+		return utmSource1;
+	}
+
+	public void setUtmSource1(String utmSource1) {
+		this.utmSource1 = utmSource1;
+	}
+
+	public String getUtmSource2() {
+		return utmSource2;
+	}
+	public void setUtmSource2(String utmSource2) {
+		this.utmSource2 = utmSource2;
+	}
 
     public Integer getId() {
         return id;

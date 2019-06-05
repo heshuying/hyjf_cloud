@@ -251,6 +251,11 @@
 		<result column="contractSignTime" property="contractSignTime" jdbcType="VARCHAR" />
 		<!--是否复投投标-->
 		<result column="tender_type" property="tenderType" jdbcType="VARCHAR"/>
+		<!--当时渠道来源-->
+		<result column="utmSource1" property="utmSource1" jdbcType="VARCHAR"/>
+		<!--当前渠道来源-->
+		<result column="utmSource2" property="utmSource2" jdbcType="VARCHAR"/>
+		
 	</resultMap>
 	<select id="exportBorrowInvestList" resultMap="exportBorrowInvestListMap" parameterType="com.hyjf.am.resquest.admin.BorrowInvestRequest">
 		SELECT
@@ -299,7 +304,9 @@
 			CASE WHEN hta.contract_sign_time IS NOT NULL THEN
 			FROM_UNIXTIME(hta.contract_sign_time, '%Y-%m-%d %H:%i:%s' )
 			ELSE '' END AS contractSignTime,
-			CASE WHEN bt.tender_type = 1 THEN '是' ELSE '否' END  AS  tender_type
+			CASE WHEN bt.tender_type = 1 THEN '是' ELSE '否' END  AS  tender_type,
+			if(bt.create_time<![CDATA[<]]>'2019-5-31 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
+			utm2.utm_source utmSource2
 		FROM
 			ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
@@ -317,6 +324,9 @@
 		LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
 		LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = bt.nid
+		left join hyjf_user.ht_utm utm on utm.utm_id=bt.tender_user_utm_id
+		left join hyjf_user.ht_utm_reg reg on bt.user_id=reg.user_id
+		left join hyjf_user.ht_utm utm2 on utm2.utm_id=reg.utm_id
 	    <include refid="Where_Clause" />
 		ORDER BY
 		    bt.create_time DESC, bt.id DESC

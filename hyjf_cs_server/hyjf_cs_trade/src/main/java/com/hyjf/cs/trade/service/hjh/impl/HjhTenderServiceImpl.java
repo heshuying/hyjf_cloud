@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.hjh.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
@@ -108,7 +107,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "100"),
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests", value = "100"),
             @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
@@ -192,8 +192,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      * @return
      */
-    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
-        logger.info("==================已进入 加入计划(三端) fallBackJoinPlan 方法================");
+    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request,Throwable e){
+        logger.info("==================已进入 加入计划(三端) fallBackJoinPlan 方法========熔断原因: "+e.getMessage());
         WebResult<Map<String,Object>> result = new WebResult<>();
         result.setStatus(AppResult.FAIL);
         result.setStatusDesc("加入失败，请重试！");
@@ -373,7 +373,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 计划不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
-        resultVo.setBorrowApr(plan.getExpectApr()+"%");
+        resultVo.setBorrowApr(FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
         PlanDetailCustomizeVO planDetail = amTradeClient.getPlanDetail(planNid);
         resultVo.setPaymentOfInterest("0" + "元");
         // 获取用户最优优惠券
@@ -524,8 +524,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 BigDecimal borrowInterest = earnings.add(couponInterest);
 
                 //备注
-                resultVo.setDesc("历史年回报率:  "+plan.getExpectApr()+"%      历史回报:  " + borrowInterest+"元");
-                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc("历史年回报率:  "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报:  " + borrowInterest+"元");
+                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
 
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null, borrowInterest) + "元");
@@ -550,8 +550,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("无可用");
                 }
 
-                resultVo.setDesc("历史年回报率: "+plan.getExpectApr()+"%      历史回报: " + earnings +"元");
-                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报: " + earnings +"元");
+                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings) + "元");
             }
@@ -1153,7 +1153,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 优惠券类别
             result.put("couponType", couponUser.getCouponType());
             // 优惠券额度
-            result.put("couponQuota", couponUser.getCouponQuota());
+            result.put("couponQuota", couponUser.getFormatCouponQuota());
             // 优惠券ID
             result.put("couponGrantId", couponUser.getId());
             result.put("projectType",couponUser.getProjectType());
@@ -1340,6 +1340,20 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         planAccede.setRequest(request);
         planAccede.setCreateTime(new Date());
+
+        // 渠道用
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetails =null;
+        if(utmRegVO!=null){
+            planAccede.setTenderUserUtmId(utmRegVO.getUtmId());
+        }else{
+            // 获取app渠道
+            appChannelStatisticsDetails = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+            if(appChannelStatisticsDetails!=null) {
+            	 //planAccede.setTenderUserUtmId(appChannelStatisticsDetails.getSourceId());
+            }
+        }
+
         // 插入汇计划加入明细表
         logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
@@ -1360,7 +1374,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 logger.error("发送CRM消息失败:" + e.getMessage());
             }
             // 更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始
-            this.updateUtm(request, plan);
+            this.updateUtm(request, plan,utmRegVO);
             // 网站累计出借追加
             // 出借、收益统计表
             JSONObject params = new JSONObject();
@@ -1384,7 +1398,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
 
         }
-        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+
         if (appChannelStatisticsDetails != null) {
             logger.info("更新app渠道统计表, userId is: {}", userId);
             Map<String, Object> params = new HashMap<String, Object>();
@@ -1497,7 +1511,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      * @param plan
      */
-    private void updateUtm(TenderRequest request, HjhPlanVO plan) {
+    private void updateUtm(TenderRequest request, HjhPlanVO plan ,UtmRegVO utmRegVO ) {
         logger.info("加入计划成功  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始  userId {}  计划编号 {}", request.getUserId(), plan.getPlanNid());
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计出借
@@ -1524,7 +1538,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         //根据investFlag标志位来决定更新哪种出借
         params.put("investFlag", checkIsNewUserCanInvest2(request.getUserId()));
         // PC渠道
-        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(request.getUserId());
         if (utmRegVO != null) {
             //压入消息队列
             try {
@@ -1675,6 +1688,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
                 }
             }
+        }
+        //资金支出校验-智投（userId/出借金额）
+        if(!this.capitalExpendituresCheck(request.getUser().getUserId(), accountBigDecimal)){
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
         }
     }
 

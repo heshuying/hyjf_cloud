@@ -1116,4 +1116,25 @@ public class UserController extends BaseController {
 
 
 
+    /**
+     *  pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     * @param userId
+     * @return
+     */
+    @PostMapping("/unlockUser/{userId}")
+    public BooleanResponse unlockUser(@PathVariable Integer userId) {
+        logger.info("unlockUser...userId is :{}", userId);
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(true);
+        User user = userService.fUserByUserId(userId);
+        try {
+            userService.updateUnlockUser(user);
+        }catch (Exception e){
+            logger.error("解锁失败，原因",e);
+            response.setResultBoolean(false);
+        }
+
+        return response;
+    }
+
 }
