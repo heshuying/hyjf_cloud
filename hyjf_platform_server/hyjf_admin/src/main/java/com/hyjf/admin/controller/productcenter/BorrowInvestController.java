@@ -479,6 +479,7 @@ public class BorrowInvestController extends BaseController {
         map.put("tenderType", "循环出借");
         map.put("utmSource1", "出借人渠道来源（出借时）");
         map.put("utmSource2", "出借人渠道来源（当前）");
+        map.put("stateDesc", "债权结束状态");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
