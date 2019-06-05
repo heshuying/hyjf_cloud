@@ -96,6 +96,11 @@ public class AdminHjhCreditTenderCustomizeVO extends BaseVO implements Serializa
 
 	@ApiModelProperty(value = "出让人智投订单号")
 	private String sellOrderId;
+	@ApiModelProperty(value = "债权结束状态 S-成功;F-失败;A-初始:W:未开始")
+	private String state;
+	@ApiModelProperty(value = "债权结束状态描述")
+	private String stateDesc;
+
 
 	/**
 	 * 构造方法

@@ -65,6 +65,13 @@
             <if test="sellOrderId != null and sellOrderId != ''">
                 AND bc.plan_order_id = #{sellOrderId}
             </if>
+			<if test="stateSrch != null and stateSrch != '' and stateSrch != 'W'">
+				AND bce.state = #{stateSrch}
+			</if>
+			<!-- 查询未开始 -->
+			<if test="stateSrch != null and stateSrch != '' and stateSrch == 'W'">
+				AND bce.id is null
+			</if>
 		</where>
 	</sql>
 	
@@ -105,6 +112,8 @@
 		<result column="assign_service_apr" property="assignServiceApr"/>
 		<!--原投资订单号-->
 		<result column="sell_order_id" property="sellOrderId"/>
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="stateDesc" property="stateDesc" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<select id="selectDebtCreditTenderList" resultMap="DebtCreditTenderMap" parameterType="map">
@@ -140,11 +149,23 @@
 			CASE WHEN ct.tender_type = 1 THEN  '是' ELSE '否' END  AS  tender_type,
 			ct.assign_service_fee AS assign_service_fee,
 			CASE WHEN ct.assign_service_apr <![CDATA[<>]]> 0 then  ct.assign_service_apr ELSE '0.00' END AS assign_service_apr,
-            bc.plan_order_id AS sell_order_id
+            bc.plan_order_id AS sell_order_id,
+			bce.`state`,
+			CASE bce.`state`
+			WHEN 'A' THEN
+			'初始'
+			WHEN 'S' THEN
+			'成功'
+			WHEN 'F' THEN
+			'失败'
+			ELSE
+			'未开始'
+			END stateDesc
 		FROM
 			ht_hjh_debt_credit_tender ct
 		INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
 		INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = ct.assign_order_id
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = ct.assign_order_id
 	   <include refid="Where_Clause" />

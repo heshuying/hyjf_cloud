@@ -96,6 +96,8 @@ public class HjhCreditTenderController extends BaseController{
         List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         // 承接方式
 		List<DropDownVO> clientList = adminCommonService.getParamNameList("PLAN_ASSIGN_TYPE");
+		//债权结束状态
+		List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
         if(CollectionUtils.isEmpty(borrowStyleList) &&  clientList.isEmpty()){
         	jsonObject.put("status", FAIL);
         } else {
@@ -103,6 +105,8 @@ public class HjhCreditTenderController extends BaseController{
         	jsonObject.put("还款方式下拉菜单", "borrowStyleList");
         	jsonObject.put("clientList", clientList);
         	jsonObject.put("承接方式下拉菜单", "clientList");
+        	jsonObject.put("creditendStateList", creditendStateList);
+        	jsonObject.put("债权结束状态下拉菜单", "creditendStateList");
         	jsonObject.put("status", SUCCESS);
         }
 		return jsonObject;
@@ -377,6 +381,7 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignServiceFee","债转服务费(元)");
 		map.put("tenderType", "复投承接(是/否)");
 		map.put("periodView", "项目期数");
+		map.put("stateDesc", "债权结束状态");
 
 		return map;
 	}

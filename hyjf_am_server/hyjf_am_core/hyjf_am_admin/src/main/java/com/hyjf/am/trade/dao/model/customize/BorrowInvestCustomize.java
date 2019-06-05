@@ -253,7 +253,7 @@ public class BorrowInvestCustomize {
     private String utmSource1;
     private String utmSource2;
 
-    /** 银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）*/
+    /** 银行交易状态（S-成功;F-失败;A-初始;W:未开始）*/
     private String state;
     /** 债权结束状态描述*/
     private String stateDesc;
