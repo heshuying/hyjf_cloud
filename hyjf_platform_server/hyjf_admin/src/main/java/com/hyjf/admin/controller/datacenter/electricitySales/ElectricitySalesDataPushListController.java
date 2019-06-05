@@ -63,7 +63,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/hyjf-admin/electricitySales")
 public class ElectricitySalesDataPushListController  extends BaseController {
 	/** 权限 */
-	public static final String PERMISSIONS = "DATACENTERCOUPON";
+	//public static final String PERMISSIONS = "DATACENTERCOUPON";
     @Autowired
     private  ElectricitySalesDataPushListService electricitySalesDataPushListService;
 
@@ -76,7 +76,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
      */
     @ApiOperation(value = "list查询",notes = "list查询")
     @PostMapping(value = "/electricitySalesDataPushList")
-	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
+	//@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ElectricitySalesDataPushListResponse> searchModifyInfoList(@RequestBody ElectricitySalesDataPushListRequest request){
         return new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.searchList(request));
     }
@@ -90,7 +90,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 	 */
 	@PostMapping("/exportAction")
 	@ApiOperation(value = "导出", notes = "导出")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportExcel(HttpServletRequest request,
 								   @RequestBody ElectricitySalesDataPushListRequest requestBean,HttpServletResponse response) throws Exception {
 		
