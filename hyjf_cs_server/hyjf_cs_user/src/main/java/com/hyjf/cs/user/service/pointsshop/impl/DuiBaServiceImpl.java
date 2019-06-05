@@ -4,6 +4,8 @@
 package com.hyjf.cs.user.service.pointsshop.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.pointsshop.DuiBaService;
 import com.hyjf.pay.lib.duiba.sdk.CreditTool;
@@ -25,9 +27,17 @@ public class DuiBaServiceImpl implements DuiBaService {
 
 	private static String NOT_LOGIN = "not_login";
 
+	private static String WECHAT = "1";
+
 	@Autowired
 	SystemConfig systemConfig;
 
+	/**
+	 * 微信端获取兑吧url接口
+	 * @param userId
+	 * @param request
+	 * @return
+	 */
 	@Override
 	public JSONObject getUrl(Integer userId, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
@@ -59,7 +69,7 @@ public class DuiBaServiceImpl implements DuiBaService {
 			// 生成url
 			String url = tool.buildAutoLoginRequest(uid, Long.valueOf(credits), redirect);
 			if (StringUtils.isNotBlank(url)) {
-				if("1".equals(platform)){
+				if(WECHAT.equals(platform)){
 					ret.put("status", "000");
 				} else {
 					ret.put("status", "0");
@@ -80,4 +90,28 @@ public class DuiBaServiceImpl implements DuiBaService {
 		}
 		return ret;
 	}
+
+	/**
+	 * 微信端获取配置接口 可扩展
+	 * @param userId
+	 * @param request
+	 * @return
+	 */
+    @Override
+    public JSONObject getConfig(Integer userId, HttpServletRequest request) {
+		JSONObject ret = new JSONObject();
+		try {
+			// 积分商城开关
+			ret.put("pointsShopSwitch", RedisUtils.get(RedisConstants.POINTS_SHOP_SWITCH));
+
+			// 微信端返000
+			ret.put("status", "000");
+			ret.put("statusDesc", "成功");
+		} catch (Exception e){
+			logger.error("微信端获取配置发生错误：", e);
+			ret.put("status", "1");
+			ret.put("statusDesc", e.getMessage());
+		}
+		return ret;
+    }
 }
