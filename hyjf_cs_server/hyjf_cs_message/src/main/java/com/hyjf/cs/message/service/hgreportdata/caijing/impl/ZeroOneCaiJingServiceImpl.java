@@ -164,7 +164,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             sendMap.put("sign",sign);
 
             //Post请求
-            String response = HttpDeal.post(url,sendMap);
+            String response = HttpDeal.post(stbuUrl.toString(),sendMap);
 
             ZeroOneResponse zeroOneResponse = JSONObject.parseObject(response,ZeroOneResponse.class);
 
