@@ -25,7 +25,7 @@ import java.util.List;
  * @author koudeli
  * @version RecoverInfoController, v0.1 2019/4/23 14:14
  */
-@Api(value = "回款信息",tags ="回款信息" )
+@Api(value = "订单信息",tags ="订单信息" )
 @RestController
 @RequestMapping("/hyjf-wbs/trade/order")
 public class OrderInfoController extends BaseController {
