@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.model.customize.ZeroOneCaiJingCustomize;
 import com.hyjf.am.trade.service.hgreportdata.caijing.ZeroOneCaiJingDataService;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,38 +27,7 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
     @Autowired
     private ZeroOneCustomizeMapper customizeMapper;
 
-    public static final Map<Character,String> signMap = new HashMap<>();
-    static{
-        signMap.put('0',"K");
-        signMap.put('1',"A");
-        signMap.put('2',"B");
-        signMap.put('3',"C");
-        signMap.put('4',"D");
-        signMap.put('5',"F");
-        signMap.put('6',"G");
-        signMap.put('7',"H");
-        signMap.put('8',"I");
-        signMap.put('9',"J");
-    }
 
-    /**
-     * 标的号加密规则：前三位替换为HYJF 数字替换为字母 1-A 2-B 3-C 4-D 5-F 6-G 7-H 8-I 9-J 0-K
-     * @param nid
-     * @return
-     */
-    public static String nidSign(String nid){
-        char cnid[] = nid.toCharArray();
-
-        if(cnid.length < 4){
-            return "";
-        }
-        StringBuilder sbuild = new StringBuilder();
-        sbuild.append("HYJF");
-        for(int i =3 ;i <cnid.length;i++ ){
-            sbuild.append(signMap.get(cnid[i]));
-        }
-        return sbuild.toString();
-    }
 
     /**
      * 查询指定日期的出借记录
@@ -77,7 +47,7 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
                 //表的主键
                 zeroOneDataVO.setInvest_id(vo.getNid());
                 //标编号
-                zeroOneDataVO.setId(nidSign(vo.getBorrowNid()));
+                zeroOneDataVO.setId(CustomUtil.nidSign(vo.getBorrowNid()));
                 //标的链接
                 if("tender".equals(vo.getFlag())){
                     zeroOneDataVO.setLink("borrow/borrowList");
@@ -122,7 +92,7 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
                 ZeroOneDataVO zeroOneDataVO = new ZeroOneDataVO();
 
                 zeroOneDataVO.setRepay_id(vo.getFreezeOrderId());
-                zeroOneDataVO.setId(nidSign(vo.getBorrowNid()));
+                zeroOneDataVO.setId(CustomUtil.nidSign(vo.getBorrowNid()));
                 zeroOneDataVO.setAdvanced_time(vo.getRepayTime());
                 //实际借款天数
                 zeroOneDataVO.setActual_period(vo.getSpentday());

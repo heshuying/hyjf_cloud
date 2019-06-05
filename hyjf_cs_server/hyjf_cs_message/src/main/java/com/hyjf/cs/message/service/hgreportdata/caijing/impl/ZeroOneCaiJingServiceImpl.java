@@ -3,6 +3,7 @@ package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
+import com.hyjf.common.enums.ZeroOneCaiJingEnum;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
@@ -75,7 +76,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Boolean sendStatus = sendDataReport("invest",String.valueOf(JSONObject.toJSON(list)));
+        Boolean sendStatus = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),String.valueOf(JSONObject.toJSON(list)));
         if(sendStatus){
             //报送成功
             logger.info("借款记录接口报送成功");
@@ -100,7 +101,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Boolean sendStatus = sendDataReport("advanced-repay",String.valueOf(JSONObject.toJSON(list)));
+        Boolean sendStatus = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(),String.valueOf(JSONObject.toJSON(list)));
         if(sendStatus){
             //报送成功
             logger.info("提前还款接口报送成功");
