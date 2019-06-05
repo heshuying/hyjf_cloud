@@ -90,7 +90,7 @@ public class ToolsController {
     public Object orderAction(HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> jsonMap = new HashMap<String, Object>();
-        jsonMap.put("entId", "8001");
+        jsonMap.put("entId", request.getParameter("endId"));
         jsonMap.put("startTime", request.getParameter("start"));
         jsonMap.put("endTime", request.getParameter("end"));
 
