@@ -171,6 +171,9 @@ public class UserParameters {
 	// 用户ID
 	private String userId;
 
+	/** 积分商城用：用户当前积分 */
+	private Integer pointsCurrent;
+
 	public String getHuifuOpenAccount() {
 		return huifuOpenAccount;
 	}
@@ -934,5 +937,13 @@ public class UserParameters {
 
 	public void setExitLabelShowFlag(String exitLabelShowFlag) {
 		this.exitLabelShowFlag = exitLabelShowFlag;
+	}
+
+	public Integer getPointsCurrent() {
+		return pointsCurrent;
+	}
+
+	public void setPointsCurrent(Integer pointsCurrent) {
+		this.pointsCurrent = pointsCurrent;
 	}
 }

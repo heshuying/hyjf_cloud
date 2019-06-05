@@ -157,6 +157,8 @@ public class WeChatRegistController extends BaseUserController {
 
          // 注册成功后,将userId返回前端
          ret.setUserId(userVO.getUserId());
+         // 积分商城，注册成功后，返回用户当前积分，默认0
+        ret.setPointsCurrent(0);
         // add by liuyang 神策数据统计追加 20181029 start
         if (StringUtils.isNotBlank(presetProps)) {
             try {
@@ -389,6 +391,8 @@ public class WeChatRegistController extends BaseUserController {
                 // 神策数据统计 add by liuyang 20180725 start
                 // 注册成功后将用户ID返给前端
                 ret.put("userId",String.valueOf(userId));
+                // 积分商城，注册成功后默认返回0
+                ret.put("pointsCurrent", 0);
                 if (StringUtils.isNotBlank(presetProps)) {
                     logger.info("注册时预置属性:presetProps" + presetProps);
                     try {

@@ -103,6 +103,8 @@ public class WeChatLoginController extends BaseUserController {
             // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
             // 登录成功后,将用户ID返回给前端
             result.setUserId(String.valueOf(userVO.getUserId()));
+            // 积分商城，将用户当前积分返回给前端
+            result.setPointsCurrent(user.getPointsCurrent());
             // 预置属性不为空,发送神策登陆事件MQ
             logger.info("presetProps:" + presetProps);
             if (StringUtils.isNotBlank(presetProps)){

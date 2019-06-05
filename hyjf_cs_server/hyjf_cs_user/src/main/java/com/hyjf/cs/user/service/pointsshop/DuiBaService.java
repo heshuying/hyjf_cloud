@@ -12,5 +12,19 @@ import javax.servlet.http.HttpServletRequest;
  * @version DuiBaService, v0.1 2019/5/29 16:36
  */
 public interface DuiBaService {
+    /**
+     * 微信端获取兑吧url接口
+     * @param userId
+     * @param request
+     * @return
+     */
     JSONObject getUrl(Integer userId, HttpServletRequest request);
+
+    /**
+     * 微信端获取配置接口 可扩展
+     * @param userId
+     * @param request
+     * @return
+     */
+    JSONObject getConfig(Integer userId, HttpServletRequest request);
 }

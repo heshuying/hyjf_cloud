@@ -21,15 +21,21 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "weChat端-兑吧相关接口", tags = "weChat端-兑吧相关接口")
 @RestController
-@RequestMapping("/hyjf-wechat/pointsshop/duiba")
+@RequestMapping("/hyjf-wechat")
 public class WeChatDuiBaController {
     @Autowired
     DuiBaService duiBaService;
 
     @ApiOperation(value = "获取兑吧跳转url", notes = "获取兑吧跳转url")
-    @PostMapping(value = "/geturl")
+    @PostMapping(value = "/pointsshop/duiba/geturl")
     public JSONObject getUrl(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request){
         return duiBaService.getUrl(userId, request);
+    }
+
+    @ApiOperation(value = "微信端获取配置接口", notes = "微信端获取配置接口")
+    @PostMapping(value = "/getconfig")
+    public JSONObject getConfig(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request){
+        return duiBaService.getConfig(userId, request);
     }
 
 }

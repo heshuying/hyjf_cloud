@@ -252,6 +252,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					+ (user.getRechargeSms() == null ? 0 : user.getRechargeSms())
 					+ (user.getRecieveSms() == null ? 0 : user.getRecieveSms());
 			result.setUserId(String.valueOf(userId));
+			// 积分商城，返回用户当前积分
+			result.setPointsCurrent(user.getPointsCurrent());
 			if (smsOpenStatus == 4) {
 				result.setSmsOpenStatus("0");
 			} else {
