@@ -148,7 +148,7 @@ public class DuiBaCallController extends BaseController {
 			} else {
 				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
 				// 传兑吧订单号
-				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum();
+				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum() + "/" + params.getErrorMessage();
 				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
