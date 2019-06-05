@@ -207,7 +207,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		record.setOrderId(orderId);
 		record.setBorrowNid(borrowRecover.getBorrowNid());
 		record.setAuthCode(borrowRecover.getAuthCode());
-		record.setCreditEndType(2); // 结束债权类型（1:还款，2:散标债转，3:计划债转）'
+		record.setCreditEndType(2); // 结束债权类型（1:还款，2:散标债转，3:计划债转，5：后台发起）
 		record.setStatus(0);
 		record.setState("A"); // 初始化为A：待处理状态
 		record.setOrgOrderId(borrowRecover.getNid());
