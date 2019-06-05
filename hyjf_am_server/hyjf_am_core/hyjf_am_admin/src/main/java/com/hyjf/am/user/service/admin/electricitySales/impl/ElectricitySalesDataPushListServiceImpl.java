@@ -16,6 +16,7 @@ import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushListExample;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushListExample.Criteria;
 import com.hyjf.am.user.service.admin.electricitySales.ElectricitySalesDataPushListService;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 
 @Service
 public class ElectricitySalesDataPushListServiceImpl  implements ElectricitySalesDataPushListService{
@@ -31,7 +32,7 @@ public class ElectricitySalesDataPushListServiceImpl  implements ElectricitySale
 		Criteria cr = electricitySalesDataPushListExample.createCriteria();
 		
 		cr.andGroupNameEqualTo(request.getGroupName());
-		cr.andGroupIdEqualTo(request.getGroupId());
+		cr.andOwnerUserNameEqualTo(request.getOwnerUserName());
 		cr.andUserNameEqualTo(request.getUserName());
 		cr.andTrueNameEqualTo(request.getTrueName());
 		cr.andMobileEqualTo(request.getMobile());
@@ -64,7 +65,11 @@ public class ElectricitySalesDataPushListServiceImpl  implements ElectricitySale
 	}
 
 	@Override
-	public int insertElectricitySalesDataPushList(ElectricitySalesDataPushListRequest request) {
-		return 0;
+	public int insertElectricitySalesDataPushList(List<ElectricitySalesDataPushList> request) {
+		int i=0;
+		for (ElectricitySalesDataPushList electricitySalesDataPushList : request) {			
+			i=i+electricitySalesDataPushListMapper.insert(electricitySalesDataPushList);
+		}
+		return i;
 	}
 }

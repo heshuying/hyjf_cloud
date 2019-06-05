@@ -270,4 +270,25 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
         }
         return null;
     }
+
+    /**
+     * 根据用户Id查询用户第一笔充值记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountRecharge selectAccountRechargeByUserId(Integer userId) {
+        AccountRechargeExample example = new AccountRechargeExample();
+        AccountRechargeExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        cra.andStatusEqualTo(2);
+        example.setOrderByClause("createTime ASC");
+        List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> list = this.accountRechargeMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+    
 }

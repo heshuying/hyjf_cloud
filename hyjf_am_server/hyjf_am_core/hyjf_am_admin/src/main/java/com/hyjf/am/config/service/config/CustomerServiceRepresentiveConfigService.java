@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service.config;
 
+import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.resquest.config.CustomerServiceRepresentiveConfigRequest;
 
@@ -75,4 +76,14 @@ public interface CustomerServiceRepresentiveConfigService {
      * @return
      */
     Map<String, Object> checkCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+    /**
+     * 根据用户名获取坐席配置
+     *
+     * @param username
+     * @param 
+     * @return
+     */
+    CustomerServiceRepresentiveConfig getCustomerServiceRepresentiveConfig(String username);
+
+	CustomerServiceChannel selectCustomerServiceChannelBySourceId(Integer sourceId);
 }

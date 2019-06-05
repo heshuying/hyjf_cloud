@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -2958,5 +2959,23 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return result.getResultInt();
+	}
+
+	@Override
+	public ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/electricitySales/electricitySalesDataPushList", request, ElectricitySalesDataPushListResponse.class)
+				.getBody();
+		return response;
+	}
+
+	@Override
+	public ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/electricitySales/insertAlectricitySalesDataPushList", request, ElectricitySalesDataPushListResponse.class)
+				.getBody();
+		return response;
 	}
 }

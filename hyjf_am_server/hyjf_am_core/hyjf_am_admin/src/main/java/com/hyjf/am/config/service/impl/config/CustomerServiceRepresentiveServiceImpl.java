@@ -1,6 +1,9 @@
 package com.hyjf.am.config.service.impl.config;
 
+import com.hyjf.am.config.dao.mapper.auto.CustomerServiceChannelMapper;
 import com.hyjf.am.config.dao.mapper.auto.CustomerServiceRepresentiveConfigMapper;
+import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
+import com.hyjf.am.config.dao.model.auto.CustomerServiceChannelExample;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfigExample;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
@@ -24,6 +27,8 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
 
     @Autowired
     private CustomerServiceRepresentiveConfigMapper customerServiceRepresentiveConfigMapper;
+    @Autowired
+    private CustomerServiceChannelMapper customerServiceChannelMapper;
 
     /**
      * 获取坐席配置总数
@@ -176,5 +181,33 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
             return result;
         }
         return result;
+    }
+
+	@Override
+	public CustomerServiceRepresentiveConfig getCustomerServiceRepresentiveConfig(String username) {
+		CustomerServiceRepresentiveConfigExample example=new CustomerServiceRepresentiveConfigExample();
+		example.or().andUserNameEqualTo(username);
+		 List<CustomerServiceRepresentiveConfig> list = customerServiceRepresentiveConfigMapper.selectByExample(example);
+		if(list != null && !list.isEmpty()) {
+			return null;
+		}
+		return list.get(0);
+	}
+    /**
+     * 根据sourceId查询该渠道是否被禁用
+     *
+     * @param sourceId
+     * @return
+     */
+    @Override
+    public CustomerServiceChannel selectCustomerServiceChannelBySourceId(Integer sourceId) {
+        CustomerServiceChannelExample example = new CustomerServiceChannelExample();
+        CustomerServiceChannelExample.Criteria cra = example.createCriteria();
+        cra.andChannelIdEqualTo(sourceId);
+        List<CustomerServiceChannel> list = this.customerServiceChannelMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 }

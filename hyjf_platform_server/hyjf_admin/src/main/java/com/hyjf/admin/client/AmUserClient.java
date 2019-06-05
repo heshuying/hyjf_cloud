@@ -10,6 +10,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1438,4 +1439,10 @@ public interface AmUserClient {
     void insertBatchSmsCount(ListRequest request);
 
     void updateOrDelectRepeatData();
+
+	ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
+
+	ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
 }

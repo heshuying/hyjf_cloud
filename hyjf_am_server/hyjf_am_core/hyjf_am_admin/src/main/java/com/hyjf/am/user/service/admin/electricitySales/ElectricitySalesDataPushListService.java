@@ -11,6 +11,6 @@ public interface ElectricitySalesDataPushListService {
 
 	List<ElectricitySalesDataPushList> searchList(ElectricitySalesDataPushListRequest request, int i, int j);
 
-	int insertElectricitySalesDataPushList(ElectricitySalesDataPushListRequest request);
+	int insertElectricitySalesDataPushList(List<ElectricitySalesDataPushList> request);
 
 }
