@@ -104,6 +104,7 @@
         AND hdp.delivery_status IS NOT NULL
       </if>
     </if>
+    AND hdp.activation_type = 0
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
     </if>
@@ -172,6 +173,7 @@
         AND hdp.delivery_status IS NOT NULL
       </if>
     </if>
+    AND hdp.activation_type = 0
   </select>
 
   <select id="findOneOrder" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

@@ -161,10 +161,18 @@ public class DuibaOrderListController {
             DuibaOrderVO duibaOrderVO = duibaOrderListService.selectOrderByOrderId(orderNum);
             // 发放优惠卷 需要的参数 优惠券编码  couponCode 用户id  userId 备注  content
             if(duibaOrderVO != null && duibaOrderVO.getUserId() != null) {
+                // 错误信息记录信息
+                String orderErrorRemark = null;
+                // 错误日志实体
+                DuibaOrderVO duibaOrderVOError = new DuibaOrderVO();
                 // 根据用户id获取用户详情信息
                 UserInfo userInfo = userInfoService.findUserInfoById(duibaOrderVO.getUserId());
                 // 根据用户id获取用户信息
                 User user = userService.findUserByUserId(duibaOrderVO.getUserId());
+                // 获取用户最新积分
+                if (user == null) {
+                    orderErrorRemark = "优惠券发放失败，没有查询到对应的用户信息！用户userid：" + duibaOrderVO.getUserId();
+                }
                 // 根据用户id获取注册时渠道名
                 String channelName = channelService.selectChannelName(duibaOrderVO.getUserId());
                 // 根据优惠券编码查询优惠券
@@ -198,54 +206,58 @@ public class DuibaOrderListController {
                 couponUserRequest.setChannel(channelName);
                 int remain = couponConfigService.checkCouponSendExcess(duibaOrderVO.getCommodityCode());
                 boolean countType = remain > 0 ? true : false;
-                if (!countType) {
-                    logger.info("优惠券发行数量超出上限，不再发放！");
-                    return "error";
-                }
-                try {
-                    // 插入审核状态并确认优惠卷状态
-                    couponUserRequest.setAuditContent("兑吧积分兑换优惠卷");
-                    couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_UNUSED);
-                    // 推送通知消息
-                    Map<String, String> param = new HashMap<String, String>();
-                    param.put("val_number", String.valueOf(1));
-                    param.put("val_coupon_type", configVO.getCouponType() == 1 ? "体验金" : configVO.getCouponType() == 2 ? "加息券" : configVO.getCouponType() == 3 ? "代金券" : "");
-                    AppMsMessage appMsMessage = new AppMsMessage(couponUserRequest.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_SUCCESS);
+                if (countType) {
                     try {
-                        commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequest.getUserId()),
-                                appMsMessage));
-                    } catch (MQException e) {
-                        logger.error(e.getMessage());
-                    }
-                    // 插入优惠卷信息
-                    CouponUser couponUser = couponUserService.insertByDuibaOrder(couponUserRequest);
-                    if (couponUser.getId() != null) {
-                        DuibaOrderVO duibaOrderVO1 = new DuibaOrderVO();
-                        // 设置更新主键
-                        duibaOrderVO1.setId(duibaOrderVO.getId());
-                        // 设置更新用户订单表的优惠卷用户表id
-                        duibaOrderVO1.setCouponUserId(couponUser.getId());
-                        // 更新订单表信息插入优惠卷用户表主键id
-                        int uocount = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO1);
-                        // 有更新数据返回成功
-                        if(uocount > 0){
-                            // 获取用户最新积分
-                            if(user!=null){
-                                String points = String.valueOf(user.getPointsCurrent());
-                                // 优惠卷发放成功
-                                return points;
-                            }else{
-                                throw new Exception("优惠券发放失败！根据用户id获取用户表信息为空！userid：" + duibaOrderVO.getUserId());
-                            }
-                        }else{
-                            throw new Exception("优惠券发放失败！更新“订单表”信息插入“优惠卷用户表主键”失败：duibaOrder 表主键 ID：" + duibaOrderVO.getId());
+                        // 插入审核状态并确认优惠卷状态
+                        couponUserRequest.setAuditContent("兑吧积分兑换优惠卷");
+                        couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_UNUSED);
+                        // 推送通知消息
+                        Map<String, String> param = new HashMap<String, String>();
+                        param.put("val_number", String.valueOf(1));
+                        param.put("val_coupon_type", configVO.getCouponType() == 1 ? "体验金" : configVO.getCouponType() == 2 ? "加息券" : configVO.getCouponType() == 3 ? "代金券" : "");
+                        AppMsMessage appMsMessage = new AppMsMessage(couponUserRequest.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_SUCCESS);
+                        try {
+                            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequest.getUserId()),
+                                    appMsMessage));
+                        } catch (MQException e) {
+                            orderErrorRemark = "优惠券发放失败，MQ消息发送失败！";
+                            logger.error(e.getMessage());
                         }
-                    }else{
-                        throw new Exception("优惠插入失败！，返回优惠卷用户表的主键id为空：" + couponUser.getId());
+                        // 插入优惠卷信息
+                        CouponUser couponUser = couponUserService.insertByDuibaOrder(couponUserRequest);
+                        if (couponUser.getId() != null) {
+                            DuibaOrderVO duibaOrderVO1 = new DuibaOrderVO();
+                            // 设置更新主键
+                            duibaOrderVO1.setId(duibaOrderVO.getId());
+                            // 设置更新用户订单表的优惠卷用户表id
+                            duibaOrderVO1.setCouponUserId(couponUser.getId());
+                            // 更新订单表信息插入优惠卷用户表主键id
+                            int uocount = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO1);
+                            // 有更新数据返回成功
+                            if (uocount == 0) {
+                                orderErrorRemark = "优惠券发放失败，没有更新到对应的订单信息！订单表id：" + duibaOrderVO.getId();
+                            }
+                        } else {
+                            orderErrorRemark = "优惠券发放失败，插入优惠卷用户表信息时，没有返回对应的优惠卷用户表主键！优惠卷用户表id：" + couponUser.getId();
+                        }
+                    } catch (Exception e) {
+                        logger.error("优惠券发放失败！异常如下：" + e.getMessage());
+                        return "error";
                     }
-                } catch (Exception e) {
-                    logger.error("优惠券发放失败！异常如下：" + e.getMessage());
+                }else{
+                    orderErrorRemark = "优惠券发行数量超出上限，不再发放！";
+                }
+                if(orderErrorRemark!=null){
+                    // 发放优惠卷错误插入错误状态
+                    duibaOrderVOError.setId(duibaOrderVO.getId());
+                    duibaOrderVOError.setRemark(orderErrorRemark);
+                    // 设置订单失效
+                    duibaOrderVOError.setActivationType(1);
+                    duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVOError);
                     return "error";
+                }else{
+                    // 优惠卷发放成功
+                    return String.valueOf(user.getPointsCurrent());
                 }
             }else{
                 logger.info("根据兑吧订单的兑吧订单号，查询用户订单信息并发放优惠卷，订单信息为空！ duibaOrderVO:" + duibaOrderVO.toString());
