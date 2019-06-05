@@ -77,7 +77,6 @@ public class WbsWechatUserController {
         wbsUserService.authorize(qo);
 
         WbsUserAuthorizeVO vo=new WbsUserAuthorizeVO();
-        vo.setRetUrl(wbsConfig.getWechatAuthorizeRetUrl());
         result.setData(vo);
 
         return result;

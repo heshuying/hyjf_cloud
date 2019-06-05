@@ -28,12 +28,6 @@ public class WbsConfig {
     @Value("${third.property.ids}")
     private String thridPropertyIds;
 
-    @Value("${web.authorize.returl}")
-    private String webAuthorizeRetUrl;
-
-    @Value("${wechat.authorize.returl}")
-    private String wechatAuthorizeRetUrl;
-
     @Value("${web.bind.returl}")
     private String webBindRetUrl;
 
@@ -141,14 +135,6 @@ public class WbsConfig {
 
     public void setWebAuthorizeRetUrl(String webAuthorizeRetUrl) {
         this.webAuthorizeRetUrl = webAuthorizeRetUrl;
-    }
-
-    public String getWechatAuthorizeRetUrl() {
-        return wechatAuthorizeRetUrl;
-    }
-
-    public void setWechatAuthorizeRetUrl(String wechatAuthorizeRetUrl) {
-        this.wechatAuthorizeRetUrl = wechatAuthorizeRetUrl;
     }
 
     public String getWebBindRetUrl() {

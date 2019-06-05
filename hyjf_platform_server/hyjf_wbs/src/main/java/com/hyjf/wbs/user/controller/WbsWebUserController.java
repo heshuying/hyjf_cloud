@@ -81,8 +81,6 @@ public class WbsWebUserController {
 		wbsUserService.authorize(qo);
 
 		WbsUserAuthorizeVO vo=new WbsUserAuthorizeVO();
-		// TODO by cui
-		vo.setRetUrl(wbsConfig.getWebAuthorizeRetUrl());
 		result.setData(vo);
 
 		return result;
