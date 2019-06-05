@@ -121,6 +121,7 @@ public class MergeAuthPagePlusController extends BaseUserController {
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");
         authBean.setUserType(user.getUserType());
+        authBean.setWjtClient(wjtClient);
         // 跳转到江西银行画面
         try {
 

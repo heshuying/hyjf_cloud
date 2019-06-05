@@ -117,9 +117,9 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");
         authBean.setUserType(user.getUserType());
+        authBean.setWjtClient(wjtClient);
         // 跳转到江西银行画面
         try {
-
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
             if(authBean.getAutoBidStatus()&&authBean.getAutoCreditStatus()&&authBean.getPaymentAuthStatus()){
