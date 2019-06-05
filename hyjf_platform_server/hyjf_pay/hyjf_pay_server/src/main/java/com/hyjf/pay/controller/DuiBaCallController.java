@@ -139,7 +139,6 @@ public class DuiBaCallController extends BaseController {
 				// 兑换成功
 			} else {
 				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
-
 				// 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
 				String status = "success";
 				// 传兑吧订单号
@@ -148,7 +147,7 @@ public class DuiBaCallController extends BaseController {
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
 						// 回滚失败
-						logger.error("订单回滚失败失败！orderNum："+params.getOrderNum());
+						throw new Exception("订单回滚失败失败！orderNum："+params.getOrderNum());
 					}
 				}
 			}
