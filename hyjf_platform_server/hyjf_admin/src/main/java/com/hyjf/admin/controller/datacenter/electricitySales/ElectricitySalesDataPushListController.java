@@ -3,7 +3,9 @@
  */
 package com.hyjf.admin.controller.datacenter.electricitySales;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +20,8 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,15 +30,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.google.common.collect.Maps;
+import com.hyjf.admin.beans.request.MspApplytRequestBean;
+import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ElectricitySalesDataPushListService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
+import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
+import com.hyjf.am.resquest.user.MspApplytRequest;
+import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,6 +79,84 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ElectricitySalesDataPushListResponse> searchModifyInfoList(@RequestBody ElectricitySalesDataPushListRequest request){
         return new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.searchList(request));
+    }
+    /**
+	 * 导出excel
+	 *
+	 * @param mspApplytRequestBean
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@PostMapping("/exportAction")
+	@ApiOperation(value = "导出", notes = "导出")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportExcel(HttpServletRequest request,
+								   @RequestBody ElectricitySalesDataPushListRequest requestBean,HttpServletResponse response) throws Exception {
+		
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "安融反欺诈查询";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		//请求第一页5000条
+		requestBean.setPageSize(defaultRowMaxCount);
+		requestBean.setCurrPage(1);
+		// 需要输出的结果列表
+		ElectricitySalesDataPushListResponse recordList = electricitySalesDataPushListService.searchList(requestBean);
+		Integer totalCount = recordList.getRecordTotal();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else{
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+		}
+		for (int i = 1; i < sheetCount; i++) {
+			requestBean.setPageSize(defaultRowMaxCount);
+			requestBean.setCurrPage(i+1);
+			ElectricitySalesDataPushListResponse recordList2 = electricitySalesDataPushListService.searchList(requestBean);
+			if (recordList2 != null && recordList2.getResultList().size()> 0) {
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("ownerUserName", "坐席用户名");
+        map.put("groupName", "所属客组");
+        map.put("userName", "客户账号");
+        map.put("trueName", "姓名");
+        map.put("mobile", "联系电话");
+        map.put("sex", "性别");
+        map.put("age", "年龄");
+        map.put("birthday", "出生年月日");
+        map.put("regTime", "注册时间");
+        map.put("pcSourceName", "PC渠道来源");
+        map.put("appSourceName", "APP渠道来源");
+        map.put("rechargeMoney", "充值金额");
+        map.put("channel", "是否渠道");
+        map.put("uploadType", "上传方式");
+        map.put("createTime", "创建时间");
+        map.put("status", "状态");
+        map.put("remark", "备注");
+    
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
     }
 
     /**

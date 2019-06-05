@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiOperation;
 
 /**
  * @author: dzs
- * @version: AccountMobileSynchController, v0.1 2018/8/15 14:08
+ * @version: ElectricitySalesDataPushListController, v0.1 2018/8/15 14:08
  */
 @RestController(value = "electricitySalesDataPushListController")
 @RequestMapping("/am-user/electricitySales")
