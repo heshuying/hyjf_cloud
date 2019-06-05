@@ -122,7 +122,7 @@ public class DuiBaCallController extends BaseController {
 	public String exchangeResult(HttpServletRequest request) {
 		logger.info("兑吧兑换结果通知接口开始");
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
-
+		String status = "success";
 		try {
 			CreditNotifyParams params = tool.parseCreditNotify(request);
 			logger.info("兑吧兑换结果通知接口，兑吧订单号：{}", params.getOrderNum());
@@ -134,20 +134,26 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
-
 			if (params.isSuccess()) {
-				// 兑换成功
+				// 兑换成功（更新优惠卷为有效）
+				// 传兑吧订单号
+				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/success/" + params.getOrderNum();
+				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
+				if (couponUserStr != null) {
+					if(!status.equals(couponUserStr)){
+						// 更新优惠卷为有效处理失败
+						logger.error("更新优惠卷为有效处理失败！orderNum：" + params.getOrderNum());
+					}
+				}
 			} else {
-				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
-				// 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
-				String status = "success";
+				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
 				// 传兑吧订单号
 				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum();
 				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
 						// 回滚失败
-						throw new Exception("订单回滚失败失败！orderNum："+params.getOrderNum());
+						logger.error("订单回滚失败失败！orderNum：" + params.getOrderNum());
 					}
 				}
 			}

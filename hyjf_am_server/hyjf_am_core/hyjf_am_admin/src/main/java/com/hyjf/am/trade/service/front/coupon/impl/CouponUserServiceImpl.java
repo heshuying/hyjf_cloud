@@ -418,4 +418,17 @@ public class CouponUserServiceImpl implements CouponUserService {
         this.operationLog(couponUser,CustomConstants.OPERATION_CODE_INSERT,String.valueOf(request.getCreateUserId()));
         return couponUser;
     }
+
+    /**
+     * 更新一条优惠券（更新优惠卷用户信息为有效状态）
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateCouponUserDelFlag(CouponUserRequest request) {
+        CouponUser couponUser = new CouponUser();
+        couponUser.setId(request.getId());
+        couponUser.setDelFlag(CustomConstants.FALG_NOR);
+        return couponUserMapper.updateByPrimaryKeySelective(couponUser);
+    }
 }

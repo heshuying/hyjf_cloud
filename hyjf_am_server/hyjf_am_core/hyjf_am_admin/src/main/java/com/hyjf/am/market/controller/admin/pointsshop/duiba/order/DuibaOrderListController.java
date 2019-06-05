@@ -198,7 +198,8 @@ public class DuibaOrderListController {
                 // 优惠卷 的发放信息修改人是用户自己本身记录用户的userid
                 couponUserRequest.setUpdateUserId(duibaOrderVO.getUserId());
                 couponUserRequest.setUpdateTime(GetDate.getDate());
-                couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
+                // 发放优惠卷时设置优惠卷信息为无效（当兑吧兑换结果通知为成功时更新为有效状态）
+                couponUserRequest.setDelFlag(CustomConstants.FALG_DEL);
                 couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
                 couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
                 couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_INTEGRAL);
@@ -337,10 +338,38 @@ public class DuibaOrderListController {
                 if(res==0){
                     throw new Exception("根据兑吧订单表id：["+ duibaOrderVOStr.getId() +"]，更新订单状态设置订单为无效，没有更新到订单信息，回滚操作失败！");
                 }
+            }else{
+                logger.error("回滚操作失败！没有查询到兑吧订单信息 订单id：" + orderNum);
             }
         }catch (Exception e){
             logger.error("回滚操作失败！异常如下：" + e.getMessage());
         }
         return "success";
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/success/{orderNum}")
+    public String success(@PathVariable String orderNum) {
+        // 根据兑吧订单号查询订单信息
+        DuibaOrderVO duibaOrderVOStr = duibaOrderListService.selectOrderByOrderId(orderNum);
+        if(duibaOrderVOStr!=null){
+            CouponUserRequest couponUserRequest = new CouponUserRequest();
+            couponUserRequest.setId(duibaOrderVOStr.getCouponUserId());
+            // 更新优惠卷用户表为有效
+            int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
+            if(flagCount > 0){
+                return "success";
+            }else{
+                logger.error("操作失败！更新优惠卷用户表失败 优惠卷用户表id：" + duibaOrderVOStr.getCouponUserId());
+            }
+        }else{
+            logger.error("操作失败！没有查询到兑吧订单信息 订单表id：" + orderNum);
+        }
+        return "error";
     }
 }
