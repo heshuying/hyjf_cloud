@@ -129,14 +129,6 @@ public class WbsConfig {
         this.thridPropertyIds = thridPropertyIds;
     }
 
-    public String getWebAuthorizeRetUrl() {
-        return webAuthorizeRetUrl;
-    }
-
-    public void setWebAuthorizeRetUrl(String webAuthorizeRetUrl) {
-        this.webAuthorizeRetUrl = webAuthorizeRetUrl;
-    }
-
     public String getWebBindRetUrl() {
         return webBindRetUrl;
     }
