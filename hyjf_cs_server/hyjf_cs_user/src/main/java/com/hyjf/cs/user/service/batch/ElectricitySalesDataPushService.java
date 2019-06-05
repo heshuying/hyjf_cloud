@@ -23,4 +23,10 @@ public interface ElectricitySalesDataPushService extends BaseUserService {
      */
     List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList();
 
+    /**
+     * 推送数据后,更新数据状态
+     *
+     * @param updateList
+     */
+    void updateElectricitySalesDataPushList(List<ElectricitySalesDataPushListVO> updateList);
 }

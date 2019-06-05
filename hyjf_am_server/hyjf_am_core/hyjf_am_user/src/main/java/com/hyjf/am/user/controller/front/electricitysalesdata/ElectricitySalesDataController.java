@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.front.electricitysalesdata;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
@@ -10,6 +11,7 @@ import com.hyjf.am.user.service.front.electricitysalesdata.ElectricitySalesDataS
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,12 +30,21 @@ public class ElectricitySalesDataController extends BaseController {
     @Autowired
     private ElectricitySalesDataService electricitySalesDataService;
 
-    @RequestMapping("/generateElectricitySalesData")
-    public void generateElectricitySalesData(ElectricitySalesDataPushListRequest request) {
+    /**
+     * 电销数据生成
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/generateElectricitySalesData")
+    public IntegerResponse generateElectricitySalesData(ElectricitySalesDataPushListRequest request) {
         List<ElectricitySalesDataPushListVO> electricitySalesDataPushList = request.getElectricitySalesDataPushList();
+        IntegerResponse response = new IntegerResponse();
         if (electricitySalesDataPushList != null && electricitySalesDataPushList.size() > 0) {
             List<ElectricitySalesDataPushList> resultList = CommonUtils.convertBeanList(electricitySalesDataPushList, ElectricitySalesDataPushList.class);
-            electricitySalesDataService.generateElectricitySalesData(resultList);
+            Integer insertResult = electricitySalesDataService.generateElectricitySalesData(resultList);
+            response.setResultInt(insertResult);
         }
+        return response;
     }
 }

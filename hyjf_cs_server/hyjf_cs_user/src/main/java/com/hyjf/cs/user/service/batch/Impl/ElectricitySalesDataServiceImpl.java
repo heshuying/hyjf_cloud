@@ -374,4 +374,15 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
         request.setElectricitySalesDataPushList(electricitySalesDataPushListVOList);
         amUserClient.generateElectricitySalesData(request);
     }
+
+    /**
+     * 根据用户Id查询电销数据是否存在
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId) {
+        return this.amUserClient.selectElectricitySalesDataPushListByUserId(userId);
+    }
 }

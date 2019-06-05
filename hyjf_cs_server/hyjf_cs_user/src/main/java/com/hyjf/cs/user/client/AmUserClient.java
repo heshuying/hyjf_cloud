@@ -703,4 +703,19 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList();
+
+	/**
+	 * 上送数据成功后,更新电销数据状态
+	 *
+	 * @param request
+	 */
+	void updateElectricitySalesDataPushList(ElectricitySalesDataPushListRequest request);
+
+	/**
+	 * 根据用户Id查询用户是否已经存在
+	 *
+	 * @param userId
+	 * @return
+	 */
+	ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId);
 }

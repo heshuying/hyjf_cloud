@@ -132,4 +132,12 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * @param electricitySalesDataPushListVOList
      */
     void generateElectricitySalesData(List<ElectricitySalesDataPushListVO> electricitySalesDataPushListVOList);
+
+    /**
+     * 根据用户Id查询电销数据是否存在
+     *
+     * @param userId
+     * @return
+     */
+    ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId);
 }

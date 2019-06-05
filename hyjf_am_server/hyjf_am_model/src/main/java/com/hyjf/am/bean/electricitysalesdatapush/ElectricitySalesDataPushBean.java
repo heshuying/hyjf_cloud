@@ -5,7 +5,6 @@ package com.hyjf.am.bean.electricitysalesdatapush;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 电销数据上送Bean
@@ -15,6 +14,11 @@ import java.util.Date;
  */
 public class ElectricitySalesDataPushBean implements Serializable {
     private static final long serialVersionUID = -1890145004710591015L;
+
+    /**
+     * 客户唯一字段
+     */
+    private Integer customerFlag;
     /**
      * 客户姓名
      */
@@ -62,7 +66,7 @@ public class ElectricitySalesDataPushBean implements Serializable {
     /**
      * 注册时间
      */
-    private Date regTime;
+    private String regTime;
 
     /**
      * 充值金额
@@ -72,7 +76,7 @@ public class ElectricitySalesDataPushBean implements Serializable {
     /**
      * 充值时间
      */
-    private Date rechargeTime;
+    private String rechargeTime;
 
 
     /**
@@ -143,13 +147,6 @@ public class ElectricitySalesDataPushBean implements Serializable {
         this.birthday = birthday;
     }
 
-    public Date getRegTime() {
-        return regTime;
-    }
-
-    public void setRegTime(Date regTime) {
-        this.regTime = regTime;
-    }
 
     public BigDecimal getRechargeMoney() {
         return rechargeMoney;
@@ -157,14 +154,6 @@ public class ElectricitySalesDataPushBean implements Serializable {
 
     public void setRechargeMoney(BigDecimal rechargeMoney) {
         this.rechargeMoney = rechargeMoney;
-    }
-
-    public Date getRechargeTime() {
-        return rechargeTime;
-    }
-
-    public void setRechargeTime(Date rechargeTime) {
-        this.rechargeTime = rechargeTime;
     }
 
     public String getChannel() {
@@ -189,5 +178,29 @@ public class ElectricitySalesDataPushBean implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(String regTime) {
+        this.regTime = regTime;
+    }
+
+    public String getRechargeTime() {
+        return rechargeTime;
+    }
+
+    public void setRechargeTime(String rechargeTime) {
+        this.rechargeTime = rechargeTime;
+    }
+
+    public Integer getCustomerFlag() {
+        return customerFlag;
+    }
+
+    public void setCustomerFlag(Integer customerFlag) {
+        this.customerFlag = customerFlag;
     }
 }

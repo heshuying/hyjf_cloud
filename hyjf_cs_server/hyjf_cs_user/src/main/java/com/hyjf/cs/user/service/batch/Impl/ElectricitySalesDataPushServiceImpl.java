@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.batch.Impl;
 
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.cs.user.service.batch.ElectricitySalesDataPushService;
@@ -30,6 +31,15 @@ public class ElectricitySalesDataPushServiceImpl extends BaseUserServiceImpl imp
         return this.amUserClient.selectElectricitySalesDataPushDataList();
     }
 
-
-
+    /**
+     * 上传数据成功后,更新数据状态
+     *
+     * @param updateList
+     */
+    @Override
+    public void updateElectricitySalesDataPushList(List<ElectricitySalesDataPushListVO> updateList) {
+        ElectricitySalesDataPushListRequest request = new ElectricitySalesDataPushListRequest();
+        request.setElectricitySalesDataPushList(updateList);
+        amUserClient.updateElectricitySalesDataPushList(request);
+    }
 }

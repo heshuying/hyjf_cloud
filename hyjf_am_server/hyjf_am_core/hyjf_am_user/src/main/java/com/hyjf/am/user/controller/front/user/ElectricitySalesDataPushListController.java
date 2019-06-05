@@ -16,11 +16,9 @@ import com.hyjf.am.user.service.front.electricitysalesdata.ElectricitySalesDataS
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.user.UserEvalationQuestionVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -61,7 +59,7 @@ public class ElectricitySalesDataPushListController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/selectElectricitySalesDataPushDataList")
+    @GetMapping("/selectElectricitySalesDataPushDataList")
     public ElectricitySalesDataPushListResponse selectElectricitySalesDataPushDataList() {
         ElectricitySalesDataPushListResponse response = new ElectricitySalesDataPushListResponse();
         List<ElectricitySalesDataPushList> recordList = this.electricitySalesDataService.selectElectricitySalesDataPushDataList();
@@ -70,6 +68,43 @@ public class ElectricitySalesDataPushListController extends BaseController {
             response.setResultList(dataPushDataList);
             response.setRtn(Response.SUCCESS);
             return response;
+        }
+        return response;
+    }
+
+
+    /**
+     * 推送数据后,更新电销数据状态
+     *
+     * @param request
+     */
+    @PostMapping("/updateElectricitySalesDataPushList")
+    public IntegerResponse updateElectricitySalesDataPushList(@RequestBody @Valid ElectricitySalesDataPushListRequest request) {
+        List<ElectricitySalesDataPushListVO> list = request.getElectricitySalesDataPushList();
+        IntegerResponse response = new IntegerResponse();
+        if (list != null && list.size() > 0) {
+            List<ElectricitySalesDataPushList> result = CommonUtils.convertBeanList(list, ElectricitySalesDataPushList.class);
+            // 插入数据
+            Integer updateCount = this.electricitySalesDataService.updateElectricitySalesDataPushList(result);
+            response.setResultInt(updateCount);
+        }
+        return response;
+    }
+
+
+    /**
+     * 根据用户Id查询电销数据是否存在
+     *
+     * @param userId
+     */
+    @PostMapping("/selectElectricitySalesDataPushListByUserId/{userId}")
+    public ElectricitySalesDataPushListResponse selectElectricitySalesDataPushListByUserId(@Valid Integer userId) {
+        ElectricitySalesDataPushListResponse response = new ElectricitySalesDataPushListResponse();
+        ElectricitySalesDataPushList bean = this.electricitySalesDataService.selectElectricitySalesDataPushListByUserId(userId);
+        if (bean != null) {
+            ElectricitySalesDataPushListVO vo = new ElectricitySalesDataPushListVO();
+            BeanUtils.copyProperties(bean, vo);
+            response.setResult(vo);
         }
         return response;
     }

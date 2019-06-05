@@ -1429,7 +1429,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public void generateElectricitySalesData(ElectricitySalesDataPushListRequest request) {
 		restTemplate
-				.put(userService + "/electricitySalesDataPushList/generateElectricitySalesData", request);
+				.postForEntity(userService + "/electricitySalesDataPushList/generateElectricitySalesData", request,IntegerResponse.class);
 	}
 
 	/**
@@ -1440,9 +1440,36 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList() {
 		ElectricitySalesDataPushListResponse response = restTemplate
-				.getForEntity(userService + "/am-user/electricitySalesDataPushList/selectElectricitySalesDataPushDataList", ElectricitySalesDataPushListResponse.class).getBody();
+				.getForEntity(userService + "/electricitySalesDataPushList/selectElectricitySalesDataPushDataList", ElectricitySalesDataPushListResponse.class).getBody();
 		if (response != null && Response.isSuccess(response)) {
 			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 上送数据成功后,更新电销数据状态
+	 *
+	 * @param request
+	 */
+	@Override
+	public void updateElectricitySalesDataPushList(ElectricitySalesDataPushListRequest request) {
+		restTemplate
+				.postForEntity(userService + "/electricitySalesDataPushList/updateElectricitySalesDataPushList", request, IntegerResponse.class);
+	}
+
+	/**
+	 * 根据用户Id查询用户是否已经存在
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.getForEntity(userService + "/electricitySalesDataPushList/selectElectricitySalesDataPushListByUserId/" + userId, ElectricitySalesDataPushListResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
 		}
 		return null;
 	}

@@ -131,20 +131,26 @@ public class ElectricitySalesDataController extends BaseUserController {
                     continue;
                 }
             }
+            // 用户属性
+            Integer attribute = userInfo.getAttribute();
+            if (attribute != 0) {
+                logger.info("用户不是无主单用户,不予分配,用户ID:[" + userId + "].");
+                continue;
+            }
+            // 判断用户是否已经存在
+            ElectricitySalesDataPushListVO electricitySalesDataPushList = this.electricitySalesDataService.selectElectricitySalesDataPushListByUserId(userId);
+            if (electricitySalesDataPushList != null) {
+                logger.error("该用户已经在电销数据表里存在,不予生成,用户ID:[" + userId + "].");
+                continue;
+            }
             // 判断老带新活动是否开启
             if ("1".equals(customerServiceSwitch)) {
                 // 如果老带新活动开启
-                // 用户属性
-                Integer attribute = userInfo.getAttribute();
-                // 用户是无主单,直接添加到需要分组用户List
+                // 用户是无主单,或者用户推荐人是无主单
                 if (attribute == 0) {
-                    userList.add(user);
-                    continue;
-                }
-                // 用户不是无主单
-                if (attribute != 0) {
                     // 获取用户推荐人信息
                     SpreadsUserVO spreadsUser = this.electricitySalesDataService.selectSpreadsUserByUserId(userId);
+                    // 如果有推荐人
                     if (spreadsUser != null) {
                         // 有推荐人
                         Integer spreadsUserId = spreadsUser.getSpreadsUserId();
@@ -253,6 +259,10 @@ public class ElectricitySalesDataController extends BaseUserController {
                                 result.add(electricitySalesDataPushListVO);
                             }
                         }
+                    } else {
+                        // 如果没有有推荐人
+                        userList.add(user);
+                        continue;
                     }
                 }
             } else {
@@ -291,7 +301,6 @@ public class ElectricitySalesDataController extends BaseUserController {
                 result.addAll(electricitySalesDataPushListVOList);
             }
         }
-
         // 保存电销数据
         if (result != null && result.size() > 0) {
             this.electricitySalesDataService.generateElectricitySalesData(result);
