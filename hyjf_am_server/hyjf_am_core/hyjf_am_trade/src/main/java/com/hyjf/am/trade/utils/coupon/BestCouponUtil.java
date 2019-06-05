@@ -50,9 +50,10 @@ public class BestCouponUtil {
      * 处理选中的操作平台
      *
      * @param operationPlatform
+     * @param platform 优惠券平台
      * @return
      */
-    public static String dealOperationNew(String operationPlatform) {
+    public static String dealOperationNew(String operationPlatform, String platform) {
         String clientString = "";
         // 操作平台
         //操作平台
@@ -72,6 +73,13 @@ public class BestCouponUtil {
                         clientString = clientString + map.get(key);
                     }
                 }
+            }
+        }
+        // app4.0 后台勾选PC、微官网、Android、iOS时，前台不显示
+        if ("2".equals(platform) || "3".equals(platform)){
+            if(clientString.contains("Android") && clientString.contains("iOS") &&
+                    clientString.contains("微官网") && clientString.contains("PC")){
+                clientString = "";
             }
         }
         if("Android、iOS".equals(clientString)){
@@ -183,7 +191,7 @@ public class BestCouponUtil {
         if("散标/新手/智投/".equals(projectString)){
             projectString="项目类型不限";
         }else{
-            projectString=projectString.substring(1, projectString.length() - 1);
+            projectString=projectString.substring(0, projectString.length() - 1);
         }
 
         return projectString;

@@ -473,7 +473,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 if(!"项目类型不限".equals(projectString)){
                     projectString = "限" + projectString + "可用";
                 }
-                clientString = BestCouponUtil.dealOperationNew(myCouponListCustomizeVO.getCouponSystem());
+                clientString = BestCouponUtil.dealOperationNew(myCouponListCustomizeVO.getCouponSystem(), requestBean.getPlatform());
             } else {
                 projectString = BestCouponUtil.dealProjectType(myCouponListCustomizeVO.getProjectType());
                 clientString = BestCouponUtil.dealOperation(myCouponListCustomizeVO.getCouponSystem());
@@ -592,7 +592,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             //是否与本金公用
             if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"不能与本金共用",platform, moneyBigDecimal);
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"金额不符",platform, moneyBigDecimal);
                 notAvailableCouponList.add(couponBean);
                 continue;
             }
@@ -606,7 +606,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             // 加息券如果没有填金额则不可用
             if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform, moneyBigDecimal);
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"金额不符",platform, moneyBigDecimal);
                 notAvailableCouponList.add(couponBean);
                 continue;
             }
@@ -846,7 +846,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             String projectString = BestCouponUtil.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
             couponBean.setProjectType(projectString);
             //处理优惠券使用平台
-            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem());
+            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem(), platform);
             couponBean.setOperationPlatform(clientString);
             long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(userCouponConfigCustomize.getEndTimeStamp())) + 1;
             if(userCouponConfigCustomize.getUsedFlag() == 0 && day >= 1 && day <=3){
@@ -865,7 +865,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             String projectString = BestCouponUtil.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
             couponBean.setProjectType(projectString);
             //处理优惠券使用平台
-            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem());
+            String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem(), platform);
             couponBean.setOperationPlatform(clientString);
             long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(userCouponConfigCustomize.getEndTimeStamp())) + 1;
             if(userCouponConfigCustomize.getUsedFlag() == 0 && day <=3){

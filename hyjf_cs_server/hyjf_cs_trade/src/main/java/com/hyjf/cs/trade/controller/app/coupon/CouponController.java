@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.app.coupon;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -53,7 +54,13 @@ public class CouponController extends BaseTradeController {
         if(null != userId){
             Map<String,Object> resultMap = new HashMap<String,Object>();
             Integer count =  appCouponService.countMyCoupon(userId,couponStatus);
-            List<CouponUserForAppCustomizeVO> couponList = appCouponService.getMyCoupon(userId,page,pageSize,couponStatus);
+            MyCouponListRequest requestBean = new MyCouponListRequest();
+            requestBean.setUserId(userId+"");
+            requestBean.setUsedFlag(couponStatus);
+            requestBean.setLimitStart((page-1) * pageSize);
+            requestBean.setLimitEnd(page * pageSize);
+            requestBean.setPlatform(request.getParameter("platform"));
+            List<CouponUserForAppCustomizeVO> couponList = appCouponService.getMyCoupon(requestBean);
             if(!CollectionUtils.isEmpty(couponList)){
                 couponList.sort(Comparator.comparing(CouponUserForAppCustomizeVO::getEndTimeStamp));
             }
