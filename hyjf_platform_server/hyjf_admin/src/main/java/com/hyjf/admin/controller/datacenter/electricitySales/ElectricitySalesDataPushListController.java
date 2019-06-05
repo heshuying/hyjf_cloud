@@ -6,7 +6,6 @@ package com.hyjf.admin.controller.datacenter.electricitySales;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +18,10 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,22 +31,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.common.collect.Maps;
-import com.hyjf.admin.beans.request.MspApplytRequestBean;
-import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ElectricitySalesDataPushListService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -146,6 +139,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
         map.put("pcSourceName", "PC渠道来源");
         map.put("appSourceName", "APP渠道来源");
         map.put("rechargeMoney", "充值金额");
+        map.put("rechargeTime", "充值时间");
         map.put("channel", "是否渠道");
         map.put("uploadType", "上传方式");
         map.put("createTime", "创建时间");
@@ -158,7 +152,40 @@ public class ElectricitySalesDataPushListController  extends BaseController {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         return mapAdapter;
     }
+    /**
+	 * 导出功能
+	 * 
+	 * @param request
+	 * @param response
+	 * @param form
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "导出模板")
+	@PostMapping("/downloadAction")
+	public void downloadAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		// 表格sheet名称
+		String sheetName = "模板";
 
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + "xls";
+
+		String[] titles = new String[] { "坐席姓名", "客户账号" };
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+
+		// 生成一个表格
+		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName);
+
+		CellStyle style = workbook.createCellStyle();
+		DataFormat format = workbook.createDataFormat();
+		style.setDataFormat(format.getFormat("@"));
+		for (int i = 0; i < 3; i++) {
+			sheet.setDefaultColumnStyle(i, style);
+		}
+
+		// 导出
+		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}
     /**
 	 * 借款内容填充
 	 *
@@ -195,10 +222,13 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 						if (hssfRow == null || (hssfRow.getCell(0) == null && hssfRow.getCell(1) == null)) {
 							continue;
 						}
+						if(StringUtils.isEmpty(this.getValue(hssfRow.getCell(0)))){
+							continue;
+						}
 						if(StringUtils.isEmpty(this.getValue(hssfRow.getCell(1)))){
 							continue;
 						}
-						if(StringUtils.isEmpty(this.getValue(hssfRow.getCell(2)))){
+						if(this.getValue(hssfRow.getCell(0)).equals("坐席姓名")){
 							continue;
 						}
 						ElectricitySalesDataPushListVO vo=new ElectricitySalesDataPushListVO();

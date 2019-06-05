@@ -18,6 +18,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.CustomerChannelService;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CustomerChannelResponse;
 import com.hyjf.am.resquest.admin.CustomerChannelRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -69,7 +70,11 @@ public class CustomerChannelController extends BaseController {
 		cRequest.setCreateUser(this.getUser(request).getUsername());
 		cRequest.setCreateTime(new Date());
 		cRequest.setUpdateTime(new Date());
-        return new AdminResult<CustomerChannelResponse>(customerChannelService.insetCustomerChannel(cRequest));
+		CustomerChannelResponse re = customerChannelService.insetCustomerChannel(cRequest);
+		if(Response.isSuccess(re)) {
+			return new AdminResult<>(AdminResult.FAIL, re.getMessage());
+		}
+      return new AdminResult<CustomerChannelResponse>();
     }
     /**
      * 插入数据
@@ -96,7 +101,11 @@ public class CustomerChannelController extends BaseController {
     public AdminResult<CustomerChannelResponse> updateCustomerChannel(HttpServletRequest request,@RequestBody CustomerChannelRequest cRequest){
 		cRequest.setUpdateUser(this.getUser(request).getUsername());
 		cRequest.setUpdateTime(new Date());
-      return new AdminResult<CustomerChannelResponse>(customerChannelService.updateCustomerChannel(cRequest));
+		CustomerChannelResponse re = customerChannelService.updateCustomerChannel(cRequest);
+		if(Response.isSuccess(re)) {
+			return new AdminResult<>(AdminResult.FAIL, re.getMessage());
+		}
+      return new AdminResult<CustomerChannelResponse>();
     }
     /**
      * 老带新配置

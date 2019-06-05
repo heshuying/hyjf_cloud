@@ -64,6 +64,9 @@ public class CustomerChannelController extends BaseConfigController {
         if (i==1){
             response.setMessage(Response.SUCCESS_MSG);
             response.setRtn(Response.SUCCESS);
+        }else {
+            response.setMessage("该渠道来源已经添加");
+            response.setRtn(Response.FAIL);
         }
         return response;
     }
@@ -80,6 +83,9 @@ public class CustomerChannelController extends BaseConfigController {
       if (i==1){
           response.setMessage(Response.SUCCESS_MSG);
           response.setRtn(Response.SUCCESS);
+      }else {
+          response.setMessage("该渠道来源已经添加");
+          response.setRtn(Response.FAIL);
       }
       return response;
     }

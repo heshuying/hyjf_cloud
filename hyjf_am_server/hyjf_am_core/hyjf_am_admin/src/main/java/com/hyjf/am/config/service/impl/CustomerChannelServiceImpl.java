@@ -44,8 +44,8 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
 		record.setCreateTime(new Date());
 		record.setUpdateTime(new Date());
 		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
-		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
 		example.or().andChannelIdEqualTo(request.getChannelId());
+		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
 		if(list!=null&&list.isEmpty()) {
 			return 0;
 		}
@@ -61,8 +61,8 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
     	record.setUpdateTime(new Date());
     	if(request.getChannelId()!=null&&request.getChannelId()!=record.getChannelId()) {
     		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
-    		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
     		example.or().andChannelIdEqualTo(request.getChannelId());
+    		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
     		if(list!=null&&list.isEmpty()) {
     			record.setChannelName(request.getChannelName());
     			record.setChannelId(request.getChannelId());
