@@ -203,7 +203,7 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getDevelopBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
-			// todo wangjun 业务处理
+			// 操作处理状态常量
 			status = "success";
 			releaseCouponsType = "error";
 			// 发放优惠卷， 传兑吧订单号
