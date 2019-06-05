@@ -916,7 +916,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AccountRechargeVO selectAccountRechargeByUserId(Integer userId) {
-        AccountRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/selectAccountRechargeByUserId/", userId, AccountRechargeResponse.class).getBody();
+        AccountRechargeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/selectAccountRechargeByUserId/"+ userId, AccountRechargeResponse.class).getBody();
         if (response != null && Response.isSuccess(response)) {
             return response.getResult();
         }

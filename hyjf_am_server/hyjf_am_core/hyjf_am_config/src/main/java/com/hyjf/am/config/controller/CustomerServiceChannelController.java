@@ -28,7 +28,6 @@ public class CustomerServiceChannelController extends BaseConfigController {
     @Autowired
     private CustomerServiceChannelService customerServiceChannelService;
 
-
     @GetMapping("/selectCustomerServiceChannelBySourceId/{sourceId}")
     public CustomerServiceChannelResponse selectCustomerServiceChannelBySourceId(@PathVariable Integer sourceId) {
         CustomerServiceChannelResponse response = new CustomerServiceChannelResponse();

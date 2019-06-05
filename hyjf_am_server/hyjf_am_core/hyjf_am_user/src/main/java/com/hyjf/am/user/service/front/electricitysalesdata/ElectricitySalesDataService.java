@@ -45,5 +45,5 @@ public interface ElectricitySalesDataService extends BaseService {
      * @param userId
      * @return
      */
-    ElectricitySalesDataPushList selectElectricitySalesDataPushListByUserId(@Valid Integer userId);
+    ElectricitySalesDataPushList selectElectricitySalesDataPushListByUserId(Integer userId);
 }

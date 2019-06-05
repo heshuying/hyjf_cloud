@@ -314,7 +314,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId) {
         CustomerServiceChannelResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/customerServiceChannel/selectCustomerServiceChannelBySourceId", CustomerServiceChannelResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceChannel/selectCustomerServiceChannelBySourceId/" + sourceId, CustomerServiceChannelResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

@@ -7,12 +7,9 @@ import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushListExample;
 import com.hyjf.am.user.service.front.electricitysalesdata.ElectricitySalesDataService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,12 +79,12 @@ public class ElectricitySalesDataServiceImpl extends BaseServiceImpl implements 
      * @return
      */
     @Override
-    public ElectricitySalesDataPushList selectElectricitySalesDataPushListByUserId(@Valid Integer userId) {
+    public ElectricitySalesDataPushList selectElectricitySalesDataPushListByUserId(Integer userId) {
         ElectricitySalesDataPushListExample example = new ElectricitySalesDataPushListExample();
         ElectricitySalesDataPushListExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(userId);
         List<ElectricitySalesDataPushList> list = this.electricitySalesDataPushListMapper.selectByExample(example);
-        if (list != null && list.size() >= 0) {
+        if (list != null && list.size() > 0) {
             return list.get(0);
         }
         return null;

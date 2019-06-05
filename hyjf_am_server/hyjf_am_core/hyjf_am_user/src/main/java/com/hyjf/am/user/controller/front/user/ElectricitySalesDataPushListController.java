@@ -97,8 +97,8 @@ public class ElectricitySalesDataPushListController extends BaseController {
      *
      * @param userId
      */
-    @PostMapping("/selectElectricitySalesDataPushListByUserId/{userId}")
-    public ElectricitySalesDataPushListResponse selectElectricitySalesDataPushListByUserId(@Valid Integer userId) {
+    @GetMapping("/selectElectricitySalesDataPushListByUserId/{userId}")
+    public ElectricitySalesDataPushListResponse selectElectricitySalesDataPushListByUserId(@PathVariable Integer userId) {
         ElectricitySalesDataPushListResponse response = new ElectricitySalesDataPushListResponse();
         ElectricitySalesDataPushList bean = this.electricitySalesDataService.selectElectricitySalesDataPushListByUserId(userId);
         if (bean != null) {
