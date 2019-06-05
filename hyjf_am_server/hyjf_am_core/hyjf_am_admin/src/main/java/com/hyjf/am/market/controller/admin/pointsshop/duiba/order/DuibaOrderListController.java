@@ -8,13 +8,17 @@ import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.market.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
+import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
+import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.trade.service.front.coupon.CouponUserService;
+import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.admin.promotion.ChannelService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
+import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
@@ -56,6 +60,9 @@ public class DuibaOrderListController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ChannelService channelService;
@@ -138,6 +145,8 @@ public class DuibaOrderListController {
             if(duibaOrderVO != null && duibaOrderVO.getUserId() != null) {
                 // 根据用户id获取用户详情信息
                 UserInfo userInfo = userInfoService.findUserInfoById(duibaOrderVO.getUserId());
+                // 根据用户id获取用户信息
+                User user = userService.findUserByUserId(duibaOrderVO.getUserId());
                 // 根据用户id获取注册时渠道名
                 String channelName = channelService.selectChannelName(duibaOrderVO.getUserId());
                 // 根据优惠券编码查询优惠券
@@ -191,24 +200,41 @@ public class DuibaOrderListController {
                         logger.error(e.getMessage());
                     }
                     // 插入优惠卷信息
-                    int count = couponUserService.insertCouponUser(couponUserRequest);
-                    if (count > 0) {
-                        // 优惠卷发放成功
-                        return "success";
+                    CouponUser couponUser = couponUserService.insertByDuibaOrder(couponUserRequest);
+                    if (couponUser.getId() != null) {
+                        DuibaOrderVO duibaOrderVO1 = new DuibaOrderVO();
+                        // 设置更新主键
+                        duibaOrderVO1.setId(duibaOrderVO.getId());
+                        // 设置更新用户订单表的优惠卷用户表id
+                        duibaOrderVO1.setCouponUserId(couponUser.getId());
+                        // 更新订单表信息插入优惠卷用户表主键id
+                        int uocount = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO1);
+                        // 有更新数据返回成功
+                        if(uocount > 0){
+                            // 获取用户最新积分
+                            if(user!=null){
+                                String points = String.valueOf(user.getPointsCurrent());
+                                // 优惠卷发放成功
+                                return points;
+                            }else{
+                                throw new Exception("优惠券发放失败！根据用户id获取用户表信息为空！userid：" + duibaOrderVO.getUserId());
+                            }
+                        }else{
+                            throw new Exception("优惠券发放失败！更新“订单表”信息插入“优惠卷用户表主键”失败：duibaOrder 表主键 ID：" + duibaOrderVO.getId());
+                        }
                     }else{
-                        logger.error("优惠插入失败！，请检查插入数据 couponUserRequest：" + couponUserRequest.toString());
-                        return "error";
+                        throw new Exception("优惠插入失败！，返回优惠卷用户表的主键id为空：" + couponUser.getId());
                     }
                 } catch (Exception e) {
                     logger.error("优惠券发放失败！异常如下：" + e.getMessage());
                     return "error";
                 }
             }else{
-                logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷，订单信息为空！ duibaOrderVO:" + duibaOrderVO.toString());
+                logger.info("根据兑吧订单的兑吧订单号，查询用户订单信息并发放优惠卷，订单信息为空！ duibaOrderVO:" + duibaOrderVO.toString());
                 return "error";
             }
         }else{
-            logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷兑吧订单号为空！ orderNum:" + orderNum);
+            logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷，兑吧订单号为空！ orderNum:" + orderNum);
             return "error";
         }
     }
@@ -223,13 +249,28 @@ public class DuibaOrderListController {
     @RequestMapping("/activation/{orderNum}")
     public String activation(@PathVariable String orderNum) {
         int res;
+        // 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
         DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
         // 根据兑吧订单号查询订单信息
         DuibaOrderVO duibaOrderVOStr = duibaOrderListService.selectOrderByOrderId(orderNum);
         if(duibaOrderVOStr!=null){
+            CouponUserBeanRequest couponUserBeanRequest = new CouponUserBeanRequest();
+            // 设置主键
+            couponUserBeanRequest.setId(duibaOrderVOStr.getCouponUserId());
+            // 设置无效描述
+            couponUserBeanRequest.setContent("兑吧兑换结果通知接口返回失败，回滚该笔数据！");
+            // 设置优惠卷用户表无效
+            couponUserService.deleteCouponUserById(couponUserBeanRequest);
+            // - - - - - - - - - - - - - - - - - - - - - - - - - -
             duibaOrderVO.setId(duibaOrderVOStr.getId());
+            // 设置订单无效
             duibaOrderVO.setActivationType(1);
-            duibaOrderVO.setRemark("兑吧兑换结果通知接口-兑吧兑换失败！");
+            // 设置更新日期
+            duibaOrderVO.setUpdateTime(new Date());
+            // 设置订单状态为失败
+            duibaOrderVO.setOrderStatus(1);
+            // 设置失败原因
+            duibaOrderVO.setRemark("兑吧兑换结果通知接口返回失败，回滚该笔数据！");
             // 根据订单信息更新订单状态
             res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
             if(res > 0){

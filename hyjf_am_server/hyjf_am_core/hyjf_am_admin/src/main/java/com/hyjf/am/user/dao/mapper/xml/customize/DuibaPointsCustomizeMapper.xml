@@ -31,7 +31,7 @@
         </if>
     </select>
 
-    <select id="selectDuibaPointsUserCount" resultMap="java.lang.Integer"
+    <select id="selectDuibaPointsUserCount" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         SELECT
         count(1)
@@ -45,5 +45,22 @@
         <if test="trueNameSrch != null and trueNameSrch != ''">
             AND hu.username = #{trueNameSrch}
         </if>
+    </select>
+
+    <select id="updateDuibaPoints" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+        UPDATE ht_user
+        SET
+        update_time = NOW()
+        <if test="modifyType != null and modifyType == 0">
+            ,points_current = points_current + #{modifyPoints},
+            points_total = points_total + #{modifyPoints}
+        </if>
+        <if test="modifyType != null and modifyType == 1">
+            ,points_current = points_current - #{modifyPoints},
+            points_total = points_total - #{modifyPoints}
+        </if>
+        WHERE
+            user_id = #{userId}
     </select>
 </mapper>

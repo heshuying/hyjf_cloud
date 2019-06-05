@@ -57,6 +57,8 @@ public class DuibaPointsModifyController {
                 // 前台未传分页那默认 10
                 paginator = new Paginator(request.getCurrPage(), recordTotal, request.getPageSize());
             }
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             request.setPaginator(paginator);
             List<DuibaPointsModifyVO> recordList = duibaPointsModifyService.selectDuibaPointsModifyList(request);
             if (CollectionUtils.isNotEmpty(recordList)) {
@@ -80,6 +82,25 @@ public class DuibaPointsModifyController {
         boolean result = false;
         try {
             result = duibaPointsModifyService.insertPointsModifyList(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.setResultBoolean(result);
+        return response;
+    }
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updatePointsModifyStatus")
+    public BooleanResponse updatePointsModifyStatus(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = false;
+        try {
+            result = duibaPointsModifyService.updatePointsModifyStatus(request);
         } catch (Exception e) {
             e.printStackTrace();
         }

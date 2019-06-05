@@ -5,6 +5,7 @@ package com.hyjf.am.market.controller.admin.pointsshop.duiba.points;
 
 import com.hyjf.am.market.controller.admin.activity.ActivityController;
 import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsListService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
@@ -57,6 +58,8 @@ public class DuibaPointsListController {
                 // 前台未传分页那默认 10
                 paginator = new Paginator(request.getCurrPage(), recordTotal, request.getPageSize());
             }
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             request.setPaginator(paginator);
             List<DuibaPointsVO> recordList = duibaPointsListService.selectDuibaPointsList(request);
             if (CollectionUtils.isNotEmpty(recordList)) {
@@ -65,6 +68,25 @@ public class DuibaPointsListController {
                 response.setRtn(Response.SUCCESS);
             }
         }
+        return response;
+    }
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/insertDuibaPoints")
+    public BooleanResponse insertDuibaPoints(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = false;
+        try {
+            result = duibaPointsListService.insertDuibaPoints(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.setResultBoolean(result);
         return response;
     }
 }

@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.pointsshop.duiba.points.impl;
 
 import com.hyjf.admin.client.AmMarketClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
@@ -21,6 +22,9 @@ public class DuibaPointsModifyServiceImpl extends BaseServiceImpl implements Dui
     @Autowired
     AmMarketClient amMarketClient;
 
+    @Autowired
+    AmUserClient amUserClient;
+
     /**
      * 兑吧积分账户修改明细
      *
@@ -30,5 +34,38 @@ public class DuibaPointsModifyServiceImpl extends BaseServiceImpl implements Dui
     @Override
     public DuibaPointsModifyResponse selectDuibaPointsModifyList(DuibaPointsRequest requestBean) {
         return amMarketClient.selectDuibaPointsModifyList(requestBean);
+    }
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean updatePointsModifyStatus(DuibaPointsRequest requestBean) {
+        return amMarketClient.updatePointsModifyStatus(requestBean);
+    }
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean updateDuibaPoints(DuibaPointsRequest requestBean) {
+        return amUserClient.updateDuibaPoints(requestBean);
+    }
+
+    /**
+     * 插入兑吧交易明细表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean insertDuibaPoints(DuibaPointsRequest requestBean) {
+        return amMarketClient.insertDuibaPoints(requestBean);
     }
 }

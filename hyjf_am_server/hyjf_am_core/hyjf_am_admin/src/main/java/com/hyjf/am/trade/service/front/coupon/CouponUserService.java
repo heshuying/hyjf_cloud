@@ -64,6 +64,8 @@ public interface CouponUserService {
 
     int insertCouponUser(CouponUserRequest request);
 
+    CouponUser insertByDuibaOrder(CouponUserRequest request);
+
     List<CouponUser> getCouponUserByCouponCode(String couponCode);
 
     CouponUser selectCouponUserById(Integer couponUserId);

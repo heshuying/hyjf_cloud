@@ -138,17 +138,17 @@ public class DuiBaCallController extends BaseController {
 			if (params.isSuccess()) {
 				// 兑换成功
 			} else {
-				// 兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
+				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
 
-				// 兑换失败将对应的"订单"设置成无效并给出失败信息
+				// 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
 				String status = "success";
 				// 传兑吧订单号
 				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum();
 				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
-						// 订单状态设置失败
-						logger.error("订单状态设置失败！orderNum："+params.getOrderNum());
+						// 回滚失败
+						logger.error("订单回滚失败失败！orderNum："+params.getOrderNum());
 					}
 				}
 			}
@@ -183,9 +183,9 @@ public class DuiBaCallController extends BaseController {
 	public String recharge(HttpServletRequest request) {
 		logger.info("兑吧自有商品充值接口开始");
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
-
 		String status = "";
 		String errorMessage = "";
+		String releaseCouponsType = "";
 		Long credits = null;
 		try {
 			VirtualParams params = tool.virtualConsume(request);
@@ -200,17 +200,18 @@ public class DuiBaCallController extends BaseController {
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			// todo wangjun 业务处理
 			status = "success";
-			credits = Long.valueOf(1000);
-			// 发放优惠卷 需要的参数 优惠券编码  couponCode 用户id  userId 备注  content
-			// 传兑吧订单号
+			releaseCouponsType = "error";
+			// 发放优惠卷， 传兑吧订单号
 			String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/releaseCoupons/" + params.getOrderNum();
 			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 			if (couponUserStr != null) {
 				// 优惠卷成功或异常处理
-				if(!status.equals(couponUserStr)){
+				if(releaseCouponsType.equals(couponUserStr)){
 					// 发放失败
                     status = "fail";
                     logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
+				}else{
+					credits = Long.valueOf(couponUserStr);
 				}
 			}
 		} catch (Exception e) {

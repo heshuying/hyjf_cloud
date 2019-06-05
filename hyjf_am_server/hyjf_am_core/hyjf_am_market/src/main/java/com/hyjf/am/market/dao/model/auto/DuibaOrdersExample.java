@@ -1805,6 +1805,126 @@ public class DuibaOrdersExample {
             addCriterion("remark not between", value1, value2, "remark");
             return (Criteria) this;
         }
+
+        public Criteria andActivationTypeIsNull() {
+            addCriterion("activation_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeIsNotNull() {
+            addCriterion("activation_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeEqualTo(Boolean value) {
+            addCriterion("activation_type =", value, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeNotEqualTo(Boolean value) {
+            addCriterion("activation_type <>", value, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeGreaterThan(Boolean value) {
+            addCriterion("activation_type >", value, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("activation_type >=", value, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeLessThan(Boolean value) {
+            addCriterion("activation_type <", value, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeLessThanOrEqualTo(Boolean value) {
+            addCriterion("activation_type <=", value, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeIn(List<Boolean> values) {
+            addCriterion("activation_type in", values, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeNotIn(List<Boolean> values) {
+            addCriterion("activation_type not in", values, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeBetween(Boolean value1, Boolean value2) {
+            addCriterion("activation_type between", value1, value2, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivationTypeNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("activation_type not between", value1, value2, "activationType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdIsNull() {
+            addCriterion("coupon_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdIsNotNull() {
+            addCriterion("coupon_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdEqualTo(Integer value) {
+            addCriterion("coupon_user_id =", value, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdNotEqualTo(Integer value) {
+            addCriterion("coupon_user_id <>", value, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdGreaterThan(Integer value) {
+            addCriterion("coupon_user_id >", value, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("coupon_user_id >=", value, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdLessThan(Integer value) {
+            addCriterion("coupon_user_id <", value, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("coupon_user_id <=", value, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdIn(List<Integer> values) {
+            addCriterion("coupon_user_id in", values, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdNotIn(List<Integer> values) {
+            addCriterion("coupon_user_id not in", values, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("coupon_user_id between", value1, value2, "couponUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCouponUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("coupon_user_id not between", value1, value2, "couponUserId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

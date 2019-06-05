@@ -83,7 +83,7 @@ public class DuibaOrders implements Serializable {
     private BigDecimal cost;
 
     /**
-     * 订单状态
+     * 订单状态（0成功，1失败，2处理中）
      *
      * @mbggenerated
      */
@@ -104,7 +104,7 @@ public class DuibaOrders implements Serializable {
     private Integer completionTime;
 
     /**
-     * 发货状态
+     * 发货状态（0待发货，1已发货）
      *
      * @mbggenerated
      */
@@ -125,7 +125,7 @@ public class DuibaOrders implements Serializable {
     private String rechargeState;
 
     /**
-     * 处理状态
+     * 处理状态（0通过，1取消）
      *
      * @mbggenerated
      */
@@ -186,6 +186,20 @@ public class DuibaOrders implements Serializable {
      * @mbggenerated
      */
     private String remark;
+
+    /**
+     * 订单有效状态（0有效，1无效）
+     *
+     * @mbggenerated
+     */
+    private Boolean activationType;
+
+    /**
+     * 优惠卷用户表id
+     *
+     * @mbggenerated
+     */
+    private Integer couponUserId;
 
     private static final long serialVersionUID = 1L;
 
@@ -395,5 +409,21 @@ public class DuibaOrders implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Boolean getActivationType() {
+        return activationType;
+    }
+
+    public void setActivationType(Boolean activationType) {
+        this.activationType = activationType;
+    }
+
+    public Integer getCouponUserId() {
+        return couponUserId;
+    }
+
+    public void setCouponUserId(Integer couponUserId) {
+        this.couponUserId = couponUserId;
     }
 }

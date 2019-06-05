@@ -54,6 +54,8 @@ public class DuibaPointsController extends BaseController {
                 // 前台未传分页那默认 10
                 paginator = new Paginator(request.getCurrPage(), recordTotal,request.getPageSize());
             }
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             request.setPaginator(paginator);
             List<DuibaPointsUserVO> recordList = duibaPointsService.selectDuibaPointsUser(request);
             if(CollectionUtils.isNotEmpty(recordList)){
@@ -75,6 +77,20 @@ public class DuibaPointsController extends BaseController {
     public BooleanResponse selectRemainPoints(@RequestBody DuibaPointsRequest request) {
         BooleanResponse response = new BooleanResponse();
         boolean result = duibaPointsService.selectRemainPoints(request);
+        response.setResultBoolean(result);
+        return response;
+    }
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateDuibaPoints")
+    public BooleanResponse updateDuibaPoints(@RequestBody DuibaPointsRequest request) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = duibaPointsService.updateDuibaPoints(request);
         response.setResultBoolean(result);
         return response;
     }

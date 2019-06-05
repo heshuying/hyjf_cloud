@@ -12,7 +12,6 @@ import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -74,27 +73,27 @@ public class DuibaPointsModifyServiceImpl implements DuibaPointsModifyService {
      * @return
      */
     @Override
-    public boolean insertPointsModifyList(DuibaPointsRequest request) throws Exception{
+    public boolean insertPointsModifyList(DuibaPointsRequest request) throws Exception {
         List<Integer> userIdList = request.getUserIdList();
-        for(Integer userId: userIdList) {
+        for (Integer userId : userIdList) {
             User user = userMapper.selectByPrimaryKey(userId);
-            if(null == user) {
+            if (null == user) {
                 logger.error("获取用户信息失败，userId：" + userId);
                 continue;
             }
 
             UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
-            if(null == userInfo) {
+            if (null == userInfo) {
                 logger.error("获取用户详细信息失败，userId：" + userId);
                 continue;
             }
 
             // 计算用户积分调整后剩余
             Integer remainPoints = 0;
-            if(0 == request.getModifyType()) {
+            if (0 == request.getModifyType()) {
                 remainPoints = request.getModifyPoints() + user.getPointsCurrent();
             } else {
-                if(user.getPointsCurrent() < request.getModifyPoints()) {
+                if (user.getPointsCurrent() < request.getModifyPoints()) {
                     logger.error("数据插入过程中发现用户积分不足，userId：" + userId + ",调减积分数：" + request.getModifyPoints() + ",当前用户积分数：" + user.getPointsCurrent());
                     throw new Exception("数据插入过程中发现用户积分不足！");
                 }
@@ -124,5 +123,20 @@ public class DuibaPointsModifyServiceImpl implements DuibaPointsModifyService {
         }
 
         return true;
+    }
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public boolean updatePointsModifyStatus(DuibaPointsRequest request) {
+        DuibaPointsModifyExample example = new DuibaPointsModifyExample();
+        example.createCriteria().andModifyOrderIdEqualTo(request.getOrderId());
+        DuibaPointsModify duibaPointsModify = new DuibaPointsModify();
+        duibaPointsModify.setStatus(request.getAuditStatus());
+        return this.duibaPointsModifyMapper.updateByExampleSelective(duibaPointsModify, example) > 0 ? true : false;
     }
 }

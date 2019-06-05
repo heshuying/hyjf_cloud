@@ -64,7 +64,7 @@
         </if>
     </select>
 
-    <select id="selectDuibaPointsModifyCount" resultMap="java.lang.Integer"
+    <select id="selectDuibaPointsModifyCount" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         SELECT
         count(1)

@@ -203,6 +203,13 @@ public class DuibaOrderVO implements Serializable {
      */
     private Integer activationType;
 
+    /**
+     * 优惠卷用户表id
+     *
+     * @mbggenerated
+     */
+    private Integer couponUserId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -427,5 +434,13 @@ public class DuibaOrderVO implements Serializable {
 
     public void setActivationType(Integer activationType) {
         this.activationType = activationType;
+    }
+
+    public Integer getCouponUserId() {
+        return couponUserId;
+    }
+
+    public void setCouponUserId(Integer couponUserId) {
+        this.couponUserId = couponUserId;
     }
 }
