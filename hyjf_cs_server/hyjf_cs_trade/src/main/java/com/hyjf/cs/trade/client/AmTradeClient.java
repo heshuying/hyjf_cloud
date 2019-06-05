@@ -3,9 +3,11 @@ package com.hyjf.cs.trade.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
@@ -50,6 +52,8 @@ import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 import com.hyjf.am.vo.trade.cert.CertClaimVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -61,6 +65,8 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.cs.trade.bean.*;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
@@ -2900,12 +2906,46 @@ public interface AmTradeClient {
      */
     List<ProtocolTemplateVO> getAllShowProtocolTemp();
     /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean);
+    /**
      * 统计最后三天的服务记录 add by nxl
      * app和危险的统计计划加入数量
      *  @author nxl
      * @date 2019/3/25 14:11
      */
     Integer countPlanAccedeRecord(HjhAccedeRequest request);
+
+    /**
+     * 获取borrow对象
+     * @param userId
+     * @return
+     */
+    BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId);
+
+    /**
+     * 统计预计新增复投额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date);
+
+    /**
+     * 统计预计新增债转额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
+
+    /**
+     * 统计实际资金计划
+     *  @author wenxin
+     * @date 2019/4/23 11:48
+     */
+    List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date);
 
     /**
      * 插入大屏数据
@@ -3026,6 +3066,17 @@ public interface AmTradeClient {
      * @return add by nxl
      */
     List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId);
+    /**
+     * 查找未上报的产品信息
+     * @return
+     */
+    List<CertProductVO> selectCertProductList();
+    /**
+     * 批量更新产品信息
+     * @param updateVO
+     * @return
+     */
+    Integer updateCertProductBatch(CertProductUpdateVO updateVO);
 
     List<String> getBorrowNidList();
 

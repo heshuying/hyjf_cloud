@@ -131,8 +131,10 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
                 for (int i = 0; i < sellDailies.size(); i++) {
                     SellDailyVO sellDaily = sellDailies.get(i);
 
-                    // 本月累计规模业绩和上月对应累计规模业绩为0的数据不显示
-                    if (BigDecimal.ZERO.compareTo(sellDaily.getInvestTotalMonth()) >= 0
+                    boolean isHZFlag = "惠众".equals(sellDaily.getPrimaryDivision());
+
+                    // 本月累计规模业绩和上月对应累计规模业绩为0的数据不显示， 惠众无论如何都显示
+                    if (!isHZFlag && BigDecimal.ZERO.compareTo(sellDaily.getInvestTotalMonth()) >= 0
                             && BigDecimal.ZERO.compareTo(sellDaily.getInvestTotalPreviousMonth()) >= 0
                             && BigDecimal.ZERO.compareTo(sellDaily.getNonRepaymentToday()) >= 0
                             && BigDecimal.ZERO.compareTo(sellDaily.getRepaymentTotalMonth()) >= 0
@@ -143,8 +145,8 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
                     }
 
 
-                    // 1. 插入运营中心汇总行
-                    if (drawOrder == 2 && "惠众".equals(sellDaily.getPrimaryDivision())) {
+                    // 1. 惠众上方需要插入运营中心汇总行
+                    if (drawOrder == 2 && isHZFlag) {
                         Row row = sheet.createRow(++rowNum);
                         HSSFCellStyle sumOCCellStyle = createTotalCellStyle(row, sheet, workbook, "运营中心汇总", rowNum,
                                 IndexedColors.GOLD.index);

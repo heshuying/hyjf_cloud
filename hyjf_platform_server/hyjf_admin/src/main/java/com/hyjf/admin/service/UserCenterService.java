@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
+import com.hyjf.admin.beans.vo.JxBankConfigCustomizeVO;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.response.user.BankCardResponse;
@@ -224,7 +225,7 @@ public interface UserCenterService {
      * @return
      * @auth nxl
      */
-    JxBankConfigVO getBankConfigByBankName(String bankName);
+    List<JxBankConfigVO> getBankConfigByBankName(String bankName);
     /**
      * 更新用户信息(基本信息,手机号,邮箱,用户角色)
      *
@@ -297,4 +298,12 @@ public interface UserCenterService {
      * @return
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+    /**
+     * 根据银行卡号获取bankId
+     *
+     * @param cardNo
+     * @return
+     * @auther: nxl
+     */
+    JxBankConfigCustomizeVO getBankIdByCardNo(String cardNo);
 }

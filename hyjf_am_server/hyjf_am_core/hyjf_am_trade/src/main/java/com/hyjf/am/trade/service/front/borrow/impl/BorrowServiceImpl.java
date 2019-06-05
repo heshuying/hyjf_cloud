@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.mq.base.CommonProducer;
@@ -334,6 +335,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteDepartmentId(tenderBg.getInviteDepartmentId());
         borrowTender.setInviteDepartmentName(tenderBg.getInviteDepartmentName());
         borrowTender.setInviteUserId(tenderBg.getInviteUserId());
+        // 投资时候渠道
+        borrowTender.setTenderUserUtmId(tenderBg.getTenderUserUtmId());
 
         logger.info("看看推荐人存在不存在？：" + tenderBg.getInviteUserName());
         borrowTender.setInviteUserName(tenderBg.getInviteUserName());
@@ -354,7 +357,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setUserName(tenderBg.getUserName());
         
         
-        logger.info("开始插入borrowTender表...");
+        logger.info("开始插入borrowTender表...borrowTender:{}",JSONObject.toJSONString(borrowTender));
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
 
@@ -4781,6 +4784,18 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<WebProjectRepayListCustomize> projectRepayList =
                 webUserInvestListCustomizeMapper.selectProjectRepayPlanList(params);
         return projectRepayList;
+    }
+
+    /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomize queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomize accountInfos = accountCustomizeMapper.queryAccountUserMoney(userId);
+        return accountInfos;
     }
 }
 

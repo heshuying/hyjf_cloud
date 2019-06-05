@@ -19,10 +19,9 @@ public interface UserLargeScreenTwoCustomizeMapper {
 
     /**
      * 通过坐席姓名查询增资和提现率
-     * @param customerList
      * @return
      */
-    List<ScreenTwoParam> getCapitalIncreaseAndCashWithdrawalRateByCustomer(List<CustomerTaskConfig> customerList);
+    List<ScreenTwoParam> getCapitalIncreaseAndCashWithdrawalRateByCustomer();
 
     /**
      * 查询运营部当前总站岗资金

@@ -1490,6 +1490,20 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		/*-------------upd by liushouyi HJH3 End-----------------*/
 		this.borrowMapper.updateByPrimaryKeySelective(borrow);
+		//应急中心二期，散标发标时，报送数据 start
+		if(borrow.getVerifyStatus()==4){
+			//已发标
+			try {
+				JSONObject params = new JSONObject();
+				params.put("planNid", borrow.getBorrowNid());
+                params.put("isPlan","0");
+				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.BORROW_MODIFY_TAG, UUID.randomUUID().toString(), params),
+						MQConstant.HG_REPORT_DELAY_LEVEL);
+			} catch (Exception e) {
+				logger.error("散标发标时，应急中心上报失败！borrowNid : " + borrow.getBorrowNid() ,e);
+			}
+		}
+		//应急中心二期，散标发标时，报送数据 end
 		borrow.setId(borrow.getInfoId());
 		BorrowInfoWithBLOBs record=new BorrowInfoWithBLOBs();
 		BeanUtils.copyProperties(borrow,record);
