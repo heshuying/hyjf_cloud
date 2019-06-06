@@ -706,7 +706,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             //是否与本金公用
             if (!BestCouponUtil.tasteMoneyCheck(userCouponConfigCustomize.getAddFlag(), money)) {
-                CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"不能与本金共用",platform, moneyBigDecimal);
+                CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"金额不符",platform, moneyBigDecimal);
                 notAvailableCouponList.add(couponBean);
                 continue;
             }
@@ -738,7 +738,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
                 // 加息券如果没有填金额则不可用
                 if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
-                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform, moneyBigDecimal);
+                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"金额不符",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
