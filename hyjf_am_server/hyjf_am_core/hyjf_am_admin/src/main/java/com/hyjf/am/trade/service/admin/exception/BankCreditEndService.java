@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.exception;
 
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
@@ -75,4 +76,8 @@ public interface BankCreditEndService extends BaseService {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bean);
+
+    int insertStartCreditEnd(StartCreditEndRequest requestBean);
+
+    StartCreditEndRequest queryForCreditEnd(StartCreditEndRequest requestBean);
 }

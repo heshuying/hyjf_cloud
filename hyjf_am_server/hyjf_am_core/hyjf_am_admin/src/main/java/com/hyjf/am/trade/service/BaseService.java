@@ -97,6 +97,8 @@ public interface BaseService {
 
     List<BorrowRecover> getBorrowRecover(String borrowNid);
 
+    BorrowRecover getBorrowRecoverByNid(String nid);
+
     List<BorrowRecoverPlan> getBorrowRecoverPlan(String borrowNid, int period);
 
     BorrowRepayPlan getRepayPlan(String borrowNid, int period);

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.exception.BankCreditEndService;
@@ -15,6 +16,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.ref.ReferenceQueue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -282,5 +284,97 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         newEnd.setUpdateTime(GetDate.getDate());
 
         return this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+    }
+
+    @Override
+    public int insertStartCreditEnd(StartCreditEndRequest requestBean) {
+
+        Borrow borrow = this.getBorrow(requestBean.getBorrowNid());
+        if (borrow == null) {
+            throw new RuntimeException("结束债券接口：标的"+requestBean.getBorrowNid()+"不存在");
+        }
+        Account account = this.getAccount(requestBean.getUserId());
+        if (account == null) {
+            throw new RuntimeException("结束债券接口：借款人"+requestBean.getUserId()+"银行未开户");
+        }
+        Account accountTender = this.getAccount(requestBean.getTenderUserId());
+        if (accountTender == null) {
+            throw new RuntimeException("结束债券接口：出借人"+requestBean.getTenderUserId()+"银行未开户");
+        }
+        String orderId = GetOrderIdUtils.getOrderId2(requestBean.getTenderUserId());
+
+        BankCreditEnd record = new BankCreditEnd();
+        record.setUserId(requestBean.getUserId());
+        record.setTenderUserId(requestBean.getTenderUserId());
+        record.setAccountId(account.getAccountId());
+        record.setTenderAccountId(accountTender.getAccountId());
+        record.setOrderId(orderId);
+        record.setBorrowNid(requestBean.getBorrowNid());
+        record.setAuthCode(requestBean.getTenderAuthCode());
+        record.setCreditEndType(requestBean.getCreditEndType()); // 结束债权类型（1:还款，2:散标债转，3:计划债转，5：后台发起）
+        record.setStatus(0);
+        record.setState("A"); // 初始化为A：待处理状态
+        record.setOrgOrderId(requestBean.getOrgOrderId());
+
+        Date nowDate = GetDate.getDate();
+        record.setCreateUser(1);
+        record.setCreateTime(nowDate);
+        record.setUpdateUser(1);
+        record.setUpdateTime(nowDate);
+
+        return this.bankCreditEndMapper.insertSelective(record);
+    }
+
+    /**
+     * 结束债权查询必要信息
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public StartCreditEndRequest queryForCreditEnd(StartCreditEndRequest requestBean){
+        // 出借明细
+        if(requestBean.getStartFrom() == 1){
+            BorrowRecover recover = getBorrowRecoverByNid(requestBean.getOrgOrderId());
+            if(recover == null){
+                logger.error("出借记录不存在，nid:" + requestBean.getOrgOrderId());
+                throw new RuntimeException("出借记录不存在，nid:" + requestBean.getOrgOrderId());
+            }
+
+            requestBean.setTenderUserId(recover.getUserId());
+            requestBean.setUserId(recover.getBorrowUserid());
+            requestBean.setBorrowNid(recover.getBorrowNid());
+            requestBean.setTenderAuthCode(recover.getAuthCode());
+        }
+
+        // 承接明细
+        if(requestBean.getStartFrom() == 2){
+            CreditTender creditTender = getCreditTender(requestBean.getOrgOrderId());
+            if(creditTender == null){
+                logger.error("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+                throw new RuntimeException("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+            }
+
+            requestBean.setTenderUserId(creditTender.getUserId());
+            requestBean.setUserId(creditTender.getBorrowUserId());
+            requestBean.setBorrowNid(creditTender.getBidNid());
+            requestBean.setTenderAuthCode(creditTender.getAuthCode());
+        }
+
+        // 智投承接明细
+        if(requestBean.getStartFrom() == 3){
+            HjhDebtCreditTender creditTender =getHjhDebtCreditTender(requestBean.getOrgOrderId());
+            if(creditTender == null){
+                logger.error("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+                throw new RuntimeException("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+            }
+            Borrow borrow = getBorrow(requestBean.getBorrowNid());
+
+            requestBean.setTenderUserId(creditTender.getUserId());
+            requestBean.setUserId(borrow.getUserId());
+            requestBean.setBorrowNid(creditTender.getBorrowNid());
+            requestBean.setTenderAuthCode(creditTender.getAuthCode());
+        }
+
+        return requestBean;
     }
 }

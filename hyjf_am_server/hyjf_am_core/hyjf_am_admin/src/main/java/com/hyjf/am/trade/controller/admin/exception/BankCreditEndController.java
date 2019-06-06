@@ -7,6 +7,7 @@ package com.hyjf.am.trade.controller.admin.exception;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.BankCreditEndResponse;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
@@ -19,6 +20,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -177,5 +179,28 @@ public class BankCreditEndController extends BaseController {
     @RequestMapping("/updateBatchCreditEndFinish")
     public IntegerResponse updateBatchCreditEndFinish(@RequestBody BankCallBeanVO request){
         return new IntegerResponse(this.bankCreditEndService.updateBatchCreditEndFinish(request));
+    }
+
+    /***
+     * 发起结束债权
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping("/startCreditEnd")
+    public IntegerResponse startCreditEnd(@RequestBody StartCreditEndRequest requestBean){
+        logger.info("【发起结束债权】requestBean：" + JSON.toJSONString(requestBean));
+
+        if(requestBean.getCreditEndType() == null){
+            requestBean.setCreditEndType(5); // 初始化为后台发起
+        }
+        if(StringUtils.isBlank(requestBean.getOrgOrderId()) || (requestBean.getCreditEndType()==5 && requestBean.getStartFrom()==null)){
+            logger.error("【发起结束债权】请求参数错误");
+            return new IntegerResponse(0);
+        }
+
+        // 查询封装请求参数
+        requestBean = bankCreditEndService.queryForCreditEnd(requestBean);
+
+        return new IntegerResponse(bankCreditEndService.insertStartCreditEnd(requestBean));
     }
 }
