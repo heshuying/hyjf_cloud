@@ -5,13 +5,12 @@ package com.hyjf.cs.user.controller.app.ponitsshop;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.user.service.pointsshop.DuiBaService;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +29,12 @@ public class DuiBaController {
     @PostMapping(value = "/geturl")
     public JSONObject getUrl(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request){
         return duiBaService.getUrl(userId, request);
+    }
+
+    @ApiOperation(value = "兑吧扣积分接口回调", notes = "兑吧扣积分接口回调")
+    @PostMapping(value = "/deductpoints")
+    public CreditConsumeResult deductPoints(@RequestBody CreditConsumeParams consumeParams){
+        return duiBaService.deductPoints(consumeParams);
     }
 
 }

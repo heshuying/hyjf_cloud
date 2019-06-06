@@ -6,8 +6,11 @@ package com.hyjf.cs.user.service.pointsshop.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.pointsshop.DuiBaService;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeResult;
 import com.hyjf.pay.lib.duiba.sdk.CreditTool;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +34,9 @@ public class DuiBaServiceImpl implements DuiBaService {
 
 	@Autowired
 	SystemConfig systemConfig;
+
+	@Autowired
+	AmUserClient amUserClient;
 
 	/**
 	 * 微信端获取兑吧url接口
@@ -114,4 +120,9 @@ public class DuiBaServiceImpl implements DuiBaService {
 		}
 		return ret;
     }
+
+	@Override
+	public CreditConsumeResult deductPoints(CreditConsumeParams consumeParams) {
+		return null;
+	}
 }

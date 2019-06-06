@@ -4,6 +4,8 @@
 package com.hyjf.cs.user.service.pointsshop;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeResult;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,4 +29,11 @@ public interface DuiBaService {
      * @return
      */
     JSONObject getConfig(Integer userId, HttpServletRequest request);
+
+    /**
+     * 兑吧扣积分接口回调
+     * @param consumeParams
+     * @return
+     */
+    CreditConsumeResult deductPoints(CreditConsumeParams consumeParams);
 }
