@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.config.dao.mapper.auto.CustomerServiceChannelMapper;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceChannelExample;
+import com.hyjf.am.config.dao.model.auto.CustomerServiceChannelExample.Criteria;
 import com.hyjf.am.config.service.CustomerChannelService;
 import com.hyjf.am.resquest.admin.CustomerChannelRequest;
 import com.hyjf.common.paginator.Paginator;
@@ -62,6 +63,9 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
     	if(request.getChannelId()!=null&&request.getChannelId()!=record.getChannelId()) {
     		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
     		example.or().andChannelIdEqualTo(request.getChannelId());
+    		Criteria cr = example.createCriteria();
+    		cr.andChannelIdEqualTo(request.getChannelId());
+    		cr.andIdNotEqualTo(request.getId());
     		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
     		if(list!=null&&list.size()>0) {
     			return 0;
