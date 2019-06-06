@@ -470,6 +470,8 @@ public class DuibaOrderListController {
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             // 更新订单为有效
             duibaOrderVO.setActivationType(0);
+            // 更新订单状态为成功
+            duibaOrderVO.setOrderStatus(0);
             int orderFlag = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
             if(flagCount > 0 && orderFlag > 0){
                 return "success";
