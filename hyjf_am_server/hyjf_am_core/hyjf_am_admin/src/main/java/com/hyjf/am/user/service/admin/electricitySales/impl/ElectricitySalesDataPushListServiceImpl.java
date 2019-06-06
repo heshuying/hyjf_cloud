@@ -30,19 +30,19 @@ public class ElectricitySalesDataPushListServiceImpl  implements ElectricitySale
 		ElectricitySalesDataPushListExample electricitySalesDataPushListExample=new ElectricitySalesDataPushListExample();
 		electricitySalesDataPushListExample.setOrderByClause("create_time desc");
 		Criteria cr = electricitySalesDataPushListExample.createCriteria();
-		if(request.getGroupName()!=null) {
+		if(request.getGroupName()!=null&&!request.getGroupName().isEmpty()) {
 			cr.andGroupNameEqualTo(request.getGroupName());
 		}
-		if(request.getOwnerUserName()!=null) {
+		if(request.getOwnerUserName()!=null&&!request.getOwnerUserName().isEmpty()) {
 			cr.andOwnerUserNameEqualTo(request.getOwnerUserName());
 		}
-		if(request.getUserName()!=null) {
+		if(request.getUserName()!=null&&!request.getUserName().isEmpty()) {
 			cr.andUserNameEqualTo(request.getUserName());
 		}
-		if(request.getTrueName()!=null) {
+		if(request.getTrueName()!=null&&!request.getTrueName().isEmpty()) {
 			cr.andTrueNameEqualTo(request.getTrueName());
 		}
-		if(request.getMobile()!=null) {
+		if(request.getMobile()!=null&&!request.getMobile().isEmpty()) {
 			cr.andMobileEqualTo(request.getMobile());
 		}
 		if(request.getUploadType()!=null) {
