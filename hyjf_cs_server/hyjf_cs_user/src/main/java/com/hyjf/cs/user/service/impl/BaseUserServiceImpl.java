@@ -529,26 +529,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 
-	/**
-	 * 获取前端的地址
-	 * @param sysConfig
-	 * @param platform
-	 * @return
-	 */
-	public String getFrontHost(SystemConfig sysConfig, String platform) {
-
-		Integer client = Integer.parseInt(platform);
-		if (ClientConstants.WEB_CLIENT == client) {
-			return sysConfig.getFrontHost();
-		}
-		if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
-			return sysConfig.getAppFrontHost();
-		}
-		if (ClientConstants.WECHAT_CLIENT == client) {
-			return sysConfig.getWeiFrontHost();
-		}
-		return null;
-	}
 
 	/**
 	 * 特殊字符编码

@@ -281,4 +281,5 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

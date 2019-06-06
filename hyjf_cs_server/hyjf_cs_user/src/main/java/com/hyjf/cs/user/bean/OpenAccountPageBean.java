@@ -83,6 +83,12 @@ public class OpenAccountPageBean {
     private  String clientHeader;
 
     private  String successfulUrl;
+
+    /**
+     * 温金投平台  ClientConstants.WJT_PC_CLIENT   ClientConstants.WJT_WEI_CLIENT
+     */
+    private String wjtClient;
+
     
     public String getMobile() {
         return mobile;
@@ -198,5 +204,14 @@ public class OpenAccountPageBean {
 
     public void setSuccessfulUrl(String successfulUrl) {
         this.successfulUrl = successfulUrl;
+    }
+
+
+    public String getWjtClient() {
+        return wjtClient;
+    }
+
+    public void setWjtClient(String wjtClient) {
+        this.wjtClient = wjtClient;
     }
 }

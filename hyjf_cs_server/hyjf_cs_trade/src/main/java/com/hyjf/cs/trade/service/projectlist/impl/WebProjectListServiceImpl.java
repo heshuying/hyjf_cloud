@@ -188,6 +188,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         String projectType = request.getProjectType();// 项目类型
         String borrowClass = request.getBorrowClass();// 项目子类型
         Integer pageSize = request.getPageSize();
+        request.setWjtInstCode(systemConfig.getWjtInstCode());
         // 校验相应的项目类型
         if (borrowTypes != null && borrowTypes.size() > 0) {
             boolean typeFlag = false;
@@ -212,14 +213,14 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 page.setTotal(0);
             }
             if (typeFlag && classFlag) {
-                ProjectListRequest requestCount = new ProjectListRequest();
-                requestCount.setProjectType(projectType);
-                requestCount.setBorrowClass(borrowClass);
-                requestCount.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
 
+                request.setProjectType(projectType);
+                request.setBorrowClass(borrowClass);
+                request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                request.setWjtInstCode(systemConfig.getWjtInstCode());
                 // 统计定时发标+出借中总记录数
-                requestCount.setStatus("21");
-                int projectTotal = amTradeClient.countProjectList(requestCount);
+                request.setStatus("21");
+                int projectTotal = amTradeClient.countProjectList(request);
                 int defaultCount = pageSize * 2;
                 logger.info("defaultCount:" + defaultCount + " projectTotal:" + projectTotal);
                 if(projectTotal > defaultCount){
@@ -247,6 +248,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     requestList2.setProjectType(projectType);
                     requestList2.setBorrowClass(borrowClass);
                     requestList2.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+                    requestList2.setWjtInstCode(systemConfig.getWjtInstCode());
                     //查询所有标的
                     int pageNum = 2;
                     projectTotal = pageSize * pageNum;
@@ -280,7 +282,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
-//        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 

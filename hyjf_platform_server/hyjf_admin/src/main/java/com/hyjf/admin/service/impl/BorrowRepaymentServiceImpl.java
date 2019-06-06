@@ -175,6 +175,11 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
     }
 
     @Override
+    public int countBorrowRepaymentPlan(BorrowRepaymentRequest request) {
+        return this.amTradeClient.countBorrowRepaymentPlan(request);
+    }
+
+    @Override
     public List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request) {
         return  this.amTradeClient.selectBorrowRepaymentPlanList(request);
     }

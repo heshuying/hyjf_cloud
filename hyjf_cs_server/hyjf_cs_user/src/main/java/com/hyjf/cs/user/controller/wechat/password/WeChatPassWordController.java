@@ -10,10 +10,12 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.AppUserToken;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
@@ -38,7 +40,8 @@ public class WeChatPassWordController {
     @Autowired
     PassWordService passWordService;
     private static final Logger logger = LoggerFactory.getLogger(WeChatPassWordController.class);
-
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 修改登录密码
@@ -47,7 +50,9 @@ public class WeChatPassWordController {
      */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/wx/user/resetpwd/modify.do")
-    public JSONObject updateLoginPassWD(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
+    public JSONObject updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,
+                                        @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                        HttpServletRequest request){
         JSONObject ret = new JSONObject();
         // 新密码
         String newPassword = request.getParameter("newPassword");
@@ -55,6 +60,11 @@ public class WeChatPassWordController {
         String oldPassword = request.getParameter("oldPassword");
         UserVO user = passWordService.getUsersById(userId);
         CheckUtil.check(StringUtils.isNotBlank(oldPassword)&&StringUtils.isNotBlank(newPassword), MsgEnum.STATUS_CE000001);
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+            throw new CheckException(MsgEnum.ERR_USER_WJT_OPT_ERR);
+        }
         newPassword = RSAJSPUtil.rsaToPassword(newPassword);
         oldPassword = RSAJSPUtil.rsaToPassword(oldPassword);
         ret = passWordService.weChatCheckParam(user,newPassword,oldPassword);
@@ -110,7 +120,8 @@ public class WeChatPassWordController {
      */
     @ApiOperation(value = "找回密码",notes = "找回密码")
     @PostMapping(value = "/wx/user/resetpwd/reset.do")
-    public JSONObject resetPassword(HttpServletRequest request, SendSmsVO sendSmsVo) {
+    public JSONObject resetPassword(HttpServletRequest request, @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                    SendSmsVO sendSmsVo) {
         JSONObject ret = new JSONObject();
         String mobile = request.getParameter("mobile");
         UserVO user = passWordService.getUsersByMobile(mobile);
@@ -130,6 +141,12 @@ public class WeChatPassWordController {
             ret.put("status", "997");
             ret.put("statusDesc", "请求参数非法");
             return ret;
+        }
+
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+            throw new CheckException(MsgEnum.ERR_USER_WJT_OPT_ERR);
         }
 
         // 业务逻辑

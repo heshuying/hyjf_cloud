@@ -21,6 +21,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
@@ -49,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -728,6 +730,52 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(request);
 
         return withdrawRuleConfigVO;
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtFrontHost(SystemConfig sysConfig, String platform) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost();
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost();
+        }
+        return null;
+    }
+
+    public String getForgotPwdUrl(String platform, String token,String sign, SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            return sysConfig.getFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
+                    "&requestType="+ CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
+                    "&platform="+platform;
+        }else if (ClientConstants.WECHAT_CLIENT == client) {
+            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtForgotPwdUrl(String platform, SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
     }
 
     /**

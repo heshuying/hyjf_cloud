@@ -57,12 +57,14 @@ public class BorrowTenderController extends BaseTradeController {
     @RequestLimit(seconds=3)
     @ApiImplicitParam(name = "tender",value = "{mobile:String}",dataType = "Map")
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId", required = false) Integer userId,
+                                                      @RequestHeader(value = "wjtClient",required = false) String wjtClient,
                                                       @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求出借接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        tender.setWjtClient(wjtClient);
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowTender(tender);
@@ -77,6 +79,7 @@ public class BorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "散标出借校验", notes = "web端散标出借校验")
     @PostMapping(value = "/investCheck", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> investCheck(@RequestHeader(value = "userId", required = false) Integer userId,
+                                                     @RequestHeader(value = "wjtClient",required = false) String wjtClient,
                                                       @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         logger.info("web端请求出借校验接口");
@@ -84,6 +87,8 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        tender.setWjtClient(wjtClient);
+
         Map<String,Object>  resultMap =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
         result.setData(resultMap);
         //用户测评校验状态转换
