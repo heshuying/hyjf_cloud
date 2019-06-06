@@ -19,6 +19,7 @@ import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
@@ -379,13 +380,13 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
      * @return
      */
     @Override
-    public IntegerResponse doCreditEnd(String orderId){
+    public Response doCreditEnd(String orderId){
         StartCreditEndRequest requestBean = new StartCreditEndRequest();
         requestBean.setOrgOrderId(orderId);
         requestBean.setCreditEndType(5);
         requestBean.setStartFrom(2); //散标债转信息
 
-        return baseClient.postExe(CREDITEND_URL, requestBean, IntegerResponse.class);
+        return baseClient.postExeNoException(CREDITEND_URL, requestBean, IntegerResponse.class);
     }
 
     /**

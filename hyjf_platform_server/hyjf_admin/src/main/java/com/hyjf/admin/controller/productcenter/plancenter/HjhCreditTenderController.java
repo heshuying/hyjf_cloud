@@ -184,6 +184,29 @@ public class HjhCreditTenderController extends BaseController{
 		}
     	return jsonObject;
 	}
+
+	@ApiOperation(value = "结束债权", notes = "结束债权")
+	@GetMapping("/creditEnd/{orderId}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+	@ResponseBody
+	public Object creditEnd(@PathVariable String orderId){
+		AdminResult result = new AdminResult();
+		logger.info("【结束债权】orderId:" + orderId);
+		if(org.apache.commons.lang.StringUtils.isBlank(orderId)){
+			result.setStatus(AdminResult.FAIL);
+			result.setStatusDesc("请求参数错误");
+			return result;
+		}
+
+		Response saveResponse = hjhCreditTenderService.doCreditEnd(orderId);
+		if(saveResponse == null || !"0".equals(saveResponse.getRtn())){
+			result.setStatus(AdminResult.FAIL);
+			result.setStatusDesc(saveResponse.getMessage());
+			return result;
+		}
+
+		return result;
+	}
     
     /**
      * 导出功能

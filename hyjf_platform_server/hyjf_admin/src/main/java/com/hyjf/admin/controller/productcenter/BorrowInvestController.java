@@ -21,6 +21,7 @@ import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -113,6 +114,29 @@ public class BorrowInvestController extends BaseController {
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
+    }
+
+    @ApiOperation(value = "结束债权", notes = "结束债权")
+    @GetMapping("/creditEnd/{orderId}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+    @ResponseBody
+    public Object creditEnd(@PathVariable String orderId){
+        AdminResult result = new AdminResult();
+        logger.info("【结束债权】orderId:" + orderId);
+        if(org.apache.commons.lang.StringUtils.isBlank(orderId)){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc("请求参数错误");
+            return result;
+        }
+
+        Response saveResponse = borrowInvestService.doCreditEnd(orderId);
+        if(saveResponse == null || !"0".equals(saveResponse.getRtn())){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc(saveResponse.getMessage());
+            return result;
+        }
+
+        return result;
     }
 
     /**

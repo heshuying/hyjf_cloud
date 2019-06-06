@@ -45,6 +45,19 @@ public class BaseClientImpl implements BaseClient {
         }
     }
 
+    @Override
+    public <T> T postExeNoException(String url, Object param, Class<T> clazz) {
+        try {
+            T t = restTemplate.postForEntity(url, param, clazz).getBody();
+            logger.debug("调用原子层返回结果response = {}", JSON.toJSON(t));
+            return t;
+        }  catch (Exception e) {
+            logger.error("调用原子层异常, 请求路径url : {} ", url);
+            logger.error("调用原子层异常, errorStack : {} ", e);
+            throw new RuntimeException("调用原子层服务异常");
+        }
+    }
+
 
     /**
      * GET调用

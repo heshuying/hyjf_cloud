@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -293,6 +294,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public int insertStartCreditEnd(StartCreditEndRequest requestBean) {
+        logger.info("【结束债权】保存到db，requestBean：" + JSON.toJSONString(requestBean));
 
         Borrow borrow = this.getBorrow(requestBean.getBorrowNid());
         if (borrow == null) {
@@ -336,7 +338,12 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      * @return
      */
     @Override
-    public StartCreditEndRequest queryForCreditEnd(StartCreditEndRequest requestBean){
+    public String queryForCreditEnd(StartCreditEndRequest requestBean){
+        BankCreditEnd creditEnd = this.getCreditEndByOrgOrderId(requestBean.getOrgOrderId());
+        if(creditEnd!=null){
+            logger.error("结束债权已提交过，requestBean:" + JSON.toJSONString(requestBean));
+            return "该债权已提交过";
+        }
         // 出借明细
         if(requestBean.getStartFrom() == 1){
             BorrowRecover recover = getBorrowRecoverByNid(requestBean.getOrgOrderId());
@@ -380,6 +387,16 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
             requestBean.setTenderAuthCode(creditTender.getAuthCode());
         }
 
-        return requestBean;
+        return null;
+    }
+
+    private BankCreditEnd getCreditEndByOrgOrderId(String orderId){
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andOrgOrderIdEqualTo(orderId);
+        List<BankCreditEnd> creditEnds = bankCreditEndMapper.selectByExample(example);
+        if(creditEnds!=null && !creditEnds.isEmpty()){
+            return creditEnds.get(0);
+        }
+        return null;
     }
 }

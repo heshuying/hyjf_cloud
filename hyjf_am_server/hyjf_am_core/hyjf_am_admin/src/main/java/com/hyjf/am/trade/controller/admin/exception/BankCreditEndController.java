@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.admin.exception;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankCreditEndResponse;
 import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -187,20 +188,36 @@ public class BankCreditEndController extends BaseController {
      * @return
      */
     @RequestMapping("/startCreditEnd")
-    public IntegerResponse startCreditEnd(@RequestBody StartCreditEndRequest requestBean){
+    public Response startCreditEnd(@RequestBody StartCreditEndRequest requestBean){
         logger.info("【发起结束债权】requestBean：" + JSON.toJSONString(requestBean));
-
+        Response response = new Response();
         if(requestBean.getCreditEndType() == null){
             requestBean.setCreditEndType(5); // 初始化为后台发起
         }
         if(StringUtils.isBlank(requestBean.getOrgOrderId()) || (requestBean.getCreditEndType()==5 && requestBean.getStartFrom()==null)){
             logger.error("【发起结束债权】请求参数错误");
-            return new IntegerResponse(0);
+            response.setRtn(Response.FAIL);
+            response.setMessage("请求参数错误");
+            return response;
         }
 
         // 查询封装请求参数
-        requestBean = bankCreditEndService.queryForCreditEnd(requestBean);
+        String msg = bankCreditEndService.queryForCreditEnd(requestBean);
+        if(StringUtils.isNotBlank(msg)){
+            logger.error("【发起结束债权】msg:" + msg);
+            response.setRtn(Response.FAIL);
+            response.setMessage(msg);
+            return response;
+        }
 
-        return new IntegerResponse(bankCreditEndService.insertStartCreditEnd(requestBean));
+        int udpCount = bankCreditEndService.insertStartCreditEnd(requestBean);
+        if(udpCount<=0){
+            logger.error("【发起结束债权】保存到数据库异常");
+            response.setRtn(Response.FAIL);
+            response.setMessage("保存到数据库异常");
+            return response;
+        }
+
+        return response;
     }
 }

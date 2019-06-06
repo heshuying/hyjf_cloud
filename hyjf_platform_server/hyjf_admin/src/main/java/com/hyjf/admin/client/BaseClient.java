@@ -11,6 +11,8 @@ public interface BaseClient {
     <T> T postExe(String url, Object param, Class<T> clazz)  ;
 
 
+    <T> T postExeNoException(String url, Object param, Class<T> clazz);
+
     <T> T getExe(String url, Class<T> clazz);
 
 }

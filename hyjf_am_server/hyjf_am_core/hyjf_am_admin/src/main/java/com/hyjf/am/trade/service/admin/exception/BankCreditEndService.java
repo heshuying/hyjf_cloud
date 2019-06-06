@@ -79,5 +79,5 @@ public interface BankCreditEndService extends BaseService {
 
     int insertStartCreditEnd(StartCreditEndRequest requestBean);
 
-    StartCreditEndRequest queryForCreditEnd(StartCreditEndRequest requestBean);
+    String queryForCreditEnd(StartCreditEndRequest requestBean);
 }

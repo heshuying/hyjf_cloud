@@ -12,6 +12,7 @@ import com.hyjf.admin.beans.vo.AdminBorrowInvestCustomizeVO;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.config.SystemConfig;
@@ -21,7 +22,10 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.PdfGenerator;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -73,6 +77,15 @@ import java.util.regex.Pattern;
 @Service
 public class BorrowInvestServiceImpl implements BorrowInvestService {
     Logger logger = LoggerFactory.getLogger(BorrowInvestServiceImpl.class);
+
+    public static final String BASE_URL = "http://AM-ADMIN/am-trade";
+
+    /*结束债权*/
+    public static final String CREDITEND_URL = BASE_URL + "/bankCreditEndController/startCreditEnd";
+
+    @Autowired
+    private BaseClient baseClient;
+
     @Autowired
     AmTradeClient amTradeClient;
 
@@ -691,5 +704,20 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             return "用户ID不是数字！";
         }
         return OK;
+    }
+
+    /**
+     * 结束债权
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Response doCreditEnd(String orderId){
+        StartCreditEndRequest requestBean = new StartCreditEndRequest();
+        requestBean.setOrgOrderId(orderId);
+        requestBean.setCreditEndType(5);
+        requestBean.setStartFrom(3); //计划债转信息
+
+        return baseClient.postExeNoException(CREDITEND_URL, requestBean, IntegerResponse.class);
     }
 }

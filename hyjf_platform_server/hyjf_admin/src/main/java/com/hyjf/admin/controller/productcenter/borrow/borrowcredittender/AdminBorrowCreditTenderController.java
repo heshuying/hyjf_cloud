@@ -15,6 +15,7 @@ import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -69,6 +70,28 @@ public class AdminBorrowCreditTenderController extends BaseController {
         return result;
     }
 
+    @ApiOperation(value = "结束债权", notes = "结束债权")
+    @GetMapping("/creditEnd/{orderId}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+    @ResponseBody
+    public Object creditEnd(@PathVariable String orderId){
+        AdminResult result = new AdminResult();
+        logger.info("【结束债权】orderId:" + orderId);
+        if(StringUtils.isBlank(orderId)){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc("请求参数错误");
+            return result;
+        }
+
+        Response saveResponse = borrowCreditTenderService.doCreditEnd(orderId);
+        if(saveResponse == null || !"0".equals(saveResponse.getRtn())){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc(saveResponse.getMessage());
+            return result;
+        }
+
+        return result;
+    }
 
     @ApiOperation(value = "承接信息导出", notes = "承接信息导出")
     @PostMapping("/exportData")
@@ -499,30 +522,5 @@ public class AdminBorrowCreditTenderController extends BaseController {
         AdminResult result = borrowCreditTenderService.pdfPreview(req);
         return result;
     }
-
-    @ApiOperation(value = "结束债权", notes = "结束债权")
-    @GetMapping("/creditEnd/{orderId}")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
-    @ResponseBody
-    public Object creditEnd(@PathVariable String orderId){
-        AdminResult result = new AdminResult();
-        logger.info("【结束债权】orderId:" + orderId);
-        if(StringUtils.isBlank(orderId)){
-            result.setStatus(AdminResult.FAIL);
-            result.setStatusDesc("请求参数错误");
-            return result;
-        }
-
-        IntegerResponse saveResponse = borrowCreditTenderService.doCreditEnd(orderId);
-        if(saveResponse == null || saveResponse.getResultInt() <= 0){
-            result.setStatus(AdminResult.FAIL);
-            result.setStatusDesc("结束债权保存失败");
-            return result;
-        }
-
-        return result;
-    }
-
-
 
 }
