@@ -1,5 +1,7 @@
 package com.hyjf.am.user.dao.model.customize;
 
+import java.util.Date;
+
 public class ChangeLogCustomize {
 
     private Integer id;
@@ -39,12 +41,56 @@ public class ChangeLogCustomize {
     private String startTime;
 
     private String endTime;
+    /**
+     * 修改类型 2用户信息修改  1推荐人修改
+     *
+     * @mbggenerated
+     */
+    private Integer updateType;
+
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
+    private String idcard;
+    /**
+     * 修改人名字
+     *
+     * @mbggenerated
+     */
+    private String updateUser;
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    private Date updateTime;
 
     private int limitStart = -1;
 
     private int limitEnd = -1;
     // add by nxl 合规四期 添加邮箱显示
     private String email;
+
+    //注册渠道
+    private String utmName;
+
+    //原注册渠道
+    private String sourceIdWasId;
+    //原注册渠道NAME
+    private String sourceIdWasName;
+
+    private String updateUserid;
+
+    private String utmType;
+
+    private String utmSourceId;
+
+    private  String loginUserId;
+
+    private  String loginUserName;
 
     public String getStartTime() {
 		return startTime;
@@ -233,6 +279,102 @@ public class ChangeLogCustomize {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUtmName() {
+        return utmName;
+    }
+
+    public void setUtmName(String utmName) {
+        this.utmName = utmName;
+    }
+
+    public Integer getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(Integer updateType) {
+        this.updateType = updateType;
+    }
+
+    public String getIdcard() {
+        return idcard;
+    }
+
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getSourceIdWasId() {
+        return sourceIdWasId;
+    }
+
+    public void setSourceIdWasId(String sourceIdWasId) {
+        this.sourceIdWasId = sourceIdWasId;
+    }
+
+    public String getSourceIdWasName() {
+        return sourceIdWasName;
+    }
+
+    public void setSourceIdWasName(String sourceIdWasName) {
+        this.sourceIdWasName = sourceIdWasName;
+    }
+
+    public String getUpdateUserid() {
+        return updateUserid;
+    }
+
+    public void setUpdateUserid(String updateUserid) {
+        this.updateUserid = updateUserid;
+    }
+
+    public String getUtmType() {
+        return utmType;
+    }
+
+    public void setUtmType(String utmType) {
+        this.utmType = utmType;
+    }
+
+    public String getUtmSourceId() {
+        return utmSourceId;
+    }
+
+    public void setUtmSourceId(String utmSourceId) {
+        this.utmSourceId = utmSourceId;
+    }
+
+    public String getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
     }
 }
 

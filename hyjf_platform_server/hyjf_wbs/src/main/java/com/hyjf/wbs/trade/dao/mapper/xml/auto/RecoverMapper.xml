@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.trade.dao.mapper.auto.RecoverMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.qvo.RecoverVO" >
+    <result column="assetCustomerId" property="assetCustomerId" jdbcType="VARCHAR" />
+    <result column="refundOrderNumber" property="refundOrderNumber" jdbcType="VARCHAR" />
+    <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+    <result column="productNo" property="productNo" jdbcType="VARCHAR" />
+    <result column="entId" property="entId" jdbcType="INTEGER" />
+    <result column="assetId" property="assetId" jdbcType="INTEGER" />
+    <result column="expectedExitTime" property="expectedExitTime" jdbcType="VARCHAR" />
+    <result column="actualExitTime" property="actualExitTime" jdbcType="VARCHAR" />
+    <result column="expectedRepay" property="expectedRepay" jdbcType="DOUBLE" />
+    <result column="actualRepay" property="actualRepay" jdbcType="DOUBLE" />
+    <result column="expectedExitCapital" property="expectedExitCapital" jdbcType="DOUBLE" />
+    <result column="actualExitCapital" property="actualExitCapital" jdbcType="DOUBLE" />
+    <result column="expectedExitAmount" property="expectedExitAmount" jdbcType="DOUBLE" />
+    <result column="actualExitAmount" property="actualExitAmount" jdbcType="DOUBLE" />
+    <result column="period" property="period" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="getRecoverInfo" resultMap="BaseResultMap"
+          parameterType="com.hyjf.wbs.qvo.RecoverQO">
+    select * from
+    (SELECT
+    br.user_id AS assetCustomerId,
+    CONCAT( br.nid, br.recover_period ) AS refundOrderNumber,
+    br.nid AS orderNo,
+    br.borrow_nid AS productNo,
+    8001 AS entId,
+    1 AS assetId,
+    FROM_UNIXTIME( br.recover_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    br.recover_interest - crs.suminterest ELSE br.recover_interest
+    END AS expectedRepay,
+    '' AS actualRepay,
+    br.recover_capital - br.credit_amount AS expectedExitCapital,
+    '' AS actualExitCapital,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    br.recover_interest - crs.suminterest + br.recover_capital - br.credit_amount ELSE br.recover_interest + br.recover_capital - br.credit_amount
+    END AS expectedExitAmount,
+    '' AS actualExitAmount,
+    br.recover_period AS period,
+    1 AS STATUS
+    FROM ht_borrow_recover br
+    LEFT JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
+    LEFT JOIN ( SELECT DISTINCT ( cr.credit_tender_nid ), sum( cr.assign_interest ) AS suminterest FROM ht_credit_repay cr GROUP BY cr.credit_tender_nid ) crs ON br.nid = crs.credit_tender_nid
+    WHERE br.recover_status=0 and br.accede_order_id is null
+    AND b.borrow_style IN ( 'endday', 'end' )
+    AND br.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    UNION ALL
+    SELECT
+    brp.user_id AS assetCustomerId,
+    CONCAT( brp.nid, brp.recover_period ) AS refundOrderNumber,
+    brp.nid AS orderNo,
+    brp.borrow_nid AS productNo,
+    8001 AS entId,
+    1 AS assetId,
+    FROM_UNIXTIME( brp.recover_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    brp.recover_interest - crs.suminterest ELSE brp.recover_interest
+    END AS expectedRepay,
+    '' AS actualRepay,
+    brp.recover_capital - brp.credit_amount AS expectedExitCapital,
+    '' AS actualExitCapital,
+    CASE
+
+    WHEN crs.suminterest IS NOT NULL THEN
+    brp.recover_interest - crs.suminterest + brp.recover_capital - brp.credit_amount ELSE brp.recover_interest + brp.recover_capital - brp.credit_amount
+    END AS expectedExitAmount,
+    '' AS actualExitAmount,
+    brp.recover_period AS period,
+    1 AS STATUS
+    FROM ht_borrow_recover_plan brp
+    LEFT JOIN ht_borrow b ON brp.borrow_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    LEFT JOIN (
+    SELECT DISTINCT
+    ( CONCAT( cr.credit_tender_nid, cr.recover_period ) ) AS crsnid,
+    sum( cr.assign_interest ) AS suminterest
+    FROM
+    ht_credit_repay cr
+    GROUP BY
+    CONCAT( cr.credit_tender_nid, cr.recover_period )
+    ) crs ON CONCAT( brp.nid, brp.recover_period ) = crs.crsnid
+    WHERE brp.recover_status=0
+    and brp.accede_order_id is null
+    AND brp.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    union all
+    SELECT
+    cr.user_id AS assetCustomerId,
+    CONCAT(cr.assign_nid,cr.assign_repay_period) AS refundOrderNumber,
+    cr.assign_nid AS orderNo,
+    cr.bid_nid AS productNo,
+    #{entId} AS entId,
+    1 AS assetId,
+    FROM_UNIXTIME( cr.assign_repay_next_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
+    cr.assign_interest AS expectedRepay,
+    '' AS actualRepay,
+    cr.assign_capital AS expectedExitCapital,
+    '' AS actualExitCapital,
+    cr.assign_account AS expectedExitAmount,
+    '' AS actualExitAmount,
+    cr.assign_repay_period AS period,
+    1 AS STATUS
+    FROM ht_credit_repay cr
+    LEFT JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON cr.user_id = ur.user_id
+    WHERE
+    cr.`status` = 0
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND cr.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+
+    union all
+    SELECT
+    ha.user_id AS assetCustomerId,
+    CONCAT(ha.accede_order_id,'1')  AS refundOrderNumber,
+    ha.accede_order_id AS orderNo,
+    ha.plan_nid AS productNo,
+    #{entId} AS entId,
+    1 AS assetId,
+    FROM_UNIXTIME( ha.quit_time, '%Y-%m-%d' ) AS expectedExitTime,
+    '' AS actualExitTime,
+    ha.should_pay_interest AS expectedRepay,
+    ha.received_interest AS actualRepay,
+    ha.should_pay_capital AS expectedExitCapital,
+    ha.received_capital AS actualExitCapital,
+    ha.should_pay_total AS expectedExitAmount,
+    ha.received_total AS actualExitAmount,
+    1 AS period,
+    1 AS STATUS
+    FROM ht_hjh_repay hr
+    LEFT JOIN ht_hjh_accede ha ON ha.accede_order_id = hr.accede_order_id
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
+    WHERE
+    hr.repay_status IN ( 0, 1 )
+    AND ha.acctual_payment_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND hr.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+
+    ) as recover
+    <if test="limitStart >= 0">
+      LIMIT #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="getRecoverCount" resultType="java.lang.Integer"
+          parameterType="com.hyjf.wbs.qvo.RecoverQO">
+    select count(*)
+    from (SELECT
+    br.user_id AS assetCustomerId
+    FROM ht_borrow_recover br
+    LEFT JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
+    WHERE br.recover_status=0 and br.accede_order_id is null
+    AND b.borrow_style IN ( 'endday', 'end' )
+    AND br.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    UNION ALL
+    SELECT
+    brp.user_id AS assetCustomerId
+    FROM ht_borrow_recover_plan brp
+    LEFT JOIN ht_borrow b ON brp.borrow_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
+    WHERE brp.recover_status=0
+    and brp.accede_order_id is null
+    AND brp.credit_status <![CDATA[<>]]> 2
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    union all
+    SELECT
+    cr.user_id AS assetCustomerId
+    FROM ht_credit_repay cr
+    LEFT JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON cr.user_id = ur.user_id
+    WHERE
+    cr.`status` = 0
+    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND cr.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+
+    union all
+    SELECT
+    ha.user_id AS assetCustomerId
+    FROM ht_hjh_repay hr
+    LEFT JOIN ht_hjh_accede ha ON ha.accede_order_id = hr.accede_order_id
+    LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
+    WHERE
+    hr.repay_status IN ( 0, 1 )
+    AND ha.acctual_payment_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND hr.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    ) countR
+  </select>
+</mapper>

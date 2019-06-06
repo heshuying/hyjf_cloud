@@ -35,6 +35,7 @@ import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
+import com.hyjf.am.response.trade.wbs.WbsHjhPlanInfoResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
@@ -7379,6 +7380,21 @@ public class AmTradeClientImpl implements AmTradeClient {
             return result;
         }
         return response.getResult();
+    }
+
+    /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> selectWbsSendHjhPlanList() {
+        String url = "http://AM-TRADE/am-trade/wbsHjhPlanInfo/selectWbsSendHjhPlanList";
+        WbsHjhPlanInfoResponse response = restTemplate.getForEntity(url, WbsHjhPlanInfoResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
     }
 
     /**

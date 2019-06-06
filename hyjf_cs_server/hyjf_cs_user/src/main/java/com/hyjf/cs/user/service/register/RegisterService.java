@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.bean.UserRegisterRequestBean;
@@ -149,7 +150,7 @@ public interface RegisterService extends BaseUserService {
      * @param version
      * @param webViewUserVO
      */
-    void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO);
+    void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO,RegisterRequest register);
 
     /**
      * 注册成功后,发送神策统计MQ
@@ -158,4 +159,11 @@ public interface RegisterService extends BaseUserService {
      * @throws MQException
      */
     void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
+
+    /**
+     * 注册成功后，发送Wbs MQ
+     * @param wbsRegisterMqVO
+     * @throws MQException
+     */
+    void sendWbsMQ(WbsRegisterMqVO wbsRegisterMqVO) throws MQException;
 }

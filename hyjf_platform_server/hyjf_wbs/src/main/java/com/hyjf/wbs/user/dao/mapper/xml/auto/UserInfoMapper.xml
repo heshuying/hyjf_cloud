@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.user.dao.mapper.auto.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.user.dao.model.auto.UserInfo" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="TINYINT" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="truename" property="truename" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="truename_isApprove" property="truenameIsapprove" jdbcType="TINYINT" />
+    <result column="mobile_isApprove" property="mobileIsapprove" jdbcType="TINYINT" />
+    <result column="email_isApprove" property="emailIsapprove" jdbcType="TINYINT" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="attribute" property="attribute" jdbcType="INTEGER" />
+    <result column="is_contact" property="isContact" jdbcType="TINYINT" />
+    <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, role_id, birthday, sex, truename, idcard, truename_isApprove, mobile_isApprove, 
+    email_isApprove, province, city, area, address, `attribute`, is_contact, borrower_type, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_user_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_user_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_user_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfoExample" >
+    delete from ht_user_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfo" >
+    insert into ht_user_info (user_id, role_id, birthday, 
+      sex, truename, idcard, 
+      truename_isApprove, mobile_isApprove, email_isApprove, 
+      province, city, area, 
+      address, `attribute`, is_contact, 
+      borrower_type, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=TINYINT}, #{birthday,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{truenameIsapprove,jdbcType=TINYINT}, #{mobileIsapprove,jdbcType=TINYINT}, #{emailIsapprove,jdbcType=TINYINT}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, #{isContact,jdbcType=TINYINT}, 
+      #{borrowerType,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfo" >
+    insert into ht_user_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="truename != null" >
+        truename,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="truenameIsapprove != null" >
+        truename_isApprove,
+      </if>
+      <if test="mobileIsapprove != null" >
+        mobile_isApprove,
+      </if>
+      <if test="emailIsapprove != null" >
+        email_isApprove,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="attribute != null" >
+        `attribute`,
+      </if>
+      <if test="isContact != null" >
+        is_contact,
+      </if>
+      <if test="borrowerType != null" >
+        borrower_type,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=TINYINT},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="truename != null" >
+        #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="truenameIsapprove != null" >
+        #{truenameIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="mobileIsapprove != null" >
+        #{mobileIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="emailIsapprove != null" >
+        #{emailIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="attribute != null" >
+        #{attribute,jdbcType=INTEGER},
+      </if>
+      <if test="isContact != null" >
+        #{isContact,jdbcType=TINYINT},
+      </if>
+      <if test="borrowerType != null" >
+        #{borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ht_user_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_user_info
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.roleId != null" >
+        role_id = #{record.roleId,jdbcType=TINYINT},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=TINYINT},
+      </if>
+      <if test="record.truename != null" >
+        truename = #{record.truename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idcard != null" >
+        idcard = #{record.idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.truenameIsapprove != null" >
+        truename_isApprove = #{record.truenameIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="record.mobileIsapprove != null" >
+        mobile_isApprove = #{record.mobileIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="record.emailIsapprove != null" >
+        email_isApprove = #{record.emailIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attribute != null" >
+        `attribute` = #{record.attribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.isContact != null" >
+        is_contact = #{record.isContact,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowerType != null" >
+        borrower_type = #{record.borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_user_info
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      role_id = #{record.roleId,jdbcType=TINYINT},
+      birthday = #{record.birthday,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=TINYINT},
+      truename = #{record.truename,jdbcType=VARCHAR},
+      idcard = #{record.idcard,jdbcType=VARCHAR},
+      truename_isApprove = #{record.truenameIsapprove,jdbcType=TINYINT},
+      mobile_isApprove = #{record.mobileIsapprove,jdbcType=TINYINT},
+      email_isApprove = #{record.emailIsapprove,jdbcType=TINYINT},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      `attribute` = #{record.attribute,jdbcType=INTEGER},
+      is_contact = #{record.isContact,jdbcType=TINYINT},
+      borrower_type = #{record.borrowerType,jdbcType=TINYINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfo" >
+    update ht_user_info
+    <set >
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=TINYINT},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="truename != null" >
+        truename = #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="truenameIsapprove != null" >
+        truename_isApprove = #{truenameIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="mobileIsapprove != null" >
+        mobile_isApprove = #{mobileIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="emailIsapprove != null" >
+        email_isApprove = #{emailIsapprove,jdbcType=TINYINT},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="attribute != null" >
+        `attribute` = #{attribute,jdbcType=INTEGER},
+      </if>
+      <if test="isContact != null" >
+        is_contact = #{isContact,jdbcType=TINYINT},
+      </if>
+      <if test="borrowerType != null" >
+        borrower_type = #{borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.wbs.user.dao.model.auto.UserInfo" >
+    update ht_user_info
+    set role_id = #{roleId,jdbcType=TINYINT},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      truename = #{truename,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      truename_isApprove = #{truenameIsapprove,jdbcType=TINYINT},
+      mobile_isApprove = #{mobileIsapprove,jdbcType=TINYINT},
+      email_isApprove = #{emailIsapprove,jdbcType=TINYINT},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      `attribute` = #{attribute,jdbcType=INTEGER},
+      is_contact = #{isContact,jdbcType=TINYINT},
+      borrower_type = #{borrowerType,jdbcType=TINYINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

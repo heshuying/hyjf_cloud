@@ -741,6 +741,23 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								params.put("userId", borrow.getUserId());
 								commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 										MQConstant.HG_REPORT_DELAY_LEVEL);
+
+
+								// add by liuyang 20190507 wbs系统标的信息推送MQ start
+								// 如果是散标,则往wbs系统推送标的
+								if (StringUtil.isBlank(bwb.getPlanNid())) {
+									try {
+										Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+										// 判断标的当前状态是否是投资中的状态
+										if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isEmpty(nowBorrow.getPlanNid()) && bwb.getIsEngineUsed()== 0 ) {
+											logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+											sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+										}
+									} catch (Exception e) {
+										logger.error("wbs系统标的信息推送MQ失败,标的编号:[" + borrow.getBorrowNid() + "].");
+									}
+								}
+								// add by liuyang 20190507 wbs系统标的信息推送MQ end
 							}
 						}
 
@@ -1114,6 +1131,19 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 定时发标
 					if (Integer.valueOf(borrowBean.getVerifyStatus()) == 3) {
 						borrow.setOntime(GetDate.strYYYYMMDDHHMMSS2Timestamp(borrowBean.getOntime()));// 发标时间
+						// add by liuyang 20190415 wbs标的信息推送 start
+						// 立即发标时,设置牛投邦状态为:1 预热中
+						try {
+							Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+							// 判断标的当前状态是否是投资中的状态
+							if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0) {
+								logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+								sendWbsBorrowInfo(borrow.getBorrowNid(), "1", 0);
+							}
+						} catch (Exception e) {
+							logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+						}
+						// add by liuyang 20190415 wbs标的信息推送 end
 					} else if (Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 						borrow.setOntime(0);// 发标时间
 					}
@@ -6194,6 +6224,24 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
         }
         return null;
     }
+
+	/**
+	 * wbs标的信息推送MQ
+	 *
+	 * @param borrowNid
+	 * @param productStatus
+	 * @param productType
+	 */
+	private void sendWbsBorrowInfo(String borrowNid, String productStatus, Integer productType) throws MQException {
+		JSONObject params = new JSONObject();
+		// 产品编号
+		params.put("productNo", borrowNid);
+		// 产品状态
+		params.put("productStatus", productStatus);
+		// 产品类型 0 散标类, 1 计划类
+		params.put("productType", productType);
+		commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+	}
 
 
 	/**

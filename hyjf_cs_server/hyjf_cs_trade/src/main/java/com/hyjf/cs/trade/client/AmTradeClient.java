@@ -3028,6 +3028,13 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+
+    /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    List<HjhPlanVO> selectWbsSendHjhPlanList();
     /**
      * 根据计划订单号查找投资详情
      * @param accedeOrderId

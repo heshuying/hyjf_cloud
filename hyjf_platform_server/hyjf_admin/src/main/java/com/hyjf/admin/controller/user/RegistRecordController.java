@@ -19,6 +19,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
@@ -59,6 +60,10 @@ public class RegistRecordController extends BaseController {
         Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
         List<DropDownVO> listRegistPlat = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(registPlat);
         userManagerInitResponseBean.setRegistPlat(listRegistPlat);
+        // 注册渠道
+        RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
+        userManagerInitResponseBean.setUtmPlatList(registRecordResponse.getUtmPlatVOList());
         return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
     }
 
@@ -98,6 +103,66 @@ public class RegistRecordController extends BaseController {
         }
         return new AdminResult<ListResult<RegistRecordCustomizeVO>>(ListResult.build(registRecordCustomizeVO, registRecordResponse.getCount())) ;
     }
+
+    /**
+     * 修改注册用户渠道信息： 加载渠道修改页面详细信息
+     * 规则说明：
+     *
+     * 1、用户名、用户类型、用户属性、注册时间、注册平台：系统带出，不可修改
+     *
+     * 2、注册渠道：下拉框，默认显示当前渠道名称（无可不显示），可以输入渠道名称修改，输入名称必须在推广中心-渠道列表中存在。
+     *
+     * @param userId
+     *
+     */
+    @ApiOperation(value = "渠道详细信息", notes = "渠道详细信息")
+    @GetMapping(value = "/registRecordUtmEditStr/{userId}" , produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(@PathVariable String userId) {
+        RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        registerRcordeRequest.setUserId(userId);
+        RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordOne(registerRcordeRequest);
+        if(registRecordResponse==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(registRecordResponse)) {
+            return new AdminResult<>(FAIL, registRecordResponse.getMessage());
+        }
+        // 详细信息 注册渠道（source_id）
+        RegistRecordCustomizeVO registRecordCustomizeVO = new RegistRecordCustomizeVO();
+        if(null!=registRecordResponse.getResult()){
+                RegistRecordVO registRecordVO = registRecordResponse.getResult();
+                registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+            registRecordCustomizeVO = CommonUtils.convertBean(registRecordResponse.getResult(),RegistRecordCustomizeVO.class);
+        }
+        // 注册渠道（source_id）
+        RegistRecordResponse registRecordResponseUtmAll = registRecordService.findUtmAllSourcePc(registerRcordeRequest);
+        registRecordCustomizeVO.setUtmPlatList(registRecordResponseUtmAll.getUtmPlatVOList());
+        return new AdminResult<RegistRecordCustomizeVO>(registRecordCustomizeVO);
+    }
+
+    /**
+     * 修改渠道信息
+     *  3、注册渠道和修改原因必填
+     *  4、点击确定：
+     *     1）校验渠道值是否正确，校验成功后，修改用户注册渠道，更新为修改值，并且新增一条操作记录。
+     *  @param registRcordRequestBean
+     */
+    @ApiOperation(value = "渠道修改确认", notes = "渠道修改确认")
+    @PostMapping(value = "/registRecordUtmEdit")
+    @ResponseBody
+    public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
+        //获取登录用户Id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        registRcordRequestBean.setLoginUserId(adminSystemVO.getId());
+        registRcordRequestBean.setLoginUserName(adminSystemVO.getUsername());
+        boolean registRecordResponse = registRecordService.editRegistRecordOne(registRcordRequestBean);
+        if (!registRecordResponse) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>();
+    }
+
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷：
