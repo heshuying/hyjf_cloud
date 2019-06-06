@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.http.HttpDealBank;
 import com.hyjf.common.util.ConvertUtils;
-import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.config.SystemConfig;
@@ -188,11 +187,7 @@ public class DuiBaCallController extends BaseController {
 	public VirtualResult recharge(HttpServletRequest request) {
 		logger.info("兑吧自有商品充值接口开始");
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
-		String status = "";
-		String errorMessage = "";
-		// 返回值常量
-		String massageStr = "@";
-		Long credits = null;
+		VirtualResult result = new VirtualResult("fail");
 		try {
 			VirtualParams params = tool.virtualConsume(request);
 			logger.info("兑吧自有商品充值接口，兑吧订单号：{}", params.getOrderNum());
@@ -204,38 +199,14 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getDevelopBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
-			// 操作处理状态常量
-			status = "success";
 			// 发放优惠卷， 传兑吧订单号
 			String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/releaseCoupons/" + params.getOrderNum();
-			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
-			if (couponUserStr != null) {
-				// 截取常量@之前的字符串来获取状态
-				String flag = couponUserStr.substring(0, couponUserStr.indexOf(massageStr));
-				// 优惠卷成功或异常处理
-				if(!status.equals(flag)){
-				    // 处理中（process），暂时没有处理中状态返回因为没有异步处理
-					// 返回失败原因
-					errorMessage = couponUserStr.substring(couponUserStr.indexOf(massageStr)+1);
-					// 发放失败
-                    status = "fail";
-                    logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
-				}else{
-					if(StringUtils.isNotEmpty(couponUserStr.substring(couponUserStr.indexOf(massageStr)+1))){
-						credits = Long.valueOf(couponUserStr.substring(couponUserStr.indexOf(massageStr)+1));
-					}
-				}
-			}
+			result = restTemplate.getForObject(url, VirtualResult.class);
 		} catch (Exception e) {
             // 发放失败
-			status = "fail";
-			errorMessage = e.getMessage();
+			result.setErrorMessage(e.getMessage());
 			logger.error("兑吧兑换结果通知接口发生错误：", e);
 		}
-		VirtualResult result = new VirtualResult(status);
-		result.setErrorMessage(errorMessage);
-		result.setSupplierBizId(GetOrderIdUtils.getSeqNo(6));
-		result.setCredits(credits);
 		return result;
 	}
 
