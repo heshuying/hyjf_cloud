@@ -108,4 +108,111 @@
 		AND ry.repay_yestime <![CDATA[<=]]> unix_timestamp(CONCAT(#{searchEndDate},' 23:59:59'))
 		</if>
 	</select>
+
+	<resultMap id="caiJingBorrowResult" type="com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO">
+		<result column="borrow_nid" property="id" />
+		<result column="link" property="link" />
+		<result column="title" property="title" />
+		<result column="username" property="username" />
+		<result column="userid" property="userid" />
+		<result column="amount" property="amount" />
+		<result column="borrow_period" property="borrow_period" />
+		<result column="interest" property="interest" />
+		<result column="asset_type" property="asset_type" />
+		<result column="borrow_type" property="borrow_type" />
+		<result column="product_type" property="product_type" />
+		<result column="repay_type" property="repay_type" />
+		<result column="percentage" property="percentage" />
+		<result column="bid_state" property="bid_state" />
+		<result column="reward" property="reward" />
+		<result column="guarantee" property="guarantee" />
+		<result column="credit" property="credit" />
+		<result column="verify_time" property="verify_time" />
+		<result column="reverify_time" property="reverify_time" />
+		<result column="invest_count" property="invest_count" />
+		<result column="borrow_detail" property="borrow_detail" />
+		<result column="attribute1" property="attribute1" />
+	</resultMap>
+
+	<select id="queryBorrowRecordSub" resultMap="caiJingBorrowResult" parameterType="java.util.Map">
+		SELECT
+		b.borrow_nid,
+		'borrow/borrowList' AS link,
+		i.`name` AS title,
+		b.account AS amount,
+		CASE WHEN b.is_month = 0
+		THEN CONCAT(b.borrow_period,'天')
+		ELSE CONCAT(b.borrow_period,'个月')
+		END AS borrow_period,
+		(b.borrow_apr*0.01) AS interest,
+		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
+		WHEN i.asset_attributes = 2 THEN '质押标'
+		WHEN i.asset_attributes = 3 THEN '信用标'
+		END AS asset_type,
+		t.borrow_name as borrow_type,
+		CASE WHEN b.plan_nid is not NULL THEN '智投'
+		ELSE '散标' END AS product_type,
+		CASE WHEN s.`name` = '先息后本' THEN '月付息到期还本'
+		WHEN s.`name` = '按月计息，到期还本还息' THEN '按月到期还款'
+		WHEN s.`name` = '按天计息，到期还本还息' THEN '按天到期还款'
+		WHEN s.`name` = '等额本息' THEN '月分期付款'
+		ELSE s.`name` END AS repey_type,
+		1 as percentage,
+		'成功' AS bid_status,
+		'AA' AS credit,
+		from_unixtime(b.verify_time,'%Y-%m-%d %H:%i:%s') AS verify_time,
+		from_unixtime(b.reverify_time,'%Y-%m-%d %H:%i:%s') AS reverify_time,
+		b.tender_times as invest_count,
+		i.borrow_contents as borrow_detail,
+		i.borrow_use as attribute1
+		FROM ht_borrow b
+		LEFT JOIN ht_borrow_info i ON i.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_project_type t ON t.borrow_cd = b.project_type
+		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
+		WHERE b.reverify_status = 6
+		AND b.create_time <![CDATA[>=]]> #{dateStart}
+		AND b.create_time <![CDATA[<=]]> #{dateEnd}
+
+		UNION ALL
+
+		SELECT
+		c.credit_nid as id,
+		'borrow/creditList' as link,
+		c.bid_name as title,
+		SUM(t.assign_pay) as amount,
+		CONCAT(c.credit_term,'天') AS borrow_period,
+		(c.bid_apr*0.01) as interest,
+		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
+		WHEN i.asset_attributes = 2 THEN '质押标'
+		WHEN i.asset_attributes = 3 THEN '信用标'
+		END AS asset_type,
+		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
+		WHEN i.asset_attributes = 2 THEN '质押标'
+		WHEN i.asset_attributes = 3 THEN '信用标'
+		END AS borrow_type,
+		'散标' AS project_type,
+		CASE WHEN s.`name` = '先息后本' THEN '月付息到期还本'
+		WHEN s.`name` = '按月计息，到期还本还息' THEN '按月到期还款'
+		WHEN s.`name` = '按天计息，到期还本还息' THEN '按天到期还款'
+		WHEN s.`name` = '等额本息' THEN '月分期付款'
+		ELSE s.`name` END AS repey_type,
+		ROUND(SUM(t.assign_pay)/c.credit_account,4) AS percentage,
+		'成功' AS bid_status,
+		'AA' AS credit,
+		c.create_time AS verify_time,
+		c.end_time AS reverify_time,
+		c.assign_num AS invest_count,
+		i.borrow_contents as borrow_detail,
+		i.borrow_use as attribute1
+		FROM ht_borrow_credit c
+		LEFT JOIN ht_credit_tender t ON t.credit_nid = c.credit_nid
+		LEFT JOIN ht_borrow_info i ON i.borrow_nid = c.bid_nid
+		LEFT JOIN ht_borrow b ON b.borrow_nid = c.bid_nid
+		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
+		WHERE c.credit_status = 1 and c.credit_status = 2
+		AND c.credit_capital_assigned > 0
+		AND c.create_time <![CDATA[>=]]> #{dateStart}
+		AND c.create_time <![CDATA[<=]]> #{dateEnd}
+		GROUP BY credit_id
+	</select>
 </mapper>

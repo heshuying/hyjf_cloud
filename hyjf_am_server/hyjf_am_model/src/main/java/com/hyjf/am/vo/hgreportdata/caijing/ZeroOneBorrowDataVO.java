@@ -13,9 +13,6 @@ public class ZeroOneBorrowDataVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    //用户id
-    private Integer userIds;
-
     //标编号
     private String id;
 
@@ -278,13 +275,5 @@ public class ZeroOneBorrowDataVO implements Serializable {
 
     public void setAttribute3(String attribute3) {
         this.attribute3 = attribute3;
-    }
-
-    public Integer getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Integer userIds) {
-        this.userIds = userIds;
     }
 }

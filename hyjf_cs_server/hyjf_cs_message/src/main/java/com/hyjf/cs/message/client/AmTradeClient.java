@@ -9,6 +9,9 @@ import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
@@ -159,4 +162,10 @@ public interface AmTradeClient {
     List<ZeroOneBorrowDataVO> queryBorrowRecordSub(String dateStart, String dateEnd);
 
 	List<ZeroOneDataVO> queryAdvancedRepay(String startDate, String endDate);
+
+    BorrowAndInfoVO getBorrowByNid(String borrowNid);
+
+	BorrowUserVO getBorrowUser(String borrowNid);
+
+	BorrowManinfoVO getBorrowManinfo(String borrowNid);
 }

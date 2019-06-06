@@ -1,8 +1,10 @@
 package com.hyjf.am.trade.controller.hgreportdata.caijing;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingBorrowResponse;
 import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingResponse;
 import com.hyjf.am.trade.service.hgreportdata.caijing.ZeroOneCaiJingDataService;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
@@ -32,21 +34,22 @@ public class ZeroOneCaiJingDataController {
 
     /**
      * 查询指定日期的出借记录
+     *
      * @param searchStartDate
      * @param searchEndDate
      * @return
      */
     @GetMapping("/getInvestRecordSub/{searchStartDate}/{searchEndDate}")
-    public ZeroOneCaiJingResponse queryInvestRecordSub(@PathVariable String searchStartDate,@PathVariable String searchEndDate){
+    public ZeroOneCaiJingResponse queryInvestRecordSub(@PathVariable String searchStartDate, @PathVariable String searchEndDate) {
         ZeroOneCaiJingResponse response = new ZeroOneCaiJingResponse();
 
-        if(StringUtils.isBlank(searchStartDate) || StringUtils.isBlank(searchEndDate)){
+        if (StringUtils.isBlank(searchStartDate) || StringUtils.isBlank(searchEndDate)) {
             response.setRtn(Response.ERROR);
             return response;
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("searchStartDate",searchStartDate);
-        map.put("searchEndDate",searchEndDate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("searchStartDate", searchStartDate);
+        map.put("searchEndDate", searchEndDate);
 
         List<ZeroOneDataVO> list = caiJingDataService.queryInvestRecordSub(map);
         if (!CollectionUtils.isEmpty(list)) {
@@ -57,23 +60,44 @@ public class ZeroOneCaiJingDataController {
 
     /**
      * 查询指定日期的出借记录
+     *
      * @param searchStartDate
      * @param searchEndDate
      * @return
      */
     @GetMapping("/getAdvancedRepay/{searchStartDate}/{searchEndDate}")
-    public ZeroOneCaiJingResponse queryAdvancedRepaySub(@PathVariable String searchStartDate,@PathVariable String searchEndDate){
+    public ZeroOneCaiJingResponse queryAdvancedRepaySub(@PathVariable String searchStartDate, @PathVariable String searchEndDate) {
         ZeroOneCaiJingResponse response = new ZeroOneCaiJingResponse();
 
-        if(StringUtils.isBlank(searchStartDate) || StringUtils.isBlank(searchEndDate)){
+        if (StringUtils.isBlank(searchStartDate) || StringUtils.isBlank(searchEndDate)) {
             response.setRtn(Response.ERROR);
             return response;
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("searchStartDate",searchStartDate);
-        map.put("searchEndDate",searchEndDate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("searchStartDate", searchStartDate);
+        map.put("searchEndDate", searchEndDate);
 
         List<ZeroOneDataVO> list = caiJingDataService.queryAdvancedRepaySub(map);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
+    /**
+     * 查询指定日期的借款记录
+     *
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
+    @GetMapping("/getBorrowDataInfo/{dateStart}/{dateEnd}")
+    public ZeroOneCaiJingBorrowResponse queryBorrowRecordSub(@PathVariable String dateStart, @PathVariable String dateEnd) {
+        ZeroOneCaiJingBorrowResponse response = new ZeroOneCaiJingBorrowResponse();
+        Map<String, Object> map = new HashMap<>();
+        map.put("dateStart", dateStart);
+        map.put("dateEnd", dateEnd);
+        List<ZeroOneBorrowDataVO> list = caiJingDataService.queryBorrowRecordSub(map);
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }

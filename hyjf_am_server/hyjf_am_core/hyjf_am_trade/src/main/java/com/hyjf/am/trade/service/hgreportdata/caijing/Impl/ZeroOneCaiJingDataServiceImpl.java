@@ -3,16 +3,16 @@ package com.hyjf.am.trade.service.hgreportdata.caijing.Impl;
 import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.caijing.ZeroOneCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.ZeroOneCaiJingCustomize;
 import com.hyjf.am.trade.service.hgreportdata.caijing.ZeroOneCaiJingDataService;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,9 +84,9 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
     public List<ZeroOneDataVO> queryAdvancedRepaySub(Map<String,Object> map) {
         List<ZeroOneCaiJingCustomize> list = customizeMapper.queryAdvancedRepaySub(map);
         List<ZeroOneDataVO> dataVOList = new ArrayList<>(list.size());
-        if(list.size() > 0) {
+        if (list.size() > 0) {
             for (ZeroOneCaiJingCustomize vo : list) {
-                if(StringUtils.isBlank(vo.getFreezeOrderId())){
+                if (StringUtils.isBlank(vo.getFreezeOrderId())) {
                     continue;
                 }
                 ZeroOneDataVO zeroOneDataVO = new ZeroOneDataVO();
@@ -101,5 +101,14 @@ public class ZeroOneCaiJingDataServiceImpl implements ZeroOneCaiJingDataService 
             }
         }
         return dataVOList;
+    }
+
+    @Override
+    public List<ZeroOneBorrowDataVO> queryBorrowRecordSub(Map<String, Object> map) {
+        List<ZeroOneBorrowDataVO> list = customizeMapper.queryBorrowRecordSub(map);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list;
+        }
+        return null;
     }
 }
