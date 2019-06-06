@@ -184,5 +184,5 @@ public interface AutoPlusService extends BaseUserService {
      * @param sign
      * @return
      */
-    BankCallBean weChatGetCommonBankCallBean(UserVO users, int i, String srvAuthCode, String code, String sign);
+    BankCallBean weChatGetCommonBankCallBean(UserVO users, int i, String srvAuthCode, String code, String sign,String wjtClient);
 }

@@ -264,7 +264,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
           @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50")})
-    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType)
+    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType,String isWjt)
             throws ReturnMessageException {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform, userType);
         registerUserRequest.setLoginIp(ip);
@@ -305,6 +305,11 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         }
         //add by libin 用户注册时通过ip获得用户所在的省，市 end
 
+        if(isWjt!=null && isWjt.equals("1")){
+            // 是温金投的用户
+            registerUserRequest.setInstCode(systemConfig.getWjtInstCode());
+            registerUserRequest.setUtmId(systemConfig.getWjtChannel());
+        }
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         logger.info("注册之后user值是否为空："+(userVO==null));
@@ -317,7 +322,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * 默认fallback
      * @return
      */
-    private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType) {
+    private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType,String isWjt) {
         logger.info("==================已进入 用户注册(三端) fallBackRegister 方法================");
         return null;
     }

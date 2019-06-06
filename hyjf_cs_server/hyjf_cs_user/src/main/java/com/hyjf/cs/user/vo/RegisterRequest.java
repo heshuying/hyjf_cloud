@@ -40,6 +40,10 @@ public class RegisterRequest extends AppBaseRequest {
     private Integer userType;
     // 合规改造 add by huanghui 20181220 end
 
+    // 温金投注册  新增字段  是否温金投注册
+    @ApiModelProperty(value = "温金投注册  新增字段  是否温金投注册 传1")
+    private String isWjt ;
+
     public String getInstCode() {
         return instCode;
     }
@@ -110,5 +114,13 @@ public class RegisterRequest extends AppBaseRequest {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    public String getIsWjt() {
+        return isWjt;
+    }
+
+    public void setIsWjt(String isWjt) {
+        this.isWjt = isWjt;
     }
 }

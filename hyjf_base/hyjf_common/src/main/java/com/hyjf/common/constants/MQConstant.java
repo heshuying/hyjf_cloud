@@ -821,4 +821,7 @@ public interface MQConstant {
 	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
 	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
+	/** 温金投修改借款人机构编号MQ */
+	String WJT_BORROW_USER_MODIFY_GROUP = "WJT_BORROW_USER_MODIFY_GROUP";
+	String WJT_BORROW_USER_MODIFY_TOPIC = "WJT_BORROW_USER_MODIFY_TOPIC";
 }

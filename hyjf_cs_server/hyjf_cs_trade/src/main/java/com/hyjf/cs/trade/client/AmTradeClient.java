@@ -3082,5 +3082,17 @@ public interface AmTradeClient {
 
     // 应急中心二期，历史数据上报 add by nxl end
 
+    /**
+     * 温金投web端首页列表数量
+     * @return
+     */
+    Integer countWjtWebProjectList(ProjectListRequest request);
+    /**
+     * 温金投web端首页列表
+     * @return
+     */
+    List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request);
+
+    List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
 }
 

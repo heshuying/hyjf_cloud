@@ -5,6 +5,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
@@ -18,6 +19,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,7 @@ public class WechatRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/recharge")
-	public WeChatResult recharge(@RequestHeader(value = "sign") String sign, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
+	public WeChatResult recharge(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "sign") String sign, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
 		logger.info("wechat充值服务");
 		WeChatResult result = new WeChatResult();
 		String ipAddr = CustomUtil.getIpAddr(request);
@@ -69,15 +71,25 @@ public class WechatRechargeController extends BaseTradeController{
 			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&money="+money;
-		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&money="+money;
 		String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
-		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
+		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
+		String host = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT);
+		if(StringUtils.isNotBlank(wjtClient)){
+			// 如果是温金投的  则跳转到温金投那边
+			host = super.getWjtFrontHost(systemConfig,wjtClient);
+		}
+		String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, request, systemConfig);
+		if(StringUtils.isNotBlank(wjtClient)){
+			// 如果是温金投的  则跳转到温金投那边
+			forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, request, systemConfig);
+		}
+		// 拼装参数 调用江西银行
+		String retUrl = host+"/user/bank/recharge/result/failed/?sign="+sign+"&money="+money;
+		String successfulUrl = host+"/user/bank/recharge/result/success/?sign="+sign+"&money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
-		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
-        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
+        directRechargeBean.setForgotPwdUrl(forgotPwdUrl);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		if (null == bean) {
 			throw new CheckException(MsgEnum.ERR_BANK_CALL);
