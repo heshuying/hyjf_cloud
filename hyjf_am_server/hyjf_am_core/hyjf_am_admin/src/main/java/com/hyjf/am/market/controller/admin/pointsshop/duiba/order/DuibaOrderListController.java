@@ -148,8 +148,8 @@ public class DuibaOrderListController {
             }
             // 设置更新时间
             duibaOrderVO.setUpdateTime(new Date());
-            // 判断之前是否失败，如果之前失败则执行以下操作
-            if(duibaOrderVO.getActivationType()==1){
+            // 判断之前是否失败且兑吧返回的处理状态为成功，如果之前失败则执行以下操作
+            if(duibaOrderVO.getActivationType()==1&&duibaOrderVO.getOrderStatus()==0){
                 // 判断该笔订单是否为“充值”（优惠卷）
                 if(productType.equals(duibaOrderVO.getProductType())){
                     // 执行更新优惠卷用户表
@@ -184,6 +184,8 @@ public class DuibaOrderListController {
                         duibaOrderVO.setRechargeState("处理完成");
                         // 订单有效状态
                         duibaOrderVO.setActivationType(0);
+                        // 更新订单状态为成功
+                        // duibaOrderVO.setOrderStatus(0);
                     }else{
                         logger.error("根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
                         return "没有查询到用户信息！";
