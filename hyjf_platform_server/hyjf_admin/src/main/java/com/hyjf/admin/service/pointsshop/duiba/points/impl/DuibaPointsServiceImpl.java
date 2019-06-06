@@ -10,6 +10,7 @@ import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,12 +56,12 @@ public class DuibaPointsServiceImpl extends BaseServiceImpl implements DuibaPoin
     /**
      * 插入积分审批表
      *
-     * @param requestBean
+     * @param duibaPointsModifyVO
      * @return
      */
     @Override
-    public boolean insertPointsModifyList(DuibaPointsRequest requestBean) {
-        boolean result = amMarketClient.insertPointsModifyList(requestBean);
+    public boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO) {
+        boolean result = amMarketClient.insertPointsModifyList(duibaPointsModifyVO);
         return result;
     }
 }

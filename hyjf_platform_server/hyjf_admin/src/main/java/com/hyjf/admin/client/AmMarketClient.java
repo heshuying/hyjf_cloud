@@ -7,6 +7,8 @@ import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.admin.DuibaPointsVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 
 import java.util.List;
@@ -178,10 +180,10 @@ public interface AmMarketClient {
     /**
      * 插入积分审批表
      *
-     * @param requestBean
+     * @param duibaPointsModifyVO
      * @return
      */
-    boolean insertPointsModifyList(DuibaPointsRequest requestBean);
+    boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO);
 
     /**
      * 更新兑吧积分调整审批状态
@@ -194,8 +196,16 @@ public interface AmMarketClient {
     /**
      * 插入兑吧交易明细表
      *
-     * @param requestBean
+     * @param duibaPointsVO
      * @return
      */
-    boolean insertDuibaPoints(DuibaPointsRequest requestBean);
+    boolean insertDuibaPoints(DuibaPointsVO duibaPointsVO);
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    DuibaPointsModifyVO selectDuibaPointsModifyByOrdid(String orderId);
 }

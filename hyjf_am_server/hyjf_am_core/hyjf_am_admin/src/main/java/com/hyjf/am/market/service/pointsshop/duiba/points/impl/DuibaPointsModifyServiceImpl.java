@@ -9,18 +9,13 @@ import com.hyjf.am.market.dao.model.auto.DuibaPointsModify;
 import com.hyjf.am.market.dao.model.auto.DuibaPointsModifyExample;
 import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,12 +32,6 @@ public class DuibaPointsModifyServiceImpl implements DuibaPointsModifyService {
 
     @Autowired
     DuibaPointsModifyMapper duibaPointsModifyMapper;
-
-    @Autowired
-    UserMapper userMapper;
-
-    @Autowired
-    UserInfoMapper userInfoMapper;
 
     /**
      * 查询兑吧积分修改明细件数
@@ -69,60 +58,13 @@ public class DuibaPointsModifyServiceImpl implements DuibaPointsModifyService {
     /**
      * 插入积分审批表
      *
-     * @param request
+     * @param duibaPointsModifyVO
      * @return
      */
     @Override
-    public boolean insertPointsModifyList(DuibaPointsRequest request) throws Exception {
-        List<Integer> userIdList = request.getUserIdList();
-        for (Integer userId : userIdList) {
-            User user = userMapper.selectByPrimaryKey(userId);
-            if (null == user) {
-                logger.error("获取用户信息失败，userId：" + userId);
-                continue;
-            }
-
-            UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
-            if (null == userInfo) {
-                logger.error("获取用户详细信息失败，userId：" + userId);
-                continue;
-            }
-
-            // 计算用户积分调整后剩余
-            Integer remainPoints = 0;
-            if (0 == request.getModifyType()) {
-                remainPoints = request.getModifyPoints() + user.getPointsCurrent();
-            } else {
-                if (user.getPointsCurrent() < request.getModifyPoints()) {
-                    logger.error("数据插入过程中发现用户积分不足，userId：" + userId + ",调减积分数：" + request.getModifyPoints() + ",当前用户积分数：" + user.getPointsCurrent());
-                    throw new Exception("数据插入过程中发现用户积分不足！");
-                }
-                remainPoints = user.getPointsCurrent() - request.getModifyPoints();
-            }
-
-            // 生成一笔订单号
-            String modifyOrderId = GetOrderIdUtils.getOrderId2(userId);
-
-            DuibaPointsModify duibaPointsModify = new DuibaPointsModify();
-            duibaPointsModify.setUserId(userId);
-            duibaPointsModify.setUserName(user.getUsername());
-            duibaPointsModify.setTrueName(userInfo.getTruename());
-            duibaPointsModify.setModifyOrderId(modifyOrderId);
-            duibaPointsModify.setPoints(request.getModifyPoints());
-            duibaPointsModify.setTotal(remainPoints);
-            duibaPointsModify.setPointsType(request.getModifyType());
-            duibaPointsModify.setModifyName(request.getModifyName());
-            duibaPointsModify.setModifyReason(request.getReason());
-            // 当前审批节点、默认0
-            duibaPointsModify.setFlowOrder(0);
-            // 审批状态：0待审批
-            duibaPointsModify.setStatus(0);
-            duibaPointsModify.setCreateBy(request.getModifyId());
-            duibaPointsModify.setCreateTime(new Date());
-            duibaPointsModifyMapper.insertSelective(duibaPointsModify);
-        }
-
-        return true;
+    public boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO) {
+        DuibaPointsModify duibaPointsModify = CommonUtils.convertBean(duibaPointsModifyVO, DuibaPointsModify.class);
+        return duibaPointsModifyMapper.insertSelective(duibaPointsModify) > 0 ? true : false;
     }
 
     /**
@@ -137,6 +79,27 @@ public class DuibaPointsModifyServiceImpl implements DuibaPointsModifyService {
         example.createCriteria().andModifyOrderIdEqualTo(request.getOrderId());
         DuibaPointsModify duibaPointsModify = new DuibaPointsModify();
         duibaPointsModify.setStatus(request.getAuditStatus());
+        // 审核不通过暂放到remark里
+        if(2 == request.getAuditStatus()) {
+            duibaPointsModify.setRemark(request.getRefuseReason());
+        }
         return this.duibaPointsModifyMapper.updateByExampleSelective(duibaPointsModify, example) > 0 ? true : false;
+    }
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param ordId
+     * @return
+     */
+    @Override
+    public DuibaPointsModify selectDuibaPointsModifyByOrdid(String ordId) {
+        DuibaPointsModifyExample example = new DuibaPointsModifyExample();
+        example.createCriteria().andModifyOrderIdEqualTo(ordId);
+        List<DuibaPointsModify> duibaPointsModify = this.duibaPointsModifyMapper.selectByExample(example);
+        if (null != duibaPointsModify && duibaPointsModify.size() > 0) {
+            return duibaPointsModify.get(0);
+        }
+        return null;
     }
 }

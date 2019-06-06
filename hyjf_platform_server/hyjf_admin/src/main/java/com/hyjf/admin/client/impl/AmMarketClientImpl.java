@@ -8,6 +8,8 @@ import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.admin.DuibaPointsVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -296,13 +298,13 @@ public class AmMarketClientImpl implements AmMarketClient {
 	/**
 	 * 插入积分审批表
 	 *
-	 * @param requestBean
+	 * @param duibaPointsModifyVO
 	 * @return
 	 */
 	@Override
-	public boolean insertPointsModifyList(DuibaPointsRequest requestBean) {
+	public boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO) {
 		String url = "http://AM-ADMIN/am-admin/duibapointsmodify/insertPointsModifyList";
-		BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+		BooleanResponse response = restTemplate.postForEntity(url, duibaPointsModifyVO, BooleanResponse.class).getBody();
 		if (response == null || !Response.isSuccess(response)) {
 			return false;
 		}
@@ -328,17 +330,32 @@ public class AmMarketClientImpl implements AmMarketClient {
 	/**
 	 * 插入兑吧交易明细表
 	 *
-	 * @param requestBean
+	 * @param duibaPointsVO
 	 * @return
 	 */
 	@Override
-	public boolean insertDuibaPoints(DuibaPointsRequest requestBean) {
+	public boolean insertDuibaPoints(DuibaPointsVO duibaPointsVO) {
 		String url = "http://AM-ADMIN/am-admin/duibapoints/insertDuibaPoints";
-		BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+		BooleanResponse response = restTemplate.postForEntity(url, duibaPointsVO, BooleanResponse.class).getBody();
 		if (response == null || !Response.isSuccess(response)) {
 			return false;
 		}
 		return response.getResultBoolean().booleanValue();
+	}
+
+	/**
+	 * 根据订单号获取订单详情
+	 *
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public DuibaPointsModifyVO selectDuibaPointsModifyByOrdid(String orderId) {
+		DuibaPointsModifyResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/duibapointsmodify/selectDuibaPointsModifyByOrdid/" + orderId,DuibaPointsModifyResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

@@ -55,11 +55,17 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "调整原因")
     private String reason;
 
+    @ApiModelProperty(value = "审核不通过原因")
+    private String refuseReason;
+
     @ApiModelProperty(value = "审核结果 1通过 2不通过")
     private Integer auditStatus;
 
     @ApiModelProperty(value = "当前审批订单号")
     private String orderId;
+
+    @ApiModelProperty(value = "导出类型0：积分调整明细 1：积分调整审核")
+    private Integer exportType;
 
     @ApiModelProperty(value = "积分明细列表相关")
     private List<DuibaPointsVO> recordList;
@@ -277,5 +283,21 @@ public class DuibaPointsRequest extends BasePage implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getRefuseReason() {
+        return refuseReason;
+    }
+
+    public void setRefuseReason(String refuseReason) {
+        this.refuseReason = refuseReason;
+    }
+
+    public Integer getExportType() {
+        return exportType;
+    }
+
+    public void setExportType(Integer exportType) {
+        this.exportType = exportType;
     }
 }

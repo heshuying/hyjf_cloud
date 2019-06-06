@@ -9,7 +9,9 @@
         <result column="points" property="points" jdbcType="INTEGER"/>
         <result column="total" property="total" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="typeStr" property="typeStr" jdbcType="VARCHAR"/>
         <result column="business_name" property="businessName" jdbcType="TINYINT"/>
+        <result column="businessNameStr" property="businessNameStr" jdbcType="VARCHAR"/>
         <result column="duiba_order_id" property="duibaOrderId" jdbcType="VARCHAR"/>
         <result column="hy_order_id" property="hyOrderId" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
@@ -27,9 +29,27 @@
     <select id="selectDuibaPointsList" resultMap="DuibaPointsList"
             parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         SELECT
-        <include refid="Base_Column_List"/>
+        hdp.id,
+        hdp.user_id,
+        hdp.user_name,
+        hdp.true_name,
+        hdp.points,
+        hdp.total,
+        hdp.`type`,
+        pn1.name as typeStr,
+        hdp.business_name,
+        pn2.name as businessNameStr,
+        hdp.duiba_order_id,
+        hdp.hy_order_id,
+        hdp.remark,
+        hdp.create_by,
+        hdp.create_time,
+        hdp.update_by,
+        hdp.update_time
         FROM
         ht_duiba_points hdp
+        LEFT JOIN hyjf_config.ht_param_name pn1 ON hdp.`type` = pn1.name_cd AND pn1.name_class = 'INTEGRAL_TYPE'
+        LEFT JOIN hyjf_config.ht_param_name pn2 ON hdp.`business_name` = pn2.name_cd AND pn2.name_class = 'INTEGRAL_BUSINESS_NAME'
         WHERE 1=1
         <if test="userNameSrch != null and userNameSrch != ''">
             AND hdp.user_name = #{userNameSrch}
@@ -37,10 +57,10 @@
         <if test="trueNameSrch != null and trueNameSrch != ''">
             AND hdp.true_name = #{trueNameSrch}
         </if>
-        <if test="businessNameSrch != null and businessNameSrch != ''">
+        <if test="businessNameSrch != null">
             AND hdp.business_name = #{businessNameSrch}
         </if>
-        <if test="typeSrch != null and typeSrch != ''">
+        <if test="typeSrch != null">
             AND hdp.`type` = #{typeSrch}
         </if>
         <if test="startDateSrch != null and startDateSrch != ''">
@@ -49,6 +69,7 @@
         <if test="endDateSrch != null and endDateSrch != ''">
             AND hdp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
+        ORDER BY hdp.create_time desc
         <if test="limitStart >= 0">
             LIMIT #{limitStart} , #{limitEnd}
         </if>
@@ -67,10 +88,10 @@
         <if test="trueNameSrch != null and trueNameSrch != ''">
             AND hdp.true_name = #{trueNameSrch}
         </if>
-        <if test="businessNameSrch != null and businessNameSrch != ''">
+        <if test="businessNameSrch != null">
             AND hdp.business_name = #{businessNameSrch}
         </if>
-        <if test="typeSrch != null and typeSrch != ''">
+        <if test="typeSrch != null">
             AND hdp.`type` = #{typeSrch}
         </if>
         <if test="startDateSrch != null and startDateSrch != ''">

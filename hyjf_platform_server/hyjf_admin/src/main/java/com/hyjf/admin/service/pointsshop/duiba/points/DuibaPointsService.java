@@ -6,6 +6,7 @@ package com.hyjf.admin.service.pointsshop.duiba.points;
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 
 import java.util.List;
 
@@ -32,8 +33,8 @@ public interface DuibaPointsService extends BaseService {
     /**
      * 插入积分审批表
      *
-     * @param requestBean
+     * @param duibaPointsModifyVO
      * @return
      */
-    boolean insertPointsModifyList(DuibaPointsRequest requestBean);
+    boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO);
 }

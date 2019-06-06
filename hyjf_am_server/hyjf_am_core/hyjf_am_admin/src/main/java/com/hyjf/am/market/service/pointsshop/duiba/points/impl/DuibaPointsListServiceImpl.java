@@ -11,8 +11,6 @@ import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsListService
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.vo.admin.DuibaPointsVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -20,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,40 +66,12 @@ public class DuibaPointsListServiceImpl implements DuibaPointsListService {
     /**
      * 插入明细表
      *
-     * @param request
+     * @param duibaPointsVO
      * @return
      */
     @Override
-    public boolean insertDuibaPoints(DuibaPointsRequest request) {
-        Integer userId = request.getUserIdList().get(0);
-        User user = userMapper.selectByPrimaryKey(userId);
-        if (null == user) {
-            logger.error("插入积分明细表获取用户信息失败，userId：" + userId);
-            return false;
-        }
-
-        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
-        if (null == userInfo) {
-            logger.error("插入积分明细表获取用户详细信息失败，userId：" + userId);
-            return false;
-        }
-
-        DuibaPoints duibaPoints = new DuibaPoints();
-        duibaPoints.setUserId(userId);
-        duibaPoints.setUserName(user.getUsername());
-        duibaPoints.setTrueName(userInfo.getTruename());
-        duibaPoints.setPoints(request.getModifyPoints());
-        duibaPoints.setTotal(user.getPointsCurrent());
-        // 调增
-        if (0 == request.getModifyType()) {
-            duibaPoints.setType(2);
-        } else {
-            duibaPoints.setType(3);
-        }
-        duibaPoints.setHyOrderId(request.getOrderId());
-        duibaPoints.setCreateBy(request.getModifyId());
-        duibaPoints.setCreateTime(new Date());
-
+    public boolean insertDuibaPoints(DuibaPointsVO duibaPointsVO) {
+        DuibaPoints duibaPoints = CommonUtils.convertBean(duibaPointsVO, DuibaPoints.class);
         return duibaPointsMapper.insertSelective(duibaPoints) > 0 ? true : false;
     }
 

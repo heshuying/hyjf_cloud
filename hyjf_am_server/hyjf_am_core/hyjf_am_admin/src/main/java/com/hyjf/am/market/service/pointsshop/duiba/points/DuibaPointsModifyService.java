@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.market.service.pointsshop.duiba.points;
 
+import com.hyjf.am.market.dao.model.auto.DuibaPointsModify;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 
@@ -33,10 +34,10 @@ public interface DuibaPointsModifyService {
     /**
      * 插入积分审批表
      *
-     * @param request
+     * @param duibaPointsModifyVO
      * @return
      */
-    boolean insertPointsModifyList(DuibaPointsRequest request) throws Exception;
+    boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO);
 
     /**
      * 更新兑吧积分调整审批状态
@@ -45,4 +46,12 @@ public interface DuibaPointsModifyService {
      * @return
      */
     boolean updatePointsModifyStatus(DuibaPointsRequest request);
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param ordId
+     * @return
+     */
+    DuibaPointsModify selectDuibaPointsModifyByOrdid(String ordId);
 }

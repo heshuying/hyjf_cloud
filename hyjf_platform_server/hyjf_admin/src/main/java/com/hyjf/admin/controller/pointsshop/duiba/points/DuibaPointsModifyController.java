@@ -3,20 +3,28 @@
  */
 package com.hyjf.admin.controller.pointsshop.duiba.points;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
+import com.hyjf.am.response.admin.DuibaPointsResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +32,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 兑吧积分调整表
@@ -43,7 +57,7 @@ public class DuibaPointsModifyController extends BaseController {
     @Autowired
     DuibaPointsService duibaPointsService;
 
-    private static final String PERMISSIONS = "dbpointslistmodify";
+    private static final String PERMISSIONS = "dbpoints";
 
     @ApiOperation(value = "兑吧积分账户修改明细", notes = "兑吧积分账户修改明细")
     @PostMapping("/selectDuibaPointsModifyList")
@@ -105,6 +119,24 @@ public class DuibaPointsModifyController extends BaseController {
             }
         }
 
+        // 根据订单号获取订单详情
+        DuibaPointsModifyVO duibaPointsModifyVO = this.duibaPointsModifyService.selectDuibaPointsModifyByOrdid(requestBean.getOrderId());
+        if (null == duibaPointsModifyVO) {
+            return new AdminResult<>(FAIL, "未获取到当前待审批积分调整的订单号");
+        }
+        if (null == duibaPointsModifyVO.getStatus() || 2 == duibaPointsModifyVO.getStatus()) {
+            return new AdminResult<>(FAIL, "当前订单已审核或审核状态异常");
+        }
+        // 获取订单调整类型
+        requestBean.setModifyType(duibaPointsModifyVO.getPointsType());
+        // 获取订单调整积分数
+        requestBean.setModifyPoints(duibaPointsModifyVO.getPoints());
+        // 获取订单调整用户id
+        List<Integer> list = new ArrayList<>();
+        list.add(duibaPointsModifyVO.getUserId());
+        requestBean.setUserId(duibaPointsModifyVO.getUserId());
+        requestBean.setUserIdList(list);
+
         // 审核通过
         if (1 == requestBean.getAuditStatus()) {
             // 调减的情况
@@ -135,5 +167,79 @@ public class DuibaPointsModifyController extends BaseController {
             }
         }
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+    }
+
+    /**
+     * 兑吧积分调整明细列表列表导出
+     *
+     * @param request
+     * @param response
+     * @param response
+     */
+    @ApiOperation(value = "兑吧积分调整明细列表列表导出", notes = "兑吧积分调整明细列表列表导出")
+    @PostMapping("/exportDuibaPointsModifyList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportToExcel(HttpServletRequest request, @RequestBody DuibaPointsRequest requestBean, HttpServletResponse response) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "积分调整审核列表";
+        if(0 == requestBean.getExportType()) {
+            sheetName = "积分调整明细列表";
+        }
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) +  CustomConstants.EXCEL_EXT;
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        //请求第一页5000条
+        requestBean.setPageSize(defaultRowMaxCount);
+
+        DuibaPointsModifyResponse duibaPointsModifyResponse = this.duibaPointsModifyService.selectDuibaPointsModifyList(requestBean);
+
+        Integer totalCount = duibaPointsModifyResponse.getRecordTotal();
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = "";
+
+        for (int i = 1; i <= sheetCount; i++) {
+            requestBean.setCurrPage(i);
+            sheetNameTmp = sheetName + "_第" + (i) + "页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, duibaPointsModifyResponse.getResultList());
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        // 序号、账户名、姓名、调整积分数、调整类型、调整人、创建时间、状态
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "账户名");
+        map.put("trueName", "姓名");
+        map.put("points", "调整积分数");
+        map.put("pointsTypeStr", "调整类型");
+        map.put("modifyName", "调整人");
+        map.put("createTime", "创建时间");
+        map.put("statusStr", "状态");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter createTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer createTime = (Integer) object;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                if(createTime != null){
+                    Date data = new Date(createTime*1000L);
+                    return sdf.format(data);
+                }else {
+                    return "";
+                }
+            }
+        };
+        return mapAdapter;
     }
 }

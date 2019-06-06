@@ -47,8 +47,7 @@
         </if>
     </select>
 
-    <select id="updateDuibaPoints" resultType="java.lang.Integer"
-            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+    <update id="updateDuibaPoints" parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         UPDATE ht_user
         SET
         update_time = NOW()
@@ -62,5 +61,5 @@
         </if>
         WHERE
             user_id = #{userId}
-    </select>
+    </update>
 </mapper>

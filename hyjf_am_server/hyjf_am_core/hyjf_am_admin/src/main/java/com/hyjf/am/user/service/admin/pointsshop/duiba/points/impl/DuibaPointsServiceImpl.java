@@ -68,7 +68,6 @@ public class DuibaPointsServiceImpl extends BaseServiceImpl implements DuibaPoin
      */
     @Override
     public boolean updateDuibaPoints(DuibaPointsRequest request) {
-        request.setUserId(request.getUserIdList().get(0));
         return this.duibaPointsCustomizeMapper.updateDuibaPoints(request) > 0 ? true : false;
     }
 }

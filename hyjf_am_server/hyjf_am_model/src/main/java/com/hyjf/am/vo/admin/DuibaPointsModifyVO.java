@@ -6,7 +6,6 @@ package com.hyjf.am.vo.admin;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -48,7 +47,7 @@ public class DuibaPointsModifyVO implements Serializable {
      * @mbggenerated
      */
     @ApiModelProperty(value = "调整积分数")
-    private BigDecimal points;
+    private Integer points;
 
     /**
      * 当时调整后总积分数
@@ -56,7 +55,7 @@ public class DuibaPointsModifyVO implements Serializable {
      * @mbggenerated
      */
     @ApiModelProperty(value = "当时调整后总积分数")
-    private BigDecimal total;
+    private Integer total;
 
     /**
      * 操作类型：0调增 1调减
@@ -116,7 +115,7 @@ public class DuibaPointsModifyVO implements Serializable {
      * 转换实义的审核状态
      */
     @ApiModelProperty(value = "转换实义的审核状态")
-    private Integer statusStr;
+    private String statusStr;
 
     /**
      * 备注
@@ -188,19 +187,19 @@ public class DuibaPointsModifyVO implements Serializable {
         this.trueName = trueName == null ? null : trueName.trim();
     }
 
-    public BigDecimal getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(BigDecimal points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 
-    public BigDecimal getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 
@@ -292,11 +291,11 @@ public class DuibaPointsModifyVO implements Serializable {
         this.pointsTypeStr = pointsTypeStr;
     }
 
-    public Integer getStatusStr() {
+    public String getStatusStr() {
         return statusStr;
     }
 
-    public void setStatusStr(Integer statusStr) {
+    public void setStatusStr(String statusStr) {
         this.statusStr = statusStr;
     }
 

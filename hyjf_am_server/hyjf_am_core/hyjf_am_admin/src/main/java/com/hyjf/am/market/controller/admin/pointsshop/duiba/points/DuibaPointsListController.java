@@ -74,15 +74,15 @@ public class DuibaPointsListController {
     /**
      * 更新兑吧积分调整审批状态
      *
-     * @param request
+     * @param duibaPointsVO
      * @return
      */
     @RequestMapping("/insertDuibaPoints")
-    public BooleanResponse insertDuibaPoints(@RequestBody DuibaPointsRequest request) {
+    public BooleanResponse insertDuibaPoints(@RequestBody DuibaPointsVO duibaPointsVO) {
         BooleanResponse response = new BooleanResponse();
         boolean result = false;
         try {
-            result = duibaPointsListService.insertDuibaPoints(request);
+            result = duibaPointsListService.insertDuibaPoints(duibaPointsVO);
         } catch (Exception e) {
             e.printStackTrace();
         }

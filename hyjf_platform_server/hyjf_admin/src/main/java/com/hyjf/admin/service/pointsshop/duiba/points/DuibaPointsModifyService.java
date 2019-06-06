@@ -6,6 +6,7 @@ package com.hyjf.admin.service.pointsshop.duiba.points;
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 
 /**
  * @author PC-LIUSHOUYI
@@ -43,4 +44,12 @@ public interface DuibaPointsModifyService extends BaseService {
      * @return
      */
     boolean insertDuibaPoints(DuibaPointsRequest requestBean);
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    DuibaPointsModifyVO selectDuibaPointsModifyByOrdid(String orderId);
 }

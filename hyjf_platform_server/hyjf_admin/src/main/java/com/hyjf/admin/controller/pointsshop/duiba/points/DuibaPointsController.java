@@ -12,9 +12,13 @@ import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DuibaPointsUserResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
 import com.hyjf.am.vo.admin.DuibaPointsUserVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetOrderIdUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,7 +82,7 @@ public class DuibaPointsController extends BaseController {
         if (null == requestBean.getModifyPoints() || 0 == requestBean.getModifyPoints()) {
             return new AdminResult<>(FAIL, "请填写调整积分数额！");
         }
-        if(null == requestBean.getUserIdList() || requestBean.getUserIdList().size() <= 0) {
+        if (null == requestBean.getUserIdList() || requestBean.getUserIdList().size() <= 0) {
             return new AdminResult<>(FAIL, "请勾选调整用户！");
         }
 
@@ -92,9 +97,57 @@ public class DuibaPointsController extends BaseController {
 
         // 记录到积分调整列表
         // 后期接入工作流后、在审批表创建相应审批节点
-        boolean re = this.duibaPointsService.insertPointsModifyList(requestBean);
-        if (!re) {
-            return new AdminResult<>(FAIL, "批量调整积分记录生成失败！");
+        List<Integer> userIdList = requestBean.getUserIdList();
+        for (Integer userId : userIdList) {
+            UserVO user = duibaPointsService.searchUserByUserId(userId);
+            if (null == user) {
+                logger.error("获取用户信息失败，userId：" + userId);
+                return new AdminResult<>(FAIL, "批量调整积分记录生成失败（存在用户信息不存在）");
+            }
+
+            UserInfoVO userInfo = duibaPointsService.findUsersInfoById(userId);
+            if (null == userInfo) {
+                logger.error("获取用户详细信息失败，userId：" + userId);
+                return new AdminResult<>(FAIL, "批量调整积分记录生成失败（存在用户详细信息不存在）");
+            }
+
+            // 计算用户积分调整后剩余
+            Integer remainPoints = 0;
+            if (0 == requestBean.getModifyType()) {
+                remainPoints = requestBean.getModifyPoints() + user.getPointsCurrent();
+            } else {
+                if (user.getPointsCurrent() < requestBean.getModifyPoints()) {
+                    logger.error("数据插入过程中发现用户积分不足，userId：" + userId + ",调减积分数：" + requestBean.getModifyPoints() + ",当前用户积分数：" + user.getPointsCurrent());
+                    continue;
+                }
+                remainPoints = user.getPointsCurrent() - requestBean.getModifyPoints();
+            }
+
+            // 生成一笔订单号
+            String modifyOrderId = GetOrderIdUtils.getOrderId2(userId);
+
+            DuibaPointsModifyVO duibaPointsModify = new DuibaPointsModifyVO();
+            duibaPointsModify.setUserId(userId);
+            duibaPointsModify.setUserName(user.getUsername());
+            duibaPointsModify.setTrueName(userInfo.getTruename());
+            duibaPointsModify.setModifyOrderId(modifyOrderId);
+            duibaPointsModify.setPoints(requestBean.getModifyPoints());
+            duibaPointsModify.setTotal(remainPoints);
+            duibaPointsModify.setPointsType(requestBean.getModifyType());
+            duibaPointsModify.setModifyName(requestBean.getModifyName());
+            duibaPointsModify.setModifyReason(requestBean.getReason());
+            // 当前审批节点、默认0
+            duibaPointsModify.setFlowOrder(0);
+            // 审批状态：0待审批
+            duibaPointsModify.setStatus(0);
+            duibaPointsModify.setCreateBy(requestBean.getModifyId());
+            duibaPointsModify.setCreateTime(new Date());
+            duibaPointsModify.setUpdateBy(requestBean.getModifyId());
+            duibaPointsModify.setUpdateTime(new Date());
+            boolean re = this.duibaPointsService.insertPointsModifyList(duibaPointsModify);
+            if (!re) {
+                logger.error("数据插入过程中数据报错，userId：" + userId + ",调减积分数：" + requestBean.getModifyPoints() + ",当前用户积分数：" + user.getPointsCurrent());
+            }
         }
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }

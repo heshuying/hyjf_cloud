@@ -9,8 +9,14 @@ import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.admin.DuibaPointsVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @author PC-LIUSHOUYI
@@ -66,6 +72,49 @@ public class DuibaPointsModifyServiceImpl extends BaseServiceImpl implements Dui
      */
     @Override
     public boolean insertDuibaPoints(DuibaPointsRequest requestBean) {
-        return amMarketClient.insertDuibaPoints(requestBean);
+        Integer userId = requestBean.getUserIdList().get(0);
+        UserVO user = this.searchUserByUserId(userId);
+        if (null == user) {
+            logger.error("插入积分明细表获取用户信息失败，userId：" + userId);
+            return false;
+        }
+
+        UserInfoVO userInfo = this.findUsersInfoById(userId);
+        if (null == userInfo) {
+            logger.error("插入积分明细表获取用户详细信息失败，userId：" + userId);
+            return false;
+        }
+
+        DuibaPointsVO duibaPoints = new DuibaPointsVO();
+        duibaPoints.setUserId(userId);
+        duibaPoints.setUserName(user.getUsername());
+        duibaPoints.setTrueName(userInfo.getTruename());
+        duibaPoints.setPoints(requestBean.getModifyPoints());
+        duibaPoints.setTotal(user.getPointsCurrent());
+        // 调增
+        if (0 == requestBean.getModifyType()) {
+            duibaPoints.setBusinessName(3);
+            duibaPoints.setType(0);
+        } else {
+            duibaPoints.setBusinessName(4);
+            duibaPoints.setType(1);
+        }
+        duibaPoints.setHyOrderId(requestBean.getOrderId());
+        duibaPoints.setCreateBy(requestBean.getModifyId());
+        duibaPoints.setCreateTime(new Date());
+        duibaPoints.setUpdateBy(requestBean.getModifyId());
+        duibaPoints.setUpdateTime(new Date());
+        return amMarketClient.insertDuibaPoints(duibaPoints);
+    }
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public DuibaPointsModifyVO selectDuibaPointsModifyByOrdid(String orderId) {
+        return amMarketClient.selectDuibaPointsModifyByOrdid(orderId);
     }
 }

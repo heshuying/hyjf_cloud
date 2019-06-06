@@ -32,10 +32,10 @@ public interface DuibaPointsListService {
     /**
      * 插入明细表
      *
-     * @param request
+     * @param duibaPointsVO
      * @return
      */
-    boolean insertDuibaPoints(DuibaPointsRequest request);
+    boolean insertDuibaPoints(DuibaPointsVO duibaPointsVO);
 
     /**
      * 根据兑吧订单获取相关积分明细

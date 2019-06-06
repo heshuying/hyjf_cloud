@@ -10,11 +10,13 @@
         <result column="points" property="points" jdbcType="DECIMAL" />
         <result column="total" property="total" jdbcType="DECIMAL" />
         <result column="points_type" property="pointsType" jdbcType="TINYINT" />
+        <result column="pointsTypeStr" property="pointsTypeStr" jdbcType="VARCHAR" />
         <result column="modify_name" property="modifyName" jdbcType="VARCHAR" />
         <result column="review_name" property="reviewName" jdbcType="VARCHAR" />
         <result column="modify_reason" property="modifyReason" jdbcType="VARCHAR" />
         <result column="flow_order" property="flowOrder" jdbcType="INTEGER" />
         <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="statusStr" property="statusStr" jdbcType="VARCHAR" />
         <result column="remark" property="remark" jdbcType="VARCHAR" />
         <result column="create_by" property="createBy" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -31,7 +33,62 @@
     <select id="selectDuibaPointsModifyList" resultMap="DuibaPointsList"
             parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
         SELECT
-        <include refid="Base_Column_List"/>
+        hdpm.id,
+        hdpm.user_id,
+        hdpm.user_name,
+        hdpm.true_name,
+        hdpm.modify_order_id,
+        hdpm.points,
+        hdpm.total,
+        hdpm.points_type,
+        pn1.name as pointsTypeStr,
+        hdpm.modify_name,
+        hdpm.review_name,
+        hdpm.modify_reason,
+        hdpm.flow_order,
+        hdpm.`status`,
+        pn2.name as statusStr,
+        hdpm.remark,
+        hdpm.create_by,
+        hdpm.create_time,
+        hdpm.update_by,
+        hdpm.update_time
+        FROM
+        ht_duiba_points_modify hdpm
+        LEFT JOIN hyjf_config.ht_param_name pn1 ON hdpm.points_type = pn1.name_cd AND pn1.name_class = 'OPERATION_TYPE'
+        LEFT JOIN hyjf_config.ht_param_name pn2 ON hdpm.`status` = pn2.name_cd AND pn2.name_class = 'AUDIT_STATUS'
+        WHERE 1=1
+        <if test="userNameSrch != null and userNameSrch != ''">
+            AND hdpm.user_name = #{userNameSrch}
+        </if>
+        <if test="trueNameSrch != null and trueNameSrch != ''">
+            AND hdpm.true_name = #{trueNameSrch}
+        </if>
+        <if test="modifyNameSrch != null and modifyNameSrch != ''">
+            AND hdpm.modify_name = #{modifyNameSrch}
+        </if>
+        <if test="typeSrch != null">
+            AND hdpm.`points_type` = #{typeSrch}
+        </if>
+        <if test="statusSrch != null">
+            AND hdpm.`status` = #{statusSrch}
+        </if>
+        <if test="startDateSrch != null and startDateSrch != ''">
+            AND hdpm.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDateSrch},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="endDateSrch != null and endDateSrch != ''">
+            AND hdpm.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        ORDER BY hdpm.create_time desc
+        <if test="limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectDuibaPointsModifyCount" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
+        SELECT
+        count(1)
         FROM
         ht_duiba_points_modify hdpm
         WHERE 1=1
@@ -44,13 +101,10 @@
         <if test="modifyNameSrch != null and modifyNameSrch != ''">
             AND hdpm.modify_name = #{modifyNameSrch}
         </if>
-        <if test="businessNameSrch != null and businessNameSrch != ''">
-            AND hdpm.business_name = #{businessNameSrch}
+        <if test="typeSrch != null">
+            AND hdpm.`points_type` = #{typeSrch}
         </if>
-        <if test="typeSrch != null and typeSrch != ''">
-            AND hdpm.`type` = #{typeSrch}
-        </if>
-        <if test="statusSrch != null and statusSrch != ''">
+        <if test="statusSrch != null">
             AND hdpm.`status` = #{statusSrch}
         </if>
         <if test="startDateSrch != null and startDateSrch != ''">
@@ -58,36 +112,6 @@
         </if>
         <if test="endDateSrch != null and endDateSrch != ''">
             AND hdpm.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
-        </if>
-        <if test="limitStart >= 0">
-            LIMIT #{limitStart} , #{limitEnd}
-        </if>
-    </select>
-
-    <select id="selectDuibaPointsModifyCount" resultType="java.lang.Integer"
-            parameterType="com.hyjf.am.resquest.admin.DuibaPointsRequest">
-        SELECT
-        count(1)
-        FROM
-        ht_duiba_points hdp
-        WHERE 1=1
-        <if test="userNameSrch != null and userNameSrch != ''">
-            AND hdp.user_name = #{userNameSrch}
-        </if>
-        <if test="trueNameSrch != null and trueNameSrch != ''">
-            AND hdp.true_name = #{trueNameSrch}
-        </if>
-        <if test="businessNameSrch != null and businessNameSrch != ''">
-            AND hdp.business_name = #{businessNameSrch}
-        </if>
-        <if test="typeSrch != null and typeSrch != ''">
-            AND hdp.`type` = #{typeSrch}
-        </if>
-        <if test="startDateSrch != null and startDateSrch != ''">
-            AND hdp.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDateSrch},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
-        </if>
-        <if test="endDateSrch != null and endDateSrch != ''">
-            AND hdp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
     </select>
 </mapper>

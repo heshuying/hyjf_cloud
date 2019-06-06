@@ -4,6 +4,7 @@
 package com.hyjf.am.market.controller.admin.pointsshop.duiba.points;
 
 import com.hyjf.am.market.controller.admin.activity.ActivityController;
+import com.hyjf.am.market.dao.model.auto.DuibaPointsModify;
 import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsModifyService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
@@ -11,14 +12,15 @@ import com.hyjf.am.response.admin.DuibaPointsModifyResponse;
 import com.hyjf.am.resquest.admin.DuibaPointsRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.admin.DuibaPointsVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -73,15 +75,15 @@ public class DuibaPointsModifyController {
     /**
      * 插入积分审批表
      *
-     * @param request
+     * @param duibaPointsModifyVO
      * @return
      */
     @RequestMapping("/insertPointsModifyList")
-    public BooleanResponse insertPointsModifyList(@RequestBody DuibaPointsRequest request) {
+    public BooleanResponse insertPointsModifyList(@RequestBody DuibaPointsModifyVO duibaPointsModifyVO) {
         BooleanResponse response = new BooleanResponse();
         boolean result = false;
         try {
-            result = duibaPointsModifyService.insertPointsModifyList(request);
+            result = duibaPointsModifyService.insertPointsModifyList(duibaPointsModifyVO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,6 +107,30 @@ public class DuibaPointsModifyController {
             e.printStackTrace();
         }
         response.setResultBoolean(result);
+        return response;
+    }
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/selectDuibaPointsModifyByOrdid/{orderId}")
+    public DuibaPointsModifyResponse selectDuibaPointsModifyByOrdid(@PathVariable String orderId) {
+        DuibaPointsModifyResponse response = new DuibaPointsModifyResponse();
+        try {
+            DuibaPointsModify duibaPointsModify = duibaPointsModifyService.selectDuibaPointsModifyByOrdid(orderId);
+            if(null != duibaPointsModify) {
+                DuibaPointsModifyVO vo = CommonUtils.convertBean(duibaPointsModify, DuibaPointsModifyVO.class);
+                response.setResult(vo);
+                response.setRtn(Response.SUCCESS);
+                return response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.setRtn(Response.FAIL);
         return response;
     }
 }
