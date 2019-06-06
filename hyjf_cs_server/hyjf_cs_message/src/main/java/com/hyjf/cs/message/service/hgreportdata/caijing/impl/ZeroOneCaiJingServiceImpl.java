@@ -49,56 +49,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     @Autowired
     private AmUserClient amUserClient;
 
-    /**
-     * 借款记录接口报送
-     */
-    @Override
-    public void investRecordSub(){
-        logger.info("借款记录接口报送开始");
-//        String date = "2019-02-02";
-        String date = "2018-4-24";
-
-        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
-
-        if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
-            logger.info("借款记录接口无数据报送结束");
-            return;
-        }
-        logger.info("借款记录接口报送条数="+zeroOneDataVOList.size());
-
-        Set<Integer> listUserId = new HashSet<>();
-        for(ZeroOneDataVO voList : zeroOneDataVOList){
-            listUserId.add(voList.getUserIds());
-        }
-
-        Map<Integer,String> mapUserId =queryCustomerId(listUserId);
-        if(mapUserId == null || mapUserId.size() == 0){
-            logger.info("借款记录接口报送结束,报送用户id为空");
-            return;
-        }
-
-        for(ZeroOneDataVO voList : zeroOneDataVOList){
-            if(mapUserId.get(voList.getUserIds()) != null){
-                voList.setUsername(mapUserId.get(voList.getUserIds()));
-                voList.setUserid(mapUserId.get(voList.getUserIds()));
-            }else{
-                logger.info("借款记录接口报送 当前用户编号为空,userId="+voList.getUserIds());
-                voList.setUserid(null);
-                voList.setUsername(null);
-            }
-
-        }
-
-        List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
-
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),String.valueOf(JSONObject.toJSON(list)));
-        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
-            //报送成功
-            logger.info("借款记录接口报送成功");
-        }
-        logger.info("借款记录接口报送结束");
-    }
-
 
     /**
      * 借款记录接口报送
@@ -109,8 +59,10 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
-        String dateStart = GetDate.getDayStart(yesterday);
-        String dateEnd = GetDate.getDayEnd(yesterday);
+//        String dateStart = GetDate.getDayStart(yesterday);
+//        String dateEnd = GetDate.getDayEnd(yesterday);
+        String dateStart = "2018-4-24";
+        String dateEnd = "2018-4-24";
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
@@ -133,13 +85,88 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             voList.setUsername(customerCAId);
             voList.setUserid(customerCAId);
         }
-        ZeroOneResponse zeroOneResponse = sendDataReport("borrow", String.valueOf(JSONObject.toJSON(borrowDataVOList)));
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), String.valueOf(JSONObject.toJSON(borrowDataVOList)));
         if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("出借记录接口报送成功");
             presentationLog.setStatus(1);
         }
         logger.info("出借记录接口报送结束");
+    }
+
+    /**
+     * 投资记录接口报送
+     */
+    @Override
+    public void investRecordSub(){
+        logger.info("投资记录接口报送开始");
+//        String date = "2019-02-02";
+        String date = "2018-4-24";
+
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
+
+        if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
+            logger.info("投资记录接口无数据报送结束");
+            return;
+        }
+        logger.info("投资记录接口报送条数="+zeroOneDataVOList.size());
+
+        Set<Integer> listUserId = new HashSet<>();
+        for(ZeroOneDataVO voList : zeroOneDataVOList){
+            listUserId.add(voList.getUserIds());
+        }
+
+        Map<Integer,String> mapUserId =queryCustomerId(listUserId);
+        if(mapUserId == null || mapUserId.size() == 0){
+            logger.info("投资记录接口报送结束,报送用户id为空");
+            return;
+        }
+
+        for(ZeroOneDataVO voList : zeroOneDataVOList){
+            if(mapUserId.get(voList.getUserIds()) != null){
+                voList.setUsername(mapUserId.get(voList.getUserIds()));
+                voList.setUserid(mapUserId.get(voList.getUserIds()));
+            }else{
+                logger.info("投资记录接口报送 当前用户编号为空,userId="+voList.getUserIds());
+                voList.setUserid(null);
+                voList.setUsername(null);
+            }
+
+        }
+
+        List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
+
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),String.valueOf(JSONObject.toJSON(list)));
+        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
+            //报送成功
+            logger.info("投资记录接口报送成功");
+        }
+        logger.info("投资记录接口报送结束");
+    }
+
+    /**
+     * 提前还款接口报送
+     */
+    @Override
+    public void advancedRepay() {
+        logger.info("提前还款接口报送开始");
+        String startdate = "2019-05-07";
+        String enddate = "2019-05-09";
+
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startdate, enddate);
+
+        if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
+            logger.info("提前还款接口无数据报送结束");
+            return;
+        }
+        List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
+
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(),String.valueOf(JSONObject.toJSON(list)));
+        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
+            //报送成功
+            logger.info("提前还款接口报送成功");
+        }
+        logger.info("提前还款接口报送结束");
     }
 
     /**
@@ -215,31 +242,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             }
         }
         return null;
-    }
-
-    /**
-     * 提前还款接口报送
-     */
-    @Override
-    public void advancedRepay() {
-        logger.info("提前还款接口报送开始");
-        String startdate = "2019-05-07";
-        String enddate = "2019-05-09";
-
-        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startdate, enddate);
-
-        if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
-            logger.info("提前还款接口无数据报送结束");
-            return;
-        }
-        List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
-
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(),String.valueOf(JSONObject.toJSON(list)));
-        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
-            //报送成功
-            logger.info("提前还款接口报送成功");
-        }
-        logger.info("提前还款接口报送结束");
     }
 
     /**
