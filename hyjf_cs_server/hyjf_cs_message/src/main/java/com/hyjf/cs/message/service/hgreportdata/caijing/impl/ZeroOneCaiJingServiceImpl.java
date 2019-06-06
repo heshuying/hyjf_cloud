@@ -1,20 +1,30 @@
 package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
+import com.hyjf.am.vo.user.LoanSubjectCertificateAuthorityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.ZeroOneCaiJingEnum;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneResponse;
 import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.service.hgreportdata.caijing.ZeroOneCaiJingService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,6 +243,35 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     }
 
     /**
+     * 获取借款主体为企业的CA认证客户编号
+     *
+     * @param borrowUsers
+     * @return
+     */
+    private String getCACustomerID(BorrowUserVO borrowUsers) {
+        CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+        request.setTrueName(borrowUsers.getUsername());
+        request.setIdNo(borrowUsers.getSocialCreditCode());
+        request.setIdType(1);
+        List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
+        if (list != null && list.size() > 0) {
+            return list.get(0).getCustomerId();
+        }
+        // 借款主体CA认证记录表
+        LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
+        request1.setName(borrowUsers.getUsername());
+        request1.setIdType(1);
+        request1.setIdNo(borrowUsers.getSocialCreditCode());
+        List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
+                .getLoanSubjectCertificateAuthorityList(request1);
+
+        if (resultList != null && resultList.size() > 0) {
+            return resultList.get(0).getCustomerId();
+        }
+        return null;
+    }
+
+    /**
      * 获得用户编号
      * @param userId
      * @return
@@ -297,5 +336,34 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
 
         return zeroOneResponse;
+    }
+
+    /**
+     * 获取借款主体为个人的CA认证客户编号
+     *
+     * @param borrowManinfo
+     * @return
+     */
+    private String getPersonCACustomerID(BorrowManinfoVO borrowManinfo) {
+        // 用户CA认证记录表
+        CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+        request.setTrueName(borrowManinfo.getName());
+        request.setIdNo(borrowManinfo.getCardNo());
+        request.setIdType(0);
+        List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
+        if (list != null && list.size() > 0) {
+            return list.get(0).getCustomerId();
+        }
+        // 借款主体CA认证记录表
+        LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
+        request1.setName(borrowManinfo.getName());
+        request1.setIdType(0);
+        request1.setIdNo(borrowManinfo.getCardNo());
+        List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
+                .getLoanSubjectCertificateAuthorityList(request1);
+        if (resultList != null && resultList.size() > 0) {
+            return resultList.get(0).getCustomerId();
+        }
+        return null;
     }
 }
