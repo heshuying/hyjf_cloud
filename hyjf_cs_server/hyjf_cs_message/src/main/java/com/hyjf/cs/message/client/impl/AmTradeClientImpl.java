@@ -249,7 +249,17 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate) {
-		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getBorrowUserInfo/"+startDate+"/"+endDate;
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getInvestRecordSub/"+startDate+"/"+endDate;
+		ZeroOneCaiJingResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<ZeroOneDataVO> queryAdvancedRepay(String startDate, String endDate) {
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getAdvancedRepay/"+startDate+"/"+endDate;
 		ZeroOneCaiJingResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();

@@ -36,7 +36,7 @@ public class ZeroOneCaiJingDataController {
      * @param searchEndDate
      * @return
      */
-    @GetMapping("/getBorrowUserInfo/{searchStartDate}/{searchEndDate}")
+    @GetMapping("/getInvestRecordSub/{searchStartDate}/{searchEndDate}")
     public ZeroOneCaiJingResponse queryInvestRecordSub(@PathVariable String searchStartDate,@PathVariable String searchEndDate){
         ZeroOneCaiJingResponse response = new ZeroOneCaiJingResponse();
 
@@ -49,6 +49,31 @@ public class ZeroOneCaiJingDataController {
         map.put("searchEndDate",searchEndDate);
 
         List<ZeroOneDataVO> list = caiJingDataService.queryInvestRecordSub(map);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
+    /**
+     * 查询指定日期的出借记录
+     * @param searchStartDate
+     * @param searchEndDate
+     * @return
+     */
+    @GetMapping("/getAdvancedRepay/{searchStartDate}/{searchEndDate}")
+    public ZeroOneCaiJingResponse queryAdvancedRepaySub(@PathVariable String searchStartDate,@PathVariable String searchEndDate){
+        ZeroOneCaiJingResponse response = new ZeroOneCaiJingResponse();
+
+        if(StringUtils.isBlank(searchStartDate) || StringUtils.isBlank(searchEndDate)){
+            response.setRtn(Response.ERROR);
+            return response;
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("searchStartDate",searchStartDate);
+        map.put("searchEndDate",searchEndDate);
+
+        List<ZeroOneDataVO> list = caiJingDataService.queryAdvancedRepaySub(map);
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }

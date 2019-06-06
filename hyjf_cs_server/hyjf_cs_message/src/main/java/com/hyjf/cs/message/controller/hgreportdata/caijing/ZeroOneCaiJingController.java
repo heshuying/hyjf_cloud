@@ -27,8 +27,9 @@ public class ZeroOneCaiJingController {
     public void investRecordSub(){
 
         // 出借记录报送
-        zeroOneCaiJingService.investRecordSub();
-
+//        zeroOneCaiJingService.investRecordSub();
+        // 提前还款报送
+        zeroOneCaiJingService.advancedRepay();
     }
 
     /**

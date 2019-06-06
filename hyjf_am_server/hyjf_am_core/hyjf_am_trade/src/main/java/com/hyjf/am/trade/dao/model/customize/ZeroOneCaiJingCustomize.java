@@ -25,6 +25,12 @@ public class ZeroOneCaiJingCustomize {
     private String createTime;
     //标示是投资还是债转
     private String flag;
+    //冻结订单号
+    private String freezeOrderId;
+    //实际借款天数
+    private String spentday;
+    //还款日期
+    private String repayTime;
 
     public String getNid() {
         return nid;
@@ -80,5 +86,29 @@ public class ZeroOneCaiJingCustomize {
 
     public void setUserIds(Integer userIds) {
         this.userIds = userIds;
+    }
+
+    public String getFreezeOrderId() {
+        return freezeOrderId;
+    }
+
+    public void setFreezeOrderId(String freezeOrderId) {
+        this.freezeOrderId = freezeOrderId;
+    }
+
+    public String getSpentday() {
+        return spentday;
+    }
+
+    public void setSpentday(String spentday) {
+        this.spentday = spentday;
+    }
+
+    public String getRepayTime() {
+        return repayTime;
+    }
+
+    public void setRepayTime(String repayTime) {
+        this.repayTime = repayTime;
     }
 }

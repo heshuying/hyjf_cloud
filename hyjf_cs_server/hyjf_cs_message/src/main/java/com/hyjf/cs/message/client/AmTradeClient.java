@@ -157,4 +157,6 @@ public interface AmTradeClient {
 	List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate);
 
     List<ZeroOneBorrowDataVO> queryBorrowRecordSub(String dateStart, String dateEnd);
+
+	List<ZeroOneDataVO> queryAdvancedRepay(String startDate, String endDate);
 }

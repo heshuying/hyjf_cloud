@@ -15,4 +15,11 @@ public interface ZeroOneCustomizeMapper {
      */
     List<ZeroOneCaiJingCustomize> queryInvestRecordSub(Map<String,Object> map);
 
+    /**
+     * 查找提前还款记录
+     * @param map
+     * @return
+     */
+    List<ZeroOneCaiJingCustomize> queryAdvancedRepaySub(Map<String,Object> map);
+
 }

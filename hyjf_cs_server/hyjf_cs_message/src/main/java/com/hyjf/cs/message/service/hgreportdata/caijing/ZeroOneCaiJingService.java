@@ -20,4 +20,9 @@ public interface ZeroOneCaiJingService {
      * 借款记录报送接口
      */
     void borrowRecordSub();
+    /**
+     * 提前还款接口报送
+     */
+    void advancedRepay();
+
 }

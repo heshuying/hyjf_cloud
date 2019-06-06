@@ -38,7 +38,14 @@ public class ZeroOneDataVO implements Serializable {
     //出借来源
     private String bid_source;
 
-    private String borrow_period;
+    //冻结订单号
+    private String repay_id;
+    //实际借款天数
+    private String actual_period;
+    //还款日期
+    private String advanced_time;
+    //提前还款总额
+    private BigDecimal advanced_amount;
 
     public String getInvest_id() {
         return invest_id;
@@ -128,19 +135,43 @@ public class ZeroOneDataVO implements Serializable {
         this.bid_source = bid_source;
     }
 
-    public String getBorrow_period() {
-        return borrow_period;
-    }
-
-    public void setBorrow_period(String borrow_period) {
-        this.borrow_period = borrow_period;
-    }
-
     public Integer getUserIds() {
         return userIds;
     }
 
     public void setUserIds(Integer userIds) {
         this.userIds = userIds;
+    }
+
+    public String getRepay_id() {
+        return repay_id;
+    }
+
+    public void setRepay_id(String repay_id) {
+        this.repay_id = repay_id;
+    }
+
+    public String getActual_period() {
+        return actual_period;
+    }
+
+    public void setActual_period(String actual_period) {
+        this.actual_period = actual_period;
+    }
+
+    public String getAdvanced_time() {
+        return advanced_time;
+    }
+
+    public void setAdvanced_time(String advanced_time) {
+        this.advanced_time = advanced_time;
+    }
+
+    public BigDecimal getAdvanced_amount() {
+        return advanced_amount;
+    }
+
+    public void setAdvanced_amount(BigDecimal advanced_amount) {
+        this.advanced_amount = advanced_amount;
     }
 }
