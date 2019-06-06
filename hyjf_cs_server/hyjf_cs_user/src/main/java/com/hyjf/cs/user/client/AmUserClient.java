@@ -13,6 +13,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 
 import java.util.List;
 
@@ -648,4 +649,11 @@ public interface AmUserClient {
 	 * @param userId
 	 */
 	void unlockUser(Integer userId);
+
+	/**
+	 * 积分商城 兑吧扣积分接口回调
+	 * @param consumeParams
+	 * @return
+	 */
+	CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams);
 }
