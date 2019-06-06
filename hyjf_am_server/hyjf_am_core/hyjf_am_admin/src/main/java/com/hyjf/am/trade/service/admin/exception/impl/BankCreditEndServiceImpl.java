@@ -286,6 +286,11 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         return this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
     }
 
+    /**
+     * 保存结束债权记录
+     * @param requestBean
+     * @return
+     */
     @Override
     public int insertStartCreditEnd(StartCreditEndRequest requestBean) {
 

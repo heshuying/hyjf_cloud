@@ -14,6 +14,7 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -21,6 +22,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -498,7 +500,28 @@ public class AdminBorrowCreditTenderController extends BaseController {
         return result;
     }
 
+    @ApiOperation(value = "结束债权", notes = "结束债权")
+    @GetMapping("/creditEnd/{orderId}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+    @ResponseBody
+    public Object creditEnd(@PathVariable String orderId){
+        AdminResult result = new AdminResult();
+        logger.info("【结束债权】orderId:" + orderId);
+        if(StringUtils.isBlank(orderId)){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc("请求参数错误");
+            return result;
+        }
 
+        IntegerResponse saveResponse = borrowCreditTenderService.doCreditEnd(orderId);
+        if(saveResponse == null || saveResponse.getResultInt() <= 0){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc("结束债权保存失败");
+            return result;
+        }
+
+        return result;
+    }
 
 
 

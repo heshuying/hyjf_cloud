@@ -5,6 +5,7 @@ import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 
@@ -77,4 +78,6 @@ public interface BorrowCreditTenderService {
      * @return
      */
     AdminCreditTenderResponse getCreditTenderResponse(BorrowCreditTenderRequest request);
+
+    IntegerResponse doCreditEnd(String orderId);
 }
