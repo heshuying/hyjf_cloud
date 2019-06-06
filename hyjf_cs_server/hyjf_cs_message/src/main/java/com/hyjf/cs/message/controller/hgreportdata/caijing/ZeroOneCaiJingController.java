@@ -31,4 +31,13 @@ public class ZeroOneCaiJingController {
         // 提前还款报送
         zeroOneCaiJingService.advancedRepay();
     }
+
+    /**
+     * 借款记录报送
+     */
+    @RequestMapping("/borrowRecordSub")
+    public void borrowRecordSub() {
+        //借款记录报送
+        zeroOneCaiJingService.borrowRecordSub();
+    }
 }

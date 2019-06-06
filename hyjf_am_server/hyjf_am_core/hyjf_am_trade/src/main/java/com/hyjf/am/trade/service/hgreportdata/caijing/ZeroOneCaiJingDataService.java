@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.hgreportdata.caijing;
 
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface ZeroOneCaiJingDataService {
      */
     List<ZeroOneDataVO> queryAdvancedRepaySub(Map<String,Object> map);
 
+    /**
+     * 查询指定日期的借款记录
+     * @param map
+     * @return
+     */
+    List<ZeroOneBorrowDataVO> queryBorrowRecordSub(Map<String, Object> map);
 }

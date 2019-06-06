@@ -12,10 +12,14 @@ import java.util.List;
 public interface ZeroOneCaiJingService {
 
     /**
-     * 借款记录接口报送
+     * 出借记录报送接口
      */
     void investRecordSub();
 
+    /**
+     * 借款记录报送接口
+     */
+    void borrowRecordSub();
     /**
      * 提前还款接口报送
      */

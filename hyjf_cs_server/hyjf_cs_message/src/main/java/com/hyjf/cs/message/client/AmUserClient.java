@@ -3,6 +3,8 @@ package com.hyjf.cs.message.client;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
@@ -175,4 +177,10 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<CertificateAuthorityVO> queryCustomerId(Set<Integer> request);
+
+    CertificateAuthorityVO selectCertificateAuthorityByUserId(String s);
+
+	List<CertificateAuthorityVO> getCertificateAuthorityList(CertificateAuthorityRequest request);
+
+	List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1);
 }

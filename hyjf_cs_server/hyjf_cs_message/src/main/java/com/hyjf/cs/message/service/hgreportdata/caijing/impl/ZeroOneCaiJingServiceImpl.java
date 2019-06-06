@@ -1,12 +1,15 @@
 package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.common.enums.ZeroOneCaiJingEnum;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneResponse;
 import com.hyjf.cs.message.client.AmTradeClient;
@@ -16,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import java.util.*;
 
 /**
@@ -82,6 +87,124 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("借款记录接口报送成功");
         }
         logger.info("借款记录接口报送结束");
+    }
+
+
+    /**
+     * 借款记录接口报送
+     */
+    @Override
+    public void borrowRecordSub() {
+        logger.info("借款记录接口报送开始");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        String yesterday = GetDate.date_sdf.format(cal.getTime());
+        String dateStart = GetDate.getDayStart(yesterday);
+        String dateEnd = GetDate.getDayEnd(yesterday);
+        logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
+        List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType("借款记录");
+        presentationLog.setCount(borrowDataVOList.size());
+        presentationLog.setPresentationTime(GetDate.getNowTime10());
+        presentationLog.setCreateTime(GetDate.getNowTime10());
+        if (!CollectionUtils.isEmpty(borrowDataVOList)) {
+            logger.info("借款记录接口报送数据为空");
+            return;
+        }
+        logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
+
+        for (ZeroOneBorrowDataVO voList : borrowDataVOList) {
+            String customerCAId = queryCustomerCAId(voList.getId());
+            if (customerCAId == null) {
+                logger.info("借款记录接口报送,报送标的编号" + voList.getId() + "的借款用户编号为空");
+                return;
+            }
+            voList.setUsername(customerCAId);
+            voList.setUserid(customerCAId);
+        }
+        ZeroOneResponse zeroOneResponse = sendDataReport("borrow", String.valueOf(JSONObject.toJSON(borrowDataVOList)));
+        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
+            //报送成功
+            logger.info("出借记录接口报送成功");
+            presentationLog.setStatus(1);
+        }
+        logger.info("出借记录接口报送结束");
+    }
+
+    /**
+     * 获取借款用户编号
+     *
+     * @param borrowNid
+     * @return
+     */
+    private String queryCustomerCAId(String borrowNid) {
+        // 借款方CA认证客户编号
+        String borrowerCustomerID = null;
+        // 借款详情
+        BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
+        if (borrow != null) {
+            String planNid = borrow.getPlanNid();
+            if (StringUtils.isNotBlank(planNid)) {
+                // 借款人用户ID
+                Integer borrowUserId = borrow.getUserId();
+                // 借款人用户信息
+                UserVO borrowUser = this.amUserClient.findUserById(borrowUserId);
+                if (borrowUser == null) {
+                    logger.error("根据借款人用户ID,查询借款人信息失败,借款人用户ID:[" + borrowUserId + "].");
+                    throw new RuntimeException("根据借款人用户ID,查询借款人信息失败,借款人用户ID:[" + borrowUserId + "].");
+                }
+
+                // 借款人用户详情信息
+                UserInfoVO borrowUserInfo = this.amUserClient.findUsersInfoById(borrowUserId);
+                if (borrowUserInfo == null) {
+                    logger.error("根据借款人用户ID,查询借款人详情信息失败,借款人用户ID:[" + borrowUserId + "].");
+                    throw new RuntimeException("根据借款人用户ID,查询借款人详情信息失败,借款人用户ID:[" + borrowUserId + "].");
+                }
+                CertificateAuthorityVO certificateAuthorityVO = this.amUserClient
+                        .selectCertificateAuthorityByUserId(String.valueOf(borrowUserId));
+                if (Validator.isNotNull(certificateAuthorityVO)) {
+                    borrowerCustomerID = certificateAuthorityVO.getCustomerId();
+                    return borrowerCustomerID;
+                }
+            } else {
+                if (StringUtils.isNotEmpty(borrow.getCompanyOrPersonal()) && "1".equals(borrow.getCompanyOrPersonal())) {
+                    // 借款主体为企业借款
+                    BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
+                    if (borrowUsers == null) {
+                        logger.error("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
+                        throw new RuntimeException("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
+                    }
+                    // 获取CA认证客户编号
+                    borrowerCustomerID = this.getCACustomerID(borrowUsers);
+                    if (StringUtils.isBlank(borrowerCustomerID)) {
+                        logger.error("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
+                                + borrowUsers.getSocialCreditCode() + "].");
+                        throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
+                                + borrowUsers.getSocialCreditCode() + "].");
+                    }
+                    return borrowerCustomerID;
+                } else if (StringUtils.isNotEmpty(borrow.getCompanyOrPersonal()) && "2".equals(borrow.getCompanyOrPersonal())) {
+                    // 借款主体为个人借款
+                    BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
+                    if (borrowManinfo == null) {
+                        logger.error("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
+                        throw new RuntimeException("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
+                    }
+                    // 获取CA认证客户编号
+                    borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
+                    logger.info("获得借款人认证编号：" + borrowerCustomerID);
+                    if (StringUtils.isBlank(borrowerCustomerID)) {
+                        logger.error("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
+                                + borrowManinfo.getCardNo() + "].");
+                        throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
+                                + borrowManinfo.getCardNo() + "].");
+                    }
+                    return borrowerCustomerID;
+                }
+            }
+        }
+        return null;
     }
 
     /**

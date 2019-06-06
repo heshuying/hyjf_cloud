@@ -5,15 +5,20 @@ import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingBorrowResponse;
 import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
@@ -262,6 +267,46 @@ public class AmTradeClientImpl implements AmTradeClient {
 		ZeroOneCaiJingResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
+    public List<ZeroOneBorrowDataVO> queryBorrowRecordSub(String dateStart, String dateEnd) {
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getBorrowDataInfo/" + dateStart + "/" + dateEnd;
+		ZeroOneCaiJingBorrowResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingBorrowResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+    }
+
+	@Override
+	public BorrowAndInfoVO getBorrowByNid(String borrowId) {
+		String url = "http://AM-TRADE/am-trade/borrow/getBorrowByNid/"+borrowId;
+		BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public BorrowUserVO getBorrowUser(String borrowNid) {
+		BorrowUserResponse response = restTemplate.getForEntity(
+				"http://AM-TRADE/am-trade/borrow/borrowUserInfo/" + borrowNid,
+				BorrowUserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public BorrowManinfoVO getBorrowManinfo(String borrowNid) {
+		BorrowManinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowManinfo/" + borrowNid ,BorrowManinfoResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResult();
 		}
 		return null;
 	}
