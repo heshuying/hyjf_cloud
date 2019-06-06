@@ -99,6 +99,7 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
+        AND hdp.product_type <![CDATA[<>]]> '0'
       </if>
       <if test="orderTypeTab == '2'">
         AND hdp.product_type = '0'
@@ -167,6 +168,7 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
+        AND hdp.product_type <![CDATA[<>]]> '0'
       </if>
       <if test="orderTypeTab == '2'">
         AND hdp.product_type = '0'
