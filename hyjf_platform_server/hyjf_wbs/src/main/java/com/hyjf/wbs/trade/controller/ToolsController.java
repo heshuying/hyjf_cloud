@@ -43,10 +43,10 @@ public class ToolsController {
     private  static  WbsConfig wbsConfig;
     @ResponseBody
     @RequestMapping(value = "/createsign/{page}", method = RequestMethod.GET)
-    public Object repayAction(@PathVariable String page) {
+    public Object repayAction(@PathVariable String page,@PathVariable String endId) {
 
         Map<String, Object> jsonMap = new HashMap<String, Object>();
-        jsonMap.put("entId", "8001");
+        jsonMap.put("entId", endId);
         jsonMap.put("currentPage", page);
 
 
