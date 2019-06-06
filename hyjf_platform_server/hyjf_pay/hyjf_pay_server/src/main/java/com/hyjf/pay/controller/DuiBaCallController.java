@@ -122,7 +122,7 @@ public class DuiBaCallController extends BaseController {
 	public String exchangeResult(HttpServletRequest request) {
 		logger.info("兑吧兑换结果通知接口开始");
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
-
+		String status = "success";
 		try {
 			CreditNotifyParams params = tool.parseCreditNotify(request);
 			logger.info("兑吧兑换结果通知接口，兑吧订单号：{}", params.getOrderNum());
@@ -134,21 +134,26 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
-
 			if (params.isSuccess()) {
-				// 兑换成功
-			} else {
-				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
-
-				// 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
-				String status = "success";
+				// 兑换成功（更新优惠卷为有效）
 				// 传兑吧订单号
-				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum();
+				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/success/" + params.getOrderNum();
+				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
+				if (couponUserStr != null) {
+					if(!status.equals(couponUserStr)){
+						// 更新优惠卷为有效处理失败
+						logger.error("更新优惠卷为有效处理失败！orderNum：" + params.getOrderNum());
+					}
+				}
+			} else {
+				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息（更新虚拟商品充值状态处理中（异常码））
+				// 传兑吧订单号
+				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum() + "/" + params.getErrorMessage();
 				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
 						// 回滚失败
-						logger.error("订单回滚失败失败！orderNum："+params.getOrderNum());
+						logger.error("订单回滚失败失败！orderNum：" + params.getOrderNum());
 					}
 				}
 			}
@@ -198,7 +203,7 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getDevelopBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
-			// todo wangjun 业务处理
+			// 操作处理状态常量
 			status = "success";
 			releaseCouponsType = "error";
 			// 发放优惠卷， 传兑吧订单号
@@ -207,6 +212,8 @@ public class DuiBaCallController extends BaseController {
 			if (couponUserStr != null) {
 				// 优惠卷成功或异常处理
 				if(releaseCouponsType.equals(couponUserStr)){
+				    // 处理中（process），暂时没有处理中状态返回因为没有异步处理
+
 					// 发放失败
                     status = "fail";
                     logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
@@ -215,6 +222,7 @@ public class DuiBaCallController extends BaseController {
 				}
 			}
 		} catch (Exception e) {
+            // 发放失败
 			status = "fail";
 			errorMessage = e.getMessage();
 			logger.error("兑吧兑换结果通知接口发生错误：", e);

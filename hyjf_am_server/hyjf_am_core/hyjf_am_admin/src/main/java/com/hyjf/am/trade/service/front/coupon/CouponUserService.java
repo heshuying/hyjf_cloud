@@ -72,4 +72,5 @@ public interface CouponUserService {
 
     Integer auditRecord(AdminCouponUserRequestBean couponUserRequestBean);
 
+    int updateCouponUserDelFlag(CouponUserRequest request);
 }

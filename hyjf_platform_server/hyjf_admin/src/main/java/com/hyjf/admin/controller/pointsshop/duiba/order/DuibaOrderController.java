@@ -137,12 +137,13 @@ public class DuibaOrderController extends BaseController {
         logger.info("调用同步接口start,orderId:{}", orderId);
         AdminResult adminResult = new AdminResult();
         JSONObject data = new JSONObject();
+        String flag = "success";
         String retMsg = duibaOrderListService.synchronization(orderId);
-        if (org.apache.commons.lang3.StringUtils.isNotEmpty(retMsg)) {
+        if (flag.equals(retMsg)) {
+            adminResult.setStatus("同步成功！");
+        } else {
             data.put("error", retMsg);
             adminResult.setStatus("同步失败！");
-        } else {
-            adminResult.setStatus("同步成功！");
         }
         adminResult.setData(data);
         return adminResult;

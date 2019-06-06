@@ -99,9 +99,10 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
+        AND hdp.product_type <![CDATA[<>]]> '0'
       </if>
       <if test="orderTypeTab == '2'">
-        AND hdp.delivery_status IS NOT NULL
+        AND hdp.product_type = '0'
       </if>
     </if>
     <if test="limitStart >= 0">
@@ -167,9 +168,10 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test="orderTypeTab == '3'">
         AND hdp.recharge_state IS NOT NULL
+        AND hdp.product_type <![CDATA[<>]]> '0'
       </if>
       <if test="orderTypeTab == '2'">
-        AND hdp.delivery_status IS NOT NULL
+        AND hdp.product_type = '0'
       </if>
     </if>
   </select>
@@ -180,7 +182,6 @@
     FROM
     ht_duiba_orders hdp
     WHERE id = #{id,jdbcType=INTEGER}
-    AND hdp.activation_type = 0
   </select>
 
   <select id="selectOrderByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -189,7 +190,6 @@
     FROM
     ht_duiba_orders hdp
     WHERE hdp.duiba_order_id = #{duibaOrderId,jdbcType=VARCHAR}
-    AND hdp.activation_type = 0
   </select>
 
   <update id="updateOneOrderByPrimaryKey" parameterType="com.hyjf.am.vo.admin.DuibaOrderVO" >

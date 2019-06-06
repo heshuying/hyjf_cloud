@@ -13,7 +13,7 @@
         SELECT
         hu.user_id,
         hu.username AS user_name,
-        hui.truename AS real_name,
+        hui.truename AS true_name,
         hu.points_total,
         hu.points_current
         FROM
@@ -24,7 +24,7 @@
             AND hu.username = #{userNameSrch}
         </if>
         <if test="trueNameSrch != null and trueNameSrch != ''">
-            AND hu.username = #{trueNameSrch}
+            AND hui.truename = #{trueNameSrch}
         </if>
         <if test="limitStart >= 0">
             LIMIT #{limitStart} , #{limitEnd}
@@ -43,7 +43,7 @@
             AND hu.username = #{userNameSrch}
         </if>
         <if test="trueNameSrch != null and trueNameSrch != ''">
-            AND hu.username = #{trueNameSrch}
+            AND hui.truename = #{trueNameSrch}
         </if>
     </select>
 
