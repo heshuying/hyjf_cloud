@@ -113,6 +113,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
 
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType("出借记录");
+        presentationLog.setCount(zeroOneDataVOList.size());
         if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
             logger.info("投资记录接口无数据报送结束");
             return;
@@ -148,7 +151,14 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
             //报送成功
             logger.info("投资记录接口报送成功");
+            presentationLog.setStatus(1);
+            presentationLog.setDescription("");
+        } else {
+            presentationLog.setStatus(0);
+            presentationLog.setDescription(zeroOneResponse.result_msg);
         }
+        //插入mongo表
+        this.presentationLogService.insertLog(presentationLog);
         logger.info("投资记录接口报送结束");
     }
 
@@ -163,6 +173,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startdate, enddate);
 
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType("提前还款");
+        presentationLog.setCount(zeroOneDataVOList.size());
         if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("提前还款接口无数据报送结束");
             return;
@@ -173,7 +186,14 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
             //报送成功
             logger.info("提前还款接口报送成功");
+            presentationLog.setStatus(1);
+            presentationLog.setDescription("");
+        } else {
+            presentationLog.setStatus(0);
+            presentationLog.setDescription(zeroOneResponse.result_msg);
         }
+        //插入mongo表
+        this.presentationLogService.insertLog(presentationLog);
         logger.info("提前还款接口报送结束");
     }
 
