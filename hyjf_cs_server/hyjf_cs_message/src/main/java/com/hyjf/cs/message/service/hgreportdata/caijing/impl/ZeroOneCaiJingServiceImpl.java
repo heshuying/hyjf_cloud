@@ -109,6 +109,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         if (borrowDataVOList == null || borrowDataVOList.size() == 0) {
+            logger.info("借款记录接口报送数据为空");
             return;
         }
         logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
