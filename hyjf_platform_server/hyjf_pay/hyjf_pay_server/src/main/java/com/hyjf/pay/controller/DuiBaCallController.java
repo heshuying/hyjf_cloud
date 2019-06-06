@@ -185,7 +185,7 @@ public class DuiBaCallController extends BaseController {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000") }, threadPoolProperties = {
 					@HystrixProperty(name = "coreSize", value = "200"),
 					@HystrixProperty(name = "maxQueueSize", value = "50") })
-	public String recharge(HttpServletRequest request) {
+	public VirtualResult recharge(HttpServletRequest request) {
 		logger.info("兑吧自有商品充值接口开始");
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
 		String status = "";
@@ -236,7 +236,7 @@ public class DuiBaCallController extends BaseController {
 		result.setErrorMessage(errorMessage);
 		result.setSupplierBizId(GetOrderIdUtils.getSeqNo(6));
 		result.setCredits(credits);
-		return "ok";
+		return result;
 	}
 
 	/**
