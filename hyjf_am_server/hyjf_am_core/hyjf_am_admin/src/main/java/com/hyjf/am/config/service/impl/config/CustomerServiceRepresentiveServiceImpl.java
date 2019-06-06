@@ -188,7 +188,7 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
 		CustomerServiceRepresentiveConfigExample example=new CustomerServiceRepresentiveConfigExample();
 		example.or().andUserNameEqualTo(username);
 		 List<CustomerServiceRepresentiveConfig> list = customerServiceRepresentiveConfigMapper.selectByExample(example);
-		if(list != null && !list.isEmpty()) {
+		if(list != null && !(list.size()==0)) {
 			return null;
 		}
 		return list.get(0);

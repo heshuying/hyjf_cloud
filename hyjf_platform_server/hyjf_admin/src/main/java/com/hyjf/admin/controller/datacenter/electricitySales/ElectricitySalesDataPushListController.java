@@ -70,7 +70,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
     @ApiOperation(value = "list查询",notes = "list查询")
     @PostMapping(value = "/electricitySalesDataPushList")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
-    public AdminResult<ElectricitySalesDataPushListResponse> searchModifyInfoList(@RequestBody ElectricitySalesDataPushListRequest request){
+    public AdminResult<ElectricitySalesDataPushListResponse> electricitySalesDataPushList(@RequestBody ElectricitySalesDataPushListRequest request){
         return new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.searchList(request));
     }
     /**

@@ -30,23 +30,40 @@ public class ElectricitySalesDataPushListServiceImpl  implements ElectricitySale
 		ElectricitySalesDataPushListExample electricitySalesDataPushListExample=new ElectricitySalesDataPushListExample();
 		electricitySalesDataPushListExample.setOrderByClause("create_time desc");
 		Criteria cr = electricitySalesDataPushListExample.createCriteria();
-		
-		cr.andGroupNameEqualTo(request.getGroupName());
-		cr.andOwnerUserNameEqualTo(request.getOwnerUserName());
-		cr.andUserNameEqualTo(request.getUserName());
-		cr.andTrueNameEqualTo(request.getTrueName());
-		cr.andMobileEqualTo(request.getMobile());
-		cr.andUploadTypeEqualTo(request.getUploadType());
-		cr.andStatusEqualTo(request.getStatus());
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar cal = Calendar.getInstance();
-		try {
-			cal.setTime(simpleDateFormat.parse(request.getCreateTimeEnd()));
-			cal.add(Calendar.DATE, 1);
-			cr.andCreateTimeBetween(simpleDateFormat.parse(request.getCreateTimeStart()), cal.getTime());
-		} catch (ParseException e) {
-			logger.error("日期转换失败,不执行时间条件查询");
+		if(request.getGroupName()!=null) {
+			cr.andGroupNameEqualTo(request.getGroupName());
 		}
+		if(request.getOwnerUserName()!=null) {
+			cr.andOwnerUserNameEqualTo(request.getOwnerUserName());
+		}
+		if(request.getUserName()!=null) {
+			cr.andUserNameEqualTo(request.getUserName());
+		}
+		if(request.getTrueName()!=null) {
+			cr.andTrueNameEqualTo(request.getTrueName());
+		}
+		if(request.getMobile()!=null) {
+			cr.andMobileEqualTo(request.getMobile());
+		}
+		if(request.getUploadType()!=null) {
+			cr.andUploadTypeEqualTo(request.getUploadType());
+		}
+//		if(request.getStatus()!=null) {
+//			cr.andStatusEqualTo(request.getStatus());
+//		}
+//				
+		if(request.getCreateTimeEnd()!=null&&request.getCreateTimeStart()!=null) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			try {
+				cal.setTime(simpleDateFormat.parse(request.getCreateTimeEnd()));
+				cal.add(Calendar.DATE, 1);
+				cr.andCreateTimeBetween(simpleDateFormat.parse(request.getCreateTimeStart()), cal.getTime());
+			} catch (ParseException e) {
+				logger.error("日期转换失败,不执行时间条件查询");
+			}
+		}
+
 
 		return electricitySalesDataPushListExample;
 	}
