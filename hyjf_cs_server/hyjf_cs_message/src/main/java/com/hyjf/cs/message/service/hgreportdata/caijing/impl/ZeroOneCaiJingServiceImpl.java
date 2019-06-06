@@ -16,6 +16,7 @@ import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneResponse;
 import com.hyjf.cs.message.client.AmTradeClient;
@@ -26,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import java.util.*;
 
 /**
@@ -108,7 +111,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String dateEnd = GetDate.getDayEnd(yesterday);
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
-        if (borrowDataVOList == null || borrowDataVOList.size() == 0) {
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType("借款记录");
+        presentationLog.setCount(borrowDataVOList.size());
+        presentationLog.setPresentationTime(GetDate.getNowTime10());
+        presentationLog.setCreateTime(GetDate.getNowTime10());
+        if (!CollectionUtils.isEmpty(borrowDataVOList)) {
             logger.info("借款记录接口报送数据为空");
             return;
         }
@@ -127,6 +135,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         if (sendStatus) {
             //报送成功
             logger.info("出借记录接口报送成功");
+            presentationLog.setStatus(1);
         }
         logger.info("出借记录接口报送结束");
     }
