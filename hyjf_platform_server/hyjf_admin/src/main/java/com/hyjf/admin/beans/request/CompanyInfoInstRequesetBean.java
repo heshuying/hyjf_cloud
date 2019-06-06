@@ -39,8 +39,8 @@ public class CompanyInfoInstRequesetBean implements Serializable {
 	private String bankName;//所属银行
 	@ApiModelProperty(value = "银联号")
 	private String payAllianceCode;//银联号
-	
-	
+	@ApiModelProperty(value = "银行id")
+	private String bankId;//银行id
 	
 	public String getCardType() {
 		return cardType;
@@ -144,5 +144,13 @@ public class CompanyInfoInstRequesetBean implements Serializable {
 
 	public void setPayAllianceCode(String payAllianceCode) {
 		this.payAllianceCode = payAllianceCode;
+	}
+
+	public String getBankId() {
+		return bankId;
+	}
+
+	public void setBankId(String bankId) {
+		this.bankId = bankId;
 	}
 }

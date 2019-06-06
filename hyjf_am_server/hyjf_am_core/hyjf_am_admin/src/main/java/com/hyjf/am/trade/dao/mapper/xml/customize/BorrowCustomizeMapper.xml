@@ -474,7 +474,7 @@ WHERE
 	<sql id="Where_Clause">
 		  <where>
 		   <if test="borrowNidSrch != null and borrowNidSrch != ''">
-		    AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
+		    AND b.borrow_nid LIKE CONCAT( '%',#{borrowNidSrch}, '%')
 		   </if>
 		   <if test="borrowNameSrch != null and borrowNameSrch != ''">
 		    AND b.`name` LIKE CONCAT( #{borrowNameSrch}, '%')
@@ -681,8 +681,7 @@ WHERE
 		  LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 		  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 		  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style and bs.status=0
-		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
-		  b.project_type AS CHAR )
+		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  LEFT JOIN ht_borrow_maninfo hbm ON b.borrow_nid = hbm.borrow_nid
 		  LEFT JOIN ht_borrow_user hbu ON b.borrow_nid = hbu.borrow_nid
@@ -704,8 +703,7 @@ WHERE
 		   LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 		   LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 		   LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		   LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
-		   b.project_type AS CHAR )
+		   LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd =b.project_type 
 		   LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  <include refid="Where_Clause" />
 		 </select>
@@ -717,8 +715,7 @@ WHERE
 			  LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 			  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 			  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style and bs.status=0
-			  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
-			  b.project_type AS CHAR )
+			  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd =b.project_type
 			  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 			  LEFT JOIN ht_borrow_maninfo hbm ON b.borrow_nid = hbm.borrow_nid
 			  LEFT JOIN ht_borrow_user hbu ON b.borrow_nid = hbu.borrow_nid

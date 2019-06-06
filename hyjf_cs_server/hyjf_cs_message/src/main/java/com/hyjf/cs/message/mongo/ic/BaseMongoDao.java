@@ -31,6 +31,14 @@ public abstract class BaseMongoDao<T> {
 		this.mongoTemplate.insert(t, collectionName);
 	}
 
+	public void insertAll(List<T> listT) {
+		this.mongoTemplate.insertAll(listT);
+	}
+
+	public void insertClass(List<T> listT) {
+		this.mongoTemplate.insert(listT);
+	}
+
 	public void save(T t){
 		this.mongoTemplate.save(t);
 	}

@@ -281,4 +281,6 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected CertClaimMapper certClaimMapper;
+	@Autowired
+	protected CertProductMapper certProductMapper;
 }

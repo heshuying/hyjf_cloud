@@ -37,6 +37,9 @@ public class UserInfosUpdCustomizeRequest {
     //登陆用户id
     private int loginUserId;
 
+    //银行Id
+    private int bankId;
+
     public String getUserId() {
         return userId;
     }
@@ -147,6 +150,14 @@ public class UserInfosUpdCustomizeRequest {
 
     public void setLoginUserId(int loginUserId) {
         this.loginUserId = loginUserId;
+    }
+
+    public int getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
     }
 }
 

@@ -416,6 +416,7 @@ public class PlanListController extends BaseController{
 				try {
 					JSONObject params = new JSONObject();
 					params.put("planNid", planNid);
+					params.put("isPlan","1");
 					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.HJHPLAN_MODIFY_TAG, UUID.randomUUID().toString(), params),
 							MQConstant.HG_REPORT_DELAY_LEVEL);
 				} catch (Exception e) {
@@ -437,6 +438,7 @@ public class PlanListController extends BaseController{
 				try {
 					JSONObject params = new JSONObject();
 					params.put("planNid", planNid);
+					params.put("isPlan","1");
 					//应急中心二期修改，新增计划修改mq延时10秒（用于和修改智投分开，防止新增完毕立马修改）mod by nxl
 					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.HJHPLAN_ADD_TAG, UUID.randomUUID().toString(), params),
 							MQConstant.HG_REPORT_DELAY_LEVEL_TEN);

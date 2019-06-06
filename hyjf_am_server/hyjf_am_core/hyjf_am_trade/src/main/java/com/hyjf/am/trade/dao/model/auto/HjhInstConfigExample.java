@@ -446,6 +446,76 @@ public class HjhInstConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andCooperativeAgencyIsNull() {
+            addCriterion("cooperative_agency is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyIsNotNull() {
+            addCriterion("cooperative_agency is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyEqualTo(String value) {
+            addCriterion("cooperative_agency =", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyNotEqualTo(String value) {
+            addCriterion("cooperative_agency <>", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyGreaterThan(String value) {
+            addCriterion("cooperative_agency >", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyGreaterThanOrEqualTo(String value) {
+            addCriterion("cooperative_agency >=", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyLessThan(String value) {
+            addCriterion("cooperative_agency <", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyLessThanOrEqualTo(String value) {
+            addCriterion("cooperative_agency <=", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyLike(String value) {
+            addCriterion("cooperative_agency like", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyNotLike(String value) {
+            addCriterion("cooperative_agency not like", value, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyIn(List<String> values) {
+            addCriterion("cooperative_agency in", values, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyNotIn(List<String> values) {
+            addCriterion("cooperative_agency not in", values, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyBetween(String value1, String value2) {
+            addCriterion("cooperative_agency between", value1, value2, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
+        public Criteria andCooperativeAgencyNotBetween(String value1, String value2) {
+            addCriterion("cooperative_agency not between", value1, value2, "cooperativeAgency");
+            return (Criteria) this;
+        }
+
         public Criteria andCommissionFeeIsNull() {
             addCriterion("commission_fee is null");
             return (Criteria) this;

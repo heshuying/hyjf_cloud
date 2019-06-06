@@ -116,7 +116,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         }catch (CheckException e){
             throw e;
         }finally {
-            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + tender.getUser().getUserId());
+            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + userId);
         }
         return weChatResult;
     }

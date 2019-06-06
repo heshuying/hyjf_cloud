@@ -314,6 +314,66 @@ public class CertClaimExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsPlanIsNull() {
+            addCriterion("is_plan is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanIsNotNull() {
+            addCriterion("is_plan is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanEqualTo(Integer value) {
+            addCriterion("is_plan =", value, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanNotEqualTo(Integer value) {
+            addCriterion("is_plan <>", value, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanGreaterThan(Integer value) {
+            addCriterion("is_plan >", value, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_plan >=", value, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanLessThan(Integer value) {
+            addCriterion("is_plan <", value, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanLessThanOrEqualTo(Integer value) {
+            addCriterion("is_plan <=", value, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanIn(List<Integer> values) {
+            addCriterion("is_plan in", values, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanNotIn(List<Integer> values) {
+            addCriterion("is_plan not in", values, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanBetween(Integer value1, Integer value2) {
+            addCriterion("is_plan between", value1, value2, "isPlan");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPlanNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_plan not between", value1, value2, "isPlan");
+            return (Criteria) this;
+        }
+
         public Criteria andIsConfigIsNull() {
             addCriterion("is_config is null");
             return (Criteria) this;

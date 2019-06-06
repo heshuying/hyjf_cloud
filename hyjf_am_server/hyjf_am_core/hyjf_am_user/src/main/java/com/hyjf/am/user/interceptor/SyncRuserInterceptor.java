@@ -1,33 +1,25 @@
 package com.hyjf.am.user.interceptor;
 
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
-import com.hyjf.am.user.mq.base.CommonProducer;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
 /**
  * 同步用户信息的mybaitis 拦截器
@@ -87,18 +79,18 @@ public class SyncRuserInterceptor implements Interceptor {
                     Object record = ((Map) paramObj).get("record");
                     if (record != null) {
                         try{
-                            User user = (User) (record);
+                            UserInfo user = (UserInfo) (record);
                             if(user.getUserId() == null){
                                 Object example = ((Map) paramObj).get("example");
                                 if(example != null) {
                                     logger.info("【am-user/{}/ht_user_info】user_id为null,取example中的user_id", methodName);
-                                    UserExample userExample = (UserExample) example;
-                                    for (UserExample.Criterion criterion : userExample.getOredCriteria().get(0).getAllCriteria()) {
-                                        if ("user_id=".equals(criterion.getCondition())) {
+                                    UserInfoExample userExample = (UserInfoExample) example;
+                                    for (UserInfoExample.Criterion criterion : userExample.getOredCriteria().get(0).getAllCriteria()) {
+                                        if ("user_id =".equals(criterion.getCondition())) {
                                             if (criterion.getValue() != null) {
                                                 user.setUserId((int) criterion.getValue());
                                                 sendToMq(user, methodName, "ht_user_info");
-                                                break;
+                                                return result;
                                             }
                                         }
                                     }
@@ -143,11 +135,11 @@ public class SyncRuserInterceptor implements Interceptor {
                                     logger.info("【am-user/{}/ht_spreads_user】record中user_id为null,取example中的user_id", methodName);
                                     SpreadsUserExample spreadsUserExample = (SpreadsUserExample) example;
                                     for (SpreadsUserExample.Criterion criterion : spreadsUserExample.getOredCriteria().get(0).getAllCriteria()) {
-                                        if ("user_id=".equals(criterion.getCondition())) {
+                                        if ("user_id =".equals(criterion.getCondition())) {
                                             if (criterion.getValue() != null) {
                                                 spreadsUser.setUserId((int) criterion.getValue());
                                                 sendToMq(spreadsUser, methodName, "ht_spreads_user");
-                                                break;
+                                                return result;
                                             }
                                         }
                                     }

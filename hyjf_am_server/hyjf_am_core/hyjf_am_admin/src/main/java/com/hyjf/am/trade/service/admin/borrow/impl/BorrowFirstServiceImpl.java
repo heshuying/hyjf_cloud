@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -207,6 +208,20 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 if (updateCount > 0) {
                     // 更新redis的定时发标时间
                     changeOntimeOfRedis(borrow);
+                    //应急中心二期，散标发标时，报送数据 start
+                    if(borrow.getVerifyStatus()==4){
+                        //已发标
+                        try {
+                            JSONObject param = new JSONObject();
+                            param.put("planNid", borrow.getBorrowNid());
+                            param.put("isPlan","0");
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.BORROW_MODIFY_TAG, UUID.randomUUID().toString(), param),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                        } catch (Exception e) {
+                            logger.error("散标发标时，应急中心上报失败！borrowNid : " + borrow.getBorrowNid() ,e);
+                        }
+                    }
+                    //应急中心二期，散标发标时，报送数据 end
                     return new Response();
                 } else {
                     return new Response(Response.FAIL, "标的信息更新失败");

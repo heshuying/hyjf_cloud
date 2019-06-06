@@ -102,6 +102,7 @@ public enum MsgEnum implements MsgCode {
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),
 	ERR_AMT_MONEY("EAM000002","未查询到正确的余额信息"),
+	ERR_AMT_BANK_BANLANCE_ERR("EAM000003","账户余额不同步"),
 	// 资金-提现相关错误信息ERR_AMT_WITHDRAW_
 	ERR_AMT_WITHDRAW_AMOUNT("EAM000101","请输入提现金额"),
 	ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE("EAM000102","提现金额需大于1元"),
