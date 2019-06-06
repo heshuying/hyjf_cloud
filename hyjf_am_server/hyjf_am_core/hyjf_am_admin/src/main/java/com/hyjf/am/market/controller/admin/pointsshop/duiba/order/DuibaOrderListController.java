@@ -121,6 +121,8 @@ public class DuibaOrderListController {
         // 同步接口开始 DuiBaCallUtils.duiBaCall()
         logger.info("订单同步接口开始同步，orderId  = {orderId}");
         // 查询需要同步的订单信息（兑吧订单表）
+        // 商品类型为充值
+        String productType = "2";
         DuibaOrderVO duibaOrderVO = duibaOrderListService.findOneOrder(orderId);
         DuiBaCallBean duiBaCallBean = new DuiBaCallBean();
         duiBaCallBean.setOrderNum(duibaOrderVO.getDuibaOrderId());
@@ -148,14 +150,17 @@ public class DuibaOrderListController {
             duibaOrderVO.setUpdateTime(new Date());
             // 判断之前是否失败，如果之前失败则执行以下操作
             if(duibaOrderVO.getActivationType()==1){
-                // 执行更新优惠卷用户表
-                CouponUserRequest couponUserRequest = new CouponUserRequest();
-                couponUserRequest.setId(duibaOrderVO.getCouponUserId());
-                // 更新优惠卷用户表为有效
-                int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
-                if(flagCount==0){
-                    logger.error("优惠卷用户表id：["+ duibaOrderVO.getCouponUserId() +"]，更新优惠卷用户表为有效，操作失败！");
-                    return "优惠卷用户更新失败！";
+                // 判断该笔订单是否为“充值”（优惠卷）
+                if(productType.equals(duibaOrderVO.getProductType())){
+                    // 执行更新优惠卷用户表
+                    CouponUserRequest couponUserRequest = new CouponUserRequest();
+                    couponUserRequest.setId(duibaOrderVO.getCouponUserId());
+                    // 更新优惠卷用户表为有效
+                    int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
+                    if(flagCount==0){
+                        logger.error("优惠卷用户表id：["+ duibaOrderVO.getCouponUserId() +"]，更新优惠卷用户表为有效，操作失败！");
+                        return "优惠卷用户更新失败！";
+                    }
                 }
                 // 更新用户表积分
                 // 根据订单号查询积分明细表
@@ -330,6 +335,8 @@ public class DuibaOrderListController {
     public String activation(@PathVariable String orderNum,@PathVariable String errorMessage) {
         // 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
         int res;
+        // 商品类型为充值
+        String productType = "2";
         try {
             // 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
             DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
@@ -362,15 +369,18 @@ public class DuibaOrderListController {
                     return "error";
                 }
                 // - - - - - - - - - - - - - - - - - - - - - - - - - -
-                CouponUserBeanRequest couponUserBeanRequest = new CouponUserBeanRequest();
-                // 设置主键
-                couponUserBeanRequest.setId(duibaOrderVOStr.getCouponUserId());
-                // 设置无效描述
-                couponUserBeanRequest.setContent("兑吧兑换结果通知接口返回失败，操作失败，回滚该笔数据！");
-                // 设置优惠卷用户表无效
-                int couponUpCount = couponUserService.deleteCouponUserById(couponUserBeanRequest);
-                if(couponUpCount==0){
-                    throw new Exception("根据优惠卷用户id：["+ duibaOrderVOStr.getCouponUserId() +"]，将发放的优惠卷设置成无效，没有更新到优惠卷用户信息，操作失败，回滚操作失败！");
+                // 判断该笔订单是否为“充值”（优惠卷）
+                if(productType.equals(duibaOrderVO.getProductType())) {
+                    CouponUserBeanRequest couponUserBeanRequest = new CouponUserBeanRequest();
+                    // 设置主键
+                    couponUserBeanRequest.setId(duibaOrderVOStr.getCouponUserId());
+                    // 设置无效描述
+                    couponUserBeanRequest.setContent("兑吧兑换结果通知接口返回失败，操作失败，回滚该笔数据！");
+                    // 设置优惠卷用户表无效
+                    int couponUpCount = couponUserService.deleteCouponUserById(couponUserBeanRequest);
+                    if (couponUpCount == 0) {
+                        throw new Exception("根据优惠卷用户id：[" + duibaOrderVOStr.getCouponUserId() + "]，将发放的优惠卷设置成无效，没有更新到优惠卷用户信息，操作失败，回滚操作失败！");
+                    }
                 }
                 // - - - - - - - - - - - - - - - - - - - - - - - - - -
                 duibaOrderVO.setId(duibaOrderVOStr.getId());
@@ -380,9 +390,12 @@ public class DuibaOrderListController {
                 duibaOrderVO.setUpdateTime(new Date());
                 // 设置订单状态为失败
                 duibaOrderVO.setOrderStatus(1);
-                // 更新虚拟商品充值状态
-                if(StringUtils.isNotEmpty(errorMessage)){
-                    duibaOrderVO.setRechargeState("处理中（" + errorMessage +"）");
+                // 判断该笔订单是否为“充值”（优惠卷）
+                if(productType.equals(duibaOrderVO.getProductType())) {
+                    // 更新虚拟商品充值状态
+                    if (StringUtils.isNotEmpty(errorMessage)) {
+                        duibaOrderVO.setRechargeState("处理中（" + errorMessage + "）");
+                    }
                 }
                 // 设置失败原因
                 duibaOrderVO.setRemark("兑吧兑换结果通知接口返回失败，回滚该笔数据，操作失败！");
@@ -408,17 +421,25 @@ public class DuibaOrderListController {
      */
     @RequestMapping("/success/{orderNum}")
     public String success(@PathVariable String orderNum) {
+        // 商品类型为充值
+        String productType = "2";
+        // 执行更新影响行数
+        int flagCount = 0;
+        // 更新虚拟商品充值状态为完成
+        DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
         // 根据兑吧订单号查询订单信息
         DuibaOrderVO duibaOrderVOStr = duibaOrderListService.selectOrderByOrderId(orderNum);
         if(duibaOrderVOStr!=null){
-            CouponUserRequest couponUserRequest = new CouponUserRequest();
-            couponUserRequest.setId(duibaOrderVOStr.getCouponUserId());
-            // 更新优惠卷用户表为有效
-            int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
-            // 更新虚拟商品充值状态为完成
-            DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
+            // 判断该笔订单是否为“充值”（优惠卷）
+            if(productType.equals(duibaOrderVOStr.getProductType())) {
+                CouponUserRequest couponUserRequest = new CouponUserRequest();
+                couponUserRequest.setId(duibaOrderVOStr.getCouponUserId());
+                // 更新优惠卷用户表为有效
+                flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
+                // 虚拟商品充值状态
+                duibaOrderVO.setRechargeState("处理完成");
+            }
             duibaOrderVO.setId(duibaOrderVOStr.getId());
-            duibaOrderVO.setRechargeState("处理完成");
             // 更新订单为有效
             duibaOrderVO.setActivationType(0);
             int orderFlag = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
