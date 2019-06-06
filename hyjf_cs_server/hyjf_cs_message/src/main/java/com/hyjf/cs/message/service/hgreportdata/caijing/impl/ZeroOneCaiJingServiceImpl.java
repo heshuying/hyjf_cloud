@@ -76,8 +76,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Boolean sendStatus = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),String.valueOf(JSONObject.toJSON(list)));
-        if(sendStatus){
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),String.valueOf(JSONObject.toJSON(list)));
+        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
             //报送成功
             logger.info("借款记录接口报送成功");
         }
@@ -101,8 +101,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Boolean sendStatus = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(),String.valueOf(JSONObject.toJSON(list)));
-        if(sendStatus){
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(),String.valueOf(JSONObject.toJSON(list)));
+        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
             //报送成功
             logger.info("提前还款接口报送成功");
         }
@@ -133,7 +133,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
      * @param json 数据json
      * @return
      */
-    public Boolean sendDataReport(String type,String json){
+    private ZeroOneResponse sendDataReport(String type,String json){
 
         String url = "http://data.01caijing.com/hub/p2p/";
 
@@ -143,7 +143,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         stbuUrl.append("/commit.json");
 
         Map<String,String> sendMap = new HashMap<>();
-
+        ZeroOneResponse zeroOneResponse = null;
         try{
             sendMap.put("visit_key","www.hyjf.com");
             sendMap.put("time",String.valueOf(System.currentTimeMillis()));
@@ -167,16 +167,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             //Post请求
             String response = HttpDeal.post(stbuUrl.toString(),sendMap);
 
-            ZeroOneResponse zeroOneResponse = JSONObject.parseObject(response,ZeroOneResponse.class);
-
-            if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
-                return true;
-            }
+            zeroOneResponse = JSONObject.parseObject(response,ZeroOneResponse.class);
 
         }catch (Exception e){
             logger.error("零壹财经数据报送错误 error:",e);
         }
 
-        return false;
+        return zeroOneResponse;
     }
 }
