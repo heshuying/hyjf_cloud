@@ -297,7 +297,8 @@ public class DuibaOrderListController {
                         }
                     } catch (Exception e) {
                         logger.error("优惠券发放失败！，操作失败，异常如下：" + e.getMessage());
-                        return "error";
+                        // 返回错误信息
+                        return "fail@优惠券发放失败！，操作失败，异常如下：" + e.getMessage();
                     }
                 }else{
                     orderErrorRemark = "优惠券发行数量超出上限，不再发放，操作失败！";
@@ -306,21 +307,48 @@ public class DuibaOrderListController {
                     // 发放优惠卷错误插入错误状态
                     duibaOrderVOError.setId(duibaOrderVO.getId());
                     duibaOrderVOError.setRemark(orderErrorRemark);
-                    // 设置订单失效
-                    duibaOrderVOError.setActivationType(1);
+                    // 设置订单状态为失败
+                    duibaOrderVOError.setOrderStatus(1);
                     duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVOError);
-                    return "error";
+                    // 回滚用户积分
+                    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                    // 根据订单号查询积分明细表
+                    DuibaPointsVO duibaPointsVO = duibaPointsListService.getDuibaPointsByOrdId(orderNum);
+                    // 回滚积分（当前用户最新积分+积分明细表积分）
+                    if(duibaPointsVO!=null){
+                        // 查询用户最新积分
+                        Integer points = user.getPointsCurrent() + duibaPointsVO.getPoints();
+                        if(user!=null){
+                            // 更新积分
+                            User userUp = new User();
+                            userUp.setUserId(user.getUserId());
+                            userUp.setPointsCurrent(points);
+                            int userUpCont = userService.updateUserById(userUp);
+                            if(userUpCont==0){
+                                logger.error("根据userid：["+ duibaPointsVO.getUserId() +"]，对用户的金币进行返还，没有更新到用户信息，回滚操作失败！");
+                            }
+                        }else{
+                            logger.error("根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
+                        }
+                    }else{
+                        logger.error("根据订单号查询积分明细表数据为空，操作失败！orderNum：" + orderNum);
+                    }
+                    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                    // 返回错误信息
+                    return "fail@" + orderErrorRemark;
                 }else{
                     // 优惠卷发放成功
-                    return String.valueOf(user.getPointsCurrent());
+                    return "success@" + String.valueOf(user.getPointsCurrent());
                 }
             }else{
                 logger.info("根据兑吧订单的兑吧订单号，查询用户订单信息并发放优惠卷，操作失败，订单信息为空！ duibaOrderVO:" + duibaOrderVO.toString());
-                return "error";
+                // 返回错误信息
+                return "fail@根据兑吧订单的兑吧订单号，查询用户订单信息并发放优惠卷，操作失败，订单信息为空！ duibaOrderVO:" + duibaOrderVO.toString();
             }
         }else{
             logger.info("根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷，操作失败，兑吧订单号为空！ orderNum:" + orderNum);
-            return "error";
+            // 返回错误信息
+            return "fail@根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷，操作失败，兑吧订单号为空！ orderNum:" + orderNum;
         }
     }
 

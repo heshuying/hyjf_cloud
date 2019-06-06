@@ -190,7 +190,8 @@ public class DuiBaCallController extends BaseController {
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
 		String status = "";
 		String errorMessage = "";
-		String releaseCouponsType = "";
+		// 返回值常量
+		String massageStr = "@";
 		Long credits = null;
 		try {
 			VirtualParams params = tool.virtualConsume(request);
@@ -205,20 +206,24 @@ public class DuiBaCallController extends BaseController {
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			// 操作处理状态常量
 			status = "success";
-			releaseCouponsType = "error";
 			// 发放优惠卷， 传兑吧订单号
 			String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/releaseCoupons/" + params.getOrderNum();
 			String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 			if (couponUserStr != null) {
+				// 截取常量@之前的字符串来获取状态
+				String flag = couponUserStr.substring(0, couponUserStr.indexOf(massageStr));
 				// 优惠卷成功或异常处理
-				if(releaseCouponsType.equals(couponUserStr)){
+				if(!status.equals(flag)){
 				    // 处理中（process），暂时没有处理中状态返回因为没有异步处理
-
+					// 返回失败原因
+					errorMessage = couponUserStr.substring(couponUserStr.indexOf(massageStr)+1);
 					// 发放失败
                     status = "fail";
                     logger.error("发放优惠卷失败！orderNum："+params.getOrderNum());
 				}else{
-					credits = Long.valueOf(couponUserStr);
+					if(StringUtils.isNotEmpty(couponUserStr.substring(couponUserStr.indexOf(massageStr)+1))){
+						credits = Long.valueOf(couponUserStr.substring(couponUserStr.indexOf(massageStr)+1));
+					}
 				}
 			}
 		} catch (Exception e) {
