@@ -23,6 +23,7 @@ import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneResponse;
 import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.client.AmUserClient;
+import com.hyjf.cs.message.service.hgreportdata.caijing.CaiJingPresentationLogService;
 import com.hyjf.cs.message.service.hgreportdata.caijing.ZeroOneCaiJingService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     @Autowired
     private AmUserClient amUserClient;
 
+    @Autowired
+    private CaiJingPresentationLogService presentationLogService;
+
     /**
      * 借款记录接口报送
      */
@@ -59,7 +63,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String date = "2018-4-24";
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
-
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType("出借记录");
+        presentationLog.setCount(zeroOneDataVOList.size());
         if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
             logger.info("借款记录接口无数据报送结束");
             return;
@@ -95,7 +101,13 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
             //报送成功
             logger.info("借款记录接口报送成功");
+            presentationLog.setStatus(1);
+            presentationLog.setDescription("");
+        } else {
+            presentationLog.setStatus(0);
+            presentationLog.setDescription(zeroOneResponse.result_msg);
         }
+        this.presentationLogService.insertLog(presentationLog);
         logger.info("借款记录接口报送结束");
     }
 
@@ -116,8 +128,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType("借款记录");
         presentationLog.setCount(borrowDataVOList.size());
-        presentationLog.setPresentationTime(GetDate.getNowTime10());
-        presentationLog.setCreateTime(GetDate.getNowTime10());
         if (!CollectionUtils.isEmpty(borrowDataVOList)) {
             logger.info("借款记录接口报送数据为空");
             return;
@@ -138,7 +148,13 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             //报送成功
             logger.info("出借记录接口报送成功");
             presentationLog.setStatus(1);
+            presentationLog.setDescription("");
+        } else {
+            presentationLog.setStatus(0);
+            presentationLog.setDescription(zeroOneResponse.result_msg);
         }
+        //插入mongo表
+        this.presentationLogService.insertLog(presentationLog);
         logger.info("出借记录接口报送结束");
     }
 
@@ -228,6 +244,10 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startdate, enddate);
 
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType("提前还款");
+        presentationLog.setCount(zeroOneDataVOList.size());
+
         if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("提前还款接口无数据报送结束");
             return;
@@ -238,7 +258,13 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
             //报送成功
             logger.info("提前还款接口报送成功");
+            presentationLog.setStatus(1);
+            presentationLog.setDescription("");
+        } else {
+            presentationLog.setStatus(0);
+            presentationLog.setDescription(zeroOneResponse.result_msg);
         }
+        this.presentationLogService.insertLog(presentationLog);
         logger.info("提前还款接口报送结束");
     }
 
@@ -297,7 +323,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
      */
     private ZeroOneResponse sendDataReport(String type,String json){
 
-        String url = "http://data.01caijing.com/hub/p2p/";
+        String url = "http://data.caijing.com/hub/p2p/";
 
         StringBuilder stbuUrl = new StringBuilder();
         stbuUrl.append(url);
