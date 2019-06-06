@@ -1562,7 +1562,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static String NIFA_CREDITER_INFO_TYPE = "26EXPORTBUSINESSJINR_INV";
 
     /** 商品类型 */
-    public static String PRODUCT_TYPE = "PRODUCT_TYPE";
+    public static String PRODUCT_TYPE = "DUIBA_PRODUCT_TYPE";
     /** 订单状态 */
     public static String ORDER_STATUS = "ORDER_STATUS";
     /** 发货状态 */
