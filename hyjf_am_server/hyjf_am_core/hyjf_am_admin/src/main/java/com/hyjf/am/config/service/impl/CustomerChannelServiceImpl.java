@@ -63,7 +63,7 @@ public class CustomerChannelServiceImpl implements  CustomerChannelService{
     		CustomerServiceChannelExample example=new CustomerServiceChannelExample();
     		example.or().andChannelIdEqualTo(request.getChannelId());
     		List<CustomerServiceChannel> list = customerServiceChannelMapper.selectByExample(example);
-    		if(list!=null&&list.size()>1) {
+    		if(list!=null&&list.size()>0) {
     			return 0;
     		}
     			record.setChannelName(request.getChannelName());
