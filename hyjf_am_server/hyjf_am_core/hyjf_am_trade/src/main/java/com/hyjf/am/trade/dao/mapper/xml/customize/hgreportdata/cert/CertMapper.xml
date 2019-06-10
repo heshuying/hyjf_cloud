@@ -129,23 +129,35 @@
         LIMIT #{limitStart} , #{limitEnd}
     </select>
 
-    <select id="getCertAccountListCustomizeVOByCreditSell" resultMap="queryCertAccountListMap"
+    <select id="getCertAccountListCustomizeVOByLiquidatesSell" resultMap="queryCertAccountListMap"
             parameterType="java.util.Map">
         SELECT
-        hru.role_id role_id,
+        '1' role_id,
         hal.*
         FROM
         ht_borrow hb
-        INNER JOIN ht_hjh_debt_credit_tender hdct ON hb.borrow_nid = hdct.borrow_nid
+		INNER JOIN ht_hjh_debt_credit_tender hdct ON hb.borrow_nid=hdct.borrow_nid
         INNER JOIN ht_account_list hal ON hdct.assign_order_id = hal.nid
-        LEFT JOIN ht_r_user hru ON hal.user_id = hru.user_id
         WHERE
         hb.`status` IN (2, 3, 4, 7)
         AND hal.id <![CDATA[<=]]> #{maxId}
-        AND (
-        hal.trade = "liquidates_sell"
-        OR hal.trade = "creditsell"
-        )
+        AND hal.trade = "liquidates_sell"
+        LIMIT #{limitStart} , #{limitEnd}
+    </select>
+
+    <select id="getCertAccountListCustomizeVOByCreditSell" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+        '1' role_id,
+        hal.*
+        FROM
+        ht_borrow hb
+        INNER JOIN ht_credit_tender hct ON hb.borrow_nid=hct.bid_nid
+        INNER JOIN ht_account_list hal ON hct.assign_nid = hal.nid
+        WHERE
+        hb.`status` IN (2, 3, 4, 7)
+        AND hal.id <![CDATA[<=]]> #{maxId}
+        AND hal.trade = "creditsell"
         LIMIT #{limitStart} , #{limitEnd}
     </select>
 

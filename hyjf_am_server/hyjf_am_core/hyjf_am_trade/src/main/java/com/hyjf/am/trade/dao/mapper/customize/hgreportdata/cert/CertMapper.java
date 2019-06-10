@@ -34,4 +34,6 @@ public interface CertMapper {
     List<CertAccountListCustomize> getCertAccountListCustomizeVOByCreditTenderRecoverYes(Map<String,Object> map);
 
     List<CertAccountListCustomize> getCertAccountListCustomizeVOByCreditSell(Map<String,Object> map);
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVOByLiquidatesSell(Map<String,Object> map);
 }

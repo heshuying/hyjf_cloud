@@ -188,6 +188,10 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByCreditSell(map);
             return accountLists;
         }
+        if("liquidates_sell".equals(trade)){
+            List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByLiquidatesSell(map);
+            return accountLists;
+        }
         /*if("tenderRecoverYes".equals(trade)){
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByTenderRecoverYes(map);
             return accountLists;
