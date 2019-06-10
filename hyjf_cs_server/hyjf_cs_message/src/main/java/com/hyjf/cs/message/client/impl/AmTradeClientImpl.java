@@ -20,8 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author lisheng
@@ -150,18 +149,29 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public List<String> queryUser(SmsCodeUserRequest request) {
-		Response tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
-				Response.class);
+
+		Set<String> mobileSet = new HashSet<>();
 		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
-		if (tradeResponse != null && userResponse != null) {
-			List<String> tradeList = tradeResponse.getResultList();
-			List<String> userList = userResponse.getResultList();
-            if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
-                tradeList.retainAll(userList);
-            }
-			return tradeList;
+		Response tradeResponse = null;
+		if(request.getOpen_account() != 0 ){
+
+			tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
+					Response.class);
 		}
-		return null;
+
+		if (userResponse != null) {
+			List<String> userList = userResponse.getResultList();
+            if (!CollectionUtils.isEmpty(userList)) {
+				mobileSet.containsAll(userList);
+            }
+		}
+		if (tradeResponse != null ) {
+			List<String> tradeList = tradeResponse.getResultList();
+			if (!CollectionUtils.isEmpty(tradeList) ) {
+				mobileSet.containsAll(tradeList);
+			}
+		}
+		return new ArrayList<>(mobileSet);
 	}
 
 	@Override
