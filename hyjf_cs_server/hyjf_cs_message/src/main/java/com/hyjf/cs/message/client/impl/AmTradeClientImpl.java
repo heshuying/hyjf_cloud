@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmTradeClient;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -149,11 +150,12 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public List<String> queryUser(SmsCodeUserRequest request) {
-
-		Set<String> mobileSet = new HashSet<>();
+		List<String> list = new ArrayList<>();
 		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
 		Response tradeResponse = null;
-		if(request.getOpen_account() != 0 ){
+		if(request.getOpen_account() != 0 || StringUtils.isNotBlank(request.getAdd_money_count())
+				|| StringUtils.isNotBlank(request.getAdd_time_begin())
+				|| StringUtils.isNotBlank(request.getAdd_time_end())){
 
 			tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
 					Response.class);
@@ -162,16 +164,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		if (userResponse != null) {
 			List<String> userList = userResponse.getResultList();
             if (!CollectionUtils.isEmpty(userList)) {
-				mobileSet.containsAll(userList);
+				list.addAll(userList);
             }
 		}
 		if (tradeResponse != null ) {
 			List<String> tradeList = tradeResponse.getResultList();
 			if (!CollectionUtils.isEmpty(tradeList) ) {
-				mobileSet.containsAll(tradeList);
+				list.retainAll(tradeList);
 			}
 		}
-		return new ArrayList<>(mobileSet);
+		return list;
 	}
 
 	@Override
