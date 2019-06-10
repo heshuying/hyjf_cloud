@@ -139,8 +139,8 @@
             <if test="re_time_end != null" >
                 AND create_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
             </if>
-            <if test="open_account!= null and open_account == 1" >
-                AND bank_open_account = 1
+            <if test="open_account!= null" >
+                AND bank_open_account = #{open_account,jdbcType=INTEGER}
             </if>
         </where>
     </select>
