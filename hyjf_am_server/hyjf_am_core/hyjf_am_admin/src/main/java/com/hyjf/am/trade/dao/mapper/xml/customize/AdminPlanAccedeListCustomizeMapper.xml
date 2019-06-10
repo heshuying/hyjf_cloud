@@ -15,14 +15,10 @@
 		LEFT JOIN ht_coupon_config hcc ON hcc.coupon_code = hcu.coupon_code
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = hdpa.accede_order_id
 		LEFT JOIN ht_r_user ruser2 ON ruser2.user_id = hdpa.user_id
-		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hdpa.invite_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = ruser2.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
 		LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid AND od.id IS NOT NULL
-		LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN ht_r_oa_department od3 ON od3.id = od2.parentid
-		LEFT JOIN ht_r_oa_users oux ON oux.hyd_id = hdpa.user_id AND oux.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_users oux ON oux.hyd_id = hdpa.user_id AND oux.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
 		LEFT JOIN ht_r_oa_department odx ON odx.id = oux.departmentid AND odx.id IS NOT NULL
-		LEFT JOIN ht_r_oa_department odx2 ON odx2.id = odx.parentid
-		LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 		<where>
 			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
 				AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
@@ -248,8 +244,10 @@
 		date_format(hdpa.create_time, '%Y-%m-%d %H:%i:%s') AS create_time,
 
 		hdpa.create_time AS add_time_long,
-		hdpa.invite_user_name referee_name,
-		hdpa.invite_user_attribute AS recommend_attr,
+		<!-- refereeUserName 推荐人（当前）-->
+		curSpread.username referee_name,
+		<!-- recommendAttr 推荐人用户属性（当前）-->
+		curSpread.attribute AS recommend_attr,
 		hdpa.invite_user_name AS invite_name,
 		hdpa.invite_user_attribute AS invite_user_attributename,
 		hdpa.user_attribute AS attribute,
@@ -268,14 +266,22 @@
 		'现金'
 		END AS tender_type,
 		IFNULL(hcu.coupon_user_code, '') AS coupon_code,
-		od3.name AS invite_user_regionname1,
-		od2.name AS invite_user_branchname1,
+		<!-- inviteUserRegionname1 推荐人分公司(当前) -->
+		od.grdfather_name AS invite_user_regionname1,
+		<!-- inviteUserBranchname1 推荐人部门(当前) -->
+		od.parent_name AS invite_user_branchname1,
+		<!-- inviteUserDepartmentname1 推荐人团队(当前) -->
 		od.name AS invite_user_departmentname1,
-		odx3.name AS invite_user_regionname2,
-		odx2.name AS invite_user_branchname2,
+		<!-- inviteUserRegionname1 分公司(当前) -->
+		odx.grdfather_name AS invite_user_regionname2,
+		<!-- inviteUserBranchname1 部门(当前) -->
+		odx.parent_name AS invite_user_branchname2,
+		<!-- inviteUserDepartmentname1 团队(当前) -->
 		odx.name AS invite_user_departmentname2,
-		hdpa.invite_user_id as referee_user_id,
-		ruser1.truename as referee_true_name,
+		<!-- recommendAttr 推荐人ID（当前）-->
+		curSpread.user_id as referee_user_id,
+		<!-- recommendAttr 推荐人姓名（当前）-->
+		curSpread.truename as referee_true_name,
 		hdpa.invite_user_id as invite_user_id,
 		ruser1.truename as invite_true_name,
 		hta.status AS contractStatus,
@@ -311,14 +317,11 @@
 		LEFT JOIN ht_coupon_config hcc ON hcc.coupon_code = hcu.coupon_code
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = hdpa.accede_order_id
 		LEFT JOIN ht_r_user ruser2 ON ruser2.user_id = hdpa.user_id
-		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hdpa.invite_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_user curSpread ON curSpread.user_id = ruser2.spreads_user_id
+		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = ruser2.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
 		LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid AND od.id IS NOT NULL
-		LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN ht_r_oa_department od3 ON od3.id = od2.parentid
-		LEFT JOIN ht_r_oa_users oux ON oux.hyd_id = hdpa.user_id AND oux.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_users oux ON oux.hyd_id = hdpa.user_id AND oux.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
 		LEFT JOIN ht_r_oa_department odx ON odx.id = oux.departmentid AND odx.id IS NOT NULL
-		LEFT JOIN ht_r_oa_department odx2 ON odx2.id = odx.parentid
-		LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 		left join hyjf_user.ht_utm utm on utm.utm_id=hdpa.tender_user_utm_id
 		left join hyjf_user.ht_utm_reg reg on hdpa.user_id=reg.user_id
 		left join hyjf_user.ht_utm utm2 on utm2.utm_id=reg.utm_id
