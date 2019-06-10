@@ -22,7 +22,7 @@
     <result column="processing_state" property="processingState" jdbcType="TINYINT" />
     <result column="commodity_code" property="commodityCode" jdbcType="VARCHAR" />
     <result column="exchange_rate" property="exchangeRate" jdbcType="DECIMAL" />
-    <result column="integral_price" property="integralPrice" jdbcType="DECIMAL" />
+    <result column="integral_price" property="integralPrice" jdbcType="INTEGER" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
@@ -149,7 +149,7 @@
       #{cost,jdbcType=DECIMAL}, #{orderStatus,jdbcType=TINYINT}, #{orderTime,jdbcType=INTEGER}, 
       #{completionTime,jdbcType=INTEGER}, #{deliveryStatus,jdbcType=TINYINT}, #{receivingInformation,jdbcType=VARCHAR}, 
       #{rechargeState,jdbcType=VARCHAR}, #{processingState,jdbcType=TINYINT}, #{commodityCode,jdbcType=VARCHAR}, 
-      #{exchangeRate,jdbcType=DECIMAL}, #{integralPrice,jdbcType=DECIMAL}, #{createBy,jdbcType=VARCHAR}, 
+      #{exchangeRate,jdbcType=DECIMAL}, #{integralPrice,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR}, #{activationType,jdbcType=BIT}, #{couponUserId,jdbcType=INTEGER}
       )
@@ -301,7 +301,7 @@
         #{exchangeRate,jdbcType=DECIMAL},
       </if>
       <if test="integralPrice != null" >
-        #{integralPrice,jdbcType=DECIMAL},
+        #{integralPrice,jdbcType=INTEGER},
       </if>
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
@@ -396,7 +396,7 @@
         exchange_rate = #{record.exchangeRate,jdbcType=DECIMAL},
       </if>
       <if test="record.integralPrice != null" >
-        integral_price = #{record.integralPrice,jdbcType=DECIMAL},
+        integral_price = #{record.integralPrice,jdbcType=INTEGER},
       </if>
       <if test="record.createBy != null" >
         create_by = #{record.createBy,jdbcType=VARCHAR},
@@ -446,7 +446,7 @@
       processing_state = #{record.processingState,jdbcType=TINYINT},
       commodity_code = #{record.commodityCode,jdbcType=VARCHAR},
       exchange_rate = #{record.exchangeRate,jdbcType=DECIMAL},
-      integral_price = #{record.integralPrice,jdbcType=DECIMAL},
+      integral_price = #{record.integralPrice,jdbcType=INTEGER},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
@@ -519,7 +519,7 @@
         exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
       </if>
       <if test="integralPrice != null" >
-        integral_price = #{integralPrice,jdbcType=DECIMAL},
+        integral_price = #{integralPrice,jdbcType=INTEGER},
       </if>
       <if test="createBy != null" >
         create_by = #{createBy,jdbcType=VARCHAR},
@@ -566,7 +566,7 @@
       processing_state = #{processingState,jdbcType=TINYINT},
       commodity_code = #{commodityCode,jdbcType=VARCHAR},
       exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
-      integral_price = #{integralPrice,jdbcType=DECIMAL},
+      integral_price = #{integralPrice,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
