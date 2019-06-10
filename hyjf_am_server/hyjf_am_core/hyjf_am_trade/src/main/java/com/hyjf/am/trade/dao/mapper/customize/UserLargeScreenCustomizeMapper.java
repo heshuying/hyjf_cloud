@@ -6,6 +6,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 import com.hyjf.am.vo.api.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tanyy
@@ -23,7 +24,7 @@ public interface UserLargeScreenCustomizeMapper {
 
     List<EchartsResultVO> getMonthReceivedPayments();
 
-    List<UserCapitalDetailsVO> getUserCapitalDetails();
+    List<UserCapitalDetailsVO> getUserCapitalDetails(Map<String, Object> param);
 
     List<EchartsResultVO> getDayScalePerformanceList();
 
