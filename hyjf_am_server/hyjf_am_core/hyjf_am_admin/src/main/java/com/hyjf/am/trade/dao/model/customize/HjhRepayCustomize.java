@@ -79,6 +79,17 @@ public class HjhRepayCustomize implements Serializable {
     // 推荐人属性（当前）
     private String recommendAttr;
 
+    // 出借人人属性（当前）
+    private String userCurrentAttribute;
+
+    /**
+     * 推荐人信息(当前)
+     */
+    private String inviteCurrentUserName;
+    private String inviteUserCurrentRegionName;
+    private String inviteUserCurrentBranchName;
+    private String inviteUserCurrentDepartmentName;
+
     /**
      * 推荐人部门信息(出借时)
      */
@@ -427,6 +438,46 @@ public class HjhRepayCustomize implements Serializable {
 
     public void setRecommendAttr(String recommendAttr) {
         this.recommendAttr = recommendAttr;
+    }
+
+    public String getUserCurrentAttribute() {
+        return userCurrentAttribute;
+    }
+
+    public void setUserCurrentAttribute(String userCurrentAttribute) {
+        this.userCurrentAttribute = userCurrentAttribute;
+    }
+
+    public String getInviteCurrentUserName() {
+        return inviteCurrentUserName;
+    }
+
+    public void setInviteCurrentUserName(String inviteCurrentUserName) {
+        this.inviteCurrentUserName = inviteCurrentUserName;
+    }
+
+    public String getInviteUserCurrentRegionName() {
+        return inviteUserCurrentRegionName;
+    }
+
+    public void setInviteUserCurrentRegionName(String inviteUserCurrentRegionName) {
+        this.inviteUserCurrentRegionName = inviteUserCurrentRegionName;
+    }
+
+    public String getInviteUserCurrentBranchName() {
+        return inviteUserCurrentBranchName;
+    }
+
+    public void setInviteUserCurrentBranchName(String inviteUserCurrentBranchName) {
+        this.inviteUserCurrentBranchName = inviteUserCurrentBranchName;
+    }
+
+    public String getInviteUserCurrentDepartmentName() {
+        return inviteUserCurrentDepartmentName;
+    }
+
+    public void setInviteUserCurrentDepartmentName(String inviteUserCurrentDepartmentName) {
+        this.inviteUserCurrentDepartmentName = inviteUserCurrentDepartmentName;
     }
 
     public String getInviteUserName() {

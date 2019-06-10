@@ -275,12 +275,12 @@ public class PlanRepayController extends BaseController {
         map.put("lockPeriod", "服务回报期限");
         map.put("expectApr", "参考年回报率");
         map.put("userName", "用户名（出借人）");
-        map.put("recommendAttr", "出借人用户属性（当前）");
-        map.put("inviteUserName", "推荐人(当前)");
+        map.put("userCurrentAttribute", "出借人用户属性（当前）");
+        map.put("inviteCurrentUserName", "推荐人(当前)");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("inviteUserRegionName", "分公司(当前)");
-            map.put("inviteUserBranchName", "部门(当前)");
-            map.put("inviteUserDepartmentName", "团队(当前)");
+            map.put("inviteUserCurrentRegionName", "分公司(当前)");
+            map.put("inviteUserCurrentBranchName", "部门(当前)");
+            map.put("inviteUserCurrentDepartmentName", "团队(当前)");
         }
         map.put("accedeAccount", "授权服务金额(元)");
         map.put("repayInterest", "参考回报(元)");
@@ -400,12 +400,30 @@ public class PlanRepayController extends BaseController {
                 return "";
             }
         };
+        IValueFormatter userCurrentAttributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "无主单";
+                } else if ("1".equals(value)) {
+                    return "有主单";
+                } else if ("2".equals(value)) {
+                    return "线下员工";
+                } else if ("3".equals(value)) {
+                    return "线上员工";
+                }else {
+                    return value;
+                }
+            }
+        };
         mapAdapter.put("lockPeriod", lockPeriodAdapter);
         mapAdapter.put("expectApr", expectAprAdapter);
         mapAdapter.put("borrowStyle", borrowStyleAdapter);
         mapAdapter.put("orderStatus", orderStatusAdapter);
         mapAdapter.put("recommendAttr", recommendAttrAdapter);
         mapAdapter.put("orderLockTime", orderLockTimeAdapter);
+        mapAdapter.put("userCurrentAttribute", userCurrentAttributeAdapter);
         return mapAdapter;
     }
 
