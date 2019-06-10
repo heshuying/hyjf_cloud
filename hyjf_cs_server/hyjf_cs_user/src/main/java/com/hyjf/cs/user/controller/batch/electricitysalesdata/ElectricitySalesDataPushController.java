@@ -52,7 +52,7 @@ public class ElectricitySalesDataPushController extends BaseUserController {
                 // 客户唯一字段
                 bean.setCustomerFlag(electricitySalesDataPushListVO.getUserId());
                 // 姓名
-                bean.setTrueName(StringUtils.isBlank(electricitySalesDataPushListVO.getTrueName()) ? null : electricitySalesDataPushListVO.getTrueName());
+                bean.setTrueName(StringUtils.isBlank(electricitySalesDataPushListVO.getTrueName()) ? "" : electricitySalesDataPushListVO.getTrueName());
                 // 手机号
                 bean.setMobile(StringUtils.isBlank(electricitySalesDataPushListVO.getMobile()) ? null : electricitySalesDataPushListVO.getMobile());
                 // 性别:0未知,1男,2女

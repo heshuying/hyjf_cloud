@@ -300,7 +300,7 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
                 electricitySalesDataPushListVO.setGroupName(customerServiceRepresentiveConfig.getGroupName());
                 electricitySalesDataPushListVO.setBankAccount(bankOpenAccountVO == null ? "" : bankOpenAccountVO.getAccount());
                 electricitySalesDataPushListVO.setRoleId(roleId);
-                electricitySalesDataPushListVO.setTrueName(StringUtils.isBlank(userInfo.getTruename()) ? null : userInfo.getTruename());
+                electricitySalesDataPushListVO.setTrueName(StringUtils.isBlank(userInfo.getTruename()) ? "" : userInfo.getTruename());
                 electricitySalesDataPushListVO.setMobile(userVO.getMobile());
                 // 性别
                 electricitySalesDataPushListVO.setSex(userInfo.getSex());

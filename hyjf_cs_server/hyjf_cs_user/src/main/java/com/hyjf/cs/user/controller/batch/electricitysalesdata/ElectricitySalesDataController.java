@@ -199,7 +199,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                                 electricitySalesDataPushListVO.setGroupName(representiveConfigVO.getGroupName());
                                 electricitySalesDataPushListVO.setBankAccount(bankOpenAccountVO == null ? "" : bankOpenAccountVO.getAccount());
                                 electricitySalesDataPushListVO.setRoleId(roleId);
-                                electricitySalesDataPushListVO.setTrueName(StringUtils.isBlank(userInfo.getTruename()) ? null : userInfo.getTruename());
+                                electricitySalesDataPushListVO.setTrueName(StringUtils.isBlank(userInfo.getTruename()) ? "" : userInfo.getTruename());
                                 electricitySalesDataPushListVO.setMobile(user.getMobile());
                                 // 性别
                                 electricitySalesDataPushListVO.setSex(userInfo.getSex());
