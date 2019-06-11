@@ -6,6 +6,7 @@ import com.hyjf.am.trade.service.front.borrow.BorrowUserService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 借款人公司信息
@@ -232,7 +234,12 @@ public class BorrowUserServiceImpl extends BaseServiceImpl implements BorrowUser
 		return borrowUserStatisticsMapper.sumBorrowUserMoneyTopOne();
 	}
 
-	/**
+    @Override
+    public List<BorrowUserVO> getBorrowUserList(List<String> borrowNids) {
+        return borrowCustomizeMapper.getBorrowUserList(borrowNids);
+    }
+
+    /**
 	 * 通过输入的日期，获取这个日期所在月份的最后一天
 	 * @param cal
 	 * @return

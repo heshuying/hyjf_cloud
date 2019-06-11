@@ -21,6 +21,17 @@
 		</foreach>
 	</select>
 
-
+	<select id="queryCustomerIds" resultMap="certificateMapResult" parameterType="java.lang.Integer">
+		SELECT
+		user_id AS userId,
+		customer_id AS customerId
+		FROM
+		ht_certificate_authority
+		WHERE
+		user_id IN
+		<foreach collection="list" index="index"  item="listItem" open="(" close=")" separator="," >
+			#{listItem, jdbcType=INTEGER}
+		</foreach>
+	</select>
 </mapper>
 

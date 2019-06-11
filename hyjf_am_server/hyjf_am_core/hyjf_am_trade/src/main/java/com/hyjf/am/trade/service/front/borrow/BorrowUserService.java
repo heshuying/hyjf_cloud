@@ -6,10 +6,12 @@ import com.hyjf.am.trade.dao.model.bifa.UserIdAccountSumBean;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 借款人公司信息
@@ -137,4 +139,11 @@ public interface BorrowUserService extends BaseService {
      * @return
      */
     BigDecimal sumBorrowUserMoneyTopOne();
+
+    /**
+     * 根据标的编号查询借款用户信息
+     * @param borrowNids
+     * @return
+     */
+    List<BorrowUserVO> getBorrowUserList(List<String> borrowNids);
 }

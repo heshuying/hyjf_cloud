@@ -1,15 +1,15 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.hgreportdata.caijing;
+package com.hyjf.cs.message.bean.hgreportdata.caijing;
 
 import java.io.Serializable;
 
 /**
  * @author yaoyong
- * @version ZeroOneBorrowDataVO, v0.1 2019/6/4 15:38
+ * @version ZeroOneBorrowEntity, v0.1 2019/6/11 16:29
  */
-public class ZeroOneBorrowDataVO implements Serializable {
+public class ZeroOneBorrowEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,12 +27,6 @@ public class ZeroOneBorrowDataVO implements Serializable {
 
     //用户编号
     private String userid;
-
-    //计划编号
-    private String planNid;
-
-    //借款人类型
-    private Integer companyOrPersonal;
 
     //借款金额
     private Double amount;
@@ -283,19 +277,4 @@ public class ZeroOneBorrowDataVO implements Serializable {
         this.attribute3 = attribute3;
     }
 
-    public String getPlanNid() {
-        return planNid;
-    }
-
-    public void setPlanNid(String planNid) {
-        this.planNid = planNid;
-    }
-
-    public Integer getCompanyOrPersonal() {
-        return companyOrPersonal;
-    }
-
-    public void setCompanyOrPersonal(Integer companyOrPersonal) {
-        this.companyOrPersonal = companyOrPersonal;
-    }
 }

@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.Date;
@@ -183,4 +184,8 @@ public interface AmUserClient {
 	List<CertificateAuthorityVO> getCertificateAuthorityList(CertificateAuthorityRequest request);
 
 	List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1);
+
+    List<CertificateAuthorityVO> getCertificateAuthorityList(List<BorrowUserVO> userVOS);
+
+	List<CertificateAuthorityVO> queryCustomerId(List<Integer> userIds);
 }

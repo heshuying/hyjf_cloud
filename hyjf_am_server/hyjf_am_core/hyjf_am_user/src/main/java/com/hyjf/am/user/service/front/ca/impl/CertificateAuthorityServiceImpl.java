@@ -56,4 +56,9 @@ public class CertificateAuthorityServiceImpl extends BaseServiceImpl implements 
     public List<CertificateAuthorityVO> queryCustomerId(Set<Integer> userId) {
          return certificateCustomizeMapper.queryCustomerId(userId);
     }
+
+    @Override
+    public List<CertificateAuthorityVO> queryCustomerIds(List<Integer> userIds) {
+        return certificateCustomizeMapper.queryCustomerIds(userIds);
+    }
 }

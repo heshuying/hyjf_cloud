@@ -15,6 +15,7 @@ import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
@@ -361,4 +362,24 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+    @Override
+    public List<CertificateAuthorityVO> getCertificateAuthorityList(List<BorrowUserVO> userVOS) {
+		String url = "http://AM-USER/am-user/certificateauthority/queryCACustomerId";
+		CertificateAuthorityResponse response = restTemplate.postForEntity(url, userVOS, CertificateAuthorityResponse.class).getBody();
+		if (Validator.isNotNull(response)) {
+			return response.getResultList();
+		}
+        return null;
+    }
+
+    @Override
+    public List<CertificateAuthorityVO> queryCustomerId(List<Integer> userIds) {
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/certificateauthority/queryCustomerIds", userIds, CertificateAuthorityResponse.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+    }
 }

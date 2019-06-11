@@ -12,11 +12,13 @@ import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author pangchengchao
@@ -171,4 +173,11 @@ public interface BorrowCustomizeMapper {
      * @return
      */
     int updateRepayOfBorrow(Borrow borrow);
+
+    /**
+     *批量查询借款用户信息
+     * @param borrowNids
+     * @return
+     */
+    List<BorrowUserVO> getBorrowUserList(@Param("set") List<String> borrowNids);
 }
