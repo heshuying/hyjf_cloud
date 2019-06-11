@@ -21,6 +21,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.aems.unbindcard.AemsUnBindCardService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -195,15 +196,15 @@ public class AemsUnBindCardServiceImpl extends BaseUserServiceImpl implements Ae
 		// 成功页面
 		String successPath = "/user/bindCardSuccess?bind=false&unbind=true&msg=解绑银行卡成功!";
 		// 回调路径
-		String retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath;
-		String successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath;
+		String retUrl = BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform()) + errorPath;
+		String successUrl = BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform()) + successPath;
 		if(!channel.contains(BankCallConstant.CHANNEL_PC)){
 			//返回路径
 			errorPath = "/user/bankCard/unbind/result/failed";
 			successPath = "/user/bankCard/unbind/result/success";
 			// 同步地址  是否跳转到前端页面
-			retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath +"?status=99";
-			successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath+"?status=000&statusDesc=";
+			retUrl = BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform()) + errorPath +"?status=99";
+			successUrl = BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform()) + successPath+"?status=000&statusDesc=";
 			retUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
 			successUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
 		}

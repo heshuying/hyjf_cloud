@@ -1,5 +1,7 @@
 package com.hyjf.am.user.dao.model.customize;
 
+import java.util.Date;
+
 public class ChangeLogCustomize {
 
     private Integer id;
@@ -43,7 +45,41 @@ public class ChangeLogCustomize {
     private int limitStart = -1;
 
     private int limitEnd = -1;
-    
+
+    private String updateUserId;
+
+    /**
+     * 修改类型 2用户信息修改  1推荐人修改
+     *
+     * @mbggenerated
+     */
+    private Integer updateType;
+
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
+    private String idcard;
+    /**
+     * 修改人名字
+     *
+     * @mbggenerated
+     */
+    private String updateUser;
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    private Date updateTime;
+
+    // add by nxl 合规四期 添加邮箱显示
+    private String email;
+
+    //注册渠道
+    private String utmName;
 
     public String getStartTime() {
 		return startTime;
@@ -226,6 +262,61 @@ public class ChangeLogCustomize {
 			
 	}
 
+    public String getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(String updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Integer getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(Integer updateType) {
+        this.updateType = updateType;
+    }
+
+    public String getIdcard() {
+        return idcard;
+    }
+
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUtmName() {
+        return utmName;
+    }
+
+    public void setUtmName(String utmName) {
+        this.utmName = utmName;
+    }
 }
 
 

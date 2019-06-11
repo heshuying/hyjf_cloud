@@ -22,6 +22,7 @@ import com.hyjf.cs.user.controller.web.bindcard.WebBindCardPageController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -139,7 +140,7 @@ public class AppUnBindCardPageController extends BaseUserController {
         try {
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            String RECHARGE_URL = super.getFrontHost(systemConfig, platform) + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
+            String RECHARGE_URL = BankCommonUtil.getFrontHost(systemConfig, platform) + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
             StringBuffer sbUrl = new StringBuffer(RECHARGE_URL);
             sbUrl.append("&").append("version").append("=").append(version);
             sbUrl.append("&").append("netStatus").append("=").append(netStatus);
@@ -209,7 +210,7 @@ public class AppUnBindCardPageController extends BaseUserController {
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         deleteCardPageBean.setPlatform(request.getParameter("platform"));
         //调用解绑银行卡接口
-        Map<String, Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean, BankCallConstant.CHANNEL_APP, sign, request);
+        Map<String, Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean, BankCallConstant.CHANNEL_APP, sign, request,null);
         result.setStatus(BaseResult.SUCCESS);
         result.setData(data);
         return result;

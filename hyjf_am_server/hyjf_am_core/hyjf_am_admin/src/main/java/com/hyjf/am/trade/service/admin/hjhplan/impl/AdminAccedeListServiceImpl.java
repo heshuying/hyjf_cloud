@@ -337,7 +337,21 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(request.getInvestCountsSrch())) {
 			param.put("investCountsSrch", request.getInvestCountsSrch());
 		}
-		
+		// add by wgx 20190530   bug 635 智投订单列表总计异常
+		//预计开始退出时间
+		if (StringUtils.isNotEmpty(request.getEndDateStartSrch())) {
+			param.put("endDateStartSrch", request.getEndDateStartSrch());
+		}
+		if (StringUtils.isNotEmpty(request.getEndDateEndSrch())) {
+			param.put("endDateEndSrch", request.getEndDateEndSrch());
+		}
+		//实际退出时间
+		if (StringUtils.isNotEmpty(request.getAcctualPaymentTimeStartSrch())) {
+			param.put("acctualPaymentTimeStartSrch", request.getAcctualPaymentTimeStartSrch());
+		}
+		if (StringUtils.isNotEmpty(request.getAcctualPaymentTimeEndSrch())) {
+			param.put("acctualPaymentTimeEndSrch", request.getAcctualPaymentTimeEndSrch());
+		}
 		return this.adminPlanAccedeListCustomizeMapper.sumAccedeRecord(param);
 	}
 

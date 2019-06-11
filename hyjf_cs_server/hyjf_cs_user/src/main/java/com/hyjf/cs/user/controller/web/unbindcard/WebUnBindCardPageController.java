@@ -44,7 +44,9 @@ public class WebUnBindCardPageController extends BaseUserController{
      */
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
     @PostMapping(value = "/deleteCardPage", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
+    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId,
+                                          @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                          @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
         logger.info("=======解绑银行卡开始,参数为:user Id = "+userId+"& cardId = "+cardId+"===============");
         // 银行卡id
 //        String cardId = param.get("cardId");
@@ -74,7 +76,7 @@ public class WebUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         //调用解绑银行卡接口
-        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,request);
+        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,request,wjtClient);
         result.setData(data);
         return result;
     }

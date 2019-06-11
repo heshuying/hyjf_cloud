@@ -195,7 +195,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
      * @return
      */
     @Override
-    public List<CertClaim> selectCertBorrowConfig(){
+    public List<CertClaim> insertCertBorrowConfig(){
         CertClaimExample example = new CertClaimExample();
         CertClaimExample.Criteria criteria = example.createCriteria();
         /*if(StringUtils.isNotBlank(isTender)){
@@ -228,7 +228,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
      * @return
      */
     @Override
-    public List<CertProduct> selectCertProductList(){
+    public List<CertProduct> insertCertProductList(){
         CertProductExample example = new CertProductExample();
         CertProductExample.Criteria criteria = example.createCriteria();
         //产品信息未上报

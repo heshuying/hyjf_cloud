@@ -35,13 +35,11 @@ import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
+import com.hyjf.am.response.trade.wbs.WbsHjhPlanInfoResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.BorrowApicronRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
@@ -7139,6 +7137,51 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 统计预计新增复投额
+     * @param date
+     * @return List<HjhPlanCapitalPredictionVO>
+     */
+    @Override
+    public List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalPredictionForProformaList/"+date;
+        HjhPlanCapitalPredictionResponse response = restTemplate.getForEntity(url, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 统计预计新增债转额
+     * @param date
+     * @return List<HjhPlanCapitalPredictionVO>
+     */
+    @Override
+    public List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForCreditList/"+date+"/"+dualDate;
+        HjhPlanCapitalPredictionResponse response = restTemplate.getForEntity(url, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 统计实际资金计划
+     * @param date
+     * @return List<HjhPlanCapitalActualVO>
+     */
+    @Override
+    public List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalActualformaList/"+date;
+        HjhPlanCapitalActualResponse response = restTemplate.getForEntity(url, HjhPlanCapitalActualResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
 
     @Override
     public IntegerResponse insertScreenData(ScreenDataBean screenDataBean) {
@@ -7341,6 +7384,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> selectWbsSendHjhPlanList() {
+        String url = "http://AM-TRADE/am-trade/wbsHjhPlanInfo/selectWbsSendHjhPlanList";
+        WbsHjhPlanInfoResponse response = restTemplate.getForEntity(url, WbsHjhPlanInfoResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 根据计划订单号查找投资详情
      * @param accedeOrderId
      * @return
@@ -7511,4 +7569,41 @@ public class AmTradeClientImpl implements AmTradeClient {
         return false;
     }
     // 应急中心二期，历史数据上报 add by nxl end
+
+    @Override
+    @Cached(name="webWjtHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+    public List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request) {
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/wjt/searchWjtWebProjectList",request,ProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    @Cached(name="wechatWjtHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String, Object> projectMap){
+        String url = BASE_URL + "/wechat/wjt/searchHomeProejctList";
+        WechatProjectListResponse res = restTemplate.postForEntity(url, projectMap, WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+    @Override
+    @Cached(name="webWjtHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+    public Integer countWjtWebProjectList(ProjectListRequest request) {
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/wjt/countWjtWebProjectList",request,ProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return null;
+    }
+
+
+
 }

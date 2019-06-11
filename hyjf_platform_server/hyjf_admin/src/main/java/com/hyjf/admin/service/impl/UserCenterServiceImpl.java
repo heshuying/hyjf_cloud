@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
+import com.hyjf.admin.beans.vo.JxBankConfigCustomizeVO;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -38,6 +39,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -653,7 +655,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      * @auth nxl
      */
     @Override
-    public JxBankConfigVO getBankConfigByBankName(String bankName){
+    public List<JxBankConfigVO> getBankConfigByBankName(String bankName){
         return amConfigClient.getBankConfigByBankName(bankName);
     }
     /**
@@ -762,5 +764,26 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
         BankCancellationAccountResponse response = this.userCenterClient.getBankCancellationAccountList(bankCancellationAccountRequest);
         return response;
+    }
+    /**
+     * 根据银行卡号获取bankId
+     *
+     * @param cardNo
+     * @return
+     * @auther: nxl
+     */
+    @Override
+    public JxBankConfigCustomizeVO getBankIdByCardNo(String cardNo) {
+        String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
+        if (StringUtils.isBlank(bankId)) {
+            return null;
+        }
+        JxBankConfigVO jxBankConfigVO = amConfigClient.selectJxBankConfigByBankId(Integer.parseInt(bankId));
+        if (null == jxBankConfigVO) {
+            return null;
+        }
+        JxBankConfigCustomizeVO jxBankConfigCustomizeVO = new JxBankConfigCustomizeVO();
+        BeanUtils.copyProperties(jxBankConfigVO,jxBankConfigCustomizeVO);
+        return jxBankConfigCustomizeVO;
     }
 }

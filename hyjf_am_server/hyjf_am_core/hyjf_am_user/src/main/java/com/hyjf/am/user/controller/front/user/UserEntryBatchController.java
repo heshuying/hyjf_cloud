@@ -23,6 +23,6 @@ public class UserEntryBatchController extends BaseController {
     @RequestMapping("/entryupdate")
     public void entryUpdate(){
         logger.info("员工入职修改客户属性...");
-        userEntryBatchService.updateUserEntryInfo();
+        userEntryBatchService.updUserEntryInfo();
     }
 }

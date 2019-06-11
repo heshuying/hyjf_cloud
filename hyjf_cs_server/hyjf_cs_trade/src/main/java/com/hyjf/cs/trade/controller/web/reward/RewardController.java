@@ -19,10 +19,11 @@ import java.util.Map;
 
 /**
  * 邀请及奖励记录
+ *
  * @author hesy
  * @version RewardController, v0.1 2018/6/23 17:14
  */
-@Api(value = "web端-奖励记录", tags ="web端-奖励记录")
+@Api(value = "web端-奖励记录", tags = "web端-奖励记录")
 @RestController
 @RequestMapping("/hyjf-web/invite")
 public class RewardController {
@@ -35,32 +36,37 @@ public class RewardController {
      * 我的奖励列表
      */
     @ApiOperation(value = "我的奖励列表", notes = "我的奖励列表")
-    @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")
+    @ApiImplicitParam(name = "param", value = "{currPage:string,pageSize:string}", dataType = "Map")
     @PostMapping(value = "/myRewardList", produces = "application/json; charset=utf-8")
-    public WebResult<List<MyRewardRecordCustomizeVO>> selectMyRewardList(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String,String> param){
+    public WebResult<List<MyRewardRecordCustomizeVO>> selectMyRewardList(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
         WebResult<List<MyRewardRecordCustomizeVO>> result = new WebResult<List<MyRewardRecordCustomizeVO>>();
         WebViewUserVO userVO = rewardService.getUserFromCache(userId);
 
-        logger.info("获取我的奖励列表开始，userId：{}", userVO.getUserId());
+        if (userVO != null) {
+            logger.info("获取我的奖励列表开始，userId：{}", userVO.getUserId());
 
-        // 请求参数校验
-        rewardService.checkForRewardList(param);
+            // 请求参数校验
+            rewardService.checkForRewardList(param);
 
-        Page page = Page.initPage(Integer.parseInt(param.get("currPage")), Integer.parseInt(param.get("pageSize")));
-        Integer rewardCount = rewardService.selectMyRewardCount(String.valueOf(userVO.getUserId()));
-        page.setTotal(rewardCount);
+            Page page = Page.initPage(Integer.parseInt(param.get("currPage")), Integer.parseInt(param.get("pageSize")));
+            Integer rewardCount = rewardService.selectMyRewardCount(String.valueOf(userVO.getUserId()));
+            page.setTotal(rewardCount);
 
-        try {
-            List<MyRewardRecordCustomizeVO> resultList = rewardService.selectMyRewardList(String.valueOf(userVO.getUserId()), page.getOffset(), page.getLimit());
-            result.setData(resultList);
-        } catch (Exception e) {
-            logger.error("获取我的奖励列表异常", e);
+            try {
+                List<MyRewardRecordCustomizeVO> resultList = rewardService.selectMyRewardList(String.valueOf(userVO.getUserId()), page.getOffset(), page.getLimit());
+                result.setData(resultList);
+            } catch (Exception e) {
+                logger.error("获取我的奖励列表异常", e);
+                result.setStatus(WebResult.ERROR);
+                result.setStatusDesc(WebResult.ERROR_DESC);
+                result.setData(Collections.emptyList());
+            }
+            result.setPage(page);
+        } else {
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
             result.setData(Collections.emptyList());
         }
-
-        result.setPage(page);
         return result;
     }
 }

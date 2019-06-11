@@ -466,4 +466,37 @@ public class CsMessageClientImpl implements CsMessageClient {
                 .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDay", request, HjhInfoAccountBalanceResponse.class).getBody();
         return response;
     }
+
+    /**
+     * 获取汇计划--计划资金列表（预计）(从MongoDB读取数据)
+     *
+     * @param hjhPlanCapitalPredictionRequest
+     * @return
+     * @Author : wenxin
+     */
+    @Override
+    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest) {
+        HjhPlanCapitalPredictionResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjhPlanCapitalPrediction/getPlanCapitalPredictionList",
+                hjhPlanCapitalPredictionRequest, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（实际）(从MongoDB读取数据)
+     * @param hjhPlanCapitalActualRequest
+     * @return
+     * @Author : wenxin
+     */
+    @Override
+    public HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest){
+        HjhPlanCapitalActualResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjhPlanCapitalActual/getPlanCapitalActualList",
+                hjhPlanCapitalActualRequest, HjhPlanCapitalActualResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }

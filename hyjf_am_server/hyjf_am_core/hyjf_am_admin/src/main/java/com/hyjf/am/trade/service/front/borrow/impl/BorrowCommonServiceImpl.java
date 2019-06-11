@@ -58,6 +58,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	private String physical;
 	@Value("${file.upload.real.path}")
 	private String real;
+
+	@Value("${wjt.instCode}")
+	private String wjtInstCode;
 	/**
 	 * 汇消费的项目类型编号
 	 */
@@ -135,42 +138,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 操作redis
 					String borrowPreNidNew = "";
 					String borrowNid = "";
-					// 拿取实际的项目编号
-//					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
-//					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
-//						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
-//							List<Object> result = null;
-//							Transaction tx = jedis.multi();
-//							borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
-//							if (StringUtils.isBlank(borrowPreNidNew)) {
-//								tx.set("xjdBorrowPreNid", borrowPreNid);
-//								borrowPreNidNew = borrowPreNid;
-//								result = tx.exec();
-//							} else if (borrowPreNidNew != null) {
-//								if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
-//									borrowPreNidNew = (String.valueOf(borrowPreNid));
-//								} else {
-//									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
-//								}
-//								tx.set("xjdBorrowPreNid", borrowPreNidNew);
-//								result = tx.exec();
-//							}
-//							if (result == null || result.isEmpty()) {
-//								jedis.unwatch();
-//							} else {
-//								String ret = (String) result.get(0);
-//								if (ret != null && "OK".equals(ret)) {
-//									if (i == 0) {
-//										borrowPreNid = borrowPreNidNew;
-//									}
-//									borrowNid = beforeFix + borrowPreNidNew;
-//									break;
-//								} else {
-//									jedis.unwatch();
-//								}
-//							}
-//						}
-//					}else{
 
 					Jedis jedis = poolNew.getResource();
 					try {
@@ -231,6 +198,15 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                     borrowLog.setCreateUserName(adminUsername);
 
                     borrowLogMapper.insert(borrowLog);
+
+					// 发送MQ 更改借款人机构编号
+					if (wjtInstCode.equals(borrow.getPublishInstCode())){
+						try {
+							this.sendBorrowUserMQ(borrow.getUserId());
+						}catch (Exception e){
+							logger.error("发送修改标的借款人机构编号MQ失败...");
+						}
+					}
 				}
 			}
 		}
@@ -263,8 +239,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			throws Exception {
 		// 插入时间
 		Date systemNowDate = GetDate.getDate();
-		// 添加时间
-//		String addtime = String.valueOf(GetDate.getNowTime10());
+
 		// 借款用户
 		RUserExample example = new RUserExample();
 		RUserExample.Criteria cra = example.createCriteria();
@@ -340,14 +315,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setAssetTypeName(assetTypeName == null ? "" : assetTypeName);
 		// 状态
 		borrow.setStatus(0);
-		// 图片信息
-//		borrow.setBorrowPic("");
-		// 点击次数
-//		borrow.setHits(0);
-//		borrow.setCommentCount(0);// 插入时不用的字段
 		//项目标题
 		borrow.setProjectName(borrowBean.getProjectName());
-		//新标（20170612改版后都为新标）
+		// 新标（20170612改版后都为新标）
 		borrow.setIsNew(1);
 		
 		// 借款方式
@@ -367,31 +337,18 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		if (StringUtils.isEmpty(borrow.getType())) {
 			borrow.setType("0");
 		}
-
-//		borrow.setViewType("");// 插入时不用的字段
-		// 添加时间
-	//	borrow.setAddtime(addtime);
 		borrow.setCreateTime(new Date());
 		// 添加IP
 		borrow.setAddIp(GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest()));
-		// 冻结额度
-//		borrow.setAmountAccount(new BigDecimal(account));
-	//	borrow.setAmountType("credit");// 插入时不用的字段
-	//	borrow.setCashStatus(0);// 插入时不用的字段
 		// 借款总金额
 		borrow.setAccount(new BigDecimal(account));
 		borrow.setBorrowAccountWait(new BigDecimal(account));
-//		borrow.setBorrowAccountWaitAppoint(new BigDecimal(account));
-	//	borrow.setOtherWebStatus(0);// 插入时不用的字段
 		// 财务状况
 		if (StringUtils.isEmpty(borrowBean.getAccountContents())) {
 			borrow.setAccountContents(StringUtils.EMPTY);
 		} else {
 			borrow.setAccountContents(borrowBean.getAccountContents());
 		}
-	//	borrow.setBorrowType("credit");// 插入时不用的字段
-	//	borrow.setBorrowPassword("");// 插入时不用的字段
-//		borrow.setBorrowFlag("");// 插入时不用的字段
 		// 是否可以进行借款
 		borrow.setBorrowStatus(0);
 		// 满表审核状态
@@ -406,18 +363,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		/******* 修改预编号生成规则 pcc ********/
 		// 已经募集的金额
 		borrow.setBorrowAccountYes(BigDecimal.ZERO);
-		// // 剩余的金额
-		// borrow.setBorrowAccountWait(BigDecimal.ZERO);
-		// 募集完成率
-//		borrow.setBorrowAccountScale(BigDecimal.ZERO);
 		// 借款用途
 		borrow.setBorrowUse(borrowBean.getBorrowUse());
 		// 还款方式
 		borrow.setBorrowStyle(borrowBean.getBorrowStyle());
 		// 借款期限
 		borrow.setBorrowPeriod(Integer.valueOf(borrowBean.getBorrowPeriod().trim()));
-//		borrow.setBorrowPeriodRoam(0);// 插入时不用的字段
-//		borrow.setBorrowDay(0);// 插入时不用的字段
 		// 借款利率
 		borrow.setBorrowApr(new BigDecimal(borrowBean.getBorrowApr().trim()));
 		// 项目描述
@@ -447,10 +398,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setBorrowIncomeDescription(borrowBean.getBorrowIncomeDescription());
 		// 发行人
 		borrow.setBorrowPublisher(borrowBean.getBorrowPublisher());
-		// del by liuyang 20180906
-//		// 产品加息收益率
-//		borrow.setBorrowExtraYield(new BigDecimal(StringUtils.isNotEmpty(borrowBean.getBorrowExtraYield()) ? borrowBean.getBorrowExtraYield() : "0"));
-		// del by liuyang 20180906
+
 		// ----------风险缓释金添加 end-------
 
 		/**************网站改版添加 ******************/
@@ -469,10 +417,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		//财务状况
 		borrow.setFianceCondition(borrowBean.getFianceCondition());
 		/**************网站改版添加end ******************/
-		
-//		borrow.setBorrowFrostAccount(BigDecimal.ZERO);// 插入时不用的字段
-//		borrow.setBorrowFrostScale("");// 插入时不用的字段
-//		borrow.setBorrowFrostSecond(BigDecimal.ZERO);// 插入时不用的字段
+
 		// 借款有效时间
 		if (StringUtils.isNotEmpty(borrowBean.getBorrowValidTime())) {
 			borrow.setBorrowValidTime(Integer.valueOf(borrowBean.getBorrowValidTime()));
@@ -501,17 +446,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		else {
 			borrow.setBankBorrowDays(borrow.getBorrowPeriod() * 30);
 		}
-		// 借款成功时间
-//		borrow.setBorrowSuccessTime(0);
 		// 借款到期时间
 		borrow.setBorrowEndTime("");
-//		borrow.setBorrowPartStatus(0);// 插入时不用的字段
 		borrow.setBorrowUpfiles("");// 插入时不用的字段
-//		borrow.setCancelUserid(0);// 插入时不用的字段
-//		borrow.setCancelStatus(0);// 插入时不用的字段
-//		borrow.setCancelTime("");// 插入时不用的字段
-	//	borrow.setCancelRemark("");// 插入时不用的字段
-//		borrow.setCancelContents("");// 插入时不用的字段
 		// 最低投标金额
 		if (StringUtils.isNotEmpty(borrowBean.getTenderAccountMin())) {
 			borrow.setTenderAccountMin(Integer.valueOf(borrowBean.getTenderAccountMin()));
@@ -527,11 +464,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		// 投标次数
 		borrow.setTenderTimes(0);
-		// 最后出借时间
-	//	borrow.setTenderLastTime("");
-	//	borrow.setRepayAdvanceStatus(0);// 插入时不用的字段
-	//	borrow.setRepayAdvanceTime("");// 插入时不用的字段
-	//	borrow.setRepayAdvanceStep(0);// 插入时不用的字段
 		// 应还款总额
 		borrow.setRepayAccountAll(BigDecimal.ZERO);
 		// 总还款利息
@@ -550,85 +482,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setRepayAccountInterestWait(BigDecimal.ZERO);
 		// 未还款本金
 		borrow.setRepayAccountCapitalWait(BigDecimal.ZERO);
-//		borrow.setRepayAccountTimes(0);// 插入时不用的字段
-//		borrow.setRepayMonthAccount(0);// 插入时不用的字段
 		// 最后还款时间
 		borrow.setRepayLastTime(0);// 插入时不用的字段
-	//	borrow.setRepayEachTime("");// 插入时不用的字段
 		borrow.setRepayNextTime(0);// 插入时不用的字段
-//		borrow.setRepayNextAccount(BigDecimal.ZERO);// 插入时不用的字段
-		// 还款次数
-//		borrow.setRepayTimes(0);
 		borrow.setRepayFullStatus(0);// 插入时不用的字段
 		borrow.setRepayFeeNormal(BigDecimal.ZERO); // 插入时不用的字段
-													// 正常还款费用
-	//	borrow.setRepayFeeAdvance(BigDecimal.ZERO); // 插入时不用的字段
-													// 提前还款费用
-	//	borrow.setRepayFeeLate(BigDecimal.ZERO); // 插入时不用的字段
-													// 逾期还款费用
-	//	borrow.setLateInterest(BigDecimal.ZERO); // 插入时不用的字段
-													// 逾期利息
-	//	borrow.setLateForfeit(BigDecimal.ZERO); // 插入时不用的字段
-												// 逾期催缴费
-//		borrow.setVouchStatus(0); // 插入时不用的字段 是否是担保
-//		borrow.setVouchAdvanceStatus(0); // 插入时不用的字段
-//		borrow.setVouchUserStatus(0); // 插入时不用的字段 担保人担保状态
-//		borrow.setVouchUsers(""); // 插入时不用的字段 担保人列表
-//		borrow.setVouchAccount(BigDecimal.ZERO); // 插入时不用的字段
-//													// 总担保的金额
-//		borrow.setVouchAccountYes(BigDecimal.ZERO); // 插入时不用的字段
-//													// 已担保的金额
-//		borrow.setVouchAccountWait(BigDecimal.ZERO); // 插入时不用的字段
-//		borrow.setVouchAccountScale(0L); // 插入时不用的字段 已担保的比例
-//		borrow.setVouchTimes(0); // 插入时不用的字段 担保次数
-//		borrow.setVouchAwardStatus(0); // 插入时不用的字段 是否设置担保奖励
-//		borrow.setVouchAwardScale(BigDecimal.ZERO); // 插入时不用的字段
-//													// 担保比例
-//		borrow.setVouchAwardAccount(BigDecimal.ZERO); // 插入时不用的字段
-//														// 总付出的担保奖励
-//
-//		borrow.setVoucherName("");// 插入时不用的字段
-//		borrow.setVoucherLianxi("");// 插入时不用的字段
-//		borrow.setVoucherAtt("");// 插入时不用的字段
-//		borrow.setVouchjgName("");// 插入时不用的字段
-//		borrow.setVouchjgLianxi("");// 插入时不用的字段
-//		borrow.setVouchjgJs("");// 插入时不用的字段
-//		borrow.setVouchjgXy("");// 插入时不用的字段
-//		borrow.setFastStatus(0);// 插入时不用的字段
-//		borrow.setVouchstatus(0);// 插入时不用的字段
-//		borrow.setGroupStatus(0);// 插入时不用的字段
-//		borrow.setGroupId(0);// 插入时不用的字段
-//
-//		borrow.setAwardStatus(0); // 插入时不用的字段 是否奖励
-//		borrow.setAwardFalse(0); // 插入时不用的字段 出借失败是否也奖励
-//		// 插入时不用的字段 奖励金额
-//		borrow.setAwardAccount(BigDecimal.ZERO);
-//		// 插入时不用的字段 按比例奖励
-//		borrow.setAwardScale(BigDecimal.ZERO);
-//		// 插入时不用的字段 投标奖励总额
-//		borrow.setAwardAccountAll(BigDecimal.ZERO);
-//
-//		borrow.setOpenAccount(0); // 插入时不用的字段 公开我的帐户资金情况
-//		borrow.setOpenBorrow(0); // 插入时不用的字段 公开我的借款资金情况
-//		borrow.setOpenTender(0); // 插入时不用的字段 公开我的投标资金情况
-//		borrow.setOpenCredit(0); // 插入时不用的字段 公开我的信用额度情况
-//		// 是否可以评论
-//		borrow.setCommentStaus(0);
-//		borrow.setCommentTimes(0); // 插入时不用的字段 评论次数
-//		borrow.setCommentUsertype(""); // 插入时不用的字段 可评论的用户
-//
-//		borrow.setBorrowPawnApp(""); // 插入时不用的字段
-//		borrow.setBorrowPawnAppUrl(""); // 插入时不用的字段
-//		borrow.setBorrowPawnAuth(""); // 插入时不用的字段
-//		borrow.setBorrowPawnAuthUrl(""); // 插入时不用的字段
-//		borrow.setBorrowPawnFormalities(""); // 插入时不用的字段
-//		borrow.setBorrowPawnFormalitiesUrl(""); // 插入时不用的字段
-//		borrow.setBorrowPawnType(""); // 插入时不用的字段
-//		borrow.setBorrowPawnTime(""); // 插入时不用的字段
-//
-//		borrow.setBorrowPawnValue(""); // 插入时不用的字段
-//		borrow.setBorrowPawnXin(""); // 插入时不用的字段
-//		borrow.setOrderTop(""); // 插入时不用的字段 置顶时间
 		borrow.setDiyaContents(""); // 插入时不用的字段
 		borrow.setBorrowPawnDescription(""); // 插入时不用的字段
 		// 初审核人
@@ -667,12 +525,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setBorrowCompany(""); // 插入时不用的字段 企业背景
 		borrow.setBorrowCompanyScope(""); // 插入时不用的字段 企业信息-营业范围
 		borrow.setBorrowCompanyBusiness(""); // 插入时不用的字段 企业信息-经营状况
-//		borrow.setXmupfilesId(""); // 插入时不用的字段
-//		borrow.setDyupfilesId(""); // 插入时不用的字段
 		// 项目资料
 		borrow.setFiles(this.getUploadImage(borrowBean, "", borrowNid));
-		// 担保方式
-//		borrow.setGuaranteeType(0);
 		// 项目类型
 		borrow.setProjectType( borrowBean.getProjectType());
 
@@ -746,17 +600,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setCompanyOrPersonal(Integer.valueOf(borrowBean.getCompanyOrPersonal()));
 		// 定时发标
 		borrow.setOntime(0);
-//		borrow.setBookingBeginTime(0);
-//		borrow.setBookingEndTime(0);
-//		borrow.setBookingStatus(0);
-//		borrow.setBorrowAccountScaleAppoint(BigDecimal.ZERO);
 		// 汇资管的内容设置
 		this.setHZGInfo(borrowBean, borrow);
 		// 更新时间
 		borrow.setUpdatetime(systemNowDate);
-		// 银行存管标识 0未进行银行存管 1已进行银行存管
-//		borrow.setBankInputFlag(0);
-
 		// new added 插入是否调用引擎字段 default 0
 		borrow.setIsEngineUsed(Integer.valueOf(borrowBean.getIsEngineUsed()));
 
@@ -766,7 +613,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		} else {
 			borrow.setIsShow(1);
 		}
+		// 定向发标平台
 		borrow.setPublishInstCode(borrowBean.getPublishInstCode());
+
 		borrow.setIsMonth(borrowBean.getIsMonth());
 		// 新建标的有标签的先打上标签
 		borrow.setLabelId(borrowBean.getLabelId());
@@ -892,6 +741,23 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								params.put("userId", borrow.getUserId());
 								commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 										MQConstant.HG_REPORT_DELAY_LEVEL);
+
+
+								// add by liuyang 20190507 wbs系统标的信息推送MQ start
+								// 如果是散标,则往wbs系统推送标的
+								if (StringUtil.isBlank(bwb.getPlanNid())) {
+									try {
+										Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+										// 判断标的当前状态是否是投资中的状态
+										if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isEmpty(nowBorrow.getPlanNid()) && bwb.getIsEngineUsed()== 0 ) {
+											logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+											sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+										}
+									} catch (Exception e) {
+										logger.error("wbs系统标的信息推送MQ失败,标的编号:[" + borrow.getBorrowNid() + "].");
+									}
+								}
+								// add by liuyang 20190507 wbs系统标的信息推送MQ end
 							}
 						}
 
@@ -1265,6 +1131,19 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 定时发标
 					if (Integer.valueOf(borrowBean.getVerifyStatus()) == 3) {
 						borrow.setOntime(GetDate.strYYYYMMDDHHMMSS2Timestamp(borrowBean.getOntime()));// 发标时间
+						// add by liuyang 20190415 wbs标的信息推送 start
+						// 立即发标时,设置牛投邦状态为:1 预热中
+						try {
+							Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+							// 判断标的当前状态是否是投资中的状态
+							if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0) {
+								logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+								sendWbsBorrowInfo(borrow.getBorrowNid(), "1", 0);
+							}
+						} catch (Exception e) {
+							logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+						}
+						// add by liuyang 20190415 wbs标的信息推送 end
 					} else if (Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 						borrow.setOntime(0);// 发标时间
 					}
@@ -1420,6 +1299,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 更新时间
 		borrow.setUpdatetime(systemNowDate);
 
+		// 定向发标平台
 		borrow.setPublishInstCode(borrowBean.getPublishInstCode());
 		// 备案中的标的重新打标签
 		/*-------------upd by liushouyi HJH3 Start-----------------*/
@@ -1489,6 +1369,14 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		this.insertBorrowHouses(borrowNid, borrowBean, borrow);
 		// 认证信息
 		this.insertBorrowCompanyAuthen(borrowNid, borrowBean, borrow);
+		// 发送MQ 更改借款人机构编号
+		if (wjtInstCode.equals(borrow.getPublishInstCode())){
+			try {
+				this.sendBorrowUserMQ(borrow.getUserId());
+			}catch (Exception e){
+				logger.error("发送修改标的借款人机构编号MQ失败...");
+			}
+		}
 	}
 
 	/**
@@ -6336,4 +6224,36 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
         }
         return null;
     }
+
+	/**
+	 * wbs标的信息推送MQ
+	 *
+	 * @param borrowNid
+	 * @param productStatus
+	 * @param productType
+	 */
+	private void sendWbsBorrowInfo(String borrowNid, String productStatus, Integer productType) throws MQException {
+		JSONObject params = new JSONObject();
+		// 产品编号
+		params.put("productNo", borrowNid);
+		// 产品状态
+		params.put("productStatus", productStatus);
+		// 产品类型 0 散标类, 1 计划类
+		params.put("productType", productType);
+		commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+	}
+
+
+	/**
+	 *
+	 * 如果是温金投定向发标标的的话,发送更新借款人机构编号的MQ
+	 *
+	 * @param borrowUserId
+	 */
+	private void sendBorrowUserMQ(Integer borrowUserId) throws MQException {
+		JSONObject params = new JSONObject();
+		params.put("userId", borrowUserId);
+		// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+		commonProducer.messageSendDelay(new MessageContent(MQConstant.WJT_BORROW_USER_MODIFY_TOPIC, MQConstant.WJT_BORROW_USER_MODIFY_GROUP, params), 2);
+	}
 }

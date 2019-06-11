@@ -2928,6 +2928,27 @@ public interface AmTradeClient {
     BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId);
 
     /**
+     * 统计预计新增复投额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date);
+
+    /**
+     * 统计预计新增债转额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
+
+    /**
+     * 统计实际资金计划
+     *  @author wenxin
+     * @date 2019/4/23 11:48
+     */
+    List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date);
+
+    /**
      * 插入大屏数据
      * @param screenDataBean
      * @return
@@ -3008,6 +3029,13 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+
+    /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    List<HjhPlanVO> selectWbsSendHjhPlanList();
     /**
      * 根据计划订单号查找投资详情
      * @param accedeOrderId
@@ -3100,5 +3128,17 @@ public interface AmTradeClient {
 
     // 应急中心二期，历史数据上报 add by nxl end
 
+    /**
+     * 温金投web端首页列表数量
+     * @return
+     */
+    Integer countWjtWebProjectList(ProjectListRequest request);
+    /**
+     * 温金投web端首页列表
+     * @return
+     */
+    List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request);
+
+    List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
 }
 
