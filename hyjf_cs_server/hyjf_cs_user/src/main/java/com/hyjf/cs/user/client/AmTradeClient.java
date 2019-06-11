@@ -8,6 +8,7 @@ import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.*;
@@ -30,7 +31,6 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
-import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 
 import java.math.BigDecimal;
 import java.util.Date;

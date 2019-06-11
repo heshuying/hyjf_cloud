@@ -72,5 +72,4 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return null;
 	}
 
-
 }

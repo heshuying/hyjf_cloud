@@ -57,7 +57,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Autowired
 	AmDataCollectClient amDataCollectClient;
-
 	@Override
 	public boolean existUser(String mobile) {
 		UserVO userVO = amUserClient.findUserByMobile(mobile);

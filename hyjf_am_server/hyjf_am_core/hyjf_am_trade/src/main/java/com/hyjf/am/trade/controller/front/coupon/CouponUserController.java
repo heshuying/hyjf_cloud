@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.front.coupon;
 
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
+import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
@@ -110,6 +111,4 @@ public class CouponUserController extends BaseController {
         response.setSend(isSend);
         return response;
     }
-
-
 }
