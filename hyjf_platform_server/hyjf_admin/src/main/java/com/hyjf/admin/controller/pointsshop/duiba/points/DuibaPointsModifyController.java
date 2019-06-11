@@ -108,6 +108,15 @@ public class DuibaPointsModifyController extends BaseController {
             return new AdminResult<>(FAIL, "未传送审核结果！");
         }
 
+        // 根据订单号获取订单详情
+        DuibaPointsModifyVO duibaPointsModifyVO = this.duibaPointsModifyService.selectDuibaPointsModifyByOrdid(requestBean.getOrderId());
+        if (null == duibaPointsModifyVO) {
+            return new AdminResult<>(FAIL, "未获取到当前待审批积分调整的订单号");
+        }
+        if (null == duibaPointsModifyVO.getStatus() || 2 == duibaPointsModifyVO.getStatus()) {
+            return new AdminResult<>(FAIL, "当前订单已审核或审核状态异常");
+        }
+
         // 后期对接工作流后调用工作流接口上送审批状态并获取最终审批结果
 
         // 审核不通过 更新修改明细表相关审核明细的状态
@@ -119,14 +128,6 @@ public class DuibaPointsModifyController extends BaseController {
             }
         }
 
-        // 根据订单号获取订单详情
-        DuibaPointsModifyVO duibaPointsModifyVO = this.duibaPointsModifyService.selectDuibaPointsModifyByOrdid(requestBean.getOrderId());
-        if (null == duibaPointsModifyVO) {
-            return new AdminResult<>(FAIL, "未获取到当前待审批积分调整的订单号");
-        }
-        if (null == duibaPointsModifyVO.getStatus() || 2 == duibaPointsModifyVO.getStatus()) {
-            return new AdminResult<>(FAIL, "当前订单已审核或审核状态异常");
-        }
         // 获取订单调整类型
         requestBean.setModifyType(duibaPointsModifyVO.getPointsType());
         // 获取订单调整积分数
