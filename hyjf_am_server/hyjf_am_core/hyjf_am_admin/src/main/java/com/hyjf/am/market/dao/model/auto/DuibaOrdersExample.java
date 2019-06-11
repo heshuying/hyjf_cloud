@@ -1426,52 +1426,52 @@ public class DuibaOrdersExample {
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceEqualTo(BigDecimal value) {
+        public Criteria andIntegralPriceEqualTo(Integer value) {
             addCriterion("integral_price =", value, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceNotEqualTo(BigDecimal value) {
+        public Criteria andIntegralPriceNotEqualTo(Integer value) {
             addCriterion("integral_price <>", value, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceGreaterThan(BigDecimal value) {
+        public Criteria andIntegralPriceGreaterThan(Integer value) {
             addCriterion("integral_price >", value, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andIntegralPriceGreaterThanOrEqualTo(Integer value) {
             addCriterion("integral_price >=", value, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceLessThan(BigDecimal value) {
+        public Criteria andIntegralPriceLessThan(Integer value) {
             addCriterion("integral_price <", value, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andIntegralPriceLessThanOrEqualTo(Integer value) {
             addCriterion("integral_price <=", value, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceIn(List<BigDecimal> values) {
+        public Criteria andIntegralPriceIn(List<Integer> values) {
             addCriterion("integral_price in", values, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceNotIn(List<BigDecimal> values) {
+        public Criteria andIntegralPriceNotIn(List<Integer> values) {
             addCriterion("integral_price not in", values, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andIntegralPriceBetween(Integer value1, Integer value2) {
             addCriterion("integral_price between", value1, value2, "integralPrice");
             return (Criteria) this;
         }
 
-        public Criteria andIntegralPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andIntegralPriceNotBetween(Integer value1, Integer value2) {
             addCriterion("integral_price not between", value1, value2, "integralPrice");
             return (Criteria) this;
         }
