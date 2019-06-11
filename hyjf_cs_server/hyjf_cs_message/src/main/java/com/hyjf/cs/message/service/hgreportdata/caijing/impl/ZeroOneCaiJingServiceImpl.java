@@ -87,10 +87,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             }
 
             for (ZeroOneBorrowDataVO voList : borrowDataVOList) {
-                if (voList.getUserid() != null) {
-                    voList.setUsername(mapUserId.get(voList.getUserid()));
-                    voList.setUserid(mapUserId.get(voList.getUserid()));
-                    logger.info("用户编号：{}", mapUserId.get(voList.getUserid()));
+                if (mapUserId.get(Integer.valueOf(voList.getUserid())) != null) {
+                    voList.setUsername(mapUserId.get(Integer.valueOf(voList.getUserid())));
+                    voList.setUserid(mapUserId.get(Integer.valueOf(voList.getUserid())));
                 } else {
                     logger.info("投资记录接口报送 当前用户编号为空,userId=" + voList.getUserid());
                     voList.setUserid(null);
