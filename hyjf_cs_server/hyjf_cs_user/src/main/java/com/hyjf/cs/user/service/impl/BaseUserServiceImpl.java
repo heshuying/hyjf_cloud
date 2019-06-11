@@ -1,14 +1,10 @@
 package com.hyjf.cs.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
-import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bean.AccessToken;
 import com.hyjf.common.cache.RedisConstants;
@@ -22,7 +18,10 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.*;
-import com.hyjf.cs.user.client.*;
+import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
+import com.hyjf.cs.user.client.AmTradeClient;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -58,10 +57,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Autowired
 	AmDataCollectClient amDataCollectClient;
-
-	@Autowired
-	public AmMarketClient amMarketClient;
-
 	@Override
 	public boolean existUser(String mobile) {
 		UserVO userVO = amUserClient.findUserByMobile(mobile);
@@ -694,60 +689,5 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		// 调用接口
 		retBean = BankCallUtils.callApiBg(selectbean);
 		return retBean;
-	}
-
-
-	@Override
-	public DuibaOrderVO selectOrderByOrderId(String duibaOrderId){
-		return amMarketClient.selectOrderByOrderId(duibaOrderId);
-	}
-
-	@Override
-	public Integer updateOneOrderByPrimaryKey(DuibaOrderVO duibaOrderVO){
-		return amMarketClient.updateOneOrderByPrimaryKey(duibaOrderVO);
-	}
-
-	/**
-	 * 根据用户id获取注册时渠道名
-	 * @param userId
-	 * @auther:
-	 * @return String
-	 */
-	@Override
-	public String selectChannelNameByUserId(Integer userId){
-		return amUserClient.selectChannelNameByUserId(userId);
-	}
-
-	/**
-	 * 根据用户id获取注册时渠道名
-	 * @param ordId
-	 * @auther:
-	 * @return String
-	 */
-	@Override
-	public CouponConfigVO getCouponConfig(String ordId){
-		return amTradeClient.getCouponConfig(ordId);
-	}
-
-	/**
-	 * 根据优惠券编号查询已发行数量
-	 * @param couponCode
-	 * @return
-	 */
-	@Override
-	public Integer checkCouponSendExcess(String couponCode){
-		return amTradeClient.checkCouponSendExcess(couponCode);
-	}
-
-	/**
-	 * @return
-	 * @Author wenxin
-	 * @Description 插入优惠卷信息
-	 * @Date 18:06 2019/6/10
-	 * @Param CouponUserResponse
-	 */
-	@Override
-	public CouponUserVO insertByDuibaOrder(CouponUserRequest request){
-		return amTradeClient.insertByDuibaOrder(request);
 	}
 }

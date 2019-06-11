@@ -656,12 +656,4 @@ public interface AmUserClient {
 	 * @return
 	 */
 	CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams);
-
-	/**
-	 * 根据用户id获取注册时渠道名
-	 * @param userId
-	 * @auther:
-	 * @return String
-	 */
-	String selectChannelNameByUserId(Integer userId);
 }

@@ -7,7 +7,6 @@ import com.hyjf.am.response.trade.WrbInvestRecordResponse;
 import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
@@ -27,7 +26,6 @@ import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
@@ -435,20 +433,4 @@ public interface AmTradeClient {
 
     /** 用户测评配置 */
     List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
-
-    /**
-     * 根据优惠券编号查询已发行数量
-     * @param couponCode
-     * @return
-     */
-    Integer checkCouponSendExcess(String couponCode);
-
-    /**
-     * @return
-     * @Author wenxin
-     * @Description 插入优惠卷信息
-     * @Date 18:06 2019/6/10
-     * @Param CouponUserResponse
-     */
-    CouponUserVO insertByDuibaOrder(CouponUserRequest request);
 }

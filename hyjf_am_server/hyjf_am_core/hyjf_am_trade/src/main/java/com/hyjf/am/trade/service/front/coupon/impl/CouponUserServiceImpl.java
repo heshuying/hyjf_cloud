@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.coupon.impl;
 
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponUserCustomizeMapper;
@@ -144,33 +143,4 @@ public class CouponUserServiceImpl implements CouponUserService {
 
         return couponUserList == null || couponUserList.size() == 0 ? true : false;
     }
-
-    /**
-     * 发放一条优惠券（来自兑吧的插入优惠卷用户信息并返回插入生成的主键id）
-     * @param request
-     * @return
-     */
-    @Override
-    public CouponUser insertByDuibaOrder(CouponUserRequest request) {
-        CouponUser couponUser = new CouponUser();
-        couponUser.setCouponCode(request.getCouponCode());
-        couponUser.setActivityId(request.getActivityId());
-        couponUser.setContent(request.getContent());
-        couponUser.setEndTime(request.getEndTime());
-        couponUser.setUserId(request.getUserId());
-        couponUser.setCouponUserCode(request.getCouponUserCode());
-        couponUser.setCreateUserId(request.getCreateUserId());
-        couponUser.setCreateTime(request.getCreateTime());
-        couponUser.setUpdateUserId(request.getUpdateUserId());
-        couponUser.setUpdateTime(request.getUpdateTime());
-        couponUser.setDelFlag(request.getDelFlag());
-        couponUser.setUsedFlag(request.getUsedFlag());
-        couponUser.setReadFlag(request.getReadFlag());
-        couponUser.setCouponSource(request.getCouponSource());
-        couponUser.setAttribute(request.getAttribute());
-        couponUser.setChannel(request.getChannel());
-        couponUserMapper.insertByDuibaOrder(couponUser);
-        return couponUser;
-    }
-
 }

@@ -7,7 +7,6 @@ import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.UnderLineRechargeResponse;
 import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.trade.*;
@@ -17,7 +16,6 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
@@ -38,7 +36,6 @@ import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
@@ -908,37 +905,4 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-
-    /**
-     * 根据优惠券编号查询已发行数量
-     * @param couponCode
-     * @return
-     */
-    @Override
-    public Integer checkCouponSendExcess(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/checkCouponSendExcess/"+ couponCode;
-        CouponConfigCustomizeResponse response = restTemplate.getForEntity(url,CouponConfigCustomizeResponse.class).getBody();
-        if (response!=null){
-            return response.getCount();
-        }
-        return 0;
-    }
-
-    /**
-     * @return
-     * @Author wenxin
-     * @Description 插入优惠卷信息
-     * @Date 18:06 2019/6/10
-     * @Param CouponUserResponse
-     */
-    @Override
-    public CouponUserVO insertByDuibaOrder(CouponUserRequest request){
-        String url = "http://AM-TRADE/am-trade/couponUser/insertByDuibaOrder";
-        CouponUserResponse response = restTemplate.postForEntity(url, request, CouponUserResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResult();
-        }
-        return null;
-    }
-
 }

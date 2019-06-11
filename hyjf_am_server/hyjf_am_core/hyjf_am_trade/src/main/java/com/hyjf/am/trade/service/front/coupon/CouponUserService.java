@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.coupon;
 
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.CouponUserListCustomize;
@@ -53,10 +52,4 @@ public interface CouponUserService {
      */
     boolean getSendRepeat(CouponUserSearchRequest couponUserSearchRequest);
 
-    /**
-     * 发放一条优惠券（来自兑吧的插入优惠卷用户信息并返回插入生成的主键id）
-     * @param request
-     * @return
-     */
-    CouponUser insertByDuibaOrder(CouponUserRequest request);
 }
