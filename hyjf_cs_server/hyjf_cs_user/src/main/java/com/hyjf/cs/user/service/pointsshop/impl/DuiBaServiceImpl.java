@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.pointsshop.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.CreditConsumeResultVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -123,6 +124,15 @@ public class DuiBaServiceImpl implements DuiBaService {
 
 	@Override
 	public CreditConsumeResult deductPoints(CreditConsumeParams consumeParams) {
-		return null;
+		CreditConsumeResult result = null;
+		CreditConsumeResultVO resultVO = amUserClient.deductPoints(consumeParams);
+		// 成功返回相应结果，失败直接返回Null
+		if(null != resultVO && resultVO.isSuccess()){
+			result = new CreditConsumeResult(true);
+			result.setBizId(resultVO.getBizId());
+			result.setErrorMessage(resultVO.getErrorMessage());
+			result.setCredits(resultVO.getCredits());
+		}
+		return result;
 	}
 }

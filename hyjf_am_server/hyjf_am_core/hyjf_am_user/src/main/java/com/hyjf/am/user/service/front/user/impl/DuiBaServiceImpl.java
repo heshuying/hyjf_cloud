@@ -3,11 +3,27 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserExample;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.service.front.user.DuiBaService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.CreditConsumeResultVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -15,9 +31,46 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
+	private Logger logger = LoggerFactory.getLogger(DuiBaServiceImpl.class);
+	@Autowired
+	CommonProducer commonProducer;
 
-    @Override
-    public CreditConsumeResultVO updateUserPoints(CreditConsumeParams consumeParams) {
-        return null;
-    }
+	/**
+	 * 兑吧扣积分回调相关业务处理
+	 * @param consumeParams
+	 * @return
+	 */
+	@Override
+	public CreditConsumeResultVO updateUserPoints(CreditConsumeParams consumeParams) {
+		// 用户扣减积分
+		duiBaCustomizeMapper.updateUserPoints(consumeParams);
+		Integer userId = Integer.valueOf(consumeParams.getUid());
+		// 生成汇盈订单号
+		String hyOrdId = GetOrderIdUtils.getOrderId2(userId);
+		consumeParams.setBizId(hyOrdId);
+		// 获取用户信息，用于返回给兑吧，并发送MQ
+		UserExample userExample = new UserExample();
+		userExample.createCriteria().andUserIdEqualTo(userId);
+		List<User> users = userMapper.selectByExample(userExample);
+		UserInfoExample userInfoExample = new UserInfoExample();
+		userInfoExample.createCriteria().andUserIdEqualTo(userId);
+		List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
+		// 用户名，真实姓名，用户当前积分，存到兑吧订单表与积分明细表
+		consumeParams.setUserName(users.get(0).getUsername());
+		consumeParams.setTrueName(userInfos.get(0).getTruename());
+		consumeParams.setCreditsCurrent(users.get(0).getPointsCurrent());
+		logger.info("兑吧订单{}扣积分成功，发送订单MQ", consumeParams.getOrderNum());
+		// 发送MQ，生成兑吧订单
+		try {
+			commonProducer.messageSend(new MessageContent(MQConstant.DUIBA_ORDER_TOPIC, UUID.randomUUID().toString(), consumeParams));
+		} catch (MQException e) {
+			logger.error("兑吧生成订单MQ发送异常，请及时处理，兑吧返回结果：{}", JSONObject.toJSONString(consumeParams), e);
+		}
+		// 设置返回参数
+        CreditConsumeResultVO resultVO = new CreditConsumeResultVO();
+		resultVO.setSuccess(true);
+		resultVO.setBizId(hyOrdId);
+		resultVO.setCredits(Long.valueOf(users.get(0).getPointsCurrent()));
+		return resultVO;
+	}
 }

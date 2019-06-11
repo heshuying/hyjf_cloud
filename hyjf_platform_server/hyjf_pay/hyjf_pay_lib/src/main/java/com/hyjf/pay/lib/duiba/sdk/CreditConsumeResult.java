@@ -1,11 +1,15 @@
 package com.hyjf.pay.lib.duiba.sdk;
 
-public class CreditConsumeResult {
+import java.io.Serializable;
+
+public class CreditConsumeResult implements Serializable {
 
 	private boolean success;
 	private String errorMessage="";
 	private String bizId="";
 	private Long credits=-1L;//用户积分余额
+
+	public CreditConsumeResult(){}
 	
 	public CreditConsumeResult(boolean success){
 		this.success=success;
@@ -50,4 +54,11 @@ public class CreditConsumeResult {
 		this.credits = credits;
 	}
 
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 }

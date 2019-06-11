@@ -1344,7 +1344,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams){
-		String url = "http://AM_USER/am-user/pointsshop/duiba/deductpoints";
+		String url = "http://AM-USER/am-user/pointsshop/duiba/deductpoints";
 		CreditConsumeResultResponse response = restTemplate.postForEntity(url, consumeParams, CreditConsumeResultResponse.class).getBody();
 		if(Response.isSuccess(response)){
 			return response.getResult();

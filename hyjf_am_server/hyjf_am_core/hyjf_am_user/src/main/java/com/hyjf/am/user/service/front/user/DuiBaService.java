@@ -12,5 +12,10 @@ import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
  * @version DuiBaService, v0.1 2019/6/6 10:37
  */
 public interface DuiBaService extends BaseService {
+    /**
+     * 兑吧扣积分回调相关业务处理
+     * @param consumeParams
+     * @return
+     */
     CreditConsumeResultVO updateUserPoints(CreditConsumeParams consumeParams);
 }

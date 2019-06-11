@@ -67,6 +67,12 @@
             <artifactId>hyjf_am_model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.hyjf</groupId>
+            <artifactId>hyjf_pay_lib</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
