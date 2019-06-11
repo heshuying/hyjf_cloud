@@ -32,18 +32,18 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
             // 检索异常订单
             request.setOrderTypeTab("3");
         }
-        if (Validator.isNotNull(request.getCompletionTimeSerachStart())) {
-            request.setCompletionTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getCompletionTimeSerachStart())));
-        }
-        if (Validator.isNotNull(request.getCompletionTimeSerachEnd())) {
-            request.setCompletionTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getCompletionTimeSerachEnd())));
-        }
-        if (Validator.isNotNull(request.getOrderTimeSerachStart())) {
-            request.setOrderTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getOrderTimeSerachStart())));
-        }
-        if (Validator.isNotNull(request.getOrderTimeSerachEnd())) {
-            request.setOrderTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getOrderTimeSerachEnd())));
-        }
+//        if (Validator.isNotNull(request.getCompletionTimeSerachStart())) {
+//            request.setCompletionTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getCompletionTimeSerachStart())));
+//        }
+//        if (Validator.isNotNull(request.getCompletionTimeSerachEnd())) {
+//            request.setCompletionTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getCompletionTimeSerachEnd())));
+//        }
+//        if (Validator.isNotNull(request.getOrderTimeSerachStart())) {
+//            request.setOrderTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getOrderTimeSerachStart())));
+//        }
+//        if (Validator.isNotNull(request.getOrderTimeSerachEnd())) {
+//            request.setOrderTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getOrderTimeSerachEnd())));
+//        }
         return duibaOrdersCustomizeMapper.selectDuibaOrderCount(request);
     }
 
@@ -54,18 +54,18 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
             // 检索异常订单
             request.setOrderTypeTab("3");
         }
-        if (Validator.isNotNull(request.getCompletionTimeSerachStart())) {
-            request.setCompletionTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getCompletionTimeSerachStart())));
-        }
-        if (Validator.isNotNull(request.getCompletionTimeSerachEnd())) {
-            request.setCompletionTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getCompletionTimeSerachEnd())));
-        }
-        if (Validator.isNotNull(request.getOrderTimeSerachStart())) {
-            request.setOrderTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getOrderTimeSerachStart())));
-        }
-        if (Validator.isNotNull(request.getOrderTimeSerachEnd())) {
-            request.setOrderTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getOrderTimeSerachEnd())));
-        }
+//        if (Validator.isNotNull(request.getCompletionTimeSerachStart())) {
+//            request.setCompletionTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getCompletionTimeSerachStart())));
+//        }
+//        if (Validator.isNotNull(request.getCompletionTimeSerachEnd())) {
+//            request.setCompletionTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getCompletionTimeSerachEnd())));
+//        }
+//        if (Validator.isNotNull(request.getOrderTimeSerachStart())) {
+//            request.setOrderTimeSerachStart(String.valueOf(GetDate.getDayStart10(request.getOrderTimeSerachStart())));
+//        }
+//        if (Validator.isNotNull(request.getOrderTimeSerachEnd())) {
+//            request.setOrderTimeSerachEnd(String.valueOf(GetDate.getDayEnd10(request.getOrderTimeSerachEnd())));
+//        }
         return duibaOrdersCustomizeMapper.selectDuibaOrderList(request);
     }
 
