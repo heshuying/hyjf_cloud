@@ -26,4 +26,5 @@ public interface ChannelService extends BaseService {
      * @return List<Utm>
      */
     List<UtmVO> getByPageList(Map<String,Object> map);
+
 }

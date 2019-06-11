@@ -16,6 +16,7 @@ import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.front.account.BankOpenService;
+import com.hyjf.am.user.service.front.user.ChannelService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
@@ -59,6 +60,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private ChannelService channelService;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {

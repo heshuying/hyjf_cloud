@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.front.coupon;
 
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
+import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
@@ -112,4 +113,19 @@ public class CouponUserController extends BaseController {
     }
 
 
+    /**
+     * @return
+     * @Author wenxin
+     * @Description 插入优惠卷信息
+     * @Date 18:06 2019/6/10
+     * @Param CouponUserResponse
+     */
+    @PostMapping("/insertByDuibaOrder")
+    public CouponUserResponse insertByDuibaOrder(@RequestBody CouponUserRequest request) {
+        CouponUserResponse response = new CouponUserResponse();
+        CouponUser couponUser = couponUserService.insertByDuibaOrder(request);
+        CouponUserVO couponUserVO = CommonUtils.convertBean(couponUser,CouponUserVO.class);
+        response.setResult(couponUserVO);
+        return response;
+    }
 }

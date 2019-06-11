@@ -1,8 +1,12 @@
 package com.hyjf.cs.user.service;
 
+import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
+import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
@@ -207,4 +211,28 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
 	BankCallBean getTermsAuthQuery(int userId, String channel);
+
+	DuibaOrderVO selectOrderByOrderId(String duibaOrderId);
+
+	Integer updateOneOrderByPrimaryKey(DuibaOrderVO duibaOrderVO);
+
+	String selectChannelNameByUserId(Integer userId);
+
+	CouponConfigVO getCouponConfig(String ordId);
+
+	/**
+	 * 根据优惠券编号查询已发行数量
+	 * @param couponCode
+	 * @return
+	 */
+	Integer checkCouponSendExcess(String couponCode);
+
+	/**
+	 * @return
+	 * @Author wenxin
+	 * @Description 插入优惠卷信息
+	 * @Date 18:06 2019/6/10
+	 * @Param CouponUserResponse
+	 */
+	CouponUserVO insertByDuibaOrder(CouponUserRequest request);
 }

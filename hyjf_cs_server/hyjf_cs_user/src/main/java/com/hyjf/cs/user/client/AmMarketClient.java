@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
@@ -24,4 +25,8 @@ public interface AmMarketClient {
     AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
 
     List<ActivityListVO> getActivityList();
+
+    DuibaOrderVO selectOrderByOrderId(String duibaOrderId);
+
+    Integer updateOneOrderByPrimaryKey(DuibaOrderVO duibaOrderVO);
 }
