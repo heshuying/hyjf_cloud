@@ -192,7 +192,7 @@ public class DuibaOrderCustomizeVO implements Serializable {
      *
      * @mbggenerated
      */
-    private BigDecimal integralPrice;
+    private Integer integralPrice;
 
     /**
      * 订单激活状态
@@ -410,11 +410,11 @@ public class DuibaOrderCustomizeVO implements Serializable {
         this.exchangeRate = exchangeRate;
     }
 
-    public BigDecimal getIntegralPrice() {
+    public Integer getIntegralPrice() {
         return integralPrice;
     }
 
-    public void setIntegralPrice(BigDecimal integralPrice) {
+    public void setIntegralPrice(Integer integralPrice) {
         this.integralPrice = integralPrice;
     }
 

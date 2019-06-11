@@ -268,11 +268,11 @@ public class DuibaOrderController extends BaseController {
         map.put("userName", "账户名");
         map.put("trueName", "姓名");
         map.put("exchangeContent", "兑换内容");
-        map.put("productType", "商品类型");
+        map.put("productTypeStr", "商品类型");
         map.put("sellingPrice", "售价");
         map.put("markingPrice", "划线价");
         map.put("cost", "成本");
-        map.put("orderStatus", "订单状态");
+        map.put("orderStatusStr", "订单状态");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
         return map;
@@ -285,7 +285,7 @@ public class DuibaOrderController extends BaseController {
         map.put("userName", "账户名");
         map.put("trueName", "姓名");
         map.put("exchangeContent", "兑换内容");
-        map.put("deliveryStatus", "发货状态");
+        map.put("deliveryStatusStr", "发货状态");
         map.put("receivingInformation", "收货信息");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
@@ -302,7 +302,7 @@ public class DuibaOrderController extends BaseController {
         map.put("rechargeState", "虚拟商品充值状态");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
-        map.put("processingState", "处理状态");
+        map.put("processingStateStr", "处理状态");
         return map;
     }
 
@@ -376,10 +376,10 @@ public class DuibaOrderController extends BaseController {
                 return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(completionTime));
             }
         };
-        mapAdapter.put("productType", productTypeAdapter);
-        mapAdapter.put("orderStatus", orderStatusAdapter);
-        mapAdapter.put("deliveryStatus", deliveryStatusAdapter);
-        mapAdapter.put("processingState", processingStateAdapter);
+        mapAdapter.put("productTypeStr", productTypeAdapter);
+        mapAdapter.put("orderStatusStr", orderStatusAdapter);
+        mapAdapter.put("deliveryStatusStr", deliveryStatusAdapter);
+        mapAdapter.put("processingStateStr", processingStateAdapter);
         mapAdapter.put("sellingPrice", sellingPriceAdapter);
         mapAdapter.put("markingPrice", markingPriceAdapter);
         mapAdapter.put("cost", costAdapter);
