@@ -134,10 +134,10 @@
         ht_user
         <where>
             <if test="re_time_begin != null" >
-                AND create_time <![CDATA[>=]]> #{re_time_begin}
+                AND reg_time <![CDATA[>=]]> #{re_time_begin}
             </if>
             <if test="re_time_end != null" >
-                AND create_time <![CDATA[<=]]> #{re_time_end}
+                AND reg_time <![CDATA[<=]]> #{re_time_end}
             </if>
             <if test="open_account!= null" >
                 AND bank_open_account = #{open_account,jdbcType=INTEGER}
