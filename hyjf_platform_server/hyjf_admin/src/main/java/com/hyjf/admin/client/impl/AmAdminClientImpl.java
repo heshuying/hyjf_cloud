@@ -19,7 +19,10 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-import com.hyjf.am.resquest.config.*;
+import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
@@ -41,6 +44,7 @@ import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2494,6 +2498,47 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public String orderSynchronization(Integer orderId){
         return restTemplate.getForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/synchronization/"+orderId, String.class).getBody();
+    }
+
+    /**
+     * 根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷
+     *
+     * @param orderNum
+     * @return
+     */
+    @Override
+    public VirtualResult selectCouponUserById(String orderNum){
+        return restTemplate.getForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/releaseCoupons/"+orderNum, VirtualResult.class).getBody();
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @Override
+    public String activation(String orderNum, String errorMessage) {
+        StringResponse response = restTemplate.getForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/activation/" + orderNum + "/" + errorMessage, StringResponse.class).getBody();
+        if (null != response) {
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）
+     *
+     * @param orderNum
+     * @return
+     */
+    @Override
+    public String success(String orderNum) {
+        StringResponse response = restTemplate.getForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/success/" + orderNum, StringResponse.class).getBody();
+        if (null != response) {
+            return response.getResultStr();
+        }
+        return null;
     }
 
 }

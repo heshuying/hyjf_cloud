@@ -142,7 +142,7 @@ public class DuiBaCallController extends BaseController {
 			if (params.isSuccess()) {
 				// 兑换成功（更新优惠卷为有效）
 				// 传兑吧订单号
-				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/success/" + params.getOrderNum();
+				String url = "http://ADMIN/hyjf-admin/pointsshop/duiba/order/activationSuccess/" + params.getOrderNum();
 				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
@@ -153,7 +153,7 @@ public class DuiBaCallController extends BaseController {
 			} else {
 				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息（更新虚拟商品充值状态处理中（异常码））
 				// 传兑吧订单号
-				String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/activation/" + params.getOrderNum() + "/" + params.getErrorMessage();
+				String url = "http://ADMIN/hyjf-admin/pointsshop/duiba/order/activationError/" + params.getOrderNum() + "/" + params.getErrorMessage();
 				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
 				if (couponUserStr != null) {
 					if(!status.equals(couponUserStr)){
@@ -206,7 +206,7 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setLogOrdId(params.getDevelopBizId());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			// 发放优惠卷， 传兑吧订单号
-			String url = "http://AM-ADMIN/am-market/pointsshop/duiba/order/releaseCoupons/" + params.getOrderNum();
+			String url = "http://ADMIN/hyjf-admin/pointsshop/duiba/order/selectReleaseCoupons/" + params.getOrderNum();
 			result = restTemplate.getForObject(url, VirtualResult.class);
 		} catch (Exception e) {
             // 发放失败

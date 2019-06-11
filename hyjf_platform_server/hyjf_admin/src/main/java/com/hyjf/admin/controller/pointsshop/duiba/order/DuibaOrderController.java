@@ -15,6 +15,7 @@ import com.hyjf.admin.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
@@ -24,8 +25,10 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,17 +131,17 @@ public class DuibaOrderController extends BaseController {
     /**
      * 同步处理中的订单信息（订单列表）
      *
-     * @param orderId
+     * @param id
      * @return
      */
     @ApiOperation(value = "同步")
     @PostMapping("/synchronization")
-    public AdminResult synchronization(@RequestParam("orderId") Integer orderId){
-        logger.info("调用同步接口start,orderId:{}", orderId);
+    public AdminResult synchronization(@RequestParam("id") Integer id){
+        logger.info("调用同步接口start,id:{}", id);
         AdminResult adminResult = new AdminResult();
         JSONObject data = new JSONObject();
         String flag = "success";
-        String retMsg = duibaOrderListService.synchronization(orderId);
+        String retMsg = duibaOrderListService.synchronization(id);
         if (flag.equals(retMsg)) {
             adminResult.setStatus("同步成功！");
         } else {
@@ -147,6 +150,49 @@ public class DuibaOrderController extends BaseController {
         }
         adminResult.setData(data);
         return adminResult;
+    }
+
+    /**
+     * 根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/selectReleaseCoupons/{orderNum}")
+    public VirtualResult selectReleaseCoupons(@PathVariable String orderNum) {
+        return duibaOrderListService.selectCouponUserById(orderNum);
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/activationError/{orderNum}/{errorMessage}")
+    public StringResponse activationError(@PathVariable String orderNum, @PathVariable String errorMessage) {
+        StringResponse response = new StringResponse();
+        String duibaStr = duibaOrderListService.activation(orderNum,errorMessage);
+        if(StringUtils.isNotEmpty(duibaStr)){
+            response.setResultStr(duibaStr);
+        }
+        return new StringResponse();
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）
+     *
+     * @param orderNum
+     * @return
+     */
+    @RequestMapping("/activationSuccess/{orderNum}")
+    public StringResponse activationSuccess(@PathVariable String orderNum) {
+        StringResponse response = new StringResponse();
+        String duibaStr = duibaOrderListService.success(orderNum);
+        if(StringUtils.isNotEmpty(duibaStr)){
+            response.setResultStr(duibaStr);
+        }
+        return new StringResponse();
     }
 
     /**
