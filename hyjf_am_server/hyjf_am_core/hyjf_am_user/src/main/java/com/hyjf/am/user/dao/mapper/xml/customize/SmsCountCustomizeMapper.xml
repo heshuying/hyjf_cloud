@@ -139,7 +139,7 @@
             <if test="re_time_end != null" >
                 AND reg_time <![CDATA[<=]]> #{re_time_end}
             </if>
-            <if test="open_account!= null" >
+            <if test="open_account != null and open_account != 3"  >
                 AND bank_open_account = #{open_account,jdbcType=INTEGER}
             </if>
         </where>
