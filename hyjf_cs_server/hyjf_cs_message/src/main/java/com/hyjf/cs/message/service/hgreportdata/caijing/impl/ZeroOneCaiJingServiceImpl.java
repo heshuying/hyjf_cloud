@@ -327,7 +327,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String url = "http://data.01caijing.com/hub/p2p/";
 
         StringBuilder stbuUrl = new StringBuilder();
-        stbuUrl.append(sendUrl);
+        stbuUrl.append(url);
         stbuUrl.append(type);
         stbuUrl.append("/commit.json");
 
