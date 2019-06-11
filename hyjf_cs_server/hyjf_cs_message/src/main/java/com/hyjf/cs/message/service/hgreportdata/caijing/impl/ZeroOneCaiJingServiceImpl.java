@@ -19,6 +19,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
+import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneBorrowEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneDataEntity;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.ZeroOneResponse;
 import com.hyjf.cs.message.client.AmTradeClient;
@@ -96,7 +97,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                     voList.setUsername(null);
                 }
             }
-            ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), String.valueOf(JSONObject.toJSON(borrowDataVOList)));
+            List<ZeroOneBorrowEntity> borrowEntities = CommonUtils.convertBeanList(borrowDataVOList, ZeroOneBorrowEntity.class);
+            ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), String.valueOf(JSONObject.toJSON(borrowEntities)));
             if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                 //报送成功
                 logger.info("出借记录接口报送成功");
