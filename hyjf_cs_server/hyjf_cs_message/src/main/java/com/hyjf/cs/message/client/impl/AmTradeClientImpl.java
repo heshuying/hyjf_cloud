@@ -176,9 +176,9 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		if (tradeResponse != null ) {
 			List<String> tradeList = tradeResponse.getResultList();
-			if (!CollectionUtils.isEmpty(tradeList) ) {
+//			if (!CollectionUtils.isEmpty(tradeList) ) {
 				list.retainAll(tradeList);
-			}
+//			}
 		}
 		return list;
 	}
