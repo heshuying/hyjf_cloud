@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.front.userlargescreen.impl;
 
+import com.hyjf.am.response.trade.ScreenTransferResponse;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
@@ -15,6 +16,7 @@ import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfigExample;
 import com.hyjf.am.user.service.front.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.vo.api.MonthDataStatisticsVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.springframework.beans.BeanUtils;
@@ -89,5 +91,13 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
             }
         }
         return list;
+    }
+
+    @Override
+    public ScreenTransferResponse getScreenTransferData(List<ScreenTransferVO> userList) {
+        List<ScreenTransferVO> list = userLargeScreenTwoCustomizeMapper.getScreenTransferData(userList);
+        ScreenTransferResponse response = new ScreenTransferResponse();
+        response.setResultList(list);
+        return response;
     }
 }
