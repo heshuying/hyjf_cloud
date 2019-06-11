@@ -17,8 +17,6 @@ public interface CouponUserMapper {
 
     int insertSelective(CouponUser record);
 
-    int insertByDuibaOrder(CouponUser record);
-
     List<CouponUser> selectByExample(CouponUserExample example);
 
     CouponUser selectByPrimaryKey(Integer id);

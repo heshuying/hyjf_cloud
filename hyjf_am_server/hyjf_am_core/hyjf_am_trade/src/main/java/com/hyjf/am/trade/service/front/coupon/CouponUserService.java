@@ -53,10 +53,4 @@ public interface CouponUserService {
      */
     boolean getSendRepeat(CouponUserSearchRequest couponUserSearchRequest);
 
-    /**
-     * 发放一条优惠券（来自兑吧的插入优惠卷用户信息并返回插入生成的主键id）
-     * @param request
-     * @return
-     */
-    CouponUser insertByDuibaOrder(CouponUserRequest request);
 }

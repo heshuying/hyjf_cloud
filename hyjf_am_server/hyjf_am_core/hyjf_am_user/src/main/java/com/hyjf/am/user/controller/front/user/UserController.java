@@ -44,7 +44,6 @@ import java.util.regex.Pattern;
  * @author xiasq
  * @version UserController, v0.1 2018/1/21 22:37
  */
-
 @RestController
 @RequestMapping("/am-user/user")
 @SuppressWarnings("unchecked")

@@ -670,6 +670,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		modelAndView.addObject("callBackForm", repwdResult);
 		return modelAndView;
 	}
+
 	@Override
 	public BankCallBean getTermsAuthQuery(int userId, String channel) {
 		BankOpenAccountVO bankOpenAccount = getBankOpenAccount(userId);
