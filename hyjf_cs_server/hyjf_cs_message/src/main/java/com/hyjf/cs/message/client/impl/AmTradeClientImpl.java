@@ -151,6 +151,13 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public List<String> queryUser(SmsCodeUserRequest request) {
 		List<String> list = new ArrayList<>();
+		//所以未开户用户 并且 累计出借金额 or 出借日期 不为空
+		if(request.getOpen_account() == 0 && (StringUtils.isNotBlank(request.getAdd_money_count())
+				|| StringUtils.isNotBlank(request.getAdd_time_begin())
+				|| StringUtils.isNotBlank(request.getAdd_time_end()))){
+			return list;
+		}
+
 		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
 		Response tradeResponse = null;
 		if((request.getOpen_account() != null && request.getOpen_account() != 0) && (StringUtils.isNotBlank(request.getAdd_money_count())
