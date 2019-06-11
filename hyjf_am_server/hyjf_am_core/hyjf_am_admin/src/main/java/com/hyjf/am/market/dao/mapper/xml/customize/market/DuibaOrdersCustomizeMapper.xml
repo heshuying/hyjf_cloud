@@ -70,16 +70,16 @@
       AND hdp.order_status = #{orderStatusSerach}
     </if>
     <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
-      AND hdp.order_time <![CDATA[>=]]> #{orderTimeSerachStart}
+      AND hdp.order_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachStart},' 00:00:00'))
     </if>
     <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
-      AND hdp.order_time <![CDATA[<=]]> #{orderTimeSerachEnd}
+      AND hdp.order_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
-      AND hdp.completion_time <![CDATA[>=]]> #{completionTimeSerachStart}
+      AND hdp.completion_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachStart},' 00:00:00'))
     </if>
     <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
-      AND hdp.completion_time <![CDATA[<=]]> #{completionTimeSerachEnd}
+      AND hdp.completion_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
       AND hdp.delivery_status = #{deliveryStatusSerach}
@@ -139,16 +139,16 @@
       AND hdp.order_status = #{orderStatusSerach}
     </if>
     <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
-      AND hdp.order_time <![CDATA[>=]]> #{orderTimeSerachStart}
+      AND hdp.order_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachStart},' 00:00:00'))
     </if>
     <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
-      AND hdp.order_time <![CDATA[<=]]> #{orderTimeSerachEnd}
+      AND hdp.order_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
-      AND hdp.completion_time <![CDATA[>=]]> #{completionTimeSerachStart}
+      AND hdp.completion_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachStart},' 00:00:00'))
     </if>
     <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
-      AND hdp.completion_time <![CDATA[<=]]> #{completionTimeSerachEnd}
+      AND hdp.completion_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
       AND hdp.delivery_status = #{deliveryStatusSerach}
