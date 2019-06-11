@@ -153,7 +153,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 		List<String> list = new ArrayList<>();
 		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
 		Response tradeResponse = null;
-		if(request.getOpen_account() != 0 || StringUtils.isNotBlank(request.getAdd_money_count())
+		if((request.getOpen_account() != null && request.getOpen_account() != 0) || StringUtils.isNotBlank(request.getAdd_money_count())
 				|| StringUtils.isNotBlank(request.getAdd_time_begin())
 				|| StringUtils.isNotBlank(request.getAdd_time_end())){
 
