@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
@@ -309,4 +310,6 @@ public interface CsMessageClient {
      * @return
      */
     CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request);
+
+    BooleanResponse reQueryCaiJingLog(String logType);
 }

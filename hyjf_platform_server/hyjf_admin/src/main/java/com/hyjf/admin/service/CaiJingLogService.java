@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.CaiJingLogResponse;
 import com.hyjf.am.resquest.admin.CaiJingLogRequest; /**
  * @author yaoyong
@@ -16,4 +17,11 @@ public interface CaiJingLogService {
      * @return
      */
     CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request);
+
+    /**
+     * 重新报送
+     * @param logType
+     * @return
+     */
+    BooleanResponse reQueryCaiJingLog(String logType);
 }

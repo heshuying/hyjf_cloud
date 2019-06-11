@@ -7,6 +7,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CaiJingLogService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CaiJingLogResponse;
 import com.hyjf.am.resquest.admin.CaiJingLogRequest;
@@ -16,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,5 +55,23 @@ public class CaiJingController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult(ListResult.build(response.getResultList(),response.getLogCount()));
+    }
+
+    /**
+     * 重新报送接口
+     * @param logType
+     * @return
+     */
+    @ApiOperation(value = "重新报送接口", notes = "重新报送接口")
+    @RequestMapping("/reQueryLogList")
+    public AdminResult reQueryLogList(@PathVariable String logType) {
+        BooleanResponse response = caiJingLogService.reQueryCaiJingLog(logType);
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult();
     }
 }

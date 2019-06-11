@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.CaiJingLogService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.CaiJingLogResponse;
 import com.hyjf.am.resquest.admin.CaiJingLogRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class CaiJIngLogServiceImpl implements CaiJingLogService {
     @Override
     public CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request) {
         return csMessageClient.queryCaiJingLog(request);
+    }
+
+    @Override
+    public BooleanResponse reQueryCaiJingLog(String logType) {
+        return csMessageClient.reQueryCaiJingLog(logType);
     }
 }
