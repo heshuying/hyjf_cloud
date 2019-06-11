@@ -130,7 +130,7 @@ public class DuibaOrderListController {
         duiBaCallBean.setOrderNum(duibaOrderVO.getDuibaOrderId());
         duiBaCallBean.setUserId(duibaOrderVO.getUserId());
         duiBaCallBean.setBizId(duibaOrderVO.getHyOrderId());
-        duiBaCallBean.setMsgType(DuiBaCallConstant.TYPE_ORDER_QUERY);
+        duiBaCallBean.setMsgType(DuiBaCallConstant.API_ORDER_QUERY);
         DuiBaCallResultBean duiBaCallResultBean = DuiBaCallUtils.duiBaCall(duiBaCallBean);
         // 根据兑吧回传的结果进行数据处理及赋值操作
         if (duiBaCallResultBean.isSuccess()) {

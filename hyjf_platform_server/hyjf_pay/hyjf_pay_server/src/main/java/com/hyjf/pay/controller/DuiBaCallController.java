@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
 
 @Controller
 @RequestMapping(value = "/duiba")
@@ -69,27 +68,34 @@ public class DuiBaCallController extends BaseController {
 		String errorMessage = "";
 		String bizId = null;
 		Long credits = 0L;
+		CreditConsumeResult result = null;
 		try {
 			CreditConsumeParams params = tool.parseCreditConsume(request);
 			logger.info("兑吧扣积分接口，兑吧订单号：{}", params.getOrderNum());
 			DuiBaReturnLog returnLog = new DuiBaReturnLog();
 			returnLog.setContent(ConvertUtils.convertObjectToMap(params));
 			returnLog.setCreateTime(DateUtils.getNowDate());
-			returnLog.setMsgType(DuiBaCallConstant.TYPE_DEDUCT_POINTS);
+			returnLog.setMsgType(DuiBaCallConstant.API_DEDUCT_POINTS);
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setRemark("用户扣积分");
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
+			String url = "http://CS-USER/hyjf-app/pointsshop/duiba/deductpoints";
+			CreditConsumeResult postResult = restTemplate.postForEntity(url, params, CreditConsumeResult.class).getBody();
+			if(null != postResult && postResult.isSuccess()){
+				success = true;
+				bizId = postResult.getBizId();
+				credits = postResult.getCredits();
+			} else {
+				success = false;
+				errorMessage = "兑换出现了问题，请联系相关人员处理。";
+			}
 
-			// todo wangjun 业务逻辑 别忘了加网关
-
-			success = true;
-			bizId = UUID.randomUUID().toString();
 		} catch (Exception e) {
 			success = false;
-			errorMessage = e.getMessage();
+			errorMessage = "兑换出现了问题，请联系相关人员处理。";
 			logger.error("兑吧调用扣积分接口发生错误：", e);
 		}
-		CreditConsumeResult result = new CreditConsumeResult(success);
+		result = new CreditConsumeResult(success);
 		result.setBizId(bizId);
 		result.setErrorMessage(errorMessage);
 		result.setCredits(credits);
@@ -128,7 +134,7 @@ public class DuiBaCallController extends BaseController {
 			DuiBaReturnLog returnLog = new DuiBaReturnLog();
 			returnLog.setContent(ConvertUtils.convertObjectToMap(params));
 			returnLog.setCreateTime(DateUtils.getNowDate());
-			returnLog.setMsgType(DuiBaCallConstant.TYPE_EXCHANGE_RESULT);
+			returnLog.setMsgType(DuiBaCallConstant.API_EXCHANGE_RESULT);
 			returnLog.setRemark("兑吧兑换结果通知");
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getBizId());
@@ -194,7 +200,7 @@ public class DuiBaCallController extends BaseController {
 			DuiBaReturnLog returnLog = new DuiBaReturnLog();
 			returnLog.setContent(ConvertUtils.convertObjectToMap(params));
 			returnLog.setCreateTime(DateUtils.getNowDate());
-			returnLog.setMsgType(DuiBaCallConstant.TYPE_RECHARGE);
+			returnLog.setMsgType(DuiBaCallConstant.API_RECHARGE);
 			returnLog.setRemark("兑吧自有商品充值");
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
 			returnLog.setLogOrdId(params.getDevelopBizId());
@@ -234,7 +240,6 @@ public class DuiBaCallController extends BaseController {
 	public String call(@RequestBody DuiBaCallBean request) {
 		logger.info("调用兑吧接口开始，兑吧订单号:" + request.getOrderNum());
 		String result = "";
-		// todo wangjun appkey与appsecret根据应用配置
 		CreditTool tool = new CreditTool(systemConfig.getDuiBaAppKey(), systemConfig.getDuiBaAppSecret());
 
 		try {

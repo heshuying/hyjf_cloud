@@ -84,17 +84,17 @@ public class DuibaOrderController extends BaseController {
         // 订单状态
         List<ParamNameVO> orderStatusList = duibaOrderListService.getParamNameList(CustomConstants.ORDER_STATUS);
         if (null != orderStatusList && orderStatusList.size() > 0) {
-            duibaOrderResponse.setProductTypeList(orderStatusList);
+            duibaOrderResponse.setOrderStatusList(orderStatusList);
         }
         // 发货状态
         List<ParamNameVO> deliveryStatusList = duibaOrderListService.getParamNameList(CustomConstants.DELIVERY_STATUS);
         if (null != deliveryStatusList && deliveryStatusList.size() > 0) {
-            duibaOrderResponse.setProductTypeList(deliveryStatusList);
+            duibaOrderResponse.setDeliveryStatusList(deliveryStatusList);
         }
         // 处理状态
         List<ParamNameVO> processingStateList = duibaOrderListService.getParamNameList(CustomConstants.PROCESSING_STATE);
         if (null != processingStateList && processingStateList.size() > 0) {
-            duibaOrderResponse.setProductTypeList(processingStateList);
+            duibaOrderResponse.setProcessingStateList(processingStateList);
         }
         return new AdminResult<DuibaOrderResponse>(duibaOrderResponse);
     }

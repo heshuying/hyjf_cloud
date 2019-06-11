@@ -656,5 +656,4 @@ public interface AmUserClient {
 	 * @return
 	 */
 	CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams);
-
 }

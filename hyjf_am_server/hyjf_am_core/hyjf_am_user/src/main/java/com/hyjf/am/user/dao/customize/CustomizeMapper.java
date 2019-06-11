@@ -114,4 +114,7 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserDepartmentInfoCustomizeMapper userDepartmentInfoCustomizeMapper;
+
+    @Autowired
+    protected DuiBaCustomizeMapper duiBaCustomizeMapper;
 }

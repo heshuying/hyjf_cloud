@@ -811,4 +811,8 @@ public interface MQConstant {
 	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
 	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
+	/** 兑吧扣积分后生成订单 */
+	String DUIBA_ORDER_GROUP = "DUIBA_ORDER_GROUP";
+	String DUIBA_ORDER_TOPIC = "DUIBA_ORDER_TOPIC";
+
 }

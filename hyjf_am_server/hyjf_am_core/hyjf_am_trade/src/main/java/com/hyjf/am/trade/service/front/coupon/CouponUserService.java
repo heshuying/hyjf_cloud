@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.coupon;
 
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.CouponUserListCustomize;

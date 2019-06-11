@@ -24,6 +24,13 @@ public class CreditConsumeParams {
 	private String ip="";//用户兑换时使用的ip地址，有可能为空
 	private String params="";//参数，根据不同的type，有不同的含义，参见在线文档
 	private String transfer="";
+	/**
+	 * 以下参数为汇盈业务自己参数，兑吧不会返回
+	 */
+	private String bizId="";//汇盈订单号
+	private String userName="";//用户名
+	private String trueName="";//用户真实姓名
+	private Integer creditsCurrent;//当前用户积分
 	
 	public Map<String, String> toRequestMap(String appSecret){
 		Map<String, String> map=new HashMap<String, String>();
@@ -165,5 +172,29 @@ public class CreditConsumeParams {
 	}
 	public void setTransfer(String transfer) {
 		this.transfer = transfer;
+	}
+	public String getBizId() {
+		return bizId;
+	}
+	public void setBizId(String bizId) {
+		this.bizId = bizId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getTrueName() {
+		return trueName;
+	}
+	public void setTrueName(String trueName) {
+		this.trueName = trueName;
+	}
+	public Integer getCreditsCurrent() {
+		return creditsCurrent;
+	}
+	public void setCreditsCurrent(Integer creditsCurrent) {
+		this.creditsCurrent = creditsCurrent;
 	}
 }

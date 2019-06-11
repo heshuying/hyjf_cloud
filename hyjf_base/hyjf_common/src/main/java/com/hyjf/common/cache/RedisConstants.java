@@ -578,5 +578,8 @@ public class RedisConstants {
      */
     public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
 
+    /** 积分商城开关*/
     public static final String POINTS_SHOP_SWITCH = "points_shop_switch";
+    /** 兑吧汇率*/
+    public static final String DUIBA_EXCHANGE_RATE = "hyjf_duiba_exchange_rate";
 }

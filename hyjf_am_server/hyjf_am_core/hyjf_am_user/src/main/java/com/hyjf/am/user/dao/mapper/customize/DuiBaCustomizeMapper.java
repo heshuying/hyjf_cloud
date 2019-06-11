@@ -3,14 +3,16 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
+
 /**
  * @author wangjun
  */
 public interface DuiBaCustomizeMapper {
     /**
-     * 查询符合条件的入职员工 列表
+     * 扣除用户积分
      * @return
      */
-    Integer updateUserPoints();
+    Integer updateUserPoints(CreditConsumeParams consumeParams);
 
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -1345,26 +1344,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams){
-		String url = "http://AM_USER/am-user/pointsshop/duiba/deductpoints";
+		String url = "http://AM-USER/am-user/pointsshop/duiba/deductpoints";
 		CreditConsumeResultResponse response = restTemplate.postForEntity(url, consumeParams, CreditConsumeResultResponse.class).getBody();
 		if(Response.isSuccess(response)){
 			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * 根据用户id获取注册时渠道名
-	 * @param userId
-	 * @auther:
-	 * @return String
-	 */
-	@Override
-	public String selectChannelNameByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId;
-		UtmResponse response = restTemplate.getForEntity(url, UtmResponse.class).getBody();
-		if (response != null) {
-			return response.getChannelName();
 		}
 		return null;
 	}
