@@ -10,9 +10,12 @@ import com.hyjf.admin.service.CaiJingLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CaiJingLogResponse;
 import com.hyjf.am.resquest.admin.CaiJingLogRequest;
+import com.hyjf.am.vo.admin.CaiJingPresentationLogVO;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +41,11 @@ public class CaiJingController extends BaseController {
     @RequestMapping("/queryLogList")
     public AdminResult queryCaiJingLog(@RequestBody CaiJingLogRequest request) {
         CaiJingLogResponse response = caiJingLogService.queryCaiJingLog(request);
+        if (!CollectionUtils.isEmpty(response.getResultList())) {
+            for (CaiJingPresentationLogVO logVO : response.getResultList()) {
+                logVO.setPushTime(GetDate.getDateTimeMyTime(logVO.getPresentationTime()));
+            }
+        }
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

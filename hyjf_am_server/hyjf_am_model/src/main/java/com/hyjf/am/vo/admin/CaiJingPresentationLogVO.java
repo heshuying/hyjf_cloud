@@ -23,6 +23,8 @@ public class CaiJingPresentationLogVO implements Serializable {
 
     private Integer presentationTime;
 
+    private String pushTime;
+
     public String getId() {
         return id;
     }
@@ -69,5 +71,13 @@ public class CaiJingPresentationLogVO implements Serializable {
 
     public void setPresentationTime(Integer presentationTime) {
         this.presentationTime = presentationTime;
+    }
+
+    public String getPushTime() {
+        return pushTime;
+    }
+
+    public void setPushTime(String pushTime) {
+        this.pushTime = pushTime;
     }
 }
