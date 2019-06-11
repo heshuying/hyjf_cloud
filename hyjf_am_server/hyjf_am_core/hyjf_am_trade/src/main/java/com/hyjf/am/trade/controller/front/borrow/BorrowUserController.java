@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowUserResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowUser;
@@ -8,10 +9,11 @@ import com.hyjf.am.trade.service.front.borrow.BorrowUserService;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiasq
@@ -36,6 +38,17 @@ public class BorrowUserController extends BaseController {
         if (null != borrowUsers) {
             BorrowUserVO borrowUserVO = CommonUtils.convertBean(borrowUsers,BorrowUserVO.class);
             response.setResult(borrowUserVO);
+        }
+        return response;
+    }
+
+    @PostMapping("/borrowUserInfoList")
+    public BorrowUserResponse getBorrowUserList(@RequestBody List<String> borrowNids) {
+        BorrowUserResponse response = new BorrowUserResponse();
+        List<BorrowUserVO> borrowUserVOList = borrowUserService.getBorrowUserList(borrowNids);
+        if (!CollectionUtils.isEmpty(borrowUserVOList)) {
+            response.setResultList(borrowUserVOList);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }

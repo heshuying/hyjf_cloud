@@ -65,27 +65,35 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String yesterday = GetDate.date_sdf.format(cal.getTime());
 //        String dateStart = GetDate.getDayStart(yesterday);
 //        String dateEnd = GetDate.getDayEnd(yesterday);
-        String dateStart = "2018-4-24";
-        String dateEnd = "2018-4-24";
+        String dateStart = "2018-10-10 00:00:00";
+        String dateEnd = "2018-10-10 23:59:59";
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType("借款记录");
         presentationLog.setCount(borrowDataVOList.size());
-        if (!CollectionUtils.isEmpty(borrowDataVOList)) {
+        if (CollectionUtils.isEmpty(borrowDataVOList)) {
             logger.info("借款记录接口报送数据为空");
             return;
         }
         logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
 
+        Map<Integer, String> mapUserId = queryCACustomerId(borrowDataVOList);
+        if (mapUserId == null || mapUserId.size() == 0) {
+            logger.info("投资记录接口报送结束,报送用户id为空");
+            return;
+        }
+
         for (ZeroOneBorrowDataVO voList : borrowDataVOList) {
-            String customerCAId = queryCustomerCAId(voList.getId());
-            if (customerCAId == null) {
-                logger.info("借款记录接口报送,报送标的编号" + voList.getId() + "的借款用户编号为空");
-                return;
+            if (voList.getUserid() != null) {
+                voList.setUsername(mapUserId.get(voList.getUserid()));
+                voList.setUserid(mapUserId.get(voList.getUserid()));
+            } else {
+                logger.info("投资记录接口报送 当前用户编号为空,userId=" + voList.getUserid());
+                voList.setUserid(null);
+                voList.setUsername(null);
             }
-            voList.setUsername(customerCAId);
-            voList.setUserid(customerCAId);
+
         }
         ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), String.valueOf(JSONObject.toJSON(borrowDataVOList)));
         if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
@@ -102,43 +110,44 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         logger.info("出借记录接口报送结束");
     }
 
+
     /**
      * 投资记录接口报送
      */
     @Override
-    public void investRecordSub(){
+    public void investRecordSub() {
         logger.info("投资记录接口报送开始");
 //        String date = "2019-02-02";
         String date = "2018-4-24";
 
-        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date,date);
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date, date);
 
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType("出借记录");
         presentationLog.setCount(zeroOneDataVOList.size());
-        if(zeroOneDataVOList == null || zeroOneDataVOList.size() == 0){
+        if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("投资记录接口无数据报送结束");
             return;
         }
-        logger.info("投资记录接口报送条数="+zeroOneDataVOList.size());
+        logger.info("投资记录接口报送条数=" + zeroOneDataVOList.size());
 
         Set<Integer> listUserId = new HashSet<>();
-        for(ZeroOneDataVO voList : zeroOneDataVOList){
+        for (ZeroOneDataVO voList : zeroOneDataVOList) {
             listUserId.add(voList.getUserIds());
         }
 
-        Map<Integer,String> mapUserId =queryCustomerId(listUserId);
-        if(mapUserId == null || mapUserId.size() == 0){
+        Map<Integer, String> mapUserId = queryCustomerId(listUserId);
+        if (mapUserId == null || mapUserId.size() == 0) {
             logger.info("投资记录接口报送结束,报送用户id为空");
             return;
         }
 
-        for(ZeroOneDataVO voList : zeroOneDataVOList){
-            if(mapUserId.get(voList.getUserIds()) != null){
+        for (ZeroOneDataVO voList : zeroOneDataVOList) {
+            if (mapUserId.get(voList.getUserIds()) != null) {
                 voList.setUsername(mapUserId.get(voList.getUserIds()));
                 voList.setUserid(mapUserId.get(voList.getUserIds()));
-            }else{
-                logger.info("投资记录接口报送 当前用户编号为空,userId="+voList.getUserIds());
+            } else {
+                logger.info("投资记录接口报送 当前用户编号为空,userId=" + voList.getUserIds());
                 voList.setUserid(null);
                 voList.setUsername(null);
             }
@@ -147,8 +156,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),String.valueOf(JSONObject.toJSON(list)));
-        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(), String.valueOf(JSONObject.toJSON(list)));
+        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("投资记录接口报送成功");
             presentationLog.setStatus(1);
@@ -182,8 +191,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(),String.valueOf(JSONObject.toJSON(list)));
-        if(zeroOneResponse != null && zeroOneResponse.result_code == 1){
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), String.valueOf(JSONObject.toJSON(list)));
+        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("提前还款接口报送成功");
             presentationLog.setStatus(1);
@@ -200,133 +209,104 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     /**
      * 获取借款用户编号
      *
-     * @param borrowNid
+     * @param borrowDataVOList
      * @return
      */
-    private String queryCustomerCAId(String borrowNid) {
-        // 借款方CA认证客户编号
-        String borrowerCustomerID = null;
-        // 借款详情
-        BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
-        if (borrow != null) {
-            String planNid = borrow.getPlanNid();
-            if (StringUtils.isNotBlank(planNid)) {
-                // 借款人用户ID
-                Integer borrowUserId = borrow.getUserId();
-                // 借款人用户信息
-                UserVO borrowUser = this.amUserClient.findUserById(borrowUserId);
-                if (borrowUser == null) {
-                    logger.error("根据借款人用户ID,查询借款人信息失败,借款人用户ID:[" + borrowUserId + "].");
-                    throw new RuntimeException("根据借款人用户ID,查询借款人信息失败,借款人用户ID:[" + borrowUserId + "].");
-                }
+    private Map<Integer, String> queryCACustomerId(List<ZeroOneBorrowDataVO> borrowDataVOList) {
+        List<Integer> userIds = new ArrayList<>();
+        List<String> borrowNids = new ArrayList<>();
+        List<String> nids = new ArrayList<>();
 
-                // 借款人用户详情信息
-                UserInfoVO borrowUserInfo = this.amUserClient.findUsersInfoById(borrowUserId);
-                if (borrowUserInfo == null) {
-                    logger.error("根据借款人用户ID,查询借款人详情信息失败,借款人用户ID:[" + borrowUserId + "].");
-                    throw new RuntimeException("根据借款人用户ID,查询借款人详情信息失败,借款人用户ID:[" + borrowUserId + "].");
-                }
-                CertificateAuthorityVO certificateAuthorityVO = this.amUserClient
-                        .selectCertificateAuthorityByUserId(String.valueOf(borrowUserId));
-                if (Validator.isNotNull(certificateAuthorityVO)) {
-                    borrowerCustomerID = certificateAuthorityVO.getCustomerId();
-                    return borrowerCustomerID;
-                }
+        for (ZeroOneBorrowDataVO borrowDataVO : borrowDataVOList) {
+            if (StringUtils.isNotBlank(borrowDataVO.getPlanNid())) {
+                userIds.add(Integer.valueOf(borrowDataVO.getUserid()));
             } else {
-                if (StringUtils.isNotEmpty(borrow.getCompanyOrPersonal()) && "1".equals(borrow.getCompanyOrPersonal())) {
-                    // 借款主体为企业借款
-                    BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
-                    if (borrowUsers == null) {
-                        logger.error("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
-                        throw new RuntimeException("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
-                    }
-                    // 获取CA认证客户编号
-                    borrowerCustomerID = this.getCACustomerID(borrowUsers);
-                    if (StringUtils.isBlank(borrowerCustomerID)) {
-                        logger.error("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
-                                + borrowUsers.getSocialCreditCode() + "].");
-                        throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
-                                + borrowUsers.getSocialCreditCode() + "].");
-                    }
-                    return borrowerCustomerID;
-                } else if (StringUtils.isNotEmpty(borrow.getCompanyOrPersonal()) && "2".equals(borrow.getCompanyOrPersonal())) {
-                    // 借款主体为个人借款
-                    BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
-                    if (borrowManinfo == null) {
-                        logger.error("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
-                        throw new RuntimeException("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
-                    }
-                    // 获取CA认证客户编号
-                    borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
-                    logger.info("获得借款人认证编号：" + borrowerCustomerID);
-                    if (StringUtils.isBlank(borrowerCustomerID)) {
-                        logger.error("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
-                                + borrowManinfo.getCardNo() + "].");
-                        throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
-                                + borrowManinfo.getCardNo() + "].");
-                    }
-                    return borrowerCustomerID;
+                if (borrowDataVO.getCompanyOrPersonal() != null && borrowDataVO.getCompanyOrPersonal() == 1) {
+                    borrowNids.add(borrowDataVO.getId());
+                }
+                if (borrowDataVO.getCompanyOrPersonal() != null && borrowDataVO.getCompanyOrPersonal() == 2) {
+                    nids.add(borrowDataVO.getId());
                 }
             }
         }
-        return null;
+        Map<Integer, String> mapUserId = new HashMap<>();
+        List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userIds);
+        if (!CollectionUtils.isEmpty(voList)) {
+            for (CertificateAuthorityVO authorityVO : voList) {
+                mapUserId.put(authorityVO.getUserId(), authorityVO.getCustomerId());
+            }
+        }
+        List<BorrowUserVO> userVOS = amTradeClient.getBorrowUserInfo(borrowNids);
+        List<BorrowManinfoVO> maninfoVOList = amTradeClient.getBorrowManList(nids);
+        if (!CollectionUtils.isEmpty(userVOS)) {
+            mapUserId = getCACustomerID(userVOS);
+        }
+        if (!CollectionUtils.isEmpty(maninfoVOList)) {
+            mapUserId = getPersonCACustomerId(maninfoVOList);
+        }
+        return mapUserId;
     }
 
 
     /**
-     * 获取借款主体为企业的CA认证客户编号
+     * 批量获取借款主体为企业的CA认证客户编号
      *
-     * @param borrowUsers
+     * @param userVOS
      * @return
      */
-    private String getCACustomerID(BorrowUserVO borrowUsers) {
-        CertificateAuthorityRequest request = new CertificateAuthorityRequest();
-        request.setTrueName(borrowUsers.getUsername());
-        request.setIdNo(borrowUsers.getSocialCreditCode());
-        request.setIdType(1);
-        List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
-        if (list != null && list.size() > 0) {
-            return list.get(0).getCustomerId();
+    private Map<Integer, String> getCACustomerID(List<BorrowUserVO> userVOS) {
+        Map<Integer, String> caCustomerIds = new HashMap<>();
+        for (BorrowUserVO borrowUsers : userVOS) {
+            CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+            request.setTrueName(borrowUsers.getUsername());
+            request.setIdNo(borrowUsers.getSocialCreditCode());
+            request.setIdType(1);
+            List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
+            if (list != null && list.size() > 0) {
+                caCustomerIds.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+            } else {
+                // 借款主体CA认证记录表
+                LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
+                request1.setName(borrowUsers.getUsername());
+                request1.setIdType(1);
+                request1.setIdNo(borrowUsers.getSocialCreditCode());
+                List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
+                        .getLoanSubjectCertificateAuthorityList(request1);
+                if (resultList != null && resultList.size() > 0) {
+                    caCustomerIds.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+                }
+            }
         }
-        // 借款主体CA认证记录表
-        LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
-        request1.setName(borrowUsers.getUsername());
-        request1.setIdType(1);
-        request1.setIdNo(borrowUsers.getSocialCreditCode());
-        List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
-                .getLoanSubjectCertificateAuthorityList(request1);
-
-        if (resultList != null && resultList.size() > 0) {
-            return resultList.get(0).getCustomerId();
-        }
-        return null;
+        return caCustomerIds;
     }
 
     /**
      * 获得用户编号
+     *
      * @param userId
      * @return
      */
-    private Map<Integer,String> queryCustomerId(Set<Integer> userId){
-        if(userId == null || userId.size() == 0){
+    private Map<Integer, String> queryCustomerId(Set<Integer> userId) {
+        if (userId == null || userId.size() == 0) {
             return null;
         }
-        Map<Integer,String> mapUserId = new HashMap<>();
+        Map<Integer, String> mapUserId = new HashMap<>();
 
         List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userId);
-        for(CertificateAuthorityVO vo : voList){
-            mapUserId.put(vo.getUserId(),vo.getCustomerId());
+        for (CertificateAuthorityVO vo : voList) {
+            mapUserId.put(vo.getUserId(), vo.getCustomerId());
         }
         return mapUserId;
     }
 
     /**
      * 数据推送
+     *
      * @param type 类型，借款=lend ,出借=invest ,提前还款=advanced-repay
      * @param json 数据json
      * @return
      */
-    private ZeroOneResponse sendDataReport(String type,String json){
+    private ZeroOneResponse sendDataReport(String type, String json) {
 
         String url = "http://data.caijing.com/hub/p2p/";
 
@@ -335,12 +315,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         stbuUrl.append(type);
         stbuUrl.append("/commit.json");
 
-        Map<String,String> sendMap = new HashMap<>();
+        Map<String, String> sendMap = new HashMap<>();
         ZeroOneResponse zeroOneResponse = null;
-        try{
-            sendMap.put("visit_key","www.hyjf.com");
-            sendMap.put("time",String.valueOf(System.currentTimeMillis()));
-            sendMap.put("data",json);
+        try {
+            sendMap.put("visit_key", "www.hyjf.com");
+            sendMap.put("time", String.valueOf(System.currentTimeMillis()));
+            sendMap.put("data", json);
 
             //Sige md5(密钥&visit_key=域名&time=时间戳&data=data字符串的byte长度)
             StringBuilder stringBuilder = new StringBuilder();
@@ -355,15 +335,15 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
             String sign = MD5.toMD5CodeCaps(stringBuilder.toString());
 
-            sendMap.put("sign",sign);
+            sendMap.put("sign", sign);
 
             //Post请求
-            String response = HttpDeal.post(stbuUrl.toString(),sendMap);
+            String response = HttpDeal.post(stbuUrl.toString(), sendMap);
 
-            zeroOneResponse = JSONObject.parseObject(response,ZeroOneResponse.class);
+            zeroOneResponse = JSONObject.parseObject(response, ZeroOneResponse.class);
 
-        }catch (Exception e){
-            logger.error("零壹财经数据报送错误 error:",e);
+        } catch (Exception e) {
+            logger.error("零壹财经数据报送错误 error:", e);
         }
 
         return zeroOneResponse;
@@ -372,29 +352,33 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     /**
      * 获取借款主体为个人的CA认证客户编号
      *
-     * @param borrowManinfo
+     * @param borrowManinfos
      * @return
      */
-    private String getPersonCACustomerID(BorrowManinfoVO borrowManinfo) {
-        // 用户CA认证记录表
-        CertificateAuthorityRequest request = new CertificateAuthorityRequest();
-        request.setTrueName(borrowManinfo.getName());
-        request.setIdNo(borrowManinfo.getCardNo());
-        request.setIdType(0);
-        List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
-        if (list != null && list.size() > 0) {
-            return list.get(0).getCustomerId();
+    private Map<Integer, String> getPersonCACustomerId(List<BorrowManinfoVO> borrowManinfos) {
+        Map<Integer, String> map = new HashMap<>();
+        for (BorrowManinfoVO borrowManinfoVO : borrowManinfos) {
+            // 用户CA认证记录表
+            CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+            request.setTrueName(borrowManinfoVO.getName());
+            request.setIdNo(borrowManinfoVO.getCardNo());
+            request.setIdType(0);
+            List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
+            if (list != null && list.size() > 0) {
+                map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+            } else {
+                // 借款主体CA认证记录表
+                LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
+                request1.setName(borrowManinfoVO.getName());
+                request1.setIdType(0);
+                request1.setIdNo(borrowManinfoVO.getCardNo());
+                List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
+                        .getLoanSubjectCertificateAuthorityList(request1);
+                if (resultList != null && resultList.size() > 0) {
+                    map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+                }
+            }
         }
-        // 借款主体CA认证记录表
-        LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
-        request1.setName(borrowManinfo.getName());
-        request1.setIdType(0);
-        request1.setIdNo(borrowManinfo.getCardNo());
-        List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
-                .getLoanSubjectCertificateAuthorityList(request1);
-        if (resultList != null && resultList.size() > 0) {
-            return resultList.get(0).getCustomerId();
-        }
-        return null;
+        return map;
     }
 }

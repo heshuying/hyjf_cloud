@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BorrowManinfoCustomizeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowManinfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="old" property="old" jdbcType="TINYINT" />
+    <result column="merry" property="merry" jdbcType="TINYINT" />
+    <result column="pro" property="pro" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="credit" property="credit" jdbcType="INTEGER" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="business" property="business" jdbcType="DECIMAL" />
+    <result column="wtime" property="wtime" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="domicile" property="domicile" jdbcType="VARCHAR" />
+    <result column="overdue_times" property="overdueTimes" jdbcType="VARCHAR" />
+    <result column="overdue_amount" property="overdueAmount" jdbcType="VARCHAR" />
+    <result column="litigation" property="litigation" jdbcType="VARCHAR" />
+    <result column="is_card" property="isCard" jdbcType="TINYINT" />
+    <result column="is_income" property="isIncome" jdbcType="TINYINT" />
+    <result column="is_credit" property="isCredit" jdbcType="TINYINT" />
+    <result column="is_asset" property="isAsset" jdbcType="TINYINT" />
+    <result column="is_vehicle" property="isVehicle" jdbcType="TINYINT" />
+    <result column="is_driving_license" property="isDrivingLicense" jdbcType="TINYINT" />
+    <result column="is_vehicle_registration" property="isVehicleRegistration" jdbcType="TINYINT" />
+    <result column="is_merry" property="isMerry" jdbcType="TINYINT" />
+    <result column="is_work" property="isWork" jdbcType="TINYINT" />
+    <result column="is_account_book" property="isAccountBook" jdbcType="TINYINT" />
+    <result column="annual_income" property="annualIncome" jdbcType="VARCHAR" />
+    <result column="overdue_report" property="overdueReport" jdbcType="VARCHAR" />
+    <result column="debt_situation" property="debtSituation" jdbcType="VARCHAR" />
+    <result column="other_borrowed" property="otherBorrowed" jdbcType="VARCHAR" />
+    <result column="is_funds" property="isFunds" jdbcType="VARCHAR" />
+    <result column="is_managed" property="isManaged" jdbcType="VARCHAR" />
+    <result column="is_ability" property="isAbility" jdbcType="VARCHAR" />
+    <result column="is_overdue" property="isOverdue" jdbcType="VARCHAR" />
+    <result column="is_complaint" property="isComplaint" jdbcType="VARCHAR" />
+    <result column="is_punished" property="isPunished" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="borrowManinfoResult" type="com.hyjf.am.vo.trade.borrow.BorrowManinfoVO" >
+    <result column="name" property="name"/>
+    <result column="card_no" property="cardNo"/>
+    <result column="id_type" property="idType" />
+  </resultMap>
+
+  <select id="getBorrowManinfoList" resultMap="borrowManinfoResult" parameterType="java.lang.String">
+    SELECT
+    m.name
+    m.card_no
+    0 AS id_type
+    FROM ht_borrow_maninfo m
+    WHERE borrow_nid IN
+    <foreach collection="set" index="index" item="item" open="(" close=")" separator=",">
+      #{item, jdbcType=VARCHAR}
+    </foreach>
+  </select>
+</mapper>

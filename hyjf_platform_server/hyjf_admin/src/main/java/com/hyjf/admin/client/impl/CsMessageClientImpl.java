@@ -466,4 +466,11 @@ public class CsMessageClientImpl implements CsMessageClient {
                 .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDay", request, HjhInfoAccountBalanceResponse.class).getBody();
         return response;
     }
+
+    @Override
+    public CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request) {
+        String url = "http://CS-MESSAGE/cs-message/dataCenter/caiJingLog";
+        CaiJingLogResponse response = restTemplate.postForEntity(url, request, CaiJingLogResponse.class).getBody();
+        return response;
+    }
 }

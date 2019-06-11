@@ -28,6 +28,12 @@ public class ZeroOneBorrowDataVO implements Serializable {
     //用户编号
     private String userid;
 
+    //计划编号
+    private String planNid;
+
+    //借款人类型
+    private Integer companyOrPersonal;
+
     //借款金额
     private Double amount;
 
@@ -275,5 +281,21 @@ public class ZeroOneBorrowDataVO implements Serializable {
 
     public void setAttribute3(String attribute3) {
         this.attribute3 = attribute3;
+    }
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public Integer getCompanyOrPersonal() {
+        return companyOrPersonal;
+    }
+
+    public void setCompanyOrPersonal(Integer companyOrPersonal) {
+        this.companyOrPersonal = companyOrPersonal;
     }
 }

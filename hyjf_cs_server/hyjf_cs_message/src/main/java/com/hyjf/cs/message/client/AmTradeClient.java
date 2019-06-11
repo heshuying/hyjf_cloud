@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lisheng
@@ -168,4 +169,8 @@ public interface AmTradeClient {
 	BorrowUserVO getBorrowUser(String borrowNid);
 
 	BorrowManinfoVO getBorrowManinfo(String borrowNid);
+
+    List<BorrowUserVO> getBorrowUserInfo(List<String> borrowNids);
+
+    List<BorrowManinfoVO> getBorrowManList(List<String> nids);
 }

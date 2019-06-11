@@ -68,4 +68,19 @@ public class CertificateAuthorityController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 通过用户id查询 ca客户编号
+     * @return
+     */
+    @ApiOperation(value = "查询ca客户编号",notes = "查询ca客户编号")
+    @PostMapping(value = "/queryCustomerId")
+    public CertificateAuthorityResponse queryCustomerIds(@RequestBody List<Integer> userIds){
+        CertificateAuthorityResponse response = new CertificateAuthorityResponse();
+        List<CertificateAuthorityVO> list = certificateAuthorityService.queryCustomerIds(userIds);
+        if(list != null && list.size() > 0){
+            response.setResultList(list);
+        }
+        return response;
+    }
 }

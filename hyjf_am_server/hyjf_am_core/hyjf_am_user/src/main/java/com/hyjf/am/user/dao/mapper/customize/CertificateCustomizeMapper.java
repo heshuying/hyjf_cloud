@@ -19,4 +19,6 @@ public interface CertificateCustomizeMapper {
      * @return
      */
     List<CertificateAuthorityVO> queryCustomerId(@Param("set") Set<Integer> userId);
+
+    List<CertificateAuthorityVO> queryCustomerIds(@Param("list") List<Integer> userIds);
 }

@@ -302,4 +302,11 @@ public interface CsMessageClient {
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonth(HjhAccountBalanceRequest request);
 
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceDay(HjhAccountBalanceRequest request);
+
+    /**
+     * 查询财经日志
+     * @param request
+     * @return
+     */
+    CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request);
 }

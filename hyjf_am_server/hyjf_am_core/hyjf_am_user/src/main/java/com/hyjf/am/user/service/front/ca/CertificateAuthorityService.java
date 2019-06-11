@@ -31,4 +31,6 @@ public interface CertificateAuthorityService {
     Integer insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
 
     List<CertificateAuthorityVO> queryCustomerId(Set<Integer> userId);
+
+    List<CertificateAuthorityVO> queryCustomerIds(List<Integer> userIds);
 }

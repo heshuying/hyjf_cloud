@@ -27,8 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lisheng
@@ -310,5 +312,23 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+
+    @Override
+    public List<BorrowUserVO> getBorrowUserInfo(List<String> borrowNids) {
+		BorrowUserResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/borrowUserInfoList", borrowNids, BorrowUserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<BorrowManinfoVO> getBorrowManList(List<String> nids) {
+		BorrowManinfoResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/borrowManinfoList", nids, BorrowManinfoResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+    }
 
 }
