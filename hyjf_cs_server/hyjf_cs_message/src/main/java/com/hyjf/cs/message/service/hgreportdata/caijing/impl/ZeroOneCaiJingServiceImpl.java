@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -54,12 +55,18 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     @Autowired
     private CaiJingPresentationLogService presentationLogService;
 
+    public static String sendUrl = "";
+
+    @Value("01caijing.send.url")
+    public static void setSendUrl(String caijingsendUrl) {
+        ZeroOneCaiJingServiceImpl.sendUrl = caijingsendUrl;
+    }
 
     /**
      * 借款记录接口报送
      */
     @Override
-    public void borrowRecordSub() {
+    public void borrowRecordSub(String startDate ,String endDate) {
         logger.info("借款记录接口报送开始");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
@@ -113,17 +120,19 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
     }
 
-
     /**
      * 投资记录接口报送
      */
     @Override
-    public void investRecordSub() {
+    public void investRecordSub(String startDate ,String endDate){
         logger.info("投资记录接口报送开始");
 //        String date = "2019-02-02";
         String date = "2018-4-24";
 
-        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(date, date);
+        startDate = GetDate.dataformat(startDate,GetDate.date_sdf_key);
+        endDate = GetDate.dataformat(endDate,GetDate.date_sdf_key);
+
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(startDate,endDate);
 
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType("出借记录");
@@ -178,12 +187,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
      * 提前还款接口报送
      */
     @Override
-    public void advancedRepay() {
+    public void advancedRepay(String startDate ,String endDate) {
         logger.info("提前还款接口报送开始");
-        String startdate = "2019-05-07";
-        String enddate = "2019-05-09";
+        startDate = GetDate.dataformat(startDate,GetDate.date_sdf_key);
+        endDate = GetDate.dataformat(endDate,GetDate.date_sdf_key);
 
-        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startdate, enddate);
+        List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startDate, endDate);
 
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType("提前还款");
@@ -314,7 +323,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String url = "http://data.caijing.com/hub/p2p/";
 
         StringBuilder stbuUrl = new StringBuilder();
-        stbuUrl.append(url);
+        stbuUrl.append(sendUrl);
         stbuUrl.append(type);
         stbuUrl.append("/commit.json");
 
