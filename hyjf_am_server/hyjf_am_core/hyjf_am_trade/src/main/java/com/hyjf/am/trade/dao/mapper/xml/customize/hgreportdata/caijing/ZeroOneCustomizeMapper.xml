@@ -169,7 +169,7 @@
 		from_unixtime(b.reverify_time,'%Y-%m-%d %H:%i:%s') AS reverify_time,
 		b.tender_times as invest_count,
 		i.borrow_contents as borrow_detail,
-		i.borrow_use as attribute1
+		i.finance_purpose as attribute1
 		FROM ht_borrow b
 		LEFT JOIN ht_borrow_info i ON i.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_borrow_project_type t ON t.borrow_cd = b.project_type
@@ -211,7 +211,7 @@
 		c.end_time AS reverify_time,
 		c.assign_num AS invest_count,
 		i.borrow_contents as borrow_detail,
-		i.borrow_use as attribute1
+		i.finance_purpose as attribute1
 		FROM ht_borrow_credit c
 		LEFT JOIN ht_credit_tender t ON t.credit_nid = c.credit_nid
 		LEFT JOIN ht_borrow_info i ON i.borrow_nid = c.bid_nid
