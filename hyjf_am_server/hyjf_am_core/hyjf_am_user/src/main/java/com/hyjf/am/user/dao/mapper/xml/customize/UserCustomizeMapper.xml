@@ -71,14 +71,33 @@
 		<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<select id="getSubjectCertificateAuthorityList" resultMap="loanSubjectCertificateAuthority" parameterType="java.util.Map">
-		select a.id,u.user_id,
-		a.name,a.mobile,a.id_no,a.customer_id
-		FROM ht_loan_subject_certificate_authority a
-		LEFT JOIN ht_user u ON u.mobile = a.mobile
+	<select id="getbatchAuthorityList" resultMap="loanSubjectCertificateAuthority" parameterType="java.util.List">
+		SELECT
+			u.user_id AS userId,
+			a.id_no AS idNo,
+			a.customer_id AS customerId
+		FROM
+			ht_loan_subject_certificate_authority a
+			LEFT JOIN ht_user u ON u.mobile = a.mobile
 		WHERE
-		a.name = #{name}
-		AND a.id_type = #{idType}
-		AND a.id_no = #{idNo}
+			a.id_type = #{idType}
+			AND a.id_no in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+
+		UNION ALL
+		SELECT
+			user_id AS userId,
+			id_no AS idNo,
+			customer_id AS customerId
+		FROM
+			ht_certificate_authority
+		WHERE
+			id_type = #{idType}
+			and id_no in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
@@ -180,13 +181,6 @@ public interface UserService extends BaseService {
 	List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request);
 
 	/**
-	 * 借款主体CA认证记录表
-	 * @param request
-	 * @return
-	 */
-	List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
-
-	/**
 	 * 通过userID获得CA认证的客户ID
 	 * @param userId
 	 * @param code
@@ -358,8 +352,7 @@ public interface UserService extends BaseService {
 
 	/**
 	 * 查询借款主体CA
-	 * @param request
 	 * @return
 	 */
-    List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
+	List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list);
 }

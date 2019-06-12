@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
@@ -830,29 +831,17 @@ public class UserController extends BaseController {
         return response;
     }
 
-
     /**
-     *
-     */
-    @PostMapping("/getLoanSubjectCertificateAuthorityList")
-    public LoanSubjectCertificateAuthorityResponse getLoanSubjectCertificateAuthorityList(@RequestBody LoanSubjectCertificateAuthorityRequest request) {
-        LoanSubjectCertificateAuthorityResponse response = new LoanSubjectCertificateAuthorityResponse();
-        List<LoanSubjectCertificateAuthority> resultList = userService.getLoanSubjectCertificateAuthorityList(request);
-        if (CollectionUtils.isNotEmpty(resultList)) {
-            response.setResultList(CommonUtils.convertBeanList(resultList, LoanSubjectCertificateAuthorityVO.class));
-        }
-        return response;
-    }
-
-    /**
-     *
-     * @param request
+     * 查询借款主体CA
      * @return
      */
     @PostMapping("/getSubjectCertificateAuthorityList")
-    public LoanSubjectCertificateAuthorityResponse getSubjectCertificateAuthorityList(@RequestBody LoanSubjectCertificateAuthorityRequest request) {
+    public LoanSubjectCertificateAuthorityResponse getSubjectCertificateAuthorityList(@RequestBody CACustomerRequest list) {
         LoanSubjectCertificateAuthorityResponse response = new LoanSubjectCertificateAuthorityResponse();
-        List<LoanSubjectCertificateAuthorityVO> resultList = userService.getSubjectCertificateAuthorityList(request);
+        if(list == null){
+            return response;
+        }
+        List<LoanSubjectCertificateAuthorityVO> resultList = userService.getbatchAuthorityList(list);
         if (CollectionUtils.isNotEmpty(resultList)) {
             response.setResultList(resultList);
         }

@@ -8,6 +8,7 @@ import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
@@ -332,45 +333,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return new ArrayList<>();
 	}
 
-    @Override
-    public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
-		CertificateAuthorityResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
-				getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
-    }
-
 	@Override
-	public List<CertificateAuthorityVO> getCertificateAuthorityList(CertificateAuthorityRequest request) {
-		String url ="http://AM-USER/am-user/user/getCertificateAuthorityList";
-		CertificateAuthorityResponse response = restTemplate.postForEntity(url,request,CertificateAuthorityResponse.class).getBody();
-		if(Validator.isNotNull(response)) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
-	public List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1) {
-		String url = "http://AM-USER/am-user/user/getLoanSubjectCertificateAuthorityList";
-		LoanSubjectCertificateAuthorityResponse response = restTemplate.postForEntity(url, request1, LoanSubjectCertificateAuthorityResponse.class).getBody();
-		if (Validator.isNotNull(response)) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
-	public List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1) {
+	public List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(CACustomerRequest request1) {
 		String url = "http://AM-USER/am-user/user/getSubjectCertificateAuthorityList";
 		LoanSubjectCertificateAuthorityResponse response = restTemplate.postForEntity(url, request1, LoanSubjectCertificateAuthorityResponse.class).getBody();
-		if (Validator.isNotNull(response)) {
+		if (response != null && response.getResultList() != null) {
 			return response.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
     @Override

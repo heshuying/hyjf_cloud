@@ -2,6 +2,7 @@ package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
@@ -234,6 +235,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         List<String> borrowNids = new ArrayList<>();
         List<String> nids = new ArrayList<>();
 
+        //
         for (ZeroOneBorrowDataVO borrowDataVO : borrowDataVOList) {
             if (StringUtils.isNotBlank(borrowDataVO.getPlanNid())) {
                 userIds.add(Integer.valueOf(borrowDataVO.getUserid()));
@@ -246,6 +248,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 }
             }
         }
+
         Map<Integer, String> mapUserId = new HashMap<>();
         if (!CollectionUtils.isEmpty(userIds)) {
             List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userIds);
@@ -256,17 +259,27 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             }
         }
 
+        //企业CA认证客户编号
         if (!CollectionUtils.isEmpty(borrowNids)) {
             List<BorrowUserVO> userVOS = amTradeClient.getBorrowUserInfo(borrowNids);
             if (!CollectionUtils.isEmpty(userVOS)) {
-                mapUserId = getCACustomerID(userVOS);
+                List<String> idNoList = new ArrayList<>(userVOS.size());
+                for (BorrowUserVO borrowUsers : userVOS) {
+                    idNoList.add(borrowUsers.getSocialCreditCode());
+                }
+                mapUserId.putAll(getCACustomerID(idNoList,1));
             }
         }
 
+        //个人CA认证客户编号
         if (!CollectionUtils.isEmpty(nids)) {
             List<BorrowManinfoVO> maninfoVOList = amTradeClient.getBorrowManList(nids);
             if (!CollectionUtils.isEmpty(maninfoVOList)) {
-                mapUserId = getPersonCACustomerId(maninfoVOList);
+                List<String> cardList = new ArrayList<>(maninfoVOList.size());
+                for (BorrowManinfoVO borrowManinfoVO : maninfoVOList) {
+                    cardList.add(borrowManinfoVO.getCardNo());
+                }
+                mapUserId.putAll(getCACustomerID(cardList,0));
             }
         }
         return mapUserId;
@@ -275,33 +288,26 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
     /**
      * 批量获取借款主体为企业的CA认证客户编号
-     *
-     * @param userVOS
      * @return
      */
-    private Map<Integer, String> getCACustomerID(List<BorrowUserVO> userVOS) {
+    private Map<Integer, String> getCACustomerID(List<String> idNoList , Integer idType) {
         Map<Integer, String> caCustomerIds = new HashMap<>();
-        for (BorrowUserVO borrowUsers : userVOS) {
-            CertificateAuthorityRequest request = new CertificateAuthorityRequest();
-            request.setTrueName(borrowUsers.getUsername());
-            request.setIdNo(borrowUsers.getSocialCreditCode());
-            request.setIdType(1);
-            List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
-            if (list != null && list.size() > 0) {
-                caCustomerIds.put(list.get(0).getUserId(), list.get(0).getCustomerId());
-            } else {
-                // 借款主体CA认证记录表
-                LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
-                request1.setName(borrowUsers.getUsername());
-                request1.setIdType(1);
-                request1.setIdNo(borrowUsers.getSocialCreditCode());
-                List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
-                        .getSubjectCertificateAuthorityList(request1);
-                if (resultList != null && resultList.size() > 0) {
-                    caCustomerIds.put(resultList.get(0).getUserId(), resultList.get(0).getCustomerId());
-                }
+        if (CollectionUtils.isEmpty(idNoList)) {
+            return caCustomerIds;
+        }
+
+        CACustomerRequest request = new CACustomerRequest();
+        request.setIdType(idType);
+        request.setIdNoList(idNoList);
+
+        List<LoanSubjectCertificateAuthorityVO> authorityVOList = amUserClient.getSubjectCertificateAuthorityList(request);
+        if (!CollectionUtils.isEmpty(authorityVOList)) {
+
+            for(LoanSubjectCertificateAuthorityVO vo : authorityVOList){
+                caCustomerIds.put(vo.getUserId(), vo.getCustomerId());
             }
         }
+
         return caCustomerIds;
     }
 
@@ -372,36 +378,4 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         return zeroOneResponse;
     }
 
-    /**
-     * 获取借款主体为个人的CA认证客户编号
-     *
-     * @param borrowManinfos
-     * @return
-     */
-    private Map<Integer, String> getPersonCACustomerId(List<BorrowManinfoVO> borrowManinfos) {
-        Map<Integer, String> map = new HashMap<>();
-        for (BorrowManinfoVO borrowManinfoVO : borrowManinfos) {
-            // 用户CA认证记录表
-            CertificateAuthorityRequest request = new CertificateAuthorityRequest();
-            request.setTrueName(borrowManinfoVO.getName());
-            request.setIdNo(borrowManinfoVO.getCardNo());
-            request.setIdType(0);
-            List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
-            if (list != null && list.size() > 0) {
-                map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
-            } else {
-                // 借款主体CA认证记录表
-                LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
-                request1.setName(borrowManinfoVO.getName());
-                request1.setIdType(0);
-                request1.setIdNo(borrowManinfoVO.getCardNo());
-                List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
-                        .getLoanSubjectCertificateAuthorityList(request1);
-                if (resultList != null && resultList.size() > 0) {
-                    map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
-                }
-            }
-        }
-        return map;
-    }
 }

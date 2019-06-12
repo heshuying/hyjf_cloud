@@ -35,9 +35,8 @@ public interface UserCustomizeMapper {
     UserUtmInfoCustomize getUserUtmInfo(@Param("userId") Integer userId);
 
     /**
-     * 查询借款主体CA
-     * @param map
+     * 批量查询借款主体CA
      * @return
      */
-    List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(Map<String, Object> map);
+    List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(List<String> list,Integer idType);
 }
