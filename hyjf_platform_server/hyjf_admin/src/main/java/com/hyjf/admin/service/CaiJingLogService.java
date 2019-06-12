@@ -20,8 +20,8 @@ public interface CaiJingLogService {
 
     /**
      * 重新报送
-     * @param logType
+     * @param request
      * @return
      */
-    BooleanResponse reQueryCaiJingLog(String logType, String startDate, String endDate);
+    BooleanResponse reQueryCaiJingLog(CaiJingLogRequest request);
 }
