@@ -71,7 +71,7 @@ public class OrderInfoController extends BaseController {
                 wbsCommonVO.setData("");
                 return wbsCommonVO;
             }
-            if(tenderAccedeQO.getEntId()!=null){
+            if(tenderAccedeQO.getEntId()!=null&&getUtmIdList(tenderAccedeQO.getEntId())!=null){
                 tenderAccedeQO.setUtmIds(getUtmIdList(tenderAccedeQO.getEntId()));
             }else {
                 wbsCommonVO.setCode(Response.ERROR);
