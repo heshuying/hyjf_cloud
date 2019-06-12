@@ -176,7 +176,6 @@ public class DuiBaServiceImpl implements DuiBaService {
     public JSONObject getUserPoints(Integer userId) {
 		JSONObject result = new JSONObject();
 		UserVO userVO = amUserClient.findUserById(userId);
-		// 失败时默认返回0
     	if(null != userVO){
 			result.put("status", "000");
 			result.put("statusDesc", "成功");
@@ -184,7 +183,6 @@ public class DuiBaServiceImpl implements DuiBaService {
 		} else {
 			result.put("status", "1");
 			result.put("statusDesc", "获取积分失败");
-			result.put("pointsCurrent", 0);
 		}
 		return result;
     }
