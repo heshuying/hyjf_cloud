@@ -407,9 +407,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 request1.setIdType(0);
                 request1.setIdNo(borrowManinfoVO.getCardNo());
                 List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
-                        .getLoanSubjectCertificateAuthorityList(request1);
+                        .getSubjectCertificateAuthorityList(request1);
                 if (resultList != null && resultList.size() > 0) {
-                    map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+                    map.put(resultList.get(0).getUserId(), resultList.get(0).getCustomerId());
                 }
             }
         }
