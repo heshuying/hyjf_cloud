@@ -4,14 +4,12 @@
 package com.hyjf.cs.user.controller.wechat.pointsshop;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.cs.user.bean.DuiBaPointsDetailRequestBean;
 import com.hyjf.cs.user.service.pointsshop.DuiBaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,6 +34,12 @@ public class WeChatDuiBaController {
     @PostMapping(value = "/getconfig")
     public JSONObject getConfig(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request){
         return duiBaService.getConfig(userId, request);
+    }
+
+    @ApiOperation(value = "获取兑吧积分明细", notes = "获取兑吧积分明细")
+    @PostMapping(value = "/pointsshop/duiba/getpointsdetail")
+    public JSONObject getPointsDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody DuiBaPointsDetailRequestBean requestBean){
+        return duiBaService.getPointsDetail(userId, requestBean);
     }
 
 }

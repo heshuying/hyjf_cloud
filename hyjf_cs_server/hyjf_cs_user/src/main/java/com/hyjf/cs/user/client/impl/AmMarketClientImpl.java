@@ -4,10 +4,13 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AdsResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
+import com.hyjf.am.response.market.DuiBaPointsDetailResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.market.DuiBaPointsDetailRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.market.DuiBaPointsDetailVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.user.client.AmMarketClient;
 import org.slf4j.Logger;
@@ -71,5 +74,20 @@ public class AmMarketClientImpl implements AmMarketClient {
 	public List<ActivityListVO> getActivityList() {
 		return null;
 	}
+
+	/**
+	 * 查询兑吧积分商城明细
+	 * @param request
+	 * @return
+	 */
+    @Override
+    public DuiBaPointsDetailVO getPointsDetail(DuiBaPointsDetailRequest request) {
+        String url = marketService.concat("/duiba/getpointsdetail");
+		DuiBaPointsDetailResponse response = restTemplate.postForEntity(url, request,DuiBaPointsDetailResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+    }
 
 }

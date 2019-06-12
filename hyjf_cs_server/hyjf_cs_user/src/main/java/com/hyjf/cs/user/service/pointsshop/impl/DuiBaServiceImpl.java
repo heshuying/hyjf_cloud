@@ -4,9 +4,13 @@
 package com.hyjf.cs.user.service.pointsshop.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.market.DuiBaPointsDetailRequest;
+import com.hyjf.am.vo.market.DuiBaPointsDetailVO;
 import com.hyjf.am.vo.user.CreditConsumeResultVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.cs.user.bean.DuiBaPointsDetailRequestBean;
+import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.pointsshop.DuiBaService;
@@ -16,6 +20,7 @@ import com.hyjf.pay.lib.duiba.sdk.CreditTool;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +43,9 @@ public class DuiBaServiceImpl implements DuiBaService {
 
 	@Autowired
 	AmUserClient amUserClient;
+
+	@Autowired
+	AmMarketClient amMarketClient;
 
 	/**
 	 * 微信端获取兑吧url接口
@@ -135,4 +143,26 @@ public class DuiBaServiceImpl implements DuiBaService {
 		}
 		return result;
 	}
+
+    @Override
+    public JSONObject getPointsDetail(Integer userId, DuiBaPointsDetailRequestBean requestBean) {
+		JSONObject result = new JSONObject();
+		// 设置查询参数
+		DuiBaPointsDetailRequest request = new DuiBaPointsDetailRequest();
+		BeanUtils.copyProperties(requestBean, request);
+		request.setYear(requestBean.getDate()[0]);
+		request.setMonth(requestBean.getDate()[1]);
+		request.setUserId(userId);
+		DuiBaPointsDetailVO vo = amMarketClient.getPointsDetail(request);
+		if(null != vo){
+			result.put("status", "000");
+			result.put("statusDesc","成功");
+			result.put("data", vo);
+		} else {
+			result.put("status", "1");
+			result.put("statusDesc","查询数据失败");
+			result.put("data", null);
+		}
+		return result;
+    }
 }

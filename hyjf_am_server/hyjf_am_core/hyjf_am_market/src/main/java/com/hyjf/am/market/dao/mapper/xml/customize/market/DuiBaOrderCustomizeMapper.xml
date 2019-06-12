@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.DuiBaOrderCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+				user_id = #{userId}
+			<if test="type != -1">
+				AND `type` = #{type}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND create_time <![CDATA[>=]]> STR_TO_DATE(#{startTime}, '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endTime}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+	</sql>
+
+	<select id="countPointsDetail" resultType="java.lang.Integer"
+			parameterType="com.hyjf.am.resquest.market.DuiBaPointsDetailRequest">
+		SELECT
+			COUNT(1)
+		FROM ht_duiba_points
+		<include refid="Where_Clause" />
+	</select>
+
+	<select id="selectPointsDetail" resultType="com.hyjf.am.vo.market.DuiBaPointsListDetailVO"
+		parameterType="com.hyjf.am.resquest.market.DuiBaPointsDetailRequest">
+		SELECT
+			0 AS isTotal,
+			DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s' ) AS `time`,
+			business_name AS businessName,
+			`type`,
+			points AS pointsDetail,
+			DATE_FORMAT(create_time, '%m' ) AS `month`,
+			DATE_FORMAT(create_time, '%Y' ) AS `year`
+		FROM ht_duiba_points
+		<include refid="Where_Clause" />
+		ORDER BY create_time DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+	<select id="selectPointsTotal" resultType="java.lang.Integer"
+			parameterType="com.hyjf.am.resquest.market.DuiBaPointsDetailRequest">
+		SELECT
+			IFNULL(SUM(points), 0)
+		FROM ht_duiba_points
+		<include refid="Where_Clause" />
+	</select>
+	
+</mapper>

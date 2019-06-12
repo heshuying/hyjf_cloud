@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.market.service;
 
+import com.hyjf.am.response.market.DuiBaPointsDetailResponse;
+import com.hyjf.am.resquest.market.DuiBaPointsDetailRequest;
 import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 
 /**
@@ -22,4 +24,11 @@ public interface DuiBaOrderService {
      * @param consumeParams
      */
     void insertDuiBaOrder(CreditConsumeParams consumeParams);
+
+    /**
+     * 获取移动端积分明细
+     * @param request
+     * @return
+     */
+    DuiBaPointsDetailResponse getPointsDetail(DuiBaPointsDetailRequest request);
 }

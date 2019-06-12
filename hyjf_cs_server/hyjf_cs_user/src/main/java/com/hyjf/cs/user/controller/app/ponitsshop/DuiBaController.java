@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.app.ponitsshop;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.cs.user.bean.DuiBaPointsDetailRequestBean;
 import com.hyjf.cs.user.service.pointsshop.DuiBaService;
 import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 import com.hyjf.pay.lib.duiba.sdk.CreditConsumeResult;
@@ -35,6 +36,12 @@ public class DuiBaController {
     @PostMapping(value = "/deductpoints")
     public CreditConsumeResult deductPoints(@RequestBody CreditConsumeParams consumeParams){
         return duiBaService.deductPoints(consumeParams);
+    }
+
+    @ApiOperation(value = "获取兑吧积分明细", notes = "获取兑吧积分明细")
+    @PostMapping(value = "/getpointsdetail")
+    public JSONObject getPointsDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody DuiBaPointsDetailRequestBean requestBean){
+        return duiBaService.getPointsDetail(userId, requestBean);
     }
 
 }

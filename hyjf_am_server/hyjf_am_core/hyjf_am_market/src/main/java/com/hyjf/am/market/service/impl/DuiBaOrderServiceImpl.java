@@ -3,20 +3,34 @@
  */
 package com.hyjf.am.market.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.calculate.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.market.dao.mapper.auto.DuibaOrdersMapper;
 import com.hyjf.am.market.dao.mapper.auto.DuibaPointsMapper;
+import com.hyjf.am.market.dao.mapper.customize.market.DuiBaOrderCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.DuibaOrders;
 import com.hyjf.am.market.dao.model.auto.DuibaOrdersExample;
 import com.hyjf.am.market.dao.model.auto.DuibaPoints;
 import com.hyjf.am.market.service.DuiBaOrderService;
+import com.hyjf.am.response.market.DuiBaPointsDetailResponse;
+import com.hyjf.am.resquest.market.DuiBaPointsDetailRequest;
+import com.hyjf.am.vo.market.DuiBaPointsDetailVO;
+import com.hyjf.am.vo.market.DuiBaPointsListDetailVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 import com.hyjf.pay.lib.duiba.util.DuiBaCallConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
 
 
 /**
@@ -29,6 +43,8 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
     DuibaOrdersMapper duibaOrdersMapper;
     @Autowired
     DuibaPointsMapper duibaPointsMapper;
+    @Autowired
+    DuiBaOrderCustomizeMapper duiBaOrderCustomizeMapper;
     @Override
     public int countDuiBaOrder(String duiBaOrderId) {
         DuibaOrdersExample duibaOrdersExample = new DuibaOrdersExample();
@@ -113,5 +129,100 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         // 汇盈订单号
         duibaPoints.setHyOrderId(consumeParams.getBizId());
         duibaPointsMapper.insertSelective(duibaPoints);
+    }
+
+    @Override
+    public DuiBaPointsDetailResponse getPointsDetail(DuiBaPointsDetailRequest request) {
+        // 原始请求类型，后面用来区分，获取不同类型的数据
+        int requestType = request.getType();
+        DuiBaPointsDetailResponse response = new DuiBaPointsDetailResponse();
+        DuiBaPointsDetailVO duiBaPointsDetailVO = null;
+        // 条数>0 做业务处理，否则就直接返回
+        Integer count = duiBaOrderCustomizeMapper.countPointsDetail(request);
+        if(count > 0){
+            // 返回结果类初始化
+            duiBaPointsDetailVO = new DuiBaPointsDetailVO();
+            List<DuiBaPointsListDetailVO> resultList = new ArrayList<>();
+
+            // 设置分页
+            Paginator paginator = new Paginator(request.getCurrentPage(), count, request.getPageSize());
+            // 是否最后一页
+            duiBaPointsDetailVO.setEnd(paginator.isLastPage());
+            // 返回当前页数，请求原样返回
+            duiBaPointsDetailVO.setCurrentPage(request.getCurrentPage());
+            // 查询的limit
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+            // 请求年月
+            String year = request.getYear();
+            String month = request.getMonth();
+            // 月是0的时候，代表查年度数据，否则按照月查
+            if(Integer.valueOf(month) == 0){
+                request.setStartTime(DateUtils.getMinYearDate(year.concat("-01-01")));
+                request.setEndTime(DateUtils.getMaxYearDate(year.concat("-01-01")));
+            } else {
+                request.setStartTime(DateUtils.getMinMonthDate(year.concat("-").concat(month).concat("-01")));
+                request.setEndTime(DateUtils.getMaxMonthDate(year.concat("-").concat(month).concat("-01")));
+            }
+            // 查询获取总积分
+            request.setType(0);
+            Integer pointsGetTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
+            duiBaPointsDetailVO.setCreditsGot(pointsGetTotal.toString());
+
+            // 查询使用总积分
+            request.setType(1);
+            Integer pointsUseTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
+            duiBaPointsDetailVO.setCreditsUsed(pointsUseTotal.toString());
+
+            // 获取积分明细
+            // 还原原始请求类型
+            request.setType(requestType);
+            List<DuiBaPointsListDetailVO> list = duiBaOrderCustomizeMapper.selectPointsDetail(request);
+            // 前一条数据月份
+            int preMonth = 0;
+            // 循环处理积分明细，将月度总计放到月度最前面
+            DuiBaPointsListDetailVO monthTotalVO = null;
+            for (DuiBaPointsListDetailVO vo : list) {
+                // 如果是第一条，或者与前一条月份不同，那么需要重新获取月统计数据，并放入该月份所有数据的前面
+                if(preMonth == 0 || (preMonth != Integer.valueOf(vo.getMonth()))){
+                    // 将当前月份作为前月份
+                    preMonth = Integer.valueOf(vo.getMonth());
+                    monthTotalVO = new DuiBaPointsListDetailVO();
+                    // 月统计标识
+                    monthTotalVO.setIsTotal(1);
+                    // 为了不混淆，总计数据类型为-1
+                    monthTotalVO.setType(-1);
+                    // 前端显示时间，如果是当月，则显示'本月'，否则显示'xxxx年xx月'
+                    if(Integer.valueOf(vo.getYear()) == LocalDate.now().getYear()
+                            && Integer.valueOf(vo.getMonth()) == LocalDate.now().getMonthValue()){
+                        monthTotalVO.setTime("本月");
+                    } else {
+                        monthTotalVO.setTime(vo.getYear().concat("年").concat(vo.getMonth()).concat("月"));
+                    }
+
+                    // 处理月度积分
+                    // 时间条件为当前月份
+                    request.setStartTime(DateUtils.getMinMonthDate(vo.getYear().concat("-").concat(vo.getMonth()).concat("-01")));
+                    request.setEndTime(DateUtils.getMaxMonthDate(vo.getYear().concat("-").concat(vo.getMonth()).concat("-01")));
+                    // 查询月度获取积分
+                    request.setType(0);
+                    Integer monthPointsGetTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
+                    monthTotalVO.setPointsGetTotal(monthPointsGetTotal.toString());
+                    // 查询月度使用积分
+                    request.setType(1);
+                    Integer monthPointsUseTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
+                    monthTotalVO.setPointsUseTotal(monthPointsUseTotal.toString());
+
+                    resultList.add(monthTotalVO);
+                }
+                vo.setBusinessName(CacheUtil.getParamName(CustomConstants.INTEGRAL_BUSINESS_NAME, vo.getBusinessName()));
+                resultList.add(vo);
+            }
+            // 列表数据
+            duiBaPointsDetailVO.setList(resultList);
+        }
+        response.setResult(duiBaPointsDetailVO);
+
+        return response;
     }
 }
