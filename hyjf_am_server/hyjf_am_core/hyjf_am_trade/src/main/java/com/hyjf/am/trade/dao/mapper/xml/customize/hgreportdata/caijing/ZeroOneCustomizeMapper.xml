@@ -152,7 +152,7 @@
 		(b.borrow_apr*0.01) AS interest,
 		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
 		WHEN i.asset_attributes = 2 THEN '质押标'
-		WHEN i.asset_attributes = 3 THEN '信用标'
+		ELSE '信用标'
 		END AS asset_type,
 		t.borrow_name as borrow_type,
 		CASE WHEN b.plan_nid is not NULL THEN '智投'
@@ -161,7 +161,7 @@
 		WHEN s.`name` = '按月计息，到期还本还息' THEN '按月到期还款'
 		WHEN s.`name` = '按天计息，到期还本还息' THEN '按天到期还款'
 		WHEN s.`name` = '等额本息' THEN '月分期付款'
-		ELSE s.`name` END AS repey_type,
+		ELSE s.`name` END AS repay_type,
 		1 as percentage,
 		'成功' AS bid_state,
 		'AA' AS credit,
@@ -192,18 +192,18 @@
 		(c.bid_apr*0.01) as interest,
 		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
 		WHEN i.asset_attributes = 2 THEN '质押标'
-		WHEN i.asset_attributes = 3 THEN '信用标'
+		ELSE '信用标'
 		END AS asset_type,
 		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
 		WHEN i.asset_attributes = 2 THEN '质押标'
-		WHEN i.asset_attributes = 3 THEN '信用标'
+		ELSE '信用标'
 		END AS borrow_type,
 		'散标' AS project_type,
 		CASE WHEN s.`name` = '先息后本' THEN '月付息到期还本'
 		WHEN s.`name` = '按月计息，到期还本还息' THEN '按月到期还款'
 		WHEN s.`name` = '按天计息，到期还本还息' THEN '按天到期还款'
 		WHEN s.`name` = '等额本息' THEN '月分期付款'
-		ELSE s.`name` END AS repey_type,
+		ELSE s.`name` END AS repay_type,
 		ROUND(SUM(t.assign_pay)/c.credit_account,4) AS percentage,
 		'成功' AS bid_state,
 		'AA' AS credit,
