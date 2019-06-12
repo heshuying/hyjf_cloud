@@ -311,5 +311,5 @@ public interface CsMessageClient {
      */
     CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request);
 
-    BooleanResponse reQueryCaiJingLog(String logType);
+    BooleanResponse reQueryCaiJingLog(String logType, String startDate, String endDate);
 }

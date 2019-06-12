@@ -27,7 +27,7 @@ public class CaiJIngLogServiceImpl implements CaiJingLogService {
     }
 
     @Override
-    public BooleanResponse reQueryCaiJingLog(String logType) {
-        return csMessageClient.reQueryCaiJingLog(logType);
+    public BooleanResponse reQueryCaiJingLog(String logType, String startDate, String endDate) {
+        return csMessageClient.reQueryCaiJingLog(logType, startDate, endDate);
     }
 }
