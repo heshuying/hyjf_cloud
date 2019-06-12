@@ -66,6 +66,7 @@ public class CaiJingController extends BaseController {
      */
     @ApiOperation(value = "重新报送接口", notes = "重新报送接口")
     @PostMapping("/reQueryLogList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult reQueryLogList(@RequestBody CaiJingLogRequest request) {
         BooleanResponse response = caiJingLogService.reQueryCaiJingLog(request);
         if(response==null) {
