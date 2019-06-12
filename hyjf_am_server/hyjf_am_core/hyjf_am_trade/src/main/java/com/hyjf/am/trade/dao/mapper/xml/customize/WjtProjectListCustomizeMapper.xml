@@ -167,10 +167,10 @@
 
     <select id="countWjtWebProjectList" resultType="int" parameterType="Map">
         SELECT
-           count(*)
+        COUNT(*)
         FROM ht_borrow htb
         INNER JOIN ht_borrow_info hbi on hbi.borrow_nid = htb.borrow_nid
-        INNER JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = hbi.project_type
+        INNER JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
         <include refid = "Where_Clause_New" />
     </select>
 

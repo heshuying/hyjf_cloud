@@ -75,7 +75,7 @@ public class RecoverInfoController extends BaseController {
                 wbsRecoverVO.setData("");
                 return wbsRecoverVO;
             }
-            if(recoverQO.getEntId()!=null){
+            if(recoverQO.getEntId()!=null&&getUtmIdList(recoverQO.getEntId())!=null){
                 recoverQO.setUtmIds(getUtmIdList(recoverQO.getEntId()));
             }else {
                 wbsRecoverVO.setCode(Response.ERROR);

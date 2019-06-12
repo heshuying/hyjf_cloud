@@ -165,7 +165,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             if(wbsConfig.getPushDataFlag().equals(1)) {
                 synProductInfoService.sync(productInfoQO);
             }else{
-                logger.info("====" + CONSUMER_NAME + "不推送数据");
+                logger.info("====" + CONSUMER_NAME + "不推送数据,推送属性："+wbsConfig.getPushDataFlag());
             }
 
 

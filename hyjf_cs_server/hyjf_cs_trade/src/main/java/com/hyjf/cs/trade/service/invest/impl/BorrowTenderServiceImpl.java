@@ -2043,7 +2043,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
 
         // 检查温金投的标的只能温金投用户投资
-        if(StringUtils.isNotBlank(borrowInfoVO.getPublishInstCode())&&(!borrowInfoVO.getPublishInstCode().equals("0")|| !borrowInfoVO.getPublishInstCode().equals("10000000"))){
+        if(StringUtils.isNotBlank(borrowInfoVO.getPublishInstCode())&&
+                (!borrowInfoVO.getPublishInstCode().equals("0") && !borrowInfoVO.getPublishInstCode().equals("10000000"))){
             // 是定向标
             if(!borrowInfoVO.getPublishInstCode().equals(user.getInstCode())){
                 // 机构编号不相等 不让投资
