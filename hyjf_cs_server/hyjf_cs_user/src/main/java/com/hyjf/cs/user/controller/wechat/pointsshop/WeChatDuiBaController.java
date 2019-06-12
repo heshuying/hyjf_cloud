@@ -42,4 +42,10 @@ public class WeChatDuiBaController {
         return duiBaService.getPointsDetail(userId, requestBean);
     }
 
+    @ApiOperation(value = "获取用户当前积分", notes = "获取用户当前积分")
+    @PostMapping(value = "/pointsshop/duiba/getuserpoints")
+    public JSONObject getUserPoints(@RequestHeader(value = "userId") Integer userId){
+        return duiBaService.getUserPoints(userId);
+    }
+
 }
