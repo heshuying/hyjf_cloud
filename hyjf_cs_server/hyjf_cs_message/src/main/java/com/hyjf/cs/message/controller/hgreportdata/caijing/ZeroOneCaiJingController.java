@@ -1,10 +1,13 @@
 package com.hyjf.cs.message.controller.hgreportdata.caijing;
 
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.service.hgreportdata.caijing.ZeroOneCaiJingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.Calendar;
 
 /**
  * 零壹财经数据推送
@@ -25,11 +28,13 @@ public class ZeroOneCaiJingController {
      */
     @RequestMapping("/investRecordSub")
     public void investRecordSub(){
-
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        String yesterday = GetDate.date_sdf.format(cal.getTime());
         // 出借记录报送
-//        zeroOneCaiJingService.investRecordSub();
+//        zeroOneCaiJingService.investRecordSub("","");
         // 提前还款报送
-        zeroOneCaiJingService.advancedRepay("","");
+        zeroOneCaiJingService.advancedRepay("2018-10-10","2018-10-10");
     }
 
     /**

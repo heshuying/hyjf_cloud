@@ -132,9 +132,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     @Override
     public void investRecordSub(String startDate, String endDate) {
         logger.info("投资记录接口报送开始");
-//        String date = "2019-02-02";
-        startDate = "2018-10-10";
-        endDate =  "2018-10-10";
 
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
@@ -338,10 +335,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
      */
     private ZeroOneResponse sendDataReport(String type, String json) {
 
-        String url = "http://data.01caijing.com/hub/p2p/";
-
         StringBuilder stbuUrl = new StringBuilder();
-        stbuUrl.append(url);
+        stbuUrl.append(sendUrl);
         stbuUrl.append(type);
         stbuUrl.append("/commit.json");
 
