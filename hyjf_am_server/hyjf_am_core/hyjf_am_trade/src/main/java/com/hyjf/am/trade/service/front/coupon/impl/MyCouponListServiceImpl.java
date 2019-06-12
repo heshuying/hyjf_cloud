@@ -547,6 +547,14 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 continue;
             }
 
+            /**************逻辑修改 pcc end***************/
+
+            // 验证优惠券适用的项目 新逻辑 pcc20160715
+            boolean ifprojectType = BestCouponUtil.dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
+            if (ifprojectType) {
+                continue;
+            }
+
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if ("2".equals(bestCoupon.getCouponType())) {
@@ -594,13 +602,6 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
                 CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"金额不符",platform, moneyBigDecimal);
                 notAvailableCouponList.add(couponBean);
-                continue;
-            }
-            /**************逻辑修改 pcc end***************/
-
-            // 验证优惠券适用的项目 新逻辑 pcc20160715
-            boolean ifprojectType = BestCouponUtil.dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
-            if (ifprojectType) {
                 continue;
             }
 
@@ -868,7 +869,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             String clientString = BestCouponUtil.dealOperationNew(userCouponConfigCustomize.getCouponSystem(), platform);
             couponBean.setOperationPlatform(clientString);
             long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(userCouponConfigCustomize.getEndTimeStamp())) + 1;
-            if(userCouponConfigCustomize.getUsedFlag() == 0 && day <=3){
+            // 没有传入remark时才设置成即将过期，否则按照传入的remark来
+            if(userCouponConfigCustomize.getUsedFlag() == 0 && day <=3 && StringUtils.isBlank(remarks)){
                 couponBean.setRemarks("即将过期");
             }
             couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
