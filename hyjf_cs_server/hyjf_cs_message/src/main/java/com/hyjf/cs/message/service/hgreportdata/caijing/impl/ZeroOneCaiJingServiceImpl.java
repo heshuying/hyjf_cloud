@@ -60,7 +60,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     public static String sendUrl = "";
 
     @Value("01caijing.send.url")
-    public static void setSendUrl(String caijingsendUrl) {
+    public void setSendUrl(String caijingsendUrl) {
         ZeroOneCaiJingServiceImpl.sendUrl = caijingsendUrl;
     }
 
@@ -108,7 +108,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             }
             List<ZeroOneBorrowEntity> borrowEntities = CommonUtils.convertBeanList(borrowDataVOList, ZeroOneBorrowEntity.class);
             logger.info("传送数据data : {}", JSONObject.toJSONString(borrowEntities));
-            ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(borrowEntities, SerializerFeature.WriteMapNullValue));
+            Map<String,Object> map = new HashMap<>();
+            map.put("data",borrowEntities);
+            ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
             if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                 //报送成功
                 logger.info("出借记录接口报送成功");
@@ -131,7 +133,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     public void investRecordSub(String startDate, String endDate) {
         logger.info("投资记录接口报送开始");
 //        String date = "2019-02-02";
-        String date = "2018-4-24";
+        startDate = "2018-10-10";
+        endDate =  "2018-10-10";
 
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
@@ -171,8 +174,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
-
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(), String.valueOf(JSONObject.toJSON(list)));
+        Map<String,Object> map = new HashMap<>();
+        map.put("data",list);
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(), String.valueOf(JSONObject.toJSON(map)));
         if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("投资记录接口报送成功");
@@ -207,7 +211,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), String.valueOf(JSONObject.toJSON(list)));
+        Map<String,Object> map = new HashMap<>();
+        map.put("data",list);
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), String.valueOf(JSONObject.toJSON(map)));
         if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("提前还款接口报送成功");
