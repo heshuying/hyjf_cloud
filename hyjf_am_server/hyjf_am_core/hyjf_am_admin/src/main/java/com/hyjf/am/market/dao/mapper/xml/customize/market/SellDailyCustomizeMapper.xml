@@ -494,7 +494,7 @@
 
     <!-- 查询千乐当日待还 -->
     <select id="countNoneRepayTodayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
+        SELECT IFNULL(ROUND(SUM(none_repay)/10000),0) AS non_repayment_today,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -523,7 +523,7 @@
 
     <!-- 查询千乐本月份规模业绩 -->
     <select id="countTotalInvestOnMonthQl" resultMap="sumResultMap">
-        select ROUND(SUM(account)/10000) AS invest_total_month,
+        select IFNULL(ROUND(SUM(account)/10000),0) AS invest_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -552,7 +552,7 @@
 
     <!-- 查询千乐上月份规模业绩 -->
     <select id="countTotalInvestOnPreviousMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
+        SELECT IFNULL(ROUND(SUM(account)/10000),0) AS invest_total_previous_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -581,7 +581,7 @@
 
     <!-- 查询千乐昨日规模业绩 -->
     <select id="countTotalTenderYesterdayQl" resultMap="sumResultMap">
-       SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
+       SELECT IFNULL(ROUND(SUM(account)/10000),0) AS invest_total_yesterday,
        '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -607,7 +607,7 @@
 
     <!-- 查询千乐本月累计已还款 -->
     <select id="countTotalRepayOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_month,
+        SELECT IFNULL(ROUND(SUM(repay_amount)/10000),0) AS repayment_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -633,7 +633,7 @@
 
     <!-- 查询千乐昨日已还款 -->
     <select id="countTotalRepayYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(repay_amount)/10000),0) AS repayment_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -659,7 +659,7 @@
 
     <!-- 查询千乐本月累计提现 -->
     <select id="countTotalWithdrawOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_month,
+        SELECT IFNULL(ROUND(SUM(withdraw_amount)/10000),0) AS withdraw_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -685,7 +685,7 @@
 
     <!-- 查询千乐昨日提现 -->
     <select id="countTotalWithdrawYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(withdraw_amount)/10000),0) AS withdraw_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -711,7 +711,7 @@
 
     <!-- 查询千乐本月累计充值 -->
     <select id="countTotalRechargeOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_month,
+        SELECT IFNULL(ROUND(SUM(recharge_amount)/10000),0) AS recharge_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -737,7 +737,7 @@
 
     <!-- 查询千乐昨日充值 -->
     <select id="countTotalRechargeYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(recharge_amount)/10000),0) AS recharge_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -774,7 +774,7 @@
 
     <!-- 查询千乐本月累计年化业绩 -->
     <select id="countTotalAnnualInvestOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
+        SELECT IFNULL(ROUND(SUM(amount)/10000),0) AS invest_annual_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -818,7 +818,7 @@
 
     <!-- 查询千乐上月累计年化业绩 -->
     <select id="countTotalAnnualInvestOnPreviousMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
+        SELECT IFNULL(ROUND(SUM(amount)/10000),0) AS invest_annual_total_previous_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -861,7 +861,7 @@
 
     <!-- 查询千乐昨日年化业绩 -->
     <select id="countTotalAnnualInvestYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(amount)/10000),0) AS invest_annual_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str

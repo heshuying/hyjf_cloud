@@ -224,7 +224,7 @@ public class SellDailyServiceImpl implements SellDailyService {
 			break;
 		case 2:
 		    BigDecimal tempSource = null;
-			if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+			if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) >= 0) {
                 tempSource = source.getCreditAmount();
 			} else {
                 tempSource = source.getRepaymentTotalMonth();
