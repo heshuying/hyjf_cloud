@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.vo.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "兑吧订单号")
     private String duibaOrderId;
 
     /**
@@ -31,6 +34,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "汇盈订单号")
     private String hyOrderId;
 
     /**
@@ -38,6 +42,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "订单兑换人用户名")
     private String userName;
 
     /**
@@ -45,6 +50,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "姓名")
     private String trueName;
 
     /**
@@ -59,6 +65,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "兑换内容")
     private String exchangeContent;
 
     /**
@@ -69,10 +76,20 @@ public class DuibaOrderVO implements Serializable {
     private String productType;
 
     /**
+     * 商品类型
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "商品类型")
+    private String productTypeStr;
+
+
+    /**
      * 售价
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "售价")
     private BigDecimal sellingPrice;
 
     /**
@@ -80,6 +97,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "划线价")
     private BigDecimal markingPrice;
 
     /**
@@ -87,6 +105,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "成本")
     private BigDecimal cost;
 
     /**
@@ -97,10 +116,19 @@ public class DuibaOrderVO implements Serializable {
     private Integer orderStatus;
 
     /**
+     * 订单状态
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "订单状态")
+    private String orderStatusStr;
+
+    /**
      * 下单时间
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "下单时间")
     private Integer orderTime;
 
     /**
@@ -108,6 +136,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "完成时间")
     private Integer completionTime;
 
     /**
@@ -118,10 +147,19 @@ public class DuibaOrderVO implements Serializable {
     private Integer deliveryStatus;
 
     /**
+     * 发货状态
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "发货状态")
+    private String deliveryStatusStr;
+
+    /**
      * 收货信息
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "收货信息")
     private String receivingInformation;
 
     /**
@@ -129,6 +167,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "虚拟商品充值状态")
     private String rechargeState;
 
     /**
@@ -137,6 +176,14 @@ public class DuibaOrderVO implements Serializable {
      * @mbggenerated
      */
     private Integer processingState;
+
+    /**
+     * 处理状态
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "处理状态")
+    private String processingStateStr;
 
     /**
      * 创建人
@@ -171,6 +218,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     private String orderTypeTab;
@@ -180,6 +228,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "商品编码")
     private String commodityCode;
 
     /**
@@ -187,6 +236,7 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "汇率")
     private BigDecimal exchangeRate;
 
     /**
@@ -194,7 +244,8 @@ public class DuibaOrderVO implements Serializable {
      *
      * @mbggenerated
      */
-    private BigDecimal integralPrice;
+    @ApiModelProperty(value = "积分")
+    private Integer integralPrice;
 
     /**
      * 订单激活状态
@@ -420,11 +471,11 @@ public class DuibaOrderVO implements Serializable {
         this.exchangeRate = exchangeRate;
     }
 
-    public BigDecimal getIntegralPrice() {
+    public Integer getIntegralPrice() {
         return integralPrice;
     }
 
-    public void setIntegralPrice(BigDecimal integralPrice) {
+    public void setIntegralPrice(Integer integralPrice) {
         this.integralPrice = integralPrice;
     }
 
@@ -443,4 +494,41 @@ public class DuibaOrderVO implements Serializable {
     public void setCouponUserId(Integer couponUserId) {
         this.couponUserId = couponUserId;
     }
+
+    public String getProductTypeStr() {
+        return productTypeStr;
+    }
+
+    public void setProductTypeStr(String productTypeStr) {
+        this.productTypeStr = productTypeStr;
+    }
+
+    public String getOrderStatusStr() {
+        return orderStatusStr;
+    }
+
+    public void setOrderStatusStr(String orderStatusStr) {
+        this.orderStatusStr = orderStatusStr;
+    }
+
+    public String getDeliveryStatusStr() {
+        return deliveryStatusStr;
+    }
+
+    public void setDeliveryStatusStr(String deliveryStatusStr) {
+        this.deliveryStatusStr = deliveryStatusStr;
+    }
+
+    public String getProcessingStateStr() {
+        return processingStateStr;
+    }
+
+    public void setProcessingStateStr(String processingStateStr) {
+        this.processingStateStr = processingStateStr;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
 }

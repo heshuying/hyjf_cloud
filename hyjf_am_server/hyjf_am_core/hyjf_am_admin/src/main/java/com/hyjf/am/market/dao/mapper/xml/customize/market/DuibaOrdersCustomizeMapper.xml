@@ -44,9 +44,48 @@
   <select id="selectDuibaOrderList" resultMap="BaseResultMap"
           parameterType="com.hyjf.am.resquest.admin.DuibaOrderRequest">
     SELECT
-    <include refid="Base_Column_List"/>
+      hdp.id,
+      hdp.duiba_order_id,
+      hdp.hy_order_id,
+      hdp.user_name,
+      hdp.true_name,
+      hdp.user_id,
+      hdp.exchange_content,
+      hdp.product_type,
+      hdp.selling_price,
+      hdp.marking_price,
+      hdp.cost,
+      hdp.order_status,
+      hdp.order_time,
+      hdp.completion_time,
+      hdp.delivery_status,
+      hdp.receiving_information,
+      hdp.recharge_state,
+      hdp.processing_state,
+      hdp.create_by,
+      hdp.create_time,
+      hdp.update_by,
+      hdp.update_time,
+      hdp.remark,
+      hdp.commodity_code,
+      hdp.exchange_rate,
+      hdp.integral_price,
+      hdp.activation_type,
+      hdp.coupon_user_id,
+     pn1.name AS productTypeStr,
+     pn3.name AS orderStatusStr,
+     pn2.name AS deliveryStatusStr,
+     pn4.name AS processingStateStr
     FROM
     ht_duiba_orders hdp
+      LEFT JOIN hyjf_config.ht_param_name pn1
+        ON hdp.`product_type` = pn1.name_cd AND pn1.name_class = 'DUIBA_PRODUCT_TYPE'
+      LEFT JOIN hyjf_config.ht_param_name pn2
+        ON hdp.`delivery_status` = pn2.name_cd AND pn2.name_class = 'DELIVERY_STATUS'
+      LEFT JOIN hyjf_config.ht_param_name pn3
+        ON hdp.`order_status` = pn3.name_cd AND pn3.name_class = 'ORDER_STATUS'
+      LEFT JOIN hyjf_config.ht_param_name pn4
+        ON hdp.`processing_state` = pn4.name_cd AND pn4.name_class = 'PROCESSING_STATE'
     WHERE 1=1
     <if test="duibaOrderIdSerach != null and duibaOrderIdSerach != ''">
       AND hdp.duiba_order_id = #{duibaOrderIdSerach}
@@ -70,16 +109,16 @@
       AND hdp.order_status = #{orderStatusSerach}
     </if>
     <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
-      AND hdp.order_time <![CDATA[>=]]> #{orderTimeSerachStart}
+      AND hdp.order_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachStart},' 00:00:00'))
     </if>
     <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
-      AND hdp.order_time <![CDATA[<=]]> #{orderTimeSerachEnd}
+      AND hdp.order_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
-      AND hdp.completion_time <![CDATA[>=]]> #{completionTimeSerachStart}
+      AND hdp.completion_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachStart},' 00:00:00'))
     </if>
     <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
-      AND hdp.completion_time <![CDATA[<=]]> #{completionTimeSerachEnd}
+      AND hdp.completion_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
       AND hdp.delivery_status = #{deliveryStatusSerach}
@@ -139,16 +178,16 @@
       AND hdp.order_status = #{orderStatusSerach}
     </if>
     <if test="orderTimeSerachStart != null and orderTimeSerachStart != ''">
-      AND hdp.order_time <![CDATA[>=]]> #{orderTimeSerachStart}
+      AND hdp.order_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachStart},' 00:00:00'))
     </if>
     <if test="orderTimeSerachEnd != null and orderTimeSerachEnd != ''">
-      AND hdp.order_time <![CDATA[<=]]> #{orderTimeSerachEnd}
+      AND hdp.order_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{orderTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="completionTimeSerachStart != null and completionTimeSerachStart != ''">
-      AND hdp.completion_time <![CDATA[>=]]> #{completionTimeSerachStart}
+      AND hdp.completion_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachStart},' 00:00:00'))
     </if>
     <if test="completionTimeSerachEnd != null and completionTimeSerachEnd != ''">
-      AND hdp.completion_time <![CDATA[<=]]> #{completionTimeSerachEnd}
+      AND hdp.completion_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{completionTimeSerachEnd},' 23:59:59'))
     </if>
     <if test="deliveryStatusSerach != null and deliveryStatusSerach != ''">
       AND hdp.delivery_status = #{deliveryStatusSerach}

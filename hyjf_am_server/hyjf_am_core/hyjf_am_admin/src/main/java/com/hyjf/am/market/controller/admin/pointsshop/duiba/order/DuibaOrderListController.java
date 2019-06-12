@@ -8,6 +8,7 @@ import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.market.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.am.market.service.pointsshop.duiba.points.DuibaPointsListService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
@@ -134,19 +135,23 @@ public class DuibaOrderListController {
         DuiBaCallResultBean duiBaCallResultBean = DuiBaCallUtils.duiBaCall(duiBaCallBean);
         // 根据兑吧回传的结果进行数据处理及赋值操作
         if (duiBaCallResultBean.isSuccess()) {
-            // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
-            if ("process".equals(duiBaCallResultBean.getStatus())) {
-                duibaOrderVO.setOrderStatus(2);
-            } else if ("success".equals(duiBaCallResultBean.getStatus())) {
-                duibaOrderVO.setOrderStatus(0);
-            } else if ("fail".equals(duiBaCallResultBean.getStatus())) {
-                duibaOrderVO.setOrderStatus(1);
-            }
-            // 更新订单发货状态（订单子状态，success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、waitAudit 待审核、waitSend 待发货、success 兑换成功、fail 兑换失败）
-            if ("waitSend".equals(duiBaCallResultBean.getStatus())) {
-                duibaOrderVO.setDeliveryStatus(0);
-            } else if ("success".equals(duiBaCallResultBean.getStatus())) {
-                duibaOrderVO.setDeliveryStatus(1);
+            // 判断虚拟商品还是实物
+            if(("0").equals(duibaOrderVO.getProductType())){
+                // 更新订单发货状态（订单子状态，success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、waitAudit 待审核、waitSend 待发货、success 兑换成功、fail 兑换失败）
+                if ("waitSend".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setDeliveryStatus(0);
+                } else if ("success".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setDeliveryStatus(1);
+                }
+            }else{
+                // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
+                if ("process".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setOrderStatus(2);
+                } else if ("success".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setOrderStatus(0);
+                } else if ("fail".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setOrderStatus(1);
+                }
             }
             // 设置更新时间
             duibaOrderVO.setUpdateTime(new Date());
@@ -187,7 +192,7 @@ public class DuibaOrderListController {
                         // 订单有效状态
                         duibaOrderVO.setActivationType(0);
                         // 更新订单状态为成功
-                        // duibaOrderVO.setOrderStatus(0);
+                        duibaOrderVO.setOrderStatus(0);
                     } else {
                         logger.error("根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
                         return "没有查询到用户信息！";
@@ -347,7 +352,8 @@ public class DuibaOrderListController {
      * @return
      */
     @RequestMapping("/activation/{orderNum}/{errorMessage}")
-    public String activation(@PathVariable String orderNum, @PathVariable String errorMessage) {
+    public StringResponse activation(@PathVariable String orderNum, @PathVariable String errorMessage) {
+        StringResponse response = new StringResponse();
         // 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
         int res;
         // 商品类型为充值
@@ -377,11 +383,11 @@ public class DuibaOrderListController {
                         }
                     } else {
                         logger.error("根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
-                        return "error";
+                        response.setResultStr("error");
                     }
                 } else {
                     logger.error("根据订单号查询积分明细表数据为空，操作失败！orderNum：" + orderNum);
-                    return "error";
+                    response.setResultStr("error");
                 }
                 // - - - - - - - - - - - - - - - - - - - - - - - - - -
                 // 判断该笔订单是否为“充值”（优惠卷）
@@ -419,13 +425,16 @@ public class DuibaOrderListController {
                 if (res == 0) {
                     throw new Exception("根据兑吧订单表id：[" + duibaOrderVOStr.getId() + "]，更新订单状态设置订单为无效，没有更新到订单信息，回滚操作失败！");
                 }
+                response.setResultStr("success");
             } else {
                 logger.error("回滚操作失败！，操作失败，没有查询到兑吧订单信息 订单id：" + orderNum);
+                response.setResultStr("error");
             }
         } catch (Exception e) {
             logger.error("回滚操作失败！，操作失败，异常如下：" + e.getMessage());
+            response.setResultStr("error");
         }
-        return "success";
+        return response;
     }
 
     /**
@@ -435,7 +444,8 @@ public class DuibaOrderListController {
      * @return
      */
     @RequestMapping("/success/{orderNum}")
-    public String success(@PathVariable String orderNum) {
+    public StringResponse success(@PathVariable String orderNum) {
+        StringResponse response = new StringResponse();
         // 商品类型为充值
         String productType = "2";
         // 执行更新影响行数
@@ -461,13 +471,15 @@ public class DuibaOrderListController {
             duibaOrderVO.setOrderStatus(0);
             int orderFlag = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
             if (flagCount > 0 && orderFlag > 0) {
-                return "success";
+                response.setResultStr("success");
             } else {
+                response.setResultStr("error");
                 logger.error("操作失败！更新优惠卷用户表或更新虚拟商品充值状态失败 优惠卷用户表id：" + duibaOrderVOStr.getCouponUserId());
             }
         } else {
+            response.setResultStr("error");
             logger.error("操作失败！没有查询到兑吧订单信息 订单表id：" + orderNum);
         }
-        return "error";
+        return response;
     }
 }

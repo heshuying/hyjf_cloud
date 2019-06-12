@@ -9,6 +9,7 @@ import com.hyjf.admin.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,5 +67,39 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
     @Override
     public String synchronization(Integer orderId){
         return adminClient.orderSynchronization(orderId);
+    }
+
+
+    /**
+     * 根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷
+     *
+     * @param orderNum
+     * @return
+     */
+    @Override
+    public VirtualResult selectCouponUserById(String orderNum){
+        return adminClient.selectCouponUserById(orderNum);
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @Override
+    public String activation(String orderNum, String errorMessage){
+        return adminClient.activation(orderNum,errorMessage);
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）
+     *
+     * @param orderNum
+     * @return
+     */
+    @Override
+    public String success(String orderNum){
+        return adminClient.success(orderNum);
     }
 }

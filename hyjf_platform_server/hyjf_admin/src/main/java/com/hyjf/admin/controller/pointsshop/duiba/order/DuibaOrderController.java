@@ -15,6 +15,7 @@ import com.hyjf.admin.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
@@ -24,8 +25,11 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,17 +88,17 @@ public class DuibaOrderController extends BaseController {
         // 订单状态
         List<ParamNameVO> orderStatusList = duibaOrderListService.getParamNameList(CustomConstants.ORDER_STATUS);
         if (null != orderStatusList && orderStatusList.size() > 0) {
-            duibaOrderResponse.setProductTypeList(orderStatusList);
+            duibaOrderResponse.setOrderStatusList(orderStatusList);
         }
         // 发货状态
         List<ParamNameVO> deliveryStatusList = duibaOrderListService.getParamNameList(CustomConstants.DELIVERY_STATUS);
         if (null != deliveryStatusList && deliveryStatusList.size() > 0) {
-            duibaOrderResponse.setProductTypeList(deliveryStatusList);
+            duibaOrderResponse.setDeliveryStatusList(deliveryStatusList);
         }
         // 处理状态
         List<ParamNameVO> processingStateList = duibaOrderListService.getParamNameList(CustomConstants.PROCESSING_STATE);
         if (null != processingStateList && processingStateList.size() > 0) {
-            duibaOrderResponse.setProductTypeList(processingStateList);
+            duibaOrderResponse.setProcessingStateList(processingStateList);
         }
         return new AdminResult<DuibaOrderResponse>(duibaOrderResponse);
     }
@@ -128,25 +132,73 @@ public class DuibaOrderController extends BaseController {
     /**
      * 同步处理中的订单信息（订单列表）
      *
-     * @param orderId
+     * @param id
      * @return
      */
-    @ApiOperation(value = "同步")
-    @PostMapping("/synchronization")
-    public AdminResult synchronization(@RequestParam("orderId") Integer orderId){
-        logger.info("调用同步接口start,orderId:{}", orderId);
+    @ApiOperation(value = "同步" ,tags = "同步" )
+    @ResponseBody
+    @ApiImplicitParam(name = "id",value = "id:列表id",dataType = "Integer")
+    @GetMapping(value = "/synchronization/{id}" , produces = "application/json; charset=utf-8")
+    public AdminResult synchronization(@PathVariable Integer id){
+        logger.info("调用同步接口start,id:{}", id);
         AdminResult adminResult = new AdminResult();
         JSONObject data = new JSONObject();
         String flag = "success";
-        String retMsg = duibaOrderListService.synchronization(orderId);
+        String retMsg = duibaOrderListService.synchronization(id);
         if (flag.equals(retMsg)) {
-            adminResult.setStatus("同步成功！");
+            adminResult.setStatus(SUCCESS);
         } else {
             data.put("error", retMsg);
-            adminResult.setStatus("同步失败！");
+            adminResult.setStatus(FAIL);
         }
         adminResult.setData(data);
         return adminResult;
+    }
+
+    /**
+     * 根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷
+     *
+     * @param orderNum
+     * @return
+     */
+    @ApiOperation(value = "根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷", notes = "根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷")
+    @GetMapping("/selectReleaseCoupons/{orderNum}")
+    public VirtualResult selectReleaseCoupons(@PathVariable String orderNum) {
+        return duibaOrderListService.selectCouponUserById(orderNum);
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（失败时设置订单无效）
+     *
+     * @param orderNum
+     * @return
+     */
+    @ApiOperation(value = "兑吧兑换结果通知接口（失败时设置订单无效）", notes = "兑吧兑换结果通知接口（失败时设置订单无效）")
+    @GetMapping("/activationError/{orderNum}/{errorMessage}")
+    public StringResponse activationError(@PathVariable String orderNum, @PathVariable String errorMessage) {
+        StringResponse response = new StringResponse();
+        String duibaStr = duibaOrderListService.activation(orderNum,errorMessage);
+        if(StringUtils.isNotEmpty(duibaStr)){
+            response.setResultStr(duibaStr);
+        }
+        return new StringResponse();
+    }
+
+    /**
+     * 兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）
+     *
+     * @param orderNum
+     * @return
+     */
+    @ApiOperation(value = "兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）", notes = "兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）")
+    @GetMapping("/activationSuccess/{orderNum}")
+    public StringResponse activationSuccess(@PathVariable String orderNum) {
+        StringResponse response = new StringResponse();
+        String duibaStr = duibaOrderListService.success(orderNum);
+        if(StringUtils.isNotEmpty(duibaStr)){
+            response.setResultStr(duibaStr);
+        }
+        return new StringResponse();
     }
 
     /**
@@ -222,11 +274,11 @@ public class DuibaOrderController extends BaseController {
         map.put("userName", "账户名");
         map.put("trueName", "姓名");
         map.put("exchangeContent", "兑换内容");
-        map.put("productType", "商品类型");
+        map.put("productTypeStr", "商品类型");
         map.put("sellingPrice", "售价");
         map.put("markingPrice", "划线价");
         map.put("cost", "成本");
-        map.put("orderStatus", "订单状态");
+        map.put("orderStatusStr", "订单状态");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
         return map;
@@ -239,7 +291,7 @@ public class DuibaOrderController extends BaseController {
         map.put("userName", "账户名");
         map.put("trueName", "姓名");
         map.put("exchangeContent", "兑换内容");
-        map.put("deliveryStatus", "发货状态");
+        map.put("deliveryStatusStr", "发货状态");
         map.put("receivingInformation", "收货信息");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
@@ -256,7 +308,7 @@ public class DuibaOrderController extends BaseController {
         map.put("rechargeState", "虚拟商品充值状态");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
-        map.put("processingState", "处理状态");
+        map.put("processingStateStr", "处理状态");
         return map;
     }
 
@@ -319,21 +371,27 @@ public class DuibaOrderController extends BaseController {
         IValueFormatter orderTimeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String orderTime = (String) object;
-                return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(orderTime));
+                Integer orderTime = (Integer) object;
+                if(orderTime!=null){
+                    return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(orderTime);
+                }
+                return "";
             }
         };
         IValueFormatter completionTimeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String completionTime = (String) object;
-                return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(completionTime));
+                Integer completionTime = (Integer) object;
+                if(completionTime!=null) {
+                    return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(completionTime);
+                }
+                return "";
             }
         };
-        mapAdapter.put("productType", productTypeAdapter);
-        mapAdapter.put("orderStatus", orderStatusAdapter);
-        mapAdapter.put("deliveryStatus", deliveryStatusAdapter);
-        mapAdapter.put("processingState", processingStateAdapter);
+        mapAdapter.put("productTypeStr", productTypeAdapter);
+        mapAdapter.put("orderStatusStr", orderStatusAdapter);
+        mapAdapter.put("deliveryStatusStr", deliveryStatusAdapter);
+        mapAdapter.put("processingStateStr", processingStateAdapter);
         mapAdapter.put("sellingPrice", sellingPriceAdapter);
         mapAdapter.put("markingPrice", markingPriceAdapter);
         mapAdapter.put("cost", costAdapter);
