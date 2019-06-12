@@ -70,11 +70,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     @Override
     public void borrowRecordSub(String startDate, String endDate) {
         logger.info("借款记录接口报送开始");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        String yesterday = GetDate.date_sdf.format(cal.getTime());
-        String dateStart = GetDate.getDayStart(yesterday);
-        String dateEnd = GetDate.getDayEnd(yesterday);
+        startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
+        endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
+        String dateStart = GetDate.getDayStart(startDate);
+        String dateEnd = GetDate.getDayEnd(endDate);
+
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();

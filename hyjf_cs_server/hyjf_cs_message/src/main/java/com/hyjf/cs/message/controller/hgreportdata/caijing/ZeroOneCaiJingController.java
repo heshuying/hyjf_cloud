@@ -24,26 +24,19 @@ public class ZeroOneCaiJingController {
     private ZeroOneCaiJingService zeroOneCaiJingService;
 
     /**
-     * 出借记录报送
+     * 零壹财经记录报送
      */
     @RequestMapping("/investRecordSub")
     public void investRecordSub(){
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
-        // 出借记录报送
-//        zeroOneCaiJingService.investRecordSub("","");
-        // 提前还款报送
-        zeroOneCaiJingService.advancedRepay("2018-10-10","2018-10-10");
-    }
-
-    /**
-     * 借款记录报送
-     */
-    @RequestMapping("/borrowRecordSub")
-    public void borrowRecordSub() {
         //借款记录报送
-        zeroOneCaiJingService.borrowRecordSub("","");
+        zeroOneCaiJingService.borrowRecordSub(yesterday,yesterday);
+        // 出借记录报送
+        zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
+        // 提前还款报送
+        zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
     }
 
     /**
@@ -59,17 +52,19 @@ public class ZeroOneCaiJingController {
             endDate = new StringBuilder();
 
             if(i > 8){
-
-                System.out.print( startDate.append("2019-").append(time[i]).append("-01"));
-                System.out.print("  , ");
-                System.out.println( endDate.append("2019-").append(time[i]).append("-32"));
+                startDate.append("2019-").append(time[i]).append("-01");
+                endDate.append("2019-").append(time[i]).append("-32");
             }else{
-                System.out.print( startDate.append("2018-").append(time[i]).append("-01"));
-                System.out.print("  , ");
-                System.out.println( endDate.append("2018-").append(time[i]).append("-32"));
+                startDate.append("2018-").append(time[i]).append("-01");
+                endDate.append("2018-").append(time[i]).append("-32");
             }
 
-
+            //借款记录报送
+            zeroOneCaiJingService.borrowRecordSub(startDate.toString(),endDate.toString());
+            // 出借记录报送
+            zeroOneCaiJingService.investRecordSub(startDate.toString(),endDate.toString());
+            // 提前还款报送
+            zeroOneCaiJingService.advancedRepay(startDate.toString(),endDate.toString());
         }
     }
 }
