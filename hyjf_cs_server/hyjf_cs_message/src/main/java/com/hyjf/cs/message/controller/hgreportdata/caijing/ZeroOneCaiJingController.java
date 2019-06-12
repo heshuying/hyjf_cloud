@@ -1,8 +1,11 @@
 package com.hyjf.cs.message.controller.hgreportdata.caijing;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.resquest.admin.CaiJingLogRequest;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.message.service.hgreportdata.caijing.CaiJingPresentationLogService;
 import com.hyjf.cs.message.service.hgreportdata.caijing.ZeroOneCaiJingService;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,12 @@ public class ZeroOneCaiJingController {
 
     @Autowired
     private ZeroOneCaiJingService zeroOneCaiJingService;
+    @Autowired
+    private CaiJingPresentationLogService presentationLogService;
+
+    private static final String INVESTRECORD = "出借记录";
+    private static final String BORROWRECORD = "借款记录";
+    private static final String ADVANCEREPAY = "提前还款";
 
     /**
      * 零壹财经记录报送
@@ -44,6 +53,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("investRecord/{startDate}/{endDate}")
     public BooleanResponse investRecord(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
+        deleteLog(INVESTRECORD, GetDate.getDayStart(startDate), GetDate.getDayEnd(endDate));
         zeroOneCaiJingService.investRecordSub(startDate, endDate);
         response.setResultBoolean(true);
         return response;
@@ -52,6 +62,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("borrowRecord/{startDate}/{endDate}")
     public BooleanResponse borrowRecord(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
+        deleteLog(BORROWRECORD, GetDate.getDayStart(startDate), GetDate.getDayEnd(endDate));
         zeroOneCaiJingService.borrowRecordSub(startDate, endDate);
         response.setResultBoolean(true);
         return response;
@@ -60,6 +71,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("advancedRepay/{startDate}/{endDate}")
     public BooleanResponse advancedRepay(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
+        deleteLog(ADVANCEREPAY, GetDate.getDayStart(startDate), GetDate.getDayEnd(endDate));
         zeroOneCaiJingService.advancedRepay(startDate, endDate);
         response.setResultBoolean(true);
         return response;
@@ -92,5 +104,13 @@ public class ZeroOneCaiJingController {
             // 提前还款报送
             zeroOneCaiJingService.advancedRepay(startDate.toString(),endDate.toString());
         }
+    }
+
+    private void deleteLog(String logType, String startDate, String endDate) {
+        CaiJingLogRequest request = new CaiJingLogRequest();
+        request.setLogType(logType);
+        request.setPresentationTimeStart(startDate);
+        request.setPresentationTimeEnd(endDate);
+        presentationLogService.deleteLog(request);
     }
 }

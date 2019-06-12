@@ -81,8 +81,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String dateEnd = GetDate.getDayEnd(endDate);
 
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
-
-        deleteLog(BORROWRECORD, startDate, endDate);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         if (!CollectionUtils.isEmpty(borrowDataVOList)) {
@@ -140,8 +138,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
-
-        deleteLog(INVESTRECORD, startDate, endDate);
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(startDate, endDate);
 
@@ -205,9 +201,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
 
-        deleteLog(ADVANCEREPAY, startDate, endDate);
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startDate, endDate);
-
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType(ADVANCEREPAY);
         presentationLog.setCount(zeroOneDataVOList.size());
@@ -416,12 +410,4 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         return map;
     }
 
-
-    private void deleteLog(String logType, String startDate, String endDate) {
-        CaiJingLogRequest request = new CaiJingLogRequest();
-        request.setLogType(logType);
-        request.setPresentationTimeStart(startDate);
-        request.setPresentationTimeEnd(endDate);
-        presentationLogService.deleteLog(request);
-    }
 }
