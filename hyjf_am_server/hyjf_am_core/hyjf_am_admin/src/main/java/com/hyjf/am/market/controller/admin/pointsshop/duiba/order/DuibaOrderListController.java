@@ -157,19 +157,16 @@ public class DuibaOrderListController {
             duibaOrderVO.setUpdateTime(new Date());
             // 判断之前是否失败且兑吧返回的处理状态为成功，如果之前失败则执行以下操作
             if (duibaOrderVO.getActivationType() == 1 && duibaOrderVO.getOrderStatus() == 0) {
-                // 判断虚拟商品还是实物
-                if(!("0").equals(duibaOrderVO.getProductType())){
-                    // 判断该笔订单是否为“充值”（优惠卷）
-                    if (productType.equals(duibaOrderVO.getProductType())) {
-                        // 执行更新优惠卷用户表
-                        CouponUserRequest couponUserRequest = new CouponUserRequest();
-                        couponUserRequest.setId(duibaOrderVO.getCouponUserId());
-                        // 更新优惠卷用户表为有效
-                        int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
-                        if (flagCount == 0) {
-                            logger.error("优惠卷用户表id：[" + duibaOrderVO.getCouponUserId() + "]，更新优惠卷用户表为有效，操作失败！");
-                            return "优惠卷用户更新失败！";
-                        }
+                // 判断该笔订单是否为“充值”（优惠卷）
+                if (productType.equals(duibaOrderVO.getProductType())) {
+                    // 执行更新优惠卷用户表
+                    CouponUserRequest couponUserRequest = new CouponUserRequest();
+                    couponUserRequest.setId(duibaOrderVO.getCouponUserId());
+                    // 更新优惠卷用户表为有效
+                    int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
+                    if (flagCount == 0) {
+                        logger.error("优惠卷用户表id：[" + duibaOrderVO.getCouponUserId() + "]，更新优惠卷用户表为有效，操作失败！");
+                        return "优惠卷用户更新失败！";
                     }
                 }
                 // 更新用户表积分
