@@ -473,7 +473,10 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
-    public BooleanResponse reQueryCaiJingLog(String logType, String startDate, String endDate) {
+    public BooleanResponse reQueryCaiJingLog(CaiJingLogRequest request) {
+        String logType = request.getLogType();
+        String startDate = request.getPresentationTimeStart();
+        String endDate = request.getPresentationTimeEnd();
         if ("借款记录".equals(logType)) {
             BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/borrowRecord/" + startDate + "/" + endDate, BooleanResponse.class);
             return response;
