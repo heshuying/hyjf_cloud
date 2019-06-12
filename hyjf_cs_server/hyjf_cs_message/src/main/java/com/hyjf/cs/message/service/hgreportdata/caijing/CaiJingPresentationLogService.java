@@ -20,4 +20,6 @@ public interface CaiJingPresentationLogService {
     List<CaiJingPresentationLogVO> queryCaiJingLog(CaiJingLogRequest request);
 
     int selectLogCount(CaiJingLogRequest request);
+
+    void deleteLog(CaiJingLogRequest request);
 }

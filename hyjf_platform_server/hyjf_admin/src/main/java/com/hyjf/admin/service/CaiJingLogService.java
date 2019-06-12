@@ -23,5 +23,5 @@ public interface CaiJingLogService {
      * @param logType
      * @return
      */
-    BooleanResponse reQueryCaiJingLog(String logType);
+    BooleanResponse reQueryCaiJingLog(String logType, String startDate, String endDate);
 }

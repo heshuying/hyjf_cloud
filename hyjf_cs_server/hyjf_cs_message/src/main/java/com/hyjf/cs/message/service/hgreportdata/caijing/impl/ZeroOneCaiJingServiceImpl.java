@@ -3,6 +3,7 @@ package com.hyjf.cs.message.service.hgreportdata.caijing.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hyjf.am.resquest.message.CACustomerRequest;
+import com.hyjf.am.resquest.admin.CaiJingLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
@@ -77,10 +78,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String dateEnd = GetDate.getDayEnd(endDate);
 
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
+
+        deleteLog(BORROWRECORD, startDate, endDate);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         if (!CollectionUtils.isEmpty(borrowDataVOList)) {
-            presentationLog.setLogType("借款记录");
+            presentationLog.setLogType(BORROWRECORD);
             presentationLog.setCount(borrowDataVOList.size());
             if (CollectionUtils.isEmpty(borrowDataVOList)) {
                 logger.info("借款记录接口报送数据为空");
@@ -135,10 +138,12 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
 
+        deleteLog(INVESTRECORD, startDate, endDate);
+
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(startDate, endDate);
 
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType("出借记录");
+        presentationLog.setLogType(INVESTRECORD);
         presentationLog.setCount(zeroOneDataVOList.size());
         if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("投资记录接口无数据报送结束");
@@ -187,6 +192,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         logger.info("投资记录接口报送结束");
     }
 
+
     /**
      * 提前还款接口报送
      */
@@ -196,10 +202,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
 
+        deleteLog(ADVANCEREPAY, startDate, endDate);
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startDate, endDate);
 
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType("提前还款");
+        presentationLog.setLogType(ADVANCEREPAY);
         presentationLog.setCount(zeroOneDataVOList.size());
         if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("提前还款接口无数据报送结束");
@@ -378,4 +385,45 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         return zeroOneResponse;
     }
 
+    /**
+     * 获取借款主体为个人的CA认证客户编号
+     *
+     * @param borrowManinfos
+     * @return
+     */
+    private Map<Integer, String> getPersonCACustomerId(List<BorrowManinfoVO> borrowManinfos) {
+        Map<Integer, String> map = new HashMap<>();
+        for (BorrowManinfoVO borrowManinfoVO : borrowManinfos) {
+            // 用户CA认证记录表
+            CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+            request.setTrueName(borrowManinfoVO.getName());
+            request.setIdNo(borrowManinfoVO.getCardNo());
+            request.setIdType(0);
+            List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
+            if (list != null && list.size() > 0) {
+                map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+            } else {
+                // 借款主体CA认证记录表
+                LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
+                request1.setName(borrowManinfoVO.getName());
+                request1.setIdType(0);
+                request1.setIdNo(borrowManinfoVO.getCardNo());
+                List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
+                        .getSubjectCertificateAuthorityList(request1);
+                if (resultList != null && resultList.size() > 0) {
+                    map.put(resultList.get(0).getUserId(), resultList.get(0).getCustomerId());
+                }
+            }
+        }
+        return map;
+    }
+
+
+    private void deleteLog(String logType, String startDate, String endDate) {
+        CaiJingLogRequest request = new CaiJingLogRequest();
+        request.setLogType(logType);
+        request.setPresentationTimeStart(startDate);
+        request.setPresentationTimeEnd(endDate);
+        presentationLogService.deleteLog(request);
+    }
 }

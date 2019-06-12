@@ -1,8 +1,10 @@
 package com.hyjf.cs.message.controller.hgreportdata.caijing;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.service.hgreportdata.caijing.ZeroOneCaiJingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -37,6 +39,30 @@ public class ZeroOneCaiJingController {
         zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
         // 提前还款报送
         zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
+    }
+
+    @RequestMapping("investRecord/{startDate}/{endDate}")
+    public BooleanResponse investRecord(@PathVariable String startDate, @PathVariable String endDate) {
+        BooleanResponse response = new BooleanResponse();
+        zeroOneCaiJingService.investRecordSub(startDate, endDate);
+        response.setResultBoolean(true);
+        return response;
+    }
+
+    @RequestMapping("borrowRecord/{startDate}/{endDate}")
+    public BooleanResponse borrowRecord(@PathVariable String startDate, @PathVariable String endDate) {
+        BooleanResponse response = new BooleanResponse();
+        zeroOneCaiJingService.borrowRecordSub(startDate, endDate);
+        response.setResultBoolean(true);
+        return response;
+    }
+
+    @RequestMapping("advancedRepay/{startDate}/{endDate}")
+    public BooleanResponse advancedRepay(@PathVariable String startDate, @PathVariable String endDate) {
+        BooleanResponse response = new BooleanResponse();
+        zeroOneCaiJingService.advancedRepay(startDate, endDate);
+        response.setResultBoolean(true);
+        return response;
     }
 
     /**

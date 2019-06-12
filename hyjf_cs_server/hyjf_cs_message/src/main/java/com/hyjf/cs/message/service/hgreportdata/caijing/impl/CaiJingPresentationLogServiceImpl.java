@@ -67,4 +67,20 @@ public class CaiJingPresentationLogServiceImpl implements CaiJingPresentationLog
         query.addCriteria(criteria);
         return presentationLogDao.count(query).intValue();
     }
+
+    @Override
+    public void deleteLog(CaiJingLogRequest request) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotBlank(request.getPresentationTimeStart()) && StringUtils.isNotBlank(request.getPresentationTimeEnd())) {
+            Date startDate = GetDate.stringToDate2(request.getPresentationTimeStart());
+            Date endDate = GetDate.stringToDate2(request.getPresentationTimeEnd());
+            criteria.and("presentationTime").gte(GetDate.getSearchStartTime(startDate))
+                    .lte(GetDate.getSearchEndTime(endDate));
+        }
+        if (StringUtils.isNotBlank(request.getLogType())) {
+            criteria.and("logType").is(request.getLogType());
+        }
+        presentationLogDao.del(query);
+    }
 }

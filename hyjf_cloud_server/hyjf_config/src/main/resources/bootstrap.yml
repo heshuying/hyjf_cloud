@@ -15,7 +15,7 @@ spring:
           username: deployment
           password: deploy2018
   profiles:
-    active: dev
+    active: beta4
 
 eureka:
   client:

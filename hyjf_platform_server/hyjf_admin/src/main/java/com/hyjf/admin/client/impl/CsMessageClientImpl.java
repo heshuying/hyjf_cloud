@@ -473,17 +473,17 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
-    public BooleanResponse reQueryCaiJingLog(String logType) {
+    public BooleanResponse reQueryCaiJingLog(String logType, String startDate, String endDate) {
         if ("借款记录".equals(logType)) {
-            BooleanResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/borrowRecordSub", null, BooleanResponse.class).getBody();
+            BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/borrowRecord/" + startDate + "/" + endDate, BooleanResponse.class);
             return response;
         }
         if ("出借记录".equals(logType)) {
-            BooleanResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/investRecordSub", null, BooleanResponse.class).getBody();
+            BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/investRecord/" + startDate + "/" + endDate, BooleanResponse.class);
             return response;
         }
         if ("提前还款".equals(logType)) {
-            BooleanResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/investRecordSub", null, BooleanResponse.class).getBody();
+            BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/advancedRepay/" + startDate + "/" + endDate, BooleanResponse.class);
             return response;
         }
         return null;

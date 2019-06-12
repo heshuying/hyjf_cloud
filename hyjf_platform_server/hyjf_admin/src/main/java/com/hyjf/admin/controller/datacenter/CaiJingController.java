@@ -64,8 +64,8 @@ public class CaiJingController extends BaseController {
      */
     @ApiOperation(value = "重新报送接口", notes = "重新报送接口")
     @RequestMapping("/reQueryLogList")
-    public AdminResult reQueryLogList(@PathVariable String logType) {
-        BooleanResponse response = caiJingLogService.reQueryCaiJingLog(logType);
+    public AdminResult reQueryLogList(@PathVariable String logType, @PathVariable String startDate, @PathVariable String endDate) {
+        BooleanResponse response = caiJingLogService.reQueryCaiJingLog(logType, startDate, endDate);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
