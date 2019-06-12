@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.BatchCreditEndSubVO;
@@ -83,6 +84,18 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
      */
     @Override
     public int updateBatchCreditEndFinish(BankCallBean bean) {
+        BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
+        BeanUtils.copyProperties(bean, bankCallBeanVO);
+        return this.amTradeClient.updateBatchCreditEndFinish(bankCallBeanVO);
+    }
+
+    /**
+     * 批次结束债权状态查询回调更新
+     * @param bean
+     * @return
+     */
+    @Override
+    public int updateForCallBackFail(BankCallBean bean) {
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
         return this.amTradeClient.updateBatchCreditEndFinish(bankCallBeanVO);
@@ -180,5 +193,47 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
      */
     private List<BankCreditEndVO> selectList(BankCreditEndVO bankCreditEndVO) {
         return this.amTradeClient.getBankCreditEndListByBatchnoTxdate(bankCreditEndVO);
+    }
+
+    /**
+     * 批次结束债权未收到回调记录查询
+     */
+    @Override
+    public List<BankCreditEndVO> getCreditEndListForCallBackFail() {
+        BankCreditEndListRequest requestBean = new BankCreditEndListRequest();
+        return amTradeClient.getCreditEndListForCallBackFail(requestBean);
+    }
+
+    /**
+     * 请求批次状态查询接口
+     * @param creditEndVO
+     * @return
+     */
+    @Override
+    public BankCallBean batchQuery(BankCreditEndVO creditEndVO) {
+
+        String batchTxDate = String.valueOf(creditEndVO.getTxDate());// 批次提交日期
+        String channel = BankCallConstant.CHANNEL_PC;
+        String logOrderId = GetOrderIdUtils.getOrderId2(Integer.parseInt(creditEndVO.getBatchNo()));
+        String orderDate = GetOrderIdUtils.getOrderDate();
+        // 调用批次状态查询接口
+        BankCallBean repayBean = new BankCallBean();
+        repayBean.setChannel(channel);
+        repayBean.setBatchNo(creditEndVO.getBatchNo());
+        repayBean.setBatchTxDate(batchTxDate);
+        repayBean.setLogUserId(creditEndVO.getBatchNo());
+        repayBean.setLogOrderId(logOrderId);
+        repayBean.setLogOrderDate(orderDate);
+        repayBean.setLogRemark("结束债权批次状态查询");
+        repayBean.setLogClient(0);
+        BankCallBean queryResult = BankCallUtils.callApiBg(repayBean);
+        if (queryResult != null && StringUtils.isNotBlank(queryResult.getRetCode())) {
+            String retCode = queryResult.getRetCode();
+            logger.info("【批次结束债权未收到回调批次状态查询】批次号：{}，批次状态查询处理状态：{}", creditEndVO.getBatchNo(), retCode);
+            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+                return queryResult;
+            }
+        }
+        return null;
     }
 }

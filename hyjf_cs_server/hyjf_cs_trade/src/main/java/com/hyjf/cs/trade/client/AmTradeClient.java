@@ -301,6 +301,8 @@ public interface AmTradeClient {
      */
     List<BankCreditEndVO> getBankCreditEndListByBatchnoTxdate(BankCreditEndVO bankCreditEndVO);
 
+    List<BankCreditEndVO> getCreditEndListForCallBackFail(BankCreditEndListRequest requestBean);
+
     /**
      * 根据条件(批次号和日期)，更新结束债权任务状态
      * @param bankCreditEndVO
@@ -322,6 +324,8 @@ public interface AmTradeClient {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO);
+
+    int updateForCallBackFail(BankCallBeanVO bankCallBeanVO);
 
     /**
      * 根据borrowNid获取BorrowInfoVO对象

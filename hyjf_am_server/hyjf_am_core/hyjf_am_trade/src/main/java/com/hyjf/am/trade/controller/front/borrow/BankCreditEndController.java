@@ -153,4 +153,28 @@ public class BankCreditEndController {
     public IntegerResponse updateBatchCreditEndFinish(@RequestBody BankCallBeanVO request){
         return new IntegerResponse(this.bankCreditEndService.updateBatchCreditEndFinish(request));
     }
+
+    /**
+     * 批次结束债权状态查询回调更新
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateForCallBackFail")
+    public IntegerResponse updateForCallBackFail(@RequestBody BankCallBeanVO request){
+        return new IntegerResponse(this.bankCreditEndService.updateForCallBackFail(request));
+    }
+
+    /**
+     * 批次结束债权未收到回调记录查询
+     * @return
+     */
+    @RequestMapping("/queryCreditEndCallBackFail")
+    public BankCreditEndResponse queryCreditEndCallBackFail(){
+        BankCreditEndResponse response = new BankCreditEndResponse();
+        List<BankCreditEndVO> recordList = bankCreditEndService.queryCreditEndCallBackFail();
+        if (Validator.isNotNull(recordList)){
+            response.setResultList(recordList);
+        }
+        return response;
+    }
 }

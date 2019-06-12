@@ -3,8 +3,11 @@
  */
 package com.hyjf.cs.trade.service.batch;
 
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.util.List;
 
 /**
  * @author liubin
@@ -30,4 +33,10 @@ public interface BatchCreditEndService extends BaseTradeService {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBean bean);
+
+    int updateForCallBackFail(BankCallBean bean);
+
+    List<BankCreditEndVO> getCreditEndListForCallBackFail();
+
+    BankCallBean batchQuery(BankCreditEndVO creditEndVO);
 }

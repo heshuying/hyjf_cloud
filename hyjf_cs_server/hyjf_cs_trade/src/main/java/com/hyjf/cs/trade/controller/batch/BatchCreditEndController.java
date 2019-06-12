@@ -6,10 +6,12 @@ package com.hyjf.cs.trade.controller.batch;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.batch.BatchCreditEndService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 批次结束债权
@@ -111,5 +114,40 @@ public class BatchCreditEndController extends BaseTradeController {
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
 
+    }
+
+    /**
+     * 批次结束债权未收到回调批次状态查询并更新
+     * @return
+     */
+    @RequestMapping("/batchQuery")
+    public BooleanResponse batchQuery() {
+        logger.info("-----------------批次结束债权未收到回调批次状态查询开始------------------");
+        BooleanResponse response = new BooleanResponse(true);
+        try {
+            // 批次结束债权
+            List<BankCreditEndVO> failList = batchCreditEndService.getCreditEndListForCallBackFail();
+            if(failList == null || failList.isEmpty()){
+                logger.info("未查询到批次结束债权未收到回调的记录");
+                return response;
+            }
+            for (BankCreditEndVO vo : failList){
+                BankCallBean bankCallBean = batchCreditEndService.batchQuery(vo);
+                if (bankCallBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())) {
+                    logger.info("批次查询接口请求失败");
+                    response.setResultBoolean(false);
+                    return response;
+                }
+
+                batchCreditEndService.updateForCallBackFail(bankCallBean);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            logger.error("-----------------批次结束债权未收到回调批次状态查询处理失败-------------------");
+            response.setResultBoolean(false);
+            return response;
+        }
+        logger.info("-----------------批次结束债权未收到回调批次状态查询结束------------------");
+        return new BooleanResponse(false);
     }
 }

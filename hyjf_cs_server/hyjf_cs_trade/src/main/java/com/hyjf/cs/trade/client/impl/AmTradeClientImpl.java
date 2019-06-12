@@ -753,6 +753,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 批次结束债权未收到回调记录查询
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<BankCreditEndVO> getCreditEndListForCallBackFail(BankCreditEndListRequest requestBean) {
+        String url = urlBase + "bankCreditEndController/queryCreditEndCallBackFail";
+        BankCreditEndResponse response = restTemplate.postForEntity(url, requestBean, BankCreditEndResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 根据条件(批次号和日期)，更新结束债权任务状态
      * @param bankCreditEndVO
      * @param status
@@ -795,6 +810,19 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO) {
         String url = urlBase + "bankCreditEndController/updateBatchCreditEndFinish";
+        IntegerResponse response = restTemplate.postForEntity(url, bankCallBeanVO, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 批次结束债权状态查询回调更新
+     */
+    @Override
+    public int updateForCallBackFail(BankCallBeanVO bankCallBeanVO) {
+        String url = urlBase + "bankCreditEndController/updateForCallBackFail";
         IntegerResponse response = restTemplate.postForEntity(url, bankCallBeanVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;

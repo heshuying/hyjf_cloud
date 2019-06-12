@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 
 import java.util.List;
 
@@ -70,4 +71,8 @@ public interface BankCreditEndService extends BaseService {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bean);
+
+    int updateForCallBackFail(BankCallBeanVO bean);
+
+    List<BankCreditEndVO> queryCreditEndCallBackFail();
 }

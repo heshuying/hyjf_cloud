@@ -280,4 +280,7 @@ public class CustomizeMapper extends AutoMapper {
 	protected CertClaimMapper certClaimMapper;
 	@Autowired
 	protected CertProductMapper certProductMapper;
+
+	@Autowired
+	protected BankCreditEndCustomizeMapper bankCreditEndCustomizeMapper;
 }
