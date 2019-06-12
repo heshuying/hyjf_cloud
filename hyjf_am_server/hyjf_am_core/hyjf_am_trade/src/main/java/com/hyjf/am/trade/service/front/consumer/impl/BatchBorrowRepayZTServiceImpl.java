@@ -1478,7 +1478,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             //发送大屏统计数据
 			logger.info("tenderOrderId:{},assignAccount:{}",tenderOrderId,assignAccount);
             ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,assignUserId,creditRepay.getUserName(),assignAccount,3);
-            this.sendScreenDataMQ(screenDataBean);
+            //暂时取消债转数据
+            //this.sendScreenDataMQ(screenDataBean);
         } catch (Exception e) {
             logger.error("【直投还款/承接人】发送短信和推送消息时发生系统异常！", e);
         }
