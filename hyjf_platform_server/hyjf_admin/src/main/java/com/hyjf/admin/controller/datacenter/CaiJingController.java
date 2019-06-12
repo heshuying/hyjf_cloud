@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.datacenter;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.CaiJingLogService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
@@ -17,10 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yaoyong
@@ -34,13 +33,16 @@ public class CaiJingController extends BaseController {
     @Autowired
     private CaiJingLogService caiJingLogService;
 
+    private static final String PERMISSIONS = "caijinglog";
+
     /**
      * 查询日志列表
      * @param request
      * @return
      */
     @ApiOperation(value = "查询日志列表", notes = "查询日志列表")
-    @RequestMapping("/queryLogList")
+    @PostMapping("/queryLogList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult queryCaiJingLog(@RequestBody CaiJingLogRequest request) {
         CaiJingLogResponse response = caiJingLogService.queryCaiJingLog(request);
         if (!CollectionUtils.isEmpty(response.getResultList())) {
@@ -63,7 +65,7 @@ public class CaiJingController extends BaseController {
      * @return
      */
     @ApiOperation(value = "重新报送接口", notes = "重新报送接口")
-    @RequestMapping("/reQueryLogList")
+    @PostMapping("/reQueryLogList")
     public AdminResult reQueryLogList(@RequestBody CaiJingLogRequest request) {
         BooleanResponse response = caiJingLogService.reQueryCaiJingLog(request);
         if(response==null) {
