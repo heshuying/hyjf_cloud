@@ -73,10 +73,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
-//        String dateStart = GetDate.getDayStart(yesterday);
-//        String dateEnd = GetDate.getDayEnd(yesterday);
-        String dateStart = "2018-10-10 00:00:00";
-        String dateEnd = "2018-10-10 23:59:59";
+        String dateStart = GetDate.getDayStart(yesterday);
+        String dateEnd = GetDate.getDayEnd(yesterday);
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
