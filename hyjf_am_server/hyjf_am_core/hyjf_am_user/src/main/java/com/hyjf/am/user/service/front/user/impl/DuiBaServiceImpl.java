@@ -42,6 +42,7 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 	 */
 	@Override
 	public CreditConsumeResultVO updateUserPoints(CreditConsumeParams consumeParams) {
+		CreditConsumeResultVO resultVO = new CreditConsumeResultVO();
 		// 用户扣减积分
 		duiBaCustomizeMapper.updateUserPoints(consumeParams);
 		Integer userId = Integer.valueOf(consumeParams.getUid());
@@ -52,6 +53,13 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 		UserExample userExample = new UserExample();
 		userExample.createCriteria().andUserIdEqualTo(userId);
 		List<User> users = userMapper.selectByExample(userExample);
+		// 如果为获取到用户信息，直接返回错误
+		if(users.size() == 0){
+			logger.error("兑吧扣积分回调出现错误，为获取到相关用户信息，用户ID:{}", userId);
+			resultVO.setSuccess(false);
+			resultVO.setErrorMessage("未获取到相关用户信息");
+			return resultVO;
+		}
 		UserInfoExample userInfoExample = new UserInfoExample();
 		userInfoExample.createCriteria().andUserIdEqualTo(userId);
 		List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
@@ -67,7 +75,6 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 			logger.error("兑吧生成订单MQ发送异常，请及时处理，兑吧返回结果：{}", JSONObject.toJSONString(consumeParams), e);
 		}
 		// 设置返回参数
-        CreditConsumeResultVO resultVO = new CreditConsumeResultVO();
 		resultVO.setSuccess(true);
 		resultVO.setBizId(hyOrdId);
 		resultVO.setCredits(Long.valueOf(users.get(0).getPointsCurrent()));

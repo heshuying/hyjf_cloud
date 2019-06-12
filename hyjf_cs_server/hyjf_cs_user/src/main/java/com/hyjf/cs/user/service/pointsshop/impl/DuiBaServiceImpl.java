@@ -135,12 +135,17 @@ public class DuiBaServiceImpl implements DuiBaService {
 	public CreditConsumeResult deductPoints(CreditConsumeParams consumeParams) {
 		CreditConsumeResult result = null;
 		CreditConsumeResultVO resultVO = amUserClient.deductPoints(consumeParams);
-		// 成功返回相应结果，失败直接返回Null
-		if(null != resultVO && resultVO.isSuccess()){
-			result = new CreditConsumeResult(true);
-			result.setBizId(resultVO.getBizId());
-			result.setErrorMessage(resultVO.getErrorMessage());
-			result.setCredits(resultVO.getCredits());
+		// 成功返回相应结果，失败直接返回失败原因，出错返回null
+		if(null != resultVO){
+			if(resultVO.isSuccess()){
+				result = new CreditConsumeResult(true);
+				result.setBizId(resultVO.getBizId());
+				result.setCredits(resultVO.getCredits());
+			} else {
+				result = new CreditConsumeResult(false);
+				result.setErrorMessage(resultVO.getErrorMessage());
+				result.setCredits(Long.valueOf(0));
+			}
 		}
 		return result;
 	}
