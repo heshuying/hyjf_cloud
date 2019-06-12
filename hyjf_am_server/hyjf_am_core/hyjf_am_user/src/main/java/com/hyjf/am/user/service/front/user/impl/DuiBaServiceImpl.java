@@ -55,7 +55,7 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 		List<User> users = userMapper.selectByExample(userExample);
 		// 如果为获取到用户信息，直接返回错误
 		if(users.size() == 0){
-			logger.error("兑吧扣积分回调出现错误，为获取到相关用户信息，用户ID:{}", userId);
+			logger.error("兑吧扣积分回调出现错误，未获取到相关用户信息，用户ID:{}", userId);
 			resultVO.setSuccess(false);
 			resultVO.setErrorMessage("未获取到相关用户信息");
 			return resultVO;

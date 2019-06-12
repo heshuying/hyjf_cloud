@@ -81,18 +81,26 @@ public class DuiBaCallController extends BaseController {
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			String url = "http://CS-USER/hyjf-app/pointsshop/duiba/deductpoints";
 			CreditConsumeResult postResult = restTemplate.postForEntity(url, params, CreditConsumeResult.class).getBody();
-			if(null != postResult && postResult.isSuccess()){
-				success = true;
-				bizId = postResult.getBizId();
-				credits = postResult.getCredits();
+			// 根据结果向兑吧响应
+			if(null != postResult ){
+				if(postResult.isSuccess()){
+					success = true;
+					bizId = postResult.getBizId();
+					credits = postResult.getCredits();
+				} else {
+					success = false;
+					errorMessage = postResult.getErrorMessage();
+					credits = postResult.getCredits();
+				}
 			} else {
 				success = false;
 				errorMessage = "兑换出现了问题，请联系相关人员处理。";
+				credits = Long.valueOf(0);
 			}
-
 		} catch (Exception e) {
 			success = false;
 			errorMessage = "兑换出现了问题，请联系相关人员处理。";
+			credits = Long.valueOf(0);
 			logger.error("兑吧调用扣积分接口发生错误：", e);
 		}
 		result = new CreditConsumeResult(success);
