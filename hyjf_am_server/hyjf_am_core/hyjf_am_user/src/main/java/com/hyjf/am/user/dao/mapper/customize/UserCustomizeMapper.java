@@ -38,5 +38,5 @@ public interface UserCustomizeMapper {
      * 批量查询借款主体CA
      * @return
      */
-    List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(List<String> list,Integer idType);
+    List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(@Param("list")List<String> list,@Param("idType")Integer idType);
 }
