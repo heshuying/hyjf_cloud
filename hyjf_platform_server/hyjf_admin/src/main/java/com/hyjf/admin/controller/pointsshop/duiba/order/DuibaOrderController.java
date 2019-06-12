@@ -161,7 +161,8 @@ public class DuibaOrderController extends BaseController {
      * @param orderNum
      * @return
      */
-    @RequestMapping("/selectReleaseCoupons/{orderNum}")
+    @ApiOperation(value = "根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷", notes = "根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷")
+    @GetMapping("/selectReleaseCoupons/{orderNum}")
     public VirtualResult selectReleaseCoupons(@PathVariable String orderNum) {
         return duibaOrderListService.selectCouponUserById(orderNum);
     }
@@ -172,7 +173,8 @@ public class DuibaOrderController extends BaseController {
      * @param orderNum
      * @return
      */
-    @RequestMapping("/activationError/{orderNum}/{errorMessage}")
+    @ApiOperation(value = "兑吧兑换结果通知接口（失败时设置订单无效）", notes = "兑吧兑换结果通知接口（失败时设置订单无效）")
+    @GetMapping("/activationError/{orderNum}/{errorMessage}")
     public StringResponse activationError(@PathVariable String orderNum, @PathVariable String errorMessage) {
         StringResponse response = new StringResponse();
         String duibaStr = duibaOrderListService.activation(orderNum,errorMessage);
@@ -188,7 +190,8 @@ public class DuibaOrderController extends BaseController {
      * @param orderNum
      * @return
      */
-    @RequestMapping("/activationSuccess/{orderNum}")
+    @ApiOperation(value = "兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）", notes = "兑吧兑换结果通知接口（成功设置优惠卷有效，更新虚拟商品充值状态为完成）")
+    @GetMapping("/activationSuccess/{orderNum}")
     public StringResponse activationSuccess(@PathVariable String orderNum) {
         StringResponse response = new StringResponse();
         String duibaStr = duibaOrderListService.success(orderNum);
