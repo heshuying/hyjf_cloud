@@ -45,4 +45,11 @@ public interface DuiBaService {
      * @return
      */
     JSONObject getPointsDetail(Integer userId, DuiBaPointsDetailRequestBean requestBean);
+
+    /**
+     * 移动端获取用户当前积分
+     * @param userId
+     * @return
+     */
+    JSONObject getUserPoints(Integer userId);
 }
