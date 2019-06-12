@@ -186,7 +186,7 @@
 		c.bid_name as title,
 		c.credit_user_id AS userid,
 		'' AS planNid,
-		'' AS companyOrPersonal,
+		ru.user_type AS companyOrPersonal,
 		SUM(t.assign_pay) as amount,
 		CONCAT(c.credit_term,'天') AS borrow_period,
 		(c.bid_apr*0.01) as interest,
@@ -217,6 +217,7 @@
 		LEFT JOIN ht_borrow_info i ON i.borrow_nid = c.bid_nid
 		LEFT JOIN ht_borrow b ON b.borrow_nid = c.bid_nid
 		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
+		LEFT JOIN ht_r_user ru ON ru.user_id = c.credit_user_id
 		WHERE c.credit_status = 1 and c.credit_status = 2
 		AND c.credit_capital_assigned > 0
 		AND c.create_time <![CDATA[>=]]> #{dateStart}

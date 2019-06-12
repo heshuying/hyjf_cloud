@@ -7,10 +7,7 @@ import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -358,4 +355,11 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	HashMap<String, String> findUserGroup(Integer userId);
+
+	/**
+	 * 查询借款主体CA
+	 * @param request
+	 * @return
+	 */
+    List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
 }

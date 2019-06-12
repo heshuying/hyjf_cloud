@@ -1688,6 +1688,17 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String taskTime = formatter.format(currentTime);
         return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
     }
+
+    @Override
+    public List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", request.getName());
+        map.put("idType", request.getIdType());
+        map.put("idNo", request.getIdNo());
+        List<LoanSubjectCertificateAuthorityVO> list = userCustomizeMapper.getSubjectCertificateAuthorityList(map);
+        return null;
+    }
+
     /**
      * 获取现在时间
      *

@@ -363,15 +363,15 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-    @Override
-    public List<CertificateAuthorityVO> getCertificateAuthorityList(List<BorrowUserVO> userVOS) {
-		String url = "http://AM-USER/am-user/certificateauthority/queryCACustomerId";
-		CertificateAuthorityResponse response = restTemplate.postForEntity(url, userVOS, CertificateAuthorityResponse.class).getBody();
+	@Override
+	public List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1) {
+		String url = "http://AM-USER/am-user/user/getSubjectCertificateAuthorityList";
+		LoanSubjectCertificateAuthorityResponse response = restTemplate.postForEntity(url, request1, LoanSubjectCertificateAuthorityResponse.class).getBody();
 		if (Validator.isNotNull(response)) {
 			return response.getResultList();
 		}
-        return null;
-    }
+		return null;
+	}
 
     @Override
     public List<CertificateAuthorityVO> queryCustomerId(List<Integer> userIds) {

@@ -240,25 +240,33 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 if (borrowDataVO.getCompanyOrPersonal() != null && borrowDataVO.getCompanyOrPersonal() == 1) {
                     borrowNids.add(borrowDataVO.getId());
                 }
-                if (borrowDataVO.getCompanyOrPersonal() != null && borrowDataVO.getCompanyOrPersonal() == 2) {
+                if (borrowDataVO.getCompanyOrPersonal() != null && borrowDataVO.getCompanyOrPersonal() == 2 || borrowDataVO.getCompanyOrPersonal() == 0) {
                     nids.add(borrowDataVO.getId());
                 }
             }
         }
         Map<Integer, String> mapUserId = new HashMap<>();
-        List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userIds);
-        if (!CollectionUtils.isEmpty(voList)) {
-            for (CertificateAuthorityVO authorityVO : voList) {
-                mapUserId.put(authorityVO.getUserId(), authorityVO.getCustomerId());
+        if (!CollectionUtils.isEmpty(userIds)) {
+            List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userIds);
+            if (!CollectionUtils.isEmpty(voList)) {
+                for (CertificateAuthorityVO authorityVO : voList) {
+                    mapUserId.put(authorityVO.getUserId(), authorityVO.getCustomerId());
+                }
             }
         }
-        List<BorrowUserVO> userVOS = amTradeClient.getBorrowUserInfo(borrowNids);
-        List<BorrowManinfoVO> maninfoVOList = amTradeClient.getBorrowManList(nids);
-        if (!CollectionUtils.isEmpty(userVOS)) {
-            mapUserId = getCACustomerID(userVOS);
+
+        if (!CollectionUtils.isEmpty(borrowNids)) {
+            List<BorrowUserVO> userVOS = amTradeClient.getBorrowUserInfo(borrowNids);
+            if (!CollectionUtils.isEmpty(userVOS)) {
+                mapUserId = getCACustomerID(userVOS);
+            }
         }
-        if (!CollectionUtils.isEmpty(maninfoVOList)) {
-            mapUserId = getPersonCACustomerId(maninfoVOList);
+
+        if (!CollectionUtils.isEmpty(nids)) {
+            List<BorrowManinfoVO> maninfoVOList = amTradeClient.getBorrowManList(nids);
+            if (!CollectionUtils.isEmpty(maninfoVOList)) {
+                mapUserId = getPersonCACustomerId(maninfoVOList);
+            }
         }
         return mapUserId;
     }
@@ -287,9 +295,9 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 request1.setIdType(1);
                 request1.setIdNo(borrowUsers.getSocialCreditCode());
                 List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
-                        .getLoanSubjectCertificateAuthorityList(request1);
+                        .getSubjectCertificateAuthorityList(request1);
                 if (resultList != null && resultList.size() > 0) {
-                    caCustomerIds.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+                    caCustomerIds.put(resultList.get(0).getUserId(), resultList.get(0).getCustomerId());
                 }
             }
         }

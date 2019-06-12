@@ -57,4 +57,28 @@
 		WHERE
 		u.user_id =#{userId,jdbcType=INTEGER}
 	</select>
+	
+	<resultMap id="loanSubjectCertificateAuthority" type="com.hyjf.am.vo.user.LoanSubjectCertificateAuthorityVO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="id_type" property="idType" jdbcType="TINYINT" />
+		<result column="id_no" property="idNo" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getSubjectCertificateAuthorityList" resultMap="loanSubjectCertificateAuthority" parameterType="java.util.Map">
+		select a.id,u.user_id,
+		a.name,a.mobile,a.id_no,a.customer_id
+		FROM ht_loan_subject_certificate_authority a
+		LEFT JOIN ht_user u ON u.mobile = a.mobile
+		WHERE
+		a.name = #{name}
+		AND a.id_type = #{idType}
+		AND a.id_no = #{idNo}
+	</select>
 </mapper>

@@ -844,6 +844,21 @@ public class UserController extends BaseController {
         return response;
     }
 
+    /**
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/getSubjectCertificateAuthorityList")
+    public LoanSubjectCertificateAuthorityResponse getSubjectCertificateAuthorityList(@RequestBody LoanSubjectCertificateAuthorityRequest request) {
+        LoanSubjectCertificateAuthorityResponse response = new LoanSubjectCertificateAuthorityResponse();
+        List<LoanSubjectCertificateAuthorityVO> resultList = userService.getSubjectCertificateAuthorityList(request);
+        if (CollectionUtils.isNotEmpty(resultList)) {
+            response.setResultList(resultList);
+        }
+        return response;
+    }
+
 
     @GetMapping("/getCustomerIDByUserID/{userId}/{code}")
     public String getCustomerIDByUserID(@PathVariable Integer userId, @PathVariable String code) {

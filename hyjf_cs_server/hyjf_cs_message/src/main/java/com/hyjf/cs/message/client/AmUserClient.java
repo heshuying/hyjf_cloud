@@ -185,7 +185,7 @@ public interface AmUserClient {
 
 	List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1);
 
-    List<CertificateAuthorityVO> getCertificateAuthorityList(List<BorrowUserVO> userVOS);
+    List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request1);
 
 	List<CertificateAuthorityVO> queryCustomerId(List<Integer> userIds);
 }

@@ -53,8 +53,8 @@
 
   <select id="getBorrowManinfoList" resultMap="borrowManinfoResult" parameterType="java.lang.String">
     SELECT
-    m.name
-    m.card_no
+    m.name,
+    m.card_no,
     0 AS id_type
     FROM ht_borrow_maninfo m
     WHERE borrow_nid IN
