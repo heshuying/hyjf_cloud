@@ -1669,19 +1669,18 @@ WHERE
 	</update>
 
 	<resultMap id="borrowUserResult" type="com.hyjf.am.vo.trade.borrow.BorrowUserVO">
-		<result column="username" property="userName" />
+		<result column="username" property="username" />
 		<result column="social_credit_code" property="socialCreditCode" />
 	</resultMap>
-	<select id="getBorrowUserList" resultMap="borrowUserResult" parameterType="java.lang.String">
+	<select id="getBorrowUserList" resultMap="borrowUserResult" parameterType="java.util.List">
 		SELECT
-		u.username AS userName,
-		u.social_credit_code AS socialCreditCode,
-		1 AS idType
+		u.username AS username,
+		u.social_credit_code AS social_credit_code
 		FROM ht_borrow_user u
 		WHERE
 		borrow_nid IN
 		<foreach collection="set" index="index" item="item" open="(" close=")" separator=",">
-			#{item, javaType=VARCHAR}
+			#{item}
 		</foreach>
 	</select>
 </mapper>
