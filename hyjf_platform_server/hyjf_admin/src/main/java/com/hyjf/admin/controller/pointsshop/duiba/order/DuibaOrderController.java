@@ -27,6 +27,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -134,19 +135,21 @@ public class DuibaOrderController extends BaseController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "同步")
-    @PostMapping("/synchronization")
-    public AdminResult synchronization(@RequestParam("id") Integer id){
+    @ApiOperation(value = "同步" ,tags = "同步" )
+    @ResponseBody
+    @ApiImplicitParam(name = "id",value = "id:列表id",dataType = "Integer")
+    @GetMapping(value = "/synchronization/{id}" , produces = "application/json; charset=utf-8")
+    public AdminResult synchronization(@PathVariable Integer id){
         logger.info("调用同步接口start,id:{}", id);
         AdminResult adminResult = new AdminResult();
         JSONObject data = new JSONObject();
         String flag = "success";
         String retMsg = duibaOrderListService.synchronization(id);
         if (flag.equals(retMsg)) {
-            adminResult.setStatus("同步成功！");
+            adminResult.setStatus(SUCCESS);
         } else {
             data.put("error", retMsg);
-            adminResult.setStatus("同步失败！");
+            adminResult.setStatus(FAIL);
         }
         adminResult.setData(data);
         return adminResult;
@@ -365,15 +368,21 @@ public class DuibaOrderController extends BaseController {
         IValueFormatter orderTimeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String orderTime = (String) object;
-                return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(orderTime));
+                Integer orderTime = (Integer) object;
+                if(orderTime!=null){
+                    return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(orderTime);
+                }
+                return "";
             }
         };
         IValueFormatter completionTimeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String completionTime = (String) object;
-                return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(completionTime));
+                Integer completionTime = (Integer) object;
+                if(completionTime!=null) {
+                    return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(completionTime);
+                }
+                return "";
             }
         };
         mapAdapter.put("productTypeStr", productTypeAdapter);
