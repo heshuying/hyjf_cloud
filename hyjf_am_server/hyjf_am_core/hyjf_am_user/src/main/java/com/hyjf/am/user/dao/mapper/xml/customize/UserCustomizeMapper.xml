@@ -71,11 +71,11 @@
 		<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<select id="getbatchAuthorityList" resultMap="loanSubjectCertificateAuthority" parameterType="java.util.List">
+	<select id="getbatchAuthorityList" resultMap="loanSubjectCertificateAuthority" >
 		SELECT
-			u.user_id AS userId,
-			a.id_no AS idNo,
-			a.customer_id AS customerId
+			u.user_id AS user_id,
+			a.id_no AS id_no,
+			a.customer_id AS customer_id
 		FROM
 			ht_loan_subject_certificate_authority a
 			LEFT JOIN ht_user u ON u.mobile = a.mobile
@@ -88,9 +88,9 @@
 
 		UNION ALL
 		SELECT
-			user_id AS userId,
-			id_no AS idNo,
-			customer_id AS customerId
+			user_id AS user_id,
+			id_no AS id_no,
+			customer_id AS customer_id
 		FROM
 			ht_certificate_authority
 		WHERE

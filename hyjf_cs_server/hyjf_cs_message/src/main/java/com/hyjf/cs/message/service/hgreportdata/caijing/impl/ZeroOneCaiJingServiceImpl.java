@@ -83,51 +83,49 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        if (!CollectionUtils.isEmpty(borrowDataVOList)) {
-            presentationLog.setLogType(BORROWRECORD);
-            presentationLog.setCount(borrowDataVOList.size());
-            if (CollectionUtils.isEmpty(borrowDataVOList)) {
-                logger.info("借款记录接口报送数据为空");
-                return;
-            }
-            logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
-
-            Map<Integer, String> mapUserId = queryCACustomerId(borrowDataVOList);
-            if (mapUserId == null || mapUserId.size() == 0) {
-                logger.info("投资记录接口报送结束,报送用户id为空");
-                return;
-            }
-
-            for (ZeroOneBorrowDataVO voList : borrowDataVOList) {
-                if (mapUserId.get(Integer.valueOf(voList.getUserid())) != null) {
-                    voList.setUsername(mapUserId.get(Integer.valueOf(voList.getUserid())));
-                    voList.setUserid(mapUserId.get(Integer.valueOf(voList.getUserid())));
-                } else {
-                    logger.info("投资记录接口报送 当前用户编号为空,userId=" + voList.getUserid());
-                    voList.setUserid(null);
-                    voList.setUsername(null);
-                }
-                voList.setId(CustomUtil.nidSign(voList.getId()));
-            }
-            List<ZeroOneBorrowEntity> borrowEntities = CommonUtils.convertBeanList(borrowDataVOList, ZeroOneBorrowEntity.class);
-            logger.info("传送数据data : {}", JSONObject.toJSONString(borrowEntities));
-            Map<String,Object> map = new HashMap<>();
-            map.put("data",borrowEntities);
-            ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
-            if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
-                //报送成功
-                logger.info("出借记录接口报送成功");
-                presentationLog.setStatus(1);
-                presentationLog.setDescription("");
-            } else {
-                presentationLog.setStatus(0);
-                presentationLog.setDescription(zeroOneResponse.result_msg);
-            }
-            //插入mongo表
-            this.presentationLogService.insertLog(presentationLog);
-            logger.info("出借记录接口报送结束");
+        if (CollectionUtils.isEmpty(borrowDataVOList)) {
+            logger.info("借款记录接口报送数据为空");
+            return;
         }
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType(BORROWRECORD);
+        presentationLog.setCount(borrowDataVOList.size());
+
+        logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
+
+        Map<Integer, String> mapUserId = queryCACustomerId(borrowDataVOList);
+        if (mapUserId == null || mapUserId.size() == 0) {
+            logger.info("借款记录接口报送结束,报送用户id为空");
+            return;
+        }
+
+        for (ZeroOneBorrowDataVO voList : borrowDataVOList) {
+            if (mapUserId.get(Integer.valueOf(voList.getUserid())) != null) {
+                voList.setUsername(mapUserId.get(Integer.valueOf(voList.getUserid())));
+                voList.setUserid(mapUserId.get(Integer.valueOf(voList.getUserid())));
+            } else {
+                logger.info("借款记录接口报送 当前用户编号为空,userId=" + voList.getUserid());
+                voList.setUserid(null);
+                voList.setUsername(null);
+            }
+            voList.setId(CustomUtil.nidSign(voList.getId()));
+        }
+        List<ZeroOneBorrowEntity> borrowEntities = CommonUtils.convertBeanList(borrowDataVOList, ZeroOneBorrowEntity.class);
+        Map<String,Object> map = new HashMap<>();
+        map.put("data",borrowEntities);
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
+        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
+            //报送成功
+            logger.info("借款记录接口报送成功");
+            presentationLog.setStatus(1);
+            presentationLog.setDescription("");
+        } else {
+            presentationLog.setStatus(0);
+            presentationLog.setDescription(zeroOneResponse.result_msg);
+        }
+        //插入mongo表
+        this.presentationLogService.insertLog(presentationLog);
+        logger.info("借款记录接口报送结束");
     }
 
     /**
