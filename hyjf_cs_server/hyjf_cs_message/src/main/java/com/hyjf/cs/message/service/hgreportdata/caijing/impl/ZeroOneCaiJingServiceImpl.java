@@ -50,6 +50,10 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
     private final Logger logger = LoggerFactory.getLogger(ZeroOneCaiJingServiceImpl.class);
 
+    private static final String INVESTRECORD = "出借记录";
+    private static final String BORROWRECORD = "借款记录";
+    private static final String ADVANCEREPAY = "提前还款";
+
     @Autowired
     private AmTradeClient amTradeClient;
 
@@ -60,10 +64,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     private CaiJingPresentationLogService presentationLogService;
 
     public static String sendUrl = "";
-
-    private static final String INVESTRECORD = "出借记录";
-    private static final String BORROWRECORD = "借款记录";
-    private static final String ADVANCEREPAY = "提前还款";
 
     @Value("01caijing.send.url")
     public void setSendUrl(String caijingsendUrl) {
@@ -82,8 +82,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         String dateEnd = GetDate.getDayEnd(endDate);
 
         logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
-
-        deleteLog(BORROWRECORD, startDate, endDate);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         if (!CollectionUtils.isEmpty(borrowDataVOList)) {
@@ -141,8 +139,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
-
-        deleteLog(INVESTRECORD, startDate, endDate);
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(startDate, endDate);
 
@@ -206,9 +202,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
 
-        deleteLog(ADVANCEREPAY, startDate, endDate);
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startDate, endDate);
-
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType(ADVANCEREPAY);
         presentationLog.setCount(zeroOneDataVOList.size());
@@ -389,11 +383,37 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         return zeroOneResponse;
     }
 
-    private void deleteLog(String logType, String startDate, String endDate) {
-        CaiJingLogRequest request = new CaiJingLogRequest();
-        request.setLogType(logType);
-        request.setPresentationTimeStart(startDate);
-        request.setPresentationTimeEnd(endDate);
-        presentationLogService.deleteLog(request);
+    /**
+     * 获取借款主体为个人的CA认证客户编号
+     *
+     * @param borrowManinfos
+     * @return
+     */
+    private Map<Integer, String> getPersonCACustomerId(List<BorrowManinfoVO> borrowManinfos) {
+        Map<Integer, String> map = new HashMap<>();
+        for (BorrowManinfoVO borrowManinfoVO : borrowManinfos) {
+            // 用户CA认证记录表
+            CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+            request.setTrueName(borrowManinfoVO.getName());
+            request.setIdNo(borrowManinfoVO.getCardNo());
+            request.setIdType(0);
+            List<CertificateAuthorityVO> list = this.amUserClient.getCertificateAuthorityList(request);
+            if (list != null && list.size() > 0) {
+                map.put(list.get(0).getUserId(), list.get(0).getCustomerId());
+            } else {
+                // 借款主体CA认证记录表
+                LoanSubjectCertificateAuthorityRequest request1 = new LoanSubjectCertificateAuthorityRequest();
+                request1.setName(borrowManinfoVO.getName());
+                request1.setIdType(0);
+                request1.setIdNo(borrowManinfoVO.getCardNo());
+                List<LoanSubjectCertificateAuthorityVO> resultList = this.amUserClient
+                        .getSubjectCertificateAuthorityList(request1);
+                if (resultList != null && resultList.size() > 0) {
+                    map.put(resultList.get(0).getUserId(), resultList.get(0).getCustomerId());
+                }
+            }
+        }
+        return map;
     }
+
 }
