@@ -48,14 +48,12 @@
   <resultMap id="borrowManinfoResult" type="com.hyjf.am.vo.trade.borrow.BorrowManinfoVO" >
     <result column="name" property="name"/>
     <result column="card_no" property="cardNo"/>
-    <result column="id_type" property="idType" />
   </resultMap>
 
   <select id="getBorrowManinfoList" resultMap="borrowManinfoResult" parameterType="java.lang.String">
     SELECT
     m.name,
-    m.card_no,
-    0 AS id_type
+    m.card_no
     FROM ht_borrow_maninfo m
     WHERE borrow_nid IN
     <foreach collection="set" index="index" item="item" open="(" close=")" separator=",">
