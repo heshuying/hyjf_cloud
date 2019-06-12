@@ -318,4 +318,20 @@ public class AdminHjhCreditTenderCustomizeVO extends BaseVO implements Serializa
 	public void setAssignServiceApr(String assignServiceApr) {
 		this.assignServiceApr = assignServiceApr;
 	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getStateDesc() {
+		return stateDesc;
+	}
+
+	public void setStateDesc(String stateDesc) {
+		this.stateDesc = stateDesc;
+	}
 }
