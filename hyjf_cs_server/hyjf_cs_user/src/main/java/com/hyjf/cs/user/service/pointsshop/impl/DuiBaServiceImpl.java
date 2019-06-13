@@ -60,21 +60,20 @@ public class DuiBaServiceImpl implements DuiBaService {
 		try {
 			// 平台
 			String platform = request.getParameter("platform");
-			// 用户id(未登录时前端传"not_login")
-			String uid = request.getParameter("uid");
 			// 用户积分
 			String credits = request.getParameter("credits");
 			// 登录前url(用于游客登录后子再跳转回之前的页面)
 			String redirect = request.getParameter("redirect");
+            // 用户id
+            String uid = "";
+            // 如果userId为空，那么为游客模式，否则用户已登录
+            if (null == userId){
+                uid = NOT_LOGIN;
+            } else {
+                uid = String.valueOf(userId);
+            }
 			// 校验参数
-			if (StringUtils.isBlank(uid) || StringUtils.isBlank(credits)) {
-				ret.put("status", "1");
-				ret.put("statusDesc", "参数错误");
-				ret.put("duiBaUrl", "");
-				return ret;
-			}
-			// 非游客模式下，判断网关传的userId是否为空
-			if (!NOT_LOGIN.equals(uid) && null == userId){
+			if (StringUtils.isBlank(credits) || StringUtils.isBlank(platform)) {
 				ret.put("status", "1");
 				ret.put("statusDesc", "参数错误");
 				ret.put("duiBaUrl", "");

@@ -24,7 +24,7 @@ public class DuiBaCallUtils {
 
     private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
-    private static final String REQUEST_DUIBA= "/call";
+    private static final String REQUEST_DUIBA= "http://PAY/duiba/call";
 
     public static DuiBaCallResultBean duiBaCall(DuiBaCallBean bean){
         DuiBaCallResultBean resultBean = null;
@@ -39,9 +39,8 @@ public class DuiBaCallUtils {
             return resultBean;
         }
         logger.info("内部服务调用兑吧接口开始：类型:{},兑吧订单号:{}", bean.getMsgType(), bean.getOrderNum());
-        // 拼接url并请求
-        // todo wangjun 这个暂时考虑写死，放在配置文件需要把用到URLSystemConfig的工程全部加上，感觉没必要，维护性也不好
-        String url = "http://PAY/duiba" + REQUEST_DUIBA;
+        // 请求pay工程
+        String url = REQUEST_DUIBA;
         try {
             String result = restTemplate.postForEntity(url, bean, String.class).getBody();
             if(StringUtils.isNotBlank(result)){
