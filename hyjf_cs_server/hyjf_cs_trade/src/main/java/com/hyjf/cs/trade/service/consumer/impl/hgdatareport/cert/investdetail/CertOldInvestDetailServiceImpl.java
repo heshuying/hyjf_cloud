@@ -259,7 +259,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		if(hjhDebtCreditTenders==null||hjhDebtCreditTenders.size()==0){
 			return;
 		}
-		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		if(usersInfo==null||usersInfo.getIdcard()==null){
 			return;
@@ -271,7 +270,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getAssignPlanNid());
 		//交易类型
 		param.put("transType", "8");
 		//交易金额
@@ -289,7 +288,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param1.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
+		param1.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getAssignPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
@@ -309,7 +308,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		if(hjhDebtCreditTenders==null||hjhDebtCreditTenders.size()==0){
 			return;
 		}
-		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		if(usersInfo==null||usersInfo.getIdcard()==null){
 			return;
@@ -321,7 +319,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getAssignPlanNid());
 		//交易类型
 		param.put("transType", "2");
 		//交易金额
