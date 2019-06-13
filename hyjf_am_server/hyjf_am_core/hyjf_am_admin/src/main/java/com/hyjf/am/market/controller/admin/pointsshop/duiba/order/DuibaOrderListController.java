@@ -197,7 +197,7 @@ public class DuibaOrderListController {
             // 根据优惠券编码查询优惠券
             CouponConfig configVO = couponConfigService.selectCouponConfig(duibaOrderVO.getCommodityCode());
             CouponUserRequest couponUserRequest = new CouponUserRequest();
-            if(configVO!=null){
+            if(configVO!=null&&configVO.getDelFlag()==0){
                 // 截止日
                 if (configVO.getExpirationType() == 1) {
                     couponUserRequest.setEndTime(configVO.getExpirationDate());
@@ -270,7 +270,7 @@ public class DuibaOrderListController {
                 }
             }else{
                 errorFlag = true;
-                errorMessage = "优惠券发放失败，根据优惠卷编码没有找到对应优惠卷信息！";
+                errorMessage = "优惠券发放失败，根据优惠卷编码没有找到对应优惠卷信息或该优惠卷无效！";
                 logger.error("【兑吧】优惠券发放失败！异常如下：根据优惠卷编码没有找到对应优惠卷信息！");
             }
             if (errorFlag) {
