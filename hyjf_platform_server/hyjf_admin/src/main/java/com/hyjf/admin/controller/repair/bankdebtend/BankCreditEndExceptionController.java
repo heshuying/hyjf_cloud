@@ -2,11 +2,13 @@ package com.hyjf.admin.controller.repair.bankdebtend;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.exception.BankCreditEndService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -50,6 +52,9 @@ public class BankCreditEndExceptionController extends BaseController {
     @Autowired
     BankCreditEndService bankCreditEndService;
 
+    @Autowired
+    AdminCommonService adminCommonService;
+
     /** 权限 */
     public static final String PERMISSIONS = "bankdebtend";
     /**
@@ -60,7 +65,15 @@ public class BankCreditEndExceptionController extends BaseController {
     @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
     @PostMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<BankCreditEndVO>> getList(@RequestBody BankCreditEndListRequest requestBean){
+    public AdminResult<Map<String,Object>> getList(@RequestBody BankCreditEndListRequest requestBean){
+        Map<String,Object> resultMap = new HashMap<>();
+        //债权结束状态
+        List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
+        resultMap.put("creditendStateList",creditendStateList);
+        //结束债权类型
+        List<DropDownVO> creditendTypeList = adminCommonService.getParamNameList("CREDITEND_TYPE");
+        resultMap.put("creditendTypeList",creditendTypeList);
+
         Integer count = bankCreditEndService.getCreditEndCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         page.setTotal(count);
@@ -68,8 +81,10 @@ public class BankCreditEndExceptionController extends BaseController {
         requestBean.setLimitEnd(page.getLimit());
 
         List<BankCreditEndVO> recordList = bankCreditEndService.getCreditEndList(requestBean);
+        resultMap.put("list",recordList);
+        resultMap.put("count",count);
 
-        return new AdminResult<>(ListResult.build(recordList, count));
+        return new AdminResult<Map<String,Object>>(resultMap);
     }
 
     /**

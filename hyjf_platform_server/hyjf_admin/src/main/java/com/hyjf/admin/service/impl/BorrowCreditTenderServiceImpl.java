@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -15,6 +16,7 @@ import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
@@ -79,6 +81,9 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     @Autowired
     CommonProducer commonProducer;
+
+    @Autowired
+    private AdminCommonService adminCommonService;
 
     public static final String HZR_PREFIX = "HZR";
 
@@ -181,6 +186,10 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public AdminResult getCreditTenderList(BorrowCreditTenderRequest request) {
         AdminResult result = new AdminResult();
         BorrowCreditTenderResultBean bean = new BorrowCreditTenderResultBean();
+        //债权结束状态
+        List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
+        bean.setCreditendStateList(creditendStateList);
+
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
         AdminCreditTenderResponse response = baseClient.postExe(TENDER_COUNT_URL, req, AdminCreditTenderResponse.class);
