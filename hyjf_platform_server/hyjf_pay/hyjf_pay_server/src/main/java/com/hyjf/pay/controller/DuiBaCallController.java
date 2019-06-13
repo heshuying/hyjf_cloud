@@ -107,6 +107,7 @@ public class DuiBaCallController extends BaseController {
 		result.setBizId(bizId);
 		result.setErrorMessage(errorMessage);
 		result.setCredits(credits);
+		logger.info("兑吧扣积分接口回调:{}", JSONObject.toJSONString(result));
 		// 返回扣积分结果json信息
 		return result.toString();
 	}
@@ -219,8 +220,9 @@ public class DuiBaCallController extends BaseController {
 		} catch (Exception e) {
             // 发放失败
 			result.setErrorMessage(e.getMessage());
-			logger.error("兑吧自由商品充值接口回调发生错误：", e);
+			logger.error("兑吧自有商品充值接口回调发生错误：", e);
 		}
+		logger.info("兑吧自有商品充值接口回调:{}", JSONObject.toJSONString(result));
 		return result;
 	}
 
