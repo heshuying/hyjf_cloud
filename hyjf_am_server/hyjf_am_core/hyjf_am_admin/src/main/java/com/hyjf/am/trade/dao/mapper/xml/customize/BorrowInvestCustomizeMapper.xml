@@ -63,11 +63,11 @@
 			<if test="productType != null and productType != ''">
 				AND  b.project_type = #{productType}
 			</if>
-			<if test="stateSrch != null and stateSrch != '' and stateSrch != 'W'">
+			<if test='stateSrch != null and stateSrch != "" and stateSrch != "W"'>
 				AND bce.state = #{stateSrch}
 			</if>
 			<!-- 查询未开始 -->
-			<if test="stateSrch != null and stateSrch != '' and stateSrch == 'W'">
+			<if test='stateSrch != null and stateSrch != "" and stateSrch == "W"'>
 				AND bce.id is null
 			</if>
 		</where>
@@ -80,6 +80,7 @@
 		    ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -90,6 +91,7 @@
 		    ht_borrow_tender bt
 		  INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
           INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
+		  LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -376,6 +378,7 @@
 		FROM
 			ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 	    <include refid="Where_Clause" />
 	</select>
 

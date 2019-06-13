@@ -76,6 +76,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getSellOrderId())){
 			param.put("sellOrderId",request.getSellOrderId());
 		}
+		if(StringUtils.isNotBlank(request.getStateSrch())){
+			param.put("stateSrch",request.getStateSrch());
+		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		int count = adminHjhCreditTenderCustomizeMapper.countDebtCreditTender(param);

@@ -716,7 +716,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         StartCreditEndRequest requestBean = new StartCreditEndRequest();
         requestBean.setOrgOrderId(orderId);
         requestBean.setCreditEndType(5);
-        requestBean.setStartFrom(3); //计划债转信息
+        requestBean.setStartFrom(1); //出借明细
 
         return baseClient.postExeNoException(CREDITEND_URL, requestBean, IntegerResponse.class);
     }
