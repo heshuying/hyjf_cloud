@@ -13,22 +13,20 @@ import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {
@@ -46,6 +44,8 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Value("${hyjf.web.host}")
     private String webUrl;
 
+    private Random random = new Random();
+
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
         ContentArticleExample example = new ContentArticleExample();
@@ -61,7 +61,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
                 example.setLimitEnd(limitEnd);
             }
             ContentArticleExample.Criteria crt = example.createCriteria();
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(request.getNoticeType())) {
+            if (StringUtils.isNotBlank(request.getNoticeType())) {
                 crt.andTypeEqualTo(request.getNoticeType());
             }
             crt.andStatusEqualTo(1);
@@ -256,6 +256,14 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         crt.andStatusEqualTo(1);
         example.setOrderByClause("create_time Desc");
         List<ContentArticle> contentArticles = contentArticleMapper.selectByExample(example);
+        if("20".equals(noticeType)) {// 公司动态添加默认随机图片  add by wgx 2019/06/13
+            List imageList = RedisUtils.getObj(RedisConstants.APP_FIND_IMAGE + "company", List.class);
+            contentArticles.stream().forEach(article -> {
+                if (org.apache.commons.lang3.StringUtils.isBlank(article.getImgurl())) {
+                    article.setImgurl(getArticleImgUrl(imageList, noticeType, imageList != null && imageList.size() > 0 ? random.nextInt(imageList.size()) : -1));
+                }
+            });
+        }
         return contentArticles;
     }
 
@@ -352,11 +360,36 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     public List<ContentArticleCustomize> getContentArticleListByType(Map<String, Object> params) {
         List<ContentArticle> list = contentArticleCustomizeMapper.getContentArticleListByType(params);
         List<ContentArticleCustomize> knowledgeCustomizes = new ArrayList<ContentArticleCustomize>();
+        String type = (String) params.get("type");
+        List imageList = RedisUtils.getObj(RedisConstants.APP_FIND_IMAGE + "company", List.class);
         for (ContentArticle contentArticle : list) {
-            knowledgeCustomizes.add(this.buildContentArticleCustomize(contentArticle, (String) params.get("type")));
+            ContentArticleCustomize knowledge = this.buildContentArticleCustomize(contentArticle, type);
+            if(org.apache.commons.lang3.StringUtils.isBlank(knowledge.getImgurl())){
+                knowledge.setImgurl(getArticleImgUrl(imageList, type, imageList != null && imageList.size() > 0 ? random.nextInt(imageList.size()) : -1));
+            }
+            knowledgeCustomizes.add(knowledge);
         }
         return knowledgeCustomizes;
     }
+
+    /**
+     * 公司动态添加默认图片
+     * @param imageList
+     * @param type
+     * @param index
+     * @return
+     * @author wgx
+     * @date 2019/06/13
+     */
+    private String getArticleImgUrl(List imageList, String type, int index) {
+        if ("20".equals(type)) {// 公司动态type = 20
+            if (index >= 0) {
+                return String.valueOf(imageList.get(index));
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 上下翻页
@@ -402,6 +435,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
                 "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", type)
                 + "?ignoreSign=true"
         );
+        customize.setImgurl(contentArticle.getImgurl());
         logger.debug("customize is: {}", customize);
         return customize;
     }
