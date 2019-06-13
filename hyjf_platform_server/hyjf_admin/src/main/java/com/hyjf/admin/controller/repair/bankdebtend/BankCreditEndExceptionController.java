@@ -105,7 +105,7 @@ public class BankCreditEndExceptionController extends BaseController {
         }
 
         List<BankCallBean> queryList = bankCreditEndService.queryBatchDetails(requestBean);
-        if(queryList == null){
+        if(queryList == null || queryList.isEmpty()){
             logger.error("结束债权(新)同步，请求银行接口失败返回null");
             return new AdminResult<>(FAIL, "请求银行接口失败");
         }

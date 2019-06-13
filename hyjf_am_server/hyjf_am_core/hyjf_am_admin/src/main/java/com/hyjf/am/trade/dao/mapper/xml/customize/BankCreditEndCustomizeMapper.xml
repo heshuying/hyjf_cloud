@@ -62,7 +62,7 @@
             AND bce.tx_date <![CDATA[>=]]> REPLACE(#{commitTimeStartSrch},'-','')
         </if>
         <if test="commitTimeEndSrch != null and commitTimeEndSrch != ''">
-            AND bce.tx_date <![CDATA[<=]]> REPLACE(#{repayTimeEndSrch},'-','')
+            AND bce.tx_date <![CDATA[<=]]> REPLACE(#{commitTimeEndSrch},'-','')
         </if>
     </sql>
 	<select id="selectCreditEndList" parameterType="com.hyjf.am.resquest.trade.BankCreditEndListRequest" resultMap="BankCreditEndResultMap">
