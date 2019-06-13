@@ -152,9 +152,9 @@ public class DuiBaCallController extends BaseController {
 				// 兑换成功（更新优惠卷为有效）
 				// 传兑吧订单号
 				String url = "http://ADMIN/hyjf-admin/pointsshop/duiba/order/activationSuccess/" + params.getOrderNum();
-				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
+				StringResponse couponUserStr = restTemplate.getForEntity(url, StringResponse.class).getBody();
 				if (couponUserStr != null) {
-					if(!status.equals(couponUserStr)){
+					if(!status.equals(couponUserStr.getResultStr())){
 						// 更新优惠卷为有效处理失败
 						logger.error("更新优惠卷为有效处理失败！orderNum：" + params.getOrderNum());
 					}
@@ -163,11 +163,11 @@ public class DuiBaCallController extends BaseController {
 				// 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息（更新虚拟商品充值状态处理中（异常码））
 				// 传兑吧订单号
 				String url = "http://ADMIN/hyjf-admin/pointsshop/duiba/order/activationError/" + params.getOrderNum() + "/" + params.getErrorMessage();
-				String couponUserStr = restTemplate.getForEntity(url, String.class).getBody();
+				StringResponse couponUserStr = restTemplate.getForEntity(url, StringResponse.class).getBody();
 				if (couponUserStr != null) {
-					if(!status.equals(couponUserStr)){
+					if(!status.equals(couponUserStr.getResultStr())){
 						// 回滚失败
-						logger.error("订单回滚失败失败！orderNum：" + params.getOrderNum());
+						logger.error("订单回滚失败！orderNum：" + params.getOrderNum());
 					}
 				}
 			}

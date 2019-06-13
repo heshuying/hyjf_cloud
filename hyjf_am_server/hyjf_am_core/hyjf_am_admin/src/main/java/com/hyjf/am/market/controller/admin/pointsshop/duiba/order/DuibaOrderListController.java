@@ -125,8 +125,6 @@ public class DuibaOrderListController {
         // 同步接口开始 DuiBaCallUtils.duiBaCall()
         logger.info("订单同步接口开始同步，orderId  = {orderId}");
         // 查询需要同步的订单信息（兑吧订单表）
-        // 商品类型为充值
-        String productType = "2";
         DuibaOrderVO duibaOrderVO = duibaOrderListService.findOneOrder(orderId);
         DuiBaCallBean duiBaCallBean = new DuiBaCallBean();
         duiBaCallBean.setOrderNum(duibaOrderVO.getDuibaOrderId());
@@ -157,70 +155,13 @@ public class DuibaOrderListController {
                 }
                 // 设置更新时间
                 duibaOrderVO.setUpdateTime(new Date());
-                // 判断之前是否失败且兑吧返回的处理状态为成功，如果之前失败则执行以下操作
-                if (duibaOrderVO.getActivationType() == 1 && duibaOrderVO.getOrderStatus() == 0) {
-                    // 判断优惠卷和订单信息是否存在，如果订单和用户优惠卷表的信息不为空，且都是未生效状态，且兑吧接口返回成功，则回滚用户积分，减积分
-                    if(duibaOrderVO!=null){
-                        // 查询优惠卷表
-                        CouponUser couponUser = couponUserService.selectCouponUserById(duibaOrderVO.getCouponUserId());
-                        if(couponUser!=null){
-                            if(duibaOrderVO.getActivationType()==1&&couponUser.getDelFlag()==1&&duibaOrderVO.getOrderStatus()==0){
-                                // - - - - - - - - - - - - - - - - （成功）回滚用户积分，减积分 - start - - - - - - - - - - - - - -
-                                // 更新用户表积分，根据订单号查询积分明细表
-                                DuibaPointsVO duibaPointsVO = duibaPointsListService.getDuibaPointsByOrdId(String.valueOf(orderId));
-                                // 回滚积分（当前用户最新积分+积分明细表积分）
-                                if (duibaPointsVO != null) {
-                                    // 查询用户最新积分
-                                    User user = userService.findUserByUserId(duibaPointsVO.getUserId());
-                                    Integer points = user.getPointsCurrent() - duibaPointsVO.getPoints();
-                                    if (user != null) {
-                                        // 更新积分
-                                        User userUp = new User();
-                                        userUp.setUserId(user.getUserId());
-                                        userUp.setPointsCurrent(points);
-                                        int userUpCont = userService.updateUserById(userUp);
-                                        if (userUpCont == 0) {
-                                            logger.error("根据userid：[" + duibaPointsVO.getUserId() + "]，对用户的金币进行扣减，没有更新到用户信息，操作失败！");
-                                            return "用户积分更新失败！";
-                                        }
-                                        // 虚拟商品充值状态（处理完成）
-                                        duibaOrderVO.setRechargeState("处理完成");
-                                        // 订单有效状态
-                                        duibaOrderVO.setActivationType(0);
-                                        // 更新订单状态为成功
-                                        duibaOrderVO.setOrderStatus(0);
-                                    } else {
-                                        logger.error("根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
-                                        return "没有查询到用户信息！";
-                                    }
-                                } else {
-                                    logger.error("根据订单号查询积分明细表数据为空，操作失败！orderId：" + orderId);
-                                    return "没有查询到用户积分明细！";
-                                }
-                                // - - - - - - - - - - - - - - - - （成功）回滚用户积分，减积分 - end - - - - - - - - - - - - - -
-                                // 判断该笔订单是否为“充值”（优惠卷）
-                                if (productType.equals(duibaOrderVO.getProductType())) {
-                                    // 执行更新优惠卷用户表
-                                    CouponUserRequest couponUserRequest = new CouponUserRequest();
-                                    couponUserRequest.setId(duibaOrderVO.getCouponUserId());
-                                    // 更新优惠卷用户表为有效
-                                    int flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
-                                    if (flagCount == 0) {
-                                        logger.error("优惠卷用户表id：[" + duibaOrderVO.getCouponUserId() + "]，更新优惠卷用户表为有效，操作失败！");
-                                        return "优惠卷用户更新失败！";
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
                 // 执行更新订单表（更新订单状态，发货状态，订单有效状态，虚拟商品充值状态）
                 duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
             } else {
                 return duiBaCallResultBean.getErrorMessage();
             }
         }else{
-            logger.error("兑吧接口调用失败！，操作失败！orderId：" + orderId);
+            logger.error("【兑吧】兑吧接口调用失败！，操作失败！orderId：" + orderId);
             return "兑吧接口调用失败！";
         }
         return "success";
@@ -320,16 +261,17 @@ public class DuibaOrderListController {
                         }
                     } catch (Exception e) {
                         errorFlag = true;
-                        logger.error("优惠券发放失败！异常如下：" + e.getMessage());
+                        logger.error("【兑吧】优惠券发放失败！异常如下：" + e.getMessage());
                     }
                 } else {
                     errorFlag = true;
                     errorMessage = "优惠券发行数量超出上限，不再发放，操作失败！";
+                    logger.error("【兑吧】优惠券发行数量超出上限，不再发放，操作失败！");
                 }
             }else{
                 errorFlag = true;
                 errorMessage = "优惠券发放失败，根据优惠卷编码没有找到对应优惠卷信息！";
-                logger.error("优惠券发放失败！异常如下：根据优惠卷编码没有找到对应优惠卷信息！");
+                logger.error("【兑吧】优惠券发放失败！异常如下：根据优惠卷编码没有找到对应优惠卷信息！");
             }
             if (errorFlag) {
                 virtualVO.setStatus(fail);
@@ -373,77 +315,115 @@ public class DuibaOrderListController {
                 if (duiBaCallResultBean.isSuccess()) {
                     // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
                     if ("fail".equals(duiBaCallResultBean.getStatus())) {
-                        // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
-                        // 根据订单号查询积分明细表
-                        DuibaPointsVO duibaPointsVO = duibaPointsListService.getDuibaPointsByOrdId(orderNum);
-                        // 回滚积分（当前用户最新积分+积分明细表积分）
-                        if (duibaPointsVO != null) {
-                            // 查询用户最新积分
-                            User user = userService.findUserByUserId(duibaPointsVO.getUserId());
-                            Integer points = user.getPointsCurrent() + duibaPointsVO.getPoints();
-                            if (user != null) {
-                                // 更新积分
-                                User userUp = new User();
-                                userUp.setUserId(user.getUserId());
-                                userUp.setPointsCurrent(points);
-                                int userUpCont = userService.updateUserById(userUp);
-                                if (userUpCont == 0) {
-                                    throw new Exception("根据userid：[" + duibaPointsVO.getUserId() + "]，对用户的金币进行返还，没有更新到用户信息，回滚操作失败！");
+                        // 调用订单同步接口，返回订单状态为失败！
+                        // 查询优惠卷表
+                        CouponUser couponUser = couponUserService.selectCouponUserById(duibaOrderVOStr.getCouponUserId());
+                        if(couponUser==null){
+                            if(duibaOrderVO.getActivationType()==1&&couponUser.getDelFlag()==1){
+                                // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
+                                // 根据订单号查询积分明细表(订单取消)
+                                DuibaPointsVO duibaPointsVOQc = duibaPointsListService.getDuibaPointsByOrdId(orderNum,2);
+                                // 根据订单号查询积分明细表(商品兑换)
+                                DuibaPointsVO duibaPointsVO = duibaPointsListService.getDuibaPointsByOrdId(orderNum,1);
+                                // 回滚积分（当前用户最新积分+积分明细表积分）
+                                // 兑吧积分明细不为空且订单为“非订单取消状态”回滚积分
+                                if (duibaPointsVO != null) {
+                                    if(duibaPointsVOQc==null) {
+                                        // 查询用户最新积分
+                                        User user = userService.findUserByUserId(duibaPointsVO.getUserId());
+                                        Integer points = user.getPointsCurrent() + duibaPointsVO.getPoints();
+                                        if (user != null) {
+                                            // 更新积分
+                                            User userUp = new User();
+                                            userUp.setUserId(user.getUserId());
+                                            userUp.setPointsCurrent(points);
+                                            int userUpCont = userService.updateUserById(userUp);
+                                            if (userUpCont == 0) {
+                                                throw new Exception("【兑吧】根据userid：[" + duibaPointsVO.getUserId() + "]，对用户的金币进行返还，没有更新到用户信息，回滚操作失败！");
+                                            } else {
+                                                // 插入积分明细
+                                                DuibaPointsVO duibaPoints = new DuibaPointsVO();
+                                                // 用户id
+                                                duibaPoints.setUserId(Integer.valueOf(duibaOrderVOStr.getUserId()));
+                                                // 用户名
+                                                duibaPoints.setUserName(duibaOrderVOStr.getUserName());
+                                                // 用户真实姓名
+                                                duibaPoints.setTrueName(duibaOrderVOStr.getTrueName());
+                                                // 操作积分数
+                                                duibaPoints.setPoints(duibaPointsVO.getPoints());
+                                                // 用户操作后总积分
+                                                duibaPoints.setTotal(points);
+                                                // 积分类型 0:获取，1:使用
+                                                duibaPoints.setType(1);
+                                                // 积分业务类型  0出借 1商品兑换 2订单取消
+                                                duibaPoints.setBusinessName(2);
+                                                // 兑吧订单号
+                                                duibaPoints.setDuibaOrderId(duibaOrderVOStr.getDuibaOrderId());
+                                                // 汇盈订单号
+                                                duibaPoints.setHyOrderId(duibaOrderVOStr.getHyOrderId());
+                                                duibaPointsListService.insertDuibaPoints(duibaPoints);
+                                            }
+                                        } else {
+                                            logger.error("【兑吧】根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
+                                            response.setResultStr("error");
+                                        }
+                                    }else{
+                                        logger.error("【兑吧】此订单回滚已完成，无需再次回滚！userid：" + duibaPointsVO.getUserId());
+                                    }
+                                } else {
+                                    logger.error("【兑吧】根据订单号查询积分明细表数据为空，操作失败！orderNum：" + orderNum);
+                                    response.setResultStr("error");
                                 }
-                            } else {
-                                logger.error("根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
-                                response.setResultStr("error");
+                                // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
                             }
-                        } else {
-                            logger.error("根据订单号查询积分明细表数据为空，操作失败！orderNum：" + orderNum);
-                            response.setResultStr("error");
+                            // 优惠卷为有效且判断该笔订单是否为“充值”（优惠卷）
+                            if (couponUser.getDelFlag()==0&&productType.equals(duibaOrderVOStr.getProductType())) {
+                                CouponUserBeanRequest couponUserBeanRequest = new CouponUserBeanRequest();
+                                // 设置主键
+                                couponUserBeanRequest.setId(duibaOrderVOStr.getCouponUserId());
+                                // 设置无效描述
+                                couponUserBeanRequest.setContent("兑吧兑换结果通知接口返回失败，操作失败，回滚该笔数据！");
+                                // 设置优惠卷用户表无效
+                                int couponUpCount = couponUserService.delDuibaCouponUserById(couponUserBeanRequest);
+                                if (couponUpCount == 0) {
+                                    throw new Exception("【兑吧】根据优惠卷用户id：[" + duibaOrderVOStr.getCouponUserId() + "]，将发放的优惠卷设置成无效，没有更新到优惠卷用户信息，操作失败，回滚操作失败！");
+                                }
+                            }
                         }
-                        // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
+                        // - - - - - - - - - - - - - - - - - - - - - - - - - -
+                        duibaOrderVO.setId(duibaOrderVOStr.getId());
+                        // 设置订单无效
+                        duibaOrderVO.setActivationType(1);
+                        // 设置更新日期
+                        duibaOrderVO.setUpdateTime(new Date());
+                        // 设置订单状态为失败
+                        duibaOrderVO.setOrderStatus(1);
+                        // 判断该笔订单是否为“充值”（优惠卷）
+                        if (productType.equals(duibaOrderVOStr.getProductType())) {
+                            // 更新虚拟商品充值状态
+                            if (StringUtils.isNotEmpty(errorMessage)) {
+                                duibaOrderVO.setRechargeState("处理中（" + errorMessage + "）");
+                            }
+                        }
+                        // 设置失败原因
+                        duibaOrderVO.setRemark("兑吧兑换结果通知接口返回失败，回滚该笔数据，操作失败！");
+                        // 根据订单信息更新订单状态
+                        res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
+                        if (res == 0) {
+                            throw new Exception("【兑吧】根据兑吧订单表id：[" + duibaOrderVOStr.getId() + "]，更新订单状态设置订单为无效，没有更新到订单信息，回滚操作失败！");
+                        }
+                        response.setResultStr("success");
+                    }else{
+                        // 调用订单同步接口，返回订单状态为成功！
+                        response.setResultStr(this.success(orderNum).getResultStr());
                     }
                 }
-                // - - - - - - - - - - - - - - - - 调用兑吧接口返回失败回滚积分逻辑 - end - - - - -  - - - - - - -
-                // 判断该笔订单是否为“充值”（优惠卷）
-                if (productType.equals(duibaOrderVOStr.getProductType())) {
-                    CouponUserBeanRequest couponUserBeanRequest = new CouponUserBeanRequest();
-                    // 设置主键
-                    couponUserBeanRequest.setId(duibaOrderVOStr.getCouponUserId());
-                    // 设置无效描述
-                    couponUserBeanRequest.setContent("兑吧兑换结果通知接口返回失败，操作失败，回滚该笔数据！");
-                    // 设置优惠卷用户表无效
-                    int couponUpCount = couponUserService.delDuibaCouponUserById(couponUserBeanRequest);
-                    if (couponUpCount == 0) {
-                        throw new Exception("根据优惠卷用户id：[" + duibaOrderVOStr.getCouponUserId() + "]，将发放的优惠卷设置成无效，没有更新到优惠卷用户信息，操作失败，回滚操作失败！");
-                    }
-                }
-                // - - - - - - - - - - - - - - - - - - - - - - - - - -
-                duibaOrderVO.setId(duibaOrderVOStr.getId());
-                // 设置订单无效
-                duibaOrderVO.setActivationType(1);
-                // 设置更新日期
-                duibaOrderVO.setUpdateTime(new Date());
-                // 设置订单状态为失败
-                duibaOrderVO.setOrderStatus(1);
-                // 判断该笔订单是否为“充值”（优惠卷）
-                if (productType.equals(duibaOrderVOStr.getProductType())) {
-                    // 更新虚拟商品充值状态
-                    if (StringUtils.isNotEmpty(errorMessage)) {
-                        duibaOrderVO.setRechargeState("处理中（" + errorMessage + "）");
-                    }
-                }
-                // 设置失败原因
-                duibaOrderVO.setRemark("兑吧兑换结果通知接口返回失败，回滚该笔数据，操作失败！");
-                // 根据订单信息更新订单状态
-                res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
-                if (res == 0) {
-                    throw new Exception("根据兑吧订单表id：[" + duibaOrderVOStr.getId() + "]，更新订单状态设置订单为无效，没有更新到订单信息，回滚操作失败！");
-                }
-                response.setResultStr("success");
             } else {
-                logger.error("回滚操作失败！，操作失败，没有查询到兑吧订单信息 订单id：" + orderNum);
+                logger.error("【兑吧】回滚操作失败！，操作失败，没有查询到兑吧订单信息 订单id：" + orderNum);
                 response.setResultStr("error");
             }
         } catch (Exception e) {
-            logger.error("回滚操作失败！，操作失败，异常如下：" + e.getMessage());
+            logger.error("【兑吧】回滚操作失败！，操作失败，异常如下：" + e.getMessage());
             response.setResultStr("error");
         }
         return response;
@@ -475,6 +455,8 @@ public class DuibaOrderListController {
                 flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
                 // 虚拟商品充值状态
                 duibaOrderVO.setRechargeState("处理完成");
+                // 完成时间
+                duibaOrderVO.setCompletionTime(GetDate.getNowTime10());
             }
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             // 更新订单为有效
@@ -486,11 +468,11 @@ public class DuibaOrderListController {
                 response.setResultStr("success");
             } else {
                 response.setResultStr("error");
-                logger.error("操作失败！更新优惠卷用户表或更新虚拟商品充值状态失败 优惠卷用户表id：" + duibaOrderVOStr.getCouponUserId());
+                logger.error("【兑吧】操作失败！更新优惠卷用户表或更新虚拟商品充值状态失败 优惠卷用户表id：" + duibaOrderVOStr.getCouponUserId());
             }
         } else {
             response.setResultStr("error");
-            logger.error("操作失败！没有查询到兑吧订单信息 订单表id：" + orderNum);
+            logger.error("【兑吧】操作失败！没有查询到兑吧订单信息 订单表id：" + orderNum);
         }
         return response;
     }

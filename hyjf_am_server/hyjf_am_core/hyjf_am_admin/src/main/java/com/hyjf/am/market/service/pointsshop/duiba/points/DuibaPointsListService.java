@@ -43,5 +43,5 @@ public interface DuibaPointsListService {
      * @param ordId
      * @return
      */
-    DuibaPointsVO getDuibaPointsByOrdId(String ordId);
+    DuibaPointsVO getDuibaPointsByOrdId(String ordId,Integer businessName);
 }

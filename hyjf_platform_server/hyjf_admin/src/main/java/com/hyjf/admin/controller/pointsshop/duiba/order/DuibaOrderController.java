@@ -171,7 +171,9 @@ public class DuibaOrderController extends BaseController {
             virtualResult.setStatus(virtualResultResponse.getResult().getStatus());
             virtualResult.setSupplierBizId(virtualResultResponse.getResult().getSupplierBizId());
             virtualResult.setErrorMessage(virtualResultResponse.getResult().getErrorMessage());
-            virtualResult.setCredits(Long.valueOf(virtualResultResponse.getResult().getCredits()));
+            if(StringUtils.isNotEmpty(virtualResultResponse.getResult().getCredits())){
+                virtualResult.setCredits(Long.valueOf(virtualResultResponse.getResult().getCredits()));
+            }
         }
         return virtualResult;
     }
