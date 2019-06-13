@@ -1758,8 +1758,11 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							}
 							// 用户名称
 							creditRepay.setUserId(userId);
+							creditRepay.setUserName(creditTender.getUserName());//用户名称
 							// 出让人id
 							creditRepay.setCreditUserId(creditTender.getCreditUserId());
+							creditRepay.setCreditUserName(creditTender.getCreditUserName());//出让人名称
+
 							// 状态
 							creditRepay.setStatus(0);
 							// 原标标号
