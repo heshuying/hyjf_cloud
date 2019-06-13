@@ -73,6 +73,8 @@ public class SponsorLogController extends BaseController {
     private AdminResult insertSponsorLog(HttpServletRequest request,@RequestBody SponsorLogRequest sponsorLogRequest) {
 		sponsorLogRequest.setAdminUserName(this.getUser(request).getUsername());
 		sponsorLogRequest.setAdminUserId(Integer.valueOf(this.getUser(request).getId()));
+		sponsorLogRequest.setStatus(0);
+		sponsorLogRequest.setDelFlag(0);
     	 SponsorLogResponse rs = sponsorLogService.insertSponsorLog(sponsorLogRequest);
     	 if(!Response.isSuccess(rs)) {
     		 return new AdminResult(AdminResult.FAIL, rs.getMessage());
