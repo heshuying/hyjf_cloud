@@ -142,6 +142,15 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         // 防止没查到数据的情况，直接给前端格式化
         DuiBaPointsDetailVO duiBaPointsDetailVO = new DuiBaPointsDetailVO();
         duiBaPointsDetailVO.setList(new ArrayList<>());
+        // 查询获取总积分
+        request.setType(0);
+        Integer pointsGetTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
+        duiBaPointsDetailVO.setCreditsGot(pointsGetTotal.toString());
+
+        // 查询使用总积分
+        request.setType(1);
+        Integer pointsUseTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
+        duiBaPointsDetailVO.setCreditsUsed(pointsUseTotal.toString());
         // 条数>0 做业务处理，否则就直接返回
         // 设置查询时间范围 如果month=0，那么是全年查询，否则是单月查询
         if(Integer.valueOf(month) == 0){
@@ -151,6 +160,8 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
             request.setStartTime(DateUtils.getMinMonthDate(year.concat("-").concat(month).concat("-01")));
             request.setEndTime(DateUtils.getMaxMonthDate(year.concat("-").concat(month).concat("-01")));
         }
+        // 还原原始请求类型，并获取明细条数
+        request.setType(requestType);
         Integer count = duiBaOrderCustomizeMapper.countPointsDetail(request);
         if(count > 0){
             List<DuiBaPointsListDetailVO> resultList = new ArrayList<>();
@@ -165,19 +176,7 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
 
-            // 查询获取总积分
-            request.setType(0);
-            Integer pointsGetTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
-            duiBaPointsDetailVO.setCreditsGot(pointsGetTotal.toString());
-
-            // 查询使用总积分
-            request.setType(1);
-            Integer pointsUseTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
-            duiBaPointsDetailVO.setCreditsUsed(pointsUseTotal.toString());
-
             // 获取积分明细
-            // 还原原始请求类型
-            request.setType(requestType);
             List<DuiBaPointsListDetailVO> list = duiBaOrderCustomizeMapper.selectPointsDetail(request);
             // 前一条数据月份
             int preMonth = 0;
