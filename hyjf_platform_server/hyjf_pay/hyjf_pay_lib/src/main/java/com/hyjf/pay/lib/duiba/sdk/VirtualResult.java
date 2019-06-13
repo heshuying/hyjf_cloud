@@ -6,6 +6,8 @@ public class VirtualResult {
 	private String errorMessage="";//失败信息
 	private String supplierBizId="";//虚拟商品充值流水号
 	private Long credits=-1L;
+
+	public VirtualResult(){}
 	
 	public VirtualResult(String status){
 		this.status=status;

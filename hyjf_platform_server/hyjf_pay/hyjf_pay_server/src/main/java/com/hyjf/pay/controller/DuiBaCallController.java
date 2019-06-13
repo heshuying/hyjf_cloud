@@ -219,7 +219,7 @@ public class DuiBaCallController extends BaseController {
 		} catch (Exception e) {
             // 发放失败
 			result.setErrorMessage(e.getMessage());
-			logger.error("兑吧兑换结果通知接口发生错误：", e);
+			logger.error("兑吧自由商品充值接口回调发生错误：", e);
 		}
 		return result;
 	}
