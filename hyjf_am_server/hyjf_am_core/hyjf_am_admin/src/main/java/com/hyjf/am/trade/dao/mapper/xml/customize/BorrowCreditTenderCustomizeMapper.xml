@@ -289,6 +289,7 @@
 		FROM
 		  ht_credit_tender ct
         INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = ct.assign_nid
 		<include refid="TENDER_WHERE_COLUMN"/>
 	</select>
 
@@ -319,11 +320,11 @@
 			<if test="client != null and client != ''">
 				AND ct.client=#{client}
 			</if>
-			<if test="stateSrch != null and stateSrch != '' and stateSrch != 'W'">
+			<if test='stateSrch != null and stateSrch != "" and stateSrch != "W"'>
 				AND bce.state = #{stateSrch}
 			</if>
 			<!-- 查询未开始 -->
-			<if test="stateSrch != null and stateSrch != '' and stateSrch == 'W'">
+			<if test='stateSrch != null and stateSrch != "" and stateSrch == "W"'>
 				AND bce.id is null
 			</if>
 			<!-- 时间 -->
