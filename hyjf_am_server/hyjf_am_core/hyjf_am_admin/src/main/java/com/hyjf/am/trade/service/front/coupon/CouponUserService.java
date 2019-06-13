@@ -62,6 +62,8 @@ public interface CouponUserService {
 
     int deleteCouponUserById(CouponUserBeanRequest couponUserBeanRequest);
 
+    int delDuibaCouponUserById(CouponUserBeanRequest request);
+
     int insertCouponUser(CouponUserRequest request);
 
     CouponUser insertByDuibaOrder(CouponUserRequest request);

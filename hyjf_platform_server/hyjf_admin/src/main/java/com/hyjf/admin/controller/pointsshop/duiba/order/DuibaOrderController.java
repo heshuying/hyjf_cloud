@@ -190,7 +190,7 @@ public class DuibaOrderController extends BaseController {
         if(StringUtils.isNotEmpty(duibaStr)){
             response.setResultStr(duibaStr);
         }
-        return new StringResponse();
+        return response;
     }
 
     /**
@@ -207,7 +207,7 @@ public class DuibaOrderController extends BaseController {
         if(StringUtils.isNotEmpty(duibaStr)){
             response.setResultStr(duibaStr);
         }
-        return new StringResponse();
+        return response;
     }
 
     /**
