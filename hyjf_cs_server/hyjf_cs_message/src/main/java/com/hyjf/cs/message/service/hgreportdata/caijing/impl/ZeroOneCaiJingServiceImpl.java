@@ -65,7 +65,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
     public static String sendUrl = "";
 
-    @Value("01caijing.send.url")
+    @Value("${01caijing.send.url}")
     public void setSendUrl(String caijingsendUrl) {
         ZeroOneCaiJingServiceImpl.sendUrl = caijingsendUrl;
     }
