@@ -748,8 +748,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								if (StringUtil.isBlank(bwb.getPlanNid())) {
 									try {
 										Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
-										// 判断标的当前状态是否是投资中的状态
-										if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isEmpty(nowBorrow.getPlanNid()) && bwb.getIsEngineUsed()== 0 ) {
+										BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+										// 判断标的当前状态是否是投资中的状态  排除温金投的标的
+										if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isEmpty(nowBorrow.getPlanNid()) && bwb.getIsEngineUsed()== 0
+												&& "10000000".equals(borrowInfo.getPublishInstCode()) ) {
 											logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
 											sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
 										}
@@ -1135,8 +1137,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						// 立即发标时,设置牛投邦状态为:1 预热中
 						try {
 							Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+							BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
 							// 判断标的当前状态是否是投资中的状态
-							if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0) {
+							if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0 && "10000000".equals(borrowInfo.getPublishInstCode())) {
 								logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
 								sendWbsBorrowInfo(borrow.getBorrowNid(), "1", 0);
 							}

@@ -6,6 +6,7 @@ package com.hyjf.am.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
@@ -175,7 +176,8 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 
 					// add by liuyang wbs系统标的状态发送 20190505 start
 					try {
-						if (borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())) {
+						BorrowInfo borrowInfo = this.batchBorrowRepayZTService.doGetBorrowInfoByNid(borrowNid);
+						if ("10000000".equals(borrowInfo.getPublishInstCode())&& borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())) {
 							// 最后一期还款成功后,发送标的已还款信息
 							JSONObject params = new JSONObject();
 							// 产品编号
