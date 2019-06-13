@@ -349,7 +349,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         // 投标金额大于可用余额
         if (account == null || new BigDecimal(transAmt).compareTo(account.getBankBalance()) > 0) {
             // app4.0 提示文案修改
-            ret.put("statusDesc", "提现金额不能大于可用金额.");
+            ret.put("statusDesc", "提现金额不能大于可用金额");
             ret.put("status", "1");
             ret.put("request", requestStr);
             return ret;
