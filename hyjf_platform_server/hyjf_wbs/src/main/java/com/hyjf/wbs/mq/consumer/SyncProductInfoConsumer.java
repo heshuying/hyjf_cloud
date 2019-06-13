@@ -90,7 +90,13 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             ProductInfoQO productInfoQO = new ProductInfoQO();
             if (productType.equals("0")) {
                 productName = "散标";
-                productTpyeInt = 2;
+                if (productNo.substring(0, 3).equals("NEW")) {
+                    productTpyeInt = 4;
+                } else {
+                    productTpyeInt = 2;
+                }
+
+
                 linkUrl = PC_SANBIAO_URL + productNo;
                 H5linkUrl = H5_SANBIAO_URL + productNo;
                 if (productStatus.equals("3") || productStatus.equals("5") || productStatus.equals("6")) {
@@ -162,12 +168,11 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             productInfoQO.setProductStatus(Integer.valueOf(productStatus));
 
             //读取配置文件，0:不推送数据  1:推送数据
-            if(wbsConfig.getPushDataFlag().equals(1)) {
+            if (wbsConfig.getPushDataFlag().equals(1)) {
                 synProductInfoService.sync(productInfoQO);
-            }else{
-                logger.info("====" + CONSUMER_NAME + "不推送数据,推送属性："+wbsConfig.getPushDataFlag());
+            } else {
+                logger.info("====" + CONSUMER_NAME + "不推送数据,推送属性：" + wbsConfig.getPushDataFlag());
             }
-
 
 
         } catch (Exception e1) {
