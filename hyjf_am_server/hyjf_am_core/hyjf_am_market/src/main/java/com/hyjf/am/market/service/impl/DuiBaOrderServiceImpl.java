@@ -136,12 +136,23 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         // 原始请求类型，后面用来区分，获取不同类型的数据
         int requestType = request.getType();
         DuiBaPointsDetailResponse response = new DuiBaPointsDetailResponse();
-        DuiBaPointsDetailVO duiBaPointsDetailVO = null;
+        // 请求年月
+        String year = request.getYear();
+        String month = request.getMonth();
+        // 防止没查到数据的情况，直接给前端格式化
+        DuiBaPointsDetailVO duiBaPointsDetailVO = new DuiBaPointsDetailVO();
+        duiBaPointsDetailVO.setList(new ArrayList<>());
         // 条数>0 做业务处理，否则就直接返回
+        // 设置查询时间范围 如果month=0，那么是全年查询，否则是单月查询
+        if(Integer.valueOf(month) == 0){
+            request.setStartTime(DateUtils.getMinYearDate(year.concat("-01-01")));
+            request.setEndTime(DateUtils.getMaxYearDate(year.concat("-01-01")));
+        } else {
+            request.setStartTime(DateUtils.getMinMonthDate(year.concat("-").concat(month).concat("-01")));
+            request.setEndTime(DateUtils.getMaxMonthDate(year.concat("-").concat(month).concat("-01")));
+        }
         Integer count = duiBaOrderCustomizeMapper.countPointsDetail(request);
         if(count > 0){
-            // 返回结果类初始化
-            duiBaPointsDetailVO = new DuiBaPointsDetailVO();
             List<DuiBaPointsListDetailVO> resultList = new ArrayList<>();
 
             // 设置分页
@@ -153,17 +164,7 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
             // 查询的limit
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
-            // 请求年月
-            String year = request.getYear();
-            String month = request.getMonth();
-            // 月是0的时候，代表查年度数据，否则按照月查
-            if(Integer.valueOf(month) == 0){
-                request.setStartTime(DateUtils.getMinYearDate(year.concat("-01-01")));
-                request.setEndTime(DateUtils.getMaxYearDate(year.concat("-01-01")));
-            } else {
-                request.setStartTime(DateUtils.getMinMonthDate(year.concat("-").concat(month).concat("-01")));
-                request.setEndTime(DateUtils.getMaxMonthDate(year.concat("-").concat(month).concat("-01")));
-            }
+
             // 查询获取总积分
             request.setType(0);
             Integer pointsGetTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
