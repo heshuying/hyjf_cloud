@@ -425,12 +425,14 @@
     <sql id="countTotalCreditSql">
         #转让数据#
         SELECT
-            bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
-            CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
-            CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
-            CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
         hyjf_trade.ht_borrow_credit bc
+        INNER JOIN ht_borrow_recover r on bc.tender_nid = r.nid
+
         LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id = su.user_id
@@ -444,8 +446,9 @@
         LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
         LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
-        AND bc.create_time <![CDATA[>=]]> #{startTime}
-        AND bc.create_time <![CDATA[<=]]> #{endTime}
+        and r.recover_yestime <![CDATA[>=]]> unix_timestamp(#{startTime})
+        and r.recover_yestime <![CDATA[<=]]> unix_timestamp(#{endTime})
+        and r.recover_period = 1
     </sql>
 
     <!-- 查询运营中心合计 -->
