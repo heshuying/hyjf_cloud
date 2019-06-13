@@ -531,6 +531,8 @@ public class DuibaOrderListController {
                 flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
                 // 虚拟商品充值状态
                 duibaOrderVO.setRechargeState("处理完成");
+                // 完成时间
+                duibaOrderVO.setCompletionTime(GetDate.getNowTime10());
             }
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             // 更新订单为有效
