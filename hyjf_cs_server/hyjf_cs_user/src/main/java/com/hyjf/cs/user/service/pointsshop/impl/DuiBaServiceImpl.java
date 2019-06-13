@@ -153,6 +153,14 @@ public class DuiBaServiceImpl implements DuiBaService {
     @Override
     public JSONObject getPointsDetail(Integer userId, DuiBaPointsDetailRequestBean requestBean) {
 		JSONObject result = new JSONObject();
+		logger.info("积分明细请求开始，请求参数:{}", JSONObject.toJSONString(requestBean));
+		// 校验日期数组，如果参数错误直接报错
+		if (null == requestBean.getDate() || requestBean.getDate().length != 2) {
+            result.put("status", "1");
+            result.put("statusDesc","请求参数错误");
+            result.put("data", null);
+            return result;
+		}
 		// 设置查询参数
 		DuiBaPointsDetailRequest request = new DuiBaPointsDetailRequest();
 		BeanUtils.copyProperties(requestBean, request);
