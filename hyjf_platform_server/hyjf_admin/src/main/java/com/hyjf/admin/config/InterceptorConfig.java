@@ -30,7 +30,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
 					"/hyjf-admin/login/login",
 					"/hyjf-admin/login/getPicture",
                     "/hyjf-admin/login/sendLoginCode/**",
-					"/hyjf-admin/login/mobileCodeLogin"
+					"/hyjf-admin/login/mobileCodeLogin",
+					"/hyjf-admin/pointsshop/duiba/order/selectReleaseCoupons/{orderNum}",
+					"/hyjf-admin/pointsshop/duiba/order/activationError/{orderNum}/{errorMessage}",
+					"/hyjf-admin/pointsshop/duiba/order/activationSuccess/{orderNum}"
 			).excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
 
 	}
