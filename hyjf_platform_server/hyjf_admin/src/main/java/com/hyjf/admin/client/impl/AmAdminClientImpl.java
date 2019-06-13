@@ -2507,8 +2507,8 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public VirtualResult selectCouponUserById(String orderNum){
-        return restTemplate.getForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/releaseCoupons/"+orderNum, VirtualResult.class).getBody();
+    public VirtualResultResponse selectCouponUserById(String orderNum){
+        return restTemplate.getForEntity("http://AM-ADMIN//am-market/pointsshop/duiba/order/releaseCoupons/"+orderNum, VirtualResultResponse.class).getBody();
     }
 
     /**

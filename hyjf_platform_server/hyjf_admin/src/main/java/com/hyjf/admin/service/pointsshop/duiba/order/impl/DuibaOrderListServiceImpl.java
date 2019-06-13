@@ -7,6 +7,7 @@ import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.pointsshop.duiba.order.DuibaOrderListService;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
+import com.hyjf.am.response.admin.VirtualResultResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
@@ -77,7 +78,7 @@ public class DuibaOrderListServiceImpl extends BaseServiceImpl implements DuibaO
      * @return
      */
     @Override
-    public VirtualResult selectCouponUserById(String orderNum){
+    public VirtualResultResponse selectCouponUserById(String orderNum){
         return adminClient.selectCouponUserById(orderNum);
     }
 

@@ -17,6 +17,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
+import com.hyjf.am.response.admin.VirtualResultResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -51,7 +52,7 @@ import java.util.Map;
  * @author WENXIN
  * @version DuibaOrderController, v0.1 2019/5/29 9:46
  */
-@Api(value = "产品中心-兑吧订单管理", tags = "产品中心-兑吧订单管理")
+@Api(value = "积分商城-订单详情", tags = "积分商城-订单详情")
 @RestController
 @RequestMapping("/hyjf-admin/pointsshop/duiba/order")
 public class DuibaOrderController extends BaseController {
@@ -164,7 +165,15 @@ public class DuibaOrderController extends BaseController {
     @ApiOperation(value = "根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷", notes = "根据兑吧订单的兑吧订单号查询用户订单信息并发放优惠卷")
     @GetMapping("/selectReleaseCoupons/{orderNum}")
     public VirtualResult selectReleaseCoupons(@PathVariable String orderNum) {
-        return duibaOrderListService.selectCouponUserById(orderNum);
+        VirtualResult virtualResult = new VirtualResult("success");
+        VirtualResultResponse virtualResultResponse = duibaOrderListService.selectCouponUserById(orderNum);
+        if(virtualResultResponse.getResult()!=null){
+            virtualResult.setStatus(virtualResultResponse.getResult().getStatus());
+            virtualResult.setSupplierBizId(virtualResultResponse.getResult().getSupplierBizId());
+            virtualResult.setErrorMessage(virtualResultResponse.getResult().getErrorMessage());
+            virtualResult.setCredits(Long.valueOf(virtualResultResponse.getResult().getCredits()));
+        }
+        return virtualResult;
     }
 
     /**
