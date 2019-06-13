@@ -264,6 +264,22 @@ public class CouponUserServiceImpl implements CouponUserService {
     }
 
     /**
+     * 根据id删除一条优惠券（兑吧）
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int delDuibaCouponUserById(CouponUserBeanRequest request) {
+        CouponUser couponUser = new CouponUser();
+        couponUser.setId(request.getId());
+        couponUser.setDeleteContent(request.getContent());
+        couponUser.setDelFlag(Integer.parseInt(CustomConstants.FLAG_DELETE));
+        int count = couponUserMapper.updateByPrimaryKeySelective(couponUser);
+        return count;
+    }
+
+    /**
      * 发放一条优惠券
      * @param request
      * @return

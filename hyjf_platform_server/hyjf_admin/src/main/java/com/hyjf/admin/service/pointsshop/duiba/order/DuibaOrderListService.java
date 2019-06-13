@@ -5,9 +5,9 @@ package com.hyjf.admin.service.pointsshop.duiba.order;
 
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
+import com.hyjf.am.response.admin.VirtualResultResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.pay.lib.duiba.sdk.VirtualResult;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +49,7 @@ public interface DuibaOrderListService extends BaseService {
      * @param orderNum
      * @return
      */
-    VirtualResult selectCouponUserById(String orderNum);
+    VirtualResultResponse selectCouponUserById(String orderNum);
 
     /**
      * 兑吧兑换结果通知接口（失败时设置订单无效）

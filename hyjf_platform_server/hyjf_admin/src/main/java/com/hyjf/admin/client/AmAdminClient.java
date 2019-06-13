@@ -1446,7 +1446,7 @@ public interface AmAdminClient {
      * @param orderNum
      * @return
      */
-    VirtualResult selectCouponUserById(String orderNum);
+    VirtualResultResponse selectCouponUserById(String orderNum);
 
     /**
      * 兑吧兑换结果通知接口（失败时设置订单无效）
