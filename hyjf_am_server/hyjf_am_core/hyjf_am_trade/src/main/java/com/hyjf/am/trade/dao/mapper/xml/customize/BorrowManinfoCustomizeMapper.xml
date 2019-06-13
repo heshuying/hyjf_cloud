@@ -46,12 +46,14 @@
   </resultMap>
   
   <resultMap id="borrowManinfoResult" type="com.hyjf.am.vo.trade.borrow.BorrowManinfoVO" >
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="name" property="name"/>
     <result column="card_no" property="cardNo"/>
   </resultMap>
 
   <select id="getBorrowManinfoList" resultMap="borrowManinfoResult" parameterType="java.lang.String">
     SELECT
+    m.borrow_nid ,
     m.name,
     m.card_no
     FROM ht_borrow_maninfo m

@@ -234,11 +234,16 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
      * @return
      */
     private Map<Integer, String> queryCACustomerId(List<ZeroOneBorrowDataVO> borrowDataVOList) {
+        //智投
         List<Integer> userIds = new ArrayList<>();
+        //企业
         List<String> borrowNids = new ArrayList<>();
+        //个人
         List<String> nids = new ArrayList<>();
+        //借款主体。key = borrowNid or SocialCreditCode or CardNo
+        Map<String,Integer> borrowMain = new HashMap<>();
 
-        //
+        //拆分
         for (ZeroOneBorrowDataVO borrowDataVO : borrowDataVOList) {
             if (StringUtils.isNotBlank(borrowDataVO.getPlanNid())) {
                 userIds.add(Integer.valueOf(borrowDataVO.getUserid()));
@@ -249,9 +254,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 if (borrowDataVO.getCompanyOrPersonal() != null && borrowDataVO.getCompanyOrPersonal() == 2 || borrowDataVO.getCompanyOrPersonal() == 0) {
                     nids.add(borrowDataVO.getId());
                 }
+                borrowMain.put(borrowDataVO.getId(),Integer.valueOf(borrowDataVO.getUserid()));
             }
         }
 
+        //智投计划的用户，属于第三方个人的，直接查询CA认证客户编号
         Map<Integer, String> mapUserId = new HashMap<>();
         if (!CollectionUtils.isEmpty(userIds)) {
             List<CertificateAuthorityVO> voList = amUserClient.queryCustomerId(userIds);
@@ -269,8 +276,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 List<String> idNoList = new ArrayList<>(userVOS.size());
                 for (BorrowUserVO borrowUsers : userVOS) {
                     idNoList.add(borrowUsers.getSocialCreditCode());
+                    if(borrowMain.get(borrowUsers.getBorrowNid()) != null){
+                        borrowMain.put(borrowUsers.getSocialCreditCode(),borrowMain.get(borrowUsers.getBorrowNid()));
+                    }
                 }
-                mapUserId.putAll(getCACustomerID(idNoList,1));
+                mapUserId.putAll(getCACustomerID(borrowMain,idNoList,1));
             }
         }
 
@@ -281,19 +291,21 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 List<String> cardList = new ArrayList<>(maninfoVOList.size());
                 for (BorrowManinfoVO borrowManinfoVO : maninfoVOList) {
                     cardList.add(borrowManinfoVO.getCardNo());
+                    if(borrowMain.get(borrowManinfoVO.getBorrowNid()) != null){
+                        borrowMain.put(borrowManinfoVO.getCardNo(),borrowMain.get(borrowManinfoVO.getBorrowNid()));
+                    }
                 }
-                mapUserId.putAll(getCACustomerID(cardList,0));
+                mapUserId.putAll(getCACustomerID(borrowMain,cardList,0));
             }
         }
         return mapUserId;
     }
 
-
     /**
      * 批量获取借款主体为企业的CA认证客户编号
      * @return
      */
-    private Map<Integer, String> getCACustomerID(List<String> idNoList , Integer idType) {
+    private Map<Integer, String> getCACustomerID(Map<String,Integer> borrowMain, List<String> idNoList , Integer idType) {
         Map<Integer, String> caCustomerIds = new HashMap<>();
         if (CollectionUtils.isEmpty(idNoList)) {
             return caCustomerIds;
@@ -307,7 +319,13 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         if (!CollectionUtils.isEmpty(authorityVOList)) {
 
             for(LoanSubjectCertificateAuthorityVO vo : authorityVOList){
-                caCustomerIds.put(vo.getUserId(), vo.getCustomerId());
+                if(borrowMain.get(vo.getIdNo()) != null){
+                    //转换为借款主体的用户ID
+                    caCustomerIds.put(borrowMain.get(vo.getIdNo()), vo.getCustomerId());
+                }else{
+                    caCustomerIds.put(vo.getUserId(), vo.getCustomerId());
+                }
+
             }
         }
 
