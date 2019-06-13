@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hyjf.wbs.qvo.csuser.ResultEnum;
 import com.hyjf.wbs.user.dao.model.customize.BankOpenAccountRecordCustomize;
 import com.hyjf.wbs.user.service.BankOpenRecordService;
 import org.slf4j.Logger;
@@ -64,7 +65,7 @@ public class SyncCustomerBaseServiceImpl implements SyncCustomerBaseService {
 
         if (Strings.isNullOrEmpty(userId)) {
             logger.info("资产端客户ID为空！");
-            throw new CheckException("999","资产端客户ID为空！");
+            throw new CheckException(ResultEnum.FAIL.getStatus(),"资产端客户ID为空！");
         } else {
             Integer userIdd = Integer.parseInt(userId);
             User userVO = userService.findUserById(userIdd);
