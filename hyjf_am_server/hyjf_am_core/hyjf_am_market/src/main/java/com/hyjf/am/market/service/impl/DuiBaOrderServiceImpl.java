@@ -105,7 +105,7 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         // 订单扣减积分
         duibaOrders.setIntegralPrice(consumeParams.getCredits().intValue());
         // 订单有效状态
-        duibaOrders.setActivationType(false);
+        duibaOrders.setActivationType(1);
         duibaOrdersMapper.insertSelective(duibaOrders);
 
         // 插入积分明细
