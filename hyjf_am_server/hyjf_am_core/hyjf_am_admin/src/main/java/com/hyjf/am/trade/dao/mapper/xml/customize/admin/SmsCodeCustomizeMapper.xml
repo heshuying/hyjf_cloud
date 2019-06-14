@@ -14,16 +14,16 @@
 				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
-				AND u.reg_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+				AND u.reg_time <![CDATA[>=]]> #{re_time_begin}
 			</if>
 			<if test="re_time_end != null" >
-				AND u.reg_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+				AND u.reg_time <![CDATA[<=]]> #{re_time_end}
 			</if>
 			<if test="add_time_begin != null" >
-				AND bt.create_time  <![CDATA[>=]]> #{add_time_begin,jdbcType=INTEGER}
+				AND bt.create_time  <![CDATA[>=]]> #{add_time_begin}
 			</if>
 			<if test="add_time_end != null" >
-				AND bt.create_time  <![CDATA[<=]]> #{add_time_end,jdbcType=INTEGER}
+				AND bt.create_time  <![CDATA[<=]]> #{add_time_end}
 			</if>
 			<if test="add_money_count != null" >
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
@@ -33,9 +33,8 @@
 	</select>
 
 	<select id="countUser" resultType="java.lang.Integer" parameterType="map">
-		select count(*) as total from (
 		SELECT
-		count(*)
+		count(distinct u.user_id) as total
 		FROM
 		hyjf_user.ht_user u
 		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
@@ -44,21 +43,20 @@
 				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
-				AND u.reg_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+				AND u.reg_time <![CDATA[>=]]> #{re_time_begin}
 			</if>
 			<if test="re_time_end != null" >
-				AND u.reg_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+				AND u.reg_time <![CDATA[<=]]> #{re_time_end}
 			</if>
 			<if test="add_time_begin != null" >
-				AND bt.create_time  <![CDATA[>=]]> #{add_time_begin,jdbcType=INTEGER}
+				AND bt.create_time  <![CDATA[>=]]> #{add_time_begin}
 			</if>
 			<if test="add_time_end != null" >
-				AND bt.create_time  <![CDATA[<=]]> #{add_time_end,jdbcType=INTEGER}
+				AND bt.create_time  <![CDATA[<=]]> #{add_time_end}
 			</if>
 			<if test="add_money_count != null" >
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
 			</if>
 		</where>
-		GROUP BY u.user_id) u
 	</select>
 </mapper>

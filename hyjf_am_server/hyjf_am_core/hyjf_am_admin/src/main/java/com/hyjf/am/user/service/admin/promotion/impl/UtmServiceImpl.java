@@ -64,6 +64,12 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     }
 
     @Override
+    public UtmChannelVO getUtmBySourceId(String sourceId) {
+        return utmRegCustomizeMapper.getUtmBySourceId(sourceId);
+    }
+
+
+    @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
         if(StringUtils.isNotBlank(channelCustomizeVO.getUtmId())){
@@ -365,6 +371,18 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public List<UtmPlatVO> getUtmPlatByParam(Map<String, Object> map) {
         UtmPlatExample utmPlat = new UtmPlatExample();
+        if(map != null || map.size() != 0){
+            UtmPlatExample.Criteria cra = utmPlat.createCriteria();
+            if(map.get("delFlag") != null){
+                cra.andDelFlagEqualTo(Integer.valueOf(map.get("delFlag").toString()));
+            }
+            if(map.get("sourceId") != null){
+                cra.andSourceIdEqualTo(Integer.valueOf(map.get("sourceId").toString()));
+            }
+            if(map.get("sourceType") != null){
+                cra.andSourceTypeEqualTo(Integer.valueOf(map.get("sourceType").toString()));
+            }
+        }
         List<UtmPlat> list = utmPlatMapper.selectByExample(utmPlat);
         if(list == null){
             list = new ArrayList<UtmPlat>();

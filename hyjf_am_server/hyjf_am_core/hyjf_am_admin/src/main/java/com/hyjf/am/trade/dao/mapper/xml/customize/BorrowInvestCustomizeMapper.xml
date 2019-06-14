@@ -301,7 +301,7 @@
 			CASE WHEN hta.contract_create_time IS NOT NULL THEN
 			FROM_UNIXTIME(hta.contract_create_time, '%Y-%m-%d %H:%i:%s' )
 			ELSE '' END AS contractCreateTime,
-			CASE WHEN hta.contract_sign_time IS NOT NULL THEN
+			CASE WHEN hta.contract_sign_time IS NOT NULL AND hta.contract_sign_time!=0 THEN
 			FROM_UNIXTIME(hta.contract_sign_time, '%Y-%m-%d %H:%i:%s' )
 			ELSE '' END AS contractSignTime,
 			CASE WHEN bt.tender_type = 1 THEN '是' ELSE '否' END  AS  tender_type,

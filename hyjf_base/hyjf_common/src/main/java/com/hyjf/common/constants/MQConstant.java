@@ -531,6 +531,10 @@ public interface MQConstant {
 	String SENSORSDATA_REGISTER_GROUP = "SENSORSDATA_REGISTER_GROUP";
 	String SENSORSDATA_REGISTER_TOPIC = "SENSORSDATA_REGISTER_TOPIC";
 
+	String WBS_REGISTER_GROUP = "WBS_REGISTER_GROUP";
+	String WBS_REGISTER_TOPIC="WBS_REGISTER_TOPIC";
+	String WBS_REGISTER_TAG="WBS_REGISTER_TAG";
+
 	/**
 	 * 用户登陆事件
 	 */
@@ -806,9 +810,18 @@ public interface MQConstant {
 	// 合规互金上报用MQ延迟发送等级（10s） add by nxl
 	int HG_REPORT_DELAY_LEVEL_TEN = 3;
 
+
+	// add by liuyang 20190415 wbs系统 标的信息推送MQ start
+	String WBS_BORROW_INFO_TOPIC = "WBS_BORROW_INFO_TOPIC";
+	String WBS_BORROW_INFO_TAG = "WBS_BORROW_INFO_TAG";
+	// add by liuyang 20190415 wbs系统 标的信息推送MQ end
+
 	/**--------------------------------- 业务流程配置start -------------------------------------*/
 	String WORKFLOW_GROUP = "WORKFLOW_GROUP";
 	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
 	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
+	/** 温金投修改借款人机构编号MQ */
+	String WJT_BORROW_USER_MODIFY_GROUP = "WJT_BORROW_USER_MODIFY_GROUP";
+	String WJT_BORROW_USER_MODIFY_TOPIC = "WJT_BORROW_USER_MODIFY_TOPIC";
 }

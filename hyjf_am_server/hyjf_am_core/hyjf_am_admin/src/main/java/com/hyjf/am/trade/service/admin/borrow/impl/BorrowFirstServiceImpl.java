@@ -19,6 +19,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
@@ -153,6 +154,21 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 3) {
                         // 发标时间
                         borrow.setOntime(GetDate.strYYYYMMDDHHMMSS2Timestamp(borrowFireRequest.getOntime()));
+                        // add by liuyang 20190415 wbs标的信息推送 start
+                        // 立即发标时,设置牛投邦状态为:1 预热中
+                        try {
+                            Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+                            BorrowInfo nowBorrowInfo = this.getBorrowInfoByNid(borrow.getBorrowNid());
+                            // 判断标的当前状态是否是投资中的状态
+                            if (nowBorrow != null && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0 && "10000000".equals(nowBorrowInfo.getPublishInstCode())) {
+                                logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+                                sendWbsBorrowInfo(borrow.getBorrowNid(), "1", 0);
+                            }
+                        } catch (Exception e) {
+                            logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+                        }
+                        // add by liuyang 20190415 wbs标的信息推送 end
+
                     } else if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 2) {
                         // 发标时间
                         borrow.setOntime(0);
@@ -198,6 +214,19 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                             return new Response(Response.FAIL, "获取第三方资产失败");
                         }
                     }
+                    // add by liuyang 20190415 wbs标的信息推送 start
+                    // 立即发标时,设置牛投邦状态为:2 募集中
+                    try {
+                        Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+                        // 判断标的当前状态是否是投资中的状态
+                        if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isBlank(borrow.getPlanNid()) && borrow.getIsEngineUsed() == 0) {
+                            logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+                            sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+                        }
+                    } catch (Exception e) {
+                        logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+                    }
+                    // add by liuyang 20190415 wbs标的信息推送 end
                 }
                 // 更新时间
                 borrow.setUpdatetime(systemNowDate);
@@ -229,6 +258,24 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             }
         }
         return new Response(Response.FAIL,"未查询到标的信息");
+    }
+
+    /**
+     * wbs标的信息推送MQ
+     *
+     * @param borrowNid
+     * @param productStatus
+     * @param productType
+     */
+    private void sendWbsBorrowInfo(String borrowNid, String productStatus, Integer productType) throws MQException {
+        JSONObject params = new JSONObject();
+        // 产品编号
+        params.put("productNo", borrowNid);
+        // 产品状态
+        params.put("productStatus", productStatus);
+        // 产品类型 0 散标类, 1 计划类
+        params.put("productType", productType);
+        commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
     }
 
     /**

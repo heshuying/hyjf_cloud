@@ -100,4 +100,9 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
         return appUtmRegMapper.selectByExample(appUtmRegExample);
 
     }
+
+    @Override
+    public void deleteAppUtmReg(Long id) {
+        appUtmRegMapper.deleteByPrimaryKey(id);
+    }
 }

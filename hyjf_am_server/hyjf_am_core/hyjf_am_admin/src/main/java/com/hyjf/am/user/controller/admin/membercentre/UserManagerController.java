@@ -57,9 +57,6 @@ public class UserManagerController extends BaseController {
     @Autowired
     BankAccountManageService bankAccountManageService;
 
-
-
-
     /**
      * 根据筛选条件查找(用户管理列表显示)
      *

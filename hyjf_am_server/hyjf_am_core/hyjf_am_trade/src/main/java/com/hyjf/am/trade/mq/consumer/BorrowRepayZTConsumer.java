@@ -6,6 +6,7 @@ package com.hyjf.am.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
@@ -172,6 +173,26 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 						logger.error("【直投还款】借款编号：{}，合规数据上报发生系统异常！", borrowNid, e);
 					}
 					// add 合规数据上报 埋点 liubin 20181122 end
+
+					// add by liuyang wbs系统标的状态发送 20190505 start
+					try {
+						BorrowInfo borrowInfo = this.batchBorrowRepayZTService.doGetBorrowInfoByNid(borrowNid);
+						if ("10000000".equals(borrowInfo.getPublishInstCode())&& borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())) {
+							// 最后一期还款成功后,发送标的已还款信息
+							JSONObject params = new JSONObject();
+							// 产品编号
+							params.put("productNo", borrowApicron.getBorrowNid());
+							// 产品状态 :6:已还款
+							params.put("productStatus", "6");
+							// 产品类型 0 散标类, 1 计划类
+							params.put("productType", 0);
+							commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+						}
+					} catch (Exception e) {
+						logger.error("【直投还款】借款编号：{}，wbs发送发生系统异常！", borrowNid, e);
+					}
+					// add by liuyang wbs系统标的状态发送 20190505 end
+
                     logger.info("【直投还款】借款编号：{}，还款成功！", borrowNid);
 				}
 			} catch (Exception e) {

@@ -3,12 +3,16 @@ package com.hyjf.cs.user.controller.web.smscode;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.user.SmsCodeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -36,6 +40,8 @@ public class WebSmsCodeController extends BaseUserController {
 
 	@Autowired
 	private SmsCodeService sendSmsCode;
+	@Autowired
+	SystemConfig systemConfig;
 
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
@@ -49,6 +55,7 @@ public class WebSmsCodeController extends BaseUserController {
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public WebResult sendSmsCode(@RequestBody Map<String,String> param,
+								 @RequestHeader(value = "wjtClient",required = false) String wjtClient,
 								 @RequestHeader(value = "userId", required = false) Integer userId,
 								 HttpServletRequest request){
 		logger.info("web端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
@@ -57,6 +64,17 @@ public class WebSmsCodeController extends BaseUserController {
 		String platform = param.get("platform");
 		WebResult resultBean = new WebResult();
 		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, userId, GetCilentIP.getIpAddr(request));
+		if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA)) {
+			UserVO user = sendSmsCode.getUsersByMobile(mobile);
+			if(user==null){
+				throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
+			}
+			// 汇盈的用户不能登录温金投
+			if(wjtClient!=null && (wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+					&& !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+				throw new CheckException(MsgEnum.ERR_USER_WJT_OPT_ERR);
+			}
+		}
 		try {
 			sendSmsCode.sendSmsCode(validCodeType, mobile,platform, GetCilentIP.getIpAddr(request));
 		} catch (Exception e) {

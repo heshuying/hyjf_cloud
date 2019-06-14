@@ -35,6 +35,7 @@ import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
+import com.hyjf.am.response.trade.wbs.WbsHjhPlanInfoResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
@@ -67,6 +68,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
@@ -7382,6 +7384,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> selectWbsSendHjhPlanList() {
+        String url = "http://AM-TRADE/am-trade/wbsHjhPlanInfo/selectWbsSendHjhPlanList";
+        WbsHjhPlanInfoResponse response = restTemplate.getForEntity(url, WbsHjhPlanInfoResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 根据计划订单号查找投资详情
      * @param accedeOrderId
      * @return
@@ -7501,5 +7518,92 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResultList();
     }
+
+    @Override
+    public List<ScreenTransferVO> getAllUser(int start, int sizes) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getallscreenuser/"+start + "/" + sizes;
+        ScreenTransferResponse response = restTemplate.getForEntity(url,  ScreenTransferResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateOperatieList(List<ScreenTransferVO> updateList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/updateoperatielist";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, updateList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteOperatieList(List<ScreenTransferVO> deleteList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/deleteoperatielist";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, deleteList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateRepaymentPlan(List<ScreenTransferVO> updateList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/updaterepaymentplan";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, updateList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteRepaymentPlan(List<ScreenTransferVO> deleteList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/deleterepaymentplan";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, deleteList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
     // 应急中心二期，历史数据上报 add by nxl end
+
+    @Override
+    @Cached(name="webWjtHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+    public List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request) {
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/wjt/searchWjtWebProjectList",request,ProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    @Cached(name="wechatWjtHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String, Object> projectMap){
+        String url = BASE_URL + "/wechat/wjt/searchHomeProejctList";
+        WechatProjectListResponse res = restTemplate.postForEntity(url, projectMap, WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+    @Override
+    @Cached(name="webWjtHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+    public Integer countWjtWebProjectList(ProjectListRequest request) {
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/wjt/countWjtWebProjectList",request,ProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return null;
+    }
+
+
+
 }

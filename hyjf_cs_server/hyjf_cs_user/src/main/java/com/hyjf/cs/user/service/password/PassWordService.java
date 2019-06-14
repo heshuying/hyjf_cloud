@@ -38,14 +38,14 @@ public interface PassWordService extends BaseUserService {
      * @param user
      * @return
      */
-    Map<String,Object> setPassword(UserVO user);
+    Map<String,Object> setPassword(UserVO user,String wjtClient);
 
     /**
      * 重置交易密码
      * @param user
      * @return
      */
-    Map<String,Object> resetPassword(UserVO user);
+    Map<String,Object> resetPassword(UserVO user,String wjtClient);
 
     /**
      * web端检查参数
@@ -158,7 +158,7 @@ public interface PassWordService extends BaseUserService {
      * @param bankOpenAccount
      * @return
      */
-    Map<String,Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
+    Map<String,Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount,String wjtClient,String sign);
 
     /**
      * 微信设置交易密码检查参数
@@ -175,7 +175,7 @@ public interface PassWordService extends BaseUserService {
      * @param bankOpenAccount
      * @return
      */
-    Map<String,Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
+    Map<String,Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount,String wjtClient,String sign);
 
     /**
      * api端校验参数
