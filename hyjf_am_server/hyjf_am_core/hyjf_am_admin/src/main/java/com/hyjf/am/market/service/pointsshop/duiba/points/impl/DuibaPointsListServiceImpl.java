@@ -84,8 +84,7 @@ public class DuibaPointsListServiceImpl implements DuibaPointsListService {
     @Override
     public DuibaPointsVO getDuibaPointsByOrdId(String ordId,Integer businessName) {
         DuibaPointsExample example = new DuibaPointsExample();
-        example.createCriteria().andDuibaOrderIdEqualTo(ordId);
-        example.createCriteria().andBusinessNameEqualTo(businessName);
+        example.createCriteria().andDuibaOrderIdEqualTo(ordId).andBusinessNameEqualTo(businessName);
         example.setOrderByClause("`create_time` DESC");
         List<DuibaPoints> duibaPoints = this.duibaPointsMapper.selectByExample(example);
         if (null != duibaPoints && duibaPoints.size() > 0) {
