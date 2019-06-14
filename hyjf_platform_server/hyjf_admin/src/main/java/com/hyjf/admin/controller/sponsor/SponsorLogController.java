@@ -62,9 +62,14 @@ public class SponsorLogController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @PostMapping(value = "/selectSponsorLog")
-    private SponsorLogResponse selectSponsorLog(@RequestBody SponsorLogRequest sponsorLogRequest) {
+    private AdminResult selectSponsorLog(@RequestBody SponsorLogRequest sponsorLogRequest) {
 
-        return sponsorLogService.selectSponsorLog(sponsorLogRequest);
+		SponsorLogResponse rs =  sponsorLogService.selectSponsorLog(sponsorLogRequest);
+	   	 if(!Response.isSuccess(rs)) {
+			 return new AdminResult(AdminResult.FAIL, rs.getMessage());
+		 }else {
+			 return new AdminResult();
+		 }
     }
 	@ApiOperation(value = "新增", notes = " 新增")
 	@ResponseBody
