@@ -131,4 +131,21 @@
         <include refid="where-list"/>
   </select>
 
+    <select id="selectCreditEndCallBackFail" parameterType="map" resultMap="BankCreditEndResultMap">
+        SELECT DISTINCT
+        bce.batch_no,
+        bce.tx_date,
+        bce.tx_time,
+        bce.seq_no,
+        bce.tx_counts
+        FROM
+        ht_bank_credit_end bce
+        WHERE
+        bce.state = 'A'
+        AND bce.`status` = 4
+        AND unix_timestamp(
+        CONCAT(bce.tx_date, bce.tx_time)
+        ) + 1800 <![CDATA[<]]> UNIX_TIMESTAMP()
+    </select>
+
 </mapper>

@@ -217,16 +217,17 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
         String logOrderId = GetOrderIdUtils.getOrderId2(Integer.parseInt(creditEndVO.getBatchNo()));
         String orderDate = GetOrderIdUtils.getOrderDate();
         // 调用批次状态查询接口
-        BankCallBean repayBean = new BankCallBean();
-        repayBean.setChannel(channel);
-        repayBean.setBatchNo(creditEndVO.getBatchNo());
-        repayBean.setBatchTxDate(batchTxDate);
-        repayBean.setLogUserId(creditEndVO.getBatchNo());
-        repayBean.setLogOrderId(logOrderId);
-        repayBean.setLogOrderDate(orderDate);
-        repayBean.setLogRemark("结束债权批次状态查询");
-        repayBean.setLogClient(0);
-        BankCallBean queryResult = BankCallUtils.callApiBg(repayBean);
+        BankCallBean bankCallBean = new BankCallBean();
+        bankCallBean.setTxCode(BankCallConstant.TXCODE_BATCH_DETAILS_QUERY);
+        bankCallBean.setChannel(channel);
+        bankCallBean.setBatchNo(creditEndVO.getBatchNo());
+        bankCallBean.setBatchTxDate(batchTxDate);
+        bankCallBean.setLogUserId(creditEndVO.getBatchNo());
+        bankCallBean.setLogOrderId(logOrderId);
+        bankCallBean.setLogOrderDate(orderDate);
+        bankCallBean.setLogRemark("结束债权批次状态查询");
+        bankCallBean.setLogClient(0);
+        BankCallBean queryResult = BankCallUtils.callApiBg(bankCallBean);
         if (queryResult != null && StringUtils.isNotBlank(queryResult.getRetCode())) {
             String retCode = queryResult.getRetCode();
             logger.info("【批次结束债权未收到回调批次状态查询】批次号：{}，批次状态查询处理状态：{}", creditEndVO.getBatchNo(), retCode);
