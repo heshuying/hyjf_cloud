@@ -41,7 +41,10 @@ public class UtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQPus
 		HashMap<String,Object> params = JSONObject.parseObject(msg.getBody(), HashMap.class);
 		if(Validator.isNotNull(params)) {
 			try {
-				userService.updateFirstUtmReg(params);
+				boolean investFlag = (boolean) params.get("investFlag");
+				if (investFlag) {
+					userService.updateFirstUtmReg(params);
+				}
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 				logger.error("消费失败，更新首投信息发生异常...");	

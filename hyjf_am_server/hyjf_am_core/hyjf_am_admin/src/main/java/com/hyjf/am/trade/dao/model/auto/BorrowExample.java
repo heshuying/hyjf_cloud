@@ -4675,6 +4675,76 @@ public class BorrowExample {
             addCriterion("invest_level not between", value1, value2, "investLevel");
             return (Criteria) this;
         }
+
+        public Criteria andRegistBankmsgIsNull() {
+            addCriterion("regist_bankmsg is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgIsNotNull() {
+            addCriterion("regist_bankmsg is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgEqualTo(String value) {
+            addCriterion("regist_bankmsg =", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgNotEqualTo(String value) {
+            addCriterion("regist_bankmsg <>", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgGreaterThan(String value) {
+            addCriterion("regist_bankmsg >", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgGreaterThanOrEqualTo(String value) {
+            addCriterion("regist_bankmsg >=", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgLessThan(String value) {
+            addCriterion("regist_bankmsg <", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgLessThanOrEqualTo(String value) {
+            addCriterion("regist_bankmsg <=", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgLike(String value) {
+            addCriterion("regist_bankmsg like", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgNotLike(String value) {
+            addCriterion("regist_bankmsg not like", value, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgIn(List<String> values) {
+            addCriterion("regist_bankmsg in", values, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgNotIn(List<String> values) {
+            addCriterion("regist_bankmsg not in", values, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgBetween(String value1, String value2) {
+            addCriterion("regist_bankmsg between", value1, value2, "registBankmsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistBankmsgNotBetween(String value1, String value2) {
+            addCriterion("regist_bankmsg not between", value1, value2, "registBankmsg");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

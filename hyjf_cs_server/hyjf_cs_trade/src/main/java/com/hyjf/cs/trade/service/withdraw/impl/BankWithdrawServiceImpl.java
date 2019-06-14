@@ -279,7 +279,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                             }
                             try{
                                 // 提现成功后,发送大屏数据统计MQ
-                                ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),transAmt,4);
+                                ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),total,4);
                                 this.sendScreenDataMQ(screenDataBean);
                             }catch (Exception e){
                                 logger.error("提现成功后,发送大屏数据统计MQ失败",e.getMessage());

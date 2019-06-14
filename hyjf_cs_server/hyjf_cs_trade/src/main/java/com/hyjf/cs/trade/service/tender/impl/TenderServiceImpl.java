@@ -937,7 +937,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			// 出借时间
 			params.put("investTime", nowTime);
 			// 项目类型
-			params.put("projectType", "汇直投");
+			params.put("projectType", "散标");
 			String investProjectPeriod = "";
 			// 首次投标项目期限// 还款方式
 			String borrowStyle = borrow.getBorrowStyle();
@@ -951,7 +951,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			// 更新渠道统计用户累计出借
 			try {
 				logger.info("=======开始校验汇直投用户渠道统计信息，userID：" + userId);
-				if(this.checkIsNewUserCanInvest(userId)){
+				if(this.checkAppUtmInvestFlag(userId)){
 					logger.info("=======开始推送汇直投用户渠道统计信息，userID：" + userId);
 					commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
 				}
@@ -959,6 +959,28 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 				logger.error(e.getMessage());
 				logger.error("更新huiyingdai_utm_reg的首投信息失败");
 			}
+		}
+	}
+
+
+
+	/**
+	 * 查询appUtmReg是否首投
+	 * @param userId
+	 * @return
+	 */
+	private boolean checkAppUtmInvestFlag(Integer userId) {
+		// 新的判断是否为新用户方法
+		try {
+			int total = amTradeClient.countNewUserTotal(userId);
+			logger.info("获取用户出借数量 userID {} 数量 {} ",userId,total);
+			if (total == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}catch (Exception e) {
+			throw e;
 		}
 	}
 

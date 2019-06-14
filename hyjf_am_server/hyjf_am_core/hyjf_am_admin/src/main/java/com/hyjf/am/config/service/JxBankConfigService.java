@@ -30,4 +30,9 @@ public interface JxBankConfigService {
      * @Author : huanghui
      */
     List<JxBankConfig> selectBankConfigList();
+    /**
+     * 根据银行卡名获取江西银行配置
+     * @Author : nxl
+     */
+    JxBankConfig selectBankConfigByName(String bankName);
 }

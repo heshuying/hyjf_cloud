@@ -49,6 +49,9 @@ public class BorrowRegistCustomize implements Serializable {
     /** 添加时间 */
     private String createTime;
 
+    /** 银行备案结果描述*/
+    private String registBankmsg;
+
     public String getBorrowNid() {
         return borrowNid;
     }
@@ -151,5 +154,13 @@ public class BorrowRegistCustomize implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getRegistBankmsg() {
+        return registBankmsg;
+    }
+
+    public void setRegistBankmsg(String registBankmsg) {
+        this.registBankmsg = registBankmsg;
     }
 }

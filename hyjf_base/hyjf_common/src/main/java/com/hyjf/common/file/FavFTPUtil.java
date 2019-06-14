@@ -1,6 +1,7 @@
 package com.hyjf.common.file;
 
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -245,7 +246,7 @@ public class FavFTPUtil {
      * @return
      */
     public static File downloadDirectory(SFTPParameter para) {
-        logger.info("----------------------------开始下载FTP协议");
+        logger.info("----------------------------开始下载FTP协议："+JSONObject.toJSONString(para));
         File localFile = null;
         FTPClient ftp = new FTPClient();
         OutputStream is = null;
@@ -260,9 +261,10 @@ public class FavFTPUtil {
                 return null;
             }
             ftp.enterLocalPassiveMode();
+            logger.info("----------------------------转移到FTP服务器目录"+para.downloadPath);
             ftp.changeWorkingDirectory(para.downloadPath);// 转移到FTP服务器目录
             FTPFile[] fs = ftp.listFiles();
-            System.out.println(fs.length);
+            logger.info("----------------------------fs.length"+fs.length);
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(para.sftpKeyFile)) {

@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.userlargescreen.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
@@ -51,6 +52,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         String dateString = getNowDateOfDay();
         request.setTaskTime(dateString);
         UserScreenConfigResponse userScreenConfigResponse = amUserClient.getScreenConfig(request);
+        UserCustomerTaskConfigResponse taskConfigResponse = amUserClient.getCustomerTaskConfig(request);
         UserLargeScreenVO scalePerformanceVo =  amTradeClient.getScalePerformance();
         UserLargeScreenVO monthScalePerformanceListVo =  amTradeClient.getMonthScalePerformanceList();
         UserLargeScreenVO totalAmountVo =  amTradeClient.getTotalAmount();
@@ -74,6 +76,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthReceivedPaymentsNew(monthReceivedPaymentsVo.getMonthReceivedPaymentsNew());
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
         bean.setUserCapitalDetailList(userCapitalDetailsVo.getUserCapitalDetailList());
+        bean.setCustomerTaskConfigVOList(taskConfigResponse.getResultList());
         return bean;
     }
 
@@ -84,14 +87,11 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
         JSONObject param = new JSONObject();
-        int sendFlag = 0;
         if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key)) &&
                 !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
-            sendFlag = 1;
             param.put("flag", "all");
             sendMQ(param);
-        }
-        if(sendFlag != 1 && !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+        }else {
             param.put("flag", "now");
             sendMQ(param);
         }

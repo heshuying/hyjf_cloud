@@ -2,10 +2,12 @@ package com.hyjf.cs.trade.bean;
 
 import com.hyjf.am.vo.api.EchartsResultVO;
 import com.hyjf.am.vo.api.UserCapitalDetailsVO;
+import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserLargeScreenResultBean implements Serializable {
@@ -38,6 +40,8 @@ public class UserLargeScreenResultBean implements Serializable {
     private BigDecimal oldPassengerGoal;
     @ApiModelProperty(value = "用户资金明细")
     private  List<UserCapitalDetailsVO> userCapitalDetailList;
+    @ApiModelProperty(value = "坐席目标金额")
+    private List<CustomerTaskConfigVO> customerTaskConfigVOList = new ArrayList<>();
     public BigDecimal getScalePerformanceNew() {
         return scalePerformanceNew;
     }
@@ -148,5 +152,13 @@ public class UserLargeScreenResultBean implements Serializable {
 
     public void setUserCapitalDetailList(List<UserCapitalDetailsVO> userCapitalDetailList) {
         this.userCapitalDetailList = userCapitalDetailList;
+    }
+
+    public List<CustomerTaskConfigVO> getCustomerTaskConfigVOList() {
+        return customerTaskConfigVOList;
+    }
+
+    public void setCustomerTaskConfigVOList(List<CustomerTaskConfigVO> customerTaskConfigVOList) {
+        this.customerTaskConfigVOList = customerTaskConfigVOList;
     }
 }

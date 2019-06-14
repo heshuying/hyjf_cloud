@@ -3172,6 +3172,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public TenderToCreditAssignCustomizeVO getInterestInfo(String creditNid, String assignCapital, Integer userId) {
+        if(userId==null){
+            userId = 0;
+        }
         String url = "http://AM-TRADE/am-trade/creditTender/get_interest_info/" + creditNid + "/" + assignCapital + "/" + userId;
         CreditAssignCustomizeResponse response = restTemplate.getForEntity(url, CreditAssignCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {

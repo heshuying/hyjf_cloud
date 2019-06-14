@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BorrowRegistCancelConfirmCustomizeResponse;
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
@@ -14,16 +15,14 @@ import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -120,5 +119,26 @@ public class BorrowRegistController extends BaseController {
     @PostMapping("/update_borrow_regist")
     public Response updateBorrowRegist(@RequestBody @Valid BorrowRegistUpdateRequest request) {
         return borrowRegistService.updateBorrowRegist(request);
+    }
+
+    /**
+     * 备案撤销成功后更新数据库
+     */
+    @RequestMapping("/regist_cancel")
+    public Response borrowCancel(@RequestBody @Valid BorrowRegistUpdateRequest request){
+        return borrowRegistService.updateForRegistCancel(request);
+    }
+
+    /**
+     * 获取备案撤销确认页面数据
+     *
+     * @return
+     */
+    @GetMapping("/registcancel_confirm/{borrowNid}")
+    public BorrowRegistCancelConfirmCustomizeResponse selectBorrowRegistCancelConfirm(@PathVariable String borrowNid) {
+        BorrowRegistCancelConfirmCustomizeResponse response = new BorrowRegistCancelConfirmCustomizeResponse();
+        BorrowRegistCancelConfirmCustomizeVO borrowRegistCancelConfirmCustomizeVO = borrowRegistService.selectRegistCancelConfirm(borrowNid);
+        response.setResult(borrowRegistCancelConfirmCustomizeVO);
+        return response;
     }
 }

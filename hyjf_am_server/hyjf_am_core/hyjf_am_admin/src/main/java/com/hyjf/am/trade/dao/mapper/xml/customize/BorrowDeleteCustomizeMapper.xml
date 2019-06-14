@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BorrowDeleteCustomizeMapper">
+
+	<select id="selectDeleteConfirm" resultType="com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO" parameterType="string">
+		SELECT
+			b.borrow_nid AS borrowNid,
+			bi.`name` AS borrowName,
+			b.borrow_user_name AS borrowUserName,
+			FORMAT(b.account, 2) AS account,
+			CONCAT(b.borrow_apr, '%') borrowApr,
+			CASE
+		WHEN borrow_style = 'endday' THEN
+			CONCAT(b.borrow_period, '天')
+		ELSE
+			CONCAT(b.borrow_period, '个月')
+		END borrowPeriod,
+		 b.borrow_style AS borrowStyle,
+		 bs.`name` AS borrowStyleName,
+		 bpt.borrow_name AS projectTypeName,
+		 IFNULL(bi.repay_org_name,'') AS repayOrgName,
+		 DATE_FORMAT(
+			b.create_time,
+			'%Y-%m-%d %H:%i:%s'
+		) AS createTime,
+		b.create_user_name AS createUserName,
+		 CASE
+		WHEN b.`status` = 0 THEN
+			'备案中'
+		WHEN b.`status` = 1 THEN
+			'初审中'
+		WHEN b.`status` = 2 THEN
+			'投资中'
+		WHEN b.`status` = 3 THEN
+			'复审中'
+		WHEN b.`status` = 4 THEN
+			'还款中'
+		WHEN b.`status` = 5 THEN
+			'已还款'
+		WHEN b.`status` = 8 THEN
+			'逾期中'
+		ELSE
+			''
+		END AS borrowStatus
+		FROM
+			ht_borrow b
+		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
+		WHERE b.borrow_nid = #{borrowNid}
+	</select>
+</mapper>

@@ -9,6 +9,14 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +32,8 @@ import java.util.List;
  */
 @Service
 public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserLargeScreenService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserLargeScreenServiceImpl.class);
 
     @Autowired
     private AccountListCustomizeMapper accountListCustomizeMapper;
@@ -77,11 +87,13 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getMonthReceivedPayments();
         List<EchartsResultVO> monthReceivedPaymentsNew = new ArrayList<>();
         List<EchartsResultVO> monthReceivedPaymentsOld = new ArrayList<>();
-        for(EchartsResultVO echartsResultVO:list){
-            if("1".equals(echartsResultVO.getCustomerGroup())){
-                monthReceivedPaymentsNew.add(echartsResultVO);
-            }else {
-                monthReceivedPaymentsOld.add(echartsResultVO);
+        if(!CollectionUtils.isEmpty(list)) {
+            for (EchartsResultVO echartsResultVO : list) {
+                if ("1".equals(echartsResultVO.getCustomerGroup())) {
+                    monthReceivedPaymentsNew.add(echartsResultVO);
+                } else {
+                    monthReceivedPaymentsOld.add(echartsResultVO);
+                }
             }
         }
         vo.setMonthReceivedPaymentsNew(monthReceivedPaymentsNew);
@@ -154,8 +166,6 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<MonthDataStatisticsVO> monthDataStatisticsOld = new ArrayList<>();
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
 
-        // 坐席
-        // List<MonthDataStatisticsVO> listOn =  userLargeScreenCustomizeMapper.getMonthDataStatisticsBO();
         // 坐席、年化业绩
         List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
         // 坐席、充值
@@ -168,31 +178,20 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         if(!CollectionUtils.isEmpty(currentOwnersAndUserIds)){
             for(MonthDataStatisticsVO monthDataStatisticsVOO : currentOwnersAndUserIds){
                 if("1".equals(monthDataStatisticsVOO.getCustomerGroup())){
-                    // 查询每个坐席下的所有用户
-                    // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 1);
+                    // 得到每个坐席下的所有用户
                     List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
-                    // 坐席下用户们当前总站岗资金
-                    BigDecimal monthNowBalance = new BigDecimal(0);
+                    // 计算月坐席下用户的当前站岗资金
+                    BigDecimal monthNowBalance = BigDecimal.ZERO;
                     if (!CollectionUtils.isEmpty(userIds)){
-                        // 一次查询的条件数
-                        int queryNum = 1000;
-                        if(userIds.size() > queryNum){
-                            int time = userIds.size()/queryNum;
-                            if(userIds.size()%queryNum > 0){
-                                time += 1;
-                            }
-                            for(int i=1; i<time+1; i++){
-                                List<Integer> queryList = new ArrayList();
-                                for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
-                                    if(null != userIds.get(j)){
-                                        queryList.add(userIds.get(j));
-                                    }
-                                }
-                                monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
-                            }
-
-                        }else {
-                            monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
+                        // 每个集合数据量
+                        int num = 1000;
+                        // 计算分多少个集合
+                        int listNum = userIds.size()%num == 0 ? userIds.size()/num : userIds.size()/num+1;
+                        // 储存userId的大list切分成多个小list,防止sql过长
+                        List<List<Integer>> usersIdLists = averageAssign(userIds, listNum);
+                        // 计算月坐席下用户的当前站岗资金
+                        for (List<Integer> usersIdList : usersIdLists) {
+                            monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(usersIdList));
                         }
                     }
                     // 年化业绩
@@ -264,58 +263,33 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             }
                         }
                     }
-                    // 查询每个坐席下的所有用户
-                    // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 2);
+                    // 得到每个坐席下的所有用户
                     List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
                     // 坐席下用户月初站岗资金
-                    BigDecimal monthBeginBalance = new BigDecimal("0");
+                    BigDecimal monthBeginBalance = BigDecimal.ZERO;
                     // 坐席下用户当前站岗资金
-                    BigDecimal monthNowBalance = new BigDecimal("0");
+                    BigDecimal monthNowBalance = BigDecimal.ZERO;
                     if (!CollectionUtils.isEmpty(userIds)){
-                        // 一次查询的条件数
-                        // 月初
-                        int queryNum = 1000;
-                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
-                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
-                        }else {
-                            if(userIds.size() > queryNum){
-                                int time = userIds.size()/queryNum;
-                                if(userIds.size()%queryNum > 0){
-                                    time += 1;
-                                }
-                                for(int i=1; i<time+1; i++){
-                                    List<Integer> queryList = new ArrayList();
-                                    for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
-                                        if(null != userIds.get(j)){
-                                            queryList.add(userIds.get(j));
-                                        }
-                                    }
-                                    monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(queryList));
-                                }
+                        // 每个集合数据量
+                        int num = 1000;
+                        // 计算分多少个集合
+                        int listNum = userIds.size()%num == 0 ? userIds.size()/num : userIds.size()/num+1;
+                        // 储存userId的大list切分成多个小list,防止sql过长
+                        List<List<Integer>> usersIdLists = averageAssign(userIds, listNum);
 
-                            }else {
-                                monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(userIds));
+                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
+                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
+                        }else {
+                            // 计算月坐席下用户的月初站岗资金
+                            for (List<Integer> usersIdList : usersIdLists) {
+                                monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(usersIdList));
                             }
-                            RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
+                            RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
                         }
-                        // 当前
-                        if(userIds.size() > queryNum){
-                            int time = userIds.size()/queryNum;
-                            if(userIds.size()%queryNum > 0){
-                                time += 1;
-                            }
-                            for(int i=1; i<time+1; i++){
-                                List<Integer> queryList = new ArrayList();
-                                for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
-                                    if(null != userIds.get(j)){
-                                        queryList.add(userIds.get(j));
-                                    }
-                                }
-                                monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
-                            }
 
-                        }else {
-                            monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
+                        // 计算月坐席下用户的当前站岗资金
+                        for (List<Integer> usersIdList : usersIdLists) {
+                            monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(usersIdList));
                         }
                     }
                     // 当前站岗资金
@@ -323,16 +297,18 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 增资
                     BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthNowBalance);
                     if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
-                        additionalShare = new BigDecimal("0");
+                        logger.info("老客组{}月坐席下用户的增资是:{},小于等于0,默认为0", monthDataStatisticsVOO.getCurrentOwner(), additionalShare);
+                        additionalShare = BigDecimal.ZERO;
                     }
                     monthDataStatisticsVOO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
                     // 提现率
-                    BigDecimal extractionRate = new BigDecimal("0");
+                    BigDecimal extractionRate = BigDecimal.ZERO;
                     if(monthDataStatisticsVOO.getWithdraw().compareTo(BigDecimal.ZERO) > 0 &&
                             monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
-                        extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP);
+                        extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
                     monthDataStatisticsVOO.setExtractionRate(extractionRate);
+                    logger.info("老客组{}月坐席下用户的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{},回款:{}", monthDataStatisticsVOO.getCurrentOwner(), monthDataStatisticsVOO.getRecharge(), monthDataStatisticsVOO.getWithdraw(), monthBeginBalance, monthNowBalance, monthDataStatisticsVOO.getReceived());
 
                     // 老客组数据
                     monthDataStatisticsOld.add(monthDataStatisticsVOO);
@@ -368,13 +344,14 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 获得坐席当前站岗资金
         BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
         if(nowMonthBalance == null){
-            nowMonthBalance = new BigDecimal("0");
+            nowMonthBalance = BigDecimal.ZERO;
         }
         // 获得坐席月初站岗资金
         BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
         if (startMonthBalance == null){
-            startMonthBalance = new BigDecimal("0");
+            startMonthBalance = BigDecimal.ZERO;
         }
+        logger.info("运营部的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{}", listO.getRecharge(), listT.getWithdraw(), startMonthBalance, nowMonthBalance);
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
@@ -384,7 +361,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 增资
         BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(startMonthBalance).subtract(nowMonthBalance);
         if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
-            additionalShare = new BigDecimal("0");
+            additionalShare = BigDecimal.ZERO;
         }
         operMonthPerformanceDataVO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
         // 提现
@@ -400,5 +377,62 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         return vo;
     }
 
+    /**
+     * 将一个list均分成n个list,主要通过偏移量来实现的
+     * @param source
+     * @return
+     */
+    public static <T> List<List<T>> averageAssign(List<T> source,int n){
+        List<List<T>> result = new ArrayList<List<T>>();
+        //(先计算出余数)
+        int remaider = source.size()%n;
+        //然后是商
+        int number = source.size()/n;
+        //偏移量
+        int offset = 0;
+        for(int i=0; i<n; i++){
+            List<T> value = null;
+            if(remaider > 0){
+                value = source.subList(i*number+offset, (i+1)*number+offset+1);
+                remaider--;
+                offset++;
+            }else{
+                value=source.subList(i*number+offset, (i+1)*number+offset);
+            }
+            result.add(value);
+        }
+        return result;
+    }
 
+    /**
+     * 得到中文全拼
+     * @param src
+     * @return
+     */
+    public static String getPingYin(String src) {
+        char[] t1 = null;
+        t1 = src.toCharArray();
+        String[] t2 = new String[t1.length];
+        HanyuPinyinOutputFormat t3 = new HanyuPinyinOutputFormat();
+        t3.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        t3.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        t3.setVCharType(HanyuPinyinVCharType.WITH_V);
+        String t4 = "";
+        int t0 = t1.length;
+        try {
+            for (int i = 0; i < t0; i++) {
+                // 判断是否为汉字字符
+                if (java.lang.Character.toString(t1[i]).matches("[\\u4E00-\\u9FA5]+")) {
+                    t2 = PinyinHelper.toHanyuPinyinStringArray(t1[i], t3);
+                    t4 += t2[0];
+                } else {
+                    t4 += java.lang.Character.toString(t1[i]);
+                }
+            }
+            return t4;
+        } catch (BadHanyuPinyinOutputFormatCombination e1) {
+            e1.printStackTrace();
+        }
+        return t4;
+    }
 }

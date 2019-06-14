@@ -327,7 +327,7 @@ public class MspApplyController  {
 	public MspApplytResponse download(@RequestBody  MspApplytRequest form) {
 		String applyId=form.getApplyId();
 		MspApplytResponse mar=new MspApplytResponse();
-		if(form.getApplyId()==null||!"".equals(form.getApplyId())) {
+		if(form.getApplyId()!=null||!"".equals(form.getApplyId())) {
 			MspApply ma=this.mspApplyService.getRecord( Integer.valueOf(form.getIds()));
 			MspApplyVO mspapply=new MspApplyVO();
 			BeanUtils.copyProperties(ma,mspapply);

@@ -622,9 +622,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (userOperationReportList != null && userOperationReportList.size() > 0) {
 				response.put("userOperationReport", userOperationReportList.get(0));
 			}
-			query2.with(new Sort(Sort.Direction.ASC, "activtyTime"));
+			query2.with(new Sort(Sort.Direction.ASC, "activtyStartTime"));
 			List<OperationActivityReport> operationReportActiveList = getOperationReportActive(id, query2);
 			if(operationReportActiveList!=null){
+				//排序  2精彩活动按照活动开始时间升序，1体验优化和3足迹按照活动时间排序
+				listSort(operationReportActiveList);
 				response.put("operationReportActiveList", operationReportActiveList);
 				/*List<OperationReportActivityVO> vos = new ArrayList<>();
 				for(OperationActivityReport operationReportActivityEntity:operationReportActiveList){
@@ -637,6 +639,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			List<OperationTenthReport> tenthOperationReportList = getTenthOperationReport(id, query2);
 			if (tenthOperationReportList != null && tenthOperationReportList.size() > 0) {
 				OperationTenthReport tenthOperationReport = tenthOperationReportList.get(0);
+				// 因合规需要  屏蔽投资人年龄
+				tenthOperationReport.setActiveTenderUserAge(0);
+				tenthOperationReport.setBigMinnerUserAge(0);
+				tenthOperationReport.setMostTenderUserAge(0);
+
+
 				TenthOperationReportVO tenthOperationReportVO = new TenthOperationReportVO();
 				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getFirstTenderUsername())) {
 					String userName1 = tenthOperationReport.getFirstTenderUsername().substring(0, 1);
@@ -2041,4 +2049,25 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		return maxDate;
 	}
 
+	/**
+	 * 排序  2精彩活动按照活动开始时间升序，1体验优化和3足迹按照活动时间排序
+	 * @param operationReportActiveList
+	 * @return
+	 */
+	public void listSort(List<OperationActivityReport> operationReportActiveList){
+		Collections.sort(operationReportActiveList, new Comparator<OperationActivityReport>() {
+			@Override
+			public int compare(OperationActivityReport o1, OperationActivityReport o2) {
+				Integer activityTime1=o1.getActivtyTime()==null?o1.getActivtyStartTime():o1.getActivtyTime();
+				Integer activityTime2=o2.getActivtyTime()==null?o2.getActivtyStartTime():o2.getActivtyTime();
+				int diff =activityTime1-activityTime2;
+				if(diff>0){
+					return 1;
+				}else if(diff<0){
+					return -1;
+				}
+				return 0;
+			}
+		});
+	}
 }
