@@ -8,6 +8,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -42,6 +43,7 @@ public class CaiJingPresentationLogDao extends BaseMongoDao<CaiJingPresentationL
         if (request.getStatus() != null) {
             criteria.and("status").is(request.getStatus());
         }
+        query.with(new Sort(Sort.Direction.DESC, "presentationTime"));
         query.addCriteria(criteria);
         if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
             int currPage = request.getCurrPage();
