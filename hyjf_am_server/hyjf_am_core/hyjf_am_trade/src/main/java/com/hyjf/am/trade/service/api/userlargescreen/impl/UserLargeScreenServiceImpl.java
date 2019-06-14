@@ -151,7 +151,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         }
         param.put("startTime",startTime);
         param.put("endTime", GetDateUtils.getCurrentTime());
-        logger.info("用户资金明细，当前时间：{}，startTime：{},endTime:{}",GetDateUtils.getCurrentTime(),startTime);
+        logger.info("用户资金明细，当前时间：{}，startTime：{},endTime:{}",GetDateUtils.getCurrentTime(),startTime,GetDateUtils.getCurrentTime());
         return param;
     }
 
