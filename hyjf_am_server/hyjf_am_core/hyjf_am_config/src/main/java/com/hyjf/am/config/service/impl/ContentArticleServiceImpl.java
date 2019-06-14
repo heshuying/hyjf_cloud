@@ -259,9 +259,9 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         if("20".equals(noticeType)) {// 公司动态添加默认随机图片  add by wgx 2019/06/13
             List imageList = RedisUtils.getObj(RedisConstants.APP_FIND_IMAGE + "company", List.class);
             contentArticles.stream().forEach(article -> {
-                if (org.apache.commons.lang3.StringUtils.isBlank(article.getImgurl())) {
+                //if (StringUtils.isBlank(article.getImgurl())) { 全部替换
                     article.setImgurl(getArticleImgUrl(imageList, noticeType, imageList != null && imageList.size() > 0 ? random.nextInt(imageList.size()) : -1));
-                }
+                //}
             });
         }
         return contentArticles;
@@ -364,9 +364,9 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         List imageList = RedisUtils.getObj(RedisConstants.APP_FIND_IMAGE + "company", List.class);
         for (ContentArticle contentArticle : list) {
             ContentArticleCustomize knowledge = this.buildContentArticleCustomize(contentArticle, type);
-            if(org.apache.commons.lang3.StringUtils.isBlank(knowledge.getImgurl())){
+            //if(StringUtils.isBlank(knowledge.getImgurl())){ 全部替换
                 knowledge.setImgurl(getArticleImgUrl(imageList, type, imageList != null && imageList.size() > 0 ? random.nextInt(imageList.size()) : -1));
-            }
+            //}
             knowledgeCustomizes.add(knowledge);
         }
         return knowledgeCustomizes;
