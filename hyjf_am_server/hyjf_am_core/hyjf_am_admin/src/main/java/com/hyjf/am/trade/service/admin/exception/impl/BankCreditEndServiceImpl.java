@@ -379,7 +379,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
                 logger.error("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
                 throw new RuntimeException("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
             }
-            Borrow borrow = getBorrow(requestBean.getBorrowNid());
+            Borrow borrow = getBorrow(creditTender.getBorrowNid());
 
             requestBean.setTenderUserId(creditTender.getUserId());
             requestBean.setUserId(borrow.getUserId());
