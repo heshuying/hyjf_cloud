@@ -58,7 +58,9 @@ public class SponsorLogServiceImpl implements SponsorLogService {
 	public SponsorLogResponse selectSponsorLog(SponsorLogRequest sponsorLogRequest) {
 		if(this.handleBorrowRegistException(sponsorLogRequest)) {
 			sponsorLogRequest.setStatus(1);
-			return amTradeClient.updateSponsorLog(sponsorLogRequest);
+			SponsorLogResponse slr = amTradeClient.updateSponsorLog(sponsorLogRequest);
+			slr.setMessage("修改成功");
+			return slr;
 		}else {
 			SponsorLogResponse slr = new SponsorLogResponse();
 			slr.setRtn(Response.ERROR);

@@ -81,12 +81,8 @@ public class SponsorLogController extends BaseController {
 		sponsorLogRequest.setStatus(0);
 		sponsorLogRequest.setDelFlag(0);
     	 SponsorLogResponse rs = sponsorLogService.insertSponsorLog(sponsorLogRequest);
-    	 if(!Response.isSuccess(rs)) {
-    		 return new AdminResult(AdminResult.FAIL, rs.getMessage());
-    	 }else {
-    		 return new AdminResult();
-    	 }
-    	 
+    		 return new AdminResult(AdminResult.SUCCESS, rs.getMessage());
+
     }
 
 }
