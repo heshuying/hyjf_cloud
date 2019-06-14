@@ -592,7 +592,6 @@ public class RedisConstants {
     public static final String POINTS_SHOP_SWITCH = "points_shop_switch";
     /** 兑吧汇率*/
     public static final String DUIBA_EXCHANGE_RATE = "hyjf_duiba_exchange_rate";
-}
 
     /**
      * redis配置是否可修改手机号
