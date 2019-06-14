@@ -531,6 +531,10 @@ public interface MQConstant {
 	String SENSORSDATA_REGISTER_GROUP = "SENSORSDATA_REGISTER_GROUP";
 	String SENSORSDATA_REGISTER_TOPIC = "SENSORSDATA_REGISTER_TOPIC";
 
+	String WBS_REGISTER_GROUP = "WBS_REGISTER_GROUP";
+	String WBS_REGISTER_TOPIC="WBS_REGISTER_TOPIC";
+	String WBS_REGISTER_TAG="WBS_REGISTER_TAG";
+
 	/**
 	 * 用户登陆事件
 	 */
@@ -712,18 +716,14 @@ public interface MQConstant {
 	// 产品信息异常重发
 	String CERT_REPAIR_LENDPRODUCT = "CERT_REPAIR_LENDPRODUCT";
 	// 产品信息异常、添加智投、修改智投时报送
-//  String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG ;
-	//不上线，不报送，后期改回上面配置
-	String CERT_LENDPRODUCT_TAG = "NO_SENDP_LENDPRODUCT" ;
+	String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG +"||"+MQConstant.BORROW_MODIFY_TAG;
 
 	/** 产品配置信息*/
 	String CERT_LENDPRODUCTCONFIG_GROUP = "CERT_LENDPRODUCTCONFIG_GROUP";
 	// 产品配置异常重发
 	String CERT_REPAIR_LENDPRODUCTCONFIG = "CERT_REPAIR_LENDPRODUCTCONFIG";
 	// 计入计划，或单笔承接成功
-//  String CERT_LENDPRODUCTCONFIG_TAG = CERT_REPAIR_LENDPRODUCTCONFIG+"||"+MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG+"||"+MQConstant.LOAN_SUCCESS_TAG;
-	//不上线，不报送，后期改回上面配置
-	String CERT_LENDPRODUCTCONFIG_TAG = "NO_SEND_LENDPRODUCTCONFIG";
+	String CERT_LENDPRODUCTCONFIG_TAG = CERT_REPAIR_LENDPRODUCTCONFIG+"||"+MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG+"||"+MQConstant.LOAN_SUCCESS_TAG;
 
 	//产品信息历史数据推送
 	String CERT_OLD_LENDPRODUCT_GROUP = "CERT_OLD_LENDPRODUCT_GROUP";
@@ -796,6 +796,8 @@ public interface MQConstant {
 	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
 	// TAG：修改智投 add by nxl
 	String HJHPLAN_MODIFY_TAG = "HJHPLAN_ADD_MODIFY";
+	// TAG：散标发标 add by nxl
+	String BORROW_MODIFY_TAG = "BORROW_MODIFY_TAG";
 	// TAG：同步余额
 	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
 	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
@@ -808,9 +810,18 @@ public interface MQConstant {
 	// 合规互金上报用MQ延迟发送等级（10s） add by nxl
 	int HG_REPORT_DELAY_LEVEL_TEN = 3;
 
+
+	// add by liuyang 20190415 wbs系统 标的信息推送MQ start
+	String WBS_BORROW_INFO_TOPIC = "WBS_BORROW_INFO_TOPIC";
+	String WBS_BORROW_INFO_TAG = "WBS_BORROW_INFO_TAG";
+	// add by liuyang 20190415 wbs系统 标的信息推送MQ end
+
 	/**--------------------------------- 业务流程配置start -------------------------------------*/
 	String WORKFLOW_GROUP = "WORKFLOW_GROUP";
 	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
 	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
+	/** 温金投修改借款人机构编号MQ */
+	String WJT_BORROW_USER_MODIFY_GROUP = "WJT_BORROW_USER_MODIFY_GROUP";
+	String WJT_BORROW_USER_MODIFY_TOPIC = "WJT_BORROW_USER_MODIFY_TOPIC";
 }

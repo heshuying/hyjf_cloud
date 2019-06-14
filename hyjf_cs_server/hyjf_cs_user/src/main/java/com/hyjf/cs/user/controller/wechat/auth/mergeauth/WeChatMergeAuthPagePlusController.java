@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
@@ -18,12 +19,14 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.vo.AuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +64,8 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "用户合并授权", notes = "用户合并授权")
     @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> page(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+    public  WebResult<Object> page(@RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                   @RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -70,15 +74,28 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
         checkUserMessage(user);
 
         // 拼装参数 调用江西银行
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
         // 失败页面
         String errorPath = "/user/setting/mergeauth/result/failed";
         // 成功页面
         String successPath = "/user/setting/mergeauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH;
+        String retUrl = host + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH;
+        String successUrl = host + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH;
         String bgRetUrl = "http://CS-USER/hyjf-wechat/bank/user/auth/mergeauthpageplus/mergeAuthBgreturn" ;
+
+        // 忘记密码跳转链接
+        String forgotPwdUrl = BankCommonUtil.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, null, systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = BankCommonUtil.getWjtForgotPwdUrl(wjtClient, null, systemConfig);
+        }
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -95,14 +112,14 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
         authBean.setPlatform(CustomConstants.CLIENT_WECHAT);
         authBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_WEI);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_WECHAT,request,systemConfig));
+        authBean.setForgotPwdUrl(forgotPwdUrl);
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");
         authBean.setUserType(user.getUserType());
+        authBean.setWjtClient(wjtClient);
         // 跳转到江西银行画面
         try {
-
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
             if(authBean.getAutoBidStatus()&&authBean.getAutoCreditStatus()&&authBean.getPaymentAuthStatus()){

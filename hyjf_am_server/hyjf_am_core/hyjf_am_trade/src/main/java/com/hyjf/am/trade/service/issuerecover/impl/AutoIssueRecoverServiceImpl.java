@@ -235,7 +235,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	/**
 	 * 汇计划三期邮件预警
 	 *
-	 * @param creditNid
 	 */
 	private void sendWarnMail(String assetId) {
 		// 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
@@ -864,7 +863,24 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 		// 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
 		borrowInfo.setAssetAttributes(hjhPlanAsset.getAssetAttributes());
 
+		// 本息保障 险控制措施-措施  风控措施  现在默认写死
+		String measureMea = "1、汇盈金服及其合作机构秉持客观公正，细致严谨的原则，严格把控业务的风险，最大程度的确保借款人相关信息的真实性，但因多种不可控因素，我们不能保证审核信息的100%无误，同时也不能保证借款人能够按期偿还借款金额。<br>2、汇盈金服仅为网络借贷信息中介机构，未以任何明示或暗示的方式对出借人提供担保或承诺保本保息，出借人应根据自身的投资偏好和风险承受能力进行独立判断和做出决策，并自行承担资金出借的风险与责任，包括但不限于可能的本息损失。<br>3、该借款项目募集期不得超过10天。网贷有风险，出借需谨慎。<br>";
+		borrowInfo.setBorrowMeasuresMea(measureMea);
+		//风险控制措施-机构
+		borrowInfo.setBorrowMeasuresInstit(getCooperativeAgency(hjhPlanAsset.getInstCode()));
+
 		return borrowInfo;
+	}
+
+	private String getCooperativeAgency(String instCode){
+		HjhInstConfigExample example = new HjhInstConfigExample();
+		HjhInstConfigExample.Criteria criteria = example.createCriteria();
+		criteria.andInstCodeEqualTo(instCode);
+		List<HjhInstConfig> list = hjhInstConfigMapper.selectByExample(example);
+		if(list.size() > 0) {
+			return list.get(0).getCooperativeAgency();
+		}return "";
+
 	}
 
 	/**

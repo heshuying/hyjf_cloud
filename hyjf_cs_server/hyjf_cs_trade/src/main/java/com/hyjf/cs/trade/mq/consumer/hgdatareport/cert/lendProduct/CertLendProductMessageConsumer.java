@@ -72,7 +72,8 @@ public class CertLendProductMessageConsumer implements RocketMQListener<MessageE
 
         String planNid = jsonObject.getString("planNid");
         String tradeDate = jsonObject.getString("tradeDate");
-        if (StringUtils.isBlank(planNid)) {
+        String isPlan = jsonObject.getString("isPlan");
+        if (StringUtils.isBlank(planNid)||StringUtils.isBlank(isPlan)) {
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
@@ -88,7 +89,7 @@ public class CertLendProductMessageConsumer implements RocketMQListener<MessageE
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductService.getPlanProdouct(planNid,false);
+            JSONArray listRepay = certLendProductService.getPlanProdouct(planNid,false,isPlan,new JSONArray());
             logger.info("数据：" + listRepay.toString());
             if (null == listRepay || listRepay.size() <= 0) {
                 logger.error(logHeader + "组装参数为空！！！参数为：" + planNid);

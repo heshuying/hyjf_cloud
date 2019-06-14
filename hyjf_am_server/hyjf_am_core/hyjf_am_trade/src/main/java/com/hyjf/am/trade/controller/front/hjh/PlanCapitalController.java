@@ -3,11 +3,17 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.hyjf.am.response.admin.HjhPlanCapitalActualResponse;
+import com.hyjf.am.response.admin.HjhPlanCapitalPredictionResponse;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.trade.service.front.trade.PlanCapitalService;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +31,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/am-trade/planCapitalController")
 public class PlanCapitalController {
+    // logger
+    private static final Logger logger = LoggerFactory.getLogger(PlanCapitalController.class);
+
     @Autowired
     private PlanCapitalService planCapitalService;
 
@@ -59,4 +68,50 @@ public class PlanCapitalController {
         }
         return response;
     }
+
+    /**
+     * 获取该期间的预计当日新增复投额
+     * @param date
+     * @return
+     */
+    @GetMapping("/getPlanCapitalPredictionForProformaList/{date}")
+    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionForProformaList(@PathVariable(value = "date") String date){
+        HjhPlanCapitalPredictionResponse response = new HjhPlanCapitalPredictionResponse();
+        List<HjhPlanCapitalPredictionVO> list = this.planCapitalService.getPlanCapitalPredictionForProformaList(GetDate.stringToDate2(date));
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
+    /**
+     * 获取该期间的预计当日新增债转
+     * @param date
+     * @return
+     */
+    @GetMapping("/getPlanCapitalForCreditList/{date}/{dualDate}")
+    public HjhPlanCapitalPredictionResponse getPlanCapitalForCreditList(@PathVariable(value = "date") String date,@PathVariable(value = "dualDate") String dualDate){
+        HjhPlanCapitalPredictionResponse response = new HjhPlanCapitalPredictionResponse();
+        List<HjhPlanCapitalPredictionVO> list = this.planCapitalService.getPlanCapitalForCreditList(GetDate.stringToDate2(date),GetDate.stringToDate2(dualDate));
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
+    /**
+     * 获取该期间的实际资金计划
+     * @param date
+     * @return
+     */
+    @GetMapping("/getPlanCapitalActualformaList/{date}")
+    public HjhPlanCapitalActualResponse getPlanCapitalActualformaList(@PathVariable(value = "date") String date){
+        HjhPlanCapitalActualResponse response = new HjhPlanCapitalActualResponse();
+        List<HjhPlanCapitalActualVO> list = this.planCapitalService.getPlanCapitalActualformaList(date);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
 }

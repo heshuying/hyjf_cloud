@@ -92,44 +92,44 @@ public class CertTransactBatchController {
         } while (certTransactCustomize.getMaxId()>certTransactCustomize.getLimitMaxId());
         logger.info(logHeader + "CertTransactBatchController execute end...");
 
-
-       /* logger.info(logHeader + "CertInvestDetailBatchController execute start...");
-        CertAccountListIdCustomizeVO certInvestDetailCustomize=new CertAccountListIdCustomizeVO();
-        Integer investDetailPage=1;
-        do {
-            String certInvestDetailMaxId = RedisUtils.get(RedisConstants.CERT_INVEST_DETAIL_MAXID);
-            Map<String, Object> param =  new HashMap<String, Object>();
-            param.put("minId", certInvestDetailMaxId==null?"0":certInvestDetailMaxId);
-            param.put("limitStart", (investDetailPage-1)*size);
-            param.put("limitEnd", size);
-            certInvestDetailCustomize=certTransactService.queryCertAccountListId(param);
-            if(certInvestDetailMaxId==null||"".equals(certInvestDetailMaxId)){
-                RedisUtils.set(RedisConstants.CERT_INVEST_DETAIL_MAXID, certInvestDetailCustomize.getMaxId()+"");
-                logger.info(logHeader + "CertInvestDetailBatchController execute end...");
-                return new StringResponse("success");
-            }
-            String minId=certInvestDetailCustomize.getLimitMinId()+"";
-            String maxId=certInvestDetailCustomize.getLimitMaxId()+"";
-            String sumCount=certInvestDetailCustomize.getSumCount()+"";
-            if("0".equals(sumCount)){
-                logger.info(logHeader + "CertInvestDetailBatchController execute end...");
-                return new StringResponse("success");
-            }
-            // 加入到消息队列
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("mqMsgId", GetCode.getRandomCode(10));
-            params.put("minId", minId);
-            params.put("maxId", maxId);
-            logger.info(logHeader + "CertInvestDetailBatchController execute ...params"+JSONObject.toJSONString(params));
-            try{
-                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_INVEST_DETAIL_TAG, UUID.randomUUID().toString(), params),
-                        MQConstant.HG_REPORT_DELAY_LEVEL);
-
-            }catch (Exception e){}
-            RedisUtils.set(RedisConstants.CERT_INVEST_DETAIL_MAXID, maxId);
-            investDetailPage=investDetailPage+1;
-        } while (certInvestDetailCustomize.getMaxId()>certInvestDetailCustomize.getLimitMaxId());
-        logger.info(logHeader + "CertInvestDetailBatchController execute end...");*/
+//
+//        logger.info(logHeader + "CertInvestDetailBatchController execute start...");
+//        CertAccountListIdCustomizeVO certInvestDetailCustomize=new CertAccountListIdCustomizeVO();
+//        Integer investDetailPage=1;
+//        do {
+//            String certInvestDetailMaxId = RedisUtils.get(RedisConstants.CERT_INVEST_DETAIL_MAXID);
+//            Map<String, Object> param =  new HashMap<String, Object>();
+//            param.put("minId", certInvestDetailMaxId==null?"0":certInvestDetailMaxId);
+//            param.put("limitStart", (investDetailPage-1)*size);
+//            param.put("limitEnd", size);
+//            certInvestDetailCustomize=certTransactService.queryCertAccountListId(param);
+//            if(certInvestDetailMaxId==null||"".equals(certInvestDetailMaxId)){
+//                RedisUtils.set(RedisConstants.CERT_INVEST_DETAIL_MAXID, certInvestDetailCustomize.getMaxId()+"");
+//                logger.info(logHeader + "CertInvestDetailBatchController execute end...");
+//                return new StringResponse("success");
+//            }
+//            String minId=certInvestDetailCustomize.getLimitMinId()+"";
+//            String maxId=certInvestDetailCustomize.getLimitMaxId()+"";
+//            String sumCount=certInvestDetailCustomize.getSumCount()+"";
+//            if("0".equals(sumCount)){
+//                logger.info(logHeader + "CertInvestDetailBatchController execute end...");
+//                return new StringResponse("success");
+//            }
+//            // 加入到消息队列
+//            Map<String, String> params = new HashMap<String, String>();
+//            params.put("mqMsgId", GetCode.getRandomCode(10));
+//            params.put("minId", minId);
+//            params.put("maxId", maxId);
+//            logger.info(logHeader + "CertInvestDetailBatchController execute ...params"+JSONObject.toJSONString(params));
+//            try{
+//                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_INVEST_DETAIL_TAG, UUID.randomUUID().toString(), params),
+//                        MQConstant.HG_REPORT_DELAY_LEVEL);
+//
+//            }catch (Exception e){}
+//            RedisUtils.set(RedisConstants.CERT_INVEST_DETAIL_MAXID, maxId);
+//            investDetailPage=investDetailPage+1;
+//        } while (certInvestDetailCustomize.getMaxId()>certInvestDetailCustomize.getLimitMaxId());
+//        logger.info(logHeader + "CertInvestDetailBatchController execute end...");
 
 
         return new StringResponse("success");

@@ -157,7 +157,7 @@
 	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderVO">
 		SELECT
 		ct.assign_nid              AS assignNid,
-		bc.client             	 AS client,
+		ct.client             	 AS client,
 		ct.credit_nid              AS creditNid,
 		ct.bid_nid                 AS bidNid,
 		ct.credit_user_name      AS creditUserName,
@@ -305,7 +305,7 @@
 			</if>
 			<!-- 客户端-->
 			<if test="client != null and client != ''">
-				AND bc.client=#{client}
+				AND ct.client=#{client}
 			</if>
 			<!-- 时间 -->
 			<if test="addTimeStart != null and addTimeStart != ''">

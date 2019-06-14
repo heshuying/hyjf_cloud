@@ -5,7 +5,9 @@ import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -19,6 +21,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
@@ -47,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -141,6 +145,39 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             logger.error(e.getMessage());
         }
 
+        return new BigDecimal(0);
+    }
+
+    /**
+     * @Description 获得江西银行的账面余额  调用江西银行接口
+     * @Author wenxin
+     * @Version v0.1
+     * @Date 20190322
+     */
+    @Override
+    public BigDecimal getBankCurrBal(Integer userId, String accountId) {
+        BigDecimal currBalance = BigDecimal.ZERO;
+        BankCallBean bean = new BankCallBean();
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
+        // 电子账号
+        bean.setAccountId(accountId);
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            if (resultBean == null) {
+                logger.error("获得江西银行的账面余额---调用银行接口查询银行账户发生错误,userId="+userId+"*********** accountId="+accountId);
+                return new BigDecimal(0);
+            }
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                // 账面余额
+                currBalance = new BigDecimal(resultBean.getCurrBal().replace(",", ""));
+                return currBalance;
+            } else {
+                logger.error("获得江西银行的账面余额---调用银行接口查询银行账户发生错误,userId="+userId+"*********** accountId="+accountId);
+                return new BigDecimal(0);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         return new BigDecimal(0);
     }
 
@@ -693,5 +730,89 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(request);
 
         return withdrawRuleConfigVO;
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtFrontHost(SystemConfig sysConfig, String platform) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost();
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost();
+        }
+        return null;
+    }
+
+    public String getForgotPwdUrl(String platform, String token,String sign, SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            return sysConfig.getFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
+                    "&requestType="+ CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
+                    "&platform="+platform;
+        }else if (ClientConstants.WECHAT_CLIENT == client) {
+            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtForgotPwdUrl(String platform, SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
+    }
+
+    /**
+     * @Description 资金支出校验共通方法
+     * @param userId
+     * @param accountMoney
+     * @return
+     * @Author wenxin
+     * @Version v0.1
+     * @Date 2019/3/22
+     */
+    @Override
+    public boolean capitalExpendituresCheck(Integer userId, BigDecimal accountMoney) {
+        BigDecimal balance = BigDecimal.ZERO;
+        try {
+            // 调用 /query_account_userMoney/{userId} 查询用户账户资金信息
+            // BankAccountManageCustomizeVO  bankAccountManageCustomize = amTradeClient.queryAccountUserMoney(userId);
+            AccountVO bankAccountManageCustomize = amTradeClient.getAccount(userId);
+            if(bankAccountManageCustomize != null) {
+                // 调用江西银行接口查询账面余额
+                // BigDecimal userBankCurrBal = this.getBankCurrBal(userId, bankAccountManageCustomize.getAccountId());
+                // 20190410 需求更改為獲取銀行可用餘額
+                BigDecimal userBankAvailBal = this.getBankBalancePay(userId, bankAccountManageCustomize.getAccountId());
+                // 校验用户操作金额+普通账户金额+智投服务可用金额 + 智投服务冻结金额 是否大于 银行账户账面金额  （更改前）
+                // 校验用户操作金额+普通冻结金额+智投服务可用金额 + 智投服务冻结金额 <=       账面余额   可以操作 （更改后）
+                // accountMoney 用户操作金额，planBalance 智投服务可用金额， planFrost 智投服务冻结金额， bankFrost （普通冻结金额）银行冻结金额
+                // balance = balance.add(accountMoney).add(bankAccountManageCustomize.getBankFrost()).add(bankAccountManageCustomize.getPlanBalance()).add(bankAccountManageCustomize.getPlanFrost());
+                // 20190410l 更改邏輯為 用戶操作金額 + 智投服務可用金額 <= 銀行可用餘額
+                balance = balance.add(accountMoney).add(bankAccountManageCustomize.getPlanBalance());
+                //判断是否可操作（返回Boolean类型）
+                if(balance.compareTo(userBankAvailBal) != 1){
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("资金支出校验共通方法发生错误：-- " + e.getMessage());
+        }
+        return false;
     }
 }

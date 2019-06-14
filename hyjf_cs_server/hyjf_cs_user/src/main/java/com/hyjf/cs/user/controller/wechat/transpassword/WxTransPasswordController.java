@@ -18,6 +18,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,9 @@ public class WxTransPasswordController extends BaseUserController {
      */
     @ApiOperation(value = "设置交易密码",notes = "设置交易密码")
     @GetMapping(value ="/setPassword.page")
-    public WeChatResult setPassword(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+    public WeChatResult setPassword(@RequestHeader(value = "userId") Integer userId,
+                                    @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                    HttpServletRequest request) {
         WeChatResult<Object> result = new WeChatResult<>();
         String sign = request.getParameter("sign");
         UserVO user = passWordService.weChatCheck(userId);
@@ -65,14 +68,10 @@ public class WxTransPasswordController extends BaseUserController {
         BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 异步调用路
         String bgRetUrl =  "http://CS-USER/hyjf-wechat/wx/transpassword/passwordBgreturn?sign=" + sign;
-        // 同步调用路径
-        String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign ;
-        // 页面同步返回 URL
-        bean.setRetUrl(retUrl);
         // 页面异步返回URL(必须)
         bean.setNotifyUrl(bgRetUrl);
         //拼装参数请求银行
-        Map<String,Object> data = passWordService.setWeChatPassword(bean,user,usersInfo,bankOpenAccount);
+        Map<String,Object> data = passWordService.setWeChatPassword(bean,user,usersInfo,bankOpenAccount,wjtClient,sign);
         result.setData(data);
         return result;
     }
@@ -117,7 +116,9 @@ public class WxTransPasswordController extends BaseUserController {
      */
     @ApiOperation(value = "重置交易密码")
     @GetMapping(value = "/resetPassword.page")
-    public WeChatResult<Object> resetPassword(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
+    public WeChatResult<Object> resetPassword(@RequestHeader(value = "userId") Integer userId,
+                                              @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                              HttpServletRequest request) {
         WeChatResult<Object> result = new WeChatResult<>();
         String sign = request.getParameter("sign");
         UserVO user = passWordService.weChatCheck(userId);
@@ -132,16 +133,12 @@ public class WxTransPasswordController extends BaseUserController {
         // 调用设置密码接口
         String txcode = "";
         BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
-        // 同步调用路径
-        String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-wechat/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
-        // 页面同步返回 URL
-        bean.setRetUrl(retUrl);
         // 页面异步返回URL(必须)
         bean.setNotifyUrl(bgRetUrl);
         //拼装参数请求银行
-        Map<String,Object> data = passWordService.resetWeChatPassword(bean,user,usersInfo,bankOpenAccount);
+        Map<String,Object> data = passWordService.resetWeChatPassword(bean,user,usersInfo,bankOpenAccount,wjtClient,sign);
         result.setData(data);
         return result;
     }

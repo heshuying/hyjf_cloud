@@ -250,5 +250,22 @@
         </if>
         ) t2
     </select>
-
+    <select id="queryAccountUserMoney" resultMap="accountInfoMapResult" parameterType="java.lang.Integer">
+        SELECT
+         a.user_id,
+         a.bank_total AS bankTotal,
+         a.account_id AS account,
+         a.bank_balance,
+         a.bank_frost,
+         a.bank_await,
+         a.bank_wait_repay,
+         a.bank_balance_cash,
+         a.bank_frost_cash,
+         a.plan_balance,
+         a.plan_frost,
+         a.plan_account_wait
+        FROM
+         ht_account a
+        WHERE a.user_id = #{user_id}
+    </select>
 </mapper>

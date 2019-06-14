@@ -205,9 +205,6 @@ public class SyncAccountConsumer implements RocketMQListener<MessageExt>, Rocket
             httpPost.setEntity(uefEntity);
             // 执行post方法
             response = httpclient.execute(httpPost);
-
-            // 执行post方法
-            response = httpclient.execute(httpPost);
             if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 String content = EntityUtils.toString(response.getEntity());
                 logger.info("======" + CONSUMER_NAME + " 投递返回结果 [{}]=====", content);

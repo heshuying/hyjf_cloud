@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.trade.dao.mapper.auto.AccountMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.trade.dao.model.auto.Account" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="balance_cash" property="balanceCash" jdbcType="DECIMAL" />
+    <result column="balance_frost" property="balanceFrost" jdbcType="DECIMAL" />
+    <result column="frost" property="frost" jdbcType="DECIMAL" />
+    <result column="await" property="await" jdbcType="DECIMAL" />
+    <result column="repay" property="repay" jdbcType="DECIMAL" />
+    <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
+    <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
+    <result column="plan_frost" property="planFrost" jdbcType="DECIMAL" />
+    <result column="plan_accede_total" property="planAccedeTotal" jdbcType="DECIMAL" />
+    <result column="plan_accede_balance" property="planAccedeBalance" jdbcType="DECIMAL" />
+    <result column="plan_accede_frost" property="planAccedeFrost" jdbcType="DECIMAL" />
+    <result column="plan_account_wait" property="planAccountWait" jdbcType="DECIMAL" />
+    <result column="plan_capital_wait" property="planCapitalWait" jdbcType="DECIMAL" />
+    <result column="plan_interest_wait" property="planInterestWait" jdbcType="DECIMAL" />
+    <result column="bank_total" property="bankTotal" jdbcType="DECIMAL" />
+    <result column="bank_balance" property="bankBalance" jdbcType="DECIMAL" />
+    <result column="bank_frost" property="bankFrost" jdbcType="DECIMAL" />
+    <result column="bank_wait_repay" property="bankWaitRepay" jdbcType="DECIMAL" />
+    <result column="bank_wait_capital" property="bankWaitCapital" jdbcType="DECIMAL" />
+    <result column="bank_wait_interest" property="bankWaitInterest" jdbcType="DECIMAL" />
+    <result column="bank_wait_repay_org" property="bankWaitRepayOrg" jdbcType="DECIMAL" />
+    <result column="bank_interest_sum" property="bankInterestSum" jdbcType="DECIMAL" />
+    <result column="bank_invest_sum" property="bankInvestSum" jdbcType="DECIMAL" />
+    <result column="bank_await" property="bankAwait" jdbcType="DECIMAL" />
+    <result column="bank_await_capital" property="bankAwaitCapital" jdbcType="DECIMAL" />
+    <result column="bank_await_interest" property="bankAwaitInterest" jdbcType="DECIMAL" />
+    <result column="bank_await_org" property="bankAwaitOrg" jdbcType="DECIMAL" />
+    <result column="bank_balance_cash" property="bankBalanceCash" jdbcType="DECIMAL" />
+    <result column="bank_frost_cash" property="bankFrostCash" jdbcType="DECIMAL" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, account_id, total, balance, balance_cash, balance_frost, 
+    frost, await, repay, plan_repay_interest, plan_balance, plan_frost, plan_accede_total, 
+    plan_accede_balance, plan_accede_frost, plan_account_wait, plan_capital_wait, plan_interest_wait, 
+    bank_total, bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, 
+    bank_wait_repay_org, bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, 
+    bank_await_interest, bank_await_org, bank_balance_cash, bank_frost_cash, del_flag, 
+    create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.wbs.trade.dao.model.auto.AccountExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.wbs.trade.dao.model.auto.AccountExample" >
+    delete from ht_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.wbs.trade.dao.model.auto.Account" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account (user_id, user_name, account_id, 
+      total, balance, balance_cash, 
+      balance_frost, frost, await, 
+      repay, plan_repay_interest, plan_balance, 
+      plan_frost, plan_accede_total, plan_accede_balance, 
+      plan_accede_frost, plan_account_wait, plan_capital_wait, 
+      plan_interest_wait, bank_total, bank_balance, 
+      bank_frost, bank_wait_repay, bank_wait_capital, 
+      bank_wait_interest, bank_wait_repay_org, bank_interest_sum, 
+      bank_invest_sum, bank_await, bank_await_capital, 
+      bank_await_interest, bank_await_org, bank_balance_cash, 
+      bank_frost_cash, del_flag, create_time, 
+      update_time)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, 
+      #{total,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{balanceCash,jdbcType=DECIMAL}, 
+      #{balanceFrost,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, #{await,jdbcType=DECIMAL}, 
+      #{repay,jdbcType=DECIMAL}, #{planRepayInterest,jdbcType=DECIMAL}, #{planBalance,jdbcType=DECIMAL}, 
+      #{planFrost,jdbcType=DECIMAL}, #{planAccedeTotal,jdbcType=DECIMAL}, #{planAccedeBalance,jdbcType=DECIMAL}, 
+      #{planAccedeFrost,jdbcType=DECIMAL}, #{planAccountWait,jdbcType=DECIMAL}, #{planCapitalWait,jdbcType=DECIMAL}, 
+      #{planInterestWait,jdbcType=DECIMAL}, #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, 
+      #{bankFrost,jdbcType=DECIMAL}, #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, 
+      #{bankWaitInterest,jdbcType=DECIMAL}, #{bankWaitRepayOrg,jdbcType=DECIMAL}, #{bankInterestSum,jdbcType=DECIMAL}, 
+      #{bankInvestSum,jdbcType=DECIMAL}, #{bankAwait,jdbcType=DECIMAL}, #{bankAwaitCapital,jdbcType=DECIMAL}, 
+      #{bankAwaitInterest,jdbcType=DECIMAL}, #{bankAwaitOrg,jdbcType=DECIMAL}, #{bankBalanceCash,jdbcType=DECIMAL}, 
+      #{bankFrostCash,jdbcType=DECIMAL}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.wbs.trade.dao.model.auto.Account" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="balanceCash != null" >
+        balance_cash,
+      </if>
+      <if test="balanceFrost != null" >
+        balance_frost,
+      </if>
+      <if test="frost != null" >
+        frost,
+      </if>
+      <if test="await != null" >
+        await,
+      </if>
+      <if test="repay != null" >
+        repay,
+      </if>
+      <if test="planRepayInterest != null" >
+        plan_repay_interest,
+      </if>
+      <if test="planBalance != null" >
+        plan_balance,
+      </if>
+      <if test="planFrost != null" >
+        plan_frost,
+      </if>
+      <if test="planAccedeTotal != null" >
+        plan_accede_total,
+      </if>
+      <if test="planAccedeBalance != null" >
+        plan_accede_balance,
+      </if>
+      <if test="planAccedeFrost != null" >
+        plan_accede_frost,
+      </if>
+      <if test="planAccountWait != null" >
+        plan_account_wait,
+      </if>
+      <if test="planCapitalWait != null" >
+        plan_capital_wait,
+      </if>
+      <if test="planInterestWait != null" >
+        plan_interest_wait,
+      </if>
+      <if test="bankTotal != null" >
+        bank_total,
+      </if>
+      <if test="bankBalance != null" >
+        bank_balance,
+      </if>
+      <if test="bankFrost != null" >
+        bank_frost,
+      </if>
+      <if test="bankWaitRepay != null" >
+        bank_wait_repay,
+      </if>
+      <if test="bankWaitCapital != null" >
+        bank_wait_capital,
+      </if>
+      <if test="bankWaitInterest != null" >
+        bank_wait_interest,
+      </if>
+      <if test="bankWaitRepayOrg != null" >
+        bank_wait_repay_org,
+      </if>
+      <if test="bankInterestSum != null" >
+        bank_interest_sum,
+      </if>
+      <if test="bankInvestSum != null" >
+        bank_invest_sum,
+      </if>
+      <if test="bankAwait != null" >
+        bank_await,
+      </if>
+      <if test="bankAwaitCapital != null" >
+        bank_await_capital,
+      </if>
+      <if test="bankAwaitInterest != null" >
+        bank_await_interest,
+      </if>
+      <if test="bankAwaitOrg != null" >
+        bank_await_org,
+      </if>
+      <if test="bankBalanceCash != null" >
+        bank_balance_cash,
+      </if>
+      <if test="bankFrostCash != null" >
+        bank_frost_cash,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceCash != null" >
+        #{balanceCash,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceFrost != null" >
+        #{balanceFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="frost != null" >
+        #{frost,jdbcType=DECIMAL},
+      </if>
+      <if test="await != null" >
+        #{await,jdbcType=DECIMAL},
+      </if>
+      <if test="repay != null" >
+        #{repay,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayInterest != null" >
+        #{planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="planBalance != null" >
+        #{planBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planFrost != null" >
+        #{planFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeTotal != null" >
+        #{planAccedeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeBalance != null" >
+        #{planAccedeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeFrost != null" >
+        #{planAccedeFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccountWait != null" >
+        #{planAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="planCapitalWait != null" >
+        #{planCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="planInterestWait != null" >
+        #{planInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="bankTotal != null" >
+        #{bankTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="bankBalance != null" >
+        #{bankBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="bankFrost != null" >
+        #{bankFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitRepay != null" >
+        #{bankWaitRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitCapital != null" >
+        #{bankWaitCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitInterest != null" >
+        #{bankWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitRepayOrg != null" >
+        #{bankWaitRepayOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="bankInterestSum != null" >
+        #{bankInterestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="bankInvestSum != null" >
+        #{bankInvestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwait != null" >
+        #{bankAwait,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwaitCapital != null" >
+        #{bankAwaitCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwaitInterest != null" >
+        #{bankAwaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwaitOrg != null" >
+        #{bankAwaitOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="bankBalanceCash != null" >
+        #{bankBalanceCash,jdbcType=DECIMAL},
+      </if>
+      <if test="bankFrostCash != null" >
+        #{bankFrostCash,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.wbs.trade.dao.model.auto.AccountExample" resultType="java.lang.Integer" >
+    select count(*) from ht_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_account
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountId != null" >
+        account_id = #{record.accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.total != null" >
+        total = #{record.total,jdbcType=DECIMAL},
+      </if>
+      <if test="record.balance != null" >
+        balance = #{record.balance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.balanceCash != null" >
+        balance_cash = #{record.balanceCash,jdbcType=DECIMAL},
+      </if>
+      <if test="record.balanceFrost != null" >
+        balance_frost = #{record.balanceFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.frost != null" >
+        frost = #{record.frost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.await != null" >
+        await = #{record.await,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repay != null" >
+        repay = #{record.repay,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planRepayInterest != null" >
+        plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planBalance != null" >
+        plan_balance = #{record.planBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planFrost != null" >
+        plan_frost = #{record.planFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planAccedeTotal != null" >
+        plan_accede_total = #{record.planAccedeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planAccedeBalance != null" >
+        plan_accede_balance = #{record.planAccedeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planAccedeFrost != null" >
+        plan_accede_frost = #{record.planAccedeFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planAccountWait != null" >
+        plan_account_wait = #{record.planAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planCapitalWait != null" >
+        plan_capital_wait = #{record.planCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planInterestWait != null" >
+        plan_interest_wait = #{record.planInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankTotal != null" >
+        bank_total = #{record.bankTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankBalance != null" >
+        bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankFrost != null" >
+        bank_frost = #{record.bankFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankWaitRepay != null" >
+        bank_wait_repay = #{record.bankWaitRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankWaitCapital != null" >
+        bank_wait_capital = #{record.bankWaitCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankWaitInterest != null" >
+        bank_wait_interest = #{record.bankWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankWaitRepayOrg != null" >
+        bank_wait_repay_org = #{record.bankWaitRepayOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankInterestSum != null" >
+        bank_interest_sum = #{record.bankInterestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankInvestSum != null" >
+        bank_invest_sum = #{record.bankInvestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankAwait != null" >
+        bank_await = #{record.bankAwait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankAwaitCapital != null" >
+        bank_await_capital = #{record.bankAwaitCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankAwaitInterest != null" >
+        bank_await_interest = #{record.bankAwaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankAwaitOrg != null" >
+        bank_await_org = #{record.bankAwaitOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankBalanceCash != null" >
+        bank_balance_cash = #{record.bankBalanceCash,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankFrostCash != null" >
+        bank_frost_cash = #{record.bankFrostCash,jdbcType=DECIMAL},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_account
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      total = #{record.total,jdbcType=DECIMAL},
+      balance = #{record.balance,jdbcType=DECIMAL},
+      balance_cash = #{record.balanceCash,jdbcType=DECIMAL},
+      balance_frost = #{record.balanceFrost,jdbcType=DECIMAL},
+      frost = #{record.frost,jdbcType=DECIMAL},
+      await = #{record.await,jdbcType=DECIMAL},
+      repay = #{record.repay,jdbcType=DECIMAL},
+      plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      plan_balance = #{record.planBalance,jdbcType=DECIMAL},
+      plan_frost = #{record.planFrost,jdbcType=DECIMAL},
+      plan_accede_total = #{record.planAccedeTotal,jdbcType=DECIMAL},
+      plan_accede_balance = #{record.planAccedeBalance,jdbcType=DECIMAL},
+      plan_accede_frost = #{record.planAccedeFrost,jdbcType=DECIMAL},
+      plan_account_wait = #{record.planAccountWait,jdbcType=DECIMAL},
+      plan_capital_wait = #{record.planCapitalWait,jdbcType=DECIMAL},
+      plan_interest_wait = #{record.planInterestWait,jdbcType=DECIMAL},
+      bank_total = #{record.bankTotal,jdbcType=DECIMAL},
+      bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
+      bank_frost = #{record.bankFrost,jdbcType=DECIMAL},
+      bank_wait_repay = #{record.bankWaitRepay,jdbcType=DECIMAL},
+      bank_wait_capital = #{record.bankWaitCapital,jdbcType=DECIMAL},
+      bank_wait_interest = #{record.bankWaitInterest,jdbcType=DECIMAL},
+      bank_wait_repay_org = #{record.bankWaitRepayOrg,jdbcType=DECIMAL},
+      bank_interest_sum = #{record.bankInterestSum,jdbcType=DECIMAL},
+      bank_invest_sum = #{record.bankInvestSum,jdbcType=DECIMAL},
+      bank_await = #{record.bankAwait,jdbcType=DECIMAL},
+      bank_await_capital = #{record.bankAwaitCapital,jdbcType=DECIMAL},
+      bank_await_interest = #{record.bankAwaitInterest,jdbcType=DECIMAL},
+      bank_await_org = #{record.bankAwaitOrg,jdbcType=DECIMAL},
+      bank_balance_cash = #{record.bankBalanceCash,jdbcType=DECIMAL},
+      bank_frost_cash = #{record.bankFrostCash,jdbcType=DECIMAL},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.wbs.trade.dao.model.auto.Account" >
+    update ht_account
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceCash != null" >
+        balance_cash = #{balanceCash,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceFrost != null" >
+        balance_frost = #{balanceFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="frost != null" >
+        frost = #{frost,jdbcType=DECIMAL},
+      </if>
+      <if test="await != null" >
+        await = #{await,jdbcType=DECIMAL},
+      </if>
+      <if test="repay != null" >
+        repay = #{repay,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayInterest != null" >
+        plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="planBalance != null" >
+        plan_balance = #{planBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planFrost != null" >
+        plan_frost = #{planFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeTotal != null" >
+        plan_accede_total = #{planAccedeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeBalance != null" >
+        plan_accede_balance = #{planAccedeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeFrost != null" >
+        plan_accede_frost = #{planAccedeFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccountWait != null" >
+        plan_account_wait = #{planAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="planCapitalWait != null" >
+        plan_capital_wait = #{planCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="planInterestWait != null" >
+        plan_interest_wait = #{planInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="bankTotal != null" >
+        bank_total = #{bankTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="bankBalance != null" >
+        bank_balance = #{bankBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="bankFrost != null" >
+        bank_frost = #{bankFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitRepay != null" >
+        bank_wait_repay = #{bankWaitRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitCapital != null" >
+        bank_wait_capital = #{bankWaitCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitInterest != null" >
+        bank_wait_interest = #{bankWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="bankWaitRepayOrg != null" >
+        bank_wait_repay_org = #{bankWaitRepayOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="bankInterestSum != null" >
+        bank_interest_sum = #{bankInterestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="bankInvestSum != null" >
+        bank_invest_sum = #{bankInvestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwait != null" >
+        bank_await = #{bankAwait,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwaitCapital != null" >
+        bank_await_capital = #{bankAwaitCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwaitInterest != null" >
+        bank_await_interest = #{bankAwaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAwaitOrg != null" >
+        bank_await_org = #{bankAwaitOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="bankBalanceCash != null" >
+        bank_balance_cash = #{bankBalanceCash,jdbcType=DECIMAL},
+      </if>
+      <if test="bankFrostCash != null" >
+        bank_frost_cash = #{bankFrostCash,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.wbs.trade.dao.model.auto.Account" >
+    update ht_account
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      account_id = #{accountId,jdbcType=VARCHAR},
+      total = #{total,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      balance_cash = #{balanceCash,jdbcType=DECIMAL},
+      balance_frost = #{balanceFrost,jdbcType=DECIMAL},
+      frost = #{frost,jdbcType=DECIMAL},
+      await = #{await,jdbcType=DECIMAL},
+      repay = #{repay,jdbcType=DECIMAL},
+      plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      plan_balance = #{planBalance,jdbcType=DECIMAL},
+      plan_frost = #{planFrost,jdbcType=DECIMAL},
+      plan_accede_total = #{planAccedeTotal,jdbcType=DECIMAL},
+      plan_accede_balance = #{planAccedeBalance,jdbcType=DECIMAL},
+      plan_accede_frost = #{planAccedeFrost,jdbcType=DECIMAL},
+      plan_account_wait = #{planAccountWait,jdbcType=DECIMAL},
+      plan_capital_wait = #{planCapitalWait,jdbcType=DECIMAL},
+      plan_interest_wait = #{planInterestWait,jdbcType=DECIMAL},
+      bank_total = #{bankTotal,jdbcType=DECIMAL},
+      bank_balance = #{bankBalance,jdbcType=DECIMAL},
+      bank_frost = #{bankFrost,jdbcType=DECIMAL},
+      bank_wait_repay = #{bankWaitRepay,jdbcType=DECIMAL},
+      bank_wait_capital = #{bankWaitCapital,jdbcType=DECIMAL},
+      bank_wait_interest = #{bankWaitInterest,jdbcType=DECIMAL},
+      bank_wait_repay_org = #{bankWaitRepayOrg,jdbcType=DECIMAL},
+      bank_interest_sum = #{bankInterestSum,jdbcType=DECIMAL},
+      bank_invest_sum = #{bankInvestSum,jdbcType=DECIMAL},
+      bank_await = #{bankAwait,jdbcType=DECIMAL},
+      bank_await_capital = #{bankAwaitCapital,jdbcType=DECIMAL},
+      bank_await_interest = #{bankAwaitInterest,jdbcType=DECIMAL},
+      bank_await_org = #{bankAwaitOrg,jdbcType=DECIMAL},
+      bank_balance_cash = #{bankBalanceCash,jdbcType=DECIMAL},
+      bank_frost_cash = #{bankFrostCash,jdbcType=DECIMAL},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

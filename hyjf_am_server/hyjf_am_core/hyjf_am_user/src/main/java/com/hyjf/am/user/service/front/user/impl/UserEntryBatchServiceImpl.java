@@ -7,7 +7,9 @@ import com.hyjf.am.user.service.front.user.UserEntryBatchService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -20,23 +22,38 @@ public class UserEntryBatchServiceImpl extends BaseServiceImpl implements UserEn
     private static final Logger logger = LoggerFactory.getLogger(UserEntryBatchServiceImpl.class);
 
     @Override
-    public void updateUserEntryInfo() {
+    public void updUserEntryInfo() {
         logger.info("员工入职，修改客户属性开始");
         List<UserInfo> users = this.queryEmployeeEntryList();
-        for (UserInfo employee : users) {
-            try {
-                // 修改客户属性
-                this.updateEmployeeByExampleSelective(employee);
-                // 修改 入职人员作为推荐人的情况，被推荐人属性变为‘有主单’
-                this.updateSpreadAttribute(employee.getUserId());
-                // 删除相应的用户的推荐人
-                this.deleteReferrer(employee.getUserId());
-            } catch (RuntimeException e) {
-                logger.error("员工入职更新失败,ID:" + employee.getUserId(), e);
-                throw e;
+        if(!CollectionUtils.isEmpty(users)){
+            for (UserInfo employee : users) {
+                try {
+                    ((UserEntryBatchService) AopContext.currentProxy()).updateUserEntryInfo(employee);
+                } catch (Exception e) {
+                    logger.error("员工入职更新失败,ID:" + employee.getUserId(), e);
+                    continue;
+                }
             }
         }
         logger.info("员工入职，修改客户属性结束");
+    }
+
+    @Override
+    public void updateUserEntryInfo(UserInfo record) {
+        // 修改用户属性信息
+        UserInfoExample userInfoExample = new UserInfoExample();
+        UserInfoExample.Criteria uCriteria = userInfoExample.createCriteria();
+        uCriteria.andUserIdEqualTo(record.getUserId());
+        userInfoMapper.updateByExampleSelective(record, userInfoExample);
+
+        // 客户变员工后，其所推荐客户变为‘有主单’
+        userEntryCustomizeMapper.updateSpreadAttribute(record.getUserId());
+
+        // 入职后 删除相应的用户的推荐人
+        SpreadsUserExample example = new SpreadsUserExample();
+        SpreadsUserExample.Criteria crt = example.createCriteria();
+        crt.andUserIdEqualTo(record.getUserId());
+        spreadsUserMapper.deleteByExample(example);
     }
 
     /**
@@ -47,42 +64,5 @@ public class UserEntryBatchServiceImpl extends BaseServiceImpl implements UserEn
     private List<UserInfo> queryEmployeeEntryList() {
         List<UserInfo> users = userEntryCustomizeMapper.queryEmployeeList();
         return users;
-    }
-
-    /**
-     * 修改用户属性信息
-     *
-     * @param record
-     * @return
-     */
-    private int updateEmployeeByExampleSelective(UserInfo record) {
-        UserInfoExample userInfoExample = new UserInfoExample();
-        UserInfoExample.Criteria uCriteria = userInfoExample.createCriteria();
-        uCriteria.andUserIdEqualTo(record.getUserId());
-        return this.userInfoMapper.updateByExampleSelective(record, userInfoExample);
-    }
-
-    /**
-     * 入职员工要删除推荐人
-     *
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-    private int deleteReferrer(Integer userId) {
-        SpreadsUserExample example = new SpreadsUserExample();
-        SpreadsUserExample.Criteria crt = example.createCriteria();
-        crt.andUserIdEqualTo(userId);
-        return spreadsUserMapper.deleteByExample(example);
-    }
-
-    /**
-     * 客户变员工后，其所推荐客户变为‘有主单’
-     *
-     * @param referrer
-     * @return
-     */
-    private int updateSpreadAttribute(Integer referrer) {
-        return userEntryCustomizeMapper.updateSpreadAttribute(referrer);
     }
 }

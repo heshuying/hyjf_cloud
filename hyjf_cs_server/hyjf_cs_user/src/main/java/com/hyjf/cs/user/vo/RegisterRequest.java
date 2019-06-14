@@ -28,6 +28,10 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "注册渠道web")
     private String utmId;
 
+    // wbs add by cuigq
+    @ApiModelProperty(value = "财富端客户ID")
+    private String customerId;
+
     @ApiModelProperty(value = "神策预置属性")
     private String presetProps;
 
@@ -35,6 +39,10 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "当前注册用的类型:0:普通用户;1:企业用户;")
     private Integer userType;
     // 合规改造 add by huanghui 20181220 end
+
+    // 温金投注册  新增字段  是否温金投注册
+    @ApiModelProperty(value = "温金投注册  新增字段  是否温金投注册 传1")
+    private String isWjt ;
 
     public String getInstCode() {
         return instCode;
@@ -98,5 +106,21 @@ public class RegisterRequest extends AppBaseRequest {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getIsWjt() {
+        return isWjt;
+    }
+
+    public void setIsWjt(String isWjt) {
+        this.isWjt = isWjt;
     }
 }

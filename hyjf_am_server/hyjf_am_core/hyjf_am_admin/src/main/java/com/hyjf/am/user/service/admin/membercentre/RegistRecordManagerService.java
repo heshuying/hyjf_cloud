@@ -31,4 +31,19 @@ public interface RegistRecordManagerService extends BaseService {
      */
     int countRecordTotal(Map<String, Object> mapParam );
 
+    /**
+     * 根据筛选条件查找注册信息
+     *
+     * @param userId 筛选条件
+     * @return
+     */
+    RegistRecordCustomize selectRegistOne(Integer userId) ;
+
+    /**
+     * 根据用户id查询渠道类型
+     *
+     * @param userId 筛选条件
+     * @return
+     */
+    RegistRecordCustomize selectByUserType(Integer userId);
 }

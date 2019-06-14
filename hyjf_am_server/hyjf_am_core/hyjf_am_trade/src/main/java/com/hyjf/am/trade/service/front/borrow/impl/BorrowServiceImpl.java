@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.mq.base.CommonProducer;
@@ -334,6 +335,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteDepartmentId(tenderBg.getInviteDepartmentId());
         borrowTender.setInviteDepartmentName(tenderBg.getInviteDepartmentName());
         borrowTender.setInviteUserId(tenderBg.getInviteUserId());
+        // 投资时候渠道
+        borrowTender.setTenderUserUtmId(tenderBg.getTenderUserUtmId());
 
         logger.info("看看推荐人存在不存在？：" + tenderBg.getInviteUserName());
         borrowTender.setInviteUserName(tenderBg.getInviteUserName());
@@ -354,7 +357,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setUserName(tenderBg.getUserName());
         
         
-        logger.info("开始插入borrowTender表...");
+        logger.info("开始插入borrowTender表...borrowTender:{}",JSONObject.toJSONString(borrowTender));
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
 
@@ -520,6 +523,25 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
                     MQConstant.HG_REPORT_DELAY_LEVEL);
             // add by liushouyi nifa2 20181204 end
+
+            // add by liuyang wbs系统推送标的信息 20190517 start
+            try{
+                // 满标后,发送标的募集结束MQ
+                if("10000000".equals(borrowInfo.getPublishInstCode())) {
+                    JSONObject borrowParams = new JSONObject();
+                    // 产品编号
+                    borrowParams.put("productNo", borrowNid);
+                    // 产品状态 :3:募集结束
+                    borrowParams.put("productStatus", "3");
+                    // 产品类型 0 散标类, 1 计划类
+                    borrowParams.put("productType", 0);
+                    commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), borrowParams));
+                }
+            }catch (Exception e){
+                logger.error(e.getMessage());
+                logger.error("wbs系统推送标的信息发送MQ失败");
+            }
+            // add by liuyang wbs系统推送标的信息 20190517 end
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
@@ -4764,6 +4786,18 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<WebProjectRepayListCustomize> projectRepayList =
                 webUserInvestListCustomizeMapper.selectProjectRepayPlanList(params);
         return projectRepayList;
+    }
+
+    /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomize queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomize accountInfos = accountCustomizeMapper.queryAccountUserMoney(userId);
+        return accountInfos;
     }
 }
 

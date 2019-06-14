@@ -980,7 +980,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         // 承接成功后,发送大屏数据统计MQ
                         ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,sellerUserId,sellerAccount.getUserName(),creditTenderLog.getAssignCapital(),3);
                         screenDataBean.setTenderUserId(assignAccount.getUserId());
-                        this.sendScreenDataMQ(screenDataBean);
+                        //暂时取消债转数据
+                        //this.sendScreenDataMQ(screenDataBean);
                     } catch (Exception e) {
                         logger.error("承接成功后,发送大屏数据统计MQ失败",e.getMessage());
                     }
@@ -1475,6 +1476,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 将出借金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));
         BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
+        Integer userId = Integer.valueOf(request.getUserId());
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(userId,new BigDecimal(assignPay))) {
+            // 账户余额不同步
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
+        }
         // 剩余可投金额
         Integer min = 1;
         if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {

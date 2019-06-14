@@ -3342,6 +3342,66 @@ public class HjhAccedeExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andTenderUserUtmIdIsNull() {
+            addCriterion("tender_user_utm_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdIsNotNull() {
+            addCriterion("tender_user_utm_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdEqualTo(Integer value) {
+            addCriterion("tender_user_utm_id =", value, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdNotEqualTo(Integer value) {
+            addCriterion("tender_user_utm_id <>", value, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdGreaterThan(Integer value) {
+            addCriterion("tender_user_utm_id >", value, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tender_user_utm_id >=", value, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdLessThan(Integer value) {
+            addCriterion("tender_user_utm_id <", value, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdLessThanOrEqualTo(Integer value) {
+            addCriterion("tender_user_utm_id <=", value, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdIn(List<Integer> values) {
+            addCriterion("tender_user_utm_id in", values, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdNotIn(List<Integer> values) {
+            addCriterion("tender_user_utm_id not in", values, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdBetween(Integer value1, Integer value2) {
+            addCriterion("tender_user_utm_id between", value1, value2, "tenderUserUtmId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserUtmIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("tender_user_utm_id not between", value1, value2, "tenderUserUtmId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

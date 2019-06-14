@@ -41,9 +41,11 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
             //
             Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> userType = CacheUtil.getParamNameMap("USER_TYPE");
             for (RegistRecordCustomize registRecordCustomize : listRegistRecord) {
                 registRecordCustomize.setUserProperty(userProperty.getOrDefault(registRecordCustomize.getUserProperty(), null));
                 registRecordCustomize.setRegistPlat(client.getOrDefault(registRecordCustomize.getRegistPlat(), null));
+                registRecordCustomize.setUserType(userType.getOrDefault(registRecordCustomize.getUserType(), null));
             }
         }
         return listRegistRecord;
@@ -61,6 +63,40 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
         Integer integerCount = registRecordCustomizeMapper.countRecordTotal(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;
+    }
+
+
+    /**
+     * 根据筛选条件查找注册信息
+     *
+     * @param userId 筛选条件
+     * @return
+     */
+    @Override
+    public RegistRecordCustomize selectRegistOne(Integer userId) {
+        RegistRecordCustomize listRegistRecord = registRecordCustomizeMapper.selectRegistOne(userId);
+        if (listRegistRecord!=null) {
+            Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
+            Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> userType = CacheUtil.getParamNameMap("USER_TYPE");
+            listRegistRecord.setRegistPlatCode(listRegistRecord.getRegistPlat());
+            listRegistRecord.setUserProperty(userProperty.getOrDefault(listRegistRecord.getUserProperty(), null));
+            listRegistRecord.setRegistPlat(client.getOrDefault(listRegistRecord.getRegistPlat(), null));
+            listRegistRecord.setUserType(userType.getOrDefault(listRegistRecord.getUserType(), null));
+        }
+        return listRegistRecord;
+    }
+
+    /**
+     * 根据用户id查询渠道类型
+     *
+     * @param userId 筛选条件
+     * @return
+     */
+    @Override
+    public RegistRecordCustomize selectByUserType(Integer userId) {
+        RegistRecordCustomize listRegistRecord = registRecordCustomizeMapper.selectByUserType(userId);
+        return listRegistRecord;
     }
 
 }
