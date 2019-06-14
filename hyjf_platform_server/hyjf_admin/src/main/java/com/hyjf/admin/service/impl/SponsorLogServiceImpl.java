@@ -62,7 +62,7 @@ public class SponsorLogServiceImpl implements SponsorLogService {
 		}else {
 			SponsorLogResponse slr = new SponsorLogResponse();
 			slr.setRtn(Response.ERROR);
-			slr.setMessage("修改失败");
+			slr.setMessage("担保账户未修改");
 			return  slr;
 		}
 		
