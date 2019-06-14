@@ -1525,6 +1525,14 @@ public interface AmUserClient {
     void updateOrDelectRepeatData();
 
     /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    boolean syncUserMobile(UserRequest userRequest);
+
+    /**
      * 兑吧积分账户查询列表
      *
      * @param requestBean

@@ -3032,6 +3032,40 @@ public class AmUserClientImpl implements AmUserClient {
         }
     }
 
+	@Override
+	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+							   Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(verificationCode);
+		request.setVerificationType(verificationType);
+		request.setPlatform(platform);
+		request.setStatus(searchStatus);
+		request.setUpdateStatus(updateStatus);
+		request.setUpdate(isUpdate);
+		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/smsCode/check/", request, IntegerResponse.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result.getResultInt();
+	}
+
+	/**
+	 * 同步用户手机号
+	 *
+	 * @param userRequest
+	 * @return
+	 */
+	@Override
+	public boolean syncUserMobile(UserRequest userRequest) {
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/syncUserMobile", userRequest, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
     @Override
     public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
                                Integer searchStatus, Integer updateStatus, boolean isUpdate) {

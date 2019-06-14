@@ -10,7 +10,6 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
-import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 
 /**
  * @author fuqiang
@@ -50,5 +49,12 @@ public interface CsMessageClient {
     List<AppAccesStatisticsVO> getAppAccesStatisticsVO(AppChannelStatisticsRequest request);
 
     List<AppUtmRegVO> getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request);
+
+    /**
+     * app发现页运营报告信息
+     * @param isRelease
+     * @return
+     */
+    List getReportList(Integer isRelease);
 
 }

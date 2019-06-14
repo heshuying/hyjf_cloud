@@ -306,6 +306,54 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 插入修改银行预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	@Override
+	public boolean insertBankMobileModify(BankMobileModifyVO vo) {
+		String url = userService + "/bankMobileModify/insertBankMobileModify";
+		BooleanResponse response = restTemplate.postForEntity(url,vo,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 更新用户银行预留手机号
+	 *
+	 * @param userId
+	 * @param newBankMobile
+	 */
+	@Override
+	public boolean updateBankMobileByUserId(int userId, String newBankMobile) {
+		String url = userService + "/bankMobileModify/updateBankMobileByUserId/" +userId + "/" + newBankMobile;
+		BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 更新用户修改预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	@Override
+	public boolean updateBankMobileModify(BankMobileModifyVO vo) {
+		String url = userService + "/bankMobileModify/updateBankMobileModify";
+		BooleanResponse response = restTemplate.postForEntity(url,vo,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * 保存验证码
 	 * @param mobile
 	 * @param checkCode

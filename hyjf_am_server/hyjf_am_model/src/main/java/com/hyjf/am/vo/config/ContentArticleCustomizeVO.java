@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fq
@@ -31,6 +32,10 @@ public class ContentArticleCustomizeVO extends BaseVO {
     private String sharePicUrl;
     //分享url
     private String shareUrl;
+
+    @ApiModelProperty(value = "列表图片")
+    private String imgurl;
+
     public String getTitle() {
         return title;
     }
@@ -78,5 +83,13 @@ public class ContentArticleCustomizeVO extends BaseVO {
     }
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl;
+    }
+
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 }

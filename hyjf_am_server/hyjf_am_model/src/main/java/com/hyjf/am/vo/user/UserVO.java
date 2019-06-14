@@ -17,6 +17,8 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private String mobile;
 
+	private String bankMobile;
+
 	private String email;
 
 	private String password;
@@ -393,6 +395,7 @@ public class UserVO extends BaseVO implements Serializable {
 				"userId=" + userId +
 				", username='" + username + '\'' +
 				", mobile='" + mobile + '\'' +
+				", bankMobile'" + bankMobile + '\'' +
 				", email='" + email + '\'' +
 				", status=" + status +
 				", openAccount=" + openAccount +
@@ -416,5 +419,13 @@ public class UserVO extends BaseVO implements Serializable {
 				", isCaFlag=" + isCaFlag +
 				", isSmtp=" + isSmtp +
 				'}';
+	}
+
+	public String getBankMobile() {
+		return bankMobile;
+	}
+
+	public void setBankMobile(String bankMobile) {
+		this.bankMobile = bankMobile;
 	}
 }

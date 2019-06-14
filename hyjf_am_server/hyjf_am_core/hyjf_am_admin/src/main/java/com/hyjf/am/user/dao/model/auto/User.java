@@ -91,7 +91,7 @@ public class User implements Serializable {
     private Integer ifReceiveNotice;
 
     /**
-     * 投标成功短信 0发送 1不发送
+     * 投资成功短信 0发送 1不发送
      *
      * @mbggenerated
      */
@@ -193,7 +193,7 @@ public class User implements Serializable {
     private Integer isCaFlag;
 
     /**
-     * 是否发送出借协议邮件 0发送 1不发送
+     * 是否发送投资协议邮件 0发送 1不发送
      *
      * @mbggenerated
      */

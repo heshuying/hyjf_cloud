@@ -110,8 +110,14 @@ public class AppSmsCodeController extends BaseUserController {
             return ret;
         }
         mobile = DES.decodeValue(key, mobile);
-        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
-        CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
+        int cnt = 0;
+        // app4.0 注册验证码单独验证，不失效
+        if(verificationType.equals(CommonConstant.PARAM_TPL_ZHUCE)){
+            cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,false);
+        } else {
+            cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
+        }
+        CheckUtil.check(cnt > 0, MsgEnum.STATUS_ZC000015);
 
         ret.put("status", "0");
         ret.put("statusDesc", CustomConstants.APP_STATUS_DESC_SUCCESS);

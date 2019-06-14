@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -169,7 +168,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         // 投标金额大于可用余额
         if (new BigDecimal(withdrawMoney).compareTo(account.getBankBalance()) > 0) {
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
-            result.setStatusDesc("提现金额大于可用金额，请确认后再次提现。");
+            // app4.0 修改提示文案
+            result.setStatusDesc("提现金额不能大于可用金额");
             return result;
         }
         WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, withdrawMoney);
@@ -348,8 +348,9 @@ public class AppBankWithdrawController extends BaseTradeController {
         AccountVO account = this.bankWithdrawService.getAccountByUserId(userId);
         // 投标金额大于可用余额
         if (account == null || new BigDecimal(transAmt).compareTo(account.getBankBalance()) > 0) {
+            // app4.0 提示文案修改
+            ret.put("statusDesc", "提现金额不能大于可用金额");
             ret.put("status", "1");
-            ret.put("statusDesc", "提现金额大于可用金额，请确认后再次提现。");
             ret.put("request", requestStr);
             return ret;
         }

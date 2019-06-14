@@ -621,7 +621,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (! CollectionUtils.isEmpty(homePageCustomizes)){
             AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
             pageCustomize.setTitle("新手专享");
-            pageCustomize.setTag("新手限投1次");
+            pageCustomize.setTag("限投一次");
             pageCustomize.setBorrowDesc("100起投，最高出借5000");
             CommonUtils.convertNullToEmptyString(pageCustomize);
             AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(pageCustomize);

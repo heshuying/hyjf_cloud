@@ -3,8 +3,7 @@ package com.hyjf.am.trade.service.front.trade.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
-import com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
@@ -217,6 +216,77 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
                 }
                 appTradeListCustomize.setBankBalance("可用金额".concat(appTradeListCustomize.getBankBalance()));
                 appTradeListCustomize.setMonth(month);
+                //app4.0需求 在相应交易类型后加上标的号、智投名称等显示字样
+                // 交易类型编号
+                String trade = appTradeListCustomize.getTrade();
+                // 交易凭证号
+                String nid = appTradeListCustomize.getNid();
+                // 汇计划加入订单号
+                String accedeOrderId = appTradeListCustomize.getAccedeOrderId();
+                // 根据交易类型编号 追加显示字样
+                if("tender_success".equals(trade) || "tender".equals(trade)){
+                    // 出借成功，投标冻结，取borrow_tender，追加"(标的号)"显示字样
+                    BorrowTenderExample borrowTenderExample = new BorrowTenderExample();
+                    borrowTenderExample.createCriteria().andNidEqualTo(nid);
+                    List<BorrowTender> borrowTenderList = borrowTenderMapper.selectByExample(borrowTenderExample);
+                    if(CollectionUtils.isNotEmpty(borrowTenderList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(borrowTenderList.get(0).getBorrowNid()).concat(")"));
+                    }
+                } else if ("borrow_success".equals(trade) || "repay_success".equals(trade)){
+                    // 借款成功/还款，取borrow_apicron，追加"(标的号)"显示字样
+                    BorrowApicronExample borrowApicronExample = new BorrowApicronExample();
+                    borrowApicronExample.createCriteria().andNidEqualTo(nid);
+                    List<BorrowApicron> borrowApicronList = borrowApicronMapper.selectByExample(borrowApicronExample);
+                    if(CollectionUtils.isNotEmpty(borrowApicronList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(borrowApicronList.get(0).getBorrowNid().concat(")")));
+                    }
+                } else if("tender_recover_yes".equals(trade)){
+                    // 收到还款，取borrow_recover，追加"(标的号)显示字样"
+                    BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+                    borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(nid);
+                    List<BorrowRecover> recoverList = borrowRecoverMapper.selectByExample(borrowRecoverExample);
+                    if(CollectionUtils.isNotEmpty(recoverList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(recoverList.get(0).getBorrowNid().concat(")")));
+                    }
+                } else if("creditassign".equals(trade)){
+                    // 购买债权，取credit_tender，追加"(债转编号)"显示字样
+                    CreditTenderExample creditTenderExample = new CreditTenderExample();
+                    creditTenderExample.createCriteria().andAssignNidEqualTo(nid);
+                    List<CreditTender> creditTenderList = creditTenderMapper.selectByExample(creditTenderExample);
+                    if(CollectionUtils.isNotEmpty(creditTenderList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(HZR").concat(creditTenderList.get(0).getCreditNid().concat(")")));
+                    }
+                } else if("credit_tender_recover_yes".equals(trade)){
+                    // 散标债转还款(智投债转还款不显示)，取credit_repay，追加"(债转编号)"显示字样
+                    CreditRepayExample creditRepayExample = new CreditRepayExample();
+                    creditRepayExample.createCriteria().andCreditRepayOrderIdEqualTo(nid);
+                    List<CreditRepay> creditRepayList = creditRepayMapper.selectByExample(creditRepayExample);
+                    if(CollectionUtils.isNotEmpty(creditRepayList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(HZR").concat(creditRepayList.get(0).getCreditNid().concat(")")));
+                    }
+                } else if("increase_interest_repay_yes".equals(trade)){
+                    // 加息收益，取increase_interest_loan_detail，追加"(标的号)显示字样"
+                    IncreaseInterestLoanDetailExample increaseInterestLoanDetailExample = new IncreaseInterestLoanDetailExample();
+                    increaseInterestLoanDetailExample.createCriteria().andRepayOrderIdEqualTo(nid);
+                    List<IncreaseInterestLoanDetail> increaseInterestLoanDetailList = increaseInterestLoanDetailMapper.selectByExample(increaseInterestLoanDetailExample);
+                    if(CollectionUtils.isNotEmpty(increaseInterestLoanDetailList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(increaseInterestLoanDetailList.get(0).getBorrowNid().concat(")")));
+                    }
+                } else if("hjh_invest".equals(trade) || "hjh_quit".equals(trade)){
+                    // 授权服务/退出服务，根据计划加入订单号查计划名称
+                    String planName = userTradeDetailCustomizeMapper.getPlanNameByAccedeOrderId(accedeOrderId);
+                    if(StringUtils.isNotBlank(planName)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(planName.concat(")")));
+                    }
+                } else if("repay_freeze".equals(trade)){
+                    // 还款冻结 nid生成规则borrowNid_userid_期数
+                    if(StringUtils.isNotBlank(nid)){
+                        String[] repayFreezeArr = nid.split("_");
+                        if(repayFreezeArr != null || StringUtils.isNotBlank(repayFreezeArr[0])){
+                            appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(repayFreezeArr[0].concat(")")));
+                        }
+                    }
+                }
                 list.add(appTradeListCustomize);
             }
         }else {

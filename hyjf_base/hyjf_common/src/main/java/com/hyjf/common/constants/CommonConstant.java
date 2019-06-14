@@ -212,6 +212,10 @@ public class CommonConstant {
      * 解绑银行卡
      */
     public static final String APP_BANK_REQUEST_TYPE_UNBINDCARD = "14";
+    /**
+     * 修改银行预留手机号
+     */
+    public static final String APP_BANK_MOBILE_MODIFY = "16";
 
 
 

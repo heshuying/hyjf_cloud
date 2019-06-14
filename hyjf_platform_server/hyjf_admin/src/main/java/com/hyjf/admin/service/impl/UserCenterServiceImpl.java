@@ -18,6 +18,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.config.IdCardCustomize;
@@ -762,5 +763,16 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
         BankCancellationAccountResponse response = this.userCenterClient.getBankCancellationAccountList(bankCancellationAccountRequest);
         return response;
+    }
+
+    /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    @Override
+    public boolean syncUserMobile(UserRequest userRequest) {
+        return this.userCenterClient.syncUserMobile(userRequest);
     }
 }

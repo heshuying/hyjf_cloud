@@ -31,6 +31,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 					"/hyjf-admin/login/getPicture",
                     "/hyjf-admin/login/sendLoginCode/**",
 					"/hyjf-admin/login/mobileCodeLogin",
+					"/hyjf-admin/smsauto/auto",
+					"/hyjf-admin/login/mobileCodeLogin",
 					"/hyjf-admin/pointsshop/duiba/order/selectReleaseCoupons/{orderNum}",
 					"/hyjf-admin/pointsshop/duiba/order/activationError/{orderNum}/{errorMessage}",
 					"/hyjf-admin/pointsshop/duiba/order/activationSuccess/{orderNum}"

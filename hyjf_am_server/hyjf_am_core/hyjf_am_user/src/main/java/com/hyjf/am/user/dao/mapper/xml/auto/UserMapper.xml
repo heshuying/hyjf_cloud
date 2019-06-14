@@ -98,10 +98,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, mobile, bank_mobile, email, `password`, salt, `status`, open_account, 
-    recharge_sms, withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, 
-    reg_esb, eprovince, send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, 
-    is_set_password, bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+    user_id, username, mobile, bank_mobile, email, `password`, salt, `status`, open_account,
+    recharge_sms, withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms,
+    reg_esb, eprovince, send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status,
+    is_set_password, bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time,
     is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time, points_total, points_current
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserExample" >
@@ -141,29 +141,29 @@
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_user (username, mobile, bank_mobile, 
-      email, `password`, salt, 
-      `status`, open_account, recharge_sms, 
-      withdraw_sms, icon_url, if_receive_notice, 
-      invest_sms, recieve_sms, reg_esb, 
-      eprovince, send_sms, is_inst_flag, 
-      inst_code, account_esb, user_type, 
-      payment_auth_status, is_set_password, bank_open_account, 
-      bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+    insert into ht_user (username, mobile, bank_mobile,
+      email, `password`, salt,
+      `status`, open_account, recharge_sms,
+      withdraw_sms, icon_url, if_receive_notice,
+      invest_sms, recieve_sms, reg_esb,
+      eprovince, send_sms, is_inst_flag,
+      inst_code, account_esb, user_type,
+      payment_auth_status, is_set_password, bank_open_account,
+      bank_account_esb, is_evaluation_flag, evaluation_expired_time,
       is_ca_flag, is_smtp, reg_ip, 
-      reg_time, create_time, update_time, 
+      reg_time, create_time, update_time,
       points_total, points_current)
-    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankMobile,jdbcType=CHAR}, 
-      #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, 
-      #{status,jdbcType=TINYINT}, #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, 
-      #{withdrawSms,jdbcType=TINYINT}, #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, 
-      #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, 
-      #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, 
-      #{instCode,jdbcType=VARCHAR}, #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
-      #{paymentAuthStatus,jdbcType=TINYINT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
-      #{bankAccountEsb,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
+    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankMobile,jdbcType=CHAR},
+      #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR},
+      #{status,jdbcType=TINYINT}, #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT},
+      #{withdrawSms,jdbcType=TINYINT}, #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT},
+      #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT},
+      #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT},
+      #{instCode,jdbcType=VARCHAR}, #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT},
+      #{paymentAuthStatus,jdbcType=TINYINT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT},
+      #{bankAccountEsb,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP},
       #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, 
-      #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{pointsTotal,jdbcType=INTEGER}, #{pointsCurrent,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.User" >

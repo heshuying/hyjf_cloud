@@ -362,6 +362,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 			result.setUsername(user.getUsername());
 			result.setMobile(user.getMobile());
+			// 返回银行预留手机号 add by Liushouyi
+			result.setBankMobile(user.getBankMobile());
 			result.setReffer(user.getUserId() + "");
 			result.setSetupPassword(String.valueOf(user.getIsSetPassword()));
 			result.setUserType(String.valueOf(user.getUserType()));
@@ -718,6 +720,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 风险测评结果
 			UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(userId);
+			// app4.0添加测评结果页 update by wgx 2019/05/06
+			int evaluation = 0;// 是否已经测评 0未测评 1已测评
 			if (userEvalationResult != null) {
 				//从user表获取用户测评到期日
 				UserVO user = amUserClient.findUserById(userId);
@@ -738,6 +742,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setFengxianDesc(userEvalationResult.getEvalType());
 					result.setEvalationSummary(userEvalationResult.getSummary());
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
+					evaluation = 1;// 已测评
 				}
 			} else {
 				result.setAnswerStatus("0");
@@ -754,7 +759,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			result.setAnswerUrl(
-					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST));
+					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST + evaluation));
 		}
 
 		{
@@ -887,6 +892,20 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		result.setExitLabelShowFlag(systemConfig.getExitLabelShowFlag());
 		// add by pcc app3.1.1追加 20180823 end
 		result.setInvitationCode(userId);
+		// add by liushouyi 修改银行预留手机号
+		result.setBankMobileModifyUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_MOBILE_MODIFY + packageStrForm(request));
+		// 从redis获取是否可修改银行预留手机号
+		String isBankMobileModify = RedisConstants.BANK_MOBILE_MODIFY_FLAG;
+		result.setBankMobileModifyFlag("0");
+		try{
+			String flag = RedisUtils.get(isBankMobileModify);
+			if(StringUtils.isNotBlank(flag)) {
+				result.setBankMobileModifyFlag(flag);
+			}
+		} catch(Exception e) {
+			logger.error("获取银行预留手机号修改按钮展示flag失败！");
+		}
+
 		return result;
 	}
 

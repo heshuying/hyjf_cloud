@@ -6,13 +6,16 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.LinkVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +37,9 @@ public class InstConfigController extends BaseController {
     private static final String PERMISSIONS = "instconfig";
     @Autowired
     private InstConfigService instConfigService;
+
+    @Autowired
+    private BorrowCommonService borrowCommonService;
 
     @ApiOperation(value = "查询配置中心机构配置", notes = "查询配置中心机构配置")
     @PostMapping("/init")
@@ -145,6 +151,22 @@ public class InstConfigController extends BaseController {
         //校验通过正常返回
         ret.put("status", "y");
         return new AdminResult<String>(ret.toJSONString());
+    }
+
+    @ApiOperation(value = "获取担保公司合作列表", notes = "获取担保公司合作列表")
+    @GetMapping("/getBondingCompany")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult getBondingCompany() {
+        LinkResponse response = borrowCommonService.getLinks();
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+
+        }
+        return new AdminResult(response.getResultList()) ;
+//        return new AdminResult<ListResult<LinkVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
     }
 
 

@@ -27,6 +27,12 @@ public class AppTradeListCustomize {
     private String month;
     //可用余额
     private String bankBalance;
+    //交易类型
+    private String trade;
+    //交易凭证号
+    private String nid;
+    //汇计划加入订单号
+    private String accedeOrderId;
     /**
      * 构造方法
      */
@@ -105,5 +111,29 @@ public class AppTradeListCustomize {
 
     public void setBankBalance(String bankBalance) {
         this.bankBalance = bankBalance;
+    }
+
+    public String getTrade() {
+        return trade;
+    }
+
+    public void setTrade(String trade) {
+        this.trade = trade;
+    }
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public String getAccedeOrderId() {
+        return accedeOrderId;
+    }
+
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId;
     }
 }

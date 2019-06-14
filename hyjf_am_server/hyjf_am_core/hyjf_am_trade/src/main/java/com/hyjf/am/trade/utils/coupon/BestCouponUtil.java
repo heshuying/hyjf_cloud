@@ -50,9 +50,10 @@ public class BestCouponUtil {
      * 处理选中的操作平台
      *
      * @param operationPlatform
+     * @param platform 优惠券平台
      * @return
      */
-    public static String dealOperationNew(String operationPlatform) {
+    public static String dealOperationNew(String operationPlatform, String platform) {
         String clientString = "";
         // 操作平台
         //操作平台
@@ -74,12 +75,30 @@ public class BestCouponUtil {
                 }
             }
         }
-        if("Android、iOS".equals(clientString)){
-            clientString ="限APP可用";
+        // app4.0 为了不影响其他端的显示，app单独处理
+        if ("2".equals(platform) || "3".equals(platform)){
+            if(clientString.contains("Android") && clientString.contains("iOS") &&
+                    clientString.contains("微官网") && clientString.contains("PC")){
+                clientString = "";
+            } else if("Android、iOS".equals(clientString)){
+                clientString ="限APP可用";
+            } else if("微官网、Android、iOS".equals(clientString)){
+                clientString ="限移动端可用";
+            } else {
+                if(StringUtils.isNotBlank(clientString)){
+                    clientString = "限".concat(clientString).concat("可用");
+                    clientString = clientString.replace("、", "/");
+                }
+            }
+        } else {
+            if("Android、iOS".equals(clientString)){
+                clientString ="限APP可用";
+            }
+            if("微官网、Android、iOS".equals(clientString)){
+                clientString ="限移动端可用";
+            }
         }
-        if("微官网、Android、iOS".equals(clientString)){
-            clientString ="限移动端可用";
-        }
+
         return clientString;
     }
 
@@ -183,7 +202,7 @@ public class BestCouponUtil {
         if("散标/新手/智投/".equals(projectString)){
             projectString="项目类型不限";
         }else{
-            projectString=projectString.substring(1, projectString.length() - 1);
+            projectString=projectString.substring(0, projectString.length() - 1);
         }
 
         return projectString;

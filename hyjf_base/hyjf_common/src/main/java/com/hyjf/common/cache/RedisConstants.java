@@ -578,8 +578,24 @@ public class RedisConstants {
      */
     public static final String  HJH_TENDER_LOCK ="HJH_TENDER_LOCK:";
 
+    /**
+     * app充值规则
+     */
+    public static final String APP_RECHARGE = "app_recharge:";
+
+    /**
+     * app发现页默认图片列表
+     */
+    public static final String APP_FIND_IMAGE = "app_find_image:";
+
     /** 积分商城开关*/
     public static final String POINTS_SHOP_SWITCH = "points_shop_switch";
     /** 兑吧汇率*/
     public static final String DUIBA_EXCHANGE_RATE = "hyjf_duiba_exchange_rate";
+}
+
+    /**
+     * redis配置是否可修改手机号
+     */
+    public static final String BANK_MOBILE_MODIFY_FLAG = "BANK_MOBILE_MODIFY_FLAG";
 }
