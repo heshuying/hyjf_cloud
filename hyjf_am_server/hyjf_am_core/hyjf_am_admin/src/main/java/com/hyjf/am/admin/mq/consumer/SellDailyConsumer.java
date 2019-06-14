@@ -81,6 +81,9 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			//List<SellDailyVO> appSellDailyList = dto.getAppSellDailyList();
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
             List<SellDailyVO> creditSellDailyList = dto.getCreditSellDailyList();
+            if (!CollectionUtils.isEmpty(creditSellDailyList)) {
+            	creditSellDailyList.add(new SellDailyVO(null, null));
+			}
 
 			// 2. 处理drawOrder=2特殊分部的数据
 			SellDailyVO noneRefferRecord = new SellDailyVO(YYZX_PRIMARY_DIVISION_NAME, YYZX_TWO_DIVISION_NAME);
