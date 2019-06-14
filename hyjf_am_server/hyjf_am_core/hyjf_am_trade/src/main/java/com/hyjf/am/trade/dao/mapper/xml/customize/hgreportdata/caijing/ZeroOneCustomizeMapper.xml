@@ -175,8 +175,8 @@
 		LEFT JOIN ht_borrow_project_type t ON t.borrow_cd = b.project_type
 		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
 		WHERE b.reverify_status = 6
-		AND b.create_time <![CDATA[>=]]> #{dateStart}
-		AND b.create_time <![CDATA[<=]]> #{dateEnd}
+		AND b.create_time <![CDATA[>=]]> CONCAT(#{dateStart},' 00:00:00')
+		AND b.create_time <![CDATA[<=]]> CONCAT(#{dateEnd},' 23:59:59')
 
 		UNION ALL
 
@@ -220,8 +220,8 @@
 		LEFT JOIN ht_r_user ru ON ru.user_id = c.credit_user_id
 		WHERE c.credit_status = 1 and c.credit_status = 2
 		AND c.credit_capital_assigned > 0
-		AND c.create_time <![CDATA[>=]]> #{dateStart}
-		AND c.create_time <![CDATA[<=]]> #{dateEnd}
+		AND c.create_time <![CDATA[>=]]> CONCAT(#{dateStart},' 00:00:00')
+		AND c.create_time <![CDATA[<=]]> CONCAT(#{dateEnd},' 23:59:59')
 		GROUP BY credit_id
 	</select>
 </mapper>

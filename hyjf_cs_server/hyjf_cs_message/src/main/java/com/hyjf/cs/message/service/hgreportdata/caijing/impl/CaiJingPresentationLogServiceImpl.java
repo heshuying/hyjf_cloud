@@ -73,14 +73,13 @@ public class CaiJingPresentationLogServiceImpl implements CaiJingPresentationLog
         Query query = new Query();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(request.getPresentationTimeStart()) && StringUtils.isNotBlank(request.getPresentationTimeEnd())) {
-            Date startDate = GetDate.stringToDate2(request.getPresentationTimeStart());
-            Date endDate = GetDate.stringToDate2(request.getPresentationTimeEnd());
-            criteria.and("presentationTime").gte(GetDate.getSearchStartTime(startDate))
-                    .lte(GetDate.getSearchEndTime(endDate));
+            criteria.and("startDate").is(request.getPresentationTimeStart());
+            criteria.and("endDate").is(request.getPresentationTimeEnd());
         }
         if (StringUtils.isNotBlank(request.getLogType())) {
             criteria.and("logType").is(request.getLogType());
         }
+        query.addCriteria(criteria);
         presentationLogDao.del(query);
     }
 }

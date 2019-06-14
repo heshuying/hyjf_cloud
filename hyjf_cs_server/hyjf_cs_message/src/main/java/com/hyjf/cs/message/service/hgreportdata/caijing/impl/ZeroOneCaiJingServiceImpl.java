@@ -76,12 +76,10 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     @Override
     public void borrowRecordSub(String startDate, String endDate) {
         logger.info("借款记录接口报送开始");
-        startDate = GetDate.dataformat(startDate, GetDate.date_sdf_key);
-        endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
-        String dateStart = GetDate.getDayStart(startDate);
-        String dateEnd = GetDate.getDayEnd(endDate);
+        String dateStart = GetDate.dataformat(startDate, GetDate.date_sdf_key);
+        String dateEnd = GetDate.dataformat(endDate, GetDate.date_sdf_key);
 
-        logger.info("借款记录接口查询开始时间：" + dateStart, "结束时间：" + dateEnd);
+        logger.info("借款记录接口查询开始时间：" + dateStart+ ",结束时间：" + dateEnd);
         List<ZeroOneBorrowDataVO> borrowDataVOList = amTradeClient.queryBorrowRecordSub(dateStart, dateEnd);
         if (CollectionUtils.isEmpty(borrowDataVOList)) {
             logger.info("借款记录接口报送数据为空");
@@ -90,6 +88,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
         presentationLog.setLogType(BORROWRECORD);
         presentationLog.setCount(borrowDataVOList.size());
+        presentationLog.setStartDate(dateStart);
+        presentationLog.setEndDate(dateEnd);
 
         logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
 
@@ -140,13 +140,17 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryInvestRecordSub(startDate, endDate);
 
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(INVESTRECORD);
-        presentationLog.setCount(zeroOneDataVOList.size());
         if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("投资记录接口无数据报送结束");
             return;
         }
+
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType(INVESTRECORD);
+        presentationLog.setCount(zeroOneDataVOList.size());
+        presentationLog.setStartDate(startDate);
+        presentationLog.setEndDate(endDate);
+
         logger.info("投资记录接口报送条数=" + zeroOneDataVOList.size());
 
         Set<Integer> listUserId = new HashSet<>();
@@ -201,13 +205,17 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         endDate = GetDate.dataformat(endDate, GetDate.date_sdf_key);
 
         List<ZeroOneDataVO> zeroOneDataVOList = amTradeClient.queryAdvancedRepay(startDate, endDate);
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(ADVANCEREPAY);
-        presentationLog.setCount(zeroOneDataVOList.size());
         if (zeroOneDataVOList == null || zeroOneDataVOList.size() == 0) {
             logger.info("提前还款接口无数据报送结束");
             return;
         }
+
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType(ADVANCEREPAY);
+        presentationLog.setCount(zeroOneDataVOList.size());
+        presentationLog.setStartDate(startDate);
+        presentationLog.setEndDate(endDate);
+
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
         Map<String,Object> map = new HashMap<>();

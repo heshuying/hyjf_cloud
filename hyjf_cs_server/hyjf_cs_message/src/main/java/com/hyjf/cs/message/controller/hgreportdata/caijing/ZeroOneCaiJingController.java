@@ -50,6 +50,12 @@ public class ZeroOneCaiJingController {
         zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
     }
 
+    /**
+     * 重新投资记录报送接口
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @RequestMapping("investRecord/{startDate}/{endDate}")
     public BooleanResponse investRecord(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
@@ -59,6 +65,12 @@ public class ZeroOneCaiJingController {
         return response;
     }
 
+    /**
+     * 重新借款记录报送接口
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @RequestMapping("borrowRecord/{startDate}/{endDate}")
     public BooleanResponse borrowRecord(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
@@ -68,6 +80,12 @@ public class ZeroOneCaiJingController {
         return response;
     }
 
+    /**
+     * 重新提前还款接口报送
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @RequestMapping("advancedRepay/{startDate}/{endDate}")
     public BooleanResponse advancedRepay(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();

@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -68,6 +69,13 @@ public class CaiJingController extends BaseController {
     @PostMapping("/reQueryLogList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult reQueryLogList(@RequestBody CaiJingLogRequest request) {
+        if(request == null || StringUtils.isEmpty(request.getLogType())
+                || StringUtils.isEmpty(request.getPresentationTimeStart())
+                || StringUtils.isEmpty(request.getPresentationTimeEnd())){
+
+            return new AdminResult<>(FAIL, "重新报送入参数据为空");
+        }
+
         BooleanResponse response = caiJingLogService.reQueryCaiJingLog(request);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
