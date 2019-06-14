@@ -139,7 +139,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         Map<String, Object> param = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("HH");
         String startTime = "";
-        Integer t = 8;
+        Integer t = Integer.valueOf(sdf.format(new Date()));
         if(t >= 0 && t < 9){
             startTime = GetDateUtils.forwardDay(1,"yyyy-MM-dd") + " 19:00:00";
         }else if(t >= 9 && t < 15){
