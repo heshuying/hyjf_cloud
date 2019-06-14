@@ -11,7 +11,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.DuibaOrderResponse;
 import com.hyjf.am.response.admin.VirtualResultResponse;
-import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.resquest.admin.Paginator;
@@ -315,20 +314,18 @@ public class DuibaOrderListController {
                 if (duiBaCallResultBean.isSuccess()) {
                     // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
                     if ("fail".equals(duiBaCallResultBean.getStatus())) {
-                        // 调用订单同步接口，返回订单状态为失败！
-                        // 查询优惠卷表
-                        CouponUser couponUser = couponUserService.selectCouponUserById(duibaOrderVOStr.getCouponUserId());
-                        if(couponUser==null){
-                            if(duibaOrderVO.getActivationType()==1&&couponUser.getDelFlag()==1){
+                        // 判断是否插入了优惠卷
+                        if(duibaOrderVOStr.getCouponUserId()==null) {
+                            if (duibaOrderVO.getActivationType() == 1) {
                                 // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
                                 // 根据订单号查询积分明细表(订单取消)
-                                DuibaPointsVO duibaPointsVOQc = duibaPointsListService.getDuibaPointsByOrdId(orderNum,2);
+                                DuibaPointsVO duibaPointsVOQc = duibaPointsListService.getDuibaPointsByOrdId(orderNum, 2);
                                 // 根据订单号查询积分明细表(商品兑换)
-                                DuibaPointsVO duibaPointsVO = duibaPointsListService.getDuibaPointsByOrdId(orderNum,1);
+                                DuibaPointsVO duibaPointsVO = duibaPointsListService.getDuibaPointsByOrdId(orderNum, 1);
                                 // 回滚积分（当前用户最新积分+积分明细表积分）
                                 // 兑吧积分明细不为空且订单为“非订单取消状态”回滚积分
                                 if (duibaPointsVO != null) {
-                                    if(duibaPointsVOQc==null) {
+                                    if (duibaPointsVOQc == null) {
                                         // 查询用户最新积分
                                         User user = userService.findUserByUserId(duibaPointsVO.getUserId());
                                         Integer points = user.getPointsCurrent() + duibaPointsVO.getPoints();
@@ -367,7 +364,7 @@ public class DuibaOrderListController {
                                             logger.error("【兑吧】根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
                                             response.setResultStr("error");
                                         }
-                                    }else{
+                                    } else {
                                         logger.error("【兑吧】此订单回滚已完成，无需再次回滚！userid：" + duibaPointsVO.getUserId());
                                     }
                                 } else {
@@ -376,21 +373,7 @@ public class DuibaOrderListController {
                                 }
                                 // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
                             }
-                            // 优惠卷为有效且判断该笔订单是否为“充值”（优惠卷）
-                            if (couponUser.getDelFlag()==0&&productType.equals(duibaOrderVOStr.getProductType())) {
-                                CouponUserBeanRequest couponUserBeanRequest = new CouponUserBeanRequest();
-                                // 设置主键
-                                couponUserBeanRequest.setId(duibaOrderVOStr.getCouponUserId());
-                                // 设置无效描述
-                                couponUserBeanRequest.setContent("兑吧兑换结果通知接口返回失败，操作失败，回滚该笔数据！");
-                                // 设置优惠卷用户表无效
-                                int couponUpCount = couponUserService.delDuibaCouponUserById(couponUserBeanRequest);
-                                if (couponUpCount == 0) {
-                                    throw new Exception("【兑吧】根据优惠卷用户id：[" + duibaOrderVOStr.getCouponUserId() + "]，将发放的优惠卷设置成无效，没有更新到优惠卷用户信息，操作失败，回滚操作失败！");
-                                }
-                            }
                         }
-                        // - - - - - - - - - - - - - - - - - - - - - - - - - -
                         duibaOrderVO.setId(duibaOrderVOStr.getId());
                         // 设置订单无效
                         duibaOrderVO.setActivationType(1);
