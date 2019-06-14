@@ -59,7 +59,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("investRecord/{startDate}/{endDate}")
     public BooleanResponse investRecord(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
-        deleteLog(INVESTRECORD, GetDate.getDayStart(startDate), GetDate.getDayEnd(endDate));
+        deleteLog(INVESTRECORD, startDate, endDate);
         zeroOneCaiJingService.investRecordSub(startDate, endDate);
         response.setResultBoolean(true);
         return response;
@@ -74,7 +74,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("borrowRecord/{startDate}/{endDate}")
     public BooleanResponse borrowRecord(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
-        deleteLog(BORROWRECORD, GetDate.getDayStart(startDate), GetDate.getDayEnd(endDate));
+        deleteLog(BORROWRECORD, startDate, endDate);
         zeroOneCaiJingService.borrowRecordSub(startDate, endDate);
         response.setResultBoolean(true);
         return response;
@@ -89,7 +89,7 @@ public class ZeroOneCaiJingController {
     @RequestMapping("advancedRepay/{startDate}/{endDate}")
     public BooleanResponse advancedRepay(@PathVariable String startDate, @PathVariable String endDate) {
         BooleanResponse response = new BooleanResponse();
-        deleteLog(ADVANCEREPAY, GetDate.getDayStart(startDate), GetDate.getDayEnd(endDate));
+        deleteLog(ADVANCEREPAY, startDate, endDate);
         zeroOneCaiJingService.advancedRepay(startDate, endDate);
         response.setResultBoolean(true);
         return response;
