@@ -138,17 +138,20 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     public Map<String, Object> getTime(){
         Map<String, Object> param = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        String startTime = "";
         Integer t = 8;
         if(t >= 0 && t < 9){
-            param.put("startTime", GetDateUtils.forwardDay(1,"yyyy-MM-dd") + " 19:00:00");
+            startTime = GetDateUtils.forwardDay(1,"yyyy-MM-dd") + " 19:00:00";
         }else if(t >= 9 && t < 15){
-            param.put("startTime",GetDateUtils.getCurrentDate() + " 09:00:00");
+            startTime = GetDateUtils.getCurrentDate() + " 09:00:00";
         }else if(t >= 15 && t < 19){
-            param.put("startTime",GetDateUtils.getCurrentDate() + " 15:00:00");
+            startTime = GetDateUtils.getCurrentDate() + " 15:00:00";
         }else {
-            param.put("startTime",GetDateUtils.getCurrentDate() + " 19:00:00");
+            startTime = GetDateUtils.getCurrentDate() + " 19:00:00";
         }
+        param.put("startTime",startTime);
         param.put("endTime", GetDateUtils.getCurrentTime());
+        logger.info("用户资金明细，当前时间：{}，startTime：{},endTime:{}",GetDateUtils.getCurrentTime(),startTime);
         return param;
     }
 
