@@ -1,11 +1,9 @@
 package com.hyjf.am.config.service.impl.config;
 
+import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.CustomerServiceChannelMapper;
 import com.hyjf.am.config.dao.mapper.auto.CustomerServiceRepresentiveConfigMapper;
-import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
-import com.hyjf.am.config.dao.model.auto.CustomerServiceChannelExample;
-import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
-import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfigExample;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
 import com.hyjf.am.resquest.config.CustomerServiceRepresentiveConfigRequest;
 import com.hyjf.common.paginator.Paginator;
@@ -29,6 +27,8 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
     private CustomerServiceRepresentiveConfigMapper customerServiceRepresentiveConfigMapper;
     @Autowired
     private CustomerServiceChannelMapper customerServiceChannelMapper;
+    @Autowired
+    private AdminMapper adminMapper;
 
     /**
      * 获取坐席配置总数
@@ -168,6 +168,15 @@ public class CustomerServiceRepresentiveServiceImpl implements CustomerServiceRe
         }
         if (request.getId() != null) {
             criteria.andIdNotEqualTo(request.getId());
+        }
+        // 校验admin用户名
+        AdminExample adminExample = new AdminExample();
+        adminExample.createCriteria().andUsernameEqualTo(userName);
+        int count = adminMapper.countByExample(adminExample);
+        if (count == 0) {
+            result.put("success", "fail");
+            result.put("message", "无该用户信息，请重新填写！");
+            return result;
         }
         criteria.andUserNameEqualTo(userName);
         List<CustomerServiceRepresentiveConfig> representiveList = customerServiceRepresentiveConfigMapper.selectByExample(example);
