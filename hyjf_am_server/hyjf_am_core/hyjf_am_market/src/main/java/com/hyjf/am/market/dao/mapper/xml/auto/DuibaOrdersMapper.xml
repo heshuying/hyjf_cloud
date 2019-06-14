@@ -28,7 +28,7 @@
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="activation_type" property="activationType" jdbcType="BIT" />
+    <result column="activation_type" property="activationType" jdbcType="TINYINT" />
     <result column="coupon_user_id" property="couponUserId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -151,7 +151,7 @@
       #{rechargeState,jdbcType=VARCHAR}, #{processingState,jdbcType=TINYINT}, #{commodityCode,jdbcType=VARCHAR}, 
       #{exchangeRate,jdbcType=DECIMAL}, #{integralPrice,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR}, #{activationType,jdbcType=BIT}, #{couponUserId,jdbcType=INTEGER}
+      #{remark,jdbcType=VARCHAR}, #{activationType,jdbcType=TINYINT}, #{couponUserId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.DuibaOrders" >
@@ -319,7 +319,7 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="activationType != null" >
-        #{activationType,jdbcType=BIT},
+        #{activationType,jdbcType=TINYINT},
       </if>
       <if test="couponUserId != null" >
         #{couponUserId,jdbcType=INTEGER},
@@ -414,7 +414,7 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.activationType != null" >
-        activation_type = #{record.activationType,jdbcType=BIT},
+        activation_type = #{record.activationType,jdbcType=TINYINT},
       </if>
       <if test="record.couponUserId != null" >
         coupon_user_id = #{record.couponUserId,jdbcType=INTEGER},
@@ -452,7 +452,7 @@
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR},
-      activation_type = #{record.activationType,jdbcType=BIT},
+      activation_type = #{record.activationType,jdbcType=TINYINT},
       coupon_user_id = #{record.couponUserId,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -537,7 +537,7 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="activationType != null" >
-        activation_type = #{activationType,jdbcType=BIT},
+        activation_type = #{activationType,jdbcType=TINYINT},
       </if>
       <if test="couponUserId != null" >
         coupon_user_id = #{couponUserId,jdbcType=INTEGER},
@@ -572,7 +572,7 @@
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
-      activation_type = #{activationType,jdbcType=BIT},
+      activation_type = #{activationType,jdbcType=TINYINT},
       coupon_user_id = #{couponUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

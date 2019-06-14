@@ -192,7 +192,7 @@ public class DuibaOrders implements Serializable {
      *
      * @mbggenerated
      */
-    private Boolean activationType;
+    private Integer activationType;
 
     /**
      * 优惠卷用户表id
@@ -411,11 +411,11 @@ public class DuibaOrders implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Boolean getActivationType() {
+    public Integer getActivationType() {
         return activationType;
     }
 
-    public void setActivationType(Boolean activationType) {
+    public void setActivationType(Integer activationType) {
         this.activationType = activationType;
     }
 

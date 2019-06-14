@@ -2089,6 +2089,7 @@
             <columnOverride column="order_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="delivery_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="processing_state" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="activation_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_duiba_points" domainObjectName="DuibaPoints">

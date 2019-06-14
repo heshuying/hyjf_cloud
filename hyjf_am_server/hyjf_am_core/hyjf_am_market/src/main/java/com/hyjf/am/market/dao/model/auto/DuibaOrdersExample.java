@@ -1816,52 +1816,52 @@ public class DuibaOrdersExample {
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeEqualTo(Boolean value) {
+        public Criteria andActivationTypeEqualTo(Integer value) {
             addCriterion("activation_type =", value, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeNotEqualTo(Boolean value) {
+        public Criteria andActivationTypeNotEqualTo(Integer value) {
             addCriterion("activation_type <>", value, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeGreaterThan(Boolean value) {
+        public Criteria andActivationTypeGreaterThan(Integer value) {
             addCriterion("activation_type >", value, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andActivationTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("activation_type >=", value, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeLessThan(Boolean value) {
+        public Criteria andActivationTypeLessThan(Integer value) {
             addCriterion("activation_type <", value, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeLessThanOrEqualTo(Boolean value) {
+        public Criteria andActivationTypeLessThanOrEqualTo(Integer value) {
             addCriterion("activation_type <=", value, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeIn(List<Boolean> values) {
+        public Criteria andActivationTypeIn(List<Integer> values) {
             addCriterion("activation_type in", values, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeNotIn(List<Boolean> values) {
+        public Criteria andActivationTypeNotIn(List<Integer> values) {
             addCriterion("activation_type not in", values, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeBetween(Boolean value1, Boolean value2) {
+        public Criteria andActivationTypeBetween(Integer value1, Integer value2) {
             addCriterion("activation_type between", value1, value2, "activationType");
             return (Criteria) this;
         }
 
-        public Criteria andActivationTypeNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andActivationTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("activation_type not between", value1, value2, "activationType");
             return (Criteria) this;
         }
