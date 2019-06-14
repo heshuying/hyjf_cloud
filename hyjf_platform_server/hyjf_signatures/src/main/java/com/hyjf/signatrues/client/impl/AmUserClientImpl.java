@@ -53,7 +53,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(Integer userId) {
 		CorpOpenAccountRecordResponse response = restTemplate
-				.getForEntity(urlBase + "corpOpenAccountRecord/findByUserId/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userManager/selectCorpOpenAccountRecordByUserId/" + userId, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

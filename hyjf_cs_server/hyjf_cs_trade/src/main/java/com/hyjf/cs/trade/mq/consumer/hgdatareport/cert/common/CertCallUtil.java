@@ -207,7 +207,7 @@ public class CertCallUtil implements Serializable {
             return "1";
         }
         if("1".equals(userType+"")){
-            return "-1";
+            return "7";
         }
         return "";
     }
@@ -217,9 +217,13 @@ public class CertCallUtil implements Serializable {
      * @param userIdcard
      * @return
      */
-    public static String desUserIdcard(String userIdcard) {
+    public static String desUserIdcard(String userIdcard,boolean isCompany) {
         if (StringUtils.isBlank(userIdcard)) {
             return "";
+        }
+        if(isCompany){
+            // 如果是企业的话  不用脱敏
+            return userIdcard;
         }
         String name = StringUtils.left(userIdcard, userIdcard.length()-4);
         return StringUtils.rightPad(name, StringUtils.length(userIdcard), "*");

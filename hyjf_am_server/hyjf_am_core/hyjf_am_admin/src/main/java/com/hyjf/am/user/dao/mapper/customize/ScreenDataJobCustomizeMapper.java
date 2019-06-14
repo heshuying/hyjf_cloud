@@ -4,6 +4,7 @@ import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lisheng
@@ -13,11 +14,10 @@ import java.util.List;
 public interface ScreenDataJobCustomizeMapper {
     /**
      * 获取获取本月待回款用户id
-     * @param startTime
-     * @param endTime
+     * @param map
      * @return
      */
-    List<RepaymentPlanVO> findRepayUser(@Param("startTime") Integer startTime, @Param("endTime") Integer endTime,@Param("limitStart") Integer limitStart, @Param("limitEnd") Integer limitEnd);
+    List<RepaymentPlanVO> findRepayUser(Map<String, Object> map);
 
     Integer countRepayUser(@Param("startTime") Integer startTime, @Param("endTime") Integer endTime);
 

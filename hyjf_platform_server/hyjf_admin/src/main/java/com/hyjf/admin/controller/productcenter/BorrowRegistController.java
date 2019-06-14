@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
+import com.hyjf.admin.beans.request.BorrowRegistCancelRequestBean;
 import com.hyjf.admin.beans.request.BorrowRegistRequestBean;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -15,12 +16,15 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -102,5 +106,53 @@ public class BorrowRegistController extends BaseController {
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
         return borrowRegistService.updateBorrowRegist(borrowNid, currUser.getId(), currUser.getUsername());
+    }
+
+    /**
+     * 备案撤销
+     * @param borrowNid
+     * @return
+     */
+    @ApiOperation(value = "备案撤销", notes = "备案撤销")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
+    @GetMapping("/debtregist_cancel/{borrowNid}")
+    @AuthorityAnnotation(key = "borrow", value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
+    public AdminResult registCancel(HttpServletRequest request, @PathVariable String borrowNid){
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        return borrowRegistService.registCancel(borrowNid, null, null, currUser.getId(), currUser.getUsername());
+    }
+
+    /**
+     * 异常标的备案撤销
+     */
+    @ApiOperation(value = "异常标的备案撤销", notes = "异常标的备案撤销")
+    @PostMapping("/debtregist_cancel_exception")
+    @AuthorityAnnotation(key = "borrow", value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
+    public AdminResult registCancelForException(HttpServletRequest request, @RequestBody BorrowRegistCancelRequestBean requestBean){
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+            return new AdminResult(BaseResult.FAIL, "请求参数错误");
+        }
+        return borrowRegistService.registCancel(requestBean.getBorrowNid(),requestBean.getBorrowAccountId(), requestBean.getRaiseDate(), currUser.getId(), currUser.getUsername());
+    }
+
+    /**
+     * 备案撤销确认页面
+     */
+    @ApiOperation(value = "备案撤销确认页面", notes = "备案撤销确认页面")
+    @GetMapping("/registcancel_confirm/{borrowNid}")
+    @AuthorityAnnotation(key = "borrow", value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<BorrowRegistCancelConfirmCustomizeVO> registCancelConfirm(HttpServletRequest request, @PathVariable String borrowNid) {
+        BorrowRegistCancelConfirmCustomizeVO responseBean = borrowRegistService.selectRegistCancelConfirm(borrowNid);
+        if(responseBean == null){
+            return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
+        }
+        return new AdminResult(responseBean);
     }
 }

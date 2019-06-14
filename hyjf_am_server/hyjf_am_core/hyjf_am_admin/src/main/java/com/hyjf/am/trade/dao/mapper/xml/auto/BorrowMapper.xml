@@ -74,6 +74,7 @@
     <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="TINYINT" />
     <result column="repay_capital_type" property="repayCapitalType" jdbcType="TINYINT" />
     <result column="invest_level" property="investLevel" jdbcType="VARCHAR" />
+    <result column="regist_bankmsg" property="registBankmsg" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -146,7 +147,8 @@
     repay_account_yes, repay_account_interest_yes, repay_account_capital_yes, repay_account_wait, 
     repay_account_interest_wait, repay_account_capital_wait, borrow_manager, service_fee_rate, 
     manage_fee_rate, differential_rate, late_interest_rate, late_free_days, create_user_name, 
-    add_ip, create_time, updatetime, increase_interest_flag, repay_capital_type, invest_level
+    add_ip, create_time, updatetime, increase_interest_flag, repay_capital_type, invest_level, 
+    regist_bankmsg
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
     select
@@ -209,7 +211,7 @@
       differential_rate, late_interest_rate, late_free_days, 
       create_user_name, add_ip, create_time, 
       updatetime, increase_interest_flag, repay_capital_type, 
-      invest_level)
+      invest_level, regist_bankmsg)
     values (#{borrowNid,jdbcType=VARCHAR}, #{projectType,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, 
       #{borrowValidTime,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, 
@@ -234,7 +236,7 @@
       #{differentialRate,jdbcType=VARCHAR}, #{lateInterestRate,jdbcType=VARCHAR}, #{lateFreeDays,jdbcType=TINYINT}, 
       #{createUserName,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updatetime,jdbcType=TIMESTAMP}, #{increaseInterestFlag,jdbcType=TINYINT}, #{repayCapitalType,jdbcType=TINYINT}, 
-      #{investLevel,jdbcType=VARCHAR})
+      #{investLevel,jdbcType=VARCHAR}, #{registBankmsg,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -455,6 +457,9 @@
       <if test="investLevel != null" >
         invest_level,
       </if>
+      <if test="registBankmsg != null" >
+        regist_bankmsg,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="borrowNid != null" >
@@ -669,6 +674,9 @@
       </if>
       <if test="investLevel != null" >
         #{investLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="registBankmsg != null" >
+        #{registBankmsg,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -897,6 +905,9 @@
       <if test="record.investLevel != null" >
         invest_level = #{record.investLevel,jdbcType=VARCHAR},
       </if>
+      <if test="record.registBankmsg != null" >
+        regist_bankmsg = #{record.registBankmsg,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -975,7 +986,8 @@
       updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
       increase_interest_flag = #{record.increaseInterestFlag,jdbcType=TINYINT},
       repay_capital_type = #{record.repayCapitalType,jdbcType=TINYINT},
-      invest_level = #{record.investLevel,jdbcType=VARCHAR}
+      invest_level = #{record.investLevel,jdbcType=VARCHAR},
+      regist_bankmsg = #{record.registBankmsg,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -1196,6 +1208,9 @@
       <if test="investLevel != null" >
         invest_level = #{investLevel,jdbcType=VARCHAR},
       </if>
+      <if test="registBankmsg != null" >
+        regist_bankmsg = #{registBankmsg,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -1271,7 +1286,8 @@
       updatetime = #{updatetime,jdbcType=TIMESTAMP},
       increase_interest_flag = #{increaseInterestFlag,jdbcType=TINYINT},
       repay_capital_type = #{repayCapitalType,jdbcType=TINYINT},
-      invest_level = #{investLevel,jdbcType=VARCHAR}
+      invest_level = #{investLevel,jdbcType=VARCHAR},
+      regist_bankmsg = #{registBankmsg,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

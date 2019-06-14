@@ -36,7 +36,7 @@ public class Borrow implements Serializable {
     private String borrowUserName;
 
     /**
-     * 状态 0备案中,1初审中,2投资中,3复审中(满标),4还款中,5已还款,6流标,7受托
+     * 状态(0:备案中,1:初审中,2:投资中,3:复审中(满标),4:还款中,5:已还款,6:流标,7:受托,8:逾期中)
      *
      * @mbggenerated
      */
@@ -483,6 +483,13 @@ public class Borrow implements Serializable {
      * @mbggenerated
      */
     private String investLevel;
+
+    /**
+     * 备案/撤销备案银行回值描述信息
+     *
+     * @mbggenerated
+     */
+    private String registBankmsg;
 
     private static final long serialVersionUID = 1L;
 
@@ -1060,5 +1067,13 @@ public class Borrow implements Serializable {
 
     public void setInvestLevel(String investLevel) {
         this.investLevel = investLevel == null ? null : investLevel.trim();
+    }
+
+    public String getRegistBankmsg() {
+        return registBankmsg;
+    }
+
+    public void setRegistBankmsg(String registBankmsg) {
+        this.registBankmsg = registBankmsg == null ? null : registBankmsg.trim();
     }
 }

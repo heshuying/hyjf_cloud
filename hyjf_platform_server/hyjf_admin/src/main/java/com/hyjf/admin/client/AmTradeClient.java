@@ -3116,7 +3116,18 @@ public interface AmTradeClient {
      */
     String getBorrowLevelAction(@Valid String borrowLevel);
 
+    /**
+     * 标的备案撤销
+     * @param request
+     * @return
+     */
+    AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request);
 
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
+
+    BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid);
+
+    AdminResult deleteBorrow(BorrowRegistUpdateRequest request);
 
     /** 加息接口开始*/
     /** 枚举类型 */
@@ -3372,5 +3383,13 @@ public interface AmTradeClient {
     SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest);
     SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest);
   //SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
+    /**
+     * 未开户用户销户成功后,删除用户Account表
+     * @param userId
+     * @return
+     */
+    int deleteUserAccountAction(String userId);
+
+
 }
 

@@ -842,6 +842,66 @@ public class RepaymentPlanExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andOldMoneyIsNull() {
+            addCriterion("old_money is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyIsNotNull() {
+            addCriterion("old_money is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyEqualTo(BigDecimal value) {
+            addCriterion("old_money =", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyNotEqualTo(BigDecimal value) {
+            addCriterion("old_money <>", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyGreaterThan(BigDecimal value) {
+            addCriterion("old_money >", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("old_money >=", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyLessThan(BigDecimal value) {
+            addCriterion("old_money <", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("old_money <=", value, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyIn(List<BigDecimal> values) {
+            addCriterion("old_money in", values, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyNotIn(List<BigDecimal> values) {
+            addCriterion("old_money not in", values, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("old_money between", value1, value2, "oldMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andOldMoneyNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("old_money not between", value1, value2, "oldMoney");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

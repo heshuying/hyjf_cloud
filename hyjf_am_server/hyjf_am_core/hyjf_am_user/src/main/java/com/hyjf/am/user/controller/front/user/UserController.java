@@ -137,7 +137,7 @@ public class UserController extends BaseController {
      * @param userId
      * @return
      */
-    @RequestMapping("/findById/{userId}")
+    @GetMapping("/findById/{userId}")
     public UserResponse findUserByUserId(@PathVariable Integer userId) {
         logger.info("根据userId查询ht_user表,userId:{}", userId);
         UserResponse response = new UserResponse();

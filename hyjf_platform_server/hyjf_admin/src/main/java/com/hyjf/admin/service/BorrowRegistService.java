@@ -6,6 +6,7 @@ package com.hyjf.admin.service;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 
 import java.util.List;
@@ -48,4 +49,7 @@ public interface BorrowRegistService {
      */
     AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
 
+    AdminResult registCancel(String borrowNid, String borrowAccountId, String raiseDate, String currUserId, String currUserName);
+
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
 }

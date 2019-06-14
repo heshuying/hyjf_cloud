@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
@@ -143,7 +144,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         int userId = borrow.getUserId();
 
         // 更新相应的标的状态为备案中
-        boolean debtRegistingFlag = this.updateBorrowRegist(borrow, 0, 1, currUserId, currUserName);
+        boolean debtRegistingFlag = this.updateBorrowRegist(borrow, 0, 1, currUserId, currUserName, "");
         if (debtRegistingFlag) {
             // 获取共同参数
             String orderId = GetOrderIdUtils.getOrderId2(userId);
@@ -193,16 +194,19 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                     debtRegistBean.setEntrustFlag(borrowInfo.getEntrustedFlg().toString());
                     debtRegistBean.setReceiptAccountId(stzhWhiteList.getStAccountId());
                 } else {
-                    this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
+                    this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName, "");
                     return new Response(Response.FAIL, "受托白名单查询为空！");
                 }
             }
+
+            String retCode = "";
+            String retMsg = "";
             try {
                 //调用银行接口
                 BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
-                String retCode = "";
                 if(registResult != null){
                     retCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
+                    retMsg = StringUtils.isNotBlank(registResult.getRetMsg()) ? registResult.getRetMsg() : "";
                 }
 
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
@@ -232,7 +236,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                             result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
                         }
                     } else {
-                        boolean debtRegistedFlag = this.updateBorrowRegist(borrow, 1, 2, currUserId, currUserName);
+                        boolean debtRegistedFlag = this.updateBorrowRegist(borrow, 1, 2, currUserId, currUserName, retMsg);
                         if (debtRegistedFlag) {
                             result.setRtn(Response.SUCCESS);
                             result.setMessage("备案成功！");
@@ -288,14 +292,14 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                 } else {
                     logger.info("标的备案失败，标的号：{}，银行返回失败码：{}", borrowNid, retCode);
                     // 调用银行接口失败
-                    this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
+                    this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName, retMsg);
                     String message = registResult == null?"":registResult.getRetMsg();
                     result.setRtn(Response.FAIL);
                     result.setMessage(StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                 }
             } catch (Exception e) {
                 logger.error("标的备案失败,编号：" + borrow.getBorrowNid(), e);
-                this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
+                this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName, retMsg);
                 result.setRtn(Response.FAIL);
                 result.setMessage("银行备案接口调用失败！");
             }
@@ -338,7 +342,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
      * @param currUserName
      * @return
      */
-    private boolean updateBorrowRegist(Borrow borrow, int status, int registStatus, String currUserId, String currUserName) {
+    private boolean updateBorrowRegist(Borrow borrow, int status, int registStatus, String currUserId, String currUserName, String registBankmsg) {
         Borrow updateBorrow = new Borrow();
         Date nowDate = new Date();
         BorrowExample example = new BorrowExample();
@@ -348,6 +352,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         // add by liuyang 合规自查 20181119 start
         // 跳过已交保证金状态
         updateBorrow.setVerifyStatus(1);
+        updateBorrow.setRegistBankmsg(registBankmsg);
         // add by liuyang 合规自查 20181119 end
         updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
         updateBorrow.setRegistUserName(currUserName);
@@ -404,5 +409,96 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         hjhPlanAssetnew.setUpdateTime(new Date());
         hjhPlanAssetnew.setUpdateUserId(1);
         return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew) > 0;
+    }
+
+    /**
+     * 备案撤销成功后更新DB
+     */
+    @Override
+    public Response updateForRegistCancel(BorrowRegistUpdateRequest requestBean) {
+        BorrowInfoWithBLOBs borrowInfo = this.getBorrowInfoByNid(requestBean.getBorrowNid());
+        Borrow borrow = this.getBorrow(requestBean.getBorrowNid());
+        if(BankCallConstant.RESPCODE_SUCCESS.equals(requestBean.getRetCode()) && 9 == Integer.valueOf(requestBean.getState())){
+            try{
+                // borrow表相应状态回退到备案前状态
+                Borrow updateBorrow = new Borrow();
+                BorrowExample example = new BorrowExample();
+                example.createCriteria().andBorrowNidEqualTo(requestBean.getBorrowNid());
+                // 备案状态：3 撤销备案
+                updateBorrow.setRegistStatus(3);
+                // 标的状态：0 备案中
+                updateBorrow.setStatus(0);
+                updateBorrow.setBorrowStatus(0);
+                // 初审时间
+                updateBorrow.setVerifyTime(0);
+                // 发标的状态
+                updateBorrow.setVerifyStatus(Integer.valueOf(0));
+                updateBorrow.setRegistBankmsg(requestBean.getBankRetmsg());
+                // 借款到期时间
+                updateBorrow.setBorrowEndTime("");
+                updateBorrow.setRegistUserId(null);
+                updateBorrow.setRegistUserName(null);
+                updateBorrow.setRegistTime(null);
+                this.borrowMapper.updateByExampleSelective(updateBorrow, example);
+
+                // 如果是计划资产还要更新计划资产状态为备案前状态
+                if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+                    HjhPlanAsset asset = this.selectHjhPlanAssetByBorrowNid(requestBean.getBorrowNid());
+                    if(asset != null){
+                        HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
+                        hjhPlanAssetnew.setId(asset.getId());
+                        // 3 备案中
+                        hjhPlanAssetnew.setStatus(3);
+                        hjhPlanAssetnew.setUpdateTime(new Date());
+                        hjhPlanAssetnew.setUpdateUserId(1);
+                        hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew);
+                    }
+                }
+
+                // 添加标的修改日志
+                BorrowLog borrowLog = new BorrowLog();
+                borrowLog.setBorrowNid(requestBean.getBorrowNid());
+    //                    String statusNameString = getBorrowStatusName(borrowBean.getStatus());
+    //                    borrowLog.setBorrowStatus(statusNameString);
+                borrowLog.setBorrowStatusCd(borrow.getStatus());
+                borrowLog.setType("撤销备案");
+                borrowLog.setCreateTime(new Date());
+                borrowLog.setCreateUserId(Integer.parseInt(requestBean.getCurrUserId()));
+                borrowLog.setCreateUserName(requestBean.getCurrUserName());
+                borrowLogMapper.insert(borrowLog);
+            }catch (Exception e) {
+                logger.error("备案撤销成功后更新DB异常", e);
+                return new Response(Response.FAIL, "备案撤销成功后更新DB异常");
+            }
+        }else {
+            // 更新银行返回失败描述信息
+            Borrow updateBorrow = new Borrow();
+            BorrowExample example = new BorrowExample();
+            example.createCriteria().andBorrowNidEqualTo(requestBean.getBorrowNid());
+            updateBorrow.setRegistBankmsg(requestBean.getBankRetmsg());
+            this.borrowMapper.updateByExampleSelective(updateBorrow, example);
+        }
+
+        return new Response();
+    }
+
+    public HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid){
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<HjhPlanAsset> hjhPlanAssetList = this.hjhPlanAssetMapper.selectByExample(example);
+        if (null != hjhPlanAssetList && hjhPlanAssetList.size() > 0 ) {
+            return hjhPlanAssetList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 备案撤销确认页面数据获取
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid){
+        return borrowRegistCustomizeMapper.selectRegistCancelConfirm(borrowNid);
     }
 }
