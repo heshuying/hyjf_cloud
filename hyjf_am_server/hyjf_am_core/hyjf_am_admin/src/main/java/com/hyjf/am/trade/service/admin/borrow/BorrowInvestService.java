@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 
 import java.util.List;
 
@@ -108,4 +109,12 @@ public interface BorrowInvestService extends BaseService {
      * @return
      */
     int updateBorrowRecover(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 根据订单id获取订单详情
+     * @param nid
+     * @return
+     */
+    BorrowInvestCustomizeExtVO selectBorrowInvestByNid(String nid);
+
 }

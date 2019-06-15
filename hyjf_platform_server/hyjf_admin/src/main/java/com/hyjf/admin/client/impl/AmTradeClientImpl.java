@@ -6937,6 +6937,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
 
-
-
+    @Override
+    public BorrowInvestCustomizeExtResponse getBorrowInvestInfo(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/borrow_invest/select_borrow_invest/" + nid, BorrowInvestCustomizeExtResponse.class).getBody();
+    }
 }

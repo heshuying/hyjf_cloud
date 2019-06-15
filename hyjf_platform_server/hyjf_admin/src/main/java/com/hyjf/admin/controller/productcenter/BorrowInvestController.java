@@ -22,6 +22,7 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.paginator.Paginator;
@@ -640,4 +641,19 @@ public class BorrowInvestController extends BaseController {
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
     }
+
+    /**
+     * 订单id查询出借明细
+     *
+     * @param nid
+     * @return
+     */
+    @ApiOperation(value = "出借明细-修改渠道-订单信息", notes = "出借明细-修改渠道-订单信息")
+    @GetMapping("/tender_info/{nid}")
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<BorrowInvestCustomizeExtVO> getBorrowInvestInfo(@PathVariable String nid) {
+        BorrowInvestCustomizeExtVO responseBean = borrowInvestService.getBorrowInvestInfo(nid);
+        return new AdminResult(responseBean);
+    }
+
 }

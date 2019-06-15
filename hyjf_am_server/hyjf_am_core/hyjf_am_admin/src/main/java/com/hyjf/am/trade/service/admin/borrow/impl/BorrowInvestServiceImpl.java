@@ -4,17 +4,19 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreementExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
+import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.common.cache.CacheUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -213,5 +215,34 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
         BorrowRecover borrowRecover = new BorrowRecover();
         borrowRecover.setSendmail(1);
         return borrowRecoverMapper.updateByExampleSelective(borrowRecover, borrowRecoverExample);
+    }
+
+    @Override
+    public BorrowInvestCustomizeExtVO selectBorrowInvestByNid(String nid) {
+        BorrowTenderExample example=new BorrowTenderExample();
+        example.or().andNidEqualTo(nid);
+        List<BorrowTender> lstBorrowTender=borrowTenderMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(lstBorrowTender)){
+            throw new IllegalArgumentException("nid="+nid+"订单为空！");
+        }
+        BorrowTender borrowTender=lstBorrowTender.get(0);
+        BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
+        BeanUtils.copyProperties(borrowTender,vo);
+        if(borrowTender.getTenderUserUtmId()!=null){
+            build(vo,borrowTender.getTenderUserUtmId());
+        }
+        return vo;
+    }
+
+    private void build(BorrowInvestCustomizeExtVO vo, Integer tenderUserUtmId) {
+
+        UtmChannelVO utmChannelVO=utmRegCustomizeMapper.getUtmByUtmId(String.valueOf(tenderUserUtmId));
+
+        if(utmChannelVO!=null){
+            vo.setUtmName(utmChannelVO.getUtmTerm());
+        }else{
+            throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
+        }
+
     }
 }

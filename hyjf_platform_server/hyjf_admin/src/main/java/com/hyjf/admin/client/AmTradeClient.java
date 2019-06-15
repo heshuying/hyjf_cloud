@@ -3115,6 +3115,13 @@ public interface AmTradeClient {
      */
     String getBorrowLevelAction(@Valid String borrowLevel);
 
+    /**
+     * 获取订单详细信息
+     * @param nid
+     * @return
+     */
+    BorrowInvestCustomizeExtResponse getBorrowInvestInfo(String nid);
+
 
     /** 加息接口开始*/
     /** 枚举类型 */

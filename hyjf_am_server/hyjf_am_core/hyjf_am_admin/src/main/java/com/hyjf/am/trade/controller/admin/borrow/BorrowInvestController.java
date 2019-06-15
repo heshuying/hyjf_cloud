@@ -3,10 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.borrow;
 
-import com.hyjf.am.response.admin.BorrowInvestCustomizeResponse;
-import com.hyjf.am.response.admin.BorrowListCustomizeResponse;
-import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
-import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
@@ -18,10 +15,7 @@ import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
-import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
-import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
-import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.util.CommonUtils;
@@ -209,6 +203,19 @@ public class BorrowInvestController extends BaseController {
         BorrowInvestCustomizeResponse response = new BorrowInvestCustomizeResponse();
         int count = borrowInvestService.updateBorrowRecover(borrowInvestRequest);
         response.setTotal(count);
+        return response;
+    }
+
+    /**
+     * 订单id查询出借明细
+     *
+     * @return
+     */
+    @RequestMapping("/select_borrow_invest/{nid}")
+    public BorrowInvestCustomizeExtResponse selectBorrowInvestList(@PathVariable(name = "nid") String nid) {
+        BorrowInvestCustomizeExtResponse response = new BorrowInvestCustomizeExtResponse();
+        BorrowInvestCustomizeExtVO vo = borrowInvestService.selectBorrowInvestByNid(nid);
+        response.setResult(vo);
         return response;
     }
 }
