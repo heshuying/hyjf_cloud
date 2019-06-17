@@ -1111,7 +1111,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 		if(oldBailAccountId==null||oldBailAccountId.isEmpty()) {
 			openAccoutBean.setOldBailAccountId("");
 		}else {
-			openAccoutBean.setOldBailAccountId(amUserClient.getBankCardByUserId(amUserClient.getUser(oldBailAccountId).getUserId()).getCardNo());
+			openAccoutBean.setOldBailAccountId(amUserClient.selectBankAccountById(amUserClient.getUser(oldBailAccountId).getUserId()).getAccount());
 		}
 		openAccoutBean.setNewBailAccountId(openBean.getCardNo());
 		openAccoutBean.setForgotPwdUrl(systemConfig.getFrontHost()+"/user/setTradePassword");
