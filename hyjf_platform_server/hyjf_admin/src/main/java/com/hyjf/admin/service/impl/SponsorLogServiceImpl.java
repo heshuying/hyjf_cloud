@@ -107,7 +107,7 @@ public class SponsorLogServiceImpl implements SponsorLogService {
                                     logger.debug("debtDetails.size == 1");
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
                                     String bailAccountId = debtDetail.getString(BankCallConstant.PARAM_BAILACCOUNTID);
-                                    UserVO user = amUserClient.getUserByUserName(sponsorLogRequest.getUpdateUserName());
+                                    UserVO user = amUserClient.getUserByUserName(sponsorLogRequest.getNewSponsor());
                                     BankOpenAccountVO account = amUserClient.getBankOpenAccountByUserId(user.getUserId());
                                     if(bailAccountId.equals(account.getAccount())) {
                                     	//更新成功

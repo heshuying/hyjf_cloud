@@ -1213,7 +1213,7 @@ public class RepayManageController extends BaseTradeController {
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         RepayListRequest requestBean=new RepayListRequest();
         requestBean.setUserId(bean.getLogUserId());
-        requestBean.setBorrowNid(bean.getProductId());
+        requestBean.setBorrowNid(borrowNid);
         if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
         	requestBean.setStatus("1");
         }else {
