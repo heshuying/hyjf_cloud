@@ -18,9 +18,11 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.BorrowRegistService;
+import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
@@ -62,6 +64,9 @@ public class BorrowInvestController extends BaseController {
 
     @Autowired
     AdminCommonService adminCommonService;
+
+    @Autowired
+    private UtmService utmService;
 
     /**
      * 权限
@@ -654,6 +659,13 @@ public class BorrowInvestController extends BaseController {
     public AdminResult<BorrowInvestCustomizeExtVO> getBorrowInvestInfo(@PathVariable String nid) {
         BorrowInvestCustomizeExtVO responseBean = borrowInvestService.getBorrowInvestInfo(nid);
         return new AdminResult(responseBean);
+    }
+
+    @ApiOperation(value = "出借明细-修改渠道-渠道列表", notes = "出借明细-修改渠道-渠道列表")
+    @GetMapping("/pcutms")
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public UtmResultResponse getPcUtms(){
+        return utmService.getPcUtms();
     }
 
 }
