@@ -14,6 +14,13 @@ import java.util.Date;
 public class BorrowInvestCustomizeExtVO{
 
     /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
+    private Integer userId;
+
+    /**
      * 标的编号
      *
      * @mbggenerated
@@ -40,6 +47,9 @@ public class BorrowInvestCustomizeExtVO{
      * @mbggenerated
      */
     private Date createTime;
+
+    //出借时间格式化
+    private String createTimeStr;
 
 
     /**
@@ -113,6 +123,14 @@ public class BorrowInvestCustomizeExtVO{
 
     //当前渠道
     private String utmNameNow;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public String getUtmName() {
         return utmName;
@@ -232,5 +250,13 @@ public class BorrowInvestCustomizeExtVO{
 
     public void setUtmNameNow(String utmNameNow) {
         this.utmNameNow = utmNameNow;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 }

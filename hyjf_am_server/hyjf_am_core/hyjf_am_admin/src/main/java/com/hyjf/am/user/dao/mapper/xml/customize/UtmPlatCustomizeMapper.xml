@@ -42,12 +42,7 @@
         FROM
         ht_utm_plat utm
         <where>
-            utm.source_type = 1
-            AND utm.source_id IS NOT NULL
-            AND utm.source_id <![CDATA[<>]]> ''
-            <if test="sourceIdSrch != null and sourceIdSrch != ''">
-                AND utm.source_id = #{sourceId}
-            </if>
+          utm.source_id = #{sourceId}
         </where>
     </select>
 

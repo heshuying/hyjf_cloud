@@ -17,9 +17,6 @@ import com.hyjf.am.user.dao.mapper.customize.TzjCustomizeMapper;
 public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
-	protected UtmRegCustomizeMapper utmRegCustomizeMapper;
-
-	@Autowired
 	protected BorrowCustomizeMapper borrowCustomizeMapper;
 
 	@Autowired

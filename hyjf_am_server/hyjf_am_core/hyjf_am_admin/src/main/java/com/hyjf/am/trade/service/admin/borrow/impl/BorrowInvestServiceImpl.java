@@ -3,6 +3,17 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.hyjf.am.user.service.front.user.UtmPlatService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
@@ -11,18 +22,9 @@ import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
-import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.common.cache.CacheUtil;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -30,6 +32,9 @@ import java.util.Map;
  */
 @Service
 public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowInvestService {
+
+    @Autowired
+    private UtmPlatService utmPlatService;
 
     /**
      * 出借明细记录 总数COUNT
@@ -228,20 +233,34 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
         BorrowTender borrowTender=lstBorrowTender.get(0);
         BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
         BeanUtils.copyProperties(borrowTender,vo);
-        if(borrowTender.getTenderUserUtmId()!=null){
-            build(vo,borrowTender.getTenderUserUtmId());
-        }
+
+        build(vo,borrowTender.getTenderUserUtmId());
+
         return vo;
     }
 
     private void build(BorrowInvestCustomizeExtVO vo, Integer tenderUserUtmId) {
 
-        UtmChannelVO utmChannelVO=utmRegCustomizeMapper.getUtmByUtmId(String.valueOf(tenderUserUtmId));
+        if (vo.getCreateTime()!=null){
+            //格式化时间
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            vo.setCreateTimeStr(sdf.format(vo.getCreateTime()));
+        }
 
-        if(utmChannelVO!=null){
-            vo.setUtmName(utmChannelVO.getUtmTerm());
-        }else{
-            throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
+        if(null!=tenderUserUtmId){
+            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
+
+            if(utmPlat!=null){
+                vo.setUtmName(utmPlat.getSourceName());
+            }else{
+                throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
+            }
+        }
+
+        UtmPlat utmPlatt=utmPlatService.getUtmByUserId(vo.getUserId());
+
+        if(utmPlatt!=null){
+            vo.setUtmNameNow(utmPlatt.getSourceName());
         }
 
     }
