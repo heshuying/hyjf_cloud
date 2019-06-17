@@ -298,6 +298,8 @@ public class DuibaOrderListController {
         int res;
         // 商品类型为充值
         String productType = "2";
+        // 商品类型为实物
+        String productTypeSW = "0";
         try {
             // 2.将发放的优惠卷设置成无效, 3.兑换失败将对应的"订单"设置成无效并给出失败信息
             DuibaOrderVO duibaOrderVO = new DuibaOrderVO();
@@ -315,7 +317,7 @@ public class DuibaOrderListController {
                     // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
                     if ("fail".equals(duiBaCallResultBean.getStatus())) {
                         // 判断是否插入了优惠卷
-                        if(duibaOrderVOStr.getCouponUserId()==null&&productType.equals(duibaOrderVOStr.getProductType())) {
+                        if(duibaOrderVOStr.getCouponUserId()==null&&(productType.equals(duibaOrderVOStr.getProductType())||productTypeSW.equals(duibaOrderVOStr.getProductType()))) {
                             if (duibaOrderVOStr.getActivationType() == 1) {
                                 // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
                                 // 根据订单号查询积分明细表(订单取消)
