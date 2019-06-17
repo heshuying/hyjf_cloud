@@ -3,13 +3,16 @@
  */
 package com.hyjf.am.trade.controller.admin.borrow;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
@@ -22,10 +25,7 @@ import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -217,5 +217,13 @@ public class BorrowInvestController extends BaseController {
         BorrowInvestCustomizeExtVO vo = borrowInvestService.selectBorrowInvestByNid(nid);
         response.setResult(vo);
         return response;
+    }
+
+    @RequestMapping("/updateTenderUtm")
+    public IntegerResponse updateTenderUtm(@RequestBody UpdateTenderUtmExtRequest extRequest){
+        TenderUtmChangeLog log=new TenderUtmChangeLog();
+        BeanUtils.copyProperties(extRequest,log);
+        int rt=borrowInvestService.updateTenderUtm(log);
+        return new IntegerResponse(rt);
     }
 }

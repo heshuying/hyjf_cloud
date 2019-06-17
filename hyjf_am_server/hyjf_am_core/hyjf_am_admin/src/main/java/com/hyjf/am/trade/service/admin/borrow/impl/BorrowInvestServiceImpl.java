@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.trade.dao.mapper.auto.TenderUtmChangeLogMapper;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,5 +264,18 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             vo.setUtmNameNow(utmPlatt.getSourceName());
         }
 
+    }
+
+    @Override
+    public int updateTenderUtm(TenderUtmChangeLog log) {
+        BorrowTender borrowTender=new BorrowTender();
+        borrowTender.setTenderUserUtmId(log.getTenderUtmId());
+
+        BorrowTenderExample example=new BorrowTenderExample();
+        example.or().andNidEqualTo(log.getNid());
+
+        borrowTenderMapper.updateByExampleSelective(borrowTender,example);
+
+        return tenderUtmChangeLogMapper.insertSelective(log);
     }
 }

@@ -19,10 +19,7 @@ import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
-import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
-import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
-import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -3121,6 +3118,13 @@ public interface AmTradeClient {
      * @return
      */
     BorrowInvestCustomizeExtResponse getBorrowInvestInfo(String nid);
+
+    /**
+     * 修改订单渠道确认
+     * @param updateTenderUtmRequest
+     * @return
+     */
+    IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
 
 
     /** 加息接口开始*/

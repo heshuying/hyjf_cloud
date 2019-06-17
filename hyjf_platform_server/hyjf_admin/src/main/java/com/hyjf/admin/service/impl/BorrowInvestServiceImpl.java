@@ -21,8 +21,10 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.PdfGenerator;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.BorrowInvestCustomizeExtResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.MailMessage;
@@ -699,6 +701,16 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         }else{
             logger.error("nid=【{}】订单明细查询失败！");
             throw new IllegalArgumentException("订单查询失败！");
+        }
+    }
+
+    @Override
+    public AdminResult updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        IntegerResponse response=amTradeClient.updateTenderUtm(updateTenderUtmRequest);
+        if(response.getResultInt()!=null && response.getResultInt() >0){
+            return new AdminResult();
+        }else{
+            return new AdminResult(BaseResult.FAIL);
         }
     }
 }

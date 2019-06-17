@@ -8,6 +8,8 @@ import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 
@@ -83,4 +85,6 @@ public interface BorrowInvestService {
      * @return
      */
     BorrowInvestCustomizeExtVO getBorrowInvestInfo(String nid);
+
+    AdminResult updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
 }
