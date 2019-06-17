@@ -5607,13 +5607,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 		RUser user = rUserMapper.selectByExample(example2).get(0);
 		sl.setStatus(Integer.valueOf(requestBean.getStatus()));
 		sl.setUpdateTime(new Date());
-		sl.setUpdateUserName(user.getUsername());
+		//sl.setUpdateUserName(user.getUsername());
 		sl.setNewSponsorId(user.getUserId());
 		 sponsorLogMapper.updateByPrimaryKeySelective(sl);
 		if(requestBean.getStatus().equals("1")) {
 			
 			BorrowInfoExample example=new BorrowInfoExample();
-			example.or().andBorrowNidEqualTo(requestBean.getBorrowNid());
+			example.or().andBorrowNidEqualTo(sl.getBorrowNid());
 			BorrowInfoWithBLOBs borrowInfo = borrowInfoMapper.selectByExampleWithBLOBs(example).get(0);
 			borrowInfo.setRepayOrgName(sl.getNewSponsor());
 			borrowInfo.setIsRepayOrgFlag(1);

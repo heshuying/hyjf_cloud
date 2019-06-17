@@ -1207,7 +1207,7 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "修改担保人异步处理", notes = "修改担保人异步处理")
     @PostMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("sid") String id) {
+    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("sid")String id) {
         logger.info("web端修改担保人异步处理start,userId:{}", bean.getLogUserId());
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
