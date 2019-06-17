@@ -77,6 +77,7 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setCreateTime(DateUtils.getNowDate());
 			returnLog.setMsgType(DuiBaCallConstant.API_DEDUCT_POINTS);
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
+			returnLog.setLogOrdId(params.getOrderNum());
 			returnLog.setRemark("用户扣积分");
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			String url = "http://CS-USER/hyjf-app/pointsshop/duiba/deductpoints";
