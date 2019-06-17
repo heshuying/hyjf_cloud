@@ -22,6 +22,9 @@ public class DuiBaPointsDetailRequestBean {
     @ApiModelProperty(value = "时间")
     private String[] date;
 
+    @ApiModelProperty(value = "最后一条数据的年月")
+    private String[] prevDate;
+
     public int getCurrentPage() {
         return currentPage;
     }
@@ -52,5 +55,13 @@ public class DuiBaPointsDetailRequestBean {
 
     public void setDate(String[] date) {
         this.date = date;
+    }
+
+    public String[] getPrevDate() {
+        return prevDate;
+    }
+
+    public void setPrevDate(String[] prevDate) {
+        this.prevDate = prevDate;
     }
 }

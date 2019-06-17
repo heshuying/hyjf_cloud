@@ -165,6 +165,11 @@ public class DuiBaServiceImpl implements DuiBaService {
 		BeanUtils.copyProperties(requestBean, request);
 		request.setYear(requestBean.getDate()[0]);
 		request.setMonth(requestBean.getDate()[1]);
+		//如果有最后一条数据年月，则设置参数，用于判断需不需要加月总计
+		if(null != requestBean.getPrevDate() && requestBean.getPrevDate().length == 2){
+			request.setPrevYear(requestBean.getPrevDate()[0]);
+			request.setPrevMonth(requestBean.getPrevDate()[1]);
+		}
 		request.setUserId(userId);
 		DuiBaPointsDetailVO vo = amMarketClient.getPointsDetail(request);
 		if(null != vo){

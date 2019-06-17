@@ -147,7 +147,7 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setMsgType(DuiBaCallConstant.API_EXCHANGE_RESULT);
 			returnLog.setRemark("兑吧兑换结果通知");
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
-			returnLog.setLogOrdId(params.getBizId());
+			returnLog.setLogOrdId(params.getOrderNum());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			if (params.isSuccess()) {
 				// 兑换成功（更新优惠卷为有效）
@@ -213,7 +213,7 @@ public class DuiBaCallController extends BaseController {
 			returnLog.setMsgType(DuiBaCallConstant.API_RECHARGE);
 			returnLog.setRemark("兑吧自有商品充值");
 			returnLog.setLogUserId(Integer.valueOf(params.getUid()));
-			returnLog.setLogOrdId(params.getDevelopBizId());
+			returnLog.setLogOrdId(params.getOrderNum());
 			duiBaLogService.insertDuiBaReturnLog(returnLog);
 			// 发放优惠卷， 传兑吧订单号
 			String url = "http://ADMIN/hyjf-admin/pointsshop/duiba/order/selectReleaseCoupons/" + params.getOrderNum();
