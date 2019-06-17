@@ -137,20 +137,19 @@ public class DuibaOrderListController {
                 // 判断虚拟商品还是实物
                 if(("0").equals(duibaOrderVO.getProductType())){
                     // 更新订单发货状态（订单子状态，success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、waitAudit 待审核、waitSend 待发货、success 兑换成功、fail 兑换失败）
-                    if ("waitSend".equals(duiBaCallResultBean.getStatus())) {
+                    if ("waitSend".equals(duiBaCallResultBean.getSubStatus())) {
                         duibaOrderVO.setDeliveryStatus(0);
-                    } else if ("success".equals(duiBaCallResultBean.getStatus())) {
+                    } else if ("success".equals(duiBaCallResultBean.getSubStatus())) {
                         duibaOrderVO.setDeliveryStatus(1);
                     }
-                }else{
-                    // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
-                    if ("process".equals(duiBaCallResultBean.getStatus())) {
-                        duibaOrderVO.setOrderStatus(2);
-                    } else if ("success".equals(duiBaCallResultBean.getStatus())) {
-                        duibaOrderVO.setOrderStatus(0);
-                    } else if ("fail".equals(duiBaCallResultBean.getStatus())) {
-                        duibaOrderVO.setOrderStatus(1);
-                    }
+                }
+                // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
+                if ("process".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setOrderStatus(2);
+                } else if ("success".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setOrderStatus(0);
+                } else if ("fail".equals(duiBaCallResultBean.getStatus())) {
+                    duibaOrderVO.setOrderStatus(1);
                 }
                 // 设置更新时间
                 duibaOrderVO.setUpdateTime(new Date());
@@ -353,7 +352,7 @@ public class DuibaOrderListController {
                                                 // 用户操作后总积分
                                                 duibaPoints.setTotal(points);
                                                 // 积分类型 0:获取，1:使用
-                                                duibaPoints.setType(1);
+                                                duibaPoints.setType(0);
                                                 // 积分业务类型  0出借 1商品兑换 2订单取消
                                                 duibaPoints.setBusinessName(2);
                                                 // 兑吧订单号
