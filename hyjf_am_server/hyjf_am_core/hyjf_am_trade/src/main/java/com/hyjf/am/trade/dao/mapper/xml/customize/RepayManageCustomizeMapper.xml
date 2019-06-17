@@ -583,8 +583,11 @@
 			bw.account,
 			bw.borrow_period,
 			bw.borrow_apr,
-			bw.create_time,
-			bw.borrow_style,
+			date_format( bw.create_time, '%Y-%c-%d' ) AS create_time,
+			CASE
+			WHEN ( bw.borrow_style = 'end' ) THEN
+			'endday' ELSE bw.borrow_style 
+			END AS borrow_style,
 			sl.old_sponsor as oldBailAccountId,
 			sl.id
 		FROM
