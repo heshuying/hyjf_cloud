@@ -51,7 +51,7 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 		record.setCreateUserName(sponsorLogRequest.getAdminUserName());
 		record.setUpdateUserName(sponsorLogRequest.getAdminUserName());
 		record.setCreateTime(new Date());
-		record.setUpdateTime(new Date());
+		record.setUpdateTime(null);
 		
 		return sponsorLogMapper.insert(record);
 	}
