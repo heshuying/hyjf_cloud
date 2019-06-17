@@ -677,7 +677,12 @@ WHERE
 		  b.create_time as addtime,
 		  b.borrow_account_scale,
 		  <!--增加是否可以备案撤销状态 add by hesy -->
-		  IF((b.`status`=1 OR b.`status` = 2) AND b.tender_times=0 AND b.borrow_account_yes=0,1,0) AS registCancelEnable,
+		 CASE
+		 WHEN b.plan_nid IS NULL THEN
+			 IF((b.`status`=1 OR b.`status` = 2) AND b.tender_times=0 AND b.borrow_account_yes=0,1,0)
+		 ELSE
+			 IF(b.`status`=1,1,0)
+		 END AS registCancelEnable,
 		  <!--增加是否可以删标状态 add by hesy -->
 		  IF(b.`status`=0 OR b.`status` = 1,1,0) AS borrowDeleteEnable
 			 FROM
