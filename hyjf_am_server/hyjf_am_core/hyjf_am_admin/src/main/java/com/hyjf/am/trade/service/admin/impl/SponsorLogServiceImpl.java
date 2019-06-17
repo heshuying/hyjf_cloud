@@ -26,7 +26,7 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 	private BorrowInfoMapper borrowInfoMapper;
 	@Override
 	public List<SponsorLog> getRecordList(SponsorLogExample example) {
-		
+		example.setOrderByClause("create_time desc");
 		return sponsorLogMapper.selectByExample(example);
 	}
 
