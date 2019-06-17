@@ -371,6 +371,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		}
 		BigDecimal creditInterest=BigDecimal.ZERO;
 		BigDecimal creditCapital=BigDecimal.ZERO;
+		String sourceFinancingCode="";
 		if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
 			//智投
 			CertRequest certRequest=new CertRequest();
@@ -381,6 +382,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			}
 			creditInterest=hjhDebtCreditRepays.get(0).getReceiveInterestYes();
 			creditCapital=hjhDebtCreditRepays.get(0).getReceiveCapitalYes();
+			sourceFinancingCode=hjhDebtCreditRepays.get(0).getAssignPlanNid();
 		}else{
 			//散标
 			CertRequest certRequest=new CertRequest();
@@ -391,6 +393,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			}
 			creditInterest=creditRepays.get(0).getAssignRepayInterest();
 			creditCapital=creditRepays.get(0).getAssignRepayCapital();
+			sourceFinancingCode=creditRepays.get(0).getBidNid();
 		}
 
 		/****************** 发送8赎回本金******************/
@@ -401,7 +404,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
+		param.put("sourceFinancingCode", sourceFinancingCode);
 		//交易类型
 		param.put("transType", "8");
 		//交易金额
@@ -419,7 +422,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param1.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid()==null?borrowAndInfoVO.getBorrowNid():borrowAndInfoVO.getPlanNid());
+		param1.put("sourceFinancingCode",sourceFinancingCode);
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
