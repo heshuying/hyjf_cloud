@@ -1192,7 +1192,7 @@ public class RepayManageController extends BaseTradeController {
         openBean.setBorrowNid(requestBean.getBorrowNid());
         openBean.setCardNo(userVO.getBankAccount());
         // 组装参数
-        Map<String,Object> data = repayManageService.getSponsorLogMV(openBean,requestBean.getOldBailAccountId());
+        Map<String,Object> data = repayManageService.getSponsorLogMV(openBean,requestBean.getOldBailAccountId(),requestBean.getId());
         result.setData(data);
         //修改担保人
         logger.info("修改担保人end");
@@ -1207,13 +1207,12 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "修改担保人异步处理", notes = "修改担保人异步处理")
     @PostMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("borrowNid") String borrowNid) {
+    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("sid") String id) {
         logger.info("web端修改担保人异步处理start,userId:{}", bean.getLogUserId());
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         RepayListRequest requestBean=new RepayListRequest();
-        requestBean.setUserId(bean.getLogUserId());
-        requestBean.setBorrowNid(borrowNid);
+        requestBean.setId(id);
         if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
         	requestBean.setStatus("1");
         }else {

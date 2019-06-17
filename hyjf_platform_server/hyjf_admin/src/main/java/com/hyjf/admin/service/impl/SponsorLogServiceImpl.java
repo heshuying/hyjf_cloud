@@ -110,6 +110,7 @@ public class SponsorLogServiceImpl implements SponsorLogService {
                                     UserVO user = amUserClient.getUserByUserName(sponsorLogRequest.getNewSponsor());
                                     BankOpenAccountVO account = amUserClient.getBankOpenAccountByUserId(user.getUserId());
                                     if(bailAccountId.equals(account.getAccount())) {
+                                    	sponsorLogRequest.setNewSponsorId(user.getUserId().toString());
                                     	//更新成功
                                     	return true;
                                     }

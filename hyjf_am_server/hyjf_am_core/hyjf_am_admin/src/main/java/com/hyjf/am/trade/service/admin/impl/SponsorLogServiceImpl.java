@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.trade.SponsorLogRequest;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.SponsorLogMapper;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.SponsorLog;
 import com.hyjf.am.trade.dao.model.auto.SponsorLogExample;
 import com.hyjf.am.trade.service.admin.SponsorLogService;
@@ -18,6 +22,8 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 
 	@Autowired
 	private SponsorLogMapper sponsorLogMapper;
+	@Autowired
+	private BorrowInfoMapper borrowInfoMapper;
 	@Override
 	public List<SponsorLog> getRecordList(SponsorLogExample example) {
 		
@@ -52,12 +58,21 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 
 	@Override
 	public int updateSponsorLog(SponsorLogRequest sponsorLogRequest) {
-//		SponsorLogExample example=new SponsorLogExample();
+
+		//		SponsorLogExample example=new SponsorLogExample();
 //		Criteria cri = example.createCriteria();
 //		cri.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
 //		cri.andStatusEqualTo(0);
 //		List<SponsorLog> list=sponsorLogMapper.selectByExample(example);
+
 		SponsorLog sl=sponsorLogMapper.selectByPrimaryKey(sponsorLogRequest.getId());
+		BorrowInfoExample example=new BorrowInfoExample();
+		example.or().andBorrowNidEqualTo(sl.getBorrowNid());
+		BorrowInfoWithBLOBs borrowInfo = borrowInfoMapper.selectByExampleWithBLOBs(example).get(0);
+		borrowInfo.setRepayOrgName(sl.getNewSponsor());
+		borrowInfo.setIsRepayOrgFlag(1);
+		borrowInfo.setRepayOrgUserId(Integer.valueOf(sponsorLogRequest.getNewSponsorId()));
+		borrowInfoMapper.updateByPrimaryKeyWithBLOBs(borrowInfo);
 		sl.setStatus(sponsorLogRequest.getStatus());
 		//sl.setDelFlag(sponsorLogRequest.getDelFlag());
 		sl.setUpdateUserName(sponsorLogRequest.getAdminUserName());

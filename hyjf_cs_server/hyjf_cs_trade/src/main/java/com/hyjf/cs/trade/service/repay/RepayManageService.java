@@ -259,6 +259,6 @@ public interface RepayManageService extends BaseTradeService {
    boolean getFailCredit(String borrowNid);
 	Integer selectSponsorLogCount(RepayListRequest requestBean);
 	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
-	Map<String, Object> getSponsorLogMV(SponsorLogBean openBean, String string);
+	Map<String, Object> getSponsorLogMV(SponsorLogBean openBean, String string, String string2);
 	int updateSponsorLog(RepayListRequest requestBean);
 }

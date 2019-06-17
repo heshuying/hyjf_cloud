@@ -5599,20 +5599,33 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
 	@Override
 	public int updateSponsorLog(@Valid RepayListRequest requestBean) {
-		RUser user = rUserMapper.selectByPrimaryKey(Integer.valueOf(requestBean.getUserId()));
-		SponsorLog record = new SponsorLog();
-		record.setId(Integer.valueOf(requestBean.getRoleId()));
-		 record.setStatus(Integer.valueOf(requestBean.getStatus()));
-		 record.setUpdateTime(new Date());
-		 record.setUpdateUserName(user.getUsername());
-		 sponsorLogMapper.updateByPrimaryKey(record);
+		
+		
+		SponsorLog sl = sponsorLogMapper.selectByPrimaryKey(Integer.valueOf(requestBean.getId()));
+		RUserExample example2=new RUserExample();
+		example2.or().andUsernameEqualTo(sl.getNewSponsor());
+		RUser user = rUserMapper.selectByExample(example2).get(0);
+		sl.setStatus(Integer.valueOf(requestBean.getStatus()));
+		sl.setUpdateTime(new Date());
+		sl.setUpdateUserName(user.getUsername());
+		sl.setNewSponsorId(user.getUserId());
+		 sponsorLogMapper.updateByPrimaryKeySelective(sl);
 		if(requestBean.getStatus().equals("1")) {
-			BorrowInfo record2=new BorrowInfo();
-			BorrowInfoExample example2=new BorrowInfoExample();
-			example2.or().andBorrowNidEqualTo(requestBean.getBorrowNid());
-			record2.setRepayOrgName(user.getUsername());
-			record2.setIsRepayOrgFlag(1);
-			borrowInfoMapper.updateByExample(record2, example2);
+			
+			BorrowInfoExample example=new BorrowInfoExample();
+			example.or().andBorrowNidEqualTo(requestBean.getBorrowNid());
+			BorrowInfoWithBLOBs borrowInfo = borrowInfoMapper.selectByExampleWithBLOBs(example).get(0);
+			borrowInfo.setRepayOrgName(sl.getNewSponsor());
+			borrowInfo.setIsRepayOrgFlag(1);
+			borrowInfo.setRepayOrgUserId(Integer.valueOf(user.getUserId()));
+			borrowInfoMapper.updateByPrimaryKeyWithBLOBs(borrowInfo);
+			
+//			BorrowInfo record2=new BorrowInfo();
+//			BorrowInfoExample example2=new BorrowInfoExample();
+//			example2.or().andBorrowNidEqualTo(requestBean.getBorrowNid());
+//			record2.setRepayOrgName(user.getUsername());
+//			record2.setIsRepayOrgFlag(1);
+//			borrowInfoMapper.updateByExample(record2, example2);
 		}
 		return 0;
 	}

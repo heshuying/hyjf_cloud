@@ -1103,7 +1103,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 	}
 
 	@Override
-	public Map<String, Object> getSponsorLogMV(SponsorLogBean openBean,String oldBailAccountId) {
+	public Map<String, Object> getSponsorLogMV(SponsorLogBean openBean,String oldBailAccountId,String id) {
 		BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.BAIL_ACCOUNT_ID_MODIFY,
 				Integer.parseInt(openBean.getPlatform()), BankCallConstant.BAIL_ACCOUNT_ID_MODIFY_PAGE);
 
@@ -1123,7 +1123,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 		String retUrl = super.getFrontHost(systemConfig, openBean.getPlatform()) + errorPath + "?logOrdId="
 				+ openAccoutBean.getLogOrderId() + "&sign=" ;
 		String successUrl = super.getFrontHost(systemConfig, openBean.getPlatform()) + successPath;
-		String bgRetUrl = "http://CS-TRADE/hyjf-web/repay/bgReturn?borrowNid=" + openBean.getBorrowNid();
+		String bgRetUrl = "http://CS-TRADE/hyjf-web/repay/bgReturn?sid=" + id;
 		openAccoutBean.setRetUrl(retUrl);
 		openAccoutBean.setSuccessfulUrl(successUrl);
 		openAccoutBean.setNotifyUrl(bgRetUrl);

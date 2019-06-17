@@ -20,9 +20,18 @@ public class RepayListRequest extends BasePage {
     Integer limitStart;
     Integer limitEnd;
     String oldBailAccountId;
+    String id;
 
     
-    public String getOldBailAccountId() {
+    public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getOldBailAccountId() {
 		return oldBailAccountId;
 	}
 
