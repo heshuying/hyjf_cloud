@@ -40,6 +40,11 @@
         <result column="invite_user_regionname" property="inviteUserRegionName" />
         <result column="invite_user_branchname" property="inviteUserBranchName" />
         <result column="invite_user_departmentname" property="inviteUserDepartmentName" />
+        <result column="userCurrentAttribute" property="userCurrentAttribute" />
+        <result column="inviteCurrentUserName" property="inviteCurrentUserName" />
+        <result column="inviteUserCurrentRegionName" property="inviteUserCurrentRegionName" />
+        <result column="inviteUserCurrentBranchName" property="inviteUserCurrentBranchName" />
+        <result column="inviteUserCurrentDepartmentName" property="inviteUserCurrentDepartmentName" />
         <result column="expectApr" property="expectApr" />
         <result column="inviteUser" property="inviteUser" />
         <result column="actualRevenue" property="actualRevenue" />
@@ -150,8 +155,6 @@
         ELSE
         FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d' )
         END AS repay_should_time,
-        --         hhr.repay_actual_time,
-        --         hhr.repay_should_time,
         hhr.plan_repay_capital,
         hhr.plan_repay_interest,
         hhr.repay_total,
@@ -166,10 +169,14 @@
         hha.invite_user_name AS recommend_name,
         hhr.user_attribute AS recommend_attr,
         hha.invite_user_name,
-        --         pna_tender.`name` AS invite_user_attributename,
         hha.invite_user_regionname,
         hha.invite_user_branchname,
         hha.invite_user_departmentname,
+        hru.attribute AS userCurrentAttribute,
+        curSpread.username AS inviteCurrentUserName,
+        hrod.grdfather_name AS inviteUserCurrentRegionName,
+        hrod.parent_name AS inviteUserCurrentBranchName,
+        hrod.name AS inviteUserCurrentDepartmentName,
         hha.expect_apr AS expectApr,
         hha.invite_user_name AS inviteUser,
         hhr.actual_revenue AS actualRevenue,
@@ -187,17 +194,14 @@
         FROM
         ht_hjh_repay hhr
         LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = hhr.accede_order_id
-        --         LEFT JOIN ht_spreads_users hydsu ON hhr.user_id = hydsu.user_id
-        --         LEFT JOIN ht_r_users hu ON hydsu.spreads_userid = hu.user_id
-        --         LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
         LEFT JOIN ht_hjh_plan hhp ON hhp.plan_nid = hhr.plan_nid
-        --         LEFT JOIN ht_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
-        --         AND pna.name_class = 'USER_PROPERTY'
-        --         LEFT JOIN ht_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
-        --         AND pna_tender.name_class = 'USER_PROPERTY'
 		left join hyjf_user.ht_utm utm on utm.utm_id=hha.tender_user_utm_id
 		left join hyjf_user.ht_utm_reg reg on hha.user_id=reg.user_id
 		left join hyjf_user.ht_utm utm2 on utm2.utm_id=reg.utm_id
+        LEFT JOIN ht_r_user hru ON hha.user_id = hru.user_id
+        LEFT JOIN ht_r_user curSpread ON curSpread.user_id = hru.spreads_user_id
+        LEFT JOIN ht_r_oa_users hrou ON hrou.hyd_id = curSpread.user_id AND hrou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
+        LEFT JOIN ht_r_oa_department hrod ON hrod.id = hrou.departmentid
         <include refid="Where_Clause_Repay" />
         ORDER BY repay_should_time desc
         <if test="limitStart != null and limitEnd !=null" >
