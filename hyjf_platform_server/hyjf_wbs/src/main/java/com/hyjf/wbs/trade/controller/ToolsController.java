@@ -93,7 +93,9 @@ public class ToolsController {
         jsonMap.put("entId", request.getParameter("endId"));
         jsonMap.put("startTime", request.getParameter("start"));
         jsonMap.put("endTime", request.getParameter("end"));
-
+        jsonMap.put("assetCustomerId", request.getParameter("assetCustomerId"));
+        jsonMap.put("orderNo", request.getParameter("orderNo"));
+        jsonMap.put("assetId", request.getParameter("assetId"));
         this.interfaceName = interfaceName;
         this.parameter = jsonMap;
         this.wbsConfig = SpringUtils.getBean(WbsConfig.class);

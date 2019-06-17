@@ -5,6 +5,7 @@ package com.hyjf.wbs.user.service.impl;
 
 import java.util.List;
 
+import com.hyjf.wbs.qvo.csuser.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,6 @@ public class UserServiceImpl implements UserService {
 		if(lstBankCard.size()>0){
 			return lstBankCard.get(0);
 		}
-		throw new CheckException("999","未找到userId=【"+userIdd+"】的开户卡信息");
+		throw new CheckException(ResultEnum.FAIL.getStatus(),"未找到userId=【"+userIdd+"】的开户卡信息");
 	}
 }

@@ -15,4 +15,25 @@
     </if>
   </select>
 
+  <!-- 获取投屏采集到的所有的数据 -->
+  <select id="getScreenTransferData" resultType="com.hyjf.am.vo.screen.ScreenTransferVO">
+    SELECT  i.user_id userId,d3.name grdfatherName,d1.name deptName,u1.source_id sourceId,p.current_owner currentOwner,tc.customer_group groups,i.attribute attribute
+    from ht_user_info i
+    LEFT JOIN ht_spreads_user s ON i.user_id = s.user_id
+    LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+    LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+    LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+    LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+    LEFT JOIN ht_utm_reg r ON r.user_id = i.user_id
+    LEFT JOIN ht_utm u1 ON u1.utm_id = r.utm_id
+    left JOIN ht_user_portrait p on i.user_id = p.user_id
+    left join ht_customer_task_config tc on p.current_owner = tc.customer_name and task_time = DATE_FORMAT(NOW(),'%Y-%m')
+    where 1=1
+    AND i.role_id = 1
+    and i.user_id in
+    <foreach collection="list" item="item" separator="," open="(" close=")">
+      #{item.userId}
+    </foreach>
+  </select>
+
 </mapper> 

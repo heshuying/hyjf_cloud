@@ -107,6 +107,8 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                     customerSyncQO.setName(bankOpenAccountRecordCustomize.getRealName());
                     customerSyncQO.setDocumentNo(bankOpenAccountRecordCustomize.getIdCard());
                     customerSyncQO.setMobile(bankOpenAccountRecordCustomize.getMobile());
+                    customerSyncQO.setPlatformRegistrationTime(bankOpenAccountRecordCustomize.getPlatformRegistrationTime());
+
                 }
                 customerSyncQO.setAssetCustomerId(userId);
                 if (!getEntId(utmReg.getUtmId()).isEmpty()) {
@@ -123,7 +125,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 if(wbsConfig.getPushDataFlag().equals(1)) {
                     syncCustomerService.sync(customerSyncQO);
                 }else{
-                    logger.info("====" + CONSUMER_NAME + "不推送数据");
+                    logger.info("====" + CONSUMER_NAME + "不推送数据,推送属性："+wbsConfig.getPushDataFlag());
                 }
 
             } else {

@@ -68,6 +68,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
@@ -7516,6 +7517,56 @@ public class AmTradeClientImpl implements AmTradeClient {
             return null;
         }
         return response.getResultList();
+    }
+
+    @Override
+    public List<ScreenTransferVO> getAllUser(int start, int sizes) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getallscreenuser/"+start + "/" + sizes;
+        ScreenTransferResponse response = restTemplate.getForEntity(url,  ScreenTransferResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateOperatieList(List<ScreenTransferVO> updateList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/updateoperatielist";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, updateList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteOperatieList(List<ScreenTransferVO> deleteList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/deleteoperatielist";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, deleteList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateRepaymentPlan(List<ScreenTransferVO> updateList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/updaterepaymentplan";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, updateList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteRepaymentPlan(List<ScreenTransferVO> deleteList) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/deleterepaymentplan";
+        ScreenTransferResponse response = restTemplate.postForEntity(url, deleteList, ScreenTransferResponse.class).getBody();
+        if (response != null ) {
+            return true;
+        }
+        return false;
     }
     // 应急中心二期，历史数据上报 add by nxl end
 

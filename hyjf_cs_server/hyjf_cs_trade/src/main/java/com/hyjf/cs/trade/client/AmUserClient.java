@@ -15,6 +15,7 @@ import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -514,4 +515,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserLargeScreenTwoVO getCurrentOwnersAndUserIds();
+
+	/**
+	 * @Author walter.limeng
+	 * @Description //
+	 * @Date 16:09 2019-05-29
+	 * @Param [userList]
+	 * @return java.util.List<com.hyjf.am.vo.screen.ScreenTransferVO>
+	 **/
+    List<ScreenTransferVO> getScreenTransferData(List<ScreenTransferVO> userList);
 }

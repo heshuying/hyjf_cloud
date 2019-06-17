@@ -12,6 +12,7 @@ import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.qvo.WbsCommonExQO;
 import com.hyjf.wbs.qvo.WbsCommonQO;
+import com.hyjf.wbs.qvo.csuser.ResultEnum;
 import com.hyjf.wbs.sign.WbsSignUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class WbsNewBankerSender {
 			wbsCommonQO.setData(URLEncoder.encode(dataJson, "utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			logger.error("为数据【{}】UTF-8编码出错", dataJson);
-			throw new CheckException("999", "编码出错！" + e.getMessage());
+			throw new CheckException(ResultEnum.FAIL.getStatus(), "编码出错！" + e.getMessage());
 		}
 		wbsCommonQO.setAccess_token("");
 		wbsCommonQO.setVersion("");
