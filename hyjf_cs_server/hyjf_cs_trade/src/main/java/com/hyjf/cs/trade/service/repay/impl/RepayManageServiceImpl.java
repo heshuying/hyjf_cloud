@@ -1108,7 +1108,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 				Integer.parseInt(openBean.getPlatform()), BankCallConstant.BAIL_ACCOUNT_ID_MODIFY_PAGE);
 
 		openAccoutBean.setProductId(openBean.getBorrowNid());
-		openAccoutBean.setOldBailAccountId(amUserClient.getBankCardByUserId(amUserClient.getUser(oldBailAccountId).getUserId()).getCardNo());
+		if(oldBailAccountId==null||oldBailAccountId.isEmpty()) {
+			openAccoutBean.setOldBailAccountId("");
+		}else {
+			openAccoutBean.setOldBailAccountId(amUserClient.getBankCardByUserId(amUserClient.getUser(oldBailAccountId).getUserId()).getCardNo());
+		}
 		openAccoutBean.setNewBailAccountId(openBean.getCardNo());
 		openAccoutBean.setForgotPwdUrl(systemConfig.getFrontHost()+"/user/setTradePassword");
 		// 失败页面
