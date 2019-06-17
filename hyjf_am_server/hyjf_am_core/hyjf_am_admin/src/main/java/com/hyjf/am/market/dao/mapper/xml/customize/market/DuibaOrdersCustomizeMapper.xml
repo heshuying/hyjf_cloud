@@ -144,6 +144,7 @@
         AND hdp.product_type = '0'
       </if>
     </if>
+    order by order_time DESC
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
     </if>
