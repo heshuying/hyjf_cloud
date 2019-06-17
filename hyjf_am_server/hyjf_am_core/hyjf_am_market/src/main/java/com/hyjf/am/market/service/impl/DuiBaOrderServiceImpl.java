@@ -183,10 +183,19 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
             // 循环处理积分明细，将月度总计放到月度最前面
             DuiBaPointsListDetailVO monthTotalVO = null;
             for (DuiBaPointsListDetailVO vo : list) {
+                // 设置业务名称
+                vo.setBusinessName(CacheUtil.getParamName(CustomConstants.INTEGRAL_BUSINESS_NAME, vo.getBusinessName()));
                 // 如果是第一条，或者与前一条月份不同，那么需要重新获取月统计数据，并放入该月份所有数据的前面
                 if(preMonth == 0 || (preMonth != Integer.valueOf(vo.getMonth()))){
-                    // 将当前月份作为前月份
+                    // 将当前数据月份作为前月份
                     preMonth = Integer.valueOf(vo.getMonth());
+                    // 前端如果传了最后一条的年月，那么这个月份无需加月总计数据，直接将数据加入列表
+                    if(null!= request.getPrevYear() && null!=request.getPrevMonth() &&
+                            Integer.valueOf(vo.getMonth()).intValue() == Integer.valueOf(request.getPrevMonth()).intValue() &&
+                            Integer.valueOf(vo.getYear()).intValue() == Integer.valueOf(request.getPrevYear()).intValue()){
+                        resultList.add(vo);
+                        continue;
+                    }
                     monthTotalVO = new DuiBaPointsListDetailVO();
                     // 月统计标识
                     monthTotalVO.setIsTotal(1);
@@ -215,7 +224,6 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
 
                     resultList.add(monthTotalVO);
                 }
-                vo.setBusinessName(CacheUtil.getParamName(CustomConstants.INTEGRAL_BUSINESS_NAME, vo.getBusinessName()));
                 resultList.add(vo);
             }
             // 列表数据

@@ -32,9 +32,10 @@ public class DuiBaPointsListDetailVO extends BaseVO {
     @ApiModelProperty(value = "积分")
     public String pointsDetail;
 
-    /** 年 */
+    @ApiModelProperty(value = "年")
     public String year;
-    /** 月 */
+
+    @ApiModelProperty(value = "月")
     public String month;
 
     public int getIsTotal() {

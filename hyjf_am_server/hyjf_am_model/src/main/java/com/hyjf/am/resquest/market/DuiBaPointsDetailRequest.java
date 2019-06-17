@@ -28,6 +28,10 @@ public class DuiBaPointsDetailRequest {
 
     private String month;
 
+    private String prevYear;
+
+    private String prevMonth;
+
     public int getCurrentPage() {
         return currentPage;
     }
@@ -106,5 +110,21 @@ public class DuiBaPointsDetailRequest {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getPrevYear() {
+        return prevYear;
+    }
+
+    public void setPrevYear(String prevYear) {
+        this.prevYear = prevYear;
+    }
+
+    public String getPrevMonth() {
+        return prevMonth;
+    }
+
+    public void setPrevMonth(String prevMonth) {
+        this.prevMonth = prevMonth;
     }
 }
