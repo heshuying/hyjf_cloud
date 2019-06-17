@@ -89,11 +89,12 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
 //                    String statusNameString = getBorrowStatusName(borrowBean.getStatus());
 //                    borrowLog.setBorrowStatus(statusNameString);
         borrowLog.setBorrowStatusCd(borrow.getStatus());
+        borrowLog.setBorrowStatus(getBorrowStatusName(borrow.getStatus()));
         borrowLog.setType("删除");
         borrowLog.setCreateTime(new Date());
         borrowLog.setCreateUserId(Integer.parseInt(requestBean.getCurrUserId()));
         borrowLog.setCreateUserName(requestBean.getCurrUserName());
-        borrowLogMapper.insert(borrowLog);
+        borrowLogMapper.insertSelective(borrowLog);
 
         // 更新保证金相关
         if(StringUtils.isNotBlank(borrowInfo.getInstCode())){
@@ -135,6 +136,45 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
         }
 
         return new Response();
+    }
+
+    /**
+     * 标的状态值转化为文字描述
+     * @param status
+     * @return
+     */
+    private String getBorrowStatusName(Integer status) {
+        String statusName = "";
+        if(status == null){
+            return statusName;
+        }
+        switch (status) {
+            case 0:
+                statusName = "备案中";
+                break;
+            case 1:
+                statusName = "初审中";
+                break;
+            case 2:
+                statusName = "投资中";
+                break;
+            case 3:
+                statusName = "复审中";
+                break;
+            case 4:
+                statusName = "还款中";
+                break;
+            case 5:
+                statusName = "已还款";
+                break;
+            case 6:
+                statusName = "流标";
+                break;
+            default:
+                statusName = "";
+        }
+
+        return statusName;
     }
 
     /**
