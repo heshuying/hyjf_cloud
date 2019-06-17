@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.RegistRcordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
@@ -13,6 +15,8 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -22,6 +26,7 @@ import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,10 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author nxl
@@ -47,6 +49,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-admin/registRecord")
 public class RegistRecordController extends BaseController {
+    @Autowired
+    private CommonProducer commonProducer;
     @Autowired
     private RegistRecordService registRecordService;
     public static final String PERMISSIONS = "registlist";
@@ -162,7 +166,30 @@ public class RegistRecordController extends BaseController {
         }
         return new AdminResult<>();
     }
-
+    /**
+     *同步客户信息到wbs财富系统
+     * 客户修改完渠道信息，点击同步按钮，推送客户信息到mq，有wbs模块消费 推送到wbs系统
+     *  @author wangxd
+     *  @date 2019/6/14 15:18
+     */
+    @ApiOperation(value = "推送客户信息到wbs", notes = "推送客户信息到wbs")
+    @PostMapping(value = "/syncAccountWbs")
+    @ResponseBody
+    public AdminResult syncAccountWbs(HttpServletRequest request, HttpServletResponse response){
+        String userId = request.getParameter("userId");
+        String jsonStr = "";
+        try {
+            JSONObject jsonData = new JSONObject();
+            jsonData.put("userId",userId);
+            jsonStr = JSON.toJSONString(jsonData);
+            commonProducer.messageSend(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(), jsonStr));
+            logger.info("=====手动发送账户信息到[{}]到mq——wbs [成功]=====", jsonStr);
+        } catch (Exception e) {
+            logger.error("=====手动发送账户信息[{}]到mq－wbs [失败!!]=====", jsonStr);
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>();
+    }
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷：
