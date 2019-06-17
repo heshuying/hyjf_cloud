@@ -423,7 +423,7 @@ public class DuibaOrderListController {
             logger.error("【兑吧】回滚操作失败！，操作失败，异常如下：" + e.getMessage());
             response.setResultStr("error");
         }
-        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）结束 orderNum："+orderNum);
+        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）结束 orderNum："+orderNum+"__ResultStr："+response.getResultStr());
         return response;
     }
 
