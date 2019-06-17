@@ -8,6 +8,7 @@
         <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
         <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="reg_time" property="platformRegistrationTime" jdbcType="TIMESTAMP"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="customer_account" property="customerAccount" jdbcType="VARCHAR"/>
         <result column="account_status_name" property="accountStatusName" jdbcType="VARCHAR"/>
@@ -18,6 +19,7 @@
     <select id="selectBankAccountList" resultMap="BankAccountListPOMap" parameterType="Map">
         SELECT
         hydu.user_id,
+        date_format(hydu.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
         hydu.username,
         hydu.mobile,
         hydui.truename AS real_name,
