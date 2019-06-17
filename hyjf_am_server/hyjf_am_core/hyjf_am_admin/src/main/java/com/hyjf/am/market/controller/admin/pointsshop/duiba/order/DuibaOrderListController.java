@@ -306,6 +306,7 @@ public class DuibaOrderListController {
             // 根据兑吧订单号查询订单信息
             DuibaOrderVO duibaOrderVOStr = duibaOrderListService.selectOrderByOrderId(orderNum);
             if (duibaOrderVOStr != null) {
+                logger.info("兑吧兑换结果通知接口（失败时设置订单无效）订单信息不为空继续 orderNum：" + orderNum);
                 // - - - - - - - - - - - - - - - - 调用兑吧接口返回失败回滚积分逻辑 - start - - - - -  - - - - - - -
                 DuiBaCallBean duiBaCallBean = new DuiBaCallBean();
                 duiBaCallBean.setOrderNum(duibaOrderVOStr.getDuibaOrderId());
@@ -314,6 +315,7 @@ public class DuibaOrderListController {
                 duiBaCallBean.setMsgType(DuiBaCallConstant.API_ORDER_QUERY);
                 DuiBaCallResultBean duiBaCallResultBean = DuiBaCallUtils.duiBaCall(duiBaCallBean);
                 if (duiBaCallResultBean.isSuccess()) {
+                    logger.info("兑吧兑换结果通知接口（失败时设置订单无效）兑吧接口调用成功 继续 orderNum：" + orderNum);
                     // 返回成功更新订单状态（success为true的时候返回，分为：create 创建订单后的初始状态、process 处理中、success 兑换成功、fail 兑换失败）
                     if ("fail".equals(duiBaCallResultBean.getStatus())) {
                         // 判断是否插入了优惠卷
