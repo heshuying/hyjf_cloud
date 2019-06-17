@@ -313,7 +313,7 @@ public class BankCallParamConstant extends BankCallMethodConstant implements Ser
 	/** 年化利率 */
 	public static final String PARAM_RATE = "rate";
 	/** 担保账户 */
-	public static final String PARAM_BAILACCOUNTID = "bailAccountId";
+	public static final String PARAM_BAILACCOUNTID = "bailaccountId";
 	/** 名义借款人电子帐号 */
 	public static final String PARAM_NOMINALACCOUNTID = "nominalAccountId";
 
