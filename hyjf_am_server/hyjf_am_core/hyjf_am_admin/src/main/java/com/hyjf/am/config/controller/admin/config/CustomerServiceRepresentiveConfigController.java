@@ -184,9 +184,11 @@ public class CustomerServiceRepresentiveConfigController {
     public CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(@RequestBody CustomerServiceRepresentiveConfigRequest request) {
         CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
         if (StringUtils.isBlank(request.getUserName())) {
-            response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
-            response.setMessage("姓名为不能为空！");
-            return response;
+            if(request.getId() == null || request.getUserName() != null) {// 添加或修改成空格返回错误
+                response.setRtn(CustomerServiceRepresentiveConfigResponse.FAIL);
+                response.setMessage("姓名为不能为空！");
+                return response;
+            }
         }
         try {
             Map<String,Object> result = customerServiceRepresentiveConfigService.checkCustomerServiceRepresentiveConfig(request);

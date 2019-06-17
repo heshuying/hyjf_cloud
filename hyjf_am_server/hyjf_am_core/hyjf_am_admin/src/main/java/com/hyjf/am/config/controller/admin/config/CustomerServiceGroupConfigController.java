@@ -173,9 +173,11 @@ public class CustomerServiceGroupConfigController {
     public CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(@RequestBody CustomerServiceGroupConfigRequest request) {
         CustomerServiceGroupConfigResponse response = new CustomerServiceGroupConfigResponse();
         if (StringUtils.isBlank(request.getGroupName())) {
-            response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
-            response.setMessage("客组名为不能为空！");
-            return response;
+            if(request.getId() == null || request.getGroupName() != null) {// 添加或修改成空格返回错误
+                response.setRtn(CustomerServiceGroupConfigResponse.FAIL);
+                response.setMessage("客组名为不能为空！");
+                return response;
+            }
         }
         try {
             Map<String, Object> result = customerServiceGroupConfigService.checkCustomerServiceGroupConfig(request);
