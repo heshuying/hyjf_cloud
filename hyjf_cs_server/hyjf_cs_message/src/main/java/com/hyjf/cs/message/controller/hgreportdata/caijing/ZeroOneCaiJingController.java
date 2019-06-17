@@ -131,4 +131,24 @@ public class ZeroOneCaiJingController {
         request.setPresentationTimeEnd(endDate);
         presentationLogService.deleteLog(request);
     }
+
+    /**
+     * 测试零壹财经记录报送
+     */
+    @RequestMapping("/ceshiInvestRecordSub")
+    public void ceshiInvestRecordSub(){
+        Calendar cal = Calendar.getInstance();
+        String yesterday = GetDate.date_sdf.format(cal.getTime());
+
+        deleteLog(BORROWRECORD, yesterday, yesterday);
+        deleteLog(INVESTRECORD, yesterday, yesterday);
+        deleteLog(ADVANCEREPAY, yesterday, yesterday);
+
+        //借款记录报送
+        zeroOneCaiJingService.borrowRecordSub(yesterday,yesterday);
+        // 出借记录报送
+        zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
+        // 提前还款报送
+        zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
+    }
 }
