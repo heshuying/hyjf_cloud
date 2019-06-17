@@ -459,7 +459,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			BorrowRecoverVO borrowRecover=borrowRecovers.get(0);
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
 				//智投
-                /*CertRequest certRequest1=new CertRequest();
+                CertRequest certRequest1=new CertRequest();
                 certRequest1.setInvestOrderId(borrowRecover.getNid());
                 certRequest1.setBorrowNid(borrowRecover.getBorrowNid());
                 certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
@@ -467,7 +467,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
                     interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
                     capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-                }*/
+                }
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
@@ -494,7 +494,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			logger.info(logHeader + "capital:"+capital);
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
 				//智投
-/*
                 CertRequest certRequest1=new CertRequest();
                 certRequest1.setInvestOrderId(borrowRecoverPlan.getNid());
                 certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
@@ -510,7 +509,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
                     logger.info(logHeader + "capital:"+capital);
 
                 }
-                logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());*/
+                logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
