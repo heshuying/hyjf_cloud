@@ -292,6 +292,7 @@ public class DuibaOrderListController {
      */
     @RequestMapping("/activation/{orderNum}/{errorMessage}")
     public StringResponse activation(@PathVariable String orderNum, @PathVariable String errorMessage) {
+        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）开始 orderNum："+orderNum);
         StringResponse response = new StringResponse();
         // 1.兑换失败，根据orderNum，对用户的金币进行返还，回滚操作
         int res;
@@ -317,6 +318,7 @@ public class DuibaOrderListController {
                     if ("fail".equals(duiBaCallResultBean.getStatus())) {
                         // 判断是否插入了优惠卷
                         if(duibaOrderVOStr.getCouponUserId()==null&&(productType.equals(duibaOrderVOStr.getProductType())||productTypeSW.equals(duibaOrderVOStr.getProductType()))) {
+                            logger.info("兑吧兑换结果通知接口（失败时设置订单无效）判断状态已完成进入扣积分逻辑 orderNum：" + orderNum);
                             if (duibaOrderVOStr.getActivationType() == 1) {
                                 // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
                                 // 根据订单号查询积分明细表(订单取消)
@@ -326,11 +328,14 @@ public class DuibaOrderListController {
                                 // 回滚积分（当前用户最新积分+积分明细表积分）
                                 // 兑吧积分明细不为空且订单为“非订单取消状态”回滚积分
                                 if (duibaPointsVO != null) {
+                                    logger.info("兑吧兑换结果通知接口（失败时设置订单无效）根据订单号查询积分明细表(商品兑换)不为空 继续 orderNum：" + orderNum);
                                     if (duibaPointsVOQc == null) {
+                                        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）根据订单号查询积分明细表(订单取消)为空 继续 orderNum：" + orderNum);
                                         // 查询用户最新积分
                                         User user = userService.findUserByUserId(duibaPointsVO.getUserId());
                                         Integer points = user.getPointsCurrent() + duibaPointsVO.getPoints();
                                         if (user != null) {
+                                            logger.info("兑吧兑换结果通知接口（失败时设置订单无效）查询用户最新积分不为空 继续 orderNum：" + orderNum);
                                             // 更新积分
                                             User userUp = new User();
                                             userUp.setUserId(user.getUserId());
@@ -360,6 +365,7 @@ public class DuibaOrderListController {
                                                 // 汇盈订单号
                                                 duibaPoints.setHyOrderId(duibaOrderVOStr.getHyOrderId());
                                                 duibaPointsListService.insertDuibaPoints(duibaPoints);
+                                                logger.info("兑吧兑换结果通知接口（失败时设置订单无效）插入积分明细 orderNum：" + orderNum);
                                             }
                                         } else {
                                             logger.error("【兑吧】根据userid查询用户表数据为空，操作失败！userid：" + duibaPointsVO.getUserId());
@@ -373,8 +379,10 @@ public class DuibaOrderListController {
                                     response.setResultStr("error");
                                 }
                                 // - - - - - - - - - - - - - - - - （失败）回滚用户积分，加积分 - start - - - - - - - - - - - - - -
+                                logger.info("兑吧兑换结果通知接口（失败时设置订单无效）扣积分业务已完成 orderNum：" + orderNum);
                             }
                         }
+                        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）开始配置订单表信息 orderNum："+orderNum);
                         duibaOrderVO.setId(duibaOrderVOStr.getId());
                         // 设置订单无效
                         duibaOrderVO.setActivationType(1);
@@ -391,15 +399,18 @@ public class DuibaOrderListController {
                         }
                         // 设置失败原因
                         duibaOrderVO.setRemark("兑吧兑换结果通知接口返回失败，回滚该笔数据，操作失败！");
+                        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）开始更新订单表 orderNum："+orderNum);
                         // 根据订单信息更新订单状态
                         res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
                         if (res == 0) {
                             throw new Exception("【兑吧】根据兑吧订单表id：[" + duibaOrderVOStr.getId() + "]，更新订单状态设置订单为无效，没有更新到订单信息，回滚操作失败！");
                         }
                         response.setResultStr("success");
+                        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）调用兑吧接口返回"+duiBaCallResultBean.getStatus()+" orderNum："+orderNum);
                     }else{
                         // 调用订单同步接口，返回订单状态为成功！
                         response.setResultStr(this.success(orderNum).getResultStr());
+                        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）调用兑吧接口返回"+duiBaCallResultBean.getStatus()+" orderNum："+orderNum);
                     }
                 }
             } else {
@@ -410,6 +421,7 @@ public class DuibaOrderListController {
             logger.error("【兑吧】回滚操作失败！，操作失败，异常如下：" + e.getMessage());
             response.setResultStr("error");
         }
+        logger.info("兑吧兑换结果通知接口（失败时设置订单无效）结束 orderNum："+orderNum);
         return response;
     }
 
