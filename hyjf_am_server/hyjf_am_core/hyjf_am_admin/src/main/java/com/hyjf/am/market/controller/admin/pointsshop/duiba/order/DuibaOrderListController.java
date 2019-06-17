@@ -402,6 +402,8 @@ public class DuibaOrderListController {
                         // 设置失败原因
                         duibaOrderVO.setRemark("兑吧兑换结果通知接口返回失败，回滚该笔数据，操作失败！");
                         logger.info("兑吧兑换结果通知接口（失败时设置订单无效）开始更新订单表 orderNum："+orderNum);
+                        // 完成时间
+                        duibaOrderVO.setCompletionTime(GetDate.getNowTime10());
                         // 根据订单信息更新订单状态
                         res = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
                         if (res == 0) {
@@ -453,14 +455,14 @@ public class DuibaOrderListController {
                 flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
                 // 虚拟商品充值状态
                 duibaOrderVO.setRechargeState("处理完成");
-                // 完成时间
-                duibaOrderVO.setCompletionTime(GetDate.getNowTime10());
             }
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             // 更新订单为有效
             duibaOrderVO.setActivationType(0);
             // 更新订单状态为成功
             duibaOrderVO.setOrderStatus(0);
+            // 完成时间
+            duibaOrderVO.setCompletionTime(GetDate.getNowTime10());
             int orderFlag = duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO);
             if (flagCount > 0 && orderFlag > 0) {
                 response.setResultStr("success");
