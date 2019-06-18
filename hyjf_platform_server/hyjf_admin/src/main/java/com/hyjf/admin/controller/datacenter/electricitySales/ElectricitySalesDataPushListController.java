@@ -37,6 +37,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ElectricitySalesDataPushListService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
@@ -178,6 +179,42 @@ public class ElectricitySalesDataPushListController  extends BaseController {
                 return AsteriskProcessUtil.getAsteriskedValue(value);
             }
         };
+        IValueFormatter channelAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 0) {
+                    return "否";
+                } else {
+                    return "是";
+                }
+            }
+        };
+        IValueFormatter uploadAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 1) {
+                    return "手动上传";
+                } else {
+                    return "系统自动上传";
+                }
+            }
+        };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 0) {
+                    return "初始";
+                }else if(Integer.valueOf(object.toString()) == 1) {
+                	return "成功";
+                }
+                else {
+                    return "失败";
+                }
+            }
+        };
+        mapAdapter.put("channel", channelAdapter);
+        mapAdapter.put("upload", uploadAdapter);
+        mapAdapter.put("status", statusAdapter);
         mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("regTime", dateAdapter);
         mapAdapter.put("rechargeTime", dateAdapter);
@@ -274,7 +311,13 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 		}
 		
 		eRequest.setElectricitySalesDataPushList(electricitySalesDataPushList);
-		return  new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.insertElectricitySalesDataPushList(eRequest));
+		ElectricitySalesDataPushListResponse rp = electricitySalesDataPushListService.insertElectricitySalesDataPushList(eRequest);
+		if(Response.isSuccess(rp)) {
+			return  new AdminResult();
+		}else {
+			return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,rp.getMessage());
+		}
+		//return  new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.insertElectricitySalesDataPushList(eRequest));
 	}
 
 	/**

@@ -128,6 +128,11 @@ public class ElectricitySalesDataPushListController extends BaseController {
 		        return response;
 			}
 			UserInfo userinfo = userInfoService.findUserInfoById(user.getUserId());
+			if(!electricitySalesDataPushListVO.getOwnerUserName().equals(userinfo.getTruename())) {
+		        response.setRtn(Response.ERROR);
+		        response.setMessage("姓名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getOwnerUserName());
+		        return response;
+			}
 			record.setOwnerUserName(electricitySalesDataPushListVO.getOwnerUserName());
 			record.setGroupId(csrcs.getGroupId());	
 			record.setGroupName(csrcs.getGroupName());
