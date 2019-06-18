@@ -213,7 +213,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
             }
         };
         mapAdapter.put("channel", channelAdapter);
-        mapAdapter.put("upload", uploadAdapter);
+        mapAdapter.put("uploadType", uploadAdapter);
         mapAdapter.put("status", statusAdapter);
         mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("regTime", dateAdapter);
