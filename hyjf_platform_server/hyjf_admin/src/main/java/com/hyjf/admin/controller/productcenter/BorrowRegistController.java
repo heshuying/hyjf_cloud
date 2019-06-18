@@ -139,6 +139,9 @@ public class BorrowRegistController extends BaseController {
         if(StringUtils.isBlank(requestBean.getBorrowNid()) || StringUtils.isBlank(requestBean.getBorrowAccountId()) || StringUtils.isBlank(requestBean.getRaiseDate())){
             return new AdminResult(BaseResult.FAIL, "请求参数错误");
         }
+        if(requestBean.getRaiseDate().contains("-")){
+            requestBean.setRaiseDate(requestBean.getRaiseDate().replace("-", ""));
+        }
         return borrowRegistService.registCancelForExceptionBorrow(requestBean.getBorrowNid(),requestBean.getBorrowAccountId(), requestBean.getRaiseDate(), currUser.getId(), currUser.getUsername());
     }
 
