@@ -100,7 +100,7 @@
       AND hdp.true_name = #{trueNameSerach}
     </if>
     <if test="exchangeContentSerach != null and exchangeContentSerach != ''">
-      AND hdp.exchange_content = #{exchangeContentSerach}
+      AND hdp.exchange_content LIKE CONCAT( #{exchangeContentSerach}, '%')
     </if>
     <if test="productTypeSerach != null and productTypeSerach != ''">
       AND hdp.product_type = #{productTypeSerach}
@@ -179,7 +179,7 @@
       AND hdp.true_name = #{trueNameSerach}
     </if>
     <if test="exchangeContentSerach != null and exchangeContentSerach != ''">
-      AND hdp.exchange_content = #{exchangeContentSerach}
+      AND hdp.exchange_content LIKE CONCAT( #{exchangeContentSerach}, '%')
     </if>
     <if test="productTypeSerach != null and productTypeSerach != ''">
       AND hdp.product_type = #{productTypeSerach}
