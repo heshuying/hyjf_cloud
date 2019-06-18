@@ -283,7 +283,7 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
         AccountRechargeExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(userId);
         cra.andStatusEqualTo(2);
-        example.setOrderByClause("createTime ASC");
+        example.setOrderByClause("create_time ASC");
         List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> list = this.accountRechargeMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list.get(0);
