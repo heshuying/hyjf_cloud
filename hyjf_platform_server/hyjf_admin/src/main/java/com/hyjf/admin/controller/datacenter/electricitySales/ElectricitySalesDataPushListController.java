@@ -35,11 +35,15 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ElectricitySalesDataPushListService;
+import com.hyjf.admin.service.config.CustomerServiceGroupConfigService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
+import com.hyjf.am.resquest.config.CustomerServiceGroupConfigRequest;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -61,7 +65,8 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 	//public static final String PERMISSIONS = "electricitySales";
     @Autowired
     private  ElectricitySalesDataPushListService electricitySalesDataPushListService;
-
+    @Autowired
+    private CustomerServiceGroupConfigService customerServiceGroupConfigService;
    
     /**
      * 线下修改信息同步查询列表list
@@ -73,7 +78,20 @@ public class ElectricitySalesDataPushListController  extends BaseController {
     @PostMapping(value = "/electricitySalesDataPushList")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ElectricitySalesDataPushListResponse> electricitySalesDataPushList(@RequestBody ElectricitySalesDataPushListRequest request){
-        return new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.searchList(request));
+    	ElectricitySalesDataPushListResponse rt = electricitySalesDataPushListService.searchList(request);
+    	rt.setGroupList(getGroupConfigList());
+        return new AdminResult<ElectricitySalesDataPushListResponse>(rt);
+    }
+    /**
+     * 获取客组列表
+     * @return
+     */
+    private List<CustomerServiceGroupConfigVO> getGroupConfigList() {
+        CustomerServiceGroupConfigRequest groupRequest = new CustomerServiceGroupConfigRequest();
+        groupRequest.setPageSize(-1);
+        groupRequest.setStatus(1);// 启用状态
+        CustomerServiceGroupConfigResponse groupConfigResponse = customerServiceGroupConfigService.getCustomerServiceGroupConfigList(groupRequest);
+        return groupConfigResponse.getResultList();
     }
     /**
 	 * 导出excel
