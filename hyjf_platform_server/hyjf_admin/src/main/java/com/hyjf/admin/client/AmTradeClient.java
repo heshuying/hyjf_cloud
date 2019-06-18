@@ -3133,6 +3133,13 @@ public interface AmTradeClient {
      */
     TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid);
 
+    /**
+     * 加入计划订单详情
+     * @param planOrderId
+     * @return
+     */
+    HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId);
+
 
     /** 加息接口开始*/
     /** 枚举类型 */

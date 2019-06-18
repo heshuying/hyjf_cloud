@@ -6951,4 +6951,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid) {
         return restTemplate.getForEntity("http://AM-ADMIN/am-trade/borrow_invest/update_tender_utm_history/" + nid,TenderUpdateUtmHistoryResponse.class).getBody();
     }
+
+    @Override
+    public HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId) {
+        HjhPlanAccedeCustomizeResponse response= restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/plan_tender_info/" + planOrderId,HjhPlanAccedeCustomizeResponse.class).getBody();
+        return response.getResult();
+    }
 }
