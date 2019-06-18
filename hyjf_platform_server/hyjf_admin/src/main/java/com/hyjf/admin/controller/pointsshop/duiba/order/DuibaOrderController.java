@@ -21,7 +21,6 @@ import com.hyjf.am.response.admin.VirtualResultResponse;
 import com.hyjf.am.resquest.admin.DuibaOrderRequest;
 import com.hyjf.am.vo.admin.DuibaOrderVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -319,44 +318,11 @@ public class DuibaOrderController extends BaseController {
         map.put("rechargeState", "虚拟商品充值状态");
         map.put("orderTime", "下单时间");
         map.put("completionTime", "完成时间");
-        map.put("processingStateStr", "处理状态");
         return map;
     }
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter productTypeAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                String productType = (String) object;
-                Map<String, String> userType = CacheUtil.getParamNameMap("PRODUCT_TYPE");
-                return userType.getOrDefault(productType, null);
-            }
-        };
-        IValueFormatter orderStatusAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                String orderStatus = (String) object;
-                Map<String, String> userType = CacheUtil.getParamNameMap("ORDER_STATUS");
-                return userType.getOrDefault(orderStatus, null);
-            }
-        };
-        IValueFormatter deliveryStatusAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                String deliveryStatus = (String) object;
-                Map<String, String> userType = CacheUtil.getParamNameMap("DELIVERY_STATUS");
-                return userType.getOrDefault(deliveryStatus, null);
-            }
-        };
-        IValueFormatter processingStateAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                String processingState = (String) object;
-                Map<String, String> userType = CacheUtil.getParamNameMap("PROCESSING_STATE");
-                return userType.getOrDefault(processingState, null);
-            }
-        };
         IValueFormatter sellingPriceAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -399,10 +365,6 @@ public class DuibaOrderController extends BaseController {
                 return "";
             }
         };
-        mapAdapter.put("productTypeStr", productTypeAdapter);
-        mapAdapter.put("orderStatusStr", orderStatusAdapter);
-        mapAdapter.put("deliveryStatusStr", deliveryStatusAdapter);
-        mapAdapter.put("processingStateStr", processingStateAdapter);
         mapAdapter.put("sellingPrice", sellingPriceAdapter);
         mapAdapter.put("markingPrice", markingPriceAdapter);
         mapAdapter.put("cost", costAdapter);

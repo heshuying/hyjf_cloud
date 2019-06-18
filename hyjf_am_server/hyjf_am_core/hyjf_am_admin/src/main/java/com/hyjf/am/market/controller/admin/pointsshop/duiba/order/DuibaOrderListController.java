@@ -178,14 +178,15 @@ public class DuibaOrderListController {
         String success = "success";
         String errorMessage = "";
         VirtualVO virtualVO = new VirtualVO();
+        String pointsCurrent = "";
+        // 是否发生错误（错误状态标识）
+        boolean errorFlag = false;
         // 根据兑吧订单号查询订单信息
         DuibaOrderVO duibaOrderVO = duibaOrderListService.selectOrderByOrderId(orderNum);
         // 发放优惠卷 需要的参数 优惠券编码  couponCode 用户id  userId 备注  content
         if (duibaOrderVO != null && duibaOrderVO.getUserId() != null) {
             // 订单流水号，开发者返回给兑吧的凭据
             virtualVO.setSupplierBizId(duibaOrderVO.getHyOrderId());
-            // 是否发生错误（错误状态标识）
-            boolean errorFlag = false;
             // 根据用户id获取用户详情信息
             UserInfo userInfo = userInfoService.findUserInfoById(duibaOrderVO.getUserId());
             // 根据用户id获取用户信息
@@ -240,7 +241,6 @@ public class DuibaOrderListController {
                                     appMsMessage));
                         } catch (MQException e) {
                             errorMessage = "优惠券发放失败，推送通知消息失败";
-                            errorFlag = true;
                             logger.error(e.getMessage());
                         }
                         // 插入优惠卷信息
@@ -253,32 +253,33 @@ public class DuibaOrderListController {
                             duibaOrderVO1.setCouponUserId(couponUser.getId());
                             // 更新订单表信息插入优惠卷用户表主键id
                             duibaOrderListService.updateOneOrderByPrimaryKey(duibaOrderVO1);
-                        } else {
                             errorFlag = true;
+                        } else {
                             errorMessage = "优惠券发放失败";
                         }
                     } catch (Exception e) {
-                        errorFlag = true;
                         logger.error("【兑吧】优惠券发放失败！异常如下：" + e.getMessage());
                     }
                 } else {
-                    errorFlag = true;
                     errorMessage = "优惠券发行数量超出上限，不再发放，操作失败！";
                     logger.error("【兑吧】优惠券发行数量超出上限，不再发放，操作失败！");
                 }
             }else{
-                errorFlag = true;
                 errorMessage = "优惠券发放失败，根据优惠卷编码没有找到对应优惠卷信息或该优惠卷无效！";
                 logger.error("【兑吧】优惠券发放失败！异常如下：根据优惠卷编码没有找到对应优惠卷信息！");
             }
-            if (errorFlag) {
-                virtualVO.setStatus(fail);
-                virtualVO.setErrorMessage(errorMessage);
-            } else {
-                virtualVO.setStatus(success);
-                // 优惠卷发放成功（积分赋值）
-                virtualVO.setCredits(String.valueOf(user.getPointsCurrent()));
-            }
+            pointsCurrent = String.valueOf(user.getPointsCurrent());
+        }else{
+            errorMessage = "优惠券发放失败，根据兑吧订单号查询订单，没有找到订单信息或者订单没有绑定用户！";
+            logger.error("【兑吧】优惠券发放失败！异常如下：根据兑吧订单号查询订单，没有找到订单信息或者订单没有绑定用户！");
+        }
+        if (errorFlag) {
+            virtualVO.setStatus(success);
+            // 优惠卷发放成功（积分赋值）
+            virtualVO.setCredits(pointsCurrent);
+        } else {
+            virtualVO.setStatus(fail);
+            virtualVO.setErrorMessage(errorMessage);
         }
         virtualResult.setResult(virtualVO);
         return virtualResult;
@@ -440,6 +441,8 @@ public class DuibaOrderListController {
         StringResponse response = new StringResponse();
         // 商品类型为充值
         String productType = "2";
+        // 商品类型为实物
+        String productTypeSW = "0";
         // 执行更新影响行数
         int flagCount = 0;
         // 更新虚拟商品充值状态为完成
@@ -455,6 +458,10 @@ public class DuibaOrderListController {
                 flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
                 // 虚拟商品充值状态
                 duibaOrderVO.setRechargeState("处理完成");
+            }
+            // 判断如果为实物则更改已发货状态
+            if(productTypeSW.equals(duibaOrderVOStr.getProductType())){
+                duibaOrderVO.setDeliveryStatus(1);
             }
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             // 更新订单为有效
