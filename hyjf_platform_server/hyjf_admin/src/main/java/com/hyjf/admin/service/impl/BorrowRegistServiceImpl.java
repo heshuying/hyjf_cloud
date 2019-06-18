@@ -197,7 +197,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
             return new AdminResult(BaseResult.SUCCESS, "撤销备案成功");
         } else {
             logger.error("备案撤销失败，标的号：{}，银行返回码：{}", borrowNid, retCode);
-            return new AdminResult(BaseResult.FAIL, "调用银行撤销备案接口失败");
+            return new AdminResult(BaseResult.FAIL, "调用银行撤销备案接口失败，retCode：" + retCode + " state:" + state);
         }
     }
 
@@ -270,7 +270,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         } else {
             logger.error("备案撤销失败，标的号：{}，银行返回码：{}", borrowNid, retCode);
             amTradeClient.updateForRegistCancel(request);
-            return new AdminResult(BaseResult.FAIL, "调用银行撤销接口失败");
+            return new AdminResult(BaseResult.FAIL, "调用银行撤销接口失败, retCode:" + retCode + " state:" + state);
         }
     }
 
