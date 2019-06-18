@@ -40,6 +40,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -174,7 +175,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
             @Override
             public String format(Object object) {
                 String value = (String) object;
-                return value.substring(0, 3) + "***"+ value.substring(value.length() - 4, value.length());
+                return AsteriskProcessUtil.getAsteriskedValue(value);
             }
         };
         mapAdapter.put("mobile", mobileAdapter);

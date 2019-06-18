@@ -41,6 +41,7 @@ import com.hyjf.am.user.service.front.user.UtmPlatService;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +86,9 @@ public class ElectricitySalesDataPushListController extends BaseController {
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             list = electricitySalesDataPushListService.searchList(request,paginator.getOffset(),paginator.getLimit());
+            for (ElectricitySalesDataPushList electricitySalesDataPushList : list) {
+            	electricitySalesDataPushList.setMobile(AsteriskProcessUtil.getAsteriskedValue(electricitySalesDataPushList.getMobile()));
+			}
         }
         
         if(!CollectionUtils.isEmpty(list)){
