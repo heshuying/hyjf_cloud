@@ -90,7 +90,8 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "安融反欺诈查询";
+		String sheetName = "电销数据推送记录";
+
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -150,6 +151,37 @@ public class ElectricitySalesDataPushListController  extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+
+        IValueFormatter sexAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 1) {
+                    return "男";
+                } else {
+                    return "女";
+                }
+            }
+        };
+        IValueFormatter dateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date value = (Date) object;
+                String formatDate = GetDate.formatDate(value);
+                return formatDate;
+            }
+        };
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                return value.substring(0, 3) + "***"+ value.substring(value.length() - 4, value.length());
+            }
+        };
+        mapAdapter.put("mobile", mobileAdapter);
+        mapAdapter.put("regTime", dateAdapter);
+        mapAdapter.put("rechargeTime", dateAdapter);
+        mapAdapter.put("createTime", dateAdapter);
+        mapAdapter.put("sex", sexAdapter);
         return mapAdapter;
     }
     /**
