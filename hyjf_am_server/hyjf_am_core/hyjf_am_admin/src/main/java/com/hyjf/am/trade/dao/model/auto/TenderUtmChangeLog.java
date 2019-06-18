@@ -21,18 +21,32 @@ public class TenderUtmChangeLog implements Serializable {
     private Integer tenderUtmId;
 
     /**
-     * 一级分部
+     * 一级分部id
      *
      * @mbggenerated
      */
     private Integer topDeptId;
 
     /**
-     * 二级分部
+     * 一级部门名称
+     *
+     * @mbggenerated
+     */
+    private String topDeptName;
+
+    /**
+     * 二级分部id
      *
      * @mbggenerated
      */
     private Integer secondDeptId;
+
+    /**
+     * 二级部门名称
+     *
+     * @mbggenerated
+     */
+    private String secondDeptName;
 
     /**
      * 三级分部id
@@ -40,6 +54,13 @@ public class TenderUtmChangeLog implements Serializable {
      * @mbggenerated
      */
     private Integer thirdDeptId;
+
+    /**
+     * 三级部门名称
+     *
+     * @mbggenerated
+     */
+    private String thirdDeptName;
 
     /**
      * 操作人
@@ -89,6 +110,14 @@ public class TenderUtmChangeLog implements Serializable {
         this.topDeptId = topDeptId;
     }
 
+    public String getTopDeptName() {
+        return topDeptName;
+    }
+
+    public void setTopDeptName(String topDeptName) {
+        this.topDeptName = topDeptName == null ? null : topDeptName.trim();
+    }
+
     public Integer getSecondDeptId() {
         return secondDeptId;
     }
@@ -97,12 +126,28 @@ public class TenderUtmChangeLog implements Serializable {
         this.secondDeptId = secondDeptId;
     }
 
+    public String getSecondDeptName() {
+        return secondDeptName;
+    }
+
+    public void setSecondDeptName(String secondDeptName) {
+        this.secondDeptName = secondDeptName == null ? null : secondDeptName.trim();
+    }
+
     public Integer getThirdDeptId() {
         return thirdDeptId;
     }
 
     public void setThirdDeptId(Integer thirdDeptId) {
         this.thirdDeptId = thirdDeptId;
+    }
+
+    public String getThirdDeptName() {
+        return thirdDeptName;
+    }
+
+    public void setThirdDeptName(String thirdDeptName) {
+        this.thirdDeptName = thirdDeptName == null ? null : thirdDeptName.trim();
     }
 
     public Integer getOperator() {

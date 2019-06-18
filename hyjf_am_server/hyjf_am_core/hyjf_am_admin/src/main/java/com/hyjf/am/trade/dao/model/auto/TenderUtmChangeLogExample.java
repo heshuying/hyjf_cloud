@@ -375,6 +375,76 @@ public class TenderUtmChangeLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andTopDeptNameIsNull() {
+            addCriterion("top_dept_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameIsNotNull() {
+            addCriterion("top_dept_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameEqualTo(String value) {
+            addCriterion("top_dept_name =", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameNotEqualTo(String value) {
+            addCriterion("top_dept_name <>", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameGreaterThan(String value) {
+            addCriterion("top_dept_name >", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameGreaterThanOrEqualTo(String value) {
+            addCriterion("top_dept_name >=", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameLessThan(String value) {
+            addCriterion("top_dept_name <", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameLessThanOrEqualTo(String value) {
+            addCriterion("top_dept_name <=", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameLike(String value) {
+            addCriterion("top_dept_name like", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameNotLike(String value) {
+            addCriterion("top_dept_name not like", value, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameIn(List<String> values) {
+            addCriterion("top_dept_name in", values, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameNotIn(List<String> values) {
+            addCriterion("top_dept_name not in", values, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameBetween(String value1, String value2) {
+            addCriterion("top_dept_name between", value1, value2, "topDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopDeptNameNotBetween(String value1, String value2) {
+            addCriterion("top_dept_name not between", value1, value2, "topDeptName");
+            return (Criteria) this;
+        }
+
         public Criteria andSecondDeptIdIsNull() {
             addCriterion("second_dept_id is null");
             return (Criteria) this;
@@ -435,6 +505,76 @@ public class TenderUtmChangeLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andSecondDeptNameIsNull() {
+            addCriterion("second_dept_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameIsNotNull() {
+            addCriterion("second_dept_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameEqualTo(String value) {
+            addCriterion("second_dept_name =", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameNotEqualTo(String value) {
+            addCriterion("second_dept_name <>", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameGreaterThan(String value) {
+            addCriterion("second_dept_name >", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameGreaterThanOrEqualTo(String value) {
+            addCriterion("second_dept_name >=", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameLessThan(String value) {
+            addCriterion("second_dept_name <", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameLessThanOrEqualTo(String value) {
+            addCriterion("second_dept_name <=", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameLike(String value) {
+            addCriterion("second_dept_name like", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameNotLike(String value) {
+            addCriterion("second_dept_name not like", value, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameIn(List<String> values) {
+            addCriterion("second_dept_name in", values, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameNotIn(List<String> values) {
+            addCriterion("second_dept_name not in", values, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameBetween(String value1, String value2) {
+            addCriterion("second_dept_name between", value1, value2, "secondDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondDeptNameNotBetween(String value1, String value2) {
+            addCriterion("second_dept_name not between", value1, value2, "secondDeptName");
+            return (Criteria) this;
+        }
+
         public Criteria andThirdDeptIdIsNull() {
             addCriterion("third_dept_id is null");
             return (Criteria) this;
@@ -492,6 +632,76 @@ public class TenderUtmChangeLogExample {
 
         public Criteria andThirdDeptIdNotBetween(Integer value1, Integer value2) {
             addCriterion("third_dept_id not between", value1, value2, "thirdDeptId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameIsNull() {
+            addCriterion("third_dept_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameIsNotNull() {
+            addCriterion("third_dept_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameEqualTo(String value) {
+            addCriterion("third_dept_name =", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameNotEqualTo(String value) {
+            addCriterion("third_dept_name <>", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameGreaterThan(String value) {
+            addCriterion("third_dept_name >", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameGreaterThanOrEqualTo(String value) {
+            addCriterion("third_dept_name >=", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameLessThan(String value) {
+            addCriterion("third_dept_name <", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameLessThanOrEqualTo(String value) {
+            addCriterion("third_dept_name <=", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameLike(String value) {
+            addCriterion("third_dept_name like", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameNotLike(String value) {
+            addCriterion("third_dept_name not like", value, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameIn(List<String> values) {
+            addCriterion("third_dept_name in", values, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameNotIn(List<String> values) {
+            addCriterion("third_dept_name not in", values, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameBetween(String value1, String value2) {
+            addCriterion("third_dept_name between", value1, value2, "thirdDeptName");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdDeptNameNotBetween(String value1, String value2) {
+            addCriterion("third_dept_name not between", value1, value2, "thirdDeptName");
             return (Criteria) this;
         }
 
