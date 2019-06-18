@@ -124,15 +124,15 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			User user = userService.findUserByUsernameOrMobile(electricitySalesDataPushListVO.getUserName());
 			if(user==null) {
 		        response.setRtn(Response.ERROR);
-		        response.setMessage("坐席用户名错误，请修改后重新上传");
+		        response.setMessage("客户用户名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getOwnerUserName());
 		        return response;
 			}
 			UserInfo userinfo = userInfoService.findUserInfoById(user.getUserId());
-			if(!electricitySalesDataPushListVO.getOwnerUserName().equals(userinfo.getTruename())) {
-		        response.setRtn(Response.ERROR);
-		        response.setMessage("姓名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getOwnerUserName());
-		        return response;
-			}
+//			if(!electricitySalesDataPushListVO.getOwnerUserName().equals(userinfo.getTruename())) {
+//		        response.setRtn(Response.ERROR);
+//		        response.setMessage("客户用户名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getOwnerUserName());
+//		        return response;
+//			}
 			record.setOwnerUserName(electricitySalesDataPushListVO.getOwnerUserName());
 			record.setGroupId(csrcs.getGroupId());	
 			record.setGroupName(csrcs.getGroupName());
