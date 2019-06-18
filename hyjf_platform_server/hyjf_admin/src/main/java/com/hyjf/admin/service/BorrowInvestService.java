@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
 import com.hyjf.am.resquest.trade.UpdateTenderUtmRequest;
@@ -87,4 +88,6 @@ public interface BorrowInvestService {
     BorrowInvestCustomizeExtVO getBorrowInvestInfo(String nid);
 
     AdminResult updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
+
+    TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid);
 }

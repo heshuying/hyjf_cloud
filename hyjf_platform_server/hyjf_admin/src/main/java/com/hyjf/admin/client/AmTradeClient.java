@@ -3126,6 +3126,13 @@ public interface AmTradeClient {
      */
     IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
 
+    /**
+     * 修改订单渠道历史记录查询
+     * @param nid
+     * @return
+     */
+    TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid);
+
 
     /** 加息接口开始*/
     /** 枚举类型 */

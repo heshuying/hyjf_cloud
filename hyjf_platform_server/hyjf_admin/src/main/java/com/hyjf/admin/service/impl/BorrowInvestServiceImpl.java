@@ -23,6 +23,7 @@ import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.BorrowInvestCustomizeExtResponse;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
 import com.hyjf.am.vo.admin.*;
@@ -712,5 +713,10 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         }else{
             return new AdminResult(BaseResult.FAIL);
         }
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid) {
+        return amTradeClient.getTenderUtmChangeLog(nid);
     }
 }

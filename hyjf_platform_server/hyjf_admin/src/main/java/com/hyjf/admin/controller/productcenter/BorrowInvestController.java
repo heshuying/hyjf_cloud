@@ -23,6 +23,7 @@ import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
@@ -30,6 +31,7 @@ import com.hyjf.am.resquest.trade.UpdateTenderUtmRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.TenderUpdateUtmHistoryVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -694,5 +696,13 @@ public class BorrowInvestController extends BaseController {
 
         return borrowInvestService.updateTenderUtm(extRequest);
 
+    }
+
+
+    @ApiOperation(value = "出借明细-修改渠道-修改记录",notes = "出借明细-修改渠道-修改记录")
+    @GetMapping("/update_tender_utm_history/{nid}")
+    public AdminResult<TenderUpdateUtmHistoryResponse> getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
+        TenderUpdateUtmHistoryResponse response=borrowInvestService.getTenderUtmChangeLog(nid);
+        return new AdminResult(response);
     }
 }

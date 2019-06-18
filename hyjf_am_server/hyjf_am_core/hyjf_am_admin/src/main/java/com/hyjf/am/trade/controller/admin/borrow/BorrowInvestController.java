@@ -18,9 +18,11 @@ import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
+import com.hyjf.am.trade.service.admin.borrow.TenderUtmChangeLogService;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.TenderUpdateUtmHistoryVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ import java.util.List;
 public class BorrowInvestController extends BaseController {
     @Autowired
     BorrowInvestService borrowInvestService;
+
+    @Autowired
+    private TenderUtmChangeLogService tenderUtmChangeLogService;
 
     /**
      * 出借明细记录 总数COUNT
@@ -225,5 +230,13 @@ public class BorrowInvestController extends BaseController {
         BeanUtils.copyProperties(extRequest,log);
         int rt=borrowInvestService.updateTenderUtm(log);
         return new IntegerResponse(rt);
+    }
+
+    @RequestMapping("/update_tender_utm_history/{nid}")
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
+        TenderUpdateUtmHistoryResponse response=new TenderUpdateUtmHistoryResponse();
+        List<TenderUpdateUtmHistoryVO> lstVO=tenderUtmChangeLogService.getChangeLog(nid);
+        response.setResultList(lstVO);
+        return response;
     }
 }
