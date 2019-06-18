@@ -1,0 +1,30 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: @eureka.serviceUrl.default@
+  instance:
+    preferIpAddress: true
+spring:
+  application:
+    name: data_statistics
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
+    
+  profiles:
+    active: dev
+
+server:
+  port: 9097
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
