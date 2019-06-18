@@ -74,7 +74,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.hyjf.data.DataApplication</mainClass>
+                    <mainClass>com.hyjf.data.DataStatisticsApplication</mainClass>
                     <requiresUnpack>
                         <dependency>
                             <groupId>org.apache.axis2</groupId>
