@@ -82,11 +82,11 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         duibaOrders.setSellingPrice(new BigDecimal(consumeParams.getCredits()).divide(duiBaRate,2, BigDecimal.ROUND_DOWN));
         // 划线价 返回单位为分，转换一下
         if(null != consumeParams.getFacePrice()){
-            duibaOrders.setMarkingPrice(new BigDecimal(consumeParams.getFacePrice()).divide(new BigDecimal("0.01"),2, BigDecimal.ROUND_DOWN));
+            duibaOrders.setMarkingPrice(new BigDecimal(consumeParams.getFacePrice()).multiply(new BigDecimal("0.01")));
         }
         // 成本 返回单位为分，转换一下
         if(null != consumeParams.getActualPrice()){
-            duibaOrders.setCost(new BigDecimal(consumeParams.getActualPrice()).divide(new BigDecimal("0.01"),2, BigDecimal.ROUND_DOWN));
+            duibaOrders.setCost(new BigDecimal(consumeParams.getActualPrice()).multiply(new BigDecimal("0.01")));
         }
         // 订单状态
         duibaOrders.setOrderStatus(2);
