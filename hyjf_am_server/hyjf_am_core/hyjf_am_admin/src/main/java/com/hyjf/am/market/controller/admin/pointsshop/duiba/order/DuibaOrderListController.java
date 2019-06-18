@@ -441,6 +441,8 @@ public class DuibaOrderListController {
         StringResponse response = new StringResponse();
         // 商品类型为充值
         String productType = "2";
+        // 商品类型为实物
+        String productTypeSW = "0";
         // 执行更新影响行数
         int flagCount = 0;
         // 更新虚拟商品充值状态为完成
@@ -456,6 +458,10 @@ public class DuibaOrderListController {
                 flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
                 // 虚拟商品充值状态
                 duibaOrderVO.setRechargeState("处理完成");
+            }
+            // 判断如果为实物则更改已发货状态
+            if(productTypeSW.equals(duibaOrderVOStr.getProductType())){
+                duibaOrderVO.setDeliveryStatus(1);
             }
             duibaOrderVO.setId(duibaOrderVOStr.getId());
             // 更新订单为有效
