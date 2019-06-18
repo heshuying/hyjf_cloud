@@ -302,8 +302,8 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 							continue;
 						}
 						ElectricitySalesDataPushListVO vo=new ElectricitySalesDataPushListVO();
-						vo.setOwnerUserName(this.getValue(hssfRow.getCell(1)));
-						vo.setUserName(this.getValue(hssfRow.getCell(2)));
+						vo.setOwnerUserName(this.getValue(hssfRow.getCell(0)));
+						vo.setUserName(this.getValue(hssfRow.getCell(1)));
 						electricitySalesDataPushList.add(vo);
 					}
 				}
