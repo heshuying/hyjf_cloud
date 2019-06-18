@@ -122,7 +122,7 @@ public class BorrowRegistController extends BaseController {
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
-        return borrowRegistService.registCancel(borrowNid, null, null, currUser.getId(), currUser.getUsername());
+        return borrowRegistService.registCancel(borrowNid, currUser.getId(), currUser.getUsername());
     }
 
     /**
@@ -136,10 +136,10 @@ public class BorrowRegistController extends BaseController {
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
-        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+        if(StringUtils.isBlank(requestBean.getBorrowNid()) || StringUtils.isBlank(requestBean.getBorrowAccountId()) || StringUtils.isBlank(requestBean.getRaiseDate())){
             return new AdminResult(BaseResult.FAIL, "请求参数错误");
         }
-        return borrowRegistService.registCancel(requestBean.getBorrowNid(),requestBean.getBorrowAccountId(), requestBean.getRaiseDate(), currUser.getId(), currUser.getUsername());
+        return borrowRegistService.registCancelForExceptionBorrow(requestBean.getBorrowNid(),requestBean.getBorrowAccountId(), requestBean.getRaiseDate(), currUser.getId(), currUser.getUsername());
     }
 
     /**

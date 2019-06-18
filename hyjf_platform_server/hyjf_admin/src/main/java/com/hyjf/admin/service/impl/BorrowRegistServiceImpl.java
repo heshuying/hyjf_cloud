@@ -151,7 +151,63 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
      * @return
      */
     @Override
-    public AdminResult registCancel(String borrowNid, String borrowAccountId, String raiseDate, String currUserId, String currUserName) {
+    public AdminResult registCancelForExceptionBorrow(String borrowNid, String borrowAccountId, String raiseDate, String currUserId, String currUserName) {
+        BorrowRegistUpdateRequest request = new BorrowRegistUpdateRequest();
+        // 校验电子账号
+        BankOpenAccountVO bankOpenAccountVO = amUserClient.getBankOpenAccountByAccountId(borrowAccountId);
+        if(bankOpenAccountVO == null){
+            return new AdminResult(BaseResult.FAIL,"借款人电子账号不正确");
+        }
+        // 调用银行接口订单号，订单日期
+        String orderId = GetOrderIdUtils.getOrderId2(bankOpenAccountVO.getUserId());
+        String orderDate = GetOrderIdUtils.getOrderDate();
+
+        BankCallBean bankCallBean = new BankCallBean();
+        // 调用类型：标的撤销
+        bankCallBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER_CANCEL);
+        // 标的号
+        bankCallBean.setProductId(borrowNid);
+        // 电子账户
+        bankCallBean.setAccountId(borrowAccountId);
+        // 募集日
+        bankCallBean.setRaiseDate(raiseDate);
+
+        // 日志用字段
+        bankCallBean.setLogOrderId(orderId);
+        bankCallBean.setLogOrderDate(orderDate);
+        bankCallBean.setLogUserId(String.valueOf(bankOpenAccountVO.getUserId()));
+        bankCallBean.setLogRemark("借款人标的备案撤销");
+        bankCallBean.setLogClient(0);
+
+        // 调用银行接口撤销标的
+        BankCallBean borrowCancelResult = BankCallUtils.callApiBg(bankCallBean);
+        // 银行返回码
+        String retCode = "";
+        // 标的状态
+        String state = "";
+        // 银行返回描述信息
+        String bankRetmsg = "";
+        if(borrowCancelResult != null){
+            retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
+            // state为空的时赋一个负数
+            state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
+        }
+
+        if(BankCallConstant.RESPCODE_SUCCESS.equals(retCode) && 9 == Integer.valueOf(state)){
+            return new AdminResult(BaseResult.SUCCESS, "撤销备案成功");
+        } else {
+            logger.error("备案撤销失败，标的号：{}，银行返回码：{}", borrowNid, retCode);
+            return new AdminResult(BaseResult.FAIL, "调用银行撤销备案接口失败");
+        }
+    }
+
+    /**
+     * 异常标的备案撤销
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public AdminResult registCancel(String borrowNid, String currUserId, String currUserName) {
         BorrowRegistUpdateRequest request = new BorrowRegistUpdateRequest();
         // 获取标的并校验
         BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
@@ -163,9 +219,6 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccount(userId);
         if(bankOpenAccount == null){
             return new AdminResult(BaseResult.FAIL,"未查询到借款人开户信息！");
-        }
-        if(StringUtils.isNotBlank(borrowAccountId) && !bankOpenAccount.getAccount().equals(borrowAccountId)){
-            return new AdminResult(BaseResult.FAIL,"借款人电子账号不正确");
         }
 
         // 调用银行接口订单号，订单日期
