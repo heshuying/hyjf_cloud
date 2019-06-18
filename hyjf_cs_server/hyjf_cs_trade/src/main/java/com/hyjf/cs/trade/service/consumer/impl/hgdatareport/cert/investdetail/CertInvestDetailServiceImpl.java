@@ -416,8 +416,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
                 certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
                 List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-                    interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes()).subtract(hjhDebtCreditRepay.getRepayInterestWait());
-                    capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes()).subtract(hjhDebtCreditRepay.getRepayCapitalWait());
+                    interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
+                    capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
                 }
             }else{
                 //散标
@@ -450,8 +450,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
                 certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
                 List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-                    interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes()).subtract(hjhDebtCreditRepay.getRepayInterestWait());
-                    capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes()).subtract(hjhDebtCreditRepay.getRepayCapitalWait());
+                    interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
+                    capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
                 }
                 logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());
             }else{
