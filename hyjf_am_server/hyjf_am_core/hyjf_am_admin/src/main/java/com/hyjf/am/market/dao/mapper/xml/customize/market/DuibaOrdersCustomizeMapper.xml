@@ -157,6 +157,14 @@
     count(1)
     FROM
     ht_duiba_orders hdp
+    LEFT JOIN hyjf_config.ht_param_name pn1
+    ON hdp.`product_type` = pn1.name_cd AND pn1.name_class = 'DUIBA_PRODUCT_TYPE'
+    LEFT JOIN hyjf_config.ht_param_name pn2
+    ON hdp.`delivery_status` = pn2.name_cd AND pn2.name_class = 'DELIVERY_STATUS'
+    LEFT JOIN hyjf_config.ht_param_name pn3
+    ON hdp.`order_status` = pn3.name_cd AND pn3.name_class = 'ORDER_STATUS'
+    LEFT JOIN hyjf_config.ht_param_name pn4
+    ON hdp.`processing_state` = pn4.name_cd AND pn4.name_class = 'PROCESSING_STATE'
     WHERE 1=1
     <if test="duibaOrderIdSerach != null and duibaOrderIdSerach != ''">
       AND hdp.duiba_order_id = #{duibaOrderIdSerach}
@@ -210,11 +218,13 @@
       <if test='orderTypeTab == "3"'>
         AND hdp.recharge_state IS NOT NULL
         AND hdp.product_type <![CDATA[<>]]> '0'
+        AND hdp.recharge_state <![CDATA[<>]]> '处理完成'
       </if>
       <if test='orderTypeTab == "2"'>
         AND hdp.product_type = '0'
       </if>
     </if>
+    order by order_time DESC
   </select>
 
   <select id="findOneOrder" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
