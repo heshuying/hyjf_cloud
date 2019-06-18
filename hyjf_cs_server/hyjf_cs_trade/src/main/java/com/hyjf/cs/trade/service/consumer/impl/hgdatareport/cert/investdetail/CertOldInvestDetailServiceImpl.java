@@ -465,8 +465,8 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
                 certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
                 List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-                    interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
-                    capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
+                    interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes());
+                    capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes());
                 }
 			}else{
 				//散标
@@ -490,8 +490,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			BorrowRecoverPlanVO borrowRecoverPlan=borrowRecoverPlans.get(0);
 			interest=borrowRecoverPlan.getRecoverInterestYes();
 			capital=borrowRecoverPlan.getRecoverCapitalYes();
-			logger.info(logHeader + "interest:"+interest);
-			logger.info(logHeader + "capital:"+capital);
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
 				//智投
                 CertRequest certRequest1=new CertRequest();
@@ -499,17 +497,11 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
                 certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
                 certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
                 List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
-                logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());
                 for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-                    logger.info(logHeader + "hjhDebtCreditRepay.getReceiveInterestYes():"+hjhDebtCreditRepay.getReceiveInterestYes());
-                    logger.info(logHeader + "hjhDebtCreditRepay.getReceiveCapitalYes():"+hjhDebtCreditRepay.getReceiveCapitalYes());
-                    interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
-                    capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-                    logger.info(logHeader + "interest:"+interest);
-                    logger.info(logHeader + "capital:"+capital);
+                    interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes());
+                    capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes());
 
                 }
-                logger.info(logHeader + "hjhDebtCreditRepays.size（）:"+hjhDebtCreditRepays.size());
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
@@ -525,8 +517,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 
 			}
 		}
-		logger.info(logHeader + "interest00:"+interest);
-		logger.info(logHeader + "capital00:"+capital);
 		/****************** 发送8赎回本金******************/
 
 		//接口版本号
