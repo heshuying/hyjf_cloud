@@ -119,9 +119,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("借款记录接口报送成功");
             presentationLog.setStatus(1);
             presentationLog.setDescription("");
+            presentationLog.setJson(map);
         } else {
             presentationLog.setStatus(0);
             presentationLog.setDescription(zeroOneResponse.result_msg);
+            presentationLog.setJson(map);
         }
         //插入mongo表
         this.presentationLogService.insertLog(presentationLog);
@@ -179,15 +181,17 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
         Map<String,Object> map = new HashMap<>();
         map.put("data",list);
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(), String.valueOf(JSONObject.toJSON(map)));
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),JSONObject.toJSONString(map));
         if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("投资记录接口报送成功");
             presentationLog.setStatus(1);
             presentationLog.setDescription("");
+            presentationLog.setJson(map);
         } else {
             presentationLog.setStatus(0);
             presentationLog.setDescription(zeroOneResponse.result_msg);
+            presentationLog.setJson(map);
         }
         //插入mongo表
         this.presentationLogService.insertLog(presentationLog);
@@ -220,15 +224,17 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
 
         Map<String,Object> map = new HashMap<>();
         map.put("data",list);
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), String.valueOf(JSONObject.toJSON(map)));
+        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), JSONObject.toJSONString(map));
         if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
             //报送成功
             logger.info("提前还款接口报送成功");
             presentationLog.setStatus(1);
             presentationLog.setDescription("");
+            presentationLog.setJson(map);
         } else {
             presentationLog.setStatus(0);
             presentationLog.setDescription(zeroOneResponse.result_msg);
+            presentationLog.setJson(map);
         }
         //插入mongo表
         this.presentationLogService.insertLog(presentationLog);

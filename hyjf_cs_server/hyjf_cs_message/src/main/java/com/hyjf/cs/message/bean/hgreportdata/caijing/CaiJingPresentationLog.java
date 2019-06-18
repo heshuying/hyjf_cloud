@@ -6,6 +6,7 @@ package com.hyjf.cs.message.bean.hgreportdata.caijing;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -33,6 +34,9 @@ public class CaiJingPresentationLog implements Serializable {
 
     //报送结束时间
     private String endDate;
+
+    //报送数据
+    private Map<String,Object> json;
 
     private Integer createTime;
 
@@ -116,5 +120,13 @@ public class CaiJingPresentationLog implements Serializable {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public Map<String, Object> getJson() {
+        return json;
+    }
+
+    public void setJson(Map<String, Object> json) {
+        this.json = json;
     }
 }
