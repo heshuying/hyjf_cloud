@@ -91,7 +91,8 @@
 
       select  user_name userName,current_owner currentOwner,operating operating,IFNULL(money,0) money,IFNULL(year_money,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
       from  ht_user_operate_list where operating &lt;&gt; 3 and current_owner is not null
-      and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 DAY),'%Y-%m-%d 00:00:00')
+      and create_time &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')
+      AND create_time &lt; DATE_FORMAT(#{endTime},'%Y-%m-%d %H:%i:%s')
       ORDER  BY create_time DESC
     </select>
 
