@@ -1,5 +1,7 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 
 /**
@@ -8,6 +10,6 @@ import com.hyjf.am.user.dao.model.auto.UtmPlat;
 public interface UtmPlatCustomizeMapper {
     UtmPlat selectUtmPlatByUserId(Integer userId);
 
-    UtmPlat selectUtmPlatBySourceIds(Integer sourceId);
+    UtmPlat selectUtmPlatBySourceIds(@Param("sourceId") Integer sourceId);
 
 }
