@@ -7,6 +7,7 @@ import com.hyjf.am.response.user.CreditConsumeResultResponse;
 import com.hyjf.am.user.service.front.user.DuiBaService;
 import com.hyjf.am.vo.user.CreditConsumeResultVO;
 import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +31,16 @@ public class DuiBaController {
     @RequestMapping("/deductpoints")
     public CreditConsumeResultResponse deductPoints(@RequestBody CreditConsumeParams consumeParams){
         CreditConsumeResultResponse response = new CreditConsumeResultResponse();
-        CreditConsumeResultVO resultVO =  duiBaService.updateUserPoints(consumeParams);
-        if(null != resultVO){
+        CreditConsumeResultVO resultVO = new CreditConsumeResultVO();
+        // 扣积分前进行校验
+        String checkResult = duiBaService.getCheckResult(consumeParams);
+        if(StringUtils.isNotBlank(checkResult)){
+            resultVO.setSuccess(false);
+            resultVO.setErrorMessage(checkResult);
+            response.setResult(resultVO);
+        } else {
+            // 扣减用户积分并返回结果
+            resultVO =  duiBaService.updateUserPoints(consumeParams);
             response.setResult(resultVO);
         }
         return response;

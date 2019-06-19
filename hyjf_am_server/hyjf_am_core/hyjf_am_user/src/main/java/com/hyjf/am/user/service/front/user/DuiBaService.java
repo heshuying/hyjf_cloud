@@ -13,6 +13,13 @@ import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
  */
 public interface DuiBaService extends BaseService {
     /**
+     * 扣减用户积分前的校验
+     * @param consumeParams
+     * @return
+     */
+    String getCheckResult(CreditConsumeParams consumeParams);
+
+    /**
      * 兑吧扣积分回调相关业务处理
      * @param consumeParams
      * @return

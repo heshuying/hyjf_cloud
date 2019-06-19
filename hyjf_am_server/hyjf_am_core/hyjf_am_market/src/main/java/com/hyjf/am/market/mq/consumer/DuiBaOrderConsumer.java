@@ -33,7 +33,7 @@ public class DuiBaOrderConsumer implements RocketMQListener<MessageExt>, RocketM
 
     @Override
     public void onMessage(MessageExt messageExt){
-        logger.info("兑吧生成订单收到消息，开始处理.....");
+        logger.info("兑吧生成订单收到消息，msgID:{}", messageExt.getMsgId());
         CreditConsumeParams creditConsumeParams;
         // 兑吧订单号
         String duiBaOrderId = "";

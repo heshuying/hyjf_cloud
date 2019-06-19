@@ -35,6 +35,38 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 	@Autowired
 	CommonProducer commonProducer;
 
+
+	/**
+	 * 扣减用户积分前的校验
+	 * @param consumeParams
+	 * @return
+	 */
+	@Override
+	public String getCheckResult(CreditConsumeParams consumeParams) {
+		// 校验结果，成功时直接返回null，失败时返回错误信息
+		String errorMsg = null;
+		Integer userId = Integer.valueOf(consumeParams.getUid());
+		// 获取用户信息
+		UserExample userExample = new UserExample();
+		userExample.createCriteria().andUserIdEqualTo(userId);
+		List<User> users = userMapper.selectByExample(userExample);
+		// 如果未获取到用户信息，直接返回错误
+		if(users.size() == 0){
+			logger.info("兑吧扣积分回调出现错误:未获取到相关用户信息，用户ID:{}", userId);
+			errorMsg = "未获取到相关用户信息";
+		} else {
+			// 判断用户积分是否够用
+			User user = users.get(0);
+			int pointsCurrent = user.getPointsCurrent().intValue();
+			int credits = consumeParams.getCredits().intValue();
+			if(pointsCurrent < credits){
+				logger.info("兑吧扣积分回调出现错误:用户当前积分不足，用户ID:{}，当前积分:{}，需要扣除积分:{}", userId, pointsCurrent, credits);
+				errorMsg = "积分不足";
+			}
+		}
+		return errorMsg;
+	}
+
 	/**
 	 * 兑吧扣积分回调相关业务处理
 	 * @param consumeParams
@@ -50,16 +82,10 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 		String hyOrdId = GetOrderIdUtils.getOrderId2(userId);
 		consumeParams.setBizId(hyOrdId);
 		// 获取用户信息，用于返回给兑吧，并发送MQ
+		// 前面校验了用户，这里就不校验了
 		UserExample userExample = new UserExample();
 		userExample.createCriteria().andUserIdEqualTo(userId);
 		List<User> users = userMapper.selectByExample(userExample);
-		// 如果为获取到用户信息，直接返回错误
-		if(users.size() == 0){
-			logger.error("兑吧扣积分回调出现错误，未获取到相关用户信息，用户ID:{}", userId);
-			resultVO.setSuccess(false);
-			resultVO.setErrorMessage("未获取到相关用户信息");
-			return resultVO;
-		}
 		UserInfoExample userInfoExample = new UserInfoExample();
 		userInfoExample.createCriteria().andUserIdEqualTo(userId);
 		List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
