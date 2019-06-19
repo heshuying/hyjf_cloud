@@ -451,6 +451,35 @@
         and r.recover_period = 1
     </sql>
 
+    <sql id="countTotalCreditRepaySql">
+        #转让数据#
+        SELECT
+        bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        FROM
+        hyjf_trade.ht_borrow_credit bc
+        INNER JOIN ht_borrow_recover r on bc.tender_nid = r.nid
+
+        LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id = 1
+        and r.recover_time <![CDATA[>=]]> unix_timestamp(#{startTime})
+        and r.recover_time <![CDATA[<=]]> unix_timestamp(#{endTime})
+        and r.recover_period = 1
+    </sql>
+
     <!-- 查询运营中心合计 -->
     <select id="selectOCSum" parameterType="java.lang.String" resultMap="sumResultMap">
         SELECT
@@ -1137,6 +1166,18 @@
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalCreditSql"/>
+        ) AS t
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询转让数据 -->
+    <select id="countTotalRepayCredit" resultMap="sumResultMap">
+        SELECT ROUND(SUM(credit_amount)/10000) AS credit_amount,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalCreditRepaySql"/>
         ) AS t
         GROUP BY t.primary_division, t.two_division
     </select>

@@ -274,7 +274,7 @@ public class SellDailyServiceImpl implements SellDailyService {
 			break;
 		case 17:
             BigDecimal tempSource17 = null;
-            if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+            if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) >= 0) {
                 tempSource17 = source.getCreditAmount();
             } else {
                 tempSource17 = source.getNonRepaymentToday();
@@ -303,7 +303,12 @@ public class SellDailyServiceImpl implements SellDailyService {
 		return target;
 	}
 
-	private <T> T operating(T source, T target, int operateType) {
+    @Override
+    public List<SellDailyVO> countTotalRepayCredit(Date startTime, Date endTime) {
+        return sellDailyCustomizeMapper.countTotalRepayCredit(startTime, endTime);
+    }
+
+    private <T> T operating(T source, T target, int operateType) {
 		if (source instanceof BigDecimal && target instanceof BigDecimal) {
 			BigDecimal b1 = (BigDecimal) source;
 			BigDecimal b2 = (BigDecimal) target;
