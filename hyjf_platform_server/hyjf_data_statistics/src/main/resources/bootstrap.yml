@@ -31,7 +31,7 @@ management:
     health:
       show-details: ALWAYS
 info:
-  name: admin
+  name: hyjf_data_statistics
   version: '@project.version@'
   encoding: '@project.build.sourceEncoding@'
   java:

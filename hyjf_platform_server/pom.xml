@@ -20,7 +20,6 @@
         <module>hyjf_signatures</module>
         <module>hyjf_wbs</module>
         <module>hyjf_data_statistics</module>
-        <module>hyjf_data_statistics</module>
     </modules>
     <dependencies>
 
