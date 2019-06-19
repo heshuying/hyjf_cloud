@@ -124,7 +124,7 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			User user = userService.findUserByUsernameOrMobile(electricitySalesDataPushListVO.getUserName());
 			if(user==null) {
 		        response.setRtn(Response.ERROR);
-		        response.setMessage("客户用户名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getOwnerUserName());
+		        response.setMessage("客户用户名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getUserName());
 		        return response;
 			}
 			UserInfo userinfo = userInfoService.findUserInfoById(user.getUserId());
