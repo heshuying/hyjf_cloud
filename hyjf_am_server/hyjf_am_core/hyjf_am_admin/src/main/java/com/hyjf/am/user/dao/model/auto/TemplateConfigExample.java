@@ -195,62 +195,52 @@ public class TemplateConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeEqualTo(String value) {
+        public Criteria andTempTypeEqualTo(Integer value) {
             addCriterion("temp_type =", value, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeNotEqualTo(String value) {
+        public Criteria andTempTypeNotEqualTo(Integer value) {
             addCriterion("temp_type <>", value, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeGreaterThan(String value) {
+        public Criteria andTempTypeGreaterThan(Integer value) {
             addCriterion("temp_type >", value, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeGreaterThanOrEqualTo(String value) {
+        public Criteria andTempTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("temp_type >=", value, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeLessThan(String value) {
+        public Criteria andTempTypeLessThan(Integer value) {
             addCriterion("temp_type <", value, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeLessThanOrEqualTo(String value) {
+        public Criteria andTempTypeLessThanOrEqualTo(Integer value) {
             addCriterion("temp_type <=", value, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeLike(String value) {
-            addCriterion("temp_type like", value, "tempType");
-            return (Criteria) this;
-        }
-
-        public Criteria andTempTypeNotLike(String value) {
-            addCriterion("temp_type not like", value, "tempType");
-            return (Criteria) this;
-        }
-
-        public Criteria andTempTypeIn(List<String> values) {
+        public Criteria andTempTypeIn(List<Integer> values) {
             addCriterion("temp_type in", values, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeNotIn(List<String> values) {
+        public Criteria andTempTypeNotIn(List<Integer> values) {
             addCriterion("temp_type not in", values, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeBetween(String value1, String value2) {
+        public Criteria andTempTypeBetween(Integer value1, Integer value2) {
             addCriterion("temp_type between", value1, value2, "tempType");
             return (Criteria) this;
         }
 
-        public Criteria andTempTypeNotBetween(String value1, String value2) {
+        public Criteria andTempTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("temp_type not between", value1, value2, "tempType");
             return (Criteria) this;
         }
@@ -825,52 +815,52 @@ public class TemplateConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Boolean value) {
+        public Criteria andStatusEqualTo(Integer value) {
             addCriterion("`status` =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Boolean value) {
+        public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("`status` <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Boolean value) {
+        public Criteria andStatusGreaterThan(Integer value) {
             addCriterion("`status` >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("`status` >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Boolean value) {
+        public Criteria andStatusLessThan(Integer value) {
             addCriterion("`status` <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
             addCriterion("`status` <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Boolean> values) {
+        public Criteria andStatusIn(List<Integer> values) {
             addCriterion("`status` in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Boolean> values) {
+        public Criteria andStatusNotIn(List<Integer> values) {
             addCriterion("`status` not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
             addCriterion("`status` between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("`status` not between", value1, value2, "status");
             return (Criteria) this;
         }
@@ -1095,52 +1085,52 @@ public class TemplateConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtEqualTo(Boolean value) {
+        public Criteria andIsJumtEqualTo(Integer value) {
             addCriterion("is_jumt =", value, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtNotEqualTo(Boolean value) {
+        public Criteria andIsJumtNotEqualTo(Integer value) {
             addCriterion("is_jumt <>", value, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtGreaterThan(Boolean value) {
+        public Criteria andIsJumtGreaterThan(Integer value) {
             addCriterion("is_jumt >", value, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsJumtGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_jumt >=", value, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtLessThan(Boolean value) {
+        public Criteria andIsJumtLessThan(Integer value) {
             addCriterion("is_jumt <", value, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsJumtLessThanOrEqualTo(Integer value) {
             addCriterion("is_jumt <=", value, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtIn(List<Boolean> values) {
+        public Criteria andIsJumtIn(List<Integer> values) {
             addCriterion("is_jumt in", values, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtNotIn(List<Boolean> values) {
+        public Criteria andIsJumtNotIn(List<Integer> values) {
             addCriterion("is_jumt not in", values, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsJumtBetween(Integer value1, Integer value2) {
             addCriterion("is_jumt between", value1, value2, "isJumt");
             return (Criteria) this;
         }
 
-        public Criteria andIsJumtNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsJumtNotBetween(Integer value1, Integer value2) {
             addCriterion("is_jumt not between", value1, value2, "isJumt");
             return (Criteria) this;
         }

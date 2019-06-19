@@ -16,7 +16,7 @@ public class TemplateConfig implements Serializable {
      *
      * @mbggenerated
      */
-    private String tempType;
+    private Integer tempType;
 
     /**
      * 模板名称
@@ -79,10 +79,10 @@ public class TemplateConfig implements Serializable {
      *
      * @mbggenerated
      */
-    private Boolean status;
+    private Integer status;
 
     /**
-     * 按钮文字
+     * 备注
      *
      * @mbggenerated
      */
@@ -107,7 +107,7 @@ public class TemplateConfig implements Serializable {
      *
      * @mbggenerated
      */
-    private Boolean isJumt;
+    private Integer isJumt;
 
     /**
      * 跳转地址
@@ -154,12 +154,12 @@ public class TemplateConfig implements Serializable {
         this.id = id;
     }
 
-    public String getTempType() {
+    public Integer getTempType() {
         return tempType;
     }
 
-    public void setTempType(String tempType) {
-        this.tempType = tempType == null ? null : tempType.trim();
+    public void setTempType(Integer tempType) {
+        this.tempType = tempType;
     }
 
     public String getTempName() {
@@ -226,11 +226,11 @@ public class TemplateConfig implements Serializable {
         this.buttonText = buttonText == null ? null : buttonText.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -258,11 +258,11 @@ public class TemplateConfig implements Serializable {
         this.layerName = layerName == null ? null : layerName.trim();
     }
 
-    public Boolean getIsJumt() {
+    public Integer getIsJumt() {
         return isJumt;
     }
 
-    public void setIsJumt(Boolean isJumt) {
+    public void setIsJumt(Integer isJumt) {
         this.isJumt = isJumt;
     }
 
