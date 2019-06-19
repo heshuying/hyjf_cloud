@@ -100,7 +100,7 @@ public class CertOldInvestDetailOtherMessageConsumer implements RocketMQListener
                 } catch (Exception e) {
                     throw e;
                 }
-                logger.info(logHeader + " 处理成功。page=" + page+",size="+size+",data.size()"+data.size());
+                logger.info(logHeader + " 处理成功。minId=" + minId+",maxId="+maxId+",data.size()"+data.size());
                 if(new Integer(maxId)==maxOldId){
                     logger.info(logHeader + "生成完成！");
                     RedisUtils.set("CREDIT_TENDER_OTHER_RUN","1");
