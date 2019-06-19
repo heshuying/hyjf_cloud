@@ -811,4 +811,13 @@ public interface MQConstant {
 	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
 	/**--------------------------------- 业务流程配置end -------------------------------------*/
 
+
+    /**--------------------------------- 法大大合同状态 0:初始,1:生成成功,2,签署成功,3,下载成功start -------------------------------------*/
+	int FDD_STATUS_INITIALIZE_ = 0;
+	int FDD_STATUS_CREATE = 1;
+	int FDD_STATUS_SIGN = 2;
+	int FDD_STATUS_DOWNLOAD = 3;
+	/**--------------------------------- 法大大合同状态 0:初始,1:生成成功,2,签署成功,3,下载成功end  -------------------------------------*/
+
+
 }

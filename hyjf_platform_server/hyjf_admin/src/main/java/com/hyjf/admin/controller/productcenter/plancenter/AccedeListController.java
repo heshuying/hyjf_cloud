@@ -1161,7 +1161,8 @@ public class AccedeListController extends BaseController{
 			return ret;
 		}
 		tenderAgreement = tenderAgreementList.get(0);
-		if(tenderAgreement != null && tenderAgreement.getStatus() == 2){
+		// /modify by Zhadaojian 2019-6-19 协议状态是1（生成成功）时，需要重新签署(修复线上汇计划-计划订单PDF签署，协议状态为“生成成功”时，不能签署的问题)
+		if(tenderAgreement != null && tenderAgreement.getStatus() < MQConstant.FDD_STATUS_DOWNLOAD ){
 			// PDF下载加脱敏
 			_log.info("==========汇计划-计划订单PDF签署发送法大大MQ(PDF下载脱敏)=========");
 			this.accedeListService.updateSaveSignInfo(tenderAgreement, "", FddGenerateContractConstant.PROTOCOL_TYPE_PLAN, accede.getDebtPlanNid());
