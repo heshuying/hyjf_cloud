@@ -19,6 +19,7 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.vo.AuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -77,8 +78,8 @@ public class RepayAuthPagePlusController extends BaseUserController {
         String successPath = "/user/autoplus/autoTenderSuccess";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
+        String successUrl = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
         String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/repayauthpageplus/repayAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
@@ -96,7 +97,7 @@ public class RepayAuthPagePlusController extends BaseUserController {
         authBean.setPlatform(CustomConstants.CLIENT_PC);
         authBean.setAuthType(AuthBean.AUTH_TYPE_REPAY_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_PC);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_PC,request,systemConfig));
+        authBean.setForgotPwdUrl(BankCommonUtil.getForgotPwdUrl(CustomConstants.CLIENT_PC,null,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");

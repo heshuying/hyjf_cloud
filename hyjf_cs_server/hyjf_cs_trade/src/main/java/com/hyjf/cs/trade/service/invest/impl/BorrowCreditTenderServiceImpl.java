@@ -980,7 +980,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         // 承接成功后,发送大屏数据统计MQ
                         ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,sellerUserId,sellerAccount.getUserName(),creditTenderLog.getAssignCapital(),3);
                         screenDataBean.setTenderUserId(assignAccount.getUserId());
-                        this.sendScreenDataMQ(screenDataBean);
+                        //暂时取消债转数据
+                        //this.sendScreenDataMQ(screenDataBean);
                     } catch (Exception e) {
                         logger.error("承接成功后,发送大屏数据统计MQ失败",e.getMessage());
                     }

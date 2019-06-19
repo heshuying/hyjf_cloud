@@ -1975,7 +1975,7 @@
         WHERE 1=1
         <include refid="where-type-4"/>
         ) t
-        ORDER BY t.borrowNid
+        ORDER BY t.borrowNid,t.recoverUserName,t.recoverPeriod ASC
         <if test="limitStart!=null and limitStart >= 0" >
             LIMIT #{limitStart} , #{limitEnd}
         </if>

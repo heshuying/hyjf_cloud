@@ -24,6 +24,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/userBankWithdraw")
     @RequestLimit(seconds = 3)
 
-    public WebResult<Object> userBankWithdraw(@RequestHeader(value = "userId") int userId,
+    public WebResult<Object> userBankWithdraw(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "userId") int userId,
                                               @RequestBody @Valid BankWithdrawVO bankWithdrawVO, HttpServletRequest request) {
         logger.info("web端提现接口, userId is :{}", JSONObject.toJSONString(userId));
         WebResult<Object> result = new WebResult<Object>();
@@ -115,7 +116,18 @@ public class WebBankWithdrawController extends BaseTradeController {
         }
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawError?token=1";
+
+        String host = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,wjtClient);
+        }
+        String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, request, systemConfig);
+        }
+        String retUrl = host + "/user/withdrawError?token=1";
 
         // add by liuyang 20190422 节假日提现修改 start
         // 获取提现规则配置
@@ -136,9 +148,9 @@ public class WebBankWithdrawController extends BaseTradeController {
         }
         // add by liuyang 20190422 节假日提现修改 end
         //                 http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn
-        String successfulUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawSuccess?token=1";
+        String successfulUrl = host + "/user/withdrawSuccess?token=1";
         String bgRetUrl = "http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
-        String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
+
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, bankWithdrawVO.getWithdrawmoney(),
                 bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl,withdrawRuleConfigVO);
         if (null == bean) {

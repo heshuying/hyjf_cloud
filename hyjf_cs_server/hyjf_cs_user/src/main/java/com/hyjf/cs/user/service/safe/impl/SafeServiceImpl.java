@@ -234,11 +234,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      *
      * @param userId
      * @param email
+     * @param wjtClient
      * @return
      * @throws MQException
      */
     @Override
-    public boolean sendEmailActive(Integer userId, String token, String email) throws MQException {
+    public boolean sendEmailActive(Integer userId, String token, String email, String wjtClient) throws MQException {
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         String activeCode = GetCode.getRandomCode(6);
@@ -255,7 +256,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         // 发送激活邮件
         activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
+
         String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            url = systemConfig.wjtFrontHost + "/user/bindEmail?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+        }
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("url_name", url);
         if (StringUtils.isNotBlank(userInfoVO.getNickname())) {

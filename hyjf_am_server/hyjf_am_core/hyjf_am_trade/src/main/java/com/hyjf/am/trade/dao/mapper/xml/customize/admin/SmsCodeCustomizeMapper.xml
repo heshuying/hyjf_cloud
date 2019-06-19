@@ -14,13 +14,12 @@
 		FROM
 		ht_borrow_tender t
 		LEFT JOIN ht_r_user r ON t.user_id = r.user_id
-		WHERE
 		<where>
 			<if test="add_time_begin != null" >
-				AND t.create_time  <![CDATA[>=]]> #{add_time_begin,jdbcType=INTEGER}
+				AND t.create_time  <![CDATA[>=]]> #{add_time_begin}
 			</if>
 			<if test="add_time_end != null" >
-				AND t.create_time  <![CDATA[<=]]> #{add_time_end,jdbcType=INTEGER}
+				AND t.create_time  <![CDATA[<=]]> #{add_time_end}
 			</if>
 		</where>
 		GROUP BY

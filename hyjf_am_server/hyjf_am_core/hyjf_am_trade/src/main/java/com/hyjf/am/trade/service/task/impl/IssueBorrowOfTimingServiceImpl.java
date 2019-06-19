@@ -58,9 +58,38 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				params.put("userId", borrowCustomize.getUserId());
 				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 						MQConstant.HG_REPORT_DELAY_LEVEL);
+				// add by liuyang 20190415 wbs系统标的信息 start
+				try {
+					BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowCustomize.getBorrowNid());
+					if("10000000".equals(borrowInfo.getPublishInstCode())) {
+						sendWbsBorrowInfo(borrowCustomize.getBorrowNid(), "2", 0);
+					}
+				} catch (Exception e) {
+					logger.error("WBS系统标的信息发送MQ失败,[" + e + "].");
+				}
+				// add by liuyang 20190415 web系统标的信息 end
 				logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
 			}
 		}
+	}
+
+
+	/**
+	 * wbs标的信息推送MQ
+	 *
+	 * @param borrowNid
+	 * @param productStatus
+	 * @param productType
+	 */
+	private void sendWbsBorrowInfo(String borrowNid, String productStatus, Integer productType) throws MQException {
+		JSONObject params = new JSONObject();
+		// 产品编号
+		params.put("productNo", borrowNid);
+		// 产品状态
+		params.put("productStatus", productStatus);
+		// 产品类型 0 散标类, 1 计划类
+		params.put("productType", productType);
+		commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
 	}
 
 	@Override
