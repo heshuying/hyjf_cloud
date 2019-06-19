@@ -56,8 +56,7 @@
             points_total = points_total + #{modifyPoints}
         </if>
         <if test="modifyType != null and modifyType == 1">
-            ,points_current = points_current - #{modifyPoints},
-            points_total = points_total - #{modifyPoints}
+            ,points_current = points_current - #{modifyPoints}
         </if>
         WHERE
             user_id = #{userId}
