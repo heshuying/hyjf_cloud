@@ -45,7 +45,7 @@
             utm.source_type = 1
             AND utm.source_id IS NOT NULL
             AND utm.source_id <![CDATA[<>]]> ''
-            <if test="sourceIdSrch != null and sourceIdSrch != ''">
+            <if test="sourceId != null and sourceId != ''">
                 AND utm.source_id = #{sourceId}
             </if>
         </where>
