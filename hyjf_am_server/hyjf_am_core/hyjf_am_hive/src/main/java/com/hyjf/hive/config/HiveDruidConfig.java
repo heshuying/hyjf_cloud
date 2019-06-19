@@ -4,7 +4,6 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @Date $ $
  **/
 @Configuration
-@Component
 @ConfigurationProperties(prefix = "hive")
 public class HiveDruidConfig {
     private String url;
