@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
 import com.hyjf.am.response.Response;
