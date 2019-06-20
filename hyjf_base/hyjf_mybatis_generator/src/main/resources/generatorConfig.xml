@@ -5,7 +5,7 @@
 
     <!-- 引入配置文件 -->
 
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -2077,6 +2077,10 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <table tableName="ht_template_dispose" domainObjectName="TemplateDispose">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_jumt" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
     </context>
 </generatorConfiguration>
