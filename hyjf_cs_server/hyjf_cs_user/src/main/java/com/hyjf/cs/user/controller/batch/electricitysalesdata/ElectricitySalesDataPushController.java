@@ -56,10 +56,10 @@ public class ElectricitySalesDataPushController extends BaseUserController {
                 // 手机号
                 bean.setMobile(StringUtils.isBlank(electricitySalesDataPushListVO.getMobile()) ? null : electricitySalesDataPushListVO.getMobile());
                 // 性别:0未知,1男,2女
-                if (electricitySalesDataPushListVO.getSex() == 1) {
-                    bean.setSex("男");
-                } else if (electricitySalesDataPushListVO.getSex() == 2) {
-                    bean.setSex("女");
+                if (electricitySalesDataPushListVO.getSex().intValue() == 1) {
+                    bean.setSex("0");
+                } else if (electricitySalesDataPushListVO.getSex().intValue() == 2) {
+                    bean.setSex("1");
                 } else {
                     bean.setSex(null);
                 }

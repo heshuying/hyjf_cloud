@@ -55,11 +55,12 @@ public class CustomerServiceRepresentiveConfigController extends BaseConfigContr
      */
     @GetMapping("/selectCustomerServiceRepresentiveConfigByUserName/{currentOwner}")
     public CustomerServiceRepresentiveConfigResponse selectCustomerServiceRepresentiveConfigByUserName(@PathVariable String currentOwner) {
+        logger.info("当前拥有人姓名:[" + currentOwner + "].");
         CustomerServiceRepresentiveConfigResponse response = new CustomerServiceRepresentiveConfigResponse();
         CustomerServiceRepresentiveConfig customerServiceGroupConfig = customerServiceRepresentiveConfigService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
         if (customerServiceGroupConfig != null) {
             CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = new CustomerServiceRepresentiveConfigVO();
-            BeanUtils.copyProperties(customerServiceGroupConfig, CustomerServiceRepresentiveConfigVO.class);
+            BeanUtils.copyProperties(customerServiceGroupConfig, customerServiceRepresentiveConfig);
             response.setResult(customerServiceRepresentiveConfig);
         }
         return response;

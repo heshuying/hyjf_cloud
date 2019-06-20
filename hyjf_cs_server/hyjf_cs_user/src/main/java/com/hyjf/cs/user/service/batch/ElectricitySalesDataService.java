@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.batch;
 
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
@@ -140,4 +141,12 @@ public interface ElectricitySalesDataService extends BaseUserService {
      * @return
      */
     ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId);
+
+    /**
+     * 根据utmId查询Utm
+     *
+     * @param utmId
+     * @return
+     */
+    UtmVO selectUtmByUtmId(Integer utmId);
 }

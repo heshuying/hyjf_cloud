@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.batch.electricitysalesdata;
 
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
@@ -106,16 +107,20 @@ public class ElectricitySalesDataController extends BaseUserController {
             if (utmReg != null) {
                 // 如果是PC推广渠道,判断渠道是否是推送禁用
                 Integer utmId = utmReg.getUtmId();
-                // 根据utmId查询推广渠道
-                utmPlatVO = this.electricitySalesDataService.selectUtmPlatByUtmId(utmId);
-                if (utmPlatVO != null) {
-                    // 渠道ID
-                    Integer sourceId = utmPlatVO.getSourceId();
-                    // 根据sourceId查询该渠道是否被禁用
-                    CustomerServiceChannelVO customerServiceChannel = this.electricitySalesDataService.selectCustomerServiceChannelBySourceId(sourceId);
-                    if (customerServiceChannel != null) {
-                        // 如果被禁用了,continue
-                        continue;
+                UtmVO utmVO = this.electricitySalesDataService.selectUtmByUtmId(utmId);
+                if (utmVO != null) {
+                    Integer sourceId = utmVO.getSourceId();
+                    // 根据utmId查询推广渠道
+                    utmPlatVO = this.electricitySalesDataService.selectUtmPlatByUtmId(sourceId);
+                    if (utmPlatVO != null) {
+                        // 渠道ID
+                        sourceId = utmPlatVO.getSourceId();
+                        // 根据sourceId查询该渠道是否被禁用
+                        CustomerServiceChannelVO customerServiceChannel = this.electricitySalesDataService.selectCustomerServiceChannelBySourceId(sourceId);
+                        if (customerServiceChannel != null) {
+                            // 如果被禁用了,continue
+                            continue;
+                        }
                     }
                 }
             }
@@ -191,6 +196,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                                     continue;
                                 }
                                 // 如果有，将此用户分配给该坐席
+                                logger.info("用户名:[" + user.getUsername() + "],当前拥有人:[" + representiveConfigVO.getUserName() + "],GroupId:[" + representiveConfigVO.getGroupId() + "],坐席名称:[" + representiveConfigVO.getGroupName() + "].");
                                 ElectricitySalesDataPushListVO electricitySalesDataPushListVO = new ElectricitySalesDataPushListVO();
                                 electricitySalesDataPushListVO.setUserId(userId);
                                 electricitySalesDataPushListVO.setUserName(user.getUsername());
