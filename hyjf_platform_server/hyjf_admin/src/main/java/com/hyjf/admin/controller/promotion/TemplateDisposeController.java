@@ -18,8 +18,11 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.am.response.admin.TemplateDisposeResponse;
+import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
+import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.common.cache.CacheUtil;
 
 import io.swagger.annotations.Api;
@@ -38,14 +41,19 @@ public class TemplateDisposeController {
     public static final String PERMISSIONS = "templateDispose";
 	@Autowired
 	private TemplateDisposeService templateDisposeService;
-	
+	@Autowired
+	private RegistRecordService registRecordService;
 
     @ApiOperation(value = "页面初始化", notes = "初始化下拉列表")
     @PostMapping("/init")
     public AdminResult utmListInit(HttpServletRequest request, HttpServletResponse response) {
-        // 模板类型 todo redis 名修改
+        // 模板类型  redis 名修改
         Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
         List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
+        // 注册渠道
+        RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
+        userManagerInitResponseBean.setUtmPlatList(registRecordResponse.getUtmPlatVOList());
         AdminResult adminResult = new AdminResult();
         adminResult.setData(listUserRoles);
         return adminResult;
