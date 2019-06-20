@@ -158,19 +158,15 @@ public class ElectricitySalesDataPushListController extends BaseController {
             UtmReg utmReg = this.utmRegService.selectUtmRegByUserId(user.getUserId());
             logger.error("测试代码++++++++++++++++++++++++++++++++++++++++5+++++"+utmReg.toString());
             // 推广渠道
-            UtmPlat utmPlatVO = null;
+            UtmChannelVO utm = null;
             if (utmReg != null) {
                 // 如果是PC推广渠道,判断渠道是否是推送禁用
 //               Integer utmId = utmReg.getUtmId();
-               UtmChannelVO utm = utmService.getUtmByUtmId(utmReg.getUtmId().toString());
-               logger.error("测试代码+++++++++++++++++++++++++++++++++++1++++++++++"+utm.getUtmSource());
-               logger.error("测试代码++++++++++++++++++++++++++++++++++2+++++++++++"+utm.getUtmId());
+                utm = utmService.getUtmByUtmId(utmReg.getUtmId().toString());
 
                 // 根据utmId查询推广渠道
-                utmPlatVO = this.utmPlatService.getUtmPlat(utm.getSourceId());
-                logger.error("测试代码++++++++++++++++++++++++++++++++++++3+++++++++"+utmPlatVO.getSourceId());
-                logger.error("测试代码++++++++++++++++++++++++++++++++++++++4+++++++"+utmPlatVO.getSourceName());
-                logger.error("测试代码++++++++++++++++++++++++++++++++++++++++5+++++"+utm.getUtmSource());
+//                utmPlatVO = this.utmPlatService.getUtmPlat(utm.getSourceId());
+
 //                if (utmPlatVO != null) {
                     // 渠道ID
 //                    Integer sourceId = utmPlatVO.getSourceId();
@@ -200,9 +196,9 @@ public class ElectricitySalesDataPushListController extends BaseController {
 //            }
             
             // PC推广渠道
-    		record.setPcSourceId(utmPlatVO == null ? null : utmPlatVO.getSourceId());
+    		record.setPcSourceId(utm == null ? null : utm.getSourceId());
             // PC推广渠道
-    		record.setPcSourceName(utmPlatVO == null ? null : utmPlatVO.getSourceName());
+    		record.setPcSourceName(utm == null ? null : utm.getUtmSource());
             // App推广渠道
     		record.setAppSourceId(appUtmReg == null ? null : appUtmReg.getSourceId());
             // App推广渠道
