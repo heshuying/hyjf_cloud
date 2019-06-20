@@ -1473,4 +1473,24 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据UtmId查询推广渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	@Override
+	public UtmVO selectUtmByUtmId(Integer utmId) {
+		UtmRequest request = new UtmRequest();
+		request.setUtmId(utmId);
+		UtmVOResponse response = restTemplate
+				.postForEntity(userService + "/utm/selectUtmByUtmId", request, UtmVOResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }

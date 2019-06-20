@@ -718,4 +718,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId);
+
+	/**
+	 * 根据UtmId查询推广渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	UtmVO selectUtmByUtmId(Integer utmId);
 }

@@ -3,7 +3,9 @@
  */
 package com.hyjf.cs.user.service.batch.Impl;
 
+import com.hyjf.am.response.user.UtmVOResponse;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.config.CustomerServiceChannelVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.CustomerServiceRepresentiveConfigVO;
@@ -183,8 +185,10 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
         if (utmReg != null) {
             // 如果是PC推广渠道,判断渠道是否是推送禁用
             Integer utmId = utmReg.getUtmId();
+            UtmVO utmVO = this.amUserClient.selectUtmByUtmId(utmId);
+            Integer sourceId = utmVO.getSourceId();
             // 根据utmId查询推广渠道
-            utmPlatVO = this.selectUtmPlatByUtmId(utmId);
+            utmPlatVO = this.selectUtmPlatByUtmId(sourceId);
         }
         // 判断用户是否是App推广渠道用户
         AppUtmRegVO appUtmReg = this.selectAppUtmRegByUserId(userId);
@@ -287,8 +291,10 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
                 if (utmReg != null) {
                     // 如果是PC推广渠道,判断渠道是否是推送禁用
                     Integer utmId = utmReg.getUtmId();
+                    UtmVO utmVO = this.amUserClient.selectUtmByUtmId(utmId);
+                    Integer sourceId = utmVO.getSourceId();
                     // 根据utmId查询推广渠道
-                    utmPlatVO = this.selectUtmPlatByUtmId(utmId);
+                    utmPlatVO = this.selectUtmPlatByUtmId(sourceId);
                 }
                 // 判断用户是否是App推广渠道用户
                 AppUtmRegVO appUtmReg = this.selectAppUtmRegByUserId(userId);
@@ -385,5 +391,16 @@ public class ElectricitySalesDataServiceImpl extends BaseUserServiceImpl impleme
     @Override
     public ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId) {
         return this.amUserClient.selectElectricitySalesDataPushListByUserId(userId);
+    }
+
+    /**
+     * 根据utmId查询Utm
+     *
+     * @param utmId
+     * @return
+     */
+    @Override
+    public UtmVO selectUtmByUtmId(Integer utmId) {
+        return this.amUserClient.selectUtmByUtmId(utmId);
     }
 }
