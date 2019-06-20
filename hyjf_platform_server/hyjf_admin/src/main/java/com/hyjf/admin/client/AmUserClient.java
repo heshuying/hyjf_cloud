@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
@@ -1528,4 +1529,35 @@ public interface AmUserClient {
     void insertBatchSmsCount(ListRequest request);
 
     void updateOrDelectRepeatData();
+    /**
+     * 获取着陆页列表 add by nxl
+     * @param request
+     * @return
+     */
+    TemplateConfigResponse selectTempConfigList(LandingManagerRequest request);
+    /**
+     * 根据id查找着陆页配置 add by nxl
+     * @param tempId
+     * @return
+     */
+    TemplateConfigResponse selectTemplateById(Integer tempId);
+    /**
+     * 保存着陆页模板配置 add by nxl
+     * @param request
+     * @return
+     */
+    //Integer insertTemplate(LandingManagerRequest request);
+
+    /**
+     * 修改着陆页模板配置 add by nxl
+     * @param request
+     * @return
+     */
+   Integer updateOrInsertTemplate(LandingManagerRequest request);
+    /**
+     * 删除陆页模板配置 add by nxl
+     * @param tempId
+     * @return
+     */
+    Boolean deleteTemplate(int tempId);
 }

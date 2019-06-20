@@ -3109,4 +3109,60 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return result.getResultInt();
 	}
+
+	/**
+	 * 获取着陆页列表 add by nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public TemplateConfigResponse selectTempConfigList(LandingManagerRequest request) {
+		String url = "http://AM-ADMIN/am-user/landing/selectTempConfigList" ;
+		TemplateConfigResponse response = restTemplate.postForEntity(url,request,TemplateConfigResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 根据id查找着陆页配置 add by nxl
+	 * @param tempId
+	 * @return
+	 */
+	@Override
+	public TemplateConfigResponse selectTemplateById(Integer tempId) {
+		String url = "http://AM-ADMIN/am-user/landing/selectTemplateById/"+tempId ;
+		TemplateConfigResponse response = restTemplate.getForEntity(url,TemplateConfigResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 修改着陆页模板配置 add by nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public Integer updateOrInsertTemplate(LandingManagerRequest request) {
+		String url = "http://AM-ADMIN/am-user/landing/updateOrInsertTemplate" ;
+		IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        return response.getResultInt().intValue();
+	}
+
+	/**
+	 * 删除陆页模板配置 add by nxl
+	 * @param tempId
+	 * @return
+	 */
+	@Override
+	public Boolean deleteTemplate(int tempId) {
+		String url = "http://AM-ADMIN/am-user/landing/deleteTemplate/"+tempId ;
+		IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return true;
+		}
+		return false;
+	}
 }
