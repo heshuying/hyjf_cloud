@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.promotion;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.LandingManagerRequestBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.beans.vo.TemplateConfigCustomizeVO;
@@ -8,6 +9,7 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.admin.service.LandingManagerService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.TemplateConfigResponse;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +49,8 @@ public class LandingManageController extends BaseController {
 
     @Autowired
     private LandingManagerService landingManagerService;
+    @Autowired
+    private ContentAdsService contentAdsService;
 
     @ApiOperation(value = "页面初始化", notes = "初始化下拉列表")
     @PostMapping("/init")
@@ -147,5 +152,19 @@ public class LandingManageController extends BaseController {
         }
         return adminResult;
     }
-
+    @ApiOperation(value = "图片上传", notes = "图片上传")
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY} )
+    public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = contentAdsService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+    }
 }
