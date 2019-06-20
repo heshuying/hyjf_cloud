@@ -20,4 +20,6 @@ public interface TenderUtmChangeLogService {
      */
     List<TenderUpdateUtmHistoryVO> getChangeLog(String nid);
 
+    List<TenderUpdateUtmHistoryVO> getPlanTenderChangeLog(String planOrderId);
+
 }

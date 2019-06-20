@@ -46,4 +46,20 @@ public class TenderUtmChangeLogServiceImpl implements TenderUtmChangeLogService 
         return lstResult;
 
     }
+
+    @Override
+    public List<TenderUpdateUtmHistoryVO> getPlanTenderChangeLog(String planOrderId) {
+        List<TenderUtmChangeLogCustomize> lstCustomize=tenderUtmChangeLogCustomizeMapper.getPlanTenderChangeLog(planOrderId);
+
+        List<TenderUpdateUtmHistoryVO> lstResult= Lists.transform(lstCustomize, new Function<TenderUtmChangeLogCustomize, TenderUpdateUtmHistoryVO>() {
+            @Nullable
+            @Override
+            public TenderUpdateUtmHistoryVO apply(@Nullable TenderUtmChangeLogCustomize tenderUtmChangeLogCustomize) {
+                TenderUpdateUtmHistoryVO vo=new TenderUpdateUtmHistoryVO();
+                BeanUtils.copyProperties(tenderUtmChangeLogCustomize,vo);
+                return vo;
+            }
+        });
+        return lstResult;
+    }
 }

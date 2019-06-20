@@ -3,17 +3,22 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
+import com.google.common.base.Strings;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlanTenderChangeUtmService;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmRequest;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 
 /**
  * @author cui
@@ -35,5 +40,38 @@ public class PlanTenderChangeUtmController extends BaseController {
 
         return new AdminResult<>(vo);
 
+    }
+
+    @ApiOperation(value = "加入计划订单修改渠道",notes = "加入计划订单修改渠道")
+    @PostMapping(value = "/update_utm")
+    public AdminResult updateTenderUtm(HttpServletRequest request, @RequestBody UpdateTenderUtmRequest updateTenderUtmRequest) {
+
+        String nid = updateTenderUtmRequest.getNid();
+        if (Strings.isNullOrEmpty(nid)) {
+            throw new IllegalArgumentException("订单ID为空！");
+        }
+
+        UpdateTenderUtmExtRequest extRequest = new UpdateTenderUtmExtRequest();
+
+        HjhPlanAccedeCustomizeVO hjhPlanAccedeCustomizeVO = planTenderChangeUtmService.getPlanTenderInfo(nid);
+
+        extRequest.setNid(updateTenderUtmRequest.getNid());
+        extRequest.setTopDeptName(hjhPlanAccedeCustomizeVO.getInviteUserRegionname());
+        extRequest.setSecondDeptName(hjhPlanAccedeCustomizeVO.getInviteUserBranchname());
+        extRequest.setThirdDeptName(hjhPlanAccedeCustomizeVO.getInviteUserDepartmentname());
+        extRequest.setUpdateTime(Calendar.getInstance().getTime());
+
+        extRequest.setTenderUtmId(updateTenderUtmRequest.getTenderUtmId());
+
+//        extRequest.setOperator(Integer.valueOf(getUser(request).getId()));
+
+        return planTenderChangeUtmService.updateTenderUtm(extRequest);
+    }
+
+    @ApiOperation(value = "出借明细-修改渠道-修改记录",notes = "出借明细-修改渠道-修改记录")
+    @GetMapping("/update_tender_utm_history/{nid}")
+    public AdminResult<TenderUpdateUtmHistoryResponse> getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
+        TenderUpdateUtmHistoryResponse response=planTenderChangeUtmService.getPlanTenderChangeLog(nid);
+        return new AdminResult(response);
     }
 }

@@ -12,4 +12,6 @@ public interface TenderUtmChangeLogCustomizeMapper {
 
     List<TenderUtmChangeLogCustomize> getUtmChangeLog(String nid);
 
+    List<TenderUtmChangeLogCustomize> getPlanTenderChangeLog(String planOrderId);
+
 }

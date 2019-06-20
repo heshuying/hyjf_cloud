@@ -30,4 +30,18 @@
 		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
 		where nid = #{nid}
 	</select>
+    <select id="getPlanTenderChangeLog"  resultMap="BaseResultMap" >
+		SELECT
+			utmlog.nid,
+			utmlog.top_dept_name as top_dept_name,
+			utmlog.second_dept_name as second_dept_name,
+			utmlog.third_dept_name as third_dept_name,
+			admin.truename AS operator,
+			utmlog.update_time
+		FROM
+			ht_borrow_tender_utmlog utmlog
+		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
+		WHERE
+			nid = #{planOrderId}
+	</select>
 </mapper>

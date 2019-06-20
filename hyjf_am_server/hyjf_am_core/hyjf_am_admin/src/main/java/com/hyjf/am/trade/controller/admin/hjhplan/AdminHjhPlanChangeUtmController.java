@@ -3,15 +3,21 @@
  */
 package com.hyjf.am.trade.controller.admin.hjhplan;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.response.trade.HjhPlanAccedeCustomizeResponse;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
+import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
+import com.hyjf.am.trade.service.admin.borrow.TenderUtmChangeLogService;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanChangeUtmService;
+import com.hyjf.am.vo.trade.borrow.TenderUpdateUtmHistoryVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author cui
@@ -21,6 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/am-trade/planutm")
 public class AdminHjhPlanChangeUtmController {
+
+    @Autowired
+    private TenderUtmChangeLogService tenderUtmChangeLogService;
 
     @Autowired
     private AdminHjhPlanChangeUtmService adminHjhPlanChangeUtmService;
@@ -36,6 +45,24 @@ public class AdminHjhPlanChangeUtmController {
 
         return response;
 
+    }
+
+    @PostMapping(value = "updateTenderUtm")
+    public IntegerResponse updateTenderUtm(@RequestBody UpdateTenderUtmExtRequest request){
+
+        TenderUtmChangeLog log=new TenderUtmChangeLog();
+        BeanUtils.copyProperties(request,log);
+        int rt=adminHjhPlanChangeUtmService.updateTenderUtm(log);
+        return new IntegerResponse(rt);
+
+    }
+
+    @RequestMapping("/update_tender_utm_history/{accede_order_id}")
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(@PathVariable(name = "accede_order_id") String planOrderId){
+        TenderUpdateUtmHistoryResponse response=new TenderUpdateUtmHistoryResponse();
+        List<TenderUpdateUtmHistoryVO> lstVO=tenderUtmChangeLogService.getPlanTenderChangeLog(planOrderId);
+        response.setResultList(lstVO);
+        return response;
     }
 
 }

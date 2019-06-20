@@ -3140,6 +3140,20 @@ public interface AmTradeClient {
      */
     HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId);
 
+    /**
+     * 修改智投订单渠道
+     * @param updateTenderUtmRequest
+     * @return
+     */
+    IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
+
+    /**
+     * 修改智投订单渠道历史记录查询
+     * @param nid
+     * @return
+     */
+    TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid);
+
 
     /** 加息接口开始*/
     /** 枚举类型 */

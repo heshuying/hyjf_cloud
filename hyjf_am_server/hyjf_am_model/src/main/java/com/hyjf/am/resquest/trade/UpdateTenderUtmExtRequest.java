@@ -18,12 +18,15 @@ public class UpdateTenderUtmExtRequest extends UpdateTenderUtmRequest {
      */
     private Integer topDeptId;
 
+    private String topDeptName;
+
     /**
      * 二级分部
      *
      * @mbggenerated
      */
     private Integer secondDeptId;
+    private String secondDeptName;
 
     /**
      * 三级分部id
@@ -31,6 +34,7 @@ public class UpdateTenderUtmExtRequest extends UpdateTenderUtmRequest {
      * @mbggenerated
      */
     private Integer thirdDeptId;
+    private String thirdDeptName;
 
     /**
      * 操作人
@@ -84,5 +88,29 @@ public class UpdateTenderUtmExtRequest extends UpdateTenderUtmRequest {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTopDeptName() {
+        return topDeptName;
+    }
+
+    public void setTopDeptName(String topDeptName) {
+        this.topDeptName = topDeptName;
+    }
+
+    public String getSecondDeptName() {
+        return secondDeptName;
+    }
+
+    public void setSecondDeptName(String secondDeptName) {
+        this.secondDeptName = secondDeptName;
+    }
+
+    public String getThirdDeptName() {
+        return thirdDeptName;
+    }
+
+    public void setThirdDeptName(String thirdDeptName) {
+        this.thirdDeptName = thirdDeptName;
     }
 }

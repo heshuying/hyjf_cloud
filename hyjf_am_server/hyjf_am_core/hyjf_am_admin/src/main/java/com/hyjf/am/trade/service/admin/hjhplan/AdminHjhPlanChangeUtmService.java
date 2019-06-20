@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.hjhplan;
 
+import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
 
 /**
@@ -13,4 +14,5 @@ public interface AdminHjhPlanChangeUtmService {
 
     HjhPlanAccedeCustomizeVO getHjhPlanTender(String planOrderId);
 
+    int updateTenderUtm(TenderUtmChangeLog log);
 }

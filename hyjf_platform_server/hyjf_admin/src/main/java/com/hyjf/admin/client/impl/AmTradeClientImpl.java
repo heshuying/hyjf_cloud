@@ -6944,6 +6944,11 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/planutm/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow_invest/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
     }
 
@@ -6956,5 +6961,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     public HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId) {
         HjhPlanAccedeCustomizeResponse response= restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/plan_tender_info/" + planOrderId,HjhPlanAccedeCustomizeResponse.class).getBody();
         return response.getResult();
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/update_tender_utm_history/" + nid,TenderUpdateUtmHistoryResponse.class).getBody();
     }
 }
