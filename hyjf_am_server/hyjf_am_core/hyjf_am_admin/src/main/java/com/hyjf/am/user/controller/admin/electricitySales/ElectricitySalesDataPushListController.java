@@ -70,8 +70,8 @@ public class ElectricitySalesDataPushListController extends BaseController {
     private UtmRegService utmRegService;
     @Autowired
     private BorrowRegistRepairService borrowRegistRepairService;
-    @Autowired
-    private UtmPlatService utmPlatService;
+//    @Autowired
+//    private UtmPlatService utmPlatService;
     @Autowired
     private RechargeManagementService rechargeManagementService;
     @Autowired
@@ -146,7 +146,7 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			record.setUserId(user.getUserId());
 			record.setMobile(user.getMobile());
 			record.setRoleId(userinfo.getRoleId());
-			record.setTrueName(record.getTrueName());
+			record.setTrueName(userinfo.getTruename());
 			record.setSex(userinfo.getSex());
 			record.setAge(getAgeByCertId(userinfo.getIdcard()));
 			record.setBirthday(userinfo.getBirthday());
