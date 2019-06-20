@@ -116,7 +116,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         HjhDebtCreditRepayExample example=new HjhDebtCreditRepayExample();
         example.createCriteria().andSellOrderIdEqualTo(certRequest.getInvestOrderId()).
                 andBorrowNidEqualTo(certRequest.getBorrowNid()).
-                andAssignRepayPeriodEqualTo(certRequest.getPeriod());
+                andRepayPeriodEqualTo(certRequest.getPeriod());
         List<HjhDebtCreditRepay> hjhDebtCreditRepays=hjhDebtCreditRepayMapper.selectByExample(example);
         return hjhDebtCreditRepays;
     }
