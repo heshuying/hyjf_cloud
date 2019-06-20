@@ -3,7 +3,7 @@
  */
 package com.hyjf.data.mongo.jinchuang;
 
-import com.hyjf.data.bean.JcDataStatistics;
+import com.hyjf.data.bean.jinchuang.JcDataStatistics;
 import com.hyjf.data.mongo.BaseMongoDao;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;

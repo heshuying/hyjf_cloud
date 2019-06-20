@@ -1,9 +1,9 @@
 package com.hyjf.data.market.service.impl;
 
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.data.bean.JcDataStatistics;
-import com.hyjf.data.bean.JcUserConversion;
-import com.hyjf.data.bean.JcUserPoint;
+import com.hyjf.data.bean.jinchuang.JcDataStatistics;
+import com.hyjf.data.bean.jinchuang.JcUserConversion;
+import com.hyjf.data.bean.jinchuang.JcUserPoint;
 import com.hyjf.data.bean.jinchuang.JcCustomerService;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;

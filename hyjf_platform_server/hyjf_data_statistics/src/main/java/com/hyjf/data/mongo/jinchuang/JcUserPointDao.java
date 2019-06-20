@@ -3,13 +3,11 @@
  */
 package com.hyjf.data.mongo.jinchuang;
 
-import com.hyjf.data.bean.JcUserPoint;
+import com.hyjf.data.bean.jinchuang.JcUserPoint;
 import com.hyjf.data.mongo.BaseMongoDao;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * @author yaoyong
