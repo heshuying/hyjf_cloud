@@ -118,11 +118,11 @@
 			LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
 			LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
 			LEFT JOIN ht_r_oa_users u ON u.hyd_id = hydsu.spreads_user_id 
-			AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+			AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
             LEFT JOIN ht_r_oa_department d3 ON d3.id = u.departmentid AND d3.id IS NOT NULL
             LEFT JOIN ht_r_oa_department d2 ON d2.id = d3.parentid
             LEFT JOIN ht_r_oa_department d1 ON d1.id = d2.parentid
-            LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+        LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
             LEFT JOIN ht_r_oa_department dd3 ON dd3.id = ou.departmentid AND dd3.id IS NOT NULL
             LEFT JOIN ht_r_oa_department dd2 ON dd2.id = dd3.parentid
             LEFT JOIN ht_r_oa_department dd1 ON dd1.id = dd2.parentid
@@ -203,11 +203,11 @@
 				LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
 				LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
 				LEFT JOIN ht_r_oa_users u ON u.hyd_id = hydsu.spreads_user_id 
-				AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+				AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
 				LEFT JOIN ht_r_oa_department d3 ON d3.id = u.departmentid AND d3.id IS NOT NULL 
 				LEFT JOIN ht_r_oa_department d2 ON d2.id = d3.parentid
 				LEFT JOIN ht_r_oa_department d1 ON d1.id = d2.parentid
-				LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+				LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
 				LEFT JOIN ht_r_oa_department dd3 ON dd3.id = ou.departmentid AND dd3.id IS NOT NULL
 				LEFT JOIN ht_r_oa_department dd2 ON dd2.id = dd3.parentid
 			 	LEFT JOIN ht_r_oa_department dd1 ON dd1.id = dd3.parentid
@@ -310,7 +310,7 @@
         LEFT JOIN ht_utm_plat hydup1 ON hydup1.source_id = hydutm.source_id
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
         LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
-        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
         LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
         LEFT JOIN ht_user_login_log hull ON  hydu.user_id = hull.user_id
         WHERE

@@ -35,6 +35,7 @@ import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -108,7 +109,7 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
     }
 
     @Override
-    public Map<String, Object> setPassword(UserVO user) {
+    public Map<String, Object> setPassword(UserVO user,String wjtClient) {
         // 判断用户是否开户
         int accountFlag = user.getBankOpenAccount();
         // 未开户
@@ -147,7 +148,14 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         bean.setMobile(user.getMobile());
         logger.info("交易密码回调参数:" + bean.getLogOrderId());
         //channel=0：设置交易密码/1：重置交易密码
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult" + "?channel=0&logOrdId=" + bean.getLogOrderId();
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
+
+        String retUrl = host + "/user/setPasswordResult" + "?channel=0&logOrdId=" + bean.getLogOrderId();
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-web/user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
@@ -166,7 +174,7 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
     }
 
     @Override
-    public Map<String, Object> resetPassword(UserVO user) {
+    public Map<String, Object> resetPassword(UserVO user,String wjtClient) {
         int userId = user.getUserId();
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
@@ -192,8 +200,15 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
+
         //channel=0：设置交易密码/1：重置交易密码
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult" + "?channel=1&logOrdId=" + bean.getLogOrderId();
+        String retUrl =host + "/user/setPasswordResult" + "?channel=1&logOrdId=" + bean.getLogOrderId();
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
@@ -578,7 +593,7 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
     }
 
     @Override
-    public Map<String, Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
+    public Map<String, Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount,String wjtClient,String sign) {
         // 消息类型
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setChannel(BankCallConstant.CHANNEL_WEI);
@@ -600,6 +615,17 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
+
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
+        // 同步调用路径
+        String retUrl = host +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign ;
+        // 页面同步返回 URL
+        bean.setRetUrl(retUrl);
         // 跳转到汇付天下画面
         Map<String, Object> resultMap = new HashMap<>();
         try {
@@ -626,7 +652,7 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
     }
 
     @Override
-    public Map<String, Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
+    public Map<String, Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount,String wjtClient,String sign) {
         // 消息类型
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setChannel(BankCallConstant.CHANNEL_APP);
@@ -649,6 +675,16 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
+        // 同步调用路径
+        String retUrl = host + "/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
+        // 页面同步返回 URL
+        bean.setRetUrl(retUrl);
         // 跳转到汇付天下画面
         Map<String, Object> resultMap = new HashMap<>();
         try {

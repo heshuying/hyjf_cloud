@@ -96,6 +96,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
 	ERR_USER_AUTH("EUS000013","用户认证失败"),
 	ERR_USER_AUTHORITY("EUS000014","没有权限使用此接口"),
+	ERR_USER_WJT_LOGIN_ERR("EUS000015","请在汇盈官网登录!"),
+	ERR_USER_WJT_OPT_ERR("EUS000016","请在汇盈官网操作!"),
 
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),
@@ -136,6 +138,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_FIND_CREDIT_SUCCESS_MESS_ERROR("EAM000223","查询债转结果失败"),
 	ERR_AMT_TENDER_SUCCESS("EAM000000","投标成功"),
 	ERR_AMT_TENDER_BIND_PLAN_ERROR("EAM000224","该标的绑定了计划"),
+	ERR_AMT_TENDER_WJT_ERROR("EAM000225","该标的仅限在温金平台出借!"),
 
 	// 资金-充值相关错误信息ERR_AMT_RECHARGE_
 	ERR_AMT_RECHARGE_BANK_CARD_GET("EAM000301","查询银行卡信息失败"),

@@ -89,9 +89,10 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
      * @param currentOwner
      */
     private void pushMessage(ScreenDataBean data, String currentOwner) {
-        if(data.getMoney().compareTo(new BigDecimal(100000))!=-1){
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        logger.info("用户：{},在{}投资了{}元",data.getUserName(),formatter.format(new Date()),data.getMoney());
+        if(data.getMoney().compareTo(new BigDecimal(50000))!=-1){
             JSONObject jsonObject = new JSONObject();
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
             jsonObject.put("currentOwner",currentOwner);
             jsonObject.put("userName",data.getUserName());
             jsonObject.put("time",formatter.format(new Date()));

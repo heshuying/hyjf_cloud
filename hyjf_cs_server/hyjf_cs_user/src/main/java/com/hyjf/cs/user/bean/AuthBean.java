@@ -50,6 +50,9 @@ public class AuthBean extends BaseBean {
     private  String identity;
     //用户类型 0普通用户 1企业用户
     private Integer userType;
+
+    //wjt
+    private  String wjtClient;
     
     //自动出借授权标识
     private  boolean autoBidStatus=false;
@@ -179,5 +182,13 @@ public class AuthBean extends BaseBean {
     }
     public void setRepayAuthAuthStatus(boolean repayAuthAuthStatus) {
         this.repayAuthAuthStatus = repayAuthAuthStatus;
+    }
+
+    public String getWjtClient() {
+        return wjtClient;
+    }
+
+    public void setWjtClient(String wjtClient) {
+        this.wjtClient = wjtClient;
     }
 }

@@ -420,53 +420,19 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 
 		bean.setIdentity(authBean.getIdentity());
 		HjhUserAuthConfigVO config=null;
-		switch (authBean.getAuthType()) {
-			case AuthBean.AUTH_TYPE_AUTO_BID:
-				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
-				bean.setAutoBid(AuthBean.AUTH_START_OPEN);
-				if(authBean.getUserType()!=1){
-					bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
-				}else{
-					bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
-				}
-				bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-				bean.setLogRemark("自动出借授权");
-				break;
-			case AuthBean.AUTH_TYPE_AUTO_CREDIT:
-				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
-				bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
-				if(authBean.getUserType()!=1){
-					bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
-				}else{
-					bean.setAutoCreditMaxAmt(config.getEnterpriseMaxAmount()+"");
-				}
-				bean.setAutoCreditDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-				bean.setLogRemark("自动债转授权");
-				break;
-			case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
-				config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
-				bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
-				if(authBean.getUserType()!=1){
-					bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
-				}else{
-					bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
-				}
-				bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-				bean.setLogRemark("服务费授权");
-				break;
-			case AuthBean.AUTH_TYPE_REPAY_AUTH:
-				config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
-				bean.setRepayAuth(AuthBean.AUTH_START_OPEN);
-				if(authBean.getUserType()!=1){
-					bean.setRepayMaxAmt(config.getPersonalMaxAmount()+"");
-				}else{
-					bean.setRepayMaxAmt(config.getEnterpriseMaxAmount()+"");
-				}
-				bean.setRepayDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-				bean.setLogRemark("还款授权");
-				break;
-			case AuthBean.AUTH_TYPE_MERGE_AUTH:
-				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID)){
+		if(StringUtils.isNotBlank(authBean.getWjtClient())){
+			config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+			bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
+			if(authBean.getUserType()!=1){
+				bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
+			}else{
+				bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
+			}
+			bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+			bean.setLogRemark("服务费授权");
+		}else{
+			switch (authBean.getAuthType()) {
+				case AuthBean.AUTH_TYPE_AUTO_BID:
 					config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 					bean.setAutoBid(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
@@ -475,9 +441,9 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
 					}
 					bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-					authBean.setAutoBidStatus(true);
-				}
-				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT)){
+					bean.setLogRemark("自动出借授权");
+					break;
+				case AuthBean.AUTH_TYPE_AUTO_CREDIT:
 					config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
 					bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
@@ -486,9 +452,9 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						bean.setAutoCreditMaxAmt(config.getEnterpriseMaxAmount()+"");
 					}
 					bean.setAutoCreditDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-					authBean.setAutoCreditStatus(true);
-				}
-				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
+					bean.setLogRemark("自动债转授权");
+					break;
+				case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
 					config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 					bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
@@ -497,39 +463,84 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
 					}
 					bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-					authBean.setPaymentAuthStatus(true);
-				}
-				bean.setLogRemark("多个授权");
-				break;
-			case AuthBean.AUTH_TYPE_PAY_REPAY_AUTH:
-				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-					config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
-					bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
-					if(authBean.getUserType()!=1){
-						bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
-					}else{
-						bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
-					}
-					bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-					authBean.setPaymentAuthStatus(true);
-				}
-				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_REPAY_AUTH)){
+					bean.setLogRemark("服务费授权");
+					break;
+				case AuthBean.AUTH_TYPE_REPAY_AUTH:
 					config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 					bean.setRepayAuth(AuthBean.AUTH_START_OPEN);
-					if(authBean.getUserType() != 1){
+					if(authBean.getUserType()!=1){
 						bean.setRepayMaxAmt(config.getPersonalMaxAmount()+"");
 					}else{
 						bean.setRepayMaxAmt(config.getEnterpriseMaxAmount()+"");
 					}
 					bean.setRepayDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-					authBean.setRepayAuthAuthStatus(true);
-				}
-				bean.setLogRemark("服务费、还款二合一授权");
-				break;
-			default:
-				break;
+					bean.setLogRemark("还款授权");
+					break;
+				case AuthBean.AUTH_TYPE_MERGE_AUTH:
+					if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID)){
+						config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
+						bean.setAutoBid(AuthBean.AUTH_START_OPEN);
+						if(authBean.getUserType()!=1){
+							bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
+						}else{
+							bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
+						}
+						bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+						authBean.setAutoBidStatus(true);
+					}
+					if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT)){
+						config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
+						bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
+						if(authBean.getUserType()!=1){
+							bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
+						}else{
+							bean.setAutoCreditMaxAmt(config.getEnterpriseMaxAmount()+"");
+						}
+						bean.setAutoCreditDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+						authBean.setAutoCreditStatus(true);
+					}
+					if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
+						config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+						bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
+						if(authBean.getUserType()!=1){
+							bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
+						}else{
+							bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
+						}
+						bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+						authBean.setPaymentAuthStatus(true);
+					}
+					bean.setLogRemark("多个授权");
+					break;
+				case AuthBean.AUTH_TYPE_PAY_REPAY_AUTH:
+					if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
+						config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+						bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
+						if(authBean.getUserType()!=1){
+							bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
+						}else{
+							bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
+						}
+						bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+						authBean.setPaymentAuthStatus(true);
+					}
+					if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_REPAY_AUTH)){
+						config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
+						bean.setRepayAuth(AuthBean.AUTH_START_OPEN);
+						if(authBean.getUserType() != 1){
+							bean.setRepayMaxAmt(config.getPersonalMaxAmount()+"");
+						}else{
+							bean.setRepayMaxAmt(config.getEnterpriseMaxAmount()+"");
+						}
+						bean.setRepayDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+						authBean.setRepayAuthAuthStatus(true);
+					}
+					bean.setLogRemark("服务费、还款二合一授权");
+					break;
+				default:
+					break;
+			}
 		}
-
 		bean.setRetUrl(authBean.getRetUrl());
 		bean.setSuccessfulUrl(authBean.getSuccessUrl());
 		bean.setNotifyUrl(authBean.getNotifyUrl());

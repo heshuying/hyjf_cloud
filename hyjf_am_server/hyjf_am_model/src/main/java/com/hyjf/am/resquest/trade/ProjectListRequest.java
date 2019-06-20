@@ -40,6 +40,8 @@ public class ProjectListRequest extends BasePage {
 
     private String publishInstCode;
 
+    private String wjtInstCode;
+
     /**
      * 翻页机能用的隐藏变量（app原来的参数）
      */
@@ -144,5 +146,13 @@ public class ProjectListRequest extends BasePage {
 
     public void setPublishInstCode(String publishInstCode) {
         this.publishInstCode = publishInstCode;
+    }
+
+    public String getWjtInstCode() {
+        return wjtInstCode;
+    }
+
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
     }
 }

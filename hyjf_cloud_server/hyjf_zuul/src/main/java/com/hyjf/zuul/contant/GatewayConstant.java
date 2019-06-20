@@ -19,7 +19,7 @@ public interface GatewayConstant {
     String WEB_CHANNEL = "hyjf-web";
     String API_CHANNEL = "hyjf-api";
     String WECHAT_CHANNEL = "hyjf-wechat";
-
+    String WBS_CHANNEL = "hyjf-wbs";
 
     /**
      * 3. api增加的前缀,其他渠道无需增加，前端访问自带

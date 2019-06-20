@@ -4,6 +4,7 @@ import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
+import com.hyjf.am.config.service.JxBankConfigService;
 import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
@@ -44,6 +45,8 @@ public class BanksConfigController extends BaseConfigController{
 
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private JxBankConfigService jxBankConfigService;
 
     /**
      * 获取银行卡配置信息
@@ -399,5 +402,21 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+    @GetMapping("/selectBankConfigByName/{bankName}")
+    public JxBankConfigResponse selectBankConfigByName(@PathVariable String bankName) {
+        JxBankConfigResponse response = new JxBankConfigResponse();
+        response.setRtn(Response.FAIL);
+        logger.info("所属银行为:[" + bankName + "] 模糊查询银行卡配置信息");
+        List<JxBankConfig> jxBankConfig = jxBankConfigService.selectBankConfigByName(bankName);
+
+        if(null!=jxBankConfig){
+            List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(jxBankConfig,JxBankConfigVO.class);
+            BeanUtils.copyProperties(jxBankConfig,jxBankConfigVO);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(jxBankConfigVO);
+        }
+        return response;
+    }
+
 
 }

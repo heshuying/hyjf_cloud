@@ -761,7 +761,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 										}
 
 										creditRepay.setUserId(userId);// 用户名称
+										creditRepay.setUserName(creditTender.getUserName());//用户名称
 										creditRepay.setCreditUserId(creditTender.getCreditUserId());// 出让人id
+										creditRepay.setCreditUserName(creditTender.getCreditUserName());//出让人名称
+										//creditRepay.setCreditUserId(creditTender.getCreditUserId());// 出让人id
 										creditRepay.setStatus(0);// 状态
 										creditRepay.setBidNid(creditTender.getBidNid());// 原标标号
 										creditRepay.setCreditNid(creditTender.getCreditNid());// 债转标号
@@ -1755,8 +1758,11 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							}
 							// 用户名称
 							creditRepay.setUserId(userId);
+							creditRepay.setUserName(creditTender.getUserName());//用户名称
 							// 出让人id
 							creditRepay.setCreditUserId(creditTender.getCreditUserId());
+							creditRepay.setCreditUserName(creditTender.getCreditUserName());//出让人名称
+
 							// 状态
 							creditRepay.setStatus(0);
 							// 原标标号
