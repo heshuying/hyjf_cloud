@@ -133,7 +133,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         bankParam.put("dataType", bean.getDataType());
         bankParam.put("timestamp", bean.getTimestamp());
         bankParam.put("nonce", bean.getNonce());
-        bankParam.put("dataList", bean.getDataList());
+        bankParam.put("dataList", bean.getDataList().toJSONString());
 
         Map<String, String> params = new HashMap<>(2);
         params.put("apiKey", bean.getApiKey());
