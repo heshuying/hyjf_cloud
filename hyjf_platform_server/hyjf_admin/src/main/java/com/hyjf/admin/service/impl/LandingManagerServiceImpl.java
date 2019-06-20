@@ -24,8 +24,6 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
     @Autowired
     private AmUserClient amUserClient;
 
-    private static Logger logger = LoggerFactory.getLogger(LandingManagerServiceImpl.class);
-
     /**
      * 根据筛选条件查找着陆页信息
      *

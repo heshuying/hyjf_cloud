@@ -136,7 +136,6 @@ public class LandingManageController extends BaseController {
         AdminResult adminResult = new AdminResult();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
         if (null != landingManagerRequestBean.getId()) {
-            //int tempId = Integer.parseInt();
             boolean flag = landingManagerService.deleteTemplate(landingManagerRequestBean.getId());
             if (!flag) {
                 adminResult.setStatus(AdminResult.FAIL);
