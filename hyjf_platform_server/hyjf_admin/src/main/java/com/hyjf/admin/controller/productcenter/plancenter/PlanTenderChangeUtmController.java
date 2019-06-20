@@ -4,8 +4,11 @@
 package com.hyjf.admin.controller.productcenter.plancenter;
 
 import com.google.common.base.Strings;
+import com.hyjf.admin.beans.request.SyncTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlanTenderChangeUtmService;
 import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
@@ -13,12 +16,15 @@ import com.hyjf.am.resquest.trade.UpdateTenderUtmRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
  * @author cui
@@ -28,6 +34,9 @@ import java.util.Calendar;
 @RestController
 @RequestMapping(value = "/hyjf-admin/planutm")
 public class PlanTenderChangeUtmController extends BaseController {
+
+    @Autowired
+    public CommonProducer commonProducer;
 
     @Autowired
     private PlanTenderChangeUtmService planTenderChangeUtmService;
@@ -63,7 +72,7 @@ public class PlanTenderChangeUtmController extends BaseController {
 
         extRequest.setTenderUtmId(updateTenderUtmRequest.getTenderUtmId());
 
-//        extRequest.setOperator(Integer.valueOf(getUser(request).getId()));
+        extRequest.setOperator(Integer.valueOf(getUser(request).getId()));
 
         return planTenderChangeUtmService.updateTenderUtm(extRequest);
     }
@@ -73,5 +82,20 @@ public class PlanTenderChangeUtmController extends BaseController {
     public AdminResult<TenderUpdateUtmHistoryResponse> getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
         TenderUpdateUtmHistoryResponse response=planTenderChangeUtmService.getPlanTenderChangeLog(nid);
         return new AdminResult(response);
+    }
+
+    @ApiOperation(value = "订单渠道同步",notes ="订单渠道同步")
+    @PostMapping("/sync_tender")
+    public AdminResult syncTender(@RequestBody SyncTenderRequest syncTenderRequest){
+
+        try {
+            commonProducer.messageSend((new MessageContent(MQConstant.WBS_TENDER_SYNC_TOPIC, UUID.randomUUID().toString(),syncTenderRequest)));
+        } catch (MQException e) {
+            logger.error(e.getMessage());
+            logger.error("订单渠道修改同步， 发送订单渠道同步消息MQ失败...", e);
+        }
+
+        return new AdminResult();
+
     }
 }

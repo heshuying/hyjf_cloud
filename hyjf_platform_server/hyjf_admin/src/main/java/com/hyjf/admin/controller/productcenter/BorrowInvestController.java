@@ -657,7 +657,6 @@ public class BorrowInvestController extends BaseController {
      */
     @ApiOperation(value = "出借明细-修改渠道-订单信息", notes = "出借明细-修改渠道-订单信息")
     @GetMapping("/tender_info/{nid}")
-//TODO    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowInvestCustomizeExtVO> getBorrowInvestInfo(@PathVariable String nid) {
         BorrowInvestCustomizeExtVO responseBean = borrowInvestService.getBorrowInvestInfo(nid);
         return new AdminResult(responseBean);
@@ -665,14 +664,12 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "出借明细-修改渠道-渠道列表", notes = "出借明细-修改渠道-渠道列表")
     @GetMapping("/pcutms")
-    //TODO @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public UtmResultResponse getPcUtms(){
         return utmService.getPcUtms();
     }
 
     @ApiOperation(value = "出借明细-修改渠道-修改渠道确认", notes = "出借明细-修改渠道-修改渠道确认")
     @PostMapping("/update_utm")
-    //TODO　@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult updateTenderUtm(HttpServletRequest request,@RequestBody UpdateTenderUtmRequest updateTenderUtmRequest){
 
         String nid=updateTenderUtmRequest.getNid();
@@ -692,7 +689,7 @@ public class BorrowInvestController extends BaseController {
 
         extRequest.setTenderUtmId(updateTenderUtmRequest.getTenderUtmId());
 
-//        extRequest.setOperator(Integer.valueOf(getUser(request).getId()));
+        extRequest.setOperator(Integer.valueOf(getUser(request).getId()));
 
         return borrowInvestService.updateTenderUtm(extRequest);
 
