@@ -6944,12 +6944,12 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
-        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/planutm/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow_invest/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
     }
 
     @Override
     public IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
-        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow_invest/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/planutm/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
     }
 
     @Override

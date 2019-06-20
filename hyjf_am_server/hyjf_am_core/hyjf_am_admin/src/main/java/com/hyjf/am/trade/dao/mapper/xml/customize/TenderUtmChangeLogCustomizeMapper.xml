@@ -33,6 +33,7 @@
     <select id="getPlanTenderChangeLog"  resultMap="BaseResultMap" >
 		SELECT
 			utmlog.nid,
+			plat.source_name as tender_utm_name,
 			utmlog.top_dept_name as top_dept_name,
 			utmlog.second_dept_name as second_dept_name,
 			utmlog.third_dept_name as third_dept_name,
@@ -40,6 +41,7 @@
 			utmlog.update_time
 		FROM
 			ht_borrow_tender_utmlog utmlog
+		LEFT JOIN hyjf_user.ht_utm_plat plat ON utmlog.tender_utm_id = plat.source_id
 		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
 		WHERE
 			nid = #{planOrderId}
