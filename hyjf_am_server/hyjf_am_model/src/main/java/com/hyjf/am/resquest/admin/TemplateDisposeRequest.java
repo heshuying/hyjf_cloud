@@ -1,8 +1,10 @@
-package com.hyjf.am.vo.admin;
+package com.hyjf.am.resquest.admin;
 
 import java.util.Date;
 
-public class TemplateDisposeVO {
+import com.hyjf.am.vo.BasePage;
+
+public class TemplateDisposeRequest extends BasePage{
 	   /**
      * 主键
      *
