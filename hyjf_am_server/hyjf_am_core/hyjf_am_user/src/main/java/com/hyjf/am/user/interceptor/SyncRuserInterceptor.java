@@ -22,10 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
 /**
  * 同步用户信息的mybaitis 拦截器
  * 
