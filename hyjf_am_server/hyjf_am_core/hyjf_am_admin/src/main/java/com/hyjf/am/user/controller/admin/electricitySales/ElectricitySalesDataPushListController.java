@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +27,7 @@ import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.service.admin.finance.RechargeManagementService;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.controller.admin.promotion.ChannelController;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
 import com.hyjf.am.user.dao.model.auto.User;
@@ -54,7 +57,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController(value = "electricitySalesDataPushListController")
 @RequestMapping("/am-user/electricitySales")
 public class ElectricitySalesDataPushListController extends BaseController {
-
+	   private Logger logger = LoggerFactory.getLogger(ElectricitySalesDataPushListController.class);
     @Autowired
     private  ElectricitySalesDataPushListService electricitySalesDataPushListService;
     @Autowired
@@ -153,14 +156,21 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			  // 判断用户渠道是否是推送禁用
             // 判断用户是否是PC推广渠道用户
             UtmReg utmReg = this.utmRegService.selectUtmRegByUserId(user.getUserId());
+            logger.error("测试代码++++++++++++++++++++++++++++++++++++++++5+++++"+utmReg.toString());
             // 推广渠道
             UtmPlat utmPlatVO = null;
             if (utmReg != null) {
                 // 如果是PC推广渠道,判断渠道是否是推送禁用
 //               Integer utmId = utmReg.getUtmId();
                UtmChannelVO utm = utmService.getUtmByUtmId(utmReg.getUtmId().toString());
+               logger.error("测试代码+++++++++++++++++++++++++++++++++++1++++++++++"+utm.getUtmSource());
+               logger.error("测试代码++++++++++++++++++++++++++++++++++2+++++++++++"+utm.getUtmId());
+
                 // 根据utmId查询推广渠道
                 utmPlatVO = this.utmPlatService.getUtmPlat(utm.getSourceId());
+                logger.error("测试代码++++++++++++++++++++++++++++++++++++3+++++++++"+utmPlatVO.getSourceId());
+                logger.error("测试代码++++++++++++++++++++++++++++++++++++++4+++++++"+utmPlatVO.getSourceName());
+                logger.error("测试代码++++++++++++++++++++++++++++++++++++++++5+++++"+utm.getUtmSource());
 //                if (utmPlatVO != null) {
                     // 渠道ID
 //                    Integer sourceId = utmPlatVO.getSourceId();
