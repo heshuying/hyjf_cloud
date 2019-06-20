@@ -18,10 +18,13 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.LandingManagerService;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.response.user.RegistRecordResponse;
+import com.hyjf.am.response.user.TemplateConfigResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
+import com.hyjf.am.resquest.user.LandingManagerRequest;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.common.cache.CacheUtil;
 
@@ -39,27 +42,37 @@ public class TemplateDisposeController {
      * 查看权限
      */
     public static final String PERMISSIONS = "templateDispose";
-	@Autowired
-	private TemplateDisposeService templateDisposeService;
+//	@Autowired
+	//private TemplateDisposeService templateDisposeService;
 	@Autowired
 	private RegistRecordService registRecordService;
-
+	@Autowired
+	private LandingManagerService landingManagerService;
     @ApiOperation(value = "页面初始化", notes = "初始化下拉列表")
     @PostMapping("/init")
     public AdminResult utmListInit(HttpServletRequest request, HttpServletResponse response) {
         // 模板类型  redis 名修改
         Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
         List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
+        return new AdminResult(listUserRoles);
+    }
+
+    @ApiOperation(value = "新建页面初始化", notes = "新建页面初始化")
+    @PostMapping("/infoInit")
+    public AdminResult infoInit(HttpServletRequest request, HttpServletResponse response) {
         // 注册渠道
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
-        userManagerInitResponseBean.setUtmPlatList(registRecordResponse.getUtmPlatVOList());
-        AdminResult adminResult = new AdminResult();
-        adminResult.setData(listUserRoles);
-        return adminResult;
+        LandingManagerRequest landingManagerRequest=new LandingManagerRequest();
+        landingManagerRequest.setCurrPage(1000);
+        landingManagerRequest.setPageSize(1);
+        landingManagerRequest.setStatus(1);
+		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
+		TemplateDisposeResponse tdr=new TemplateDisposeResponse();
+		tdr.setTemplateConfigList(templateConfigResponse.getResultList());
+		tdr.setUserRoles( registRecordResponse.getUtmPlatVOList());
+        return new AdminResult(tdr);
     }
-
-	
 	/**
 	 * 查询着陆页配置
  	 */
