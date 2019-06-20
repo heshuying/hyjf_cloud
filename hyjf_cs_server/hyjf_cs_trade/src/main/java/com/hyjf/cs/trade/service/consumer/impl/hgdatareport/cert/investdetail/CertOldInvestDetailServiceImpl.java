@@ -459,15 +459,15 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			BorrowRecoverVO borrowRecover=borrowRecovers.get(0);
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
 				//智投
-                CertRequest certRequest1=new CertRequest();
-                certRequest1.setInvestOrderId(borrowRecover.getNid());
-                certRequest1.setBorrowNid(borrowRecover.getBorrowNid());
-                certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
-                List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
-                for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-                    interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
-                    capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-                }
+				CertRequest certRequest1 = new CertRequest();
+				certRequest1.setInvestOrderId(borrowRecover.getNid());
+				certRequest1.setBorrowNid(borrowRecover.getBorrowNid());
+				certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
+				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays = amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
+				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
+					interest = interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
+					capital = capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
+				}
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
@@ -492,16 +492,15 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			capital=borrowRecoverPlan.getRecoverCapitalYes();
 			if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
 				//智投
-                CertRequest certRequest1=new CertRequest();
-                certRequest1.setInvestOrderId(borrowRecoverPlan.getNid());
-                certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
-                certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
-                List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
-                for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
+				CertRequest certRequest1=new CertRequest();
+				certRequest1.setInvestOrderId(borrowRecoverPlan.getNid());
+				certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
+				certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
+				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
+				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
 					interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
 					capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
-
-                }
+				}
 			}else{
 				//散标
 				CertRequest certRequest1=new CertRequest();
