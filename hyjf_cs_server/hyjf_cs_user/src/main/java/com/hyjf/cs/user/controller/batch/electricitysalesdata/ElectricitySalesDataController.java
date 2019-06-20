@@ -191,6 +191,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                                     continue;
                                 }
                                 // 如果有，将此用户分配给该坐席
+                                logger.info("用户名:[" + user.getUsername() + "],当前拥有人:[" + representiveConfigVO.getUserName() + "],GroupId:[" + representiveConfigVO.getGroupId() + "],坐席名称:[" + representiveConfigVO.getGroupName() + "].");
                                 ElectricitySalesDataPushListVO electricitySalesDataPushListVO = new ElectricitySalesDataPushListVO();
                                 electricitySalesDataPushListVO.setUserId(userId);
                                 electricitySalesDataPushListVO.setUserName(user.getUsername());
