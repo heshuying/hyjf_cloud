@@ -41,6 +41,7 @@ import com.hyjf.am.user.service.front.user.UtmPlatService;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +86,9 @@ public class ElectricitySalesDataPushListController extends BaseController {
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             list = electricitySalesDataPushListService.searchList(request,paginator.getOffset(),paginator.getLimit());
+            for (ElectricitySalesDataPushList electricitySalesDataPushList : list) {
+            	electricitySalesDataPushList.setMobile(AsteriskProcessUtil.getAsteriskedValue(electricitySalesDataPushList.getMobile()));
+			}
         }
         
         if(!CollectionUtils.isEmpty(list)){
@@ -105,6 +109,7 @@ public class ElectricitySalesDataPushListController extends BaseController {
     @ApiOperation(value = "插入多条信息",notes = "插入多条信息")
     @PostMapping(value = "/insertAlectricitySalesDataPushList")
     public ElectricitySalesDataPushListResponse insertAccountMobileSynch(@RequestBody ElectricitySalesDataPushListRequest request){
+    	ElectricitySalesDataPushListResponse response = new ElectricitySalesDataPushListResponse();
 		List<ElectricitySalesDataPushListVO> list = request.getElectricitySalesDataPushList();
 		List<ElectricitySalesDataPushList> list2=new ArrayList<ElectricitySalesDataPushList>();
 		for (ElectricitySalesDataPushListVO electricitySalesDataPushListVO : list) {
@@ -112,13 +117,22 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			ElectricitySalesDataPushList record=new ElectricitySalesDataPushList();
 			CustomerServiceRepresentiveConfig csrcs = customerServiceRepresentiveConfigService.getCustomerServiceRepresentiveConfig(electricitySalesDataPushListVO.getOwnerUserName());
 			if(csrcs==null) {
-				continue;
+		        response.setRtn(Response.ERROR);
+		        response.setMessage("坐席用户名错误，请修改后重新上传");
+		        return response;
 			}
 			User user = userService.findUserByUsernameOrMobile(electricitySalesDataPushListVO.getUserName());
 			if(user==null) {
-				continue;
+		        response.setRtn(Response.ERROR);
+		        response.setMessage("客户用户名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getUserName());
+		        return response;
 			}
 			UserInfo userinfo = userInfoService.findUserInfoById(user.getUserId());
+//			if(!electricitySalesDataPushListVO.getOwnerUserName().equals(userinfo.getTruename())) {
+//		        response.setRtn(Response.ERROR);
+//		        response.setMessage("客户用户名错误，请修改后重新上传,错误姓名:"+electricitySalesDataPushListVO.getOwnerUserName());
+//		        return response;
+//			}
 			record.setOwnerUserName(electricitySalesDataPushListVO.getOwnerUserName());
 			record.setGroupId(csrcs.getGroupId());	
 			record.setGroupName(csrcs.getGroupName());
@@ -150,7 +164,9 @@ public class ElectricitySalesDataPushListController extends BaseController {
                     CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
                     if (customerServiceChannel != null) {
                         // 如果被禁用了,continue
-                        continue;
+        		        response.setRtn(Response.ERROR);
+        		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
+        		        return response;
                     }
                 }
             }
@@ -163,7 +179,9 @@ public class ElectricitySalesDataPushListController extends BaseController {
                 CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
                 if (customerServiceChannel != null) {
                     // 如果被禁用了,continue
-                    continue;
+    		        response.setRtn(Response.ERROR);
+    		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
+    		        return response;
                 }
             }
             
@@ -195,7 +213,6 @@ public class ElectricitySalesDataPushListController extends BaseController {
     		list2.add(record);
 			
 		}
-		ElectricitySalesDataPushListResponse response = new ElectricitySalesDataPushListResponse();
 		int count = electricitySalesDataPushListService.insertElectricitySalesDataPushList(list2);
         response.setRecordTotal(count);
         response.setRtn(Response.SUCCESS);

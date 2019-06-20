@@ -35,11 +35,17 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ElectricitySalesDataPushListService;
+import com.hyjf.admin.service.config.CustomerServiceGroupConfigService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.user.ElectricitySalesDataPushListResponse;
+import com.hyjf.am.resquest.config.CustomerServiceGroupConfigRequest;
 import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -59,7 +65,8 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 	//public static final String PERMISSIONS = "electricitySales";
     @Autowired
     private  ElectricitySalesDataPushListService electricitySalesDataPushListService;
-
+    @Autowired
+    private CustomerServiceGroupConfigService customerServiceGroupConfigService;
    
     /**
      * 线下修改信息同步查询列表list
@@ -71,7 +78,20 @@ public class ElectricitySalesDataPushListController  extends BaseController {
     @PostMapping(value = "/electricitySalesDataPushList")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ElectricitySalesDataPushListResponse> electricitySalesDataPushList(@RequestBody ElectricitySalesDataPushListRequest request){
-        return new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.searchList(request));
+    	ElectricitySalesDataPushListResponse rt = electricitySalesDataPushListService.searchList(request);
+    	rt.setGroupList(getGroupConfigList());
+        return new AdminResult<ElectricitySalesDataPushListResponse>(rt);
+    }
+    /**
+     * 获取客组列表
+     * @return
+     */
+    private List<CustomerServiceGroupConfigVO> getGroupConfigList() {
+        CustomerServiceGroupConfigRequest groupRequest = new CustomerServiceGroupConfigRequest();
+        groupRequest.setPageSize(-1);
+        groupRequest.setStatus(1);// 启用状态
+        CustomerServiceGroupConfigResponse groupConfigResponse = customerServiceGroupConfigService.getCustomerServiceGroupConfigList(groupRequest);
+        return groupConfigResponse.getResultList();
     }
     /**
 	 * 导出excel
@@ -90,7 +110,8 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "安融反欺诈查询";
+		String sheetName = "电销数据推送记录";
+
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -150,6 +171,73 @@ public class ElectricitySalesDataPushListController  extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+
+        IValueFormatter sexAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 1) {
+                    return "男";
+                } else {
+                    return "女";
+                }
+            }
+        };
+        IValueFormatter dateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date value = (Date) object;
+                String formatDate = GetDate.formatDate(value);
+                return formatDate;
+            }
+        };
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(value);
+            }
+        };
+        IValueFormatter channelAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 0) {
+                    return "否";
+                } else {
+                    return "是";
+                }
+            }
+        };
+        IValueFormatter uploadAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 1) {
+                    return "手动上传";
+                } else {
+                    return "系统自动上传";
+                }
+            }
+        };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 0) {
+                    return "初始";
+                }else if(Integer.valueOf(object.toString()) == 1) {
+                	return "成功";
+                }
+                else {
+                    return "失败";
+                }
+            }
+        };
+        mapAdapter.put("channel", channelAdapter);
+        mapAdapter.put("uploadType", uploadAdapter);
+        mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("mobile", mobileAdapter);
+        mapAdapter.put("regTime", dateAdapter);
+        mapAdapter.put("rechargeTime", dateAdapter);
+        mapAdapter.put("createTime", dateAdapter);
+        mapAdapter.put("sex", sexAdapter);
         return mapAdapter;
     }
     /**
@@ -232,8 +320,8 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 							continue;
 						}
 						ElectricitySalesDataPushListVO vo=new ElectricitySalesDataPushListVO();
-						vo.setOwnerUserName(this.getValue(hssfRow.getCell(1)));
-						vo.setUserName(this.getValue(hssfRow.getCell(2)));
+						vo.setOwnerUserName(this.getValue(hssfRow.getCell(0)));
+						vo.setUserName(this.getValue(hssfRow.getCell(1))); 
 						electricitySalesDataPushList.add(vo);
 					}
 				}
@@ -241,7 +329,13 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 		}
 		
 		eRequest.setElectricitySalesDataPushList(electricitySalesDataPushList);
-		return  new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.insertElectricitySalesDataPushList(eRequest));
+		ElectricitySalesDataPushListResponse rp = electricitySalesDataPushListService.insertElectricitySalesDataPushList(eRequest);
+		if(Response.isSuccess(rp)) {
+			return  new AdminResult();
+		}else {
+			return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,rp.getMessage());
+		}
+		//return  new AdminResult<ElectricitySalesDataPushListResponse>(electricitySalesDataPushListService.insertElectricitySalesDataPushList(eRequest));
 	}
 
 	/**
