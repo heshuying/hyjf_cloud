@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableDiscoveryClient
-@EnableCircuitBreaker
+//@EnableCircuitBreaker
 @CrossOrigin(origins = "*")
 @ComponentScan(basePackages = {"com.hyjf.data","com.hyjf.common"})
 public class DataStatisticsApplication {
@@ -27,10 +26,10 @@ public class DataStatisticsApplication {
 		return new RestTemplate();
 	}
 
-    @Bean(name = "rocketMQMessageObjectMapper")
-    public ObjectMapper jacksonObjectMapper(@Autowired Jackson2ObjectMapperBuilder builder) {
-        return builder.createXmlMapper(false).build();
-    }
+	@Bean(name = "rocketMQMessageObjectMapper")
+	public ObjectMapper jacksonObjectMapper(@Autowired Jackson2ObjectMapperBuilder builder) {
+		return builder.createXmlMapper(false).build();
+	}
 
 
 

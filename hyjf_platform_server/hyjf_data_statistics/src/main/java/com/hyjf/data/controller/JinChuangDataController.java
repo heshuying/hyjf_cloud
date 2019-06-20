@@ -2,11 +2,11 @@ package com.hyjf.data.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 /**
  * @Auther:yangchangwei
  * @Date:2019/6/18
@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "金创展厅数据",tags = "金创展厅数据")
 @RestController
+@Slf4j
 @RequestMapping("/hyjf_data_statistics")
 public class JinChuangDataController {
+
 
     @ApiOperation(value = "测试", notes = "测试")
     @PostMapping(value = "/update")
@@ -24,5 +26,7 @@ public class JinChuangDataController {
 
         return "success";
     }
+
+
 
 }
