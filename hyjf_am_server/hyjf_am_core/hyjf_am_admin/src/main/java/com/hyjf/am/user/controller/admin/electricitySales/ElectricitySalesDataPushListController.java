@@ -35,9 +35,11 @@ import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.service.admin.electricitySales.ElectricitySalesDataPushListService;
 import com.hyjf.am.user.service.admin.exception.BorrowRegistRepairService;
 import com.hyjf.am.user.service.admin.promotion.UtmRegService;
+import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.paginator.Paginator;
@@ -70,6 +72,8 @@ public class ElectricitySalesDataPushListController extends BaseController {
     private UtmPlatService utmPlatService;
     @Autowired
     private RechargeManagementService rechargeManagementService;
+    @Autowired
+    private UtmService utmService;
     /**
      * 线下修改信息同步查询列表list
      * @auth dzs
@@ -154,36 +158,37 @@ public class ElectricitySalesDataPushListController extends BaseController {
             UtmPlat utmPlatVO = null;
             if (utmReg != null) {
                 // 如果是PC推广渠道,判断渠道是否是推送禁用
-                Integer utmId = utmReg.getUtmId();
+//               Integer utmId = utmReg.getUtmId();
+               UtmChannelVO utm = utmService.getUtmByUtmId(utmReg.getUtmId().toString());
                 // 根据utmId查询推广渠道
-                utmPlatVO = this.utmPlatService.getUtmPlat(utmId);
-                if (utmPlatVO != null) {
+                utmPlatVO = this.utmPlatService.getUtmPlat(utm.getSourceId());
+//                if (utmPlatVO != null) {
                     // 渠道ID
-                    Integer sourceId = utmPlatVO.getSourceId();
+//                    Integer sourceId = utmPlatVO.getSourceId();
 //                    // 根据sourceId查询该渠道是否被禁用
-                    CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
-                    if (customerServiceChannel != null) {
-                        // 如果被禁用了,continue
-        		        response.setRtn(Response.ERROR);
-        		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
-        		        return response;
-                    }
-                }
+//                    CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
+//                    if (customerServiceChannel != null) {
+//                        // 如果被禁用了,continue
+//        		        response.setRtn(Response.ERROR);
+//        		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
+//        		        return response;
+//                    }
+//                }
             }
             // 判断用户是否是App推广渠道用户
             AppUtmReg appUtmReg = this.utmRegService.selectAppUtmRegByUserId(user.getUserId());
-            if (appUtmReg != null) {
-                // 如果是App推广渠道的用户
-                Integer sourceId = appUtmReg.getSourceId();
-                // 根据sourceId查询该渠道是否被禁用
-                CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
-                if (customerServiceChannel != null) {
-                    // 如果被禁用了,continue
-    		        response.setRtn(Response.ERROR);
-    		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
-    		        return response;
-                }
-            }
+//            if (appUtmReg != null) {
+//                // 如果是App推广渠道的用户
+//                Integer sourceId = appUtmReg.getSourceId();
+//                // 根据sourceId查询该渠道是否被禁用
+//                CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
+//                if (customerServiceChannel != null) {
+//                    // 如果被禁用了,continue
+//    		        response.setRtn(Response.ERROR);
+//    		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
+//    		        return response;
+//                }
+//            }
             
             // PC推广渠道
     		record.setPcSourceId(utmPlatVO == null ? null : utmPlatVO.getSourceId());
