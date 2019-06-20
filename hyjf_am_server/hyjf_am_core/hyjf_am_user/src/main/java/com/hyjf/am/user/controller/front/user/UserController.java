@@ -18,6 +18,7 @@ import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -1136,5 +1137,17 @@ public class UserController extends BaseController {
 
         return response;
     }
-
+    /**
+     * 根据渠道号检索渠道是否存在
+     *
+     * @param utmId
+     * @return
+     */
+    @RequestMapping("/getTemplateDispose/{templateId}")
+    public UserResponse getTemplateDispose(@PathVariable String templateId) {
+    	UserResponse ur=new UserResponse();
+    	TemplateDisposeVO td=userService.getTemplateDispose(templateId);
+    	ur.setTemplateDispose(td);
+        return ur;
+    }
 }

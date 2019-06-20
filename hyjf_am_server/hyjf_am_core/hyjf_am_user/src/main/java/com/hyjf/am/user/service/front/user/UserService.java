@@ -6,6 +6,7 @@ import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
@@ -402,4 +403,6 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	void insertUtmReg(int userId, String utmId);
+
+	TemplateDisposeVO getTemplateDispose(String templateId);
 }

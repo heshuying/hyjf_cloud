@@ -1560,4 +1560,12 @@ public interface AmUserClient {
      * @return
      */
     Boolean deleteTemplate(int tempId);
+
+	TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest);
+
+	TemplateDisposeResponse updateTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
+
+	TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
+
+	TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
 }

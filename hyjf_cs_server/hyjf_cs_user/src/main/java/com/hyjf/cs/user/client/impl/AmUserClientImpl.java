@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -1334,5 +1335,15 @@ public class AmUserClientImpl implements AmUserClient {
 	public void getBankOpenAccountForCrmRepair() {
 		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
 		restTemplate.getForEntity(url, String.class).getBody();
+	}
+
+	@Override
+	public TemplateDisposeVO getTemplateDispose(String templateId) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/getTemplateDispose/"+ templateId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getTemplateDispose();
+		}
+		return null;
 	}
 }

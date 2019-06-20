@@ -26,7 +26,7 @@ import com.hyjf.common.util.CommonUtils;
 public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 	@Autowired
 	TemplateDisposeMapper templateDisposeMapper;
-
+	
 	@Override
 	public TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest) {
 		TemplateDisposeExample example=new TemplateDisposeExample();
@@ -78,6 +78,8 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 		TemplateDisposeResponse tr=new TemplateDisposeResponse();
 		if(templateDisposeRequest.getStatus()!=null) {
 			TemplateDispose record = templateDisposeMapper.selectByPrimaryKey(templateDisposeRequest.getId());
+			record.setUpdateTime(templateDisposeRequest.getUpdateTime());
+			record.setUpdateUserId(templateDisposeRequest.getUpdateUserId());
 			record.setStatus(templateDisposeRequest.getStatus());
 			tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKey(record));
 		}else {
@@ -90,6 +92,7 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 
 	@Override
 	public TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		//templateDisposeRequest.getUrl()+"/landingPage?templateId" 
 		TemplateDisposeResponse tr=new TemplateDisposeResponse();
 		tr.setRecordTotal(templateDisposeMapper.insertSelective(CommonUtils.convertBean(templateDisposeRequest,TemplateDispose.class)));
 		return tr;
