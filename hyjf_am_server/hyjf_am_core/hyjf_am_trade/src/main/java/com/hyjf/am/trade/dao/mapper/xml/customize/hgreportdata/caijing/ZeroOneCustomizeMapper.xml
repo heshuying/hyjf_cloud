@@ -176,8 +176,8 @@
 		LEFT JOIN ht_borrow_project_type t ON t.borrow_cd = b.project_type
 		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
 		WHERE b.reverify_status = 6
-		AND b.create_time <![CDATA[>=]]> CONCAT(#{dateStart},' 00:00:00')
-		AND b.create_time <![CDATA[<=]]> CONCAT(#{dateEnd},' 23:59:59')
+		AND b.reverify_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{dateStart},' 00:00:00'))
+		AND b.reverify_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{dateEnd},' 23:59:59'))
 
 		UNION ALL
 
