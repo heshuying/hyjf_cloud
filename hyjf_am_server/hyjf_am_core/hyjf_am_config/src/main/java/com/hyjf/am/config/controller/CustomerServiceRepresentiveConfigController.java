@@ -60,7 +60,7 @@ public class CustomerServiceRepresentiveConfigController extends BaseConfigContr
         CustomerServiceRepresentiveConfig customerServiceGroupConfig = customerServiceRepresentiveConfigService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
         if (customerServiceGroupConfig != null) {
             CustomerServiceRepresentiveConfigVO customerServiceRepresentiveConfig = new CustomerServiceRepresentiveConfigVO();
-            BeanUtils.copyProperties(customerServiceGroupConfig, CustomerServiceRepresentiveConfigVO.class);
+            BeanUtils.copyProperties(customerServiceGroupConfig, customerServiceRepresentiveConfig);
             response.setResult(customerServiceRepresentiveConfig);
         }
         return response;
