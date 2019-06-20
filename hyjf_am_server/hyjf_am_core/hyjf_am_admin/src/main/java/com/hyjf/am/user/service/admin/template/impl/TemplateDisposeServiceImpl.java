@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
 import com.hyjf.am.user.dao.mapper.auto.TemplateDisposeMapper;
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.TemplateDispose;
 import com.hyjf.am.user.dao.model.auto.TemplateDisposeExample;
 import com.hyjf.am.user.dao.model.auto.TemplateDisposeExample.Criteria;
@@ -65,20 +66,33 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 
 	@Override
 	public TemplateDisposeResponse updateTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		TemplateDispose record=new TemplateDispose();
+		record=CommonUtils.convertBean(templateDisposeRequest,TemplateDispose.class);
+		TemplateDisposeResponse tr=new TemplateDisposeResponse();
+		tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKey(record));
+		return tr;
 	}
 
 	@Override
 	public TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		TemplateDisposeResponse tr=new TemplateDisposeResponse();
+		if(templateDisposeRequest.getStatus()!=null) {
+			TemplateDispose record = templateDisposeMapper.selectByPrimaryKey(templateDisposeRequest.getId());
+			record.setStatus(templateDisposeRequest.getStatus());
+			tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKey(record));
+		}else {
+			
+			tr.setRecordTotal(templateDisposeMapper.deleteByPrimaryKey(templateDisposeRequest.getId()));
+			
+		}
+		return tr;
 	}
 
 	@Override
 	public TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		TemplateDisposeResponse tr=new TemplateDisposeResponse();
+		tr.setRecordTotal(templateDisposeMapper.insertSelective(CommonUtils.convertBean(templateDisposeRequest,TemplateDispose.class)));
+		return tr;
 	}
 	
 }
