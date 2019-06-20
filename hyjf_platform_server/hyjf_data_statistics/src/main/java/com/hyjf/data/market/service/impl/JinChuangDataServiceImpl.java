@@ -1,4 +1,4 @@
-package com.hyjf.data.service.impl;
+package com.hyjf.data.market.service.impl;
 
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.data.bean.JcDataStatistics;
