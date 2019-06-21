@@ -261,6 +261,16 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             vo.setUtmNameNow(utmPlatt.getSourceName());
         }
 
+        if(vo.getTenderUserUtmId()!=null){
+            Integer tenderUserUtmId=vo.getTenderUserUtmId();
+            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
+
+            if(utmPlat!=null){
+                vo.setUtmName(utmPlat.getSourceName());
+            }else{
+                throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
+            }
+        }
     }
 
     @Override

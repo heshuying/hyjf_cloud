@@ -64,6 +64,8 @@ public class HjhPlanAccedeCustomizeVO {
      */
     private Integer tenderUserUtmId;
 
+    private String utmName;
+
     //当前渠道
     private String utmNameNow;
 
@@ -169,6 +171,14 @@ public class HjhPlanAccedeCustomizeVO {
 
     public void setTenderUserUtmId(Integer tenderUserUtmId) {
         this.tenderUserUtmId = tenderUserUtmId;
+    }
+
+    public String getUtmName() {
+        return utmName;
+    }
+
+    public void setUtmName(String utmName) {
+        this.utmName = utmName;
     }
 
     public String getUtmNameNow() {

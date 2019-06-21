@@ -60,6 +60,17 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
         vo.setInviteUserDepartmentname(hjhAccede.getInviteUserDepartmentname());
         vo.setTenderUserUtmId(hjhAccede.getTenderUserUtmId());
 
+        if(vo.getTenderUserUtmId()!=null){
+            Integer tenderUserUtmId=vo.getTenderUserUtmId();
+            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
+
+            if(utmPlat!=null){
+                vo.setUtmName(utmPlat.getSourceName());
+            }else{
+                throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
+            }
+        }
+
         UtmPlat utmPlatt=utmPlatService.getUtmByUserId(hjhAccede.getUserId());
 
         if(utmPlatt!=null){
