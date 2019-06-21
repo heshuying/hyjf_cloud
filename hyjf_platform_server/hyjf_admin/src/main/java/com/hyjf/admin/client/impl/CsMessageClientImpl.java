@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client.impl;
 
+import com.hyjf.admin.beans.request.JcCustomerServerRequest;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
@@ -497,6 +498,11 @@ public class CsMessageClientImpl implements CsMessageClient {
         if (response != null) {
             return response;
         }
+        return null;
+    }
+
+    @Override
+    public CustomerServerResponse getServerList(JcCustomerServerRequest request) {
         return null;
     }
 }

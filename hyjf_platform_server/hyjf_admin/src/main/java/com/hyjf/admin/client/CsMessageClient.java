@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.admin.beans.request.JcCustomerServerRequest;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
@@ -318,4 +319,11 @@ public interface CsMessageClient {
      * @Author : wenxin
      */
     HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest);
+
+    /**
+     * 获取客户服务列表
+     * @param request
+     * @return
+     */
+    CustomerServerResponse getServerList(JcCustomerServerRequest request);
 }
