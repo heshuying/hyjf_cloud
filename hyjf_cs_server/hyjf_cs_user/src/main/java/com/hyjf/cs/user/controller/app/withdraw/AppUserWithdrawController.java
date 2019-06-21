@@ -117,7 +117,7 @@ public class AppUserWithdrawController extends BaseUserController {
                         //通用赋值
                         bankCardBean.setBankCode(bank.getBank());
                         bankCardBean.setCardNo(bank.getCardNo());
-                        bankCardBean.setCardNo_info(BankCardUtil.getCardNo(bank.getCardNo()));
+                        bankCardBean.setCardNo_info(BankCardUtil.getCardNoNew(bank.getCardNo()));
                         bankCardBean.setNotice(WARM_AND_SWEET_REMINDERS_URL);
                         bankCardBean.setBank(bank.getBank());
                         // 每次限额 单位：万元
