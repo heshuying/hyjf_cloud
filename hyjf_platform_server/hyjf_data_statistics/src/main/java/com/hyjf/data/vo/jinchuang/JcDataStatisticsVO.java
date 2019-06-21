@@ -3,7 +3,7 @@
  */
 package com.hyjf.data.vo.jinchuang;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.data.vo.BaseVO;
 
 import java.io.Serializable;
 
