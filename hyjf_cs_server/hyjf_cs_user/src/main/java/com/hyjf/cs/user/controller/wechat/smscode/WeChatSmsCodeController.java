@@ -67,7 +67,6 @@ public class WeChatSmsCodeController extends BaseUserController {
 		// 业务逻辑
 		try {
 			if("TPL_ZHUCE".equals(verificationType)){
-				// 着陆页注册, 使用无感知验证码
 
 				// 拼装所需参数
 				String aid = "2026782647";
