@@ -29,6 +29,7 @@ public class CustomerServiceChannelServiceImpl extends BaseServiceImpl implement
         CustomerServiceChannelExample example = new CustomerServiceChannelExample();
         CustomerServiceChannelExample.Criteria cra = example.createCriteria();
         cra.andChannelIdEqualTo(sourceId);
+        cra.andStatusEqualTo(1);
         List<CustomerServiceChannel> list = this.customerServiceChannelMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list.get(0);
