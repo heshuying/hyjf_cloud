@@ -109,7 +109,6 @@ public class CashDepositeController extends BaseController {
      * 批量处理
      * 根据选择的方式，处理标的（重新校验合作额度，或者流标）
      * @param form
-     * @param menuHide  1  重新验证合作额度 0 流标
      * @return
      */
     @ApiOperation(value = "批量处理", notes = "批量处理")
