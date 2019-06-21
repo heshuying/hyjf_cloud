@@ -1160,7 +1160,7 @@
 
     <!-- 查询转让数据 -->
     <select id="countTotalCredit" resultMap="sumResultMap">
-        SELECT ROUND(SUM(credit_amount)/10000) AS credit_amount,
+        SELECT IFNULL(ROUND(SUM(credit_amount)/10000),0) AS credit_amount,
         primary_division AS primary_division,
         two_division AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -1172,7 +1172,7 @@
 
     <!-- 查询转让数据 -->
     <select id="countTotalRepayCredit" resultMap="sumResultMap">
-        SELECT ROUND(SUM(credit_amount)/10000) AS credit_amount,
+        SELECT IFNULL(ROUND(SUM(credit_amount)/10000),0) AS credit_amount,
         primary_division AS primary_division,
         two_division AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
