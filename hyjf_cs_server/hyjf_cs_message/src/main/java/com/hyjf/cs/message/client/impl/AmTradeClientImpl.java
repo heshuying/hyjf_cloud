@@ -16,12 +16,12 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmTradeClient;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author lisheng
@@ -150,18 +150,37 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public List<String> queryUser(SmsCodeUserRequest request) {
-		Response tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
-				Response.class);
-		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
-		if (tradeResponse != null && userResponse != null) {
-			List<String> tradeList = tradeResponse.getResultList();
-			List<String> userList = userResponse.getResultList();
-            if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
-                tradeList.retainAll(userList);
-            }
-			return tradeList;
+		List<String> list = new ArrayList<>();
+		//所以未开户用户 并且 累计出借金额 or 出借日期 不为空
+		if(request.getOpen_account() == 0 && (StringUtils.isNotBlank(request.getAdd_money_count())
+				|| StringUtils.isNotBlank(request.getAdd_time_begin())
+				|| StringUtils.isNotBlank(request.getAdd_time_end()))){
+			return list;
 		}
-		return null;
+
+		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
+		Response tradeResponse = null;
+		if((request.getOpen_account() != null && request.getOpen_account() != 0) && (StringUtils.isNotBlank(request.getAdd_money_count())
+				|| StringUtils.isNotBlank(request.getAdd_time_begin())
+				|| StringUtils.isNotBlank(request.getAdd_time_end()))){
+
+			tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
+					Response.class);
+		}
+
+		if (userResponse != null) {
+			List<String> userList = userResponse.getResultList();
+            if (!CollectionUtils.isEmpty(userList)) {
+				list.addAll(userList);
+            }
+		}
+		if (tradeResponse != null ) {
+			List<String> tradeList = tradeResponse.getResultList();
+//			if (!CollectionUtils.isEmpty(tradeList) ) {
+				list.retainAll(tradeList);
+//			}
+		}
+		return list;
 	}
 
 	@Override

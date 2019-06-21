@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
@@ -12,9 +13,13 @@ import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.service.front.user.UserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
@@ -30,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author nxl
@@ -47,6 +53,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     @Autowired
     private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
 
+    @Autowired
+    private CommonProducer commonProducer;
     /**
      * 根据筛选条件查找会员列表
      *
@@ -711,6 +719,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 int deleteFlg = spreadsUserMapper.deleteByPrimaryKey(spreadsUserVO.getId());
                 if (deleteFlg > 0) {
                     logger.info("==================删除用户的推荐人成功!======");
+                    // 删除用户推荐人发送同步mq  add by wgx 2019/05/31
+                    SpreadsUser rUser = new SpreadsUser();
+                    rUser.setUserId(Integer.parseInt(userId));
+                    rUser.setSpreadsUserId(0);
+                    try {
+                        commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, "ht_spreads_user", UUID.randomUUID().toString(), rUser));
+                        logger.info("【删除推荐人】am-user发送用户信息同步,同步信息：{}", JSON.toJSON(rUser).toString());
+                    } catch (MQException e) {
+                        logger.error("【删除推荐人】am-user发送用户信息同步失败！用户userId：{}", userId, e);
+                    }
                 } else {
                     throw new RuntimeException("============删除用户的推荐人失败!========");
                 }

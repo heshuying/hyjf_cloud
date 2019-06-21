@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version BaseMarketController, v0.1 2018/6/1:36
  */
 public class BaseTradeController extends BaseController {
+
     /**
      * 获取前端的地址
      * @param sysConfig
@@ -27,33 +28,59 @@ public class BaseTradeController extends BaseController {
         Integer client = Integer.parseInt(platform);
         if (ClientConstants.WEB_CLIENT == client) {
             return sysConfig.getFrontHost();
-        }
-        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+        }else if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
             return sysConfig.getAppFrontHost();
-        }
-        if (ClientConstants.WECHAT_CLIENT == client) {
+        }else if (ClientConstants.WECHAT_CLIENT == client) {
             return sysConfig.getWeiFrontHost();
         }
         return null;
     }
 
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtFrontHost(SystemConfig sysConfig, String platform) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost();
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost();
+        }
+        return null;
+    }
+
     public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
-
-
         Integer client = Integer.parseInt(platform);
         if (ClientConstants.WEB_CLIENT == client) {
             String token=request.getHeader("token");
             return sysConfig.getFrontHost()+"/user/setTradePassword";
-        }
-        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+        }else if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
             String sign=request.getParameter("sign");
             return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
                     "&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
                     "&platform="+request.getParameter("platform");
-        }
-        if (ClientConstants.WECHAT_CLIENT == client) {
+        }else if (ClientConstants.WECHAT_CLIENT == client) {
             String sign=request.getParameter("sign");
             return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
+    }
+
+    /**
+     * 获取温金投前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getWjtForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WJT_PC_CLIENT == client) {
+            return sysConfig.getWjtFrontHost()+"/user/setTradePassword";
+        }else if (ClientConstants.WJT_WEI_CLIENT == client) {
+            return sysConfig.getWjtWeiFrontHost()+"/submitForm?queryType=6";
         }
         return "";
     }

@@ -49,7 +49,7 @@ public interface BindCardService extends BaseUserService {
      * @auther: hesy
      * @date: 2018/6/22
      */
-    Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception;
+    Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus ,String wjtClient) throws Exception;
     /**
      * 请求银行绑卡接口
      */

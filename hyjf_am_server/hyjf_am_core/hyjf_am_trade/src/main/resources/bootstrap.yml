@@ -13,7 +13,7 @@ spring:
         enabled: true
         serviceId: CONFIG-SERVER
       failFast: true
-    
+
   profiles:
     active: dev
 server:

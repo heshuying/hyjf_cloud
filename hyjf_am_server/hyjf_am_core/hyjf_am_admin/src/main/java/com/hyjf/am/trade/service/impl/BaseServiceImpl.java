@@ -37,7 +37,7 @@ import java.util.List;
  * @version BaseServiceImpl, v0.1 2018/6/27 9:33
  */
 public class BaseServiceImpl extends CustomizeMapper implements BaseService {
-    public static Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
+    protected Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 根据标的编号检索标的信息
      *

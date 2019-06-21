@@ -50,6 +50,7 @@ public class WithdrawBeanRequest extends BasePage implements Serializable{
     /** 翻页结束 */
     protected int limitEnd = -1;
 
+
     public int getLimitStart() {
         return limitStart;
     }
@@ -185,4 +186,5 @@ public class WithdrawBeanRequest extends BasePage implements Serializable{
     public void setStatusExceptionSrch(String statusExceptionSrch) {
         this.statusExceptionSrch = statusExceptionSrch;
     }
+
 }

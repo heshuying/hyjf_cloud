@@ -5,7 +5,7 @@
 
     <!-- 引入配置文件 -->
 
-    <properties resource="init_market.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 

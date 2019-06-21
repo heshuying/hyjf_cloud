@@ -14,6 +14,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -97,29 +98,28 @@ public class BorrowRepaymentPlanController extends BaseController {
         copyForm.setPageSize(defaultRowMaxCount);
         copyForm.setCurrPage(1);
         // 查询
-        List<BorrowRepaymentPlanCustomizeVO> recordList = this.borrowRepaymentService.selectBorrowRepaymentPlanList(copyForm);
-        Integer totalCount = recordList.size();
-
+        int totalCount = borrowRepaymentService.countBorrowRepaymentPlan(copyForm);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
-        }
-        for (int i = 1; i < sheetCount; i++) {
-
-            copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i+1);
-            List<BorrowRepaymentPlanCustomizeVO> recordList2 = this.borrowRepaymentService.selectBorrowRepaymentPlanList(copyForm);
-            if (recordList2 != null && recordList2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
-            } else {
-                break;
+            for (int i = 1; i < sheetCount + 1; i++) {
+                copyForm.setPageSize(defaultRowMaxCount);
+                copyForm.setCurrPage(i);
+                // 添加分页信息  add by wgx 2019/06/04
+                Paginator paginator = new Paginator(i, totalCount, defaultRowMaxCount);
+                copyForm.setLimitStart(paginator.getOffset());
+                copyForm.setLimitEnd(paginator.getLimit());
+                List<BorrowRepaymentPlanCustomizeVO> recordList2 = this.borrowRepaymentService.selectBorrowRepaymentPlanList(copyForm);
+                if (recordList2 != null && recordList2.size() > 0) {
+                    sheetNameTmp = sheetName + "_第" + i + "页";
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList2);
+                } else {
+                    break;
+                }
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
