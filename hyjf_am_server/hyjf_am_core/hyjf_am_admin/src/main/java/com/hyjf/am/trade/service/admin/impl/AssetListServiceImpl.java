@@ -107,18 +107,6 @@ public class AssetListServiceImpl extends BaseServiceImpl implements AssetListSe
 			mapParam.put("limitEnd", limitEnd);
 		}
 		List<AssetListCustomizeVO> list = assetListServiceCustomizeMapper.findBZJBZList(mapParam);
-		if(!CollectionUtils.isEmpty(list)){
-			Map<String, String> assetStatusMap = CacheUtil.getParamNameMap("ASSET_STATUS");
-			Map<String, String> assetApplyStatusMap = CacheUtil.getParamNameMap("ASSET_APPLY_STATUS");
-			Map<String, String> accountStatusMap = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
-			Map<String, String> userTypeMap = CacheUtil.getParamNameMap("USER_TYPE");
-			for(AssetListCustomizeVO assetListCustomizeVO : list){
-				assetListCustomizeVO.setStatus(assetStatusMap.getOrDefault(assetListCustomizeVO.getStatus(),null));
-				assetListCustomizeVO.setVerifyStatus(assetApplyStatusMap.getOrDefault(assetListCustomizeVO.getVerifyStatus(),null));
-				assetListCustomizeVO.setBankOpenAccount(accountStatusMap.getOrDefault(assetListCustomizeVO.getBankOpenAccount(),null));
-				assetListCustomizeVO.setUserType(userTypeMap.getOrDefault(assetListCustomizeVO.getUserType(),null));
-			}
-		}
 		return list;
 	}
 

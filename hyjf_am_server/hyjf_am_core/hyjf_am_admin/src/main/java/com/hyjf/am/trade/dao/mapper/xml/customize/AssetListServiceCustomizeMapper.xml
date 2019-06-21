@@ -86,8 +86,8 @@
         hpa.account_id,
         <!-- pnusertype.name AS user_type, -->
         u.user_type,
-        CONCAT(substr(hpa.truename, 1, 1),'**') truename,
-        CONCAT(substr(hpa.idcard, 1, 4),'************') idcard,
+        hpa.truename,
+        hpa.idcard,
         FORMAT(hpa.account, 2) account,
         CASE WHEN hpa.borrow_style = 'endday' THEN CONCAT(hpa.borrow_period, '天') ELSE CONCAT(hpa.borrow_period, '个月') END borrow_period,
         bs.name borrow_style_name,
