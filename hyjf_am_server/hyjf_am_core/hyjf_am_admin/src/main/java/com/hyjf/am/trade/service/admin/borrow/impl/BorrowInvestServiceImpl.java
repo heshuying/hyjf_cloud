@@ -234,12 +234,12 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
         BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
         BeanUtils.copyProperties(borrowTender,vo);
 
-        build(vo,borrowTender.getTenderUserUtmId());
+        build(vo);
 
         return vo;
     }
 
-    private void build(BorrowInvestCustomizeExtVO vo, Integer tenderUserUtmId) {
+    private void build(BorrowInvestCustomizeExtVO vo) {
 
         if (vo.getCreateTime()!=null){
             //格式化时间

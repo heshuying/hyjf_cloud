@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -28,6 +29,8 @@ public class TenderUtmChangeLogServiceImpl implements TenderUtmChangeLogService 
     @Autowired
     private TenderUtmChangeLogCustomizeMapper tenderUtmChangeLogCustomizeMapper;
 
+    private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Override
     public List<TenderUpdateUtmHistoryVO> getChangeLog(String nid) {
 
@@ -39,6 +42,9 @@ public class TenderUtmChangeLogServiceImpl implements TenderUtmChangeLogService 
             public TenderUpdateUtmHistoryVO apply(@Nullable TenderUtmChangeLogCustomize tenderUtmChangeLogCustomize) {
                 TenderUpdateUtmHistoryVO vo=new TenderUpdateUtmHistoryVO();
                 BeanUtils.copyProperties(tenderUtmChangeLogCustomize,vo);
+                if(vo.getUpdateTime()!=null){
+                    vo.setUdpateTimeStr(sdf.format(vo.getUpdateTime()));
+                }
                 return vo;
             }
         });
@@ -57,6 +63,9 @@ public class TenderUtmChangeLogServiceImpl implements TenderUtmChangeLogService 
             public TenderUpdateUtmHistoryVO apply(@Nullable TenderUtmChangeLogCustomize tenderUtmChangeLogCustomize) {
                 TenderUpdateUtmHistoryVO vo=new TenderUpdateUtmHistoryVO();
                 BeanUtils.copyProperties(tenderUtmChangeLogCustomize,vo);
+                if(vo.getUpdateTime()!=null){
+                    vo.setUdpateTimeStr(sdf.format(vo.getUpdateTime()));
+                }
                 return vo;
             }
         });

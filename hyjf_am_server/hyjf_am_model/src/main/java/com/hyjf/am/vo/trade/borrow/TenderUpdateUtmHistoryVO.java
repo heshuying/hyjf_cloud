@@ -51,6 +51,8 @@ public class TenderUpdateUtmHistoryVO {
      */
     private Date updateTime;
 
+    private String udpateTimeStr;
+
     public String getNid() {
         return nid;
     }
@@ -105,5 +107,13 @@ public class TenderUpdateUtmHistoryVO {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getUdpateTimeStr() {
+        return udpateTimeStr;
+    }
+
+    public void setUdpateTimeStr(String udpateTimeStr) {
+        this.udpateTimeStr = udpateTimeStr;
     }
 }
