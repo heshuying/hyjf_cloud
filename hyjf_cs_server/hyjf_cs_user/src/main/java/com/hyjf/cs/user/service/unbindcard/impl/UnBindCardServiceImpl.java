@@ -220,7 +220,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
             // 同步地址  是否跳转到前端页面
             retUrl = host + errorPath + "?status=99";
             successUrl = host + successPath + "?status=000&statusDesc=";
-            retUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
+            retUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform()+"&logOrdId="+ bindCardBean.getLogOrderId();
             successUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
         }
 
