@@ -2,7 +2,6 @@ package com.hyjf.am.response.admin;
 
 import java.util.List;
 
-import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.user.TemplateConfigVO;
