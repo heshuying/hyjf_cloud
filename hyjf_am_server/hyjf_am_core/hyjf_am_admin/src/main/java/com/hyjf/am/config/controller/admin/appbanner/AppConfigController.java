@@ -201,6 +201,18 @@ public class AppConfigController {
                         returnNewList.add(type);
                     }else if(AdsTypeEnum.android_module4.toString().equals(type.getCode())){
                         returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_new_banner.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_new_register.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_new_open.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_new_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_new_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_new_module3.toString().equals(type.getCode())){
+                        returnNewList.add(type);
                     }else if(AdsTypeEnum.android_find_module1.toString().equals(type.getCode())){
                         returnNewList.add(type);
                     }else if(AdsTypeEnum.android_find_module2.toString().equals(type.getCode())){
@@ -232,6 +244,18 @@ public class AppConfigController {
                     }else if(AdsTypeEnum.ios_module3.toString().equals(type.getCode())){
                         returnNewList.add(type);
                     }else if(AdsTypeEnum.ios_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_new_banner.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_new_register.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_new_open.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_new_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_new_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_new_module3.toString().equals(type.getCode())){
                         returnNewList.add(type);
                     }else if(AdsTypeEnum.ios_find_module1.toString().equals(type.getCode())){
                         returnNewList.add(type);

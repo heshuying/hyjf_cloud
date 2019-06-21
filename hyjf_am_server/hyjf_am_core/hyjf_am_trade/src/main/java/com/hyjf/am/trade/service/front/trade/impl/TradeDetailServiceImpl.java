@@ -242,11 +242,19 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
                     }
                 } else if("tender_recover_yes".equals(trade)){
                     // 收到还款，取borrow_recover，追加"(标的号)显示字样"
-                    BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
-                    borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(nid);
-                    List<BorrowRecover> recoverList = borrowRecoverMapper.selectByExample(borrowRecoverExample);
-                    if(CollectionUtils.isNotEmpty(recoverList)){
-                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(recoverList.get(0).getBorrowNid().concat(")")));
+                    // 先查分期，查不到再查不分期
+                    BorrowRecoverPlanExample borrowRecoverPlanExample = new BorrowRecoverPlanExample();
+                    borrowRecoverPlanExample.createCriteria().andRepayOrderIdEqualTo(nid);
+                    List<BorrowRecoverPlan> planList = borrowRecoverPlanMapper.selectByExample(borrowRecoverPlanExample);
+                    if(CollectionUtils.isNotEmpty(planList)){
+                        appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(planList.get(0).getBorrowNid().concat(")")));
+                    } else {
+                        BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+                        borrowRecoverExample.createCriteria().andRepayOrdidEqualTo(nid);
+                        List<BorrowRecover> recoverList = borrowRecoverMapper.selectByExample(borrowRecoverExample);
+                        if(CollectionUtils.isNotEmpty(recoverList)){
+                            appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(recoverList.get(0).getBorrowNid().concat(")")));
+                        }
                     }
                 } else if("creditassign".equals(trade)){
                     // 购买债权，取credit_tender，追加"(债转编号)"显示字样

@@ -14,6 +14,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import io.swagger.annotations.ApiImplicitParam;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,6 +126,11 @@ public class AppFindController extends BaseMarketController {
 
 				if (!CollectionUtils.isEmpty(list)) {
 					ret.put("messageCount", count);
+					list.stream().forEach(article -> {
+						if(StringUtils.isNotBlank(article.getImgurl())) {
+							article.setImgurl(appHost + article.getImgurl());
+						}
+					});
 					ret.put("messageList", list);
 				} else {
 					ret.put("messageCount", "0");
@@ -259,7 +265,9 @@ public class AppFindController extends BaseMarketController {
 		for (ContentArticleVO article : articleList) {
 			AppFindNewsVO newsVO = new AppFindNewsVO();
 			newsVO.setId(article.getId());
-			newsVO.setImg(article.getImgurl());
+			if(StringUtils.isNotBlank(article.getImgurl())){
+				newsVO.setImg(appHost + article.getImgurl());
+			}
 			newsVO.setTitle(article.getTitle());
 			newsVO.setDate(DateFormatUtils.format(article.getCreateTime(), DATE_FORMAT));
 			newsVO.setShareContent(article.getSummary());

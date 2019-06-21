@@ -75,19 +75,33 @@ public class BestCouponUtil {
                 }
             }
         }
-        // app4.0 后台勾选PC、微官网、Android、iOS时，前台不显示
+        // app4.0 为了不影响其他端的显示，app单独处理
         if ("2".equals(platform) || "3".equals(platform)){
             if(clientString.contains("Android") && clientString.contains("iOS") &&
                     clientString.contains("微官网") && clientString.contains("PC")){
-                clientString = "";
+                clientString = "全部平台";
+            } else if("Android、iOS".equals(clientString)){
+                clientString ="限APP可用";
+            } else if("微官网、Android、iOS".equals(clientString)){
+                clientString ="限移动端可用";
+            } else {
+                if(StringUtils.isNotBlank(clientString)){
+                    clientString = "限".concat(clientString).concat("可用");
+                    clientString = clientString.replace("、", "/");
+                } else {
+                    // app4.0不强更，为了之前的版本，全部平台就返回“全部平台”
+                    clientString = "全部平台";
+                }
+            }
+        } else {
+            if("Android、iOS".equals(clientString)){
+                clientString ="限APP可用";
+            }
+            if("微官网、Android、iOS".equals(clientString)){
+                clientString ="限移动端可用";
             }
         }
-        if("Android、iOS".equals(clientString)){
-            clientString ="限APP可用";
-        }
-        if("微官网、Android、iOS".equals(clientString)){
-            clientString ="限移动端可用";
-        }
+
         return clientString;
     }
 
