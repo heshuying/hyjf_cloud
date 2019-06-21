@@ -97,4 +97,22 @@ public class AsteriskProcessUtil {
         phoneNumAsterisked = originValue.substring(0, 3) + getAsterisked(originValue.length() - 7) + originValue.substring(originValue.length() - 4);
         return phoneNumAsterisked;
     }
+
+    /**
+     * 手机号脱敏(前1后1显示，其余脱敏显示*)
+     * @param mobile
+     * @return
+     */
+    public static String getAsteriskedMobile(String mobile){
+        if (StringUtils.isEmpty(mobile) || (mobile.length() != 11)) {
+            return mobile;
+        }
+        return mobile.replaceAll("(\\d{1})\\d{9}(\\d{1})", "$1*********$2");
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(AsteriskProcessUtil.getAsteriskedMobile(""));
+    }
+
 }
