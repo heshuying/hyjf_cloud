@@ -15,12 +15,10 @@ import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -70,10 +68,22 @@ public class CertificateAuthorityExceptionController extends BaseController {
     @PostMapping("/search")
 	@ApiOperation(value = "CA认证记录列表", notes = "CA认证记录列表")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CertificateAuthorityVO>> init(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean) {
-
+    public AdminResult<ListResult<CertificateAuthorityVO>> init(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean,HttpServletRequest httpServletRequest) {
 
 		CertificateAuthorityResponse prs = certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean);
+        List<CertificateAuthorityVO> resultList = prs.getResultList();
+        if (CollectionUtils.isNotEmpty(resultList)){
+            boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS2 + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+            if(!isShow){
+                for (CertificateAuthorityVO vo : resultList) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
+                    vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
+                    vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                }
+
+            }
+        }
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -94,7 +104,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
     @PostMapping("/searchExceptionList")
     @ApiOperation(value = "CA认证异常记录列表", notes = "CA认证异常记录列表")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CertificateAuthorityVO>> searchExceptionList(@RequestBody CertificateAuthorityExceptionRequest request) {
+    public AdminResult<ListResult<CertificateAuthorityVO>> searchExceptionList(@RequestBody CertificateAuthorityExceptionRequest request,HttpServletRequest httpServletRequest) {
         CertificateAuthorityResponse response = certificateAuthorityExceptionService.getExceptionRecordList(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -102,7 +112,21 @@ public class CertificateAuthorityExceptionController extends BaseController {
         if (!AdminResponse.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<CertificateAuthorityVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+        List<CertificateAuthorityVO> resultList = response.getResultList();
+        if (CollectionUtils.isNotEmpty(resultList)){
+            boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+            if(!isShow){
+                for (CertificateAuthorityVO vo : resultList) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
+                    vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
+                    vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                }
+
+            }
+        }
+
+        return new AdminResult<ListResult<CertificateAuthorityVO>>(ListResult.build(resultList, response.getRecordTotal()));
     }
 
 
@@ -161,14 +185,25 @@ public class CertificateAuthorityExceptionController extends BaseController {
         certificateAuthorityExceptionBean.setCurrPage(1);
         // 需要输出的结果列表
         CertificateAuthorityResponse recordList = certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean);
+
         Integer totalCount = recordList.getRecordTotal();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapBkAcc();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterBkAcc();
         String sheetNameTmp = sheetName + "_第1页";
+
+        boolean isShow = this.havePermission(request,PERMISSIONS2 + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
+            if(!isShow){
+                for (CertificateAuthorityVO vo : recordList.getResultList()) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
+                    vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
+                    vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                }
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
@@ -176,6 +211,15 @@ public class CertificateAuthorityExceptionController extends BaseController {
         	certificateAuthorityExceptionBean.setCurrPage(i+1);
             CertificateAuthorityResponse recordList2 = certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean);
             if (recordList2 != null && recordList2.getResultList().size()> 0) {
+                if(!isShow){
+                    for (CertificateAuthorityVO vo : recordList2.getResultList()) {
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                        vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
+                        vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
+                        vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                    }
+                }
+
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
             } else {
@@ -218,9 +262,19 @@ public class CertificateAuthorityExceptionController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMapBkAcc();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterBkAcc();
         String sheetNameTmp = sheetName + "_第1页";
+
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
+            if(!isShow){
+                for (CertificateAuthorityVO vo : recordList.getResultList()) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
+                    vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
+                    vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                }
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
@@ -228,6 +282,14 @@ public class CertificateAuthorityExceptionController extends BaseController {
             certificateBean.setCurrPage(i+1);
             CertificateAuthorityResponse recordList2 = certificateAuthorityExceptionService.getExceptionRecordList(certificateAuthorityExceptionBean);
             if (recordList2 != null && recordList2.getResultList().size()> 0) {
+                if(!isShow){
+                    for (CertificateAuthorityVO vo : recordList2.getResultList()) {
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                        vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
+                        vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
+                        vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                    }
+                }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
             } else {

@@ -89,14 +89,7 @@ public class UserParamRepairController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         // 获取该角色 权限列表
-        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-        //判断权限
-        boolean isShow = false;
-        for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
-            }
-        }
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         List<UserManagerVO> listUserManagetVO = userManagerResponse.getResultList();
         List<UserManagerCustomizeVO> userManagerCustomizeList = new ArrayList<UserManagerCustomizeVO>();
         if (null != listUserManagetVO && listUserManagetVO.size() > 0) {
