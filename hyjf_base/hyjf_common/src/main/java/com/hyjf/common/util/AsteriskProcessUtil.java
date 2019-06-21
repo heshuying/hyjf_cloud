@@ -1,5 +1,7 @@
 package com.hyjf.common.util;
 
+import com.hyjf.common.validator.Validator;
+import com.hyjf.common.validator.ValidatorCheckUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class AsteriskProcessUtil {
@@ -98,6 +100,34 @@ public class AsteriskProcessUtil {
         return phoneNumAsterisked;
     }
 
+
+    /**
+     * 身份证和手机号码脱敏处理
+     * 规则:
+     *      显示第一位和最后一位, 其余以 * 代替
+     *
+     *  如若传入的 号码的格式不正确, 则不做任何处理原样返回.
+     * @param originValue
+     * @return
+     */
+    public static String getDesensitizationValue(String originValue){
+        // 已脱敏字符串
+        String desensitizedStr = "";
+
+        /**
+         * 1.不能为空
+         * 2. 必须为身份证或者为手机号.
+         */
+        if (StringUtils.isEmpty(originValue)){
+            return "";
+        }else if (!ValidatorCheckUtil.isIDCard(originValue) && !Validator.isMobile(originValue)){
+            return originValue;
+        }
+
+        desensitizedStr = originValue.substring(0, 1) + getAsterisked(originValue.length() - 2) + originValue.substring(originValue.length() - 1);
+        return desensitizedStr;
+    }
+
     /**
      * 手机号脱敏(前1后1显示，其余脱敏显示*)
      * @param mobile
@@ -173,7 +203,7 @@ public class AsteriskProcessUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(AsteriskProcessUtil.getAsteriskedEmail(""));
+        System.out.println(AsteriskProcessUtil.getDesensitizationValue("37"));
     }
 
 }
