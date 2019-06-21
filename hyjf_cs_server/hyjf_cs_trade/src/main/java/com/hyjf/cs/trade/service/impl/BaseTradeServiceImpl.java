@@ -760,6 +760,8 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 if(balance.compareTo(userBankAvailBal) != 1){
                     return true;
                 }
+            } else {
+                logger.error("当前用户：" + userId + "未获取到相关江西银行数据!");
             }
         } catch (Exception e) {
             logger.error("资金支出校验共通方法发生错误：-- " + e.getMessage());

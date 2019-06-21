@@ -1479,6 +1479,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         Integer userId = Integer.valueOf(request.getUserId());
         // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
         if (!this.capitalExpendituresCheck(userId,new BigDecimal(assignPay))) {
+            logger.error("当前用户：" + userId + "交易金额是：" + assignPay);
             // 账户余额不同步
             throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
         }
