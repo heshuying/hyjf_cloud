@@ -1787,4 +1787,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void insertAppUtmReg(AppUtmReg entity) {
         appUtmRegMapper.insertSelective(entity);
     }
+
+    /**
+     * 根据着陆页id查找移动端着陆页配置 add by nxl
+     * @param landingId
+     * @return
+     */
+    @Override
+    public TemplateDispose selectTemplateDisposeById(Integer landingId){
+        TemplateDispose templateDispose = templateDisposeMapper.selectByPrimaryKey(landingId);
+        return templateDispose;
+    }
 }

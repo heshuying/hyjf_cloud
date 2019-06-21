@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.customize;
 
 import com.hyjf.am.user.dao.auto.AutoMapper;
+import com.hyjf.am.user.dao.mapper.auto.TemplateDisposeMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.*;
@@ -114,4 +115,6 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserDepartmentInfoCustomizeMapper userDepartmentInfoCustomizeMapper;
+    @Autowired
+    protected TemplateDisposeMapper templateDisposeMapper;
 }

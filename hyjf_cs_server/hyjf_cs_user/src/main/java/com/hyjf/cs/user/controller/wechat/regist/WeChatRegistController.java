@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -376,6 +377,33 @@ public class WeChatRegistController extends BaseUserController {
         logger.info("verificationCode: {}", bean.getVerificationCode());
 
         registService.checkReffer(refferUserId);
+        // 着陆页配置代码修改 20190621 add by nxl start
+        // 着陆页id
+        String landingId = bean.getLandingId();
+        logger.info("landingId: {}", bean.getLandingId());
+        if(StringUtils.isNotBlank(landingId)){
+            ret.put("status", "99");
+            ret.put("statusDesc", "缺少着陆页id!");
+            return ret;
+        }
+        Integer intLandingId = Integer.parseInt(landingId);
+        // 根据着陆页id获取推荐渠道id
+        //
+        TemplateDisposeVO templateDisposeVO = registService.selectTemplateDisposeById(intLandingId);
+        if(null==templateDisposeVO){
+            logger.info("------根据着陆页id："+landingId+" 未能查找到该着陆页配置信息!------");
+            ret.put("status", "99");
+            ret.put("statusDesc", "未能查找到着陆页配置信息!");
+            return ret;
+        }
+        String templateLanding = templateDisposeVO.getUtmId().toString();
+        if(!bean.getUtmId().equals(templateLanding)){
+            logger.info("------渠道id传入参数为："+bean.getUtmId()+" 与着陆页配置渠道id"+templateLanding+"不相同!------");
+            ret.put("status", "99");
+            ret.put("statusDesc", "渠道编码与着陆页配置渠道不相同!");
+            return ret;
+        }
+        // 着陆页配置代码修改  20190621 add by nxl  end
 
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/

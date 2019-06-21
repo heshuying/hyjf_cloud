@@ -402,4 +402,10 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	void insertUtmReg(int userId, String utmId);
+	/**
+	 * 根据着陆页id查找移动端着陆页配置 add by nxl
+	 * @param landingId
+	 * @return
+	 */
+	TemplateDispose selectTemplateDisposeById(Integer landingId);
 }

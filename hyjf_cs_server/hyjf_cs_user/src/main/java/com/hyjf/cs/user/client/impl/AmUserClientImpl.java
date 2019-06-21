@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -13,6 +14,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -1334,5 +1336,19 @@ public class AmUserClientImpl implements AmUserClient {
 	public void getBankOpenAccountForCrmRepair() {
 		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
 		restTemplate.getForEntity(url, String.class).getBody();
+	}
+	/**
+	 * 根据着陆页id查找移动端着陆页配置 add by nxl
+	 * @param landingId
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeVO selectTemplateDisposeById(Integer landingId) {
+		TemplateDisposeResponse response = restTemplate
+				.getForEntity(userService+"/user/selectTemplateDisposeById/"+landingId, TemplateDisposeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

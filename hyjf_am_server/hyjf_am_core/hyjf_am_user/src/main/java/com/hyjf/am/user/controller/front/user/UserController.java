@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
@@ -18,6 +19,7 @@ import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -1137,4 +1139,24 @@ public class UserController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据着陆页id查找移动端着陆页配置 add by nxl
+     * @param landingId
+     * @return
+     */
+    @GetMapping("/selectTemplateDisposeById/{landingId}")
+    public TemplateDisposeResponse selectTemplateDisposeById(@PathVariable Integer landingId){
+        TemplateDisposeResponse response = new TemplateDisposeResponse();
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        TemplateDisposeVO templateDisposeVO = new TemplateDisposeVO();
+        TemplateDispose templateDispose =userService.selectTemplateDisposeById(landingId);
+        if(null!=templateDispose){
+            BeanUtils.copyProperties(templateDispose, templateDisposeVO);
+            response.setResult(templateDisposeVO);
+            response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
+        }
+        return response;
+    }
 }

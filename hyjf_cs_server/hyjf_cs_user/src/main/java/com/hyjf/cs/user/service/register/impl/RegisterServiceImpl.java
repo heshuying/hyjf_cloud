@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -854,5 +855,15 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     @Override
     public void sendWbsMQ(WbsRegisterMqVO wbsRegisterMqVO) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,MQConstant.WBS_REGISTER_TAG,UUID.randomUUID().toString(), wbsRegisterMqVO),1);
+    }
+
+    /**
+     * 根据着陆页id查找移动端着陆页配置 add by nxl
+     * @param landingId
+     * @return
+     */
+    @Override
+    public TemplateDisposeVO selectTemplateDisposeById(Integer landingId) {
+        return amUserClient.selectTemplateDisposeById(landingId);
     }
 }
