@@ -27,6 +27,7 @@ public class BorrowInvestCustomizeExtVO{
      */
     private String borrowNid;
 
+
     /**
      * 投资订单号
      *
@@ -66,12 +67,23 @@ public class BorrowInvestCustomizeExtVO{
      */
     private Integer tenderUserAttribute;
 
+    private String tenderUserAttributeStr;
+
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
+    private String borrowUserName;
+
     /**
      * 推荐人用户属性
      *
      * @mbggenerated
      */
     private Integer inviteUserAttribute;
+
+    private String inviteUserAttributeStr;
 
 
     /**
@@ -118,8 +130,12 @@ public class BorrowInvestCustomizeExtVO{
 
 
 
-    //出借时渠道
-    private String utmName;
+    /**
+     * 出借人渠道来源（出借时）
+     *
+     * @mbggenerated
+     */
+    private Integer tenderUserUtmId;
 
     //当前渠道
     private String utmNameNow;
@@ -130,14 +146,6 @@ public class BorrowInvestCustomizeExtVO{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getUtmName() {
-        return utmName;
-    }
-
-    public void setUtmName(String utmName) {
-        this.utmName = utmName;
     }
 
     public String getBorrowNid() {
@@ -258,5 +266,37 @@ public class BorrowInvestCustomizeExtVO{
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public String getTenderUserAttributeStr() {
+        return tenderUserAttributeStr;
+    }
+
+    public void setTenderUserAttributeStr(String tenderUserAttributeStr) {
+        this.tenderUserAttributeStr = tenderUserAttributeStr;
+    }
+
+    public String getBorrowUserName() {
+        return borrowUserName;
+    }
+
+    public void setBorrowUserName(String borrowUserName) {
+        this.borrowUserName = borrowUserName;
+    }
+
+    public String getInviteUserAttributeStr() {
+        return inviteUserAttributeStr;
+    }
+
+    public void setInviteUserAttributeStr(String inviteUserAttributeStr) {
+        this.inviteUserAttributeStr = inviteUserAttributeStr;
+    }
+
+    public Integer getTenderUserUtmId() {
+        return tenderUserUtmId;
+    }
+
+    public void setTenderUserUtmId(Integer tenderUserUtmId) {
+        this.tenderUserUtmId = tenderUserUtmId;
     }
 }

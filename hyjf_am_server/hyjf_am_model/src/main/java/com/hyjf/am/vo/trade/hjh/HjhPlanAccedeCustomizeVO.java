@@ -57,8 +57,12 @@ public class HjhPlanAccedeCustomizeVO {
     private String inviteUserBranchname;
     private String inviteUserDepartmentname;
 
-    //出借时渠道
-    private String utmName;
+    /**
+     * 出借人渠道来源（出借时）
+     *
+     * @mbggenerated
+     */
+    private Integer tenderUserUtmId;
 
     //当前渠道
     private String utmNameNow;
@@ -159,12 +163,12 @@ public class HjhPlanAccedeCustomizeVO {
         this.inviteUserDepartmentname = inviteUserDepartmentname;
     }
 
-    public String getUtmName() {
-        return utmName;
+    public Integer getTenderUserUtmId() {
+        return tenderUserUtmId;
     }
 
-    public void setUtmName(String utmName) {
-        this.utmName = utmName;
+    public void setTenderUserUtmId(Integer tenderUserUtmId) {
+        this.tenderUserUtmId = tenderUserUtmId;
     }
 
     public String getUtmNameNow() {

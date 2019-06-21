@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ import java.util.UUID;
  * @author cui
  * @version PlanTenderChangeUtmController, v0.1 2019/6/18 14:44
  */
-@ApiOperation(value = "产品中心-汇计划-加入明细2",notes = "产品中心-汇计划-加入明细2")
+@Api(value = "产品中心-汇计划-加入明细2",tags = "产品中心-汇计划-加入明细2")
 @RestController
 @RequestMapping(value = "/hyjf-admin/planutm")
 public class PlanTenderChangeUtmController extends BaseController {

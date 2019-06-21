@@ -58,22 +58,20 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
         vo.setInviteUserRegionname(hjhAccede.getInviteUserRegionname());
         vo.setInviteUserBranchname(hjhAccede.getInviteUserBranchname());
         vo.setInviteUserDepartmentname(hjhAccede.getInviteUserDepartmentname());
-
-        Integer tenderUserUtmId=hjhAccede.getTenderUserUtmId();
-        if(null!=tenderUserUtmId){
-            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
-
-            if(utmPlat!=null){
-                vo.setUtmName(utmPlat.getSourceName());
-            }else{
-                throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
-            }
-        }
+        vo.setTenderUserUtmId(hjhAccede.getTenderUserUtmId());
 
         UtmPlat utmPlatt=utmPlatService.getUtmByUserId(hjhAccede.getUserId());
 
         if(utmPlatt!=null){
             vo.setUtmNameNow(utmPlatt.getSourceName());
+        }
+
+        if(hjhAccede.getUserAttribute()!=null && hjhAccede.getUserAttribute().intValue()<userAttribute.length){
+            vo.setUserAttribute(userAttribute[hjhAccede.getUserAttribute().intValue()]);
+        }
+
+        if(hjhAccede.getInviteUserAttribute()!=null && hjhAccede.getInviteUserAttribute().intValue()<userAttribute.length){
+            vo.setRecommendAttr(userAttribute[hjhAccede.getInviteUserAttribute()]);
         }
     }
 
@@ -89,4 +87,6 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
 
         return tenderUtmChangeLogMapper.insertSelective(log);
     }
+
+    private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};
 }

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.am.trade.dao.mapper.auto.TenderUtmChangeLogMapper;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -248,17 +247,15 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             vo.setCreateTimeStr(sdf.format(vo.getCreateTime()));
         }
 
-        if(null!=tenderUserUtmId){
-            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
+        UtmPlat utmPlatt=utmPlatService.getUtmByUserId(vo.getUserId());
 
-            if(utmPlat!=null){
-                vo.setUtmName(utmPlat.getSourceName());
-            }else{
-                throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
-            }
+        if(vo.getTenderUserAttribute()!=null && vo.getTenderUserAttribute().intValue()<userAttribute.length){
+                vo.setTenderUserAttributeStr(userAttribute[vo.getTenderUserAttribute()]);
         }
 
-        UtmPlat utmPlatt=utmPlatService.getUtmByUserId(vo.getUserId());
+        if(vo.getInviteUserAttribute()!=null && vo.getTenderUserAttribute().intValue()<userAttribute.length){
+            vo.setInviteUserAttributeStr(userAttribute[vo.getInviteUserAttribute()]);
+        }
 
         if(utmPlatt!=null){
             vo.setUtmNameNow(utmPlatt.getSourceName());
@@ -278,4 +275,6 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
 
         return tenderUtmChangeLogMapper.insertSelective(log);
     }
+
+    private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};
 }
