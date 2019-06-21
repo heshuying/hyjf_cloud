@@ -300,7 +300,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 出借金额
             data.put("assignCapital",bean.getAssignCapital());
             // 历史回报
-            data.put("assignInterest",bean.getAssignInterest());
+//            data.put("assignInterest",bean.getAssignInterest());
+            data.put("assignInterest",bean.getAssignAccount().subtract(bean.getAssignPay()));
             WebResult<Map<String, Object>> result = new WebResult();
             result.setData(data);
             return result;
