@@ -17,7 +17,7 @@
            select
         (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where status = 1 and operating=1 and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as scalePerformanceNew,
 
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where status = 1 andoperating=1 and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as scalePerformanceOld
+        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where status = 1 and operating=1 and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as scalePerformanceOld
 
         from ht_user_operate_list LIMIT 0,1
     </select>
