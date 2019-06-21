@@ -104,10 +104,10 @@ public class AsteriskProcessUtil {
      * @return
      */
     public static String getAsteriskedMobile(String mobile){
-        if (StringUtils.isEmpty(mobile) || (mobile.length() != 11)) {
+        if (StringUtils.isEmpty(mobile)) {
             return mobile;
         }
-        return mobile.replaceAll("(\\d{1})\\d{9}(\\d{1})", "$1*********$2");
+        return mobile.replaceAll("(?<=\\w{1})\\w(?=\\w{1})", "*");
     }
 
     /**
@@ -131,9 +131,49 @@ public class AsteriskProcessUtil {
         return cnName.substring(0,1)+stars;
     }
 
+    /**
+     * 身份证号脱敏( 前1后1显示，其余脱敏显示*)
+     * @param idcard
+     */
+    public static String getAsteriskedIdcard(String idcard){
+        if (StringUtils.isEmpty(idcard)){
+            return idcard;
+        }
+        return idcard.replaceAll("(?<=\\w{1})\\w(?=\\w{1})", "*");
+    }
+
+    /**
+     * 银行卡号脱敏(显示后四位，其余脱敏显示*)
+     * @param bankCard
+     */
+    public static String getAsteriskedBankCard(String bankCard){
+        if (StringUtils.isEmpty(bankCard)){
+            return bankCard;
+        }
+        return bankCard.replaceAll("\\w(?=\\w{4})", "*");
+    }
+
+
+    /**
+     * 邮箱脱敏(显示a****@及后面域名)
+     * @param email
+     */
+    public static String getAsteriskedEmail(String email){
+        if (StringUtils.isEmpty(email)){
+            return email;
+        }
+        String subStr = email.substring(1,email.indexOf("@"));
+        String stars="";
+        for (int i = 0; i < subStr.length(); i++) {
+            stars+="*";
+        }
+        String suffix = email.substring(email.indexOf("@"));
+        return email.substring(0,1)+stars+suffix;
+    }
+
 
     public static void main(String[] args) {
-        System.out.println(AsteriskProcessUtil.getAsteriskedCnName(""));
+        System.out.println(AsteriskProcessUtil.getAsteriskedEmail(""));
     }
 
 }
