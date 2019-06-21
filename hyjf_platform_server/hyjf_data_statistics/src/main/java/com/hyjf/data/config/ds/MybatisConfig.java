@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Configuration
-@MapperScan("com.hyjf.data.market.mapper*")
+@MapperScan("com.hyjf.data.market.mapper")
 @AutoConfigureAfter({ DataSourceAutoConfiguration.class})
 public class MybatisConfig {
 	// private static Logger logger = Logger.getLogger(MybatisConfig.class);
