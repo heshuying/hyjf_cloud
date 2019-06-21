@@ -331,7 +331,7 @@ public class AppHomeServiceImpl implements AppHomeService {
     private boolean isApp4(String version) {
         String version4 = "0";
         if (version != null && version.length() >= 1) {
-            version4 = version.substring(0, 1);
+            version4 = version.split("\\.")[0];
         }
         try {
             if (Integer.parseInt(version4) >= 4) {
