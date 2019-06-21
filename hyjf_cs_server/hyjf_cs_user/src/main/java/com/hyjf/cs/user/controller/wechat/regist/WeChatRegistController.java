@@ -381,7 +381,7 @@ public class WeChatRegistController extends BaseUserController {
         // 着陆页id
         String landingId = bean.getLandingId();
         logger.info("landingId: {}", bean.getLandingId());
-        if(StringUtils.isNotBlank(landingId)){
+        if(StringUtils.isBlank(landingId)){
             ret.put("status", "99");
             ret.put("statusDesc", "缺少着陆页id!");
             return ret;
