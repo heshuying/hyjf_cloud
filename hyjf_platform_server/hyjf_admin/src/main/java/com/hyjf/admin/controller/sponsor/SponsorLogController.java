@@ -62,8 +62,9 @@ public class SponsorLogController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @PostMapping(value = "/selectSponsorLog")
-    private AdminResult selectSponsorLog(@RequestBody SponsorLogRequest sponsorLogRequest) {
-
+    private AdminResult selectSponsorLog(HttpServletRequest request,@RequestBody SponsorLogRequest sponsorLogRequest) {
+		sponsorLogRequest.setAdminUserName(this.getUser(request).getUsername());
+		sponsorLogRequest.setAdminUserId(Integer.valueOf(this.getUser(request).getId()));
 		SponsorLogResponse rs =  sponsorLogService.selectSponsorLog(sponsorLogRequest);
 	   	 if(!Response.isSuccess(rs)) {
 			 return new AdminResult(AdminResult.FAIL, rs.getMessage());
