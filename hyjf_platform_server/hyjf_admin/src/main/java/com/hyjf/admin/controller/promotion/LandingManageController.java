@@ -56,9 +56,9 @@ public class LandingManageController extends BaseController {
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult utmListInit(HttpServletRequest request, HttpServletResponse response) {
-        // 模板类型 todo redis 名修改
-        Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
-        List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
+        // 模板类型
+        Map<String, String> tempType = CacheUtil.getParamNameMap("TEMP_TYPE");
+        List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(tempType);
         AdminResult adminResult = new AdminResult();
         adminResult.setData(listUserRoles);
         return adminResult;
@@ -71,6 +71,7 @@ public class LandingManageController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<TemplateConfigCustomizeVO>> getUserslist(@RequestBody LandingManagerRequestBean landingManagerRequestBean, HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Map<String, String> tempType = CacheUtil.getParamNameMap("TEMP_TYPE");
         LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
         BeanUtils.copyProperties(landingManagerRequestBean, landingManagerRequest);
         TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
@@ -87,6 +88,7 @@ public class LandingManageController extends BaseController {
                 }
                 String strCreate = sdf.format(templateConfigVO.getCreateTime());
                 templateConfigVO.setCreateTimeStr(strCreate);
+                templateConfigVO.setTempTypeStr(tempType.getOrDefault(templateConfigVO.getTempType().toString(), null));
             }
         }
         List<TemplateConfigCustomizeVO> templateConfigCustomizeVOS = CommonUtils.convertBeanList(templateConfigVOList, TemplateConfigCustomizeVO.class);
@@ -111,9 +113,9 @@ public class LandingManageController extends BaseController {
     }
 
     @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")
-    @PostMapping("/insertTemplate")
+    @PostMapping("/insertOrUpdateTemplate")
     @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
-    public AdminResult insertTemplate(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
+    public AdminResult insertOrUpdateTemplate(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
         //根据id判断，如存在，则为修改，如不存在，则为新增
         LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -135,9 +137,9 @@ public class LandingManageController extends BaseController {
     }
 
     @ApiOperation(value = "删除信息", notes = "删除信息")
-    @PostMapping("/deleteaction")
+    @PostMapping("/deleteTemplate")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
+    public AdminResult deleteTemplate(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
         AdminResult adminResult = new AdminResult();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
         if (null != landingManagerRequestBean.getId()) {

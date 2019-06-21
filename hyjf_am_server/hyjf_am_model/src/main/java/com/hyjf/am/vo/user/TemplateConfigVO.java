@@ -162,6 +162,8 @@ public class TemplateConfigVO extends BaseVO implements Serializable {
 
     private String createTimeStr;
 
+    private String tempTypeStr;
+
 
     public Integer getId() {
         return id;
@@ -337,5 +339,13 @@ public class TemplateConfigVO extends BaseVO implements Serializable {
 
     public void setIsJumt(Integer isJumt) {
         this.isJumt = isJumt;
+    }
+
+    public String getTempTypeStr() {
+        return tempTypeStr;
+    }
+
+    public void setTempTypeStr(String tempTypeStr) {
+        this.tempTypeStr = tempTypeStr;
     }
 }

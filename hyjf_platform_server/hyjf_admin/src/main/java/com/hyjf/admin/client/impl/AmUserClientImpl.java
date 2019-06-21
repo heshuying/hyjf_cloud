@@ -3160,7 +3160,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public Boolean deleteTemplate(int tempId) {
 		String url = "http://AM-ADMIN/am-user/landing/deleteTemplate/"+tempId ;
 		IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
-		if (response == null || !Response.isSuccess(response)) {
+		if (response != null && Response.isSuccess(response)) {
 			return true;
 		}
 		return false;

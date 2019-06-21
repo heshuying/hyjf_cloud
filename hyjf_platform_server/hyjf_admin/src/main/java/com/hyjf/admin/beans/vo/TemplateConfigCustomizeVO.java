@@ -57,6 +57,8 @@ public class TemplateConfigCustomizeVO extends BaseVO implements Serializable {
 
     @ApiModelProperty(value = "添加时间")
     private String createTimeStr;
+    @ApiModelProperty(value = "模板类型显示")
+    private String tempTypeStr;
 
     public Integer getId() {
         return id;
@@ -104,5 +106,13 @@ public class TemplateConfigCustomizeVO extends BaseVO implements Serializable {
 
     public void setStatusStr(String statusStr) {
         this.statusStr = statusStr;
+    }
+
+    public String getTempTypeStr() {
+        return tempTypeStr;
+    }
+
+    public void setTempTypeStr(String tempTypeStr) {
+        this.tempTypeStr = tempTypeStr;
     }
 }
