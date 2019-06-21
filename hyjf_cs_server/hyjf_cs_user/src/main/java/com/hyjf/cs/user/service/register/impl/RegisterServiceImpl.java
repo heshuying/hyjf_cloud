@@ -857,6 +857,12 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,MQConstant.WBS_REGISTER_TAG,UUID.randomUUID().toString(), wbsRegisterMqVO),1);
     }
 
+	@Override
+	public TemplateDisposeVO getTemplateDispose(String templateId) {
+
+		return amUserClient.getTemplateDispose( templateId);
+	}
+
     /**
      * 根据着陆页id查找移动端着陆页配置 add by nxl
      * @param landingId

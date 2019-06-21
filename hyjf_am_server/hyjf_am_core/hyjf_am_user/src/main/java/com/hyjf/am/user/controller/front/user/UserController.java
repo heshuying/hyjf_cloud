@@ -1138,6 +1138,19 @@ public class UserController extends BaseController {
 
         return response;
     }
+    /**
+     * 根据渠道号检索渠道是否存在
+     *
+     * @param utmId
+     * @return
+     */
+    @RequestMapping("/getTemplateDispose/{templateId}")
+    public UserResponse getTemplateDispose(@PathVariable String templateId) {
+    	UserResponse ur=new UserResponse();
+    	TemplateDisposeVO td=userService.getTemplateDispose(templateId);
+    	ur.setTemplateDispose(td);
+        return ur;
+    }
 
     /**
      * 根据着陆页id查找移动端着陆页配置 add by nxl

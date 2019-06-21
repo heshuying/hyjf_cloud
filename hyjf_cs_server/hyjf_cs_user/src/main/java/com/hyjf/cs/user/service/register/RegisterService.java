@@ -167,6 +167,14 @@ public interface RegisterService extends BaseUserService {
      * @throws MQException
      */
     void sendWbsMQ(WbsRegisterMqVO wbsRegisterMqVO) throws MQException;
+    /**
+     * 登录操作
+     *
+     * @param
+     * @return
+     * @auth dongzeshan
+     */
+    TemplateDisposeVO getTemplateDispose(String templateId);
 
     /**
      * 根据着陆页id查找移动端着陆页配置 add by nxl

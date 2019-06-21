@@ -626,4 +626,50 @@ public class WeChatRegistController extends BaseUserController {
             return "";
         }
     }
+    
+    /**
+     * 点击下一步验证
+     * @param request
+     * @param response
+     * @return
+     */
+    @ApiOperation(value = "-移动端着陆页配置",notes = "移动端着陆页配置")
+    @PostMapping(value = "/templateDispose.do")
+    public JSONObject templateDispose(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+
+        ret.put("status", "000");
+        ret.put("statusDesc", "成功");
+
+        String templateId = request.getParameter("templateId");
+        if (Validator.isNull(templateId)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "templateId不能为空");
+            return ret;
+        }
+        JSONObject data = new JSONObject();
+        TemplateDisposeVO rt = registService.getTemplateDispose(templateId);
+        if (rt==null) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "id无效");
+            return ret;
+        }
+        data.put("landingId", rt.getId());
+        data.put("title",rt.getTempName());
+        data.put("name",rt.getUtmName() );
+        data.put("utmId", rt.getUtmId());
+        data.put("btnText", rt.getButtonText());
+        data.put("topImg",rt.getTopImg());
+        data.put("bottomImg", rt.getBottomImg());
+        data.put("midColor", rt.getBackgroundColor());
+        data.put("mainColor",rt.getDominantColor());
+        data.put("subColor",rt.getSecondaryColor());
+        data.put("alertTitle", rt.getLayerName());
+        data.put("alertImg", rt.getLayerImg());
+        data.put("alertOpen", rt.getIsJumt());
+        data.put("alertUrl", rt.getJumtUrl());
+        ret.put("data", data);
+        return ret;
+
+    }
 }

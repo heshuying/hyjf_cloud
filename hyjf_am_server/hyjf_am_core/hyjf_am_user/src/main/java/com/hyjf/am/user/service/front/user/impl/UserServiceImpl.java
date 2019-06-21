@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
+import com.hyjf.am.user.dao.mapper.auto.TemplateDisposeMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.ScreenDataCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -17,6 +18,7 @@ import com.hyjf.am.user.mq.base.CommonProducer;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.*;
@@ -1787,6 +1789,13 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void insertAppUtmReg(AppUtmReg entity) {
         appUtmRegMapper.insertSelective(entity);
     }
+
+	@Override
+	public TemplateDisposeVO getTemplateDispose(String templateId) {
+		TemplateDisposeVO vo=new TemplateDisposeVO();
+		 BeanUtils.copyProperties(templateDisposeMapper.selectByPrimaryKey(Integer.valueOf(templateId)), vo);
+		return vo;
+	}
 
     /**
      * 根据着陆页id查找移动端着陆页配置 add by nxl

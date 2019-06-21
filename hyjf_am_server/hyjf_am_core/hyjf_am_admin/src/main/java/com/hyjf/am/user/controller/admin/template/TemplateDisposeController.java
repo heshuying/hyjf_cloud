@@ -10,6 +10,9 @@ import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
 import com.hyjf.am.user.service.admin.template.TemplateDisposeService;
 
+import io.swagger.annotations.Api;
+
+@Api(tags = "推广中心-移动端着陆页配置")
 @RestController
 @RequestMapping("/am-user/templateDispose")
 public class TemplateDisposeController {

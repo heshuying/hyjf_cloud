@@ -1337,6 +1337,16 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
 		restTemplate.getForEntity(url, String.class).getBody();
 	}
+
+	@Override
+	public TemplateDisposeVO getTemplateDispose(String templateId) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/getTemplateDispose/"+ templateId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getTemplateDispose();
+		}
+		return null;
+	}
 	/**
 	 * 根据着陆页id查找移动端着陆页配置 add by nxl
 	 * @param landingId

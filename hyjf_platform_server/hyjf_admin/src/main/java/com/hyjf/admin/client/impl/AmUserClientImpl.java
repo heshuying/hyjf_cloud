@@ -3165,4 +3165,60 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return false;
 	}
+	/**
+	 * 查询着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN//am-user/templateDisposeg/templateDisposeList" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 修改着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse updateTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN//am-user/templateDisposeg/updateTemplateDispose" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 插入着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN//am-user/templateDisposeg/insertTemplateDispose" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 删除或禁用着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN//am-user/templateDisposeg/deleteTemplateDispose" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
 }
