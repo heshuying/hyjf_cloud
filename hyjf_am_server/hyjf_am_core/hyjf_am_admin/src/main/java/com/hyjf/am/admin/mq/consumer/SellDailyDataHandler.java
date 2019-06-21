@@ -262,7 +262,7 @@ public class SellDailyDataHandler {
 		}
 
 		if (qlSellDaily != null) {
-			logger.info("千乐数据qlSellDaily: {}", qlSellDaily.print());
+			logger.info("千乐数据qlSellDaily: {}, column is: {}", qlSellDaily.print(), column);
 			dto.setQlSellDaily(setValue(qlSellDaily, QIANLE_DIVISION_NAME, "千乐", 2, 0));
 		}
 		return dto;
