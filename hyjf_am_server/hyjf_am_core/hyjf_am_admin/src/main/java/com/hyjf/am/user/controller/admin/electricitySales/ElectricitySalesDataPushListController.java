@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.CustomerServiceChannel;
 import com.hyjf.am.config.dao.model.auto.CustomerServiceRepresentiveConfig;
 import com.hyjf.am.config.service.config.CustomerServiceRepresentiveConfigService;
 import com.hyjf.am.response.Response;
@@ -26,6 +27,7 @@ import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.service.admin.finance.RechargeManagementService;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.controller.admin.promotion.ChannelController;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.ElectricitySalesDataPushList;
 import com.hyjf.am.user.dao.model.auto.User;
@@ -35,9 +37,11 @@ import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.service.admin.electricitySales.ElectricitySalesDataPushListService;
 import com.hyjf.am.user.service.admin.exception.BorrowRegistRepairService;
 import com.hyjf.am.user.service.admin.promotion.UtmRegService;
+import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.paginator.Paginator;
@@ -53,7 +57,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController(value = "electricitySalesDataPushListController")
 @RequestMapping("/am-user/electricitySales")
 public class ElectricitySalesDataPushListController extends BaseController {
-
+	   private Logger logger = LoggerFactory.getLogger(ElectricitySalesDataPushListController.class);
     @Autowired
     private  ElectricitySalesDataPushListService electricitySalesDataPushListService;
     @Autowired
@@ -66,10 +70,12 @@ public class ElectricitySalesDataPushListController extends BaseController {
     private UtmRegService utmRegService;
     @Autowired
     private BorrowRegistRepairService borrowRegistRepairService;
-    @Autowired
-    private UtmPlatService utmPlatService;
+//    @Autowired
+//    private UtmPlatService utmPlatService;
     @Autowired
     private RechargeManagementService rechargeManagementService;
+    @Autowired
+    private UtmService utmService;
     /**
      * 线下修改信息同步查询列表list
      * @auth dzs
@@ -140,7 +146,7 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			record.setUserId(user.getUserId());
 			record.setMobile(user.getMobile());
 			record.setRoleId(userinfo.getRoleId());
-			record.setTrueName(record.getTrueName());
+			record.setTrueName(userinfo.getTruename());
 			record.setSex(userinfo.getSex());
 			record.setAge(getAgeByCertId(userinfo.getIdcard()));
 			record.setBirthday(userinfo.getBirthday());
@@ -150,45 +156,49 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			  // 判断用户渠道是否是推送禁用
             // 判断用户是否是PC推广渠道用户
             UtmReg utmReg = this.utmRegService.selectUtmRegByUserId(user.getUserId());
+            logger.error("测试代码++++++++++++++++++++++++++++++++++++++++5+++++"+utmReg.toString());
             // 推广渠道
-            UtmPlat utmPlatVO = null;
+            UtmChannelVO utm = null;
             if (utmReg != null) {
                 // 如果是PC推广渠道,判断渠道是否是推送禁用
-                Integer utmId = utmReg.getUtmId();
+//               Integer utmId = utmReg.getUtmId();
+                utm = utmService.getUtmByUtmId(utmReg.getUtmId().toString());
+
                 // 根据utmId查询推广渠道
-                utmPlatVO = this.utmPlatService.getUtmPlat(utmId);
-                if (utmPlatVO != null) {
+//                utmPlatVO = this.utmPlatService.getUtmPlat(utm.getSourceId());
+
+//                if (utmPlatVO != null) {
                     // 渠道ID
-                    Integer sourceId = utmPlatVO.getSourceId();
+//                    Integer sourceId = utmPlatVO.getSourceId();
 //                    // 根据sourceId查询该渠道是否被禁用
-                    CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
-                    if (customerServiceChannel != null) {
-                        // 如果被禁用了,continue
-        		        response.setRtn(Response.ERROR);
-        		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
-        		        return response;
-                    }
-                }
+//                    CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
+//                    if (customerServiceChannel != null) {
+//                        // 如果被禁用了,continue
+//        		        response.setRtn(Response.ERROR);
+//        		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
+//        		        return response;
+//                    }
+//                }
             }
             // 判断用户是否是App推广渠道用户
             AppUtmReg appUtmReg = this.utmRegService.selectAppUtmRegByUserId(user.getUserId());
-            if (appUtmReg != null) {
-                // 如果是App推广渠道的用户
-                Integer sourceId = appUtmReg.getSourceId();
-                // 根据sourceId查询该渠道是否被禁用
-                CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
-                if (customerServiceChannel != null) {
-                    // 如果被禁用了,continue
-    		        response.setRtn(Response.ERROR);
-    		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
-    		        return response;
-                }
-            }
+//            if (appUtmReg != null) {
+//                // 如果是App推广渠道的用户
+//                Integer sourceId = appUtmReg.getSourceId();
+//                // 根据sourceId查询该渠道是否被禁用
+//                CustomerServiceChannel customerServiceChannel = this.customerServiceRepresentiveConfigService.selectCustomerServiceChannelBySourceId(sourceId);
+//                if (customerServiceChannel != null) {
+//                    // 如果被禁用了,continue
+//    		        response.setRtn(Response.ERROR);
+//    		        response.setMessage("用户渠道被禁用,该用户"+electricitySalesDataPushListVO.getUserName());
+//    		        return response;
+//                }
+//            }
             
             // PC推广渠道
-    		record.setPcSourceId(utmPlatVO == null ? null : utmPlatVO.getSourceId());
+    		record.setPcSourceId(utm == null ? null : utm.getSourceId());
             // PC推广渠道
-    		record.setPcSourceName(utmPlatVO == null ? null : utmPlatVO.getSourceName());
+    		record.setPcSourceName(utm == null ? null : utm.getUtmSource());
             // App推广渠道
     		record.setAppSourceId(appUtmReg == null ? null : appUtmReg.getSourceId());
             // App推广渠道
