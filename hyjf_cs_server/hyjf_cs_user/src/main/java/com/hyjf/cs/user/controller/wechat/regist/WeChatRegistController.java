@@ -612,7 +612,7 @@ public class WeChatRegistController extends BaseUserController {
         JSONObject ret = new JSONObject();
 
         ret.put("status", "000");
-        ret.put("statusDesc", "手机号校验通过");
+        ret.put("statusDesc", "成功");
 
         String templateId = request.getParameter("templateId");
         if (Validator.isNull(templateId)) {
@@ -637,7 +637,7 @@ public class WeChatRegistController extends BaseUserController {
         data.put("midColor", rt.getBackgroundColor());
         data.put("mainColor",rt.getDominantColor());
         data.put("subColor",rt.getSecondaryColor());
-        data.put("alertTitle ", rt.getLayerName());
+        data.put("alertTitle", rt.getLayerName());
         data.put("alertImg", rt.getLayerImg());
         data.put("alertOpen", rt.getIsJumt());
         data.put("alertUrl", rt.getJumtUrl());
