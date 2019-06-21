@@ -431,7 +431,7 @@
         CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
         hyjf_trade.ht_borrow_credit bc
-        INNER JOIN ht_trade.ht_borrow_recover r on bc.tender_nid = r.nid
+        INNER JOIN hyjf_trade.ht_borrow_recover r on bc.tender_nid = r.nid
 
         LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
@@ -460,7 +460,7 @@
         CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
         hyjf_trade.ht_borrow_credit bc
-        INNER JOIN ht_trade.ht_borrow_recover r on bc.tender_nid = r.nid
+        INNER JOIN hyjf_trade.ht_borrow_recover r on bc.tender_nid = r.nid
 
         LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
