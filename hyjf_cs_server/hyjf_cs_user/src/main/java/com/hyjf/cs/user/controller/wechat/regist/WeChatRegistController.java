@@ -381,30 +381,25 @@ public class WeChatRegistController extends BaseUserController {
         // 着陆页id
         String landingId = bean.getLandingId();
         logger.info("landingId: {}", bean.getLandingId());
-        if(StringUtils.isBlank(landingId)){
-            ret.put("status", "99");
-            ret.put("statusDesc", "缺少着陆页id!");
-            return ret;
-        }
-        Integer intLandingId = Integer.parseInt(landingId);
-        // 根据着陆页id获取推荐渠道id
-        //
-        TemplateDisposeVO templateDisposeVO = registService.selectTemplateDisposeById(intLandingId);
-        if(null==templateDisposeVO){
-            logger.info("------根据着陆页id："+landingId+" 未能查找到该着陆页配置信息!------");
-            ret.put("status", "99");
-            ret.put("statusDesc", "未能查找到着陆页配置信息!");
-            return ret;
-        }
-        String templateLanding = templateDisposeVO.getUtmId().toString();
-        if(!bean.getUtmId().equals(templateLanding)){
-            logger.info("------渠道id传入参数为："+bean.getUtmId()+" 与着陆页配置渠道id"+templateLanding+"不相同!------");
-            ret.put("status", "99");
-            ret.put("statusDesc", "渠道编码与着陆页配置渠道不相同!");
-            return ret;
+        if(StringUtils.isNotBlank(landingId)&&StringUtils.isNotBlank(bean.getUtmId())){
+            Integer intLandingId = Integer.parseInt(landingId);
+            // 根据着陆页id获取推荐渠道id
+            TemplateDisposeVO templateDisposeVO = registService.selectTemplateDisposeById(intLandingId);
+            if(null==templateDisposeVO){
+                logger.info("------根据着陆页id："+landingId+" 未能查找到该着陆页配置信息!------");
+                ret.put("status", "99");
+                ret.put("statusDesc", "未能查找到着陆页配置信息!");
+                return ret;
+            }
+            String templateLanding = templateDisposeVO.getUtmId().toString();
+            if(!bean.getUtmId().equals(templateLanding)){
+                logger.info("------渠道id传入参数为："+bean.getUtmId()+" 与着陆页配置渠道id"+templateLanding+"不相同!------");
+                ret.put("status", "99");
+                ret.put("statusDesc", "渠道编码与着陆页配置渠道不相同!");
+                return ret;
+            }
         }
         // 着陆页配置代码修改  20190621 add by nxl  end
-
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
         WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType,null);
