@@ -110,9 +110,30 @@ public class AsteriskProcessUtil {
         return mobile.replaceAll("(\\d{1})\\d{9}(\\d{1})", "$1*********$2");
     }
 
+    /**
+     * 姓名脱敏(只显示第一个字，其余脱敏显示*)
+     * @param cnName
+     * @return
+     */
+    public static String getAsteriskedCnName(String cnName){
+        if (StringUtils.isEmpty(cnName)){
+            return cnName;
+        }
+
+        String subStr = cnName.substring(1,cnName.length());
+        if (StringUtils.isEmpty(subStr)){
+            return cnName;
+        }
+        String stars = "";
+        for (int i = 0; i < subStr.length(); i++) {
+            stars+="*";
+        }
+        return cnName.substring(0,1)+stars;
+    }
+
 
     public static void main(String[] args) {
-        System.out.println(AsteriskProcessUtil.getAsteriskedMobile(""));
+        System.out.println(AsteriskProcessUtil.getAsteriskedCnName(""));
     }
 
 }
