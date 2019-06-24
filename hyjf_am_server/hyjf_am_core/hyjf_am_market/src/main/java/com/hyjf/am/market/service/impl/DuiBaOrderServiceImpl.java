@@ -151,7 +151,6 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         request.setType(1);
         Integer pointsUseTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
         duiBaPointsDetailVO.setCreditsUsed(pointsUseTotal.toString());
-        // 条数>0 做业务处理，否则就直接返回
         // 设置查询时间范围 如果month=0，那么是全年查询，否则是单月查询
         if(Integer.valueOf(month) == 0){
             request.setStartTime(DateUtils.getMinYearDate(year.concat("-01-01")));
@@ -162,6 +161,7 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         }
         // 还原原始请求类型，并获取明细条数
         request.setType(requestType);
+        // 条数 >0 做业务处理，否则就直接返回
         Integer count = duiBaOrderCustomizeMapper.countPointsDetail(request);
         if(count > 0){
             List<DuiBaPointsListDetailVO> resultList = new ArrayList<>();
