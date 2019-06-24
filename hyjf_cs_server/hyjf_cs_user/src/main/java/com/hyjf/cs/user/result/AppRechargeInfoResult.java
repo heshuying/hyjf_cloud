@@ -73,6 +73,20 @@ public class AppRechargeInfoResult extends BaseResultBean {
     private String transferGuideURL = "";
 
     /**
+     * 银行android应用市场链接
+     *
+     * @mbggenerated
+     */
+    private String androidMarket;
+
+    /**
+     * 银行ios应用市场链接
+     *
+     * @mbggenerated
+     */
+    private String iosMarket;
+
+    /**
      * 此处为属性说明
      */
     private static final long serialVersionUID = -3095160356825014456L;
@@ -255,5 +269,21 @@ public class AppRechargeInfoResult extends BaseResultBean {
 
     public void setHints(String hints) {
         this.hints = hints;
+    }
+
+    public String getAndroidMarket() {
+        return androidMarket;
+    }
+
+    public void setAndroidMarket(String androidMarket) {
+        this.androidMarket = androidMarket;
+    }
+
+    public String getIosMarket() {
+        return iosMarket;
+    }
+
+    public void setIosMarket(String iosMarket) {
+        this.iosMarket = iosMarket;
     }
 }
