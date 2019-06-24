@@ -122,6 +122,7 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "渠道详细信息", notes = "渠道详细信息")
     @GetMapping(value = "/registRecordUtmEditStr/{userId}", produces = "application/json; charset=utf-8")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_UPDATE})
     public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(@PathVariable String userId) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         registerRcordeRequest.setUserId(userId);
@@ -156,7 +157,8 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "渠道修改确认", notes = "渠道修改确认")
     @PostMapping(value = "/registRecordUtmEdit")
     @ResponseBody
-    public AdminResult editRegistRecordOne(HttpServletRequest request, @RequestBody RegistRcordRequestBean registRcordRequestBean) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_UPDATE})
+    public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
         registRcordRequestBean.setLoginUserId(adminSystemVO.getId());
