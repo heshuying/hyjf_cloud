@@ -156,7 +156,6 @@ public class ElectricitySalesDataPushListController extends BaseController {
 			  // 判断用户渠道是否是推送禁用
             // 判断用户是否是PC推广渠道用户
             UtmReg utmReg = this.utmRegService.selectUtmRegByUserId(user.getUserId());
-            logger.error("测试代码++++++++++++++++++++++++++++++++++++++++5+++++"+utmReg.toString());
             // 推广渠道
             UtmChannelVO utm = null;
             if (utmReg != null) {
