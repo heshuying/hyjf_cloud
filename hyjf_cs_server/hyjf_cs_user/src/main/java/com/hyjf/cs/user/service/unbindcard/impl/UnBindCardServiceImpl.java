@@ -215,7 +215,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         }
         if (!channel.contains(BankCallConstant.CHANNEL_PC)) {
             //返回路径
-            host= BankCommonUtil.getWjtFrontHost(systemConfig,bean.getPlatform());
+            host= BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform());
             logger.info("==========银行卡解绑，返回路径为："+host);
             errorPath = "/user/bankCard/unbind/result/failed";
             successPath = "/user/bankCard/unbind/result/success";
