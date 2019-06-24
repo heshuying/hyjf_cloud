@@ -9,7 +9,7 @@
     <!-- 本月运营部业绩完成分布 -->
     <select id="getAchievementDistributionList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
        select ROUND(IFNULL(SUM(money),0)/10000,0) as money , customer_group as customerGroup
-       from ht_user_operate_list where status = 1 and operating=1  and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY customer_group
+       from ht_user_operate_list where status = 1 and operating=1  and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') and customer_group is not null GROUP BY customer_group
     </select>
 
     <!-- 规模业绩 -->
