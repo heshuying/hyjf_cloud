@@ -3,7 +3,8 @@
  */
 package com.hyjf.data.controller.test;
 
-import com.hyjf.data.market.service.IHtAdsService;
+import com.hyjf.data.market.entity.HtActivityList;
+import com.hyjf.data.market.service.IHtActivityListService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "测试",tags = "测试")
 @RestController
 @Slf4j
-@RequestMapping("/hyjf_data_statistics")
+@RequestMapping("/hyjf")
 public class TestController {
     @Autowired
-    IHtAdsService iHtAdsService;
+    IHtActivityListService iHtActivityListService;
 
     /**
      * 测试 mybatisplus
      */
     @GetMapping("/test1")
-    public void testPlus(){
-        iHtAdsService.list();
+    public HtActivityList testPlus(){
+        return iHtActivityListService.selectById();
     }
 }

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author auto
- * @since 2019-06-20
+ * @since 2019-06-24
  */
 public interface HtActivityListMapper extends BaseMapper<HtActivityList> {
 

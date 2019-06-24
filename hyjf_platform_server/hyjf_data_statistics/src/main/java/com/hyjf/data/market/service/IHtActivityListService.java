@@ -9,8 +9,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author auto
- * @since 2019-06-20
+ * @since 2019-06-24
  */
 public interface IHtActivityListService extends IService<HtActivityList> {
 
+    HtActivityList selectById();
 }
