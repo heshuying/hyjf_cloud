@@ -1276,22 +1276,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 借款主体CA认证记录表
-     * @param request
-     * @return
-     */
-    @Override
-    public List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request) {
-        LoanSubjectCertificateAuthorityExample loanSubjectCertificateAuthorityExample = new LoanSubjectCertificateAuthorityExample();
-        LoanSubjectCertificateAuthorityExample.Criteria  loanSubjectCra = loanSubjectCertificateAuthorityExample.createCriteria();
-        loanSubjectCra.andNameEqualTo(request.getName());
-        loanSubjectCra.andIdTypeEqualTo(request.getIdType());
-        loanSubjectCra.andIdNoEqualTo(request.getIdNo());
-        return this.loanSubjectCertificateAuthorityMapper.selectByExample(loanSubjectCertificateAuthorityExample);
-
-    }
-
-    /**
      * 通过userID获得CA认证的客户ID
      * @param userId
      * @param code
