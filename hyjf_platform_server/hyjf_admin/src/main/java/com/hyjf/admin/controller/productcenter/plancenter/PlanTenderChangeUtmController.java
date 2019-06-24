@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.productcenter.plancenter;
 import com.google.common.base.Strings;
 import com.hyjf.admin.beans.request.SyncTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlanTenderChangeUtmService;
@@ -44,6 +46,7 @@ public class PlanTenderChangeUtmController extends BaseController {
 
     @ApiOperation(value = "加入计划订单详情",notes = "加入计划订单详情")
     @GetMapping(value = "/plan_tender_info/{planOrderId}")
+    @AuthorityAnnotation(key = AccedeListController.PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<HjhPlanAccedeCustomizeVO> getPlanTenderInfo(@PathVariable(value = "planOrderId") String planOrderId){
 
         HjhPlanAccedeCustomizeVO vo=planTenderChangeUtmService.getPlanTenderInfo(planOrderId);
@@ -54,6 +57,7 @@ public class PlanTenderChangeUtmController extends BaseController {
 
     @ApiOperation(value = "加入计划订单修改渠道",notes = "加入计划订单修改渠道")
     @PostMapping(value = "/update_utm")
+    @AuthorityAnnotation(key = AccedeListController.PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult updateTenderUtm(HttpServletRequest request, @RequestBody UpdateTenderUtmRequest updateTenderUtmRequest) {
 
         String nid = updateTenderUtmRequest.getNid();
@@ -80,6 +84,7 @@ public class PlanTenderChangeUtmController extends BaseController {
 
     @ApiOperation(value = "出借明细-修改渠道-修改记录",notes = "出借明细-修改渠道-修改记录")
     @GetMapping("/update_tender_utm_history/{nid}")
+    @AuthorityAnnotation(key = AccedeListController.PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<TenderUpdateUtmHistoryResponse> getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
         TenderUpdateUtmHistoryResponse response=planTenderChangeUtmService.getPlanTenderChangeLog(nid);
         return new AdminResult(response);
@@ -87,6 +92,7 @@ public class PlanTenderChangeUtmController extends BaseController {
 
     @ApiOperation(value = "订单渠道同步",notes ="订单渠道同步")
     @PostMapping("/sync_tender")
+    @AuthorityAnnotation(key = AccedeListController.PERMISSIONS, value = ShiroConstants.PERMISSION_SYNC)
     public AdminResult syncTender(@RequestBody SyncTenderRequest syncTenderRequest){
 
         try {

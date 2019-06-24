@@ -656,6 +656,7 @@ public class BorrowInvestController extends BaseController {
      * @return
      */
     @ApiOperation(value = "出借明细-修改渠道-订单信息", notes = "出借明细-修改渠道-订单信息")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @GetMapping("/tender_info/{nid}")
     public AdminResult<BorrowInvestCustomizeExtVO> getBorrowInvestInfo(@PathVariable String nid) {
         BorrowInvestCustomizeExtVO responseBean = borrowInvestService.getBorrowInvestInfo(nid);
@@ -664,12 +665,14 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "出借明细-修改渠道-渠道列表", notes = "出借明细-修改渠道-渠道列表")
     @GetMapping("/pcutms")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public UtmResultResponse getPcUtms(){
         return utmService.getPcUtms();
     }
 
     @ApiOperation(value = "出借明细-修改渠道-修改渠道确认", notes = "出借明细-修改渠道-修改渠道确认")
     @PostMapping("/update_utm")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateTenderUtm(HttpServletRequest request,@RequestBody UpdateTenderUtmRequest updateTenderUtmRequest){
 
         String nid=updateTenderUtmRequest.getNid();
@@ -698,6 +701,7 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "出借明细-修改渠道-修改记录",notes = "出借明细-修改渠道-修改记录")
     @GetMapping("/update_tender_utm_history/{nid}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<TenderUpdateUtmHistoryResponse> getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
         TenderUpdateUtmHistoryResponse response=borrowInvestService.getTenderUtmChangeLog(nid);
         return new AdminResult(response);
