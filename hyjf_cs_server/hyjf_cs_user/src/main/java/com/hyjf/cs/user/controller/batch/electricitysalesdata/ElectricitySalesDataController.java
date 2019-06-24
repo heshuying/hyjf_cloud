@@ -193,6 +193,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                                 CustomerServiceRepresentiveConfigVO representiveConfigVO = this.electricitySalesDataService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
                                 if (representiveConfigVO == null) {
                                     logger.error("用户推荐人的当前拥有人姓名在坐席配置表中不存在,不予生成,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].推荐人当前拥有人姓名:[" + currentOwner + "].");
+                                    userList.add(user);
                                     continue;
                                 }
                                 // 如果有，将此用户分配给该坐席
@@ -278,12 +279,15 @@ public class ElectricitySalesDataController extends BaseUserController {
             }
         }
         // 筛选后需要组的用户List为空
-        if (CollectionUtils.isEmpty(userList)) {
+        if (CollectionUtils.isEmpty(userList) && CollectionUtils.isEmpty(result)) {
             logger.info("经筛选后，需要分组的用户为空，不需要生成数据");
             return;
         }
         // 需要分组的用户数
-        Integer totalCount = userList.size();
+        Integer totalCount = 0;
+        if(!CollectionUtils.isEmpty(userList)){
+            totalCount = userList.size();
+        }
         // 需要分组的用户数<= 客组类型为新客组的坐席数
         if (customerServiceRepresentiveCount >= totalCount) {
             for (int i = 0; i < totalCount; i++) {
