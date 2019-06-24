@@ -7283,7 +7283,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid) {
         BorrowApicronResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/pushMoneyRecord/selectBorrowApicronListByBorrowNid/" + borrowNid,
+                "http://AM-TRADE/am-trade/borrowApicron/selectBorrowApicronListByBorrowNid/" + borrowNid,
                 BorrowApicronResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
