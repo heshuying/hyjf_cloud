@@ -87,7 +87,7 @@ public class UserPortraitController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for (UserPortraitVO registRecordVO:userPortraitVOList){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                    registRecordVO.setMobile(AsteriskProcessUtil.getDesensitizationValue(registRecordVO.getMobile()));
                 }
             }
             userPortraitCustomizeVOList = CommonUtils.convertBeanList(userPortraitVOList, UserPortraitCustomizeVO.class);
@@ -908,7 +908,7 @@ public class UserPortraitController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getDesensitizationValue(mobile);
             }
         };
         mapAdapter.put("mobile", mobileAdapter);

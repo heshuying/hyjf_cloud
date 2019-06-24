@@ -18,7 +18,6 @@ import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.vo.user.EvalationResultVO;
 import com.hyjf.am.vo.user.UserEvalationQuestionVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -62,18 +61,13 @@ public class EvalationController extends BaseController {
     public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation(HttpServletRequest request, @RequestBody EvalationRequestBean evalationRequestBean){
         // 获取该角色 权限列表
         List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-        //判断权限
-        String isShow = "0";
-       for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow="1";
-                break;
-            }
-        }
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         EvalationRequest evalationRequest = new EvalationRequest();
         BeanUtils.copyProperties(evalationRequestBean,evalationRequest);
-        //脱敏参数
-        evalationRequest.setIsShow(isShow);
+
         EvalationResultResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
         if(evalationResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -83,6 +77,12 @@ public class EvalationController extends BaseController {
         }
         List<EvalationCustomizeVO> evalationCustomizeVOList = new ArrayList<EvalationCustomizeVO>();
         if(!CollectionUtils.isEmpty(evalationResponse.getResultList())){
+            evalationResponse.getResultList().forEach(item ->{
+                // 手机号码
+                item.setMobile(AsteriskProcessUtil.getDesensitizationValue(item.getMobile()));
+                // 姓名
+                item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
+            });
             evalationCustomizeVOList = CommonUtils.convertBeanList(evalationResponse.getResultList(),EvalationCustomizeVO.class);
         }
         return new AdminResult<ListResult<EvalationCustomizeVO>>(ListResult.build(evalationCustomizeVOList, evalationResponse.getCount())) ;

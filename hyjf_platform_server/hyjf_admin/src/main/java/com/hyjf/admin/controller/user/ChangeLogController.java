@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.user;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ChangeLogService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -42,6 +44,9 @@ public class ChangeLogController extends BaseController {
 //	private Logger logger = LoggerFactory.getLogger(ChangeLogController.class);
 	@Autowired
 	private ChangeLogService changeLogService;
+
+    public static final String PERMISSIONS = "changeLog";
+
 	/**
 	 * 权限维护画面初始化
 	 *
@@ -51,8 +56,13 @@ public class ChangeLogController extends BaseController {
 	@ApiOperation(value = "查询操作日志", notes = "查询操作日志")
 	@PostMapping(value = "/userauthlist")
 	@ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<ChangeLogVO>> userManagerInit(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody Map<String, String> map) {
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
 		ChangeLogRequest clr = new ChangeLogRequest();
 		clr.setUsername(map.get("username"));
 		clr.setRealName(map.get("realName"));
@@ -79,6 +89,16 @@ public class ChangeLogController extends BaseController {
         }
         if (!AdminResponse.isSuccess(prs)) {
             return new AdminResult<>(FAIL, prs.getMessage());
+        }
+        if (!isShow) {
+            prs.getResultList().forEach(item -> {
+                // 真实姓名
+                item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
+                // 手机号码
+                item.setMobile(AsteriskProcessUtil.getDesensitizationValue(item.getMobile()));
+                // 身份证号码
+                item.setIdCard(AsteriskProcessUtil.getDesensitizationValue(item.getIdCard()));
+            });
         }
         return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
 
@@ -220,7 +240,12 @@ public class ChangeLogController extends BaseController {
     @ApiOperation(value = "下载操作日志", notes = "下载操作日志")
     @PostMapping(value = "/exportAccountsExcel")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcelLog(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String, String> map) throws Exception {
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         // 封装查询条件
         ChangeLogRequest clr = new ChangeLogRequest();
 		clr.setUsername(map.get("username"));
@@ -253,6 +278,9 @@ public class ChangeLogController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapLog();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterLog();
+        if (!isShow){
+            mapValueAdapter = buildValueAdapterLogNoPermissions();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -330,6 +358,59 @@ public class ChangeLogController extends BaseController {
         mapAdapter.put("role", roleAdapter);
         mapAdapter.put("attribute", attributeAdapter);
         mapAdapter.put("status", statusAdapter);
+        return mapAdapter;
+    }
+
+
+    private Map<String, IValueFormatter> buildValueAdapterLogNoPermissions() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String mobile = (String) object;
+                if(mobile!=null) {
+                    return AsteriskProcessUtil.getDesensitizationValue(mobile);
+                }
+                return "";
+            }
+        };
+
+        IValueFormatter roleAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer role = (Integer) object;
+                return role==null?"":role==1?"出借人":"借款人";
+            }
+        };
+
+        IValueFormatter attributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String attribute = (String) object;
+                return attribute==null?"":attribute.equals("0")?"无主单":attribute.equals("1")?"有主单":attribute.equals("2")?"线下员工":"线上员工";
+            }
+        };
+
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer status = (Integer) object;
+                return status==null?"":status==0?"启用" : "禁用";
+            }
+        };
+
+        IValueFormatter realNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String realName = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(realName);
+            }
+        };
+        mapAdapter.put("mobile", mobileAdapter);
+        mapAdapter.put("role", roleAdapter);
+        mapAdapter.put("attribute", attributeAdapter);
+        mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("realName", realNameAdapter);
         return mapAdapter;
     }
 
