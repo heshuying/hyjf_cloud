@@ -78,25 +78,25 @@ public class DynamicDataSourceContextHolder {
     /**
      * 当使用只读数据源时通过轮循方式选择要使用的数据源
      */
-    public static void useSlaveDataSource() {
-        lock.lock();
-
-        try {
-            int datasourceKeyIndex = counter % slaveDataSourceKeys.size();
-            CONTEXT_HOLDER.set(slaveDataSourceKeys.get(datasourceKeyIndex));
-            if(counter < 0) {
-            	counter = 0;
-            }else {
-                counter++;
-            }
-        } catch (Exception e) {
-            logger.error("Switch slave datasource failed, error message is {}", e.getMessage());
-            useMasterTradeDataSource();
-            logger.error(e.getMessage());
-        } finally {
-            lock.unlock();
-        }
-    }
+//    public static void useSlaveDataSource() {
+//        lock.lock();
+//
+//        try {
+//            int datasourceKeyIndex = counter % slaveDataSourceKeys.size();
+//            CONTEXT_HOLDER.set(slaveDataSourceKeys.get(datasourceKeyIndex));
+//            if(counter < 0) {
+//            	counter = 0;
+//            }else {
+//                counter++;
+//            }
+//        } catch (Exception e) {
+//            logger.error("Switch slave datasource failed, error message is {}", e.getMessage());
+//            useMasterTradeDataSource();
+//            logger.error(e.getMessage());
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
 
     public static void useSlaveTradeDataSource(){
         CONTEXT_HOLDER.set(DbType.READTRADE.name());
