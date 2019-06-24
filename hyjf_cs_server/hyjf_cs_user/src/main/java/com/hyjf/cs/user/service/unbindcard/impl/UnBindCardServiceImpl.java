@@ -194,7 +194,6 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
         bean.setChannel(channel);// 交易渠道
-        bean.setPlatform(bean.getPlatform());
 
         BankCallBean bindCardBean = getCallbankMV(bean);
 
@@ -206,7 +205,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         String retUrl = BankCommonUtil.getFrontHost(systemConfig, bean.getPlatform()) + errorPath;
         String successUrl = BankCommonUtil.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
         // 同步地址  是否跳转到前端页面
-        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
+        String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(bean.getPlatform()));
         if(StringUtils.isNotBlank(wjtClient)){
             // 如果是温金投的  则跳转到温金投那边
             host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
@@ -222,6 +221,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
             successUrl = host + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform()+"&logOrdId="+ bindCardBean.getLogOrderId();
             successUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
+
         }
 
         // 忘记密码跳转链接
