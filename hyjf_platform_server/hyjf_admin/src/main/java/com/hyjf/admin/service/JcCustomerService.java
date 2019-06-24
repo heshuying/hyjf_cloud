@@ -3,8 +3,8 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.request.JcCustomerServerRequest;
 import com.hyjf.am.response.admin.CustomerServerResponse;
+import com.hyjf.am.resquest.message.JcCustomerServerRequest;
 
 /**
  * @author yaoyong
@@ -18,4 +18,25 @@ public interface JcCustomerService {
      * @return
      */
     CustomerServerResponse getServerList(JcCustomerServerRequest request);
+
+    /**
+     * 添加客户服务
+     * @param request
+     * @return
+     */
+    CustomerServerResponse addCustomerServer(JcCustomerServerRequest request);
+
+    /**
+     * 根据id查询客户服务
+     * @param id
+     * @return
+     */
+    CustomerServerResponse getCustomerServer(String id);
+
+    /**
+     * 修改客户服务信息
+     * @param request
+     * @return
+     */
+    CustomerServerResponse updateCustomerServer(JcCustomerServerRequest request);
 }

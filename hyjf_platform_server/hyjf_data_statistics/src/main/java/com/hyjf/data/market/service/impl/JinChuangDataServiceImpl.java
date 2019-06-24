@@ -1,21 +1,20 @@
 package com.hyjf.data.market.service.impl;
 
+import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.data.bean.jinchuang.JcDataStatistics;
 import com.hyjf.data.bean.jinchuang.JcUserConversion;
 import com.hyjf.data.bean.jinchuang.JcUserPoint;
-import com.hyjf.data.bean.jinchuang.JcCustomerService;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;
 import com.hyjf.data.bean.jinchuang.JcUserAnalysis;
+import com.hyjf.data.client.CsMessageClient;
 import com.hyjf.data.mongo.jinchuang.*;
 import com.hyjf.data.response.Interest;
-import com.hyjf.data.service.JinChuangDataService;
-import com.hyjf.data.vo.jinchuang.JcCustomerServiceVO;
+import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
 import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,7 +46,7 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     @Autowired
     private JcRegisterTradeDao registerTradeDao;
     @Autowired
-    private JcCustomerServiceDao customerServiceDao;
+    private CsMessageClient csMessageClient;
 
     @Override
     public JcUserConversionVO getUserConversion() {
@@ -138,14 +137,7 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
 
     @Override
     public JcCustomerServiceVO getCustomerService() {
-        JcCustomerServiceVO customerServiceVO = new JcCustomerServiceVO();
-        JcCustomerService customerService = customerServiceDao.getCustomerService();
-        if (customerService != null) {
-            BeanUtils.copyProperties(customerService, customerServiceVO);
-            String complaint = customerService.getComplaintNum()/(customerService.getPhoneReception() + customerService.getQqReception() + customerService.getWxReception()) + "%";
-            customerServiceVO.setComplaintNum(complaint);
-        }
-        return customerServiceVO;
+        return csMessageClient.getCustomerService();
     }
 
     @Override

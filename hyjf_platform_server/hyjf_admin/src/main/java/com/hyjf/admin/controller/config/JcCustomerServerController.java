@@ -3,18 +3,17 @@
  */
 package com.hyjf.admin.controller.config;
 
-import com.hyjf.admin.beans.request.JcCustomerServerRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.JcCustomerService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CustomerServerResponse;
+import com.hyjf.am.resquest.message.JcCustomerServerRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yaoyong
@@ -32,6 +31,52 @@ public class JcCustomerServerController extends BaseController {
     @PostMapping("/serverList")
     public AdminResult getServerList(@RequestBody JcCustomerServerRequest request) {
         CustomerServerResponse response = jcCustomerService.getServerList(request);
-        return null;
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+    }
+
+    @ApiOperation(value = "添加客户服务", notes = "添加客户服务")
+    @PostMapping("/addCustomerServer")
+    public AdminResult addCustomerServer(@RequestBody JcCustomerServerRequest request) {
+        CustomerServerResponse response = jcCustomerService.addCustomerServer(request);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(response);
+    }
+
+
+    @ApiOperation(value = "根据id查询客户服务", notes = "根据id查询客户服务")
+    @GetMapping("/getCustomerServer")
+    public AdminResult getCustomerServer(@RequestParam String id) {
+        CustomerServerResponse response = jcCustomerService.getCustomerServer(id);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(response);
+    }
+
+    @ApiOperation(value = "修改客服服务", notes = "修改客户服务")
+    @PostMapping("/updateCustomerServer")
+    public AdminResult updateCustomerServer(@RequestBody JcCustomerServerRequest request) {
+        CustomerServerResponse response = jcCustomerService.updateCustomerServer(request);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(response);
     }
 }

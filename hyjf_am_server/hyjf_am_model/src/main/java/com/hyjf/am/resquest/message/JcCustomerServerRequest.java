@@ -1,16 +1,18 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.data.bean.jinchuang;
+package com.hyjf.am.resquest.message;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.hyjf.am.vo.BasePage;
+
+import java.io.Serializable;
 
 /**
  * @author yaoyong
- * @version JcCustomerService, v0.1 2019/6/20 15:20
+ * @version JcCustomerServerRequest, v0.1 2019/6/21 11:06
  */
-@Document(collection = "ht_jc_customer_service")
-public class JcCustomerService {
+public class JcCustomerServerRequest extends BasePage implements Serializable {
 
     private String id;
 
@@ -31,6 +33,10 @@ public class JcCustomerService {
     private Integer createTime;
 
     private Integer updateTime;
+
+    private String startTime;
+
+    private String endTime;
 
     public String getId() {
         return id;
@@ -96,19 +102,35 @@ public class JcCustomerService {
         this.time = time;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 }

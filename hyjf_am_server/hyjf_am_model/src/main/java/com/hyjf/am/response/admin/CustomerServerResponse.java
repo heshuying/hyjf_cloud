@@ -11,4 +11,14 @@ import com.hyjf.am.vo.admin.JcCustomerServiceVO;
  * @version CustomerServerResponse, v0.1 2019/6/21 11:37
  */
 public class CustomerServerResponse extends Response<JcCustomerServiceVO> {
+
+    private Integer count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 }

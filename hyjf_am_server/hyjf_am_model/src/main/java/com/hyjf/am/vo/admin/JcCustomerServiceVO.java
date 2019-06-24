@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 
@@ -20,6 +21,8 @@ public class JcCustomerServiceVO extends BaseVO implements Serializable {
 
     private Integer complaintNum;
 
+    private String complaint;
+
     private Integer phoneReception;
 
     private Integer qqReception;
@@ -28,7 +31,9 @@ public class JcCustomerServiceVO extends BaseVO implements Serializable {
 
     private String time;
 
-    private String updateTime;
+    private String createTime;
+
+    private Integer updateTime;
 
     public String getId() {
         return id;
@@ -94,11 +99,30 @@ public class JcCustomerServiceVO extends BaseVO implements Serializable {
         this.time = time;
     }
 
-    public String getUpdateTime() {
+    public Integer getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTime() {
+        if (updateTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(updateTime);
+        }
+        return null;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getComplaint() {
+        return complaint;
+    }
+
+    public void setComplaint(String complaint) {
+        this.complaint = complaint;
     }
 }

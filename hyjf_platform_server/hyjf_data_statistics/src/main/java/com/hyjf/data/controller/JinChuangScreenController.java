@@ -3,13 +3,13 @@
  */
 package com.hyjf.data.controller;
 
+import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;
 import com.hyjf.data.response.Interest;
 import com.hyjf.data.response.JcScreenResponse;
 import com.hyjf.data.result.ApiResult;
-import com.hyjf.data.service.JinChuangDataService;
-import com.hyjf.data.vo.jinchuang.JcCustomerServiceVO;
+import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
 import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
@@ -60,9 +60,6 @@ public class JinChuangScreenController {
         response.setInterests((List<Interest>) maps.get("interests"));
         response.setAnalysis((JcUserAnalysisVO) maps.get("jcUserAnalysis"));
         response.setCustomerService(customerService);
-        if (response != null) {
-            return new ApiResult(response);
-        }
-        return new ApiResult();
+        return new ApiResult(response);
     }
 }

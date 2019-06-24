@@ -1,9 +1,8 @@
-package com.hyjf.data.service;
+package com.hyjf.data.market.service;
 
-import com.hyjf.data.bean.jinchuang.JcCustomerService;
+import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;
-import com.hyjf.data.vo.jinchuang.JcCustomerServiceVO;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
 

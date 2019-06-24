@@ -3,10 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.beans.request.JcCustomerServerRequest;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.JcCustomerService;
 import com.hyjf.am.response.admin.CustomerServerResponse;
+import com.hyjf.am.resquest.message.JcCustomerServerRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +23,20 @@ public class JcCustomerServiceImpl implements JcCustomerService {
     @Override
     public CustomerServerResponse getServerList(JcCustomerServerRequest request) {
         return csMessageClient.getServerList(request);
+    }
+
+    @Override
+    public CustomerServerResponse addCustomerServer(JcCustomerServerRequest request) {
+        return csMessageClient.addCustomerServer(request);
+    }
+
+    @Override
+    public CustomerServerResponse getCustomerServer(String id) {
+        return csMessageClient.getCustomerServer(id);
+    }
+
+    @Override
+    public CustomerServerResponse updateCustomerServer(JcCustomerServerRequest request) {
+        return csMessageClient.updateCustomerServer(request);
     }
 }
