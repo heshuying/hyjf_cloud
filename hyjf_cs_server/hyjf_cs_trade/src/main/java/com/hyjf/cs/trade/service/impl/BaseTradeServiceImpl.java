@@ -5,15 +5,10 @@ import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -50,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -805,7 +799,6 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 // balance = balance.add(accountMoney).add(bankAccountManageCustomize.getBankFrost()).add(bankAccountManageCustomize.getPlanBalance()).add(bankAccountManageCustomize.getPlanFrost());
                 // 20190410l 更改邏輯為 用戶操作金額 + 智投服務可用金額 <= 銀行可用餘額
                 balance = balance.add(accountMoney).add(bankAccountManageCustomize.getPlanBalance());
-                logger.info("计算后：" + balance + "调用银行返回：" + userBankAvailBal);
                 //判断是否可操作（返回Boolean类型）
                 if(balance.compareTo(userBankAvailBal) != 1){
                     return true;
