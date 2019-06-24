@@ -221,6 +221,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
             successUrl = host + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform()+"&logOrdId="+ bindCardBean.getLogOrderId();
             successUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
+
         }
 
         // 忘记密码跳转链接
