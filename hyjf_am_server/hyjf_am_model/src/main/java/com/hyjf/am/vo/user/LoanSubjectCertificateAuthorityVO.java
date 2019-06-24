@@ -13,6 +13,8 @@ public class LoanSubjectCertificateAuthorityVO extends BaseVO implements Seriali
 
 	 	private Integer id;
 
+	 	private Integer userId;
+
 	    private String name;
 
 	    private String mobile;
@@ -172,4 +174,12 @@ public class LoanSubjectCertificateAuthorityVO extends BaseVO implements Seriali
 	    public void setUpdateUserName(String updateUserName) {
 	        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
 	    }
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 }
