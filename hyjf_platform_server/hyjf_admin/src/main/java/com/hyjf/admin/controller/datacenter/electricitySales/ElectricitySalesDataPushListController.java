@@ -177,8 +177,10 @@ public class ElectricitySalesDataPushListController  extends BaseController {
             public String format(Object object) {
                 if (Integer.valueOf(object.toString()) == 1) {
                     return "男";
-                } else {
-                    return "女";
+                }else if(Integer.valueOf(object.toString()) == 2) {
+                	 return "女";
+                }else {
+                    return "未知";
                 }
             }
         };
