@@ -9,14 +9,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DynamicDataSourceContextHolder {
-	
-	private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceContextHolder.class);
-	
 
-	// 列举数据源的key
-	public enum DbType {
-		WRITE, READ1
-	}
+    private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceContextHolder.class);
+
+
+    // 列举数据源的key
+    public enum DbType {
+        WRITETRADE, WRITEUSER, WRITECONFIG, WRITEMARKET, READTRADE, READUSER, READCONFIG, READMARKET
+    }
 
     /**
      * 用于在切换数据源时保证不会被其他线程修改
@@ -32,11 +32,11 @@ public class DynamicDataSourceContextHolder {
      * Maintain variable for every thread, to avoid effect other thread
      */
     private static final ThreadLocal<String> CONTEXT_HOLDER = new ThreadLocal<String>() {
-		@Override
-		protected String initialValue() {
-			return DbType.WRITE.name();
-		}
-	};
+        @Override
+        protected String initialValue() {
+            return DbType.WRITETRADE.name();
+        }
+    };
 
     /**
      * All DataSource List
@@ -60,10 +60,21 @@ public class DynamicDataSourceContextHolder {
     /**
      * Use master data source.
      */
-    public static void useMasterDataSource() {
-        CONTEXT_HOLDER.set(DbType.WRITE.name());
+//    public static void useMasterDataSource() {
+//        CONTEXT_HOLDER.set(DbType.WRITETRADE.name());
+//    }
+    public static void useMasterTradeDataSource() {
+        CONTEXT_HOLDER.set(DbType.WRITETRADE.name());
     }
-
+    public static void useMasterUserDataSource() {
+        CONTEXT_HOLDER.set(DbType.WRITEUSER.name());
+    }
+    public static void useMasterConfigDataSource() {
+        CONTEXT_HOLDER.set(DbType.WRITECONFIG.name());
+    }
+    public static void useMasterMarketDataSource() {
+        CONTEXT_HOLDER.set(DbType.WRITEMARKET.name());
+    }
     /**
      * 当使用只读数据源时通过轮循方式选择要使用的数据源
      */
@@ -80,11 +91,27 @@ public class DynamicDataSourceContextHolder {
             }
         } catch (Exception e) {
             logger.error("Switch slave datasource failed, error message is {}", e.getMessage());
-            useMasterDataSource();
+            useMasterTradeDataSource();
             logger.error(e.getMessage());
         } finally {
             lock.unlock();
         }
+    }
+
+    public static void useSlaveTradeDataSource(){
+        CONTEXT_HOLDER.set(DbType.READTRADE.name());
+    }
+
+    public static void useSlaveUserDataSource(){
+        CONTEXT_HOLDER.set(DbType.READUSER.name());
+    }
+
+    public static void useSlaveConfigDataSource(){
+        CONTEXT_HOLDER.set(DbType.READCONFIG.name());
+    }
+
+    public static void useSlaveMarketDataSource(){
+        CONTEXT_HOLDER.set(DbType.READMARKET.name());
     }
 
     /**
