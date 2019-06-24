@@ -805,6 +805,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 // balance = balance.add(accountMoney).add(bankAccountManageCustomize.getBankFrost()).add(bankAccountManageCustomize.getPlanBalance()).add(bankAccountManageCustomize.getPlanFrost());
                 // 20190410l 更改邏輯為 用戶操作金額 + 智投服務可用金額 <= 銀行可用餘額
                 balance = balance.add(accountMoney).add(bankAccountManageCustomize.getPlanBalance());
+                logger.info("计算后：" + balance + "调用银行返回：" + userBankAvailBal);
                 //判断是否可操作（返回Boolean类型）
                 if(balance.compareTo(userBankAvailBal) != 1){
                     return true;

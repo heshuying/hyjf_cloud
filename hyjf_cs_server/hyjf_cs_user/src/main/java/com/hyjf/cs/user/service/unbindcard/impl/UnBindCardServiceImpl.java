@@ -215,6 +215,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
         }
         if (!channel.contains(BankCallConstant.CHANNEL_PC)) {
             //返回路径
+            //host= BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform());
+            logger.info("==========银行卡解绑，返回路径为："+host);
             errorPath = "/user/bankCard/unbind/result/failed";
             successPath = "/user/bankCard/unbind/result/success";
             // 同步地址  是否跳转到前端页面
@@ -222,6 +224,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
             successUrl = host + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform()+"&logOrdId="+ bindCardBean.getLogOrderId();
             successUrl += "&token=1&sign=" + sign + "&platform=" + bean.getPlatform();
+            logger.info("==========银行卡解绑，成功返回路径为："+successUrl);
+
         }
 
         // 忘记密码跳转链接
