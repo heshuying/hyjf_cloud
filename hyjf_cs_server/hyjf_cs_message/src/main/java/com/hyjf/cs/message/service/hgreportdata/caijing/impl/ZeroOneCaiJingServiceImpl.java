@@ -122,7 +122,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             presentationLog.setJson(map);
         } else {
             presentationLog.setStatus(0);
-            presentationLog.setDescription(zeroOneResponse.result_msg);
+            if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
+                presentationLog.setDescription(zeroOneResponse.result_msg);
+            }else{
+                presentationLog.setDescription("");
+            }
             presentationLog.setJson(map);
         }
         //插入mongo表
@@ -190,7 +194,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             presentationLog.setJson(map);
         } else {
             presentationLog.setStatus(0);
-            presentationLog.setDescription(zeroOneResponse.result_msg);
+            if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
+                presentationLog.setDescription(zeroOneResponse.result_msg);
+            }else{
+                presentationLog.setDescription("");
+            }
             presentationLog.setJson(map);
         }
         //插入mongo表
@@ -233,7 +241,11 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             presentationLog.setJson(map);
         } else {
             presentationLog.setStatus(0);
-            presentationLog.setDescription(zeroOneResponse.result_msg);
+            if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
+                presentationLog.setDescription(zeroOneResponse.result_msg);
+            }else{
+                presentationLog.setDescription("");
+            }
             presentationLog.setJson(map);
         }
         //插入mongo表
@@ -405,7 +417,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             String response = HttpDeal.post(stbuUrl.toString(), sendMap);
 
             zeroOneResponse = JSONObject.parseObject(response, ZeroOneResponse.class);
-
+            logger.info("零壹财经数据报送返回结果="+zeroOneResponse);
         } catch (Exception e) {
             logger.error("零壹财经数据报送错误 error:", e);
         }
