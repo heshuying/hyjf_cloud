@@ -261,4 +261,5 @@ public interface RepayManageService extends BaseTradeService {
 	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
 	Map<String, Object> getSponsorLogMV(SponsorLogBean openBean, String string, String string2);
 	int updateSponsorLog(RepayListRequest requestBean);
+	List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
 }

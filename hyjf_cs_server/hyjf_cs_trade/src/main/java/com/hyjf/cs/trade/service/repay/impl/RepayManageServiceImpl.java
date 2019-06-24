@@ -1143,4 +1143,8 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 	public int updateSponsorLog(RepayListRequest requestBean) {
 		return amTradeClient.updateSponsorLog(requestBean);
 	}
+	@Override
+	public List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid){
+		return amTradeClient.selectBorrowApicronListByBorrowNid(borrowNid);
+	}
 }

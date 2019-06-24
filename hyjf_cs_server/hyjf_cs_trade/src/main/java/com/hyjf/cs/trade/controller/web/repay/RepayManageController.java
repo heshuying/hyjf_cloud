@@ -1168,6 +1168,13 @@ public class RepayManageController extends BaseTradeController {
         requestBean.setLimitEnd(page.getLimit());
         try {
             List<SponsorLogCustomizeVO> resultList = repayManageService.selectSponsorLog(requestBean);
+            for (SponsorLogCustomizeVO sponsorLogCustomizeVO : resultList) {
+				if(sponsorLogCustomizeVO.getStatus().equals("0")) {
+					if(repayManageService.selectBorrowApicronListByBorrowNid(sponsorLogCustomizeVO.getBorrowNid())!=null) {
+						sponsorLogCustomizeVO.setStatus("3");
+					}
+				}
+			}
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取担保授权列表异常", e);
@@ -1182,6 +1189,15 @@ public class RepayManageController extends BaseTradeController {
     @ResponseBody
     public WebResult<Object> updateSponsorLog(@RequestHeader(value = "userId") int userId,@RequestBody RepayListRequest requestBean, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
+        
+        if(repayManageService.selectBorrowApicronListByBorrowNid(requestBean.getBorrowNid())!=null) {
+        	 Map<String,String> data2 =new HashMap<String, String>();
+        	 data2.put("status", "911");
+        	 result.setData(data2);
+        	 return result;
+		}
+        
+        
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         SponsorLogBean openBean = new SponsorLogBean();
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
