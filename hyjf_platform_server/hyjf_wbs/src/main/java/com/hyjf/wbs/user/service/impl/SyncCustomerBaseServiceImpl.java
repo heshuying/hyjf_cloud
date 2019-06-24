@@ -70,7 +70,7 @@ public class SyncCustomerBaseServiceImpl implements SyncCustomerBaseService {
             Integer userIdd = Integer.parseInt(userId);
             User userVO = userService.findUserById(userIdd);
             if (userVO != null) {
-                if (userVO.getOpenAccount() != null && userVO.getOpenAccount().intValue() == ACCOUNT_OPENED) {
+                if (userVO.getBankOpenAccount() != null && userVO.getBankOpenAccount().intValue() == ACCOUNT_OPENED) {
                     // 余额信息
                     Account accountVO = accountService.getAccount(userIdd);
                     // 开户行信息

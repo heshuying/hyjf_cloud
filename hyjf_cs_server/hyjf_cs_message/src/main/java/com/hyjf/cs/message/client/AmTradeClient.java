@@ -5,13 +5,19 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lisheng
@@ -145,4 +151,26 @@ public interface AmTradeClient {
 	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request);
 
 	List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(AppChannelStatisticsRequest request);
+
+	/**
+	 * 查询指定日期的出借记录
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate);
+
+    List<ZeroOneBorrowDataVO> queryBorrowRecordSub(String dateStart, String dateEnd);
+
+	List<ZeroOneDataVO> queryAdvancedRepay(String startDate, String endDate);
+
+    BorrowAndInfoVO getBorrowByNid(String borrowNid);
+
+	BorrowUserVO getBorrowUser(String borrowNid);
+
+	BorrowManinfoVO getBorrowManinfo(String borrowNid);
+
+    List<BorrowUserVO> getBorrowUserInfo(List<String> borrowNids);
+
+    List<BorrowManinfoVO> getBorrowManList(List<String> nids);
 }

@@ -1325,6 +1325,146 @@ public class JxBankConfigExample {
             addCriterion("month_card_quota not between", value1, value2, "monthCardQuota");
             return (Criteria) this;
         }
+
+        public Criteria andAndroidMarketIsNull() {
+            addCriterion("android_market is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketIsNotNull() {
+            addCriterion("android_market is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketEqualTo(String value) {
+            addCriterion("android_market =", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketNotEqualTo(String value) {
+            addCriterion("android_market <>", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketGreaterThan(String value) {
+            addCriterion("android_market >", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketGreaterThanOrEqualTo(String value) {
+            addCriterion("android_market >=", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketLessThan(String value) {
+            addCriterion("android_market <", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketLessThanOrEqualTo(String value) {
+            addCriterion("android_market <=", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketLike(String value) {
+            addCriterion("android_market like", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketNotLike(String value) {
+            addCriterion("android_market not like", value, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketIn(List<String> values) {
+            addCriterion("android_market in", values, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketNotIn(List<String> values) {
+            addCriterion("android_market not in", values, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketBetween(String value1, String value2) {
+            addCriterion("android_market between", value1, value2, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andAndroidMarketNotBetween(String value1, String value2) {
+            addCriterion("android_market not between", value1, value2, "androidMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketIsNull() {
+            addCriterion("ios_market is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketIsNotNull() {
+            addCriterion("ios_market is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketEqualTo(String value) {
+            addCriterion("ios_market =", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketNotEqualTo(String value) {
+            addCriterion("ios_market <>", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketGreaterThan(String value) {
+            addCriterion("ios_market >", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketGreaterThanOrEqualTo(String value) {
+            addCriterion("ios_market >=", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketLessThan(String value) {
+            addCriterion("ios_market <", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketLessThanOrEqualTo(String value) {
+            addCriterion("ios_market <=", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketLike(String value) {
+            addCriterion("ios_market like", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketNotLike(String value) {
+            addCriterion("ios_market not like", value, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketIn(List<String> values) {
+            addCriterion("ios_market in", values, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketNotIn(List<String> values) {
+            addCriterion("ios_market not in", values, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketBetween(String value1, String value2) {
+            addCriterion("ios_market between", value1, value2, "iosMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andIosMarketNotBetween(String value1, String value2) {
+            addCriterion("ios_market not between", value1, value2, "iosMarket");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -171,6 +171,15 @@ public class UserParameters {
 	// 用户ID
 	private String userId;
 
+	/**
+	 * 修改用户手机号Url
+	 */
+	private String bankMobileModifyUrl;
+
+	private String bankMobileModifyFlag;
+
+	private String bankMobile;
+
 	public String getHuifuOpenAccount() {
 		return huifuOpenAccount;
 	}
@@ -934,5 +943,29 @@ public class UserParameters {
 
 	public void setExitLabelShowFlag(String exitLabelShowFlag) {
 		this.exitLabelShowFlag = exitLabelShowFlag;
+	}
+
+	public String getBankMobileModifyUrl() {
+		return bankMobileModifyUrl;
+	}
+
+	public void setBankMobileModifyUrl(String bankMobileModifyUrl) {
+		this.bankMobileModifyUrl = bankMobileModifyUrl;
+	}
+
+	public String getBankMobileModifyFlag() {
+		return bankMobileModifyFlag;
+	}
+
+	public void setBankMobileModifyFlag(String bankMobileModifyFlag) {
+		this.bankMobileModifyFlag = bankMobileModifyFlag;
+	}
+
+	public String getBankMobile() {
+		return bankMobile;
+	}
+
+	public void setBankMobile(String bankMobile) {
+		this.bankMobile = bankMobile;
 	}
 }

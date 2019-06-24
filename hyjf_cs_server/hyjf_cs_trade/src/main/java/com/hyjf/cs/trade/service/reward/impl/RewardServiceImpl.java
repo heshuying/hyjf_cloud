@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.reward.impl;
 
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.reward.RewardService;
@@ -58,5 +59,15 @@ public class RewardServiceImpl extends BaseTradeServiceImpl implements RewardSer
         MyInviteListRequest requestBean = new MyInviteListRequest();
         requestBean.setUserId(userId);
         return amTradeClient.selectMyRewardCount(requestBean);
+    }
+
+    /**
+     * 获取分享信息
+     * @author wgx
+     * @date 2019/05/09
+     */
+    @Override
+    public ShareNewsBeanVO queryShareNews() {
+        return amConfigClient.queryShareNews();
     }
 }

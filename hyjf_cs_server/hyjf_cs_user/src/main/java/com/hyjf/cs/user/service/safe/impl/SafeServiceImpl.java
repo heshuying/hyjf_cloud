@@ -120,6 +120,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }else {
             resultMap.put("mobile","");
         }
+
+        // web端返回银行预留手机号 add by liushouyi
+        if (user.getBankMobile() != null && user.getBankMobile().length() == 11) {
+            resultMap.put("bankMobile", user.getBankMobile().substring(0, 3) + "****" + user.getBankMobile().substring(user.getBankMobile().length() - 4));
+        }else {
+            resultMap.put("bankMobile","");
+        }
+
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);

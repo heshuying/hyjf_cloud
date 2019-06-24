@@ -88,7 +88,7 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
     @PostMapping(value = "/getSuccessResult", produces = "application/json; charset=utf-8")
     public AppResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId", required = true) Integer userId,
                                                           @RequestParam String logOrdId) {
-        logger.info("APP端债转出借获取出借结果，logOrdId{}",logOrdId);
+        logger.info("APP端债转出借获取出借结果，logOrdId{}",logOrdId + ",userId:" + userId);
         WebResult<Map<String,Object>> webResult = borrowTenderService.getSuccessResult(userId,logOrdId);
         AppResult<Map<String,Object>> result  = new AppResult<Map<String,Object>>();
         Map<String,Object> data = webResult.getData();

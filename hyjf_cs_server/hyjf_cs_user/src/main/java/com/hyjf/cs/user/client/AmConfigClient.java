@@ -2,7 +2,9 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -150,4 +152,23 @@ public interface AmConfigClient {
      * @return
      */
     List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request);
+
+    /**
+     * app获取充值规则
+     * @return
+     */
+    List<AppRechargeRuleVO> getRechargeRule();
+
+    /**
+     * app获取充值限额说明
+     * @return
+     */
+    List getRechargeLimit();
+
+    /**
+     * 获取分享信息
+     * @author wgx
+     * @date 2019/05/09
+     */
+    ShareNewsBeanVO queryShareNews();
 }

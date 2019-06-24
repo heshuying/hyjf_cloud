@@ -24,6 +24,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 			addIn.addPathPatterns("/**");
 			//不拦截的请求
 			addIn.excludePathPatterns(
+					"hyjf-admin/registRecord/syncAccountWbs",
 					"/batch/borrow/repay/statistics",
 					"/batch/borrow/repayrestoration/datarestoration",
 					"/hyjf-api/websocket/*",
