@@ -131,6 +131,8 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         int result = 0;
         BankCreditEndExample example = new BankCreditEndExample();
         example.createCriteria().andStatusEqualTo(0); // 初始
+        example.or(example.createCriteria().andStateEqualTo("F")); // 或者是失败的扫描出来再处理
+
         example.setLimitStart(0);
         example.setLimitEnd(500);// 记录数限制
         example.setOrderByClause("id");
