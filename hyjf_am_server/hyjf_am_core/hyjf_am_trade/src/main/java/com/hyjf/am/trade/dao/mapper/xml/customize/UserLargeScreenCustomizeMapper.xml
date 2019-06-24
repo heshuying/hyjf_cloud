@@ -91,7 +91,8 @@
 
       select  user_name userName,current_owner currentOwner,operating operating,IFNULL(money,0) money,IFNULL(year_money,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
       from  ht_user_operate_list where operating &lt;&gt; 3 and current_owner is not null
-      and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 DAY),'%Y-%m-%d 00:00:00')
+      and create_time &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')
+      AND create_time &lt; DATE_FORMAT(#{endTime},'%Y-%m-%d %H:%i:%s')
       ORDER  BY create_time DESC
     </select>
 
@@ -640,4 +641,79 @@
             '%Y-%m-%d 23:59:59'
         )
     </select>
+
+    <!-- 获取投屏采集到的所有的用户 -->
+    <select id="getAllScreenUser" resultType="com.hyjf.am.vo.screen.ScreenTransferVO">
+        SELECT r.userId userId from (
+                    SELECT DISTINCT user_id userId FROM ht_user_operate_list
+                    union all
+                    SELECT DISTINCT user_id userId from ht_repayment_plan
+            ) r
+            limit #{start},#{sizes}
+    </select>
+
+
+    <update id="updateOperatieList" parameterType="java.util.List">
+        UPDATE ht_user_operate_list
+        <trim prefix="set" suffixOverrides=",">
+
+            <trim prefix="current_owner =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    WHEN user_id=#{item.userId} THEN #{item.currentOwner}
+                </foreach>
+            </trim>
+
+            <trim prefix="customer_group =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    WHEN user_id=#{item.userId} THEN #{item.groups}
+                </foreach>
+            </trim>
+
+        </trim>
+        WHERE user_id IN
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.userId}
+        </foreach>
+    </update>
+
+    <delete id="deleteOperatieList">
+        DELETE FROM ht_user_operate_list WHERE user_id IN
+        <foreach collection="list" item="item" open="("
+                 separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </delete>
+
+    <update id="updateRepaymentPlan" parameterType="java.util.List">
+        UPDATE ht_repayment_plan
+        <trim prefix="set" suffixOverrides=",">
+
+            <trim prefix="customer_name =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    WHEN user_id=#{item.userId} THEN #{item.currentOwner}
+                </foreach>
+            </trim>
+
+            <trim prefix="customer_group =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    WHEN user_id=#{item.userId} THEN #{item.groups}
+                </foreach>
+            </trim>
+
+        </trim>
+        WHERE user_id IN
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.userId}
+        </foreach>
+    </update>
+
+    <delete id="deleteRepaymentPlan">
+        DELETE FROM ht_repayment_plan WHERE user_id IN
+        <foreach collection="list" item="item" open="("
+                 separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </delete>
+
+
 </mapper>

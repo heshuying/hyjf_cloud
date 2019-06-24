@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
@@ -104,6 +105,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private CsMessageClient amMongoClient;
     @Autowired
     private CommonProducer commonProducer;
+    @Autowired
+    private AppCouponService appCouponService;
     /**
      * @param request
      * @Description 散标出借
@@ -228,6 +231,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     private WebResult<Map<String, Object>> tender(TenderRequest request, BorrowAndInfoVO borrow, BankOpenAccountVO account, CouponUserVO cuc, Map<String, Object> resultEval) {
+        String wjtClient = request.getWjtClient();
         // 生成订单id
         Integer userId = request.getUser().getUserId();
         String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
@@ -265,10 +269,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             pageFailedName = "fal";
 
         }
+        // 同步地址  是否跳转到前端页面
+        String host = super.getFrontHost(systemConfig,request.getPlatform());
+        if(StringUtils.isNotBlank(request.getWjtClient())){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,request.getWjtClient());
+        }
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = host + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+        String successUrl = host + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
@@ -281,11 +291,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         //忘记密码url
-        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
+        String forgotPwdUrl = super.getForgotPwdUrl(request.getPlatform(),request.getToken(),request.getSign(), systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, systemConfig);
+        }
         callBean.setRetUrl(retUrl);
         callBean.setSuccessfulUrl(successUrl);
         callBean.setNotifyUrl(bgRetUrl);
-        callBean.setForgotPwdUrl(forgetPassWoredUrl);
+        callBean.setForgotPwdUrl(forgotPwdUrl);
         // 插入记录 tmp表
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
@@ -1125,6 +1139,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
             logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
+            // app4.0 bug-1300 之前是按照总条数判断，现在按照散标的优惠券判断
+            JSONObject userCoupon = appCouponService.getBorrowCoupon(tender.getUserId(),request.getBorrowNid(), money,
+                    request.getPlatform());
             investInfo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
@@ -1170,13 +1187,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCouponQuota("");
                 investInfo.setCouponId("-1");
 
-                if (couponAvailableCount > 0) {
+                // app4.0 bug-1300 之前是按照总条数判断，现在按照散标的优惠券判断
+                if(userCoupon!=null&& !"0".equals(userCoupon.getString("availableCouponListCount"))){
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("请选择");
-                } else if (recordTotal > 0 && couponAvailableCount == 0) {
+                }else if (userCoupon!=null&& "0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("暂无可用");
-                } else {
+                }else {
                     investInfo.setIsThereCoupon("0");
                     investInfo.setCouponDescribe("无可用");
                 }
@@ -1975,6 +1993,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             vo.setDurationUnit("月");
         }
         // add by liuyang 神策数据统计 20180820 end
+
+        // 是否绑卡
+        if (tender.getUserId() != null) {
+            BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(tender.getUserId());
+            if (bankCard!=null &&bankCard.getId()!=null) {
+                vo.setIsBindCard(true);
+            } else {
+                vo.setIsBindCard(false);
+            }
+        }
         return vo;
     }
 
@@ -2008,6 +2036,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_BIND_PLAN_ERROR);
             }
         }
+
         borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
         borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
         borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
@@ -2019,6 +2048,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserVO user = amUserClient.findUserById(request.getUserId());
         request.setUser(user);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+
+        // 检查温金投的标的只能温金投用户投资
+        if(StringUtils.isNotBlank(borrowInfoVO.getPublishInstCode())&&
+                (!borrowInfoVO.getPublishInstCode().equals("0") && !borrowInfoVO.getPublishInstCode().equals("10000000"))){
+            // 是定向标
+            if(!borrowInfoVO.getPublishInstCode().equals(user.getInstCode())){
+                // 机构编号不相等 不让投资
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_WJT_ERROR);
+            }
+        }
         // 检查用户状态  角色  授权状态等  是否允许出借
         checkUser(user, userInfo);
         //校验用户测评

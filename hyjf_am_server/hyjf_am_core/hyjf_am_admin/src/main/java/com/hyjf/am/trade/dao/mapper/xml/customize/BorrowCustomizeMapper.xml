@@ -873,7 +873,7 @@ WHERE
 		  bb.borrow_extra_yield,
 		  bb.remark,
 		  IFNULL(label.label_name, '--') AS labelName,
-		  DATE_FORMAT(b.regist_time,'%Y-%c-%d %h:%i:%s') AS regist_time,
+		  DATE_FORMAT(b.regist_time,'%Y-%m-%d %H:%i:%s') AS regist_time ,
 		  CONCAT(b.borrow_account_scale, '%') borrow_account_scale,
 		  b.`status` AS `status`,
 		  b.create_time as addtime,

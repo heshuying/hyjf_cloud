@@ -148,23 +148,19 @@ public class MessageServiceImpl implements MessageService {
 		}
 
 		if (StringUtils.isNotEmpty(smsOntime.getAddTimeBegin())) {
-			int begin = Integer.parseInt(GetDate.get10Time(smsOntime.getAddTimeBegin()));
-			request.setAdd_time_begin(String.valueOf(begin));
+			request.setAdd_time_begin(smsOntime.getAddTimeBegin());
 		}
 
 		if (StringUtils.isNotEmpty(smsOntime.getAddTimeEnd())) {
-			int end = Integer.parseInt(GetDate.get10Time(smsOntime.getAddTimeEnd()));
-			request.setAdd_time_end(String.valueOf(end));
+			request.setAdd_time_end(smsOntime.getAddTimeEnd());
 		}
 
 		if (StringUtils.isNotEmpty(smsOntime.getReTimeBegin())) {
-			int re_begin = Integer.parseInt(GetDate.get10Time(smsOntime.getReTimeBegin()));
-			request.setRe_time_begin(String.valueOf(re_begin));
+			request.setRe_time_begin(smsOntime.getReTimeBegin());
 		}
 
 		if (StringUtils.isNotEmpty(smsOntime.getReTimeEnd())) {
-			int re_end = Integer.parseInt(GetDate.get10Time(smsOntime.getReTimeEnd()));
-			request.setRe_time_end(String.valueOf(re_end));
+			request.setRe_time_end(smsOntime.getReTimeEnd());
 		}
 		if (smsOntime.getOpenAccount() != null) {
 			request.setOpen_account(smsOntime.getOpenAccount());

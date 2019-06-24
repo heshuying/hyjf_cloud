@@ -600,6 +600,15 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 }
             }
             resultVo.setAnnotation("");
+            // 是否绑卡
+            if (tender.getUserId() != null) {
+                BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(tender.getUserId());
+                if (bankCard!=null &&bankCard.getId()!=null) {
+                    resultVo.setIsBindCard(true);
+                } else {
+                    resultVo.setIsBindCard(false);
+                }
+            }
         } else {
             logger.info("=================HJH borrow is null! =============");
             resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_FAIL);

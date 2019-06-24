@@ -51,10 +51,11 @@ public interface SafeService  extends BaseUserService {
      * @param userId
      * @param token
      * @param email
+     * @param wjtClient
      * @return
      * @throws MQException
      */
-    boolean sendEmailActive(Integer userId, String token, String email) throws MQException;
+    boolean sendEmailActive(Integer userId, String token, String email, String wjtClient) throws MQException;
 
     /**
      * 发送激活邮件条件校验
