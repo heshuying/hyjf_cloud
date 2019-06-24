@@ -211,9 +211,5 @@ public class ShiroConstants {
 	/** 用户销户权限 */
 	public static final String PERMISSION_BANK_CANCELLATION_ACCOUNT ="CANCELLATIONACCOUNT";
 
-	/** 出借明细、订单同步 */
-	public static final String PERMISSION_SYNC="SYNC";
-
-
 
 }

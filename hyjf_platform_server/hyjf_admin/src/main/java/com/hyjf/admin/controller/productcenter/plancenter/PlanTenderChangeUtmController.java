@@ -89,20 +89,4 @@ public class PlanTenderChangeUtmController extends BaseController {
         TenderUpdateUtmHistoryResponse response=planTenderChangeUtmService.getPlanTenderChangeLog(nid);
         return new AdminResult(response);
     }
-
-    @ApiOperation(value = "订单渠道同步",notes ="订单渠道同步")
-    @PostMapping("/sync_tender")
-    @AuthorityAnnotation(key = AccedeListController.PERMISSIONS, value = ShiroConstants.PERMISSION_SYNC)
-    public AdminResult syncTender(@RequestBody SyncTenderRequest syncTenderRequest){
-
-        try {
-            commonProducer.messageSend((new MessageContent(MQConstant.WBS_TENDER_SYNC_TOPIC, UUID.randomUUID().toString(),syncTenderRequest)));
-        } catch (MQException e) {
-            logger.error(e.getMessage());
-            logger.error("订单渠道修改同步， 发送订单渠道同步消息MQ失败...", e);
-        }
-
-        return new AdminResult();
-
-    }
 }
