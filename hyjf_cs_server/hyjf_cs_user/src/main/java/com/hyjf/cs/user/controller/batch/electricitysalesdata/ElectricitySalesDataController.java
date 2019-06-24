@@ -193,6 +193,7 @@ public class ElectricitySalesDataController extends BaseUserController {
                                 CustomerServiceRepresentiveConfigVO representiveConfigVO = this.electricitySalesDataService.selectCustomerServiceRepresentiveConfigByUserName(currentOwner);
                                 if (representiveConfigVO == null) {
                                     logger.error("用户推荐人的当前拥有人姓名在坐席配置表中不存在,不予生成,用户ID:[" + userId + "].推荐人用户ID:[" + spreadsUserId + "].推荐人当前拥有人姓名:[" + currentOwner + "].");
+                                    userList.add(user);
                                     continue;
                                 }
                                 // 如果有，将此用户分配给该坐席
