@@ -18,6 +18,7 @@ import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
@@ -60,7 +61,7 @@ public class WithdrawController extends BaseController {
 	@ApiOperation(value = "提现管理页面载入", notes = "提现管理页面载入")
 	@PostMapping("/init")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(@RequestBody WithdrawBeanAPIRequest request) {
+	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(@RequestBody WithdrawBeanAPIRequest request,HttpServletRequest httpServletRequest) {
 
 		WithdrawCustomizeResponse response =withdrawService.getWithdrawRecordList(CommonUtils.convertBean(request, WithdrawBeanRequest.class));
 		if (response==null){
@@ -72,6 +73,20 @@ public class WithdrawController extends BaseController {
 		List<AdminWithdrawAPIVO> apiList = new ArrayList<AdminWithdrawAPIVO>();
 
 		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			Map<String, String> userPropertyMap = CacheUtil.getParamNameMap("USER_PROPERTY");
+			Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
+			Map<String, String> withdrawStatusMap = CacheUtil.getParamNameMap("WITHDRAW_STATUS");
+
+			boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+			for (WithdrawCustomizeVO vo : response.getResultList()) {
+				vo.setUserProperty(userPropertyMap.getOrDefault(vo.getUserProperty(),null));
+				vo.setClientStr(clientMap.getOrDefault(vo.getClientStr(),null));
+				vo.setStatusStr(withdrawStatusMap.getOrDefault(vo.getStatusStr(),null));
+				//脱敏
+				if(!isShow){
+					vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+				}
+			}
 			apiList=CommonUtils.convertBeanList(response.getResultList(), AdminWithdrawAPIVO.class);
 			return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList, response.getCount()));
 		}else {

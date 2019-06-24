@@ -1,12 +1,16 @@
 package com.hyjf.admin.controller;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.service.AdminService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminUserResponse;
 import com.hyjf.am.resquest.config.AdminRequest;
+import com.hyjf.am.vo.admin.AdminCustomizeVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,29 +31,30 @@ public class AdminUserController extends BaseController {
 	@Autowired
 	private AdminService adminService;
 
+	private static final String PERMISSIONS = "adminuser";
+
 	/**
 	 * 画面查询
-	 * 
-	 * @param request
-	 * @param form
 	 * @return
 	 */
 	@ApiOperation(value = "用户管理-画面查询", notes = "用户管理-画面查询")
 	@PostMapping(value = "/searchAction")
 	@ResponseBody
-	public AdminResult<AdminUserResponse> search(@RequestBody AdminRequest adminRequest) {
+	public AdminResult<AdminUserResponse> search(@RequestBody AdminRequest adminRequest,HttpServletRequest httpServletRequest) {
 		AdminUserResponse ap = adminService.search(adminRequest);
+		boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+		if(!isShow) {
+			if (ap!=null && CollectionUtils.isNotEmpty(ap.getResultList())){
+				for (AdminCustomizeVO vo : ap.getResultList()) {
+					vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+				}
+			}
+		}
 		return new AdminResult<AdminUserResponse>(ap);
 	}
 
 	/**
 	 * 迁移到账户设置详细画面
-	 * 
-	 * @param request
-	 * @param form
-	 * @return
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
 	@ApiOperation(value = "用户管理-迁移到账户设置详细画面", notes = "用户管理-迁移到账户设置详细画面")
 	@PostMapping(value = "/moveToInfoAction")
@@ -60,10 +65,6 @@ public class AdminUserController extends BaseController {
 
 	/**
 	 * 添加账户设置信息
-	 * 
-	 * @param request
-	 * @param form
-	 * @return
 	 */
 	@ApiOperation(value = "用户管理-添加账户设置信息", notes = "用户管理-添加账户设置信息")
 	@PostMapping(value = "/insertAction")
@@ -79,10 +80,6 @@ public class AdminUserController extends BaseController {
 
 	/**
 	 * 修改账户设置信息
-	 * 
-	 * @param request
-	 * @param form
-	 * @return
 	 */
 	@ApiOperation(value = " 用户管理-修改账户设置信息", notes = "用户管理-修改账户设置信息")
 	@PostMapping(value = "/updateAction")
@@ -106,10 +103,6 @@ public class AdminUserController extends BaseController {
 
 	/**
 	 * 删除账户
-	 * 
-	 * @param request
-	 * @param form
-	 * @return
 	 */
 	@ApiOperation(value = "  用户管理-删除账户", notes = " 用户管理-删除账户")
 	@PostMapping(value = "/deleteAction")
@@ -129,10 +122,6 @@ public class AdminUserController extends BaseController {
 
 	/**
 	 * 重置密码账户
-	 * 
-	 * @param request
-	 * @param form
-	 * @return
 	 */
 	@ApiOperation(value = " 用户管理-重置密码账户", notes = "用户管理-重置密码账户")
 	@PostMapping(value = "/resetPwdAction")
@@ -148,9 +137,6 @@ public class AdminUserController extends BaseController {
 
 	/**
 	 * 检查手机号码或用户名唯一性
-	 * 
-	 * @param request
-	 * @return
 	 */
 	@ApiOperation(value = " 用户管理-检查手机号码或用户名唯一性", notes = " 用户管理-检查手机号码或用户名唯一性")
 	@PostMapping(value = "/checkAction")

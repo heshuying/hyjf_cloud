@@ -5,7 +5,6 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -13,7 +12,6 @@ import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -132,7 +129,6 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 
 	@Override
 	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
-		
 		return amTradeClient.exportBorrowList(borrowCommonCustomize);
 	}
 

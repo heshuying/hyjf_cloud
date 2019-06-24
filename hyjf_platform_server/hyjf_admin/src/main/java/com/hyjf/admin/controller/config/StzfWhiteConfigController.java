@@ -15,6 +15,7 @@ import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,7 @@ public class StzfWhiteConfigController extends BaseController {
 	@ApiOperation(value = "受托支付白名单列表显示", notes = "受托支付白名单列表显示")
 	@PostMapping("/selectSTZHWhiteList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<ListResult<STZHWhiteListVO>> selectSTZHWhiteList(
-			@RequestBody STZHWhiteListRequestBean requestBean) {
+	public AdminResult<ListResult<STZHWhiteListVO>> selectSTZHWhiteList(@RequestBody STZHWhiteListRequestBean requestBean,HttpServletRequest httpServletRequest) {
 		STZHWhiteListResponse response = stzfWhiteConfigService.selectSTZHWhiteList(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -53,16 +53,29 @@ public class StzfWhiteConfigController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
+
+		boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+		if(!isShow){
+			for (STZHWhiteListVO vo : response.getResultList()) {
+				vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+			}
+		}
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
 	@ApiOperation(value = "受托支付白名单初始详情",notes = "受托支付白名单初始详情")
 	@PostMapping("/infoAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
-	public AdminResult infoAction(@RequestBody STZHWhiteListRequestBean requestBean) {
+	public AdminResult infoAction(@RequestBody STZHWhiteListRequestBean requestBean,HttpServletRequest httpServletRequest) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		if (requestBean.getId() != null) {
 			response = stzfWhiteConfigService.selectSTZHWhiteById(requestBean.getId());
+			//脱敏权限
+			boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+			if(!isShow){
+				STZHWhiteListVO vo=response.getResult();
+				vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+			}
 			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
 			response.setRegionList(regionList);
 		}else {

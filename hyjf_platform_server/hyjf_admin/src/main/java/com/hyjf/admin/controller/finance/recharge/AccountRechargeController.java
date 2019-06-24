@@ -222,18 +222,7 @@ public class AccountRechargeController extends BaseController {
         BeanUtils.copyProperties(requestBean, copyRequest);
 
         // 获取该角色 权限列表
-        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-        //判断权限
-        boolean isShow = false;
-        try {
-            for (String string : perm) {
-                if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                    isShow = true;
-                }
-            }
-        }catch (NullPointerException e){
-            logger.error("Admin - 充值管理未获取到当前用户的权限列表!", e.getMessage());
-        }
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
 
         //初始化返回List
         List<AccountRechargeCustomizeVO> returnList = new ArrayList<>();
@@ -253,7 +242,7 @@ public class AccountRechargeController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for(AccountRechargeCustomizeVO rechargeCustomizeVO:accountRechargeCustomizeVO){
-                    rechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(rechargeCustomizeVO.getMobile()));
+                    rechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(rechargeCustomizeVO.getMobile()));
                 }
             }
             returnList = CommonUtils.convertBeanList(accountRechargeCustomizeVO, AccountRechargeCustomizeVO.class);
@@ -385,17 +374,27 @@ public class AccountRechargeController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
+            if (!isShow){
+                rechargeResponse.getResultList().forEach(accountRechargeCustomizeVO -> {
+                    accountRechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(accountRechargeCustomizeVO.getMobile()));
+                });
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, rechargeResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
-
             accountRechargeRequest.setPageSize(defaultRowMaxCount);
             accountRechargeRequest.setCurrPage(i+1);
             AccountRechargeCustomizeResponse rechargeCustomizeResponse = rechargeService.queryRechargeList(accountRechargeRequest);
             if (rechargeCustomizeResponse != null && rechargeCustomizeResponse.getResultList().size()> 0) {
+                if (!isShow){
+                    rechargeCustomizeResponse.getResultList().forEach(accountRechargeCustomizeVO -> {
+                        accountRechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(accountRechargeCustomizeVO.getMobile()));
+                    });
+                }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  rechargeCustomizeResponse.getResultList());
             } else {

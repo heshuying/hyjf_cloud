@@ -18,8 +18,8 @@ import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -116,15 +116,9 @@ public class SmsLogController extends BaseController {
     @PostMapping("/findSmsLog")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<SmsLogVO>> findSmsLog(@RequestBody SmsLogRequest request, HttpServletRequest servletRequest) {
-        // 获取该角色 权限列表
-        List<String> perm = (List<String>) servletRequest.getSession().getAttribute("permission");
         //判断权限
-        boolean isShow = false;
-        for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow = true;
-            }
-        }
+        boolean isShow = this.havePermission(servletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         SmsLogResponse response = smsLogService.findSmsLog(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -142,14 +136,14 @@ public class SmsLogController extends BaseController {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < mobiles.length; i++) {
                             if (i != mobiles.length - 1) {
-                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedValue(mobiles[i])).append(",");
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i])).append(",");
                             } else {
-                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedValue(mobiles[i]));
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i]));
                             }
                         }
                         vo.setMobile(stringBuilder.toString());
                     } else {
-                        vo.setMobile(AsteriskProcessUtil.getAsteriskedValue(vo.getMobile()));
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
                     }
                 }
                 vo.setContent(displayContent(vo));
@@ -160,7 +154,7 @@ public class SmsLogController extends BaseController {
 
     @ApiOperation(value = "查询定时发送短信列表", notes = "查询定时发送短信列表")
     @PostMapping("/timeinit")
-    public AdminResult<ListResult<SmsOntimeVO>> timeinit(@RequestBody SmsLogRequest request) {
+    public AdminResult<ListResult<SmsOntimeVO>> timeinit(@RequestBody SmsLogRequest request,HttpServletRequest httpServletRequest) {
         SmsOntimeResponse response = smsLogService.queryTime(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -168,6 +162,32 @@ public class SmsLogController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+        //判断权限
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if (!isShow) {
+            if (CollectionUtils.isNotEmpty(response.getResultList())){
+                for (SmsOntimeVO vo : response.getResultList()) {
+                    if (vo.getMobile().contains(",")) {
+                        String[] mobiles = vo.getMobile().split(",");
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < mobiles.length; i++) {
+                            if (i != mobiles.length - 1) {
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i])).append(",");
+                            } else {
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i]));
+                            }
+                        }
+                        vo.setMobile(stringBuilder.toString());
+                    } else {
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    }
+                }
+
+            }
+        }
+
+
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
+
 }
