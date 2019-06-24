@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
@@ -1765,16 +1766,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String taskTime = formatter.format(currentTime);
         return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
     }
-    /**
-     * 获取现在时间
-     *
-     * @return 返回时间类型 yyyyMM
-     */
-    private  String getNowDateOfDay() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
-        String dateString = formatter.format(currentTime);
-        return dateString;
+
+
+    @Override
+    public List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list) {
+        return userCustomizeMapper.getbatchAuthorityList(list.getIdNoList(),list.getIdType());
     }
 
     @Override
@@ -1793,4 +1789,5 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void insertAppUtmReg(AppUtmReg entity) {
         appUtmRegMapper.insertSelective(entity);
     }
+
 }
