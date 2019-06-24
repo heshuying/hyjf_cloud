@@ -278,12 +278,15 @@ public class ElectricitySalesDataController extends BaseUserController {
             }
         }
         // 筛选后需要组的用户List为空
-        if (CollectionUtils.isEmpty(userList)) {
+        if (CollectionUtils.isEmpty(userList) && CollectionUtils.isEmpty(result)) {
             logger.info("经筛选后，需要分组的用户为空，不需要生成数据");
             return;
         }
         // 需要分组的用户数
-        Integer totalCount = userList.size();
+        Integer totalCount = 0;
+        if(!CollectionUtils.isEmpty(userList)){
+            totalCount = userList.size();
+        }
         // 需要分组的用户数<= 客组类型为新客组的坐席数
         if (customerServiceRepresentiveCount >= totalCount) {
             for (int i = 0; i < totalCount; i++) {
