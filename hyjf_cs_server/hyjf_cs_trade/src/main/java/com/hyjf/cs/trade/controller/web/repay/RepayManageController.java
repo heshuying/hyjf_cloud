@@ -1168,13 +1168,13 @@ public class RepayManageController extends BaseTradeController {
         requestBean.setLimitEnd(page.getLimit());
         try {
             List<SponsorLogCustomizeVO> resultList = repayManageService.selectSponsorLog(requestBean);
-            for (SponsorLogCustomizeVO sponsorLogCustomizeVO : resultList) {
-				if(sponsorLogCustomizeVO.getStatus().equals("0")) {
-					if(repayManageService.selectBorrowApicronListByBorrowNid(sponsorLogCustomizeVO.getBorrowNid())!=null) {
-						sponsorLogCustomizeVO.setStatus("3");
-					}
-				}
-			}
+//            for (SponsorLogCustomizeVO sponsorLogCustomizeVO : resultList) {
+//				if(sponsorLogCustomizeVO.getStatus().equals("0")) {
+//					if(repayManageService.selectBorrowApicronListByBorrowNid(sponsorLogCustomizeVO.getBorrowNid())!=null) {
+//						sponsorLogCustomizeVO.setStatus("3");
+//					}
+//				}
+//			}
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取担保授权列表异常", e);
