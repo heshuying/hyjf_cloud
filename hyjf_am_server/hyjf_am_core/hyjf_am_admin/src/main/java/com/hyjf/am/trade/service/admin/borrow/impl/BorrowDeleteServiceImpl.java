@@ -156,7 +156,7 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
                 statusName = "初审中";
                 break;
             case 2:
-                statusName = "投资中";
+                statusName = "出借中";
                 break;
             case 3:
                 statusName = "复审中";
