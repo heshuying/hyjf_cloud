@@ -214,5 +214,4 @@ public class ShiroConstants {
 	/** 同步用户预留手机号*/
 	public static final String PERMISSION_SYNC_USER_MOBILE = "syncUserMobile";
 
-
 }
