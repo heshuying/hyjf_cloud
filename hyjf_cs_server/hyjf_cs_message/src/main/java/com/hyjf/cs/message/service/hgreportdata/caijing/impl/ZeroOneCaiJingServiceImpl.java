@@ -86,11 +86,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("借款记录接口报送数据为空");
             return;
         }
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(BORROWRECORD);
-        presentationLog.setCount(borrowDataVOList.size());
-        presentationLog.setStartDate(dateStart);
-        presentationLog.setEndDate(dateEnd);
+
 
         logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
 
@@ -111,6 +107,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             }
             voList.setId(CustomUtil.nidSign(voList.getId()));
         }
+
         List<ZeroOneBorrowEntity> borrowEntities = CommonUtils.convertBeanList(borrowDataVOList, ZeroOneBorrowEntity.class);
 
         //将数据大于1500的进行拆分上报
@@ -119,6 +116,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 : totalCount / defaultRowMaxCount + 1;
 
         for (int i = 1; i <= sheetCount; i++) {
+            Integer status = 0;
+            String description = "";
 
             int start=(i-1) * defaultRowMaxCount;
             int end = Math.min(totalCount, i * defaultRowMaxCount);
@@ -132,20 +131,15 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                     //报送成功
                     logger.info("借款记录接口报送成功");
-                    presentationLog.setStatus(1);
-                    presentationLog.setDescription("");
-                    presentationLog.setJson(map);
+                    status = 1;
                 } else {
-                    presentationLog.setStatus(0);
+                    status = 0;
                     if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
-                        presentationLog.setDescription(zeroOneResponse.result_msg);
-                    }else{
-                        presentationLog.setDescription("");
+                        description = zeroOneResponse.result_msg;
                     }
-                    presentationLog.setJson(map);
                 }
                 //插入mongo表
-                this.presentationLogService.insertLog(presentationLog);
+                this.saveLog(result.size(),dateStart,dateEnd,status,description,map);
             }
         }
         logger.info("借款记录接口报送结束");
@@ -207,6 +201,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 : totalCount / defaultRowMaxCount + 1;
 
         for (int i = 1; i <= sheetCount; i++) {
+            Integer status = 0;
+            String description = "";
 
             int start = (i - 1) * defaultRowMaxCount;
             int end = Math.min(totalCount, i * defaultRowMaxCount);
@@ -220,20 +216,15 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                     //报送成功
                     logger.info("投资记录接口报送成功");
-                    presentationLog.setStatus(1);
-                    presentationLog.setDescription("");
-                    presentationLog.setJson(map);
+                    status = 1;
                 } else {
-                    presentationLog.setStatus(0);
+                    status = 0;
                     if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
-                        presentationLog.setDescription(zeroOneResponse.result_msg);
-                    }else{
-                        presentationLog.setDescription("");
+                        description = zeroOneResponse.result_msg;
                     }
-                    presentationLog.setJson(map);
                 }
                 //插入mongo表
-                this.presentationLogService.insertLog(presentationLog);
+                this.saveLog(result.size(),startDate,endDate,status,description,map);
             }
         }
 
@@ -270,7 +261,8 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 : totalCount / defaultRowMaxCount + 1;
 
         for (int i = 1; i <= sheetCount; i++) {
-
+            Integer status = 0;
+            String description = "";
             int start = (i - 1) * defaultRowMaxCount;
             int end = Math.min(totalCount, i * defaultRowMaxCount);
 
@@ -283,20 +275,15 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                     //报送成功
                     logger.info("提前还款接口报送成功");
-                    presentationLog.setStatus(1);
-                    presentationLog.setDescription("");
-                    presentationLog.setJson(map);
+                    status = 1;
                 } else {
-                    presentationLog.setStatus(0);
+                    status = 0;
                     if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
-                        presentationLog.setDescription(zeroOneResponse.result_msg);
-                    }else{
-                        presentationLog.setDescription("");
+                        description = zeroOneResponse.result_msg;
                     }
-                    presentationLog.setJson(map);
                 }
                 //插入mongo表
-                this.presentationLogService.insertLog(presentationLog);
+                this.saveLog(result.size(),startDate,endDate,status,description,map);
             }
         }
 
@@ -427,7 +414,28 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         return mapUserId;
     }
 
+    /**
+     * 保存零壹财经报送数据
+     * @param size 报送数据条数
+     * @param dateStart 报送开始时间
+     * @param dateEnd   报送结束时间
+     * @param status   报送状态，1=成功，0=失败
+     * @param description 报送返回描述
+     * @param jsonData  报送数据，json格式
+     */
+    private void saveLog(Integer size,String dateStart, String dateEnd,Integer status,String description,
+                         Map<String,Object> jsonData){
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType(BORROWRECORD);
+        presentationLog.setCount(size);
+        presentationLog.setStartDate(dateStart);
+        presentationLog.setEndDate(dateEnd);
 
+        presentationLog.setStatus(status);
+        presentationLog.setDescription(description);
+        presentationLog.setJson(jsonData);
+        this.presentationLogService.insertLog(presentationLog);
+    }
 
     /**
      * 数据推送
