@@ -399,7 +399,7 @@ public class DuibaOrderListController {
                         if (productTypeCZ.equals(duibaOrderVOStr.getProductType())) {
                             // 更新虚拟商品充值状态
                             if (StringUtils.isNotEmpty(errorMessage)) {
-                                duibaOrderVO.setRechargeState("处理中（" + errorMessage + "）");
+                                duibaOrderVO.setRechargeState("失败（" + errorMessage + "）");
                             }
                         }
                         // 设置失败原因
