@@ -83,13 +83,13 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
 			//本月累计待还债转数据
             List<SellDailyVO> creditSellDailyList = dto.getCreditSellDailyList();
-            if (!CollectionUtils.isEmpty(creditSellDailyList)) {
+            if (CollectionUtils.isEmpty(creditSellDailyList)) {
             	creditSellDailyList.add(new SellDailyVO(null, null));
 			}
 
 			//当日待还债转数据
 			List<SellDailyVO> creditRepayList = dto.getCreditRepayList();
-			if (!CollectionUtils.isEmpty(creditRepayList)) {
+			if (CollectionUtils.isEmpty(creditRepayList)) {
 				creditRepayList.add(new SellDailyVO(null, null));
 			}
 
