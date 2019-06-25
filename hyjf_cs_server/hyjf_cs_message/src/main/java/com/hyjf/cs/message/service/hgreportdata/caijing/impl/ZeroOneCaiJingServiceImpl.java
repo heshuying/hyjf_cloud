@@ -133,13 +133,14 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                     logger.info("借款记录接口报送成功");
                     status = 1;
                 } else {
+                    logger.info("借款记录接口报送失败");
                     status = 0;
                     if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
                         description = zeroOneResponse.result_msg;
                     }
                 }
                 //插入mongo表
-                this.saveLog(result.size(),dateStart,dateEnd,status,description,map);
+                this.saveLog(BORROWRECORD,result.size(),dateStart,dateEnd,status,description,map);
             }
         }
         logger.info("借款记录接口报送结束");
@@ -161,12 +162,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("投资记录接口无数据报送结束");
             return;
         }
-
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(INVESTRECORD);
-        presentationLog.setCount(zeroOneDataVOList.size());
-        presentationLog.setStartDate(startDate);
-        presentationLog.setEndDate(endDate);
 
         logger.info("投资记录接口报送条数=" + zeroOneDataVOList.size());
 
@@ -218,13 +213,14 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                     logger.info("投资记录接口报送成功");
                     status = 1;
                 } else {
+                    logger.info("投资记录接口报送失败");
                     status = 0;
                     if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
                         description = zeroOneResponse.result_msg;
                     }
                 }
                 //插入mongo表
-                this.saveLog(result.size(),startDate,endDate,status,description,map);
+                this.saveLog(INVESTRECORD,result.size(),startDate,endDate,status,description,map);
             }
         }
 
@@ -246,12 +242,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("提前还款接口无数据报送结束");
             return;
         }
-
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(ADVANCEREPAY);
-        presentationLog.setCount(zeroOneDataVOList.size());
-        presentationLog.setStartDate(startDate);
-        presentationLog.setEndDate(endDate);
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
@@ -277,13 +267,14 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                     logger.info("提前还款接口报送成功");
                     status = 1;
                 } else {
+                    logger.info("提前还款接口报送失败");
                     status = 0;
                     if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
                         description = zeroOneResponse.result_msg;
                     }
                 }
                 //插入mongo表
-                this.saveLog(result.size(),startDate,endDate,status,description,map);
+                this.saveLog(ADVANCEREPAY,result.size(),startDate,endDate,status,description,map);
             }
         }
 
@@ -423,10 +414,10 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
      * @param description 报送返回描述
      * @param jsonData  报送数据，json格式
      */
-    private void saveLog(Integer size,String dateStart, String dateEnd,Integer status,String description,
+    private void saveLog(String logType,Integer size,String dateStart, String dateEnd,Integer status,String description,
                          Map<String,Object> jsonData){
         CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(BORROWRECORD);
+        presentationLog.setLogType(logType);
         presentationLog.setCount(size);
         presentationLog.setStartDate(dateStart);
         presentationLog.setEndDate(dateEnd);
