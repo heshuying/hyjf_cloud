@@ -40,7 +40,7 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 		if(templateDisposeRequest.getStatus()!=null) {
 			cr.andStatusEqualTo(templateDisposeRequest.getStatus());
 		}
-		if(templateDisposeRequest.getTempName()!=null&&!templateDisposeRequest.getTempName().isEmpty())
+//		if(templateDisposeRequest.getTempName()!=null&&!templateDisposeRequest.getTempName().isEmpty())
 		if(templateDisposeRequest.getCreateTimeEnd()!=null&&templateDisposeRequest.getCreateTimeStart()!=null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();

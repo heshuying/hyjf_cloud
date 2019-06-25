@@ -21,9 +21,7 @@ import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.admin.service.LandingManagerService;
 import com.hyjf.admin.service.RegistRecordService;
@@ -72,6 +70,16 @@ public class TemplateDisposeController extends BaseController{
     @ApiOperation(value = "新建页面初始化", notes = "新建页面初始化")
     @PostMapping("/infoInit")
     public AdminResult infoInit(@RequestBody  TemplateDisposeRequest templateDisposeRequest) {
+    	TemplateDisposeResponse tdr=new TemplateDisposeResponse();
+    	if(templateDisposeRequest.getTempId()!=null) {
+            LandingManagerRequest landingManagerRequest=new LandingManagerRequest();
+            landingManagerRequest.setCurrPage(1);
+            landingManagerRequest.setPageSize(1000);
+            landingManagerRequest.setStatus(1);
+    		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTemplateById(templateDisposeRequest.getTempId());
+    		tdr.setTemplateConfig(templateConfigResponse.getResult());
+    		return new AdminResult(tdr);
+    	}
         // 注册渠道
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
@@ -80,13 +88,20 @@ public class TemplateDisposeController extends BaseController{
         landingManagerRequest.setPageSize(1);
         landingManagerRequest.setStatus(1);
 		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
-		TemplateDisposeResponse tdr=new TemplateDisposeResponse();
+		
 		tdr.setTemplateConfigList(templateConfigResponse.getResultList());
 		tdr.setUserRoles( registRecordResponse.getUtmPlatVOList());
-		templateDisposeRequest.setCurrPage(1);
-		templateDisposeRequest.setPageSize(1);
-		TemplateDisposeResponse templateDisposeResponse=templateDisposeService.templateDisposeList(templateDisposeRequest);
-		tdr.setResult(templateDisposeResponse.getResultList().get(0));
+        Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
+        List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
+        tdr.setListUserRoles(listUserRoles);
+		
+		if(templateDisposeRequest.getId()!=null) {
+			templateDisposeRequest.setCurrPage(1);
+			templateDisposeRequest.setPageSize(1);
+			TemplateDisposeResponse templateDisposeResponse=templateDisposeService.templateDisposeList(templateDisposeRequest);
+			tdr.setResult(templateDisposeResponse.getResultList().get(0));
+		}
+
         return new AdminResult(tdr);
     }
 	/**
@@ -103,6 +118,12 @@ public class TemplateDisposeController extends BaseController{
  	 */
 	@PostMapping("/updateTemplateDispose")
 	public AdminResult updateTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
+		String[] temp = templateDisposeRequest.getTempName().split("\\|");
+		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
+		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
+		templateDisposeRequest.setTempName(temp[1]);
+		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
+		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUpdateTime(new Date());
 		templateDisposeRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 		TemplateDisposeResponse templateDisposeResponse=templateDisposeService.updateTemplateDispose(templateDisposeRequest);
@@ -118,7 +139,12 @@ public class TemplateDisposeController extends BaseController{
  	 */
 	@PostMapping("/insertTemplateDispose")
 	public AdminResult insertTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
-		
+		String[] temp = templateDisposeRequest.getTempName().split("\\|");
+		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
+		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
+		templateDisposeRequest.setTempName(temp[1]);
+		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
+		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUrl(systemConfig.getWechatHost());
 		templateDisposeRequest.setCreateTime(new Date());
 		templateDisposeRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
@@ -147,7 +173,7 @@ public class TemplateDisposeController extends BaseController{
 	}
     @ApiOperation(value = "图片上传", notes = "图片上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY} )
+  //  @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY} )
     public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

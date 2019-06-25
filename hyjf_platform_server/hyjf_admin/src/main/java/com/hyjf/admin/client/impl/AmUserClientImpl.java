@@ -3172,7 +3172,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest) {
-		String url = "http://AM-ADMIN//am-user/templateDisposeg/templateDisposeList" ;
+		String url = "http://AM-ADMIN/am-user/templateDispose/templateDisposeList" ;
 		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response;
@@ -3186,7 +3186,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public TemplateDisposeResponse updateTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
-		String url = "http://AM-ADMIN//am-user/templateDisposeg/updateTemplateDispose" ;
+		String url = "http://AM-ADMIN/am-user/templateDispose/updateTemplateDispose" ;
 		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response;
@@ -3200,7 +3200,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
-		String url = "http://AM-ADMIN//am-user/templateDisposeg/insertTemplateDispose" ;
+		String url = "http://AM-ADMIN/am-user/templateDispose/insertTemplateDispose" ;
 		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response;
@@ -3214,7 +3214,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
-		String url = "http://AM-ADMIN//am-user/templateDisposeg/deleteTemplateDispose" ;
+		String url = "http://AM-ADMIN/am-user/templateDispose/deleteTemplateDispose" ;
 		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response;

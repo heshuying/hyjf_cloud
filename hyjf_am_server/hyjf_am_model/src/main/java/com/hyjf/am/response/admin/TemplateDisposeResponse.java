@@ -7,7 +7,7 @@ import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.user.TemplateConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
-public class TemplateDisposeResponse extends AdminResponse<TemplateDisposeVO>{
+public class TemplateDisposeResponse<T> extends AdminResponse<TemplateDisposeVO>{
 
 	/**
 	 * 
@@ -18,6 +18,25 @@ public class TemplateDisposeResponse extends AdminResponse<TemplateDisposeVO>{
 	private List<UtmPlatVO> userRoles;
 	
 	private List<TemplateConfigVO>	templateConfigList;
+	private List<T> listUserRoles;
+	private TemplateConfigVO templateConfig;
+	
+	
+	public TemplateConfigVO getTemplateConfig() {
+		return templateConfig;
+	}
+
+	public void setTemplateConfig(TemplateConfigVO templateConfig) {
+		this.templateConfig = templateConfig;
+	}
+
+	public List<T> getListUserRoles() {
+		return listUserRoles;
+	}
+
+	public void setListUserRoles(List<T> listUserRoles) {
+		this.listUserRoles = listUserRoles;
+	}
 
 	public List<UtmPlatVO> getUserRoles() {
 		return userRoles;
