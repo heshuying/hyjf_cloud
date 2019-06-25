@@ -90,8 +90,6 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         }
         // 订单状态
         duibaOrders.setOrderStatus(2);
-        // 充值状态
-        duibaOrders.setRechargeState("处理中");
         // 下单时间
         duibaOrders.setOrderTime(GetDate.getNowTime10());
         // 发货状态，收货信息，只有实物的时候存初始值
@@ -99,8 +97,9 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
             duibaOrders.setDeliveryStatus(0);
             duibaOrders.setReceivingInformation(consumeParams.getParams());
         }
-        // 商品编码，只有虚拟充值时设置，为汇盈优惠券编码
+        // 商品编码，虚拟商品充值状态，只有虚拟充值时设置
         if(DuiBaCallConstant.TYPE_VIRTUAL.equals(type)){
+            duibaOrders.setRechargeState("处理中");
             duibaOrders.setCommodityCode(consumeParams.getParams());
         }
         duibaOrders.setExchangeRate(duiBaRate);
