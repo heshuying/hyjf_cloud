@@ -217,6 +217,7 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test='orderTypeTab == "3"'>
         AND hdp.recharge_state IS NOT NULL
+        AND hdp.product_type <![CDATA[<>]]> '0'
         AND hdp.order_status = 1
         AND hdp.activation_type = 1
       </if>
