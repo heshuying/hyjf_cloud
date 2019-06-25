@@ -79,7 +79,7 @@ public class EvalationController extends BaseController {
         if(!CollectionUtils.isEmpty(evalationResponse.getResultList())){
             evalationResponse.getResultList().forEach(item ->{
                 // 手机号码
-                item.setMobile(AsteriskProcessUtil.getDesensitizationValue(item.getMobile()));
+                item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
                 // 姓名
                 item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
             });

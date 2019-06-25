@@ -144,11 +144,11 @@ public class BankCardManagerController extends BaseController {
                     // 银行卡号
                     item.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(item.getAccount()));
                     // 当前手机号码
-                    item.setMobile(AsteriskProcessUtil.getDesensitizationValue(item.getMobile()));
+                    item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
                     // 预留手机号码
-                    item.setBankMobile(AsteriskProcessUtil.getDesensitizationValue(item.getBankMobile()));
+                    item.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getBankMobile()));
                     // 身份证号码
-                    item.setIdcard(AsteriskProcessUtil.getDesensitizationValue(item.getIdcard()));
+                    item.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdcard()));
                     // 姓名
                     item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
                 });
@@ -383,7 +383,7 @@ public class BankCardManagerController extends BaseController {
             @Override
             public String format(Object object) {
                 String account = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(account);
+                return AsteriskProcessUtil.getAsteriskedBankCard(account);
             }
         };
         mapAdapter.put("account", accountAdapter);
@@ -547,7 +547,7 @@ public class BankCardManagerController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
 
@@ -563,7 +563,7 @@ public class BankCardManagerController extends BaseController {
             @Override
             public String format(Object object) {
                 String idcard = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(idcard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idcard);
             }
         };
 

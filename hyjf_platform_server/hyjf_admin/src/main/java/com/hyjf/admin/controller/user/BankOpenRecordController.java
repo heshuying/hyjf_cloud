@@ -96,8 +96,8 @@ public class BankOpenRecordController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for (BankOpenAccountRecordVO registRecordVO:bankOpenAccountRecordVOList){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getDesensitizationValue(registRecordVO.getMobile()));
-                    registRecordVO.setIdCard(AsteriskProcessUtil.getDesensitizationValue(registRecordVO.getIdCard()));
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
+                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(registRecordVO.getIdCard()));
                     // 姓名
                     registRecordVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(registRecordVO.getRealName()));
                 }
@@ -135,8 +135,8 @@ public class BankOpenRecordController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for (BankOpenAccountRecordVO registRecordVO:bankOpenAccountRecordVOList){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getDesensitizationValue(registRecordVO.getMobile()));
-                    registRecordVO.setIdCard(AsteriskProcessUtil.getDesensitizationValue(registRecordVO.getIdCard()));
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
+                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(registRecordVO.getIdCard()));
                     // 用户姓名
                     registRecordVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(registRecordVO.getRealName()));
                     // 银行卡号
@@ -393,7 +393,7 @@ public class BankOpenRecordController extends BaseController {
             @Override
             public String format(Object object) {
                 String idCard = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(idCard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idCard);
             }
         };
 
@@ -582,14 +582,14 @@ public class BankOpenRecordController extends BaseController {
             @Override
             public String format(Object object) {
                 String idCard = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(idCard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idCard);
             }
         };
         IValueFormatter mobileAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
 
@@ -660,9 +660,9 @@ public class BankOpenRecordController extends BaseController {
             if (!isShow){
                 bankCancellationList.forEach(item ->{
                     // 手机号码
-                    item.setMobile(AsteriskProcessUtil.getDesensitizationValue(item.getMobile()));
+                    item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
                     // 身份证号码
-                    item.setIdcard(AsteriskProcessUtil.getDesensitizationValue(item.getIdcard()));
+                    item.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdcard()));
                     // 姓名
                     item.setTruename(AsteriskProcessUtil.getAsteriskedCnName(item.getTruename()));
                     // 银行卡号

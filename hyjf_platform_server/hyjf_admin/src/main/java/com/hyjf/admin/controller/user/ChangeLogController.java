@@ -95,9 +95,9 @@ public class ChangeLogController extends BaseController {
                 // 真实姓名
                 item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
                 // 手机号码
-                item.setMobile(AsteriskProcessUtil.getDesensitizationValue(item.getMobile()));
+                item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
                 // 身份证号码
-                item.setIdCard(AsteriskProcessUtil.getDesensitizationValue(item.getIdCard()));
+                item.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdCard()));
             });
         }
         return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
@@ -369,7 +369,7 @@ public class ChangeLogController extends BaseController {
             public String format(Object object) {
                 String mobile = (String) object;
                 if(mobile!=null) {
-                    return AsteriskProcessUtil.getDesensitizationValue(mobile);
+                    return AsteriskProcessUtil.getAsteriskedMobile(mobile);
                 }
                 return "";
             }

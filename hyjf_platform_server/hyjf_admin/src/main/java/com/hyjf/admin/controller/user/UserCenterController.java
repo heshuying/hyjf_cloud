@@ -102,7 +102,7 @@ public class UserCenterController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for(UserManagerVO userManagerVO:listUserManagetVO){
-                    userManagerVO.setMobile(AsteriskProcessUtil.getDesensitizationValue(userManagerVO.getMobile()));
+                    userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
                     userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
                 }
             }
@@ -137,9 +137,9 @@ public class UserCenterController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 //用户身份证号码
-                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getDesensitizationValue(userManagerDetailVO.getIdCard()));
+                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(userManagerDetailVO.getIdCard()));
                 // 用户手机号
-                userManagerDetailVO.setMobile(AsteriskProcessUtil.getDesensitizationValue(userManagerDetailVO.getMobile()));
+                userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getMobile()));
                 //用户邮箱
                 userManagerDetailVO.setEmail(AsteriskProcessUtil.getAsteriskedEmail(userManagerDetailVO.getEmail()));
                 // 真实姓名
@@ -147,7 +147,7 @@ public class UserCenterController extends BaseController {
                 // 紧急联系人姓名
                 userManagerDetailVO.setEmName(AsteriskProcessUtil.getAsteriskedCnName(userManagerDetailVO.getEmName()));
                 //紧急联系人手机号加密显示
-                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
+                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getEmPhone()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
@@ -684,7 +684,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String idcard = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(idcard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idcard);
             }
         };
         IValueFormatter bankOpenAccounAdapter = new IValueFormatter() {
@@ -705,7 +705,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
         //户籍所在地

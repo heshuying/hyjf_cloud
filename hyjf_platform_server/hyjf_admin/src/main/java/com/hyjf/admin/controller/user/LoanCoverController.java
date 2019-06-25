@@ -85,7 +85,7 @@ public class LoanCoverController extends BaseController {
                     // 企业名称
                     item.setName(AsteriskProcessUtil.getAsteriskedCnName(item.getName()));
                     // 证件号码
-                    item.setIdNo(AsteriskProcessUtil.getDesensitizationValue(item.getIdNo()));
+                    item.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdNo()));
                 });
             }
             loanCoverUserCustomizeVOList = CommonUtils.convertBeanList(loanCoverUserVOList.getResultList(),LoanCoverUserCustomizeVO.class);
@@ -468,7 +468,7 @@ public class LoanCoverController extends BaseController {
             @Override
             public String format(Object object) {
                 String idNo = (String) object;
-                return AsteriskProcessUtil.getDesensitizationValue(idNo);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idNo);
             }
         };
 
