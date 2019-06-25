@@ -83,15 +83,9 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
 			//本月累计待还债转数据
             List<SellDailyVO> creditSellDailyList = dto.getCreditSellDailyList();
-            if (CollectionUtils.isEmpty(creditSellDailyList)) {
-            	creditSellDailyList.add(new SellDailyVO(null, null));
-			}
 
 			//当日待还债转数据
 			List<SellDailyVO> creditRepayList = dto.getCreditRepayList();
-			if (CollectionUtils.isEmpty(creditRepayList)) {
-				creditRepayList.add(new SellDailyVO(null, null));
-			}
 
 			// 2. 处理drawOrder=2特殊分部的数据
 			SellDailyVO noneRefferRecord = new SellDailyVO(YYZX_PRIMARY_DIVISION_NAME, YYZX_TWO_DIVISION_NAME);
@@ -125,29 +119,33 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
             // F-本月累计已还款（2列） 扣减债转
             if (column == 2) {
-                //无主单 - 债转 计算：一级部门空 + 杭州分部
-                for (SellDailyVO creditSellDaily : creditSellDailyList) {
-                    if (StringUtils.isEmpty(creditSellDaily.getPrimaryDivision())
-                            || NONE_REFFER_PRIMARY_DIVISION.contains(creditSellDaily.getPrimaryDivision())) {
-                        logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
-                        logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
-                        noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
-                        logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                if (!CollectionUtils.isEmpty(creditSellDailyList)) {
+                    //无主单 - 债转 计算：一级部门空 + 杭州分部
+                    for (SellDailyVO creditSellDaily : creditSellDailyList) {
+                        if (StringUtils.isEmpty(creditSellDaily.getPrimaryDivision())
+                                || NONE_REFFER_PRIMARY_DIVISION.contains(creditSellDaily.getPrimaryDivision())) {
+                            logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
+                            logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                            noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+                            logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                        }
                     }
                 }
             }
 			// U-当日待还（17列）扣减债转
             if (column == 17) {
             	logger.info("17列扣减债转开始, list is :", JSON.toJSONString(creditRepayList));
-				for (SellDailyVO creditRepay : creditRepayList) {
-					if (StringUtils.isEmpty(creditRepay.getPrimaryDivision())
-							|| NONE_REFFER_PRIMARY_DIVISION.contains(creditRepay.getPrimaryDivision())) {
-						logger.info("{}列扣减债转, vo is : {}", column, creditRepay.print());
-						logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
-						noneRefferRecord = sellDailyService.addValue(creditRepay, noneRefferRecord, column, SUBTRACT);
-						logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
-					}
-				}
+            	if (!CollectionUtils.isEmpty(creditRepayList)) {
+                    for (SellDailyVO creditRepay : creditRepayList) {
+                        if (StringUtils.isEmpty(creditRepay.getPrimaryDivision())
+                                || NONE_REFFER_PRIMARY_DIVISION.contains(creditRepay.getPrimaryDivision())) {
+                            logger.info("{}列扣减债转, vo is : {}", column, creditRepay.print());
+                            logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                            noneRefferRecord = sellDailyService.addValue(creditRepay, noneRefferRecord, column, SUBTRACT);
+                            logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
+                        }
+                    }
+                }
 			}
 //			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
 //			if (column == 17 || column == 2) {
