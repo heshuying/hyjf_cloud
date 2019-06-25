@@ -97,8 +97,9 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
             duibaOrders.setDeliveryStatus(0);
             duibaOrders.setReceivingInformation(consumeParams.getParams());
         }
-        // 商品编码，只有虚拟充值时设置，为汇盈优惠券编码
+        // 商品编码，虚拟商品充值状态，只有虚拟充值时设置
         if(DuiBaCallConstant.TYPE_VIRTUAL.equals(type)){
+            duibaOrders.setRechargeState("处理中");
             duibaOrders.setCommodityCode(consumeParams.getParams());
         }
         duibaOrders.setExchangeRate(duiBaRate);
