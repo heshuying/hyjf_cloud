@@ -155,6 +155,17 @@ public class AsteriskProcessUtil {
         return bankCard.replaceAll("\\w(?=\\w{4})", "*");
     }
 
+    /**
+     * 银行卡号脱敏(显示前四位，其余脱敏显示*)
+     * @param idNo
+     */
+    public static String getAsteriskedEnterpriseIdNo(String idNo){
+        if (StringUtils.isEmpty(idNo)){
+            return idNo;
+        }
+        return idNo.replaceAll("(?<=\\w{4})\\w", "*");
+    }
+
 
     /**
      * 邮箱脱敏(显示a****@及后面域名)
@@ -175,7 +186,7 @@ public class AsteriskProcessUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(AsteriskProcessUtil.getAsteriskedBankCard("37"));
+        System.out.println(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo("3720000000000000aaa"));
     }
 
 }
