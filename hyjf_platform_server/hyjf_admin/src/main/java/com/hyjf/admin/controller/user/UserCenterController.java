@@ -181,7 +181,7 @@ public class UserCenterController extends BaseController {
         if(null!=userBankOpenAccountVO){
             if(!isShow){
                 // 银行卡号
-                userBankOpenAccountVO.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(userBankOpenAccountVO.getAccount()));
+                userBankOpenAccountVO.setBankNo(AsteriskProcessUtil.getAsteriskedBankCard(userBankOpenAccountVO.getBankNo()));
                 // 预留手机号
                 userBankOpenAccountVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userBankOpenAccountVO.getMobile()));
             }
