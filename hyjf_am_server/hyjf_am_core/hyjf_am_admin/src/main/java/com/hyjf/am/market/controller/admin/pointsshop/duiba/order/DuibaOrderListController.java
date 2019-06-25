@@ -445,6 +445,8 @@ public class DuibaOrderListController {
         String productTypeCZ = "2";
         // 商品类型为实物
         String productTypeSW = "0";
+        // 卡密和优惠卷
+        String productTypeKM = "1";
         // 执行更新影响行数
         int flagCount = 0;
         // 更新虚拟商品充值状态为完成
@@ -458,7 +460,12 @@ public class DuibaOrderListController {
                 couponUserRequest.setId(duibaOrderVOStr.getCouponUserId());
                 // 更新优惠卷用户表为有效
                 flagCount = couponUserService.updateCouponUserDelFlag(couponUserRequest);
-                // 虚拟商品充值状态
+                // 虚拟商品充值状态(充值)
+                duibaOrderVO.setRechargeState("处理完成");
+            }
+            // 虚拟商品充值状态(卡密优惠卷)
+            if(productTypeKM.equals(duibaOrderVOStr.getProductType())){
+                // 虚拟商品充值状态(卡密优惠卷)
                 duibaOrderVO.setRechargeState("处理完成");
             }
             // 判断如果为实物则更改已发货状态
