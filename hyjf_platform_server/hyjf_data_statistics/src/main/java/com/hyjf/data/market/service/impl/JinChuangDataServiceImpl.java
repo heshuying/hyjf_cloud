@@ -53,11 +53,11 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
         JcUserConversion userConversion = userConversionDao.getUserConversion();
         JcUserConversionVO conversionVO = new JcUserConversionVO();
         if (userConversion != null) {
-            conversionVO.setRegisterNum("100%");
-            conversionVO.setOpenAccountNum(userConversion.getOpenAccountNum() / userConversion.getRegisterNum() + "%");
-            conversionVO.setRechargeNum(userConversion.getRechargeNum() / userConversion.getRegisterNum() + "%");
-            conversionVO.setInvestNum(userConversion.getInvestNum() / userConversion.getRegisterNum() + "%");
-            conversionVO.setReInvestNum(userConversion.getReInvestNum() / userConversion.getRegisterNum() + "%");
+//            conversionVO.setRegisterNum("100%");
+//            conversionVO.setOpenAccountNum(userConversion.getOpenAccountNum() / userConversion.getRegisterNum() + "%");
+//            conversionVO.setRechargeNum(userConversion.getRechargeNum() / userConversion.getRegisterNum() + "%");
+//            conversionVO.setInvestNum(userConversion.getInvestNum() / userConversion.getRegisterNum() + "%");
+//            conversionVO.setReInvestNum(userConversion.getReInvestNum() / userConversion.getRegisterNum() + "%");
             return conversionVO;
         }
         return new JcUserConversionVO();

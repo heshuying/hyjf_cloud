@@ -13,70 +13,61 @@ import java.io.Serializable;
  */
 @Document(collection = "ht_jc_user_conversion")
 public class JcUserConversion implements Serializable {
-    private String id;
 
-    private Integer registerNum;
+    private String registerRate;
 
-    private Integer openAccountNum;
+    private String openAccountRate;
 
-    private Integer rechargeNum;
+    private String rechargeRate;
 
-    private Integer investNum;
+    private String investRate;
 
-    private Integer reInvestNum;
+    private String reInvestRate;
 
     private String time;
 
-    private Integer createTime;
+    private String createTime;
 
-    private Integer updateTime;
+    private String updateTime;
 
-    public String getId() {
-        return id;
+    public String getRegisterRate() {
+        return registerRate;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setRegisterRate(String registerRate) {
+        this.registerRate = registerRate;
     }
 
-    public Integer getRegisterNum() {
-        return registerNum;
+    public String getOpenAccountRate() {
+        return openAccountRate;
     }
 
-    public void setRegisterNum(Integer registerNum) {
-        this.registerNum = registerNum;
+    public void setOpenAccountRate(String openAccountRate) {
+        this.openAccountRate = openAccountRate;
     }
 
-    public Integer getOpenAccountNum() {
-        return openAccountNum;
+    public String getRechargeRate() {
+        return rechargeRate;
     }
 
-    public void setOpenAccountNum(Integer openAccountNum) {
-        this.openAccountNum = openAccountNum;
+    public void setRechargeRate(String rechargeRate) {
+        this.rechargeRate = rechargeRate;
     }
 
-    public Integer getRechargeNum() {
-        return rechargeNum;
+    public String getInvestRate() {
+        return investRate;
     }
 
-    public void setRechargeNum(Integer rechargeNum) {
-        this.rechargeNum = rechargeNum;
+    public void setInvestRate(String investRate) {
+        this.investRate = investRate;
     }
 
-    public Integer getInvestNum() {
-        return investNum;
+    public String getReInvestRate() {
+        return reInvestRate;
     }
 
-    public void setInvestNum(Integer investNum) {
-        this.investNum = investNum;
-    }
-
-    public Integer getReInvestNum() {
-        return reInvestNum;
-    }
-
-    public void setReInvestNum(Integer reInvestNum) {
-        this.reInvestNum = reInvestNum;
+    public void setReInvestRate(String reInvestRate) {
+        this.reInvestRate = reInvestRate;
     }
 
     public String getTime() {
@@ -87,19 +78,19 @@ public class JcUserConversion implements Serializable {
         this.time = time;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

@@ -27,4 +27,8 @@ public class JcUserConversionDao extends BaseMongoDao<JcUserConversion> {
         query.limit(1);
         return mongoTemplate.findOne(query, getEntityClass());
     }
+
+    public void saveUserConversion(JcUserConversion entity){
+        mongoTemplate.save(entity);
+    }
 }
