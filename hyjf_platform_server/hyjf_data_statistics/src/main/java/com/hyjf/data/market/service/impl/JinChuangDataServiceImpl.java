@@ -14,7 +14,6 @@ import com.hyjf.data.response.Interest;
 import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
-import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -49,18 +48,12 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     private CsMessageClient csMessageClient;
 
     @Override
-    public JcUserConversionVO getUserConversion() {
+    public JcUserConversion getUserConversion() {
         JcUserConversion userConversion = userConversionDao.getUserConversion();
-        JcUserConversionVO conversionVO = new JcUserConversionVO();
         if (userConversion != null) {
-//            conversionVO.setRegisterNum("100%");
-//            conversionVO.setOpenAccountNum(userConversion.getOpenAccountNum() / userConversion.getRegisterNum() + "%");
-//            conversionVO.setRechargeNum(userConversion.getRechargeNum() / userConversion.getRegisterNum() + "%");
-//            conversionVO.setInvestNum(userConversion.getInvestNum() / userConversion.getRegisterNum() + "%");
-//            conversionVO.setReInvestNum(userConversion.getReInvestNum() / userConversion.getRegisterNum() + "%");
-            return conversionVO;
+            return userConversion;
         }
-        return new JcUserConversionVO();
+        return new JcUserConversion();
     }
 
     @Override

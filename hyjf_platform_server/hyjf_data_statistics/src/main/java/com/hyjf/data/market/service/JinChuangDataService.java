@@ -3,8 +3,8 @@ package com.hyjf.data.market.service;
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;
+import com.hyjf.data.bean.jinchuang.JcUserConversion;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
-import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public interface JinChuangDataService {
     /**
      * 获取用户转化数据
      */
-    JcUserConversionVO getUserConversion();
+    JcUserConversion getUserConversion();
 
     /**
      * 获取用户数据分析

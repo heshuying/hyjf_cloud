@@ -6,13 +6,13 @@ package com.hyjf.data.controller;
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;
+import com.hyjf.data.bean.jinchuang.JcUserConversion;
 import com.hyjf.data.response.Interest;
 import com.hyjf.data.response.JcScreenResponse;
 import com.hyjf.data.result.ApiResult;
 import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
-import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class JinChuangScreenController {
     @RequestMapping(value = "/getData", method = RequestMethod.POST)
     public ApiResult getData() {
         JcScreenResponse response = new JcScreenResponse();
-        JcUserConversionVO userConversion = jinChuangDataService.getUserConversion();
+        JcUserConversion userConversion = jinChuangDataService.getUserConversion();
         String jsonObject = jinChuangDataService.getUserPoint();
         List<JcDataStatisticsVO> dataStatisticsList = jinChuangDataService.getDataStatistics();
         Map<String, Object> maps = jinChuangDataService.getUserAnalysis();

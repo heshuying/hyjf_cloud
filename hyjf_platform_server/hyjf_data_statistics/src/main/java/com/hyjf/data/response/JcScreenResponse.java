@@ -6,9 +6,9 @@ package com.hyjf.data.response;
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
 import com.hyjf.data.bean.jinchuang.JcTradeAmount;
+import com.hyjf.data.bean.jinchuang.JcUserConversion;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
-import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class JcScreenResponse implements Serializable {
 
-    private JcUserConversionVO userConversion;
+    private JcUserConversion userConversion;
 
     private String jsonObject;
 
@@ -35,11 +35,11 @@ public class JcScreenResponse implements Serializable {
 
     JcCustomerServiceVO customerService;
 
-    public JcUserConversionVO getUserConversion() {
+    public JcUserConversion getUserConversion() {
         return userConversion;
     }
 
-    public void setUserConversion(JcUserConversionVO userConversion) {
+    public void setUserConversion(JcUserConversion userConversion) {
         this.userConversion = userConversion;
     }
 
