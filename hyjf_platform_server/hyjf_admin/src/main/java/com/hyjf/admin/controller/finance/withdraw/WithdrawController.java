@@ -202,12 +202,20 @@ public class WithdrawController extends BaseController {
 			String sheetNameTmp = sheetName + "_第1页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 		}
+
+		boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
 		for (int i = 1; i <= sheetCount; i++) {
 			withdrawBeanRequest.setPageSize(defaultRowMaxCount);
 			withdrawBeanRequest.setCurrPage(i);
 			WithdrawCustomizeResponse withdrawCustomizeResponse = withdrawService.getWithdrawRecordList(withdrawBeanRequest);
 			List<WithdrawCustomizeVO> record = withdrawCustomizeResponse.getResultList();
+
 			if (record != null && record.size()> 0) {
+				if (!isShow){
+					record.forEach(withdrawCustomizeVO -> {
+						withdrawCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(withdrawCustomizeVO.getMobile()));
+					});
+				}
 				String sheetNameTmp = sheetName + "_第" + i + "页";
 				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  record);
 			} else {
@@ -223,7 +231,7 @@ public class WithdrawController extends BaseController {
 		map.put("accountId", "电子帐号");
 		map.put("bankFlag", "资金托管平台");
 		map.put("bankSeqNo", "流水号");
-		map.put("mobile", "手机号");
+		//map.put("mobile", "手机号");
 		map.put("roleid", "用户角色");
 		map.put("userAttribute", "用户属性（当前）");
 		if (StringUtils.isNotBlank(isOrganizationView)) {

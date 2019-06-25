@@ -1830,6 +1830,7 @@ public class BorrowCommonController extends BaseController {
 				borrowCustomizeVO.setStatus(map.get(borrowCustomizeVO.getStatus()));
 				if (!isShow){
 					borrowCustomizeVO.setTruename(AsteriskProcessUtil.getAsteriskedCnName(borrowCustomizeVO.getTruename()));
+					borrowCustomizeVO.setBusiname(AsteriskProcessUtil.getAsteriskedCnName(borrowCustomizeVO.getBusiname()));
 				}
 			});
 		}
