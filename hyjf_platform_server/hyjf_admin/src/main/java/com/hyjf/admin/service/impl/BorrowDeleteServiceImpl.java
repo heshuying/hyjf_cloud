@@ -12,6 +12,7 @@ import com.hyjf.admin.service.BorrowDeleteService;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -60,7 +61,8 @@ public class BorrowDeleteServiceImpl implements BorrowDeleteService {
         BorrowRegistUpdateRequest request = new BorrowRegistUpdateRequest();
         // 获取标的并校验
         BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
-        if(borrow == null){
+        BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
+        if(borrow == null || borrowInfo == null){
             return new AdminResult(BaseResult.FAIL,"未查询到标的信息！");
         }
         // 获取开户信息并校验
@@ -84,7 +86,7 @@ public class BorrowDeleteServiceImpl implements BorrowDeleteService {
             // 电子账户
             bankCallBean.setAccountId(bankOpenAccount.getAccount());
             // 募集日
-            bankCallBean.setRaiseDate(borrow.getBankRaiseStartDate());
+            bankCallBean.setRaiseDate(borrowInfo.getBankRaiseStartDate());
 
             // 日志用字段
             bankCallBean.setLogOrderId(orderId);
