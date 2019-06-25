@@ -77,12 +77,14 @@ public class EvalationController extends BaseController {
         }
         List<EvalationCustomizeVO> evalationCustomizeVOList = new ArrayList<EvalationCustomizeVO>();
         if(!CollectionUtils.isEmpty(evalationResponse.getResultList())){
-            evalationResponse.getResultList().forEach(item ->{
-                // 手机号码
-                item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
-                // 姓名
-                item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
-            });
+            if (!isShow) {
+                evalationResponse.getResultList().forEach(item -> {
+                    // 手机号码
+                    item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
+                    // 姓名
+                    item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
+                });
+            }
             evalationCustomizeVOList = CommonUtils.convertBeanList(evalationResponse.getResultList(),EvalationCustomizeVO.class);
         }
         return new AdminResult<ListResult<EvalationCustomizeVO>>(ListResult.build(evalationCustomizeVOList, evalationResponse.getCount())) ;
