@@ -156,7 +156,7 @@ public class AsteriskProcessUtil {
     }
 
     /**
-     * 银行卡号脱敏(显示前四位，其余脱敏显示*)
+     * 企业证件号脱敏(显示前四位，其余脱敏显示*)
      * @param idNo
      */
     public static String getAsteriskedEnterpriseIdNo(String idNo){
@@ -186,7 +186,7 @@ public class AsteriskProcessUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo("3720000000000000aaa"));
+        System.out.println(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo("3700000000000000"));
     }
 
 }
