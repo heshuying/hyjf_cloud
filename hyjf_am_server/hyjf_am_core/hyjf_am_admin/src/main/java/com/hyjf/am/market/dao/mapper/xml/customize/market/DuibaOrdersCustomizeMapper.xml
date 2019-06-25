@@ -217,8 +217,8 @@
     <if test="orderTypeTab != null and orderTypeTab != ''">
       <if test='orderTypeTab == "3"'>
         AND hdp.recharge_state IS NOT NULL
-        AND hdp.product_type <![CDATA[<>]]> '0'
-        AND hdp.recharge_state <![CDATA[<>]]> '处理完成'
+        AND hdp.order_status = 1
+        AND hdp.activation_type = 1
       </if>
       <if test='orderTypeTab == "2"'>
         AND hdp.product_type = '0'
