@@ -10,6 +10,7 @@ import java.io.Serializable;
 /**
  * @author yaoyong
  * @version JcUserConversion, v0.1 2019/6/19 10:23
+ * 金创用户行为转化表
  */
 @Document(collection = "ht_jc_user_conversion")
 public class JcUserConversion implements Serializable {

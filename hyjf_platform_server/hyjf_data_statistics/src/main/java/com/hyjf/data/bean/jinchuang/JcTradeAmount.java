@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * @author yaoyong
  * @version JcTradeAmount, v0.1 2019/6/20 14:39
+ * 金创累计交易金额表
  */
 @Document(collection = "ht_jc_trade_amount")
 public class JcTradeAmount {

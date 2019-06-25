@@ -11,6 +11,7 @@ import java.io.Serializable;
 /**
  * @author yaoyong
  * @version JcUserPoint, v0.1 2019/6/19 11:38
+ * 金创用户行为表
  */
 @Document(collection = "ht_jc_user_point")
 public class JcUserPoint implements Serializable {

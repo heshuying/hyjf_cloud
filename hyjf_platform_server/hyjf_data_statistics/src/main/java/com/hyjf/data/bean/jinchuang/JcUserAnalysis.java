@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * @author yaoyong
  * @version JcUserAnalysis, v0.1 2019/6/20 11:01
+ * 用户出借分析表
  */
 @Document(collection = "ht_jc_user_analysis")
 public class JcUserAnalysis {

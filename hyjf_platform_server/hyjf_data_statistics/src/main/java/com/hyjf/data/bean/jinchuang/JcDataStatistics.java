@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author yaoyong
  * @version JcDataStatistics, v0.1 2019/6/19 16:01
+ * 金创统计出借笔数表
  */
 @Document(collection = "ht_jc_data_statistics")
 public class JcDataStatistics {

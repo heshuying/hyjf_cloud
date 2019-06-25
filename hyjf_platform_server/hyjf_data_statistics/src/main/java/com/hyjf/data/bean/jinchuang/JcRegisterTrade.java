@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * @author yaoyong
  * @version JcRegisterTrade, v0.1 2019/6/20 14:56
+ * 金创注册、交易规模表
  */
 @Document(collection = "ht_jc_register_trade")
 public class JcRegisterTrade {
