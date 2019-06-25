@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @package com.hyjf.admin.maintenance.Admin
@@ -31,7 +30,7 @@ public class AdminUserController extends BaseController {
 	@Autowired
 	private AdminService adminService;
 
-	private static final String PERMISSIONS = "adminuser";
+	private static final String PERMISSIONS = "admin";
 
 	/**
 	 * 画面查询

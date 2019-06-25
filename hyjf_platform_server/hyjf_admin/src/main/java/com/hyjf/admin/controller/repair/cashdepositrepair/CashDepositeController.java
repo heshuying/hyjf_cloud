@@ -47,7 +47,7 @@ public class CashDepositeController extends BaseController {
     @Autowired
     private CashDepositeService cashDepositeService;
 
-    private static final String PERMISSIONS = "cashdepositexception";
+    private static final String PERMISSIONS = "cashdeposite";
 
     /**
      *  合作额度不足的资产列表

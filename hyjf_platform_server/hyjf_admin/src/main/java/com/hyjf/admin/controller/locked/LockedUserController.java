@@ -34,7 +34,7 @@ public class LockedUserController extends BaseController {
     @Autowired
     private LockedUserService lockedUserService;
 
-    private static final String PERMISSIONS = "lockeduser";
+    private static final String PERMISSIONS = "lockUserPermission";
 
     @ApiOperation(value = "前台锁定用户列表",notes = "前台账户锁定用户列表")
     @PostMapping(value = "/frontlist")
