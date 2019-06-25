@@ -97,19 +97,16 @@ public class BorrowDeleteServiceImpl implements BorrowDeleteService {
 
             // 调用银行接口撤销标的
             BankCallBean borrowCancelResult = BankCallUtils.callApiBg(bankCallBean);
-            // 银行返回码
-            String retCode = "";
-            // 标的状态
-            String state = "";
-            // 银行返回描述信息
-            String bankRetmsg = "";
-            if(borrowCancelResult != null){
-                retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
-                // state为空的时赋一个负数
-                state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
-                // 失败描述
-                bankRetmsg = StringUtils.isNotBlank(borrowCancelResult.getRetMsg()) ? borrowCancelResult.getRetMsg() : "";
+            if(borrowCancelResult == null){
+                logger.error("标的删除失败，标的号：{}，撤销备案接口银行返回null", borrowNid);
+                return new AdminResult(BaseResult.FAIL,"请求撤销备案接口失败，返回null！");
             }
+
+            String retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
+            // state为空的时赋一个负数
+            String state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
+            // 失败描述
+            String bankRetmsg = StringUtils.isNotBlank(borrowCancelResult.getRetMsg()) ? borrowCancelResult.getRetMsg() : "";
             // 成功撤销或者标的已经撤销，则删除标的数据
             if(BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || 9 == Integer.valueOf(state)){
                 // 请求实体赋值

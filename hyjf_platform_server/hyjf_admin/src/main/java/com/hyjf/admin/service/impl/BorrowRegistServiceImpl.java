@@ -181,19 +181,16 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
 
         // 调用银行接口撤销标的
         BankCallBean borrowCancelResult = BankCallUtils.callApiBg(bankCallBean);
-        // 银行返回码
-        String retCode = "";
-        // 标的状态
-        String state = "";
-        // 银行返回描述信息
-        String bankRetmsg = "";
-        if(borrowCancelResult != null){
-            retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
-            // state为空的时赋一个负数
-            state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
-            // 失败描述
-            bankRetmsg = StringUtils.isNotBlank(borrowCancelResult.getRetMsg()) ? borrowCancelResult.getRetMsg() : "";
+        if(borrowCancelResult == null){
+            logger.error("备案撤销失败，标的号：{}，撤销备案接口银行返回null", borrowNid);
+            return new AdminResult(BaseResult.FAIL,"请求撤销备案接口失败，返回null！");
         }
+
+        String retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
+        // state为空的时赋一个负数
+        String state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
+        // 失败描述
+        String bankRetmsg = StringUtils.isNotBlank(borrowCancelResult.getRetMsg()) ? borrowCancelResult.getRetMsg() : "";
 
         if(BankCallConstant.RESPCODE_SUCCESS.equals(retCode) && 9 == Integer.valueOf(state)){
             return new AdminResult(BaseResult.SUCCESS, "撤销备案成功");
@@ -246,19 +243,16 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
 
         // 调用银行接口撤销标的
         BankCallBean borrowCancelResult = BankCallUtils.callApiBg(bankCallBean);
-        // 银行返回码
-        String retCode = "";
-        // 标的状态
-        String state = "";
-        // 银行返回描述信息
-        String bankRetmsg = "";
-        if(borrowCancelResult != null){
-            retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
-            // state为空的时赋一个负数
-            state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
-            // 失败描述
-            bankRetmsg = StringUtils.isNotBlank(borrowCancelResult.getRetMsg()) ? borrowCancelResult.getRetMsg() : "";
+        if(borrowCancelResult == null){
+            logger.error("备案撤销失败，标的号：{}，撤销备案接口银行返回null", borrowNid);
+            return new AdminResult(BaseResult.FAIL,"请求撤销备案接口失败，返回null！");
         }
+
+        String retCode = StringUtils.isNotBlank(borrowCancelResult.getRetCode()) ? borrowCancelResult.getRetCode() : "";
+        // state为空的时赋一个负数
+        String state = StringUtils.isNotBlank(borrowCancelResult.getState()) ? borrowCancelResult.getState() : "-1";
+        // 失败描述
+        String bankRetmsg = StringUtils.isNotBlank(borrowCancelResult.getRetMsg()) ? borrowCancelResult.getRetMsg() : "";
 
         // 请求实体赋值
         request.setBorrowNid(borrowNid);
