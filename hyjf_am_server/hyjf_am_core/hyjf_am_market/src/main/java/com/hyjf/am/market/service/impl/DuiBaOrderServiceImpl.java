@@ -68,14 +68,14 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         duibaOrders.setUserId(Integer.valueOf(consumeParams.getUid()));
         // 兑换内容
         duibaOrders.setExchangeContent(consumeParams.getDescription());
-        // 商品类型
+        // 商品类型 2019-06-24需求重评 除了实物跟自有商品充值，其他暂时全部按照优惠券来储存
         String type = consumeParams.getType();
-        if(DuiBaCallConstant.TYPE_OBJECT.equals(type)){
+        if(DuiBaCallConstant.TYPE_OBJECT.equalsIgnoreCase(type)){
             duibaOrders.setProductType("0");
-        } else if(DuiBaCallConstant.TYPE_COUPON.equals(type)){
-            duibaOrders.setProductType("1");
-        } else if(DuiBaCallConstant.TYPE_VIRTUAL.equals(type)){
+        } else if(DuiBaCallConstant.TYPE_VIRTUAL.equalsIgnoreCase(type)){
             duibaOrders.setProductType("2");
+        } else {
+            duibaOrders.setProductType("1");
         }
         // 售价
         BigDecimal duiBaRate = new BigDecimal(RedisUtils.get(RedisConstants.DUIBA_EXCHANGE_RATE));
