@@ -31,9 +31,11 @@ public class JcCustomerServiceVO extends BaseVO implements Serializable {
 
     private String time;
 
-    private String createTime;
+    private Integer createTime;
 
     private Integer updateTime;
+
+    private String presentTime;
 
     public String getId() {
         return id;
@@ -107,14 +109,11 @@ public class JcCustomerServiceVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getCreateTime() {
-        if (updateTime != null) {
-            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(updateTime);
-        }
-        return null;
+    public Integer getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
     }
 
@@ -124,5 +123,16 @@ public class JcCustomerServiceVO extends BaseVO implements Serializable {
 
     public void setComplaint(String complaint) {
         this.complaint = complaint;
+    }
+
+    public String getPresentTime() {
+        if (updateTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(updateTime);
+        }
+        return null;
+    }
+
+    public void setPresentTime(String presentTime) {
+        this.presentTime = presentTime;
     }
 }

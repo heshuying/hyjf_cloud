@@ -517,7 +517,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     @Override
     public CustomerServerResponse getCustomerServer(String id) {
-        CustomerServerResponse response = restTemplate.getForEntity("http://CS=MESSAGE/cs-message/customerServer/getCustomerServer/" + id, CustomerServerResponse.class).getBody();
+        CustomerServerResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/customerServer/getCustomerServer/" + id, CustomerServerResponse.class);
         if (response != null) {
             return response;
         }
@@ -526,7 +526,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     @Override
     public CustomerServerResponse updateCustomerServer(JcCustomerServerRequest request) {
-        CustomerServerResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/customerServer/updateCustomerServer/", request, CustomerServerResponse.class).getBody();
+        CustomerServerResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/customerServer/updateCustomerServer", request, CustomerServerResponse.class).getBody();
         if (response != null) {
             return response;
         }
