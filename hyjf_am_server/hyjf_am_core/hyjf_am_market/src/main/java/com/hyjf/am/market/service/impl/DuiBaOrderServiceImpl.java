@@ -90,6 +90,8 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         }
         // 订单状态
         duibaOrders.setOrderStatus(2);
+        // 充值状态
+        duibaOrders.setRechargeState("处理中");
         // 下单时间
         duibaOrders.setOrderTime(GetDate.getNowTime10());
         // 发货状态，收货信息，只有实物的时候存初始值
