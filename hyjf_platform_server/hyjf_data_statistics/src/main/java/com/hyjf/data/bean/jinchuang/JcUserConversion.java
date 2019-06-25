@@ -33,6 +33,14 @@ public class JcUserConversion implements Serializable {
 
     private String updateTime;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getRegisterRate() {
         return registerRate;
     }
