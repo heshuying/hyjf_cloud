@@ -182,7 +182,7 @@
 		UNION ALL
 
 		SELECT
-		c.credit_nid as borrow_nid,
+		c.bid_nid as borrow_nid,
 		'borrow/creditList' as link,
 		c.bid_name as title,
 		c.credit_user_id AS userid,
