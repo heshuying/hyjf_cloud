@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -137,6 +138,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
             }
 			// U-当日待还（17列）扣减债转
             if (column == 17) {
+            	logger.info("17列扣减债转开始, list is :", JSON.toJSONString(creditRepayList));
 				for (SellDailyVO creditRepay : creditRepayList) {
 					if (StringUtils.isEmpty(creditRepay.getPrimaryDivision())
 							|| NONE_REFFER_PRIMARY_DIVISION.contains(creditRepay.getPrimaryDivision())) {
