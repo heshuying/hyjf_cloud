@@ -1190,7 +1190,7 @@ public class RepayManageController extends BaseTradeController {
     public WebResult<Object> updateSponsorLog(@RequestHeader(value = "userId") int userId,@RequestBody RepayListRequest requestBean, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
        List<BorrowApicronVO> ret = repayManageService.selectBorrowApicronListByBorrowNid(requestBean.getBorrowNid());
-        if(ret!=null||!ret.isEmpty()) {
+        if(ret!=null&&!ret.isEmpty()) {
         	 Map<String,String> data2 =new HashMap<String, String>();
         	 data2.put("status", "911");
         	 result.setData(data2);
