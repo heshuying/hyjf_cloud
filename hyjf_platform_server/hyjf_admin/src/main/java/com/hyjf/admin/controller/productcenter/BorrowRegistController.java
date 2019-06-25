@@ -150,7 +150,7 @@ public class BorrowRegistController extends BaseController {
      */
     @ApiOperation(value = "备案撤销确认页面", notes = "备案撤销确认页面")
     @GetMapping("/registcancel_confirm/{borrowNid}")
-    @AuthorityAnnotation(key = "cancelRecord", value = ShiroConstants.PERMISSION_VIEW)
+//    @AuthorityAnnotation(key = "cancelRecord", value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowRegistCancelConfirmCustomizeVO> registCancelConfirm(HttpServletRequest request, @PathVariable String borrowNid) {
         BorrowRegistCancelConfirmCustomizeVO responseBean = borrowRegistService.selectRegistCancelConfirm(borrowNid);
         if(responseBean == null){
@@ -158,4 +158,6 @@ public class BorrowRegistController extends BaseController {
         }
         return new AdminResult(responseBean);
     }
+
+
 }
