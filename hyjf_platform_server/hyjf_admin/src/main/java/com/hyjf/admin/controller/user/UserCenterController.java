@@ -148,8 +148,6 @@ public class UserCenterController extends BaseController {
                 userManagerDetailVO.setEmName(AsteriskProcessUtil.getAsteriskedCnName(userManagerDetailVO.getEmName()));
                 //紧急联系人手机号加密显示
                 userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getEmPhone()));
-                // 银行卡号
-                userManagerDetailVO.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(userManagerDetailVO.getAccount()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
@@ -181,6 +179,12 @@ public class UserCenterController extends BaseController {
         UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(userId);
         UserBankOpenAccountCustomizeVO userBankOpenAccountCustomizeVO = new UserBankOpenAccountCustomizeVO();
         if(null!=userBankOpenAccountVO){
+            if(!isShow){
+                // 银行卡号
+                userBankOpenAccountVO.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(userBankOpenAccountVO.getAccount()));
+                // 预留手机号
+                userBankOpenAccountVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userBankOpenAccountVO.getMobile()));
+            }
             BeanUtils.copyProperties(userBankOpenAccountVO, userBankOpenAccountCustomizeVO);
         }
         userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountCustomizeVO);
