@@ -42,11 +42,11 @@ public class CustomerServerController extends BaseController {
         if (!CollectionUtils.isEmpty(serviceList)) {
             List<JcCustomerServiceVO> serverList = CommonUtils.convertBeanList(serviceList, JcCustomerServiceVO.class);
             for (JcCustomerServiceVO customerService : serverList) {
-                String complaint = customerService.getComplaintNum() / (customerService.getPhoneReception() + customerService.getQqReception() + customerService.getWxReception()) * 100 + "%";
-                customerService.setComplaint(complaint);
+                double complaint = (customerService.getComplaintNum() * 100) / (customerService.getPhoneReception() + customerService.getQqReception() + customerService.getWxReception());
+                customerService.setComplaint(complaint + "%");
             }
             response.setResultList(serverList);
-            response.setCount((int)count);
+            response.setCount((int) count);
         }
         return response;
     }
@@ -94,8 +94,8 @@ public class CustomerServerController extends BaseController {
         JcCustomerServiceVO customerServiceVO = new JcCustomerServiceVO();
         if (customerService != null) {
             BeanUtils.copyProperties(customerService, customerServiceVO);
-            String complaint = customerService.getComplaintNum() / (customerService.getPhoneReception() + customerService.getQqReception() + customerService.getWxReception()) * 100 + "%";
-            customerServiceVO.setComplaint(complaint);
+            double complaint = (customerService.getComplaintNum() * 100) / (customerService.getPhoneReception() + customerService.getQqReception() + customerService.getWxReception());
+            customerServiceVO.setComplaint(complaint + "%");
             response.setResult(customerServiceVO);
         }
         return response;
