@@ -15,6 +15,8 @@ import java.io.Serializable;
 @Document(collection = "ht_jc_user_conversion")
 public class JcUserConversion implements Serializable {
 
+    private String id;
+
     private String registerRate;
 
     private String openAccountRate;
