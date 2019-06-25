@@ -15,6 +15,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -27,6 +29,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -65,6 +68,8 @@ public class UserCenterController extends BaseController {
     private UserCenterService userCenterService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CommonProducer commonProducer;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
@@ -1410,7 +1415,14 @@ public class UserCenterController extends BaseController {
                     userRequest.setBankMobile(bankMobile);
                     userRequest.setUserId(Integer.parseInt(userId));
                     userRequest.setRegIp(GetCilentIP.getIpAddr(request));
-                    this.userCenterService.syncUserMobile(userRequest);
+                    boolean isOk = this.userCenterService.syncUserMobile(userRequest);
+                    if(isOk){
+                        // 推送数据到MQ 用户信息修改（绑卡异步）
+                        JSONObject params = new JSONObject();
+                        params.put("userId", userId);
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                    }
                    return  new AdminResult<>(SUCCESS, "同步用户手机号成功");
                 } else {
                     return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");

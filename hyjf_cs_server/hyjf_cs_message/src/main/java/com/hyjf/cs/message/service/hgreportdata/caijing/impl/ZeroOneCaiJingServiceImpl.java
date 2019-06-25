@@ -53,6 +53,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     private static final String INVESTRECORD = "出借记录";
     private static final String BORROWRECORD = "借款记录";
     private static final String ADVANCEREPAY = "提前还款";
+    private static final int defaultRowMaxCount = 1500;//最大行数
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -85,11 +86,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("借款记录接口报送数据为空");
             return;
         }
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(BORROWRECORD);
-        presentationLog.setCount(borrowDataVOList.size());
-        presentationLog.setStartDate(dateStart);
-        presentationLog.setEndDate(dateEnd);
+
 
         logger.info("借款记录接口报送条数=" + borrowDataVOList.size());
 
@@ -110,23 +107,42 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             }
             voList.setId(CustomUtil.nidSign(voList.getId()));
         }
+
         List<ZeroOneBorrowEntity> borrowEntities = CommonUtils.convertBeanList(borrowDataVOList, ZeroOneBorrowEntity.class);
-        Map<String,Object> map = new HashMap<>();
-        map.put("data",borrowEntities);
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
-        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
-            //报送成功
-            logger.info("借款记录接口报送成功");
-            presentationLog.setStatus(1);
-            presentationLog.setDescription("");
-            presentationLog.setJson(map);
-        } else {
-            presentationLog.setStatus(0);
-            presentationLog.setDescription(zeroOneResponse.result_msg);
-            presentationLog.setJson(map);
+
+        //将数据大于1500的进行拆分上报
+        int totalCount = borrowEntities.size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
+                : totalCount / defaultRowMaxCount + 1;
+
+        for (int i = 1; i <= sheetCount; i++) {
+            Integer status = 0;
+            String description = "";
+
+            int start=(i-1) * defaultRowMaxCount;
+            int end = Math.min(totalCount, i * defaultRowMaxCount);
+
+            if(totalCount >= i){
+                List<ZeroOneBorrowEntity> result=borrowEntities.subList(start,end);
+
+                Map<String,Object> map = new HashMap<>();
+                map.put("data",result);
+                ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
+                if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
+                    //报送成功
+                    logger.info("借款记录接口报送成功,预计报送:{},实际报送:{}",result.size(),zeroOneResponse.data_num);
+                    status = 1;
+                } else {
+                    logger.info("借款记录接口报送失败");
+                    status = 0;
+                    if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
+                        description = zeroOneResponse.result_msg;
+                    }
+                }
+                //插入mongo表
+                this.saveLog(BORROWRECORD,result.size(),dateStart,dateEnd,status,description,map);
+            }
         }
-        //插入mongo表
-        this.presentationLogService.insertLog(presentationLog);
         logger.info("借款记录接口报送结束");
     }
 
@@ -146,12 +162,6 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             logger.info("投资记录接口无数据报送结束");
             return;
         }
-
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(INVESTRECORD);
-        presentationLog.setCount(zeroOneDataVOList.size());
-        presentationLog.setStartDate(startDate);
-        presentationLog.setEndDate(endDate);
 
         logger.info("投资记录接口报送条数=" + zeroOneDataVOList.size());
 
@@ -179,22 +189,41 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
         }
 
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
-        Map<String,Object> map = new HashMap<>();
-        map.put("data",list);
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),JSONObject.toJSONString(map));
-        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
-            //报送成功
-            logger.info("投资记录接口报送成功");
-            presentationLog.setStatus(1);
-            presentationLog.setDescription("");
-            presentationLog.setJson(map);
-        } else {
-            presentationLog.setStatus(0);
-            presentationLog.setDescription(zeroOneResponse.result_msg);
-            presentationLog.setJson(map);
+
+        //将数据大于1500的进行拆分上报
+        int totalCount = list.size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
+                : totalCount / defaultRowMaxCount + 1;
+
+        for (int i = 1; i <= sheetCount; i++) {
+            Integer status = 0;
+            String description = "";
+
+            int start = (i - 1) * defaultRowMaxCount;
+            int end = Math.min(totalCount, i * defaultRowMaxCount);
+
+            if (totalCount >= i) {
+                List<ZeroOneDataEntity> result = list.subList(start, end);
+
+                Map<String,Object> map = new HashMap<>();
+                map.put("data",result);
+                ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),JSONObject.toJSONString(map));
+                if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
+                    //报送成功
+                    logger.info("投资记录接口报送成功,预计报送:{},实际报送:{}",result.size(),zeroOneResponse.data_num);
+                    status = 1;
+                } else {
+                    logger.info("投资记录接口报送失败");
+                    status = 0;
+                    if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
+                        description = zeroOneResponse.result_msg;
+                    }
+                }
+                //插入mongo表
+                this.saveLog(INVESTRECORD,result.size(),startDate,endDate,status,description,map);
+            }
         }
-        //插入mongo表
-        this.presentationLogService.insertLog(presentationLog);
+
         logger.info("投资记录接口报送结束");
     }
 
@@ -214,30 +243,41 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             return;
         }
 
-        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
-        presentationLog.setLogType(ADVANCEREPAY);
-        presentationLog.setCount(zeroOneDataVOList.size());
-        presentationLog.setStartDate(startDate);
-        presentationLog.setEndDate(endDate);
-
         List<ZeroOneDataEntity> list = CommonUtils.convertBeanList(zeroOneDataVOList, ZeroOneDataEntity.class);
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("data",list);
-        ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), JSONObject.toJSONString(map));
-        if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
-            //报送成功
-            logger.info("提前还款接口报送成功");
-            presentationLog.setStatus(1);
-            presentationLog.setDescription("");
-            presentationLog.setJson(map);
-        } else {
-            presentationLog.setStatus(0);
-            presentationLog.setDescription(zeroOneResponse.result_msg);
-            presentationLog.setJson(map);
+        //将数据大于1500的进行拆分上报
+        int totalCount = list.size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
+                : totalCount / defaultRowMaxCount + 1;
+
+        for (int i = 1; i <= sheetCount; i++) {
+            Integer status = 0;
+            String description = "";
+            int start = (i - 1) * defaultRowMaxCount;
+            int end = Math.min(totalCount, i * defaultRowMaxCount);
+
+            if (totalCount >= i) {
+                List<ZeroOneDataEntity> result = list.subList(start, end);
+
+                Map<String,Object> map = new HashMap<>();
+                map.put("data",result);
+                ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), JSONObject.toJSONString(map));
+                if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
+                    //报送成功
+                    logger.info("提前还款接口报送成功,预计报送:{},实际报送:{}",result.size(),zeroOneResponse.data_num);
+                    status = 1;
+                } else {
+                    logger.info("提前还款接口报送失败");
+                    status = 0;
+                    if(zeroOneResponse != null && zeroOneResponse.result_msg != null){
+                        description = zeroOneResponse.result_msg;
+                    }
+                }
+                //插入mongo表
+                this.saveLog(ADVANCEREPAY,result.size(),startDate,endDate,status,description,map);
+            }
         }
-        //插入mongo表
-        this.presentationLogService.insertLog(presentationLog);
+
         logger.info("提前还款接口报送结束");
     }
 
@@ -366,6 +406,29 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
     }
 
     /**
+     * 保存零壹财经报送数据
+     * @param size 报送数据条数
+     * @param dateStart 报送开始时间
+     * @param dateEnd   报送结束时间
+     * @param status   报送状态，1=成功，0=失败
+     * @param description 报送返回描述
+     * @param jsonData  报送数据，json格式
+     */
+    private void saveLog(String logType,Integer size,String dateStart, String dateEnd,Integer status,String description,
+                         Map<String,Object> jsonData){
+        CaiJingPresentationLog presentationLog = new CaiJingPresentationLog();
+        presentationLog.setLogType(logType);
+        presentationLog.setCount(size);
+        presentationLog.setStartDate(dateStart);
+        presentationLog.setEndDate(dateEnd);
+
+        presentationLog.setStatus(status);
+        presentationLog.setDescription(description);
+        presentationLog.setJson(jsonData);
+        this.presentationLogService.insertLog(presentationLog);
+    }
+
+    /**
      * 数据推送
      *
      * @param type 类型，借款=lend ,出借=invest ,提前还款=advanced-repay
@@ -405,7 +468,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
             String response = HttpDeal.post(stbuUrl.toString(), sendMap);
 
             zeroOneResponse = JSONObject.parseObject(response, ZeroOneResponse.class);
-
+            logger.info("零壹财经数据报送返回结果="+zeroOneResponse);
         } catch (Exception e) {
             logger.error("零壹财经数据报送错误 error:", e);
         }
