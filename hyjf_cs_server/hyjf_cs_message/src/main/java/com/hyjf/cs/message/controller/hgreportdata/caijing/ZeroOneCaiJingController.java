@@ -47,12 +47,27 @@ public class ZeroOneCaiJingController {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
-        //借款记录报送
-        zeroOneCaiJingService.borrowRecordSub(yesterday,yesterday);
-        // 出借记录报送
-        zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
-        // 提前还款报送
-        zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
+        try{
+            //借款记录报送
+            zeroOneCaiJingService.borrowRecordSub(yesterday,yesterday);
+        }catch (Exception e){
+            logger.error("推送昨日零壹财经借款记录报送错误 error:", e);
+        }
+
+        try{
+            // 出借记录报送
+            zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
+        }catch (Exception e){
+            logger.error("推送昨日零壹财经出借记录报送错误 error:", e);
+        }
+
+        try{
+            // 提前还款报送
+            zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
+        }catch (Exception e){
+            logger.error("推送昨日零壹财经提前还款报送错误 error:", e);
+        }
+
     }
 
     /**
