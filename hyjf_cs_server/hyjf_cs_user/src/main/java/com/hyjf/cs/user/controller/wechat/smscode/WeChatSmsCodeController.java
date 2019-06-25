@@ -67,40 +67,33 @@ public class WeChatSmsCodeController extends BaseUserController {
 		// 业务逻辑
 		try {
 			if("TPL_ZHUCE".equals(verificationType)){
-				if ("register".equals(pageType)){
+
+				// 拼装所需参数
+				String aid = "2026782647";
+				String AppSecretKey = "0K6K0OwY9HELsYAQ2u_gzQA**";
+				String ticket = request.getParameter("ticket");
+				String randstr = request.getParameter("randstr");
+				String userIp = GetCilentIP.getIpAddr(request);
+				String verifyUrl = "https://ssl.captcha.qq.com/ticket/verify?aid=" + aid + "&AppSecretKey=" + AppSecretKey + "&Ticket=" + ticket + "&Randstr=" + randstr + "&UserIP=" + userIp;
+				logger.info(mobile + "=>无感知验证码请求地址:" + verifyUrl);
+				String backRes = HttpDeal.get(verifyUrl);
+				logger.info(mobile + "=>无感知验证码请求返回:" + backRes);
+
+				// 解析返回的JSON串
+				JSONObject jsonObject = JSON.parseObject(backRes);
+				String backResponse = (String) jsonObject.get("response");
+				String backErrMsg = (String) jsonObject.get("err_msg");
+
+				if ("1".equals(backResponse)){
+					// 无感知图形验证码验证通过
 					sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
 					ret.put("status", "000");
 					ret.put("statusDesc", "发送验证码成功");
 				}else {
-					// 着陆页注册, 使用无感知验证码
-
-					// 拼装所需参数
-					String aid = "2026782647";
-					String AppSecretKey = "0K6K0OwY9HELsYAQ2u_gzQA**";
-					String ticket = request.getParameter("ticket");
-					String randstr = request.getParameter("randstr");
-					String userIp = GetCilentIP.getIpAddr(request);
-					String verifyUrl = "https://ssl.captcha.qq.com/ticket/verify?aid=" + aid + "&AppSecretKey=" + AppSecretKey + "&Ticket=" + ticket + "&Randstr=" + randstr + "&UserIP=" + userIp;
-					logger.info(mobile + "=>无感知验证码请求地址:" + verifyUrl);
-					String backRes = HttpDeal.get(verifyUrl);
-					logger.info(mobile + "=>无感知验证码请求返回:" + backRes);
-
-					// 解析返回的JSON串
-					JSONObject jsonObject = JSON.parseObject(backRes);
-					String backResponse = (String) jsonObject.get("response");
-					String backErrMsg = (String) jsonObject.get("err_msg");
-
-					if ("1".equals(backResponse)){
-						// 无感知图形验证码验证通过
-						sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
-						ret.put("status", "000");
-						ret.put("statusDesc", "发送验证码成功");
-					}else {
-						String getBackErrMsg = this.backErrMsg(backErrMsg);
-						ret.put("status", "99");
-						ret.put("statusDesc", "图形验证码:" + getBackErrMsg);
-						return ret;
-					}
+					String getBackErrMsg = this.backErrMsg(backErrMsg);
+					ret.put("status", "99");
+					ret.put("statusDesc", "图形验证码:" + getBackErrMsg);
+					return ret;
 				}
 			}else if(CommonConstant.PARAM_TPL_DUANXINDENGLU.equals(verificationType)){
 				logger.info("开始发送登录验证码  ，手机号：{}   IP  {}",mobile,GetCilentIP.getIpAddr(request));

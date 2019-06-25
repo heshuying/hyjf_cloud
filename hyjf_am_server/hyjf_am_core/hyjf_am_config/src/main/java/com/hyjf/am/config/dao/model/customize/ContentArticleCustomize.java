@@ -30,6 +30,9 @@ public class ContentArticleCustomize implements Serializable {
     private String sharePicUrl;
     //分享url
     private String shareUrl;
+    // 列表图片
+    private String imgurl;
+
     public String getTitle() {
         return title;
     }
@@ -77,6 +80,14 @@ public class ContentArticleCustomize implements Serializable {
     }
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl;
+    }
+
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 
     @Override

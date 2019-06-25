@@ -21,6 +21,8 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="month_card_quota" property="monthCardQuota" jdbcType="DECIMAL" />
+    <result column="android_market" property="androidMarket" jdbcType="VARCHAR" />
+    <result column="ios_market" property="iosMarket" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -83,7 +85,7 @@
   <sql id="Base_Column_List" >
     id, bank_id, bank_name, pay_alliance_code, bank_code, bank_icon, bank_logo, quick_payment, 
     single_quota, single_card_quota, fee_withdraw, sort_id, remark, create_user_id, update_user_id, 
-    create_time, update_time, del_flag, month_card_quota
+    create_time, update_time, del_flag, month_card_quota, android_market, ios_market
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.JxBankConfigExample" >
     select
@@ -127,15 +129,15 @@
       quick_payment, single_quota, single_card_quota, 
       fee_withdraw, sort_id, remark, 
       create_user_id, update_user_id, create_time, 
-      update_time, del_flag, month_card_quota
-      )
+      update_time, del_flag, month_card_quota, 
+      android_market, ios_market)
     values (#{bankId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{payAllianceCode,jdbcType=VARCHAR}, 
       #{bankCode,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, #{bankLogo,jdbcType=VARCHAR}, 
       #{quickPayment,jdbcType=TINYINT}, #{singleQuota,jdbcType=DECIMAL}, #{singleCardQuota,jdbcType=DECIMAL}, 
       #{feeWithdraw,jdbcType=DECIMAL}, #{sortId,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
-      )
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}, 
+      #{androidMarket,jdbcType=VARCHAR}, #{iosMarket,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.JxBankConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -197,6 +199,12 @@
       <if test="monthCardQuota != null" >
         month_card_quota,
       </if>
+      <if test="androidMarket != null" >
+        android_market,
+      </if>
+      <if test="iosMarket != null" >
+        ios_market,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="bankId != null" >
@@ -252,6 +260,12 @@
       </if>
       <if test="monthCardQuota != null" >
         #{monthCardQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="androidMarket != null" >
+        #{androidMarket,jdbcType=VARCHAR},
+      </if>
+      <if test="iosMarket != null" >
+        #{iosMarket,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -321,6 +335,12 @@
       <if test="record.monthCardQuota != null" >
         month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL},
       </if>
+      <if test="record.androidMarket != null" >
+        android_market = #{record.androidMarket,jdbcType=VARCHAR},
+      </if>
+      <if test="record.iosMarket != null" >
+        ios_market = #{record.iosMarket,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -346,7 +366,9 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL}
+      month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL},
+      android_market = #{record.androidMarket,jdbcType=VARCHAR},
+      ios_market = #{record.iosMarket,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -408,6 +430,12 @@
       <if test="monthCardQuota != null" >
         month_card_quota = #{monthCardQuota,jdbcType=DECIMAL},
       </if>
+      <if test="androidMarket != null" >
+        android_market = #{androidMarket,jdbcType=VARCHAR},
+      </if>
+      <if test="iosMarket != null" >
+        ios_market = #{iosMarket,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -430,7 +458,9 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      month_card_quota = #{monthCardQuota,jdbcType=DECIMAL}
+      month_card_quota = #{monthCardQuota,jdbcType=DECIMAL},
+      android_market = #{androidMarket,jdbcType=VARCHAR},
+      ios_market = #{iosMarket,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

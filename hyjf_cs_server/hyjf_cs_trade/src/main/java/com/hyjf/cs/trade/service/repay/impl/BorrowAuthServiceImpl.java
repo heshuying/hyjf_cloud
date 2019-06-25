@@ -9,6 +9,7 @@ import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.TradeConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -154,7 +155,8 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
         if(StringUtils.isBlank(bean.getIdNo())){
             new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_IDCARDNO_REQUIRED);
         }
-        bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+        String forgotPwdUrl = systemConfig.getFrontHost()+"/user/setTradePassword";
+        bean.setForgotPwdUrl(forgotPwdUrl);
         bean.setRetUrl(retUrl);// 页面同步返回 URL
         bean.setNotifyUrl(bgRetUrl);// 页面异步返回URL(必须)
         bean.setSuccessfulUrl(successfulUrl);

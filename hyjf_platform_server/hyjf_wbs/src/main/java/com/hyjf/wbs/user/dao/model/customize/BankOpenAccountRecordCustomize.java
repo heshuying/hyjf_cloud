@@ -17,6 +17,8 @@ public class BankOpenAccountRecordCustomize {
     /** 用户真实姓名 */
     public String realName;
     /** 用户身份证号码 */
+    //客户注册时间
+    public String platformRegistrationTime;
     public String idCard;
     // 用户属性
     public String userProperty;
@@ -40,6 +42,14 @@ public class BankOpenAccountRecordCustomize {
     public String registArea;
     // 身份证号
     public String idcard;
+
+    public String getPlatformRegistrationTime() {
+        return platformRegistrationTime;
+    }
+
+    public void setPlatformRegistrationTime(String platformRegistrationTime) {
+        this.platformRegistrationTime = platformRegistrationTime;
+    }
 
     public String getUserId() {
         return userId;

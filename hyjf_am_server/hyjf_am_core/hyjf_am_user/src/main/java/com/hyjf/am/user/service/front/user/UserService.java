@@ -1,16 +1,14 @@
 package com.hyjf.am.user.service.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -181,13 +179,6 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request);
-
-	/**
-	 * 借款主体CA认证记录表
-	 * @param request
-	 * @return
-	 */
-	List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
 
 	/**
 	 * 通过userID获得CA认证的客户ID
@@ -402,4 +393,10 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	void insertUtmReg(int userId, String utmId);
+
+	/**
+	 * 查询借款主体CA
+	 * @return
+	 */
+	List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list);
 }

@@ -94,6 +94,18 @@ public class HjhRepayVO extends BaseVO implements Serializable {
     private String inviteUserRegionName;
     private String inviteUserBranchName;
     private String inviteUserDepartmentName;
+
+    // 出借人人属性（当前）
+    private String userCurrentAttribute;
+
+    /**
+     * 推荐人信息(当前)
+     */
+    private String inviteCurrentUserName;
+    private String inviteUserCurrentRegionName;
+    private String inviteUserCurrentBranchName;
+    private String inviteUserCurrentDepartmentName;
+
     /*
      * 锁定期天月
      */
@@ -479,6 +491,46 @@ public class HjhRepayVO extends BaseVO implements Serializable {
 
     public void setInviteUserDepartmentName(String inviteUserDepartmentName) {
         this.inviteUserDepartmentName = inviteUserDepartmentName;
+    }
+
+    public String getUserCurrentAttribute() {
+        return userCurrentAttribute;
+    }
+
+    public void setUserCurrentAttribute(String userCurrentAttribute) {
+        this.userCurrentAttribute = userCurrentAttribute;
+    }
+
+    public String getInviteCurrentUserName() {
+        return inviteCurrentUserName;
+    }
+
+    public void setInviteCurrentUserName(String inviteCurrentUserName) {
+        this.inviteCurrentUserName = inviteCurrentUserName;
+    }
+
+    public String getInviteUserCurrentRegionName() {
+        return inviteUserCurrentRegionName;
+    }
+
+    public void setInviteUserCurrentRegionName(String inviteUserCurrentRegionName) {
+        this.inviteUserCurrentRegionName = inviteUserCurrentRegionName;
+    }
+
+    public String getInviteUserCurrentBranchName() {
+        return inviteUserCurrentBranchName;
+    }
+
+    public void setInviteUserCurrentBranchName(String inviteUserCurrentBranchName) {
+        this.inviteUserCurrentBranchName = inviteUserCurrentBranchName;
+    }
+
+    public String getInviteUserCurrentDepartmentName() {
+        return inviteUserCurrentDepartmentName;
+    }
+
+    public void setInviteUserCurrentDepartmentName(String inviteUserCurrentDepartmentName) {
+        this.inviteUserCurrentDepartmentName = inviteUserCurrentDepartmentName;
     }
 
     public Integer getIsMonth() {
