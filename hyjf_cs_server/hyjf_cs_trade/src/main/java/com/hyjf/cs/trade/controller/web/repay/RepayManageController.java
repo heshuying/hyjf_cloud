@@ -1191,6 +1191,7 @@ public class RepayManageController extends BaseTradeController {
         WebResult<Object> result = new WebResult<Object>();
         
         if(repayManageService.selectBorrowApicronListByBorrowNid(requestBean.getBorrowNid())!=null) {
+            logger.info(repayManageService.selectBorrowApicronListByBorrowNid(requestBean.getBorrowNid()).toString()+"123131231cccccccccc-----------------------------");
         	 Map<String,String> data2 =new HashMap<String, String>();
         	 data2.put("status", "911");
         	 result.setData(data2);
