@@ -130,7 +130,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.LEND.getName(), JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
                 if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                     //报送成功
-                    logger.info("借款记录接口报送成功");
+                    logger.info("借款记录接口报送成功,预计报送:{},实际报送:{}",result.size(),zeroOneResponse.data_num);
                     status = 1;
                 } else {
                     logger.info("借款记录接口报送失败");
@@ -210,7 +210,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.INVEST.getName(),JSONObject.toJSONString(map));
                 if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                     //报送成功
-                    logger.info("投资记录接口报送成功");
+                    logger.info("投资记录接口报送成功,预计报送:{},实际报送:{}",result.size(),zeroOneResponse.data_num);
                     status = 1;
                 } else {
                     logger.info("投资记录接口报送失败");
@@ -264,7 +264,7 @@ public class ZeroOneCaiJingServiceImpl implements ZeroOneCaiJingService {
                 ZeroOneResponse zeroOneResponse = sendDataReport(ZeroOneCaiJingEnum.ADVANCEDREPAY.getName(), JSONObject.toJSONString(map));
                 if (zeroOneResponse != null && zeroOneResponse.result_code == 1) {
                     //报送成功
-                    logger.info("提前还款接口报送成功");
+                    logger.info("提前还款接口报送成功,预计报送:{},实际报送:{}",result.size(),zeroOneResponse.data_num);
                     status = 1;
                 } else {
                     logger.info("提前还款接口报送失败");
