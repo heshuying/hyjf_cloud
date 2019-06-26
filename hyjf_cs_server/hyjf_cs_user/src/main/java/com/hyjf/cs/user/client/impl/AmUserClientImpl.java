@@ -1354,10 +1354,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public TemplateDisposeVO selectTemplateDisposeById(Integer landingId) {
-		TemplateDisposeResponse response = restTemplate
-				.getForEntity(userService+"/user/selectTemplateDisposeById/"+landingId, TemplateDisposeResponse.class).getBody();
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/selectTemplateDisposeById/"+landingId, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
+			return response.getTemplateDispose();
 		}
 		return null;
 	}
