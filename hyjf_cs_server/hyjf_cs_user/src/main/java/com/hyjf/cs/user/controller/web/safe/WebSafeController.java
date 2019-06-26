@@ -9,6 +9,8 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -89,6 +91,18 @@ public class WebSafeController extends BaseUserController {
 //        }
         result.put("inviteLink", inviteLink);
 
+        // 从redis获取是否可修改银行预留手机号
+        String isBankMobileModify = RedisConstants.BANK_MOBILE_MODIFY_FLAG;
+        try{
+            String flag = RedisUtils.get(isBankMobileModify);
+            if(StringUtils.isNotBlank(flag)) {
+                result.put("bankMobileModifyFlag",flag);
+            }
+        } catch(Exception e) {
+            result.put("bankMobileModifyFlag","0");
+            logger.error("获取银行预留手机号修改按钮展示flag失败！");
+        }
+
         if (null == result) {
             response.setStatus(ApiResult.FAIL);
             response.setStatusDesc("账户设置查询失败");
@@ -159,7 +173,8 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @ApiImplicitParam(name = "paraMap", value = "{email:string}", dataType = "Map")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
-    public WebResult<Object> sendEmailActive(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<Object> sendEmailActive(@RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                             @RequestHeader(value = "userId") Integer userId,
                                              @RequestHeader(value = "token") String token ,
                                              @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
@@ -184,7 +199,7 @@ public class WebSafeController extends BaseUserController {
             logger.error("保存用户日志失败", e);
         }
         try {
-            safeService.sendEmailActive(userId, token, paraMap.get("email"));
+            safeService.sendEmailActive(userId, token, paraMap.get("email"),wjtClient);
         } catch (MQException e) {
             logger.error("发送激活邮件失败", e);
             result.setStatus(ApiResult.FAIL);

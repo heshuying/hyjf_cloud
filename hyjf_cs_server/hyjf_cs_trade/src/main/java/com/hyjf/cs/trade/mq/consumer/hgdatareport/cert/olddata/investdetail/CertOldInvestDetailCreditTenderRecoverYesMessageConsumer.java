@@ -71,9 +71,9 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         String tradeDate = jsonObject.getString("tradeDate");
 
         Integer page=1;
-        Integer size=100;
+        Integer size=1000;
 
-        List<String> borrowNidList=certOldInvestDetailService.getBorrowNidList();
+        /*List<String> borrowNidList=certOldInvestDetailService.getBorrowNidList();
         logger.info(logHeader + " borrowNidList.size()=" +borrowNidList.size());
         List<String> selectBorrowNidList=new ArrayList<String>();
         try {
@@ -143,8 +143,8 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         } finally {
             logger.info(logHeader + " 结束。");
         }
-        RedisUtils.set("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN","1");
-        /*try {
+        RedisUtils.set("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN","1");*/
+        try {
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size, null, "creditTenderRecoverYes");
@@ -180,6 +180,6 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {
             logger.info(logHeader + " 结束。");
-        }*/
+        }
     }
 }

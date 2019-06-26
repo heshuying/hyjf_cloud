@@ -397,44 +397,47 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         cr.setNoticeFlg(1);
         this.couponRecoverMapper.updateByPrimaryKeySelective(cr);
 
-        // 添加红包账户明细
-        BankMerchantAccount nowBankMerchantAccount = this.getBankMerchantAccount(resultBean.getAccountId());
-        nowBankMerchantAccount.setAvailableBalance(nowBankMerchantAccount.getAvailableBalance().subtract(recoverAccount));
-        nowBankMerchantAccount.setAccountBalance(nowBankMerchantAccount.getAccountBalance().subtract(recoverAccount));
-        nowBankMerchantAccount.setUpdateTime(nowTime);
+        if (resultBean != null && resultBean.getAccountId() != null) {
+            // 添加红包账户明细
+            BankMerchantAccount nowBankMerchantAccount = this.getBankMerchantAccount(resultBean.getAccountId());
+            if (nowBankMerchantAccount != null) {
+                nowBankMerchantAccount.setAvailableBalance(nowBankMerchantAccount.getAvailableBalance().subtract(recoverAccount));
+                nowBankMerchantAccount.setAccountBalance(nowBankMerchantAccount.getAccountBalance().subtract(recoverAccount));
+                nowBankMerchantAccount.setUpdateTime(nowTime);
 
-        // 更新红包账户信息
-        int updateCount = this.updateBankMerchantAccount(nowBankMerchantAccount);
-        if (updateCount > 0) {
-            // 添加红包明细
-            BankMerchantAccountList bankMerchantAccountList = new BankMerchantAccountList();
-            bankMerchantAccountList.setOrderId(orderId);
-            bankMerchantAccountList.setUserId(tenderUserId);
-            bankMerchantAccountList.setAccountId(bankOpenAccountVO.getAccount());
-            bankMerchantAccountList.setAmount(recoverAccount);
-            bankMerchantAccountList.setBankAccountCode(resultBean.getAccountId());
-            bankMerchantAccountList.setBankAccountBalance(nowBankMerchantAccount.getAccountBalance());
-            bankMerchantAccountList.setBankAccountFrost(nowBankMerchantAccount.getFrost());
-            bankMerchantAccountList.setTransType(CustomConstants.BANK_MER_TRANS_TYPE_AUTOMATIC);
-            bankMerchantAccountList.setType(CustomConstants.BANK_MER_TYPE_EXPENDITURE);
-            bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_SUCCESS);
-            bankMerchantAccountList.setTxDate(Integer.parseInt(resultBean.getTxDate()));
-            bankMerchantAccountList.setTxTime(Integer.parseInt(resultBean.getTxTime()));
-            bankMerchantAccountList.setSeqNo(resultBean.getSeqNo());
-            bankMerchantAccountList.setCreateTime(new Date());
-            bankMerchantAccountList.setUpdateTime(new Date());
-            bankMerchantAccountList.setRegionName(userInfoCustomize.getRegionName());
-            bankMerchantAccountList.setBranchName(userInfoCustomize.getBranchName());
-            bankMerchantAccountList.setDepartmentName(userInfoCustomize.getDepartmentName());
-            bankMerchantAccountList.setCreateUserId(tenderUserId);
-            bankMerchantAccountList.setUpdateUserId(tenderUserId);
-            bankMerchantAccountList.setCreateUserName(userInfoCustomize.getUserName());
-            bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());
-            bankMerchantAccountList.setRemark("优惠券单独出借还款");
+                // 更新红包账户信息
+                int updateCount = this.updateBankMerchantAccount(nowBankMerchantAccount);
+                if (updateCount > 0) {
+                    // 添加红包明细
+                    BankMerchantAccountList bankMerchantAccountList = new BankMerchantAccountList();
+                    bankMerchantAccountList.setOrderId(orderId);
+                    bankMerchantAccountList.setUserId(tenderUserId);
+                    bankMerchantAccountList.setAccountId(bankOpenAccountVO.getAccount());
+                    bankMerchantAccountList.setAmount(recoverAccount);
+                    bankMerchantAccountList.setBankAccountCode(resultBean.getAccountId());
+                    bankMerchantAccountList.setBankAccountBalance(nowBankMerchantAccount.getAccountBalance());
+                    bankMerchantAccountList.setBankAccountFrost(nowBankMerchantAccount.getFrost());
+                    bankMerchantAccountList.setTransType(CustomConstants.BANK_MER_TRANS_TYPE_AUTOMATIC);
+                    bankMerchantAccountList.setType(CustomConstants.BANK_MER_TYPE_EXPENDITURE);
+                    bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_SUCCESS);
+                    bankMerchantAccountList.setTxDate(Integer.parseInt(resultBean.getTxDate()));
+                    bankMerchantAccountList.setTxTime(Integer.parseInt(resultBean.getTxTime()));
+                    bankMerchantAccountList.setSeqNo(resultBean.getSeqNo());
+                    bankMerchantAccountList.setCreateTime(new Date());
+                    bankMerchantAccountList.setUpdateTime(new Date());
+                    bankMerchantAccountList.setRegionName(userInfoCustomize.getRegionName());
+                    bankMerchantAccountList.setBranchName(userInfoCustomize.getBranchName());
+                    bankMerchantAccountList.setDepartmentName(userInfoCustomize.getDepartmentName());
+                    bankMerchantAccountList.setCreateUserId(tenderUserId);
+                    bankMerchantAccountList.setUpdateUserId(tenderUserId);
+                    bankMerchantAccountList.setCreateUserName(userInfoCustomize.getUserName());
+                    bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());
+                    bankMerchantAccountList.setRemark("优惠券单独出借还款");
 
-            this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
+                    this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
+                }
+            }
         }
-
 
         logger.info(CouponRepayServiceImpl.class.toString(),
                 "-----------还款结束---" + borrowTenderCpn.getBorrowNid() + "---------" + currentRecover.getTransferId() + "---------------");

@@ -17,10 +17,9 @@ public interface UserLargeScreenTwoCustomizeService {
 
     /**
      * 查询坐席下的增资、提现率
-     * @param customerList
      * @return
      */
-    List<ScreenTwoParam> getCapitalIncreaseAndCashWithdrawalRateByCustomer(List<CustomerTaskConfig> customerList);
+    List<ScreenTwoParam> getCapitalIncreaseAndCashWithdrawalRateByCustomer();
 
     /**
      * 查询运营部当前总站岗资金

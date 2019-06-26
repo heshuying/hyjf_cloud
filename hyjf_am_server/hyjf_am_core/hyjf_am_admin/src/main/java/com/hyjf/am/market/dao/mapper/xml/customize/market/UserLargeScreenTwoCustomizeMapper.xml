@@ -11,221 +11,51 @@
 			status = 1 AND del_flag = 0
 	</select>
 
-	<select id="getCapitalIncreaseAndCashWithdrawalRateByCustomer" parameterType="java.util.List" resultType="com.hyjf.am.market.dao.model.auto.ScreenTwoParam">
+	<select id="getCapitalIncreaseAndCashWithdrawalRateByCustomer" resultType="com.hyjf.am.market.dao.model.auto.ScreenTwoParam">
 		SELECT
-		customer_group AS flag,
-		current_owner AS customerName,
-		NOW() AS queryTime,
-		ROUND(SUM(add_share), 0) AS capitalIncrease,
-		ROUND(IFNULL(SUM(numerator) / SUM(denominator), 0), 2) AS cashWithdrawalRate,
-		ROUND(SUM(end_balance), 0) AS nowBalance
-		FROM
-		(
-		SELECT
-		username AS '用户名',
-		attribute AS '用户属性',
-		IFNULL(money - withdraw + start_balance - end_balance, 0) AS add_share,
-		money AS '充值',
-		withdraw AS '提现',
-		start_balance AS '月初站岗',
-		end_balance,
-		credit_advanc AS '债转到手金额',
-		withdraw - credit_advanc AS '提现-债转',
-		recover_account_yes AS '回款',
-		utm_source AS 'pc渠道来源',
+			customer_group AS flag, current_owner AS customerName, CURDATE() AS queryTime, ROUND(add_share, 0) AS capitalIncrease,
+			ROUND(IFNULL(numerator / denominator, 0), 2) AS cashWithdrawalRate, ROUND(end_balance, 0) AS nowBalance
+		FROM(
+			SELECT sum(IF(recharge - withdraw + start_balance - end_balance &lt; 0, 0, recharge - withdraw + start_balance - end_balance)) AS add_share, sum(end_balance) AS end_balance,
+			sum(IF (
+			IF((withdraw - recharge) &lt; (start_balance + recover_account_yes), withdraw - recharge, start_balance + recover_account_yes) &lt; 0, 0,
+			IF((withdraw - recharge) &lt; (start_balance + recover_account_yes), withdraw - recharge, start_balance + recover_account_yes)
+			)) AS numerator,
+			sum(start_balance + recover_account_yes) AS denominator, current_owner, customer_group
+			FROM(
+				SELECT customer_group, current_owner, u.user_id,
 
-		IF (
+				ifnull((SELECT bank_balance FROM hyjf_trade.ht_account_list l
+				WHERE is_show = 0 and user_id = u.user_id
+				and l.create_time &lt; date_format(CURDATE(), '%Y-%m-01')
+				order by id desc limit 1), 0) AS start_balance,
 
-		IF (
-		(
-		withdraw - credit_advanc - money
-		) <![CDATA[<]]> (
-		start_balance + recover_account_yes
-		),
-		withdraw - credit_advanc - money,
-		start_balance + recover_account_yes
-		) <![CDATA[<]]> 0,
-		0,
+				ifnull((SELECT bank_balance from hyjf_trade.ht_account_list l
+				WHERE user_id = u.user_id order by id desc limit 1 ),0) AS end_balance,
 
-		IF (
-		(
-		withdraw - credit_advanc - money
-		) <![CDATA[<]]> (
-		start_balance + recover_account_yes
-		),
-		withdraw - credit_advanc - money,
-		start_balance + recover_account_yes
-		)
-		) AS numerator,
-		start_balance + recover_account_yes AS denominator,
-		current_owner,
-		customer_group
-		FROM
-		(
-		SELECT
-		u.username,
-		ui.attribute,
-		ifnull(
-		(
-		SELECT
-		SUM(money) AS money
-		FROM
-		hyjf_trade.ht_account_recharge r
-		WHERE
-		u.user_id = r.user_id
-		AND STATUS = 2
-		AND create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		),
-		0
-		) AS money,
-		ifnull(
-		(
-		SELECT
-		SUM(total) AS withdraw
-		FROM
-		hyjf_trade.ht_account_withdraw w
-		WHERE
-		u.user_id = w.user_id
-		AND STATUS = 2
-		AND w.create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		GROUP BY
-		user_id
-		),
-		0
-		) AS withdraw,
-		(
-		SELECT
-		l.bank_balance AS start_balance
-		FROM
-		hyjf_trade.ht_account_list l
-		WHERE
-		l.create_time <![CDATA[<]]> date_format(
-		now() - INTERVAL 1 DAY,
-		'%Y-%m-01'
-		)
-		AND l.user_id = u.user_id
-		ORDER BY
-		l.create_time DESC
-		LIMIT 1
-		) AS start_balance,
-		(
-		SELECT
-		l.bank_balance AS end_balance
-		FROM
-		hyjf_trade.ht_account_list l
-		WHERE
-		l.user_id = u.user_id
-		ORDER BY
-		l.create_time DESC
-		LIMIT 1
-		) AS end_balance,
-		ifnull(
-		(
-		SELECT
-		sum(
-		ct.assign_price + ct.assign_interest_advance - ct.credit_fee
-		) AS credit_advanc
-		FROM
-		hyjf_trade.ht_borrow_recover br
-		INNER JOIN hyjf_trade.ht_borrow_tender bt ON br.nid = bt.nid
-		LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
-		LEFT JOIN hyjf_trade.ht_borrow_credit bc ON bc.tender_nid = bt.nid
-		LEFT JOIN hyjf_trade.ht_credit_tender ct ON ct.credit_nid = bc.credit_nid
-		WHERE
-		ct.create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		AND br.accede_order_id IS NULL
-		AND ui.attribute = 0
-		AND br.user_id = u.user_id
-		),
-		0
-		) AS credit_advanc,
-		ifnull(
-		(
-		SELECT
-		sum(recover_account_yes) AS recover_account_yes
-		FROM
-		(
-		<!-- 汇直投已还 -->
-		SELECT
-		hbr.user_id,
-		recover_account_yes
-		FROM
-		hyjf_trade.ht_borrow_recover hbr
-		INNER JOIN hyjf_trade.ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
-		WHERE
-		hbr.accede_order_id IS NULL
-		AND hbr.recover_yestime >= unix_timestamp(
-		DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		)
-		AND (
-		hb.borrow_style = 'endday'
-		OR hb.borrow_style = 'end'
-		)
-		AND hbr.recover_status = 1
-		UNION ALL
-		SELECT
-		hbrp.user_id,
-		recover_account_yes
-		FROM
-		hyjf_trade.ht_borrow_recover_plan hbrp
-		INNER JOIN hyjf_trade.ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
-		WHERE
-		hbrp.accede_order_id IS NULL
-		AND hbrp.recover_yestime >= unix_timestamp(
-		DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		)
-		AND (
-		hb.borrow_style = 'month'
-		OR hb.borrow_style = 'endmonth'
-		)
-		AND hbrp.recover_status = 1
-		UNION ALL
-		<!-- 汇计划已还 -->
-		SELECT
-		br.user_id,
-		br.repay_total AS recover_account_yes
-		FROM
-		hyjf_trade.ht_hjh_repay br
-		LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
-		LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
-		WHERE
-		ui.role_id = 1
-		AND br.repay_actual_time >= unix_timestamp(
-		DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		)
-		AND br.repay_status = 2
-		) br
-		WHERE
-		u.user_id = br.user_id
-		GROUP BY
-		user_id
-		),
-		0
-		) AS recover_account_yes,
-		utm.utm_source,
-		current_owner,
-		customer_group
-		FROM
-		hyjf_user.ht_user u
-		LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
-		LEFT JOIN hyjf_user.ht_utm_reg utmreg ON u.user_id = utmreg.user_id
-		LEFT JOIN hyjf_user.ht_utm utm ON utmreg.utm_id = utm.utm_id
-		INNER JOIN hyjf_user.ht_user_portrait up ON up.user_name = u.username
-		INNER JOIN hyjf_user.ht_customer_task_config ctc ON ctc.customer_name = up.current_owner
-		WHERE
-		ui.attribute = 0
-		<if test="list != null" >
-			AND current_owner IN
-			<foreach collection="list" item="item" separator="," open="(" close=")">
-				#{item.customerName}
-			</foreach>
-		</if>
-		) bt
-		) hh
-		WHERE
-		add_share >= 0
-		GROUP BY
-		current_owner
+				sum(case when l.trade in ('increase_interest_repay_yes','hjh_quit','tender_recover_yes','creditsell','increase_interest_profit','cash_coupon_profit','credit_tender_recover_yes','experience_profit')
+				then l.amount else 0 end) as recover_account_yes,
+				sum(case when l.trade in ('recharge_offline','recharge') then l.amount when l.trade='account_adjustment_down' then -l.amount else 0 end) as recharge,
+				sum(case when l.trade in ('cash_success') then l.amount when l.trade ='account_adjustment_up' then -l.amount else 0 end) AS withdraw,
+				sum(case when l.trade in ('creditassign','hjh_invest','tender_success') then l.amount else 0 end) AS tender_amount
+				FROM hyjf_user.ht_user u
+				inner JOIN hyjf_user.ht_user_info i ON u.user_id = i.user_id
+				left JOIN hyjf_user.ht_user_portrait p ON p.user_id = u.user_id
+				left JOIN hyjf_user.ht_customer_task_config c ON c.customer_name = p.current_owner
+
+				left join hyjf_trade.ht_account_list l ON u.user_id = l.user_id
+				and l.create_time &gt;= date_format(CURDATE(), '%Y-%m-01')
+				and l.is_show = 0 and l.trade in ('increase_interest_repay_yes','hjh_quit','tender_recover_yes','creditsell',
+				'increase_interest_profit','cash_coupon_profit','credit_tender_recover_yes','experience_profit',
+				'creditassign','hjh_invest','tender_success',
+				'recharge_offline','recharge','account_adjustment_down',
+				'cash_success','account_adjustment_up')
+
+				WHERE i.role_id = 1 AND i.attribute = 0 AND c.task_time = DATE_FORMAT(CURDATE(), '%Y-%m') AND c.status = 1 AND c.del_flag = 0
+				group by u.user_id
+			) a
+			group by current_owner, customer_group
+		) r order by current_owner
 	</select>
 
 	<select id="getOperNowBalance" resultType="java.math.BigDecimal">

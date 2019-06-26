@@ -13,6 +13,8 @@ import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.ContentArticleEnum;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -23,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {
@@ -42,6 +41,8 @@ public class ContentArticleServiceImpl implements ContentArticleService {
 
     @Value("${hyjf.web.host}")
     private String webUrl;
+
+    private Random random = new Random();
 
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
@@ -301,6 +302,13 @@ public class ContentArticleServiceImpl implements ContentArticleService {
 
             ContentArticle contentArticle = new ContentArticle();
             BeanUtils.copyProperties(request, contentArticle);
+
+            if("20".equals(contentArticle.getType())) {// 公司动态添加默认随机图片  add by wgx 2019/06/13
+                List imageList = RedisUtils.getObj(RedisConstants.APP_FIND_IMAGE + "company", List.class);
+                if(org.apache.commons.collections.CollectionUtils.isNotEmpty(imageList)){
+                    contentArticle.setImgurl(String.valueOf(imageList.get(random.nextInt(imageList.size()))));
+                }
+            }
             contentArticleMapper.insert(contentArticle);
         }
     }

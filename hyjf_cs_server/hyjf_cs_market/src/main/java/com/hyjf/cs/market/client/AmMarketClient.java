@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
@@ -152,4 +154,18 @@ public interface AmMarketClient {
      * @return Integer 主键ID
      **/
     Integer saveActivity518UserReward(ActivityUserRewardVO vo);
+
+    /**
+     * 获取app发现页顶部广告位
+     * @return
+     * @author wgx
+     */
+    List<AppFindAdCustomizeVO> getFindModules(AdsRequest request);
+
+    /**
+     * 获取app发现页广告banner
+     * @return
+     * @author wgx
+     */
+    AppFindAdCustomizeVO getFindBanner(AdsRequest request);
 }

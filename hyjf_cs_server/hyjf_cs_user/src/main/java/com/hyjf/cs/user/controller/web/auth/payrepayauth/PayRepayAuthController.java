@@ -19,6 +19,7 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.vo.AuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -65,7 +66,7 @@ public class PayRepayAuthController extends BaseUserController {
      */
     @ApiOperation(value = "二合一授权(缴费授权、还款授权)", notes = "二合一授权(缴费授权、还款授权)")
     @PostMapping(value = PAY_REPAY_AUTH, produces = "application/json; charset=utf-8")
-    public  WebResult<Object> auth(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+    public  WebResult<Object> auth(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         logger.info("缴费、还款二合一授权开始------------------------------接口路径:{}", PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
         WebResult<Object> result = new WebResult<>();
         // 验证请求参数
@@ -80,12 +81,12 @@ public class PayRepayAuthController extends BaseUserController {
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 成功同步调用路径
         String successPath = "/user/autoplus/autoTenderSuccess";
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="
+        String successUrl = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="
                 + orderId + "&authType="
                 + AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
         // 失败同步调用路径
         String errorPath = "/user/autoplus/autoTenderFail";
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath+"?logOrdId="
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath+"?logOrdId="
                 + orderId + "&authType="
                 + AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
         String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
@@ -105,7 +106,7 @@ public class PayRepayAuthController extends BaseUserController {
         authBean.setPlatform(CustomConstants.CLIENT_PC);
         authBean.setAuthType(AuthBean.AUTH_TYPE_PAY_REPAY_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_PC);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_PC,request,systemConfig));
+        authBean.setForgotPwdUrl(BankCommonUtil.getForgotPwdUrl(CustomConstants.CLIENT_PC,null,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(StringUtil.valueOf(usersInfo.getRoleId()));

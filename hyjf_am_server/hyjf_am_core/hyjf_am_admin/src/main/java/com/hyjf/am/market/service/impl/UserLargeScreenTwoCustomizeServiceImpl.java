@@ -32,12 +32,11 @@ public class UserLargeScreenTwoCustomizeServiceImpl implements UserLargeScreenTw
 
     /**
      * 查询坐席下的增资、提现率
-     * @param customerList
      * @return
      */
     @Override
-    public List<ScreenTwoParam> getCapitalIncreaseAndCashWithdrawalRateByCustomer(List<CustomerTaskConfig> customerList) {
-        return userLargeScreenTwoCustomizeMapper.getCapitalIncreaseAndCashWithdrawalRateByCustomer(customerList);
+    public List<ScreenTwoParam> getCapitalIncreaseAndCashWithdrawalRateByCustomer() {
+        return userLargeScreenTwoCustomizeMapper.getCapitalIncreaseAndCashWithdrawalRateByCustomer();
     }
 
     /**

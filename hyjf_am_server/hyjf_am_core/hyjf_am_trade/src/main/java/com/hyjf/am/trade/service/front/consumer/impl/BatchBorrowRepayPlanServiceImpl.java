@@ -1473,7 +1473,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		logger.info("【智投还款/出借人】借款编号：{}，订单号：{}，结束时间：{}", borrowNid, accedeOrderId, dateStr);
 		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
 			logger.info("【智投还款/出借人】借款编号：{}，开始增加冻结金额。订单号：{}，原冻结金额：{}，增加金额：{}", borrowNid, accedeOrderId, frostAccount, repayAccount);
-			paramInfo.setFrostAccount(repayAccount);//智投冻结金额
 			List<HjhRepay> repayList = this.hjhRepayMapper.selectByExample(repayExample);
 			HjhRepay hjhRepay = repayList.get(0);
 			HjhRepay repayParam = new HjhRepay();
@@ -1484,20 +1483,28 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			repayParam.setRepayAlready(repayAccount);
 			this.hjhPlanCustomizeMapper.updateHjhRepayForHjhRepay(repayParam);
 			logger.info("【智投还款/出借人】借款编号：{}，开始增加还款。订单号：{}，原回款金额：{}，增加金额：{}", borrowNid, accedeOrderId, hjhRepay.getRepayAlready(), repayAccount);
-		}else{
-			logger.info("【智投还款/出借人】借款编号：{}，开始增加可用金额。订单号：{}", borrowNid, accedeOrderId);
-			paramInfo.setAvailableInvestAccount(repayAccount);//智投订单可用金额
 		}
+		// modify liuyang 20190410 资金校验修改 start
+//		else{
+//			logger.info("【智投还款/出借人】借款编号：{}，开始增加可用金额。订单号：{}", borrowNid, accedeOrderId);
+//			paramInfo.setAvailableInvestAccount(repayAccount);//智投订单可用金额
+//		}
+		logger.info("【智投还款/出借人】借款编号：{}，开始增加可用金额。订单号：{}", borrowNid, accedeOrderId);
+		paramInfo.setAvailableInvestAccount(repayAccount);// 智投订单可用金额
+		// modify liuyang 20190410 资金校验修改 end
 		this.hjhPlanCustomizeMapper.updateHjhAccedeForHjhProcess(paramInfo);
 		// 更新账户信息(出借人)
 		Account tenderAccount = new Account();
 		tenderAccount.setUserId(tenderUserId);
 		logger.info("【智投还款/出借人】借款编号：{}，订单号：{}，账户金额结束时间：{}", borrowNid, accedeOrderId, dateStr);
-		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
-			tenderAccount.setPlanFrost(repayAccount);//智投冻结金额
-		}else{
-			tenderAccount.setPlanBalance(repayAccount);//智投可用金额
-		}
+		// modify by liuyang 20190410 资金校验修改 start
+//		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
+//			tenderAccount.setPlanFrost(repayAccount);//智投冻结金额
+//		}else{
+//			tenderAccount.setPlanBalance(repayAccount);//智投可用金额
+//		}
+		tenderAccount.setPlanBalance(repayAccount);//智投可用金额
+		// modify by liuyang 20190410 资金校验修改 start
 		tenderAccount.setBankBalanceCash(repayAccount);// 出借人银行可用余额
 		boolean investAccountFlag = this.adminAccountCustomizeMapper.updateOfRepayPlanTender(tenderAccount) > 0 ? true : false;
 		if (!investAccountFlag) {
@@ -1550,16 +1557,20 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		accountList.setSeqNo(seqNo);
 		accountList.setBankSeqNo(bankSeqNo);
 		/** 非银行相关 */
-		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
-			accountList.setType(3); // 冻结
-		}else{
-			accountList.setType(1); // 1收入
-		}
-		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
-			accountList.setTrade("hjh_repay_frost"); // 收到还款冻结
-		}else{
-			accountList.setTrade("hjh_repay_balance"); // 收到还款复投
-		}
+		// modify by liuyang 20190410 资金校验修改 start
+//		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
+//			accountList.setType(3); // 冻结
+//		}else{
+//			accountList.setType(1); // 1收入
+//		}
+//		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
+//			accountList.setTrade("hjh_repay_frost"); // 收到还款冻结
+//		}else{
+//			accountList.setTrade("hjh_repay_balance"); // 收到还款复投
+//		}
+		accountList.setType(1); // 1收入
+		accountList.setTrade("hjh_repay_balance");
+		// modify by liuyang 20190410 资金校验修改 end
 		accountList.setTradeCode("balance"); // 余额操作
 		accountList.setTotal(tenderAccount.getTotal()); // 出借人资金总额
 		accountList.setBalance(tenderAccount.getBalance()); // 出借人可用金额
@@ -2098,28 +2109,36 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			HjhRepay hjhRepay = repayList.get(0);
 			HjhRepay repayParam = new HjhRepay();
 			repayParam.setId(hjhRepay.getId());
-			paramInfo.setFrostAccount(repayAccount);//智投冻结金额
+			// modify by liuyang 20190410 资金校验修改 start
+			// paramInfo.setFrostAccount(repayAccount);//智投冻结金额
 			repayParam.setRepayTotal(repayAccount);
 			repayParam.setPlanRepayCapital(repayCapital);
 			repayParam.setPlanRepayInterest(repayInterest);
 			repayParam.setRepayAlready(repayAccount);
 			this.hjhPlanCustomizeMapper.updateHjhRepayForHjhRepay(repayParam);
 			logger.info("【智投还款/承接人】借款编号：{}，开始增加还款。债转编号：{}，承接智投订单号：{}，原冻结金额：{}，增加金额：{}", borrowNid, creditNid, assignPlanOrderId, hjhRepay.getRepayAlready(), repayAccount);
-		}else{
-			logger.info("【智投还款/承接人】借款编号：{}，开始增加可用金额。债转编号：{}，承接智投订单号：{}", borrowNid, creditNid, assignPlanOrderId);
-			paramInfo.setAvailableInvestAccount(repayAccount);//智投订单可用金额
 		}
+//		else{
+//			logger.info("【智投还款/承接人】借款编号：{}，开始增加可用金额。债转编号：{}，承接智投订单号：{}", borrowNid, creditNid, assignPlanOrderId);
+//			paramInfo.setAvailableInvestAccount(repayAccount);//智投订单可用金额
+//		}
+		logger.info("【智投还款/承接人】借款编号：{}，开始增加可用金额。债转编号：{}，承接智投订单号：{}", borrowNid, creditNid, assignPlanOrderId);
+		paramInfo.setAvailableInvestAccount(repayAccount);//智投订单可用金额
+		// modify by liuyang 20190410 资金校验修改 end
 		this.hjhPlanCustomizeMapper.updateHjhAccedeForHjhProcess(paramInfo);
 		// 债转的下次还款时间
 		int creditRepayNextTime = creditRepay.getAssignRepayNextTime();
 		// 更新账户信息(出借人)
 		Account assignUserAccount = new Account();
 		assignUserAccount.setUserId(assignUserId);
-		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
-			assignUserAccount.setPlanFrost(repayAccount);//汇智投冻结金额
-		}else{
-			assignUserAccount.setPlanBalance(repayAccount);//汇智投可用金额
-		}
+		// modify by liuyang 20190410 资金校验 start
+//		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
+//			assignUserAccount.setPlanFrost(repayAccount);//汇智投冻结金额
+//		}else{
+//			assignUserAccount.setPlanBalance(repayAccount);//汇智投可用金额
+//		}
+		assignUserAccount.setPlanBalance(repayAccount);
+		// modify by liuyang 20190410 资金校验 end
 		assignUserAccount.setBankBalanceCash(repayAccount);// 出借人银行可用余额
 		boolean investAccountFlag = this.adminAccountCustomizeMapper.updateOfRepayPlanTender(assignUserAccount) > 0 ? true : false;
 		if (!investAccountFlag) {
@@ -2169,17 +2188,21 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		accountList.setSeqNo(seqNo);
 		accountList.setBankSeqNo(bankSeqNo);
 		/** 非银行相关 */
-		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
-			accountList.setType(3); // 冻结
-		}else{
-			accountList.setType(1); // 1收入
-		}
-		
-		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
-			accountList.setTrade("credit_tender_recover_forst"); // 投标成功冻结
-		}else{
-			accountList.setTrade("credit_tender_recover_yes"); // 投标成功
-		}
+		// modify by liuyang 20190410 资金校验修改 start
+//		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
+//			accountList.setType(3); // 冻结
+//		}else{
+//			accountList.setType(1); // 1收入
+//		}
+
+		accountList.setType(1); // 1收入
+//		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
+//			accountList.setTrade("credit_tender_recover_forst"); // 投标成功冻结
+//		}else{
+//			accountList.setTrade("credit_tender_recover_yes"); // 投标成功
+//		}
+		accountList.setTrade("credit_tender_recover_yes"); // 债转收到还款
+		// modify by liuyang 20190410 资金校验修改 end
 		accountList.setTradeCode("balance"); // 余额操作
 		accountList.setTotal(assignUserAccount.getTotal()); // 出借人资金总额
 		accountList.setBalance(assignUserAccount.getBalance()); // 出借人可用金额

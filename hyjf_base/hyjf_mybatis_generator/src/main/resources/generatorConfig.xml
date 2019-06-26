@@ -5,7 +5,7 @@
 
     <!-- 引入配置文件 -->
 
-    <properties resource="init_market.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -2077,6 +2077,12 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+
+        <table tableName="ht_bank_mobile_modify" domainObjectName="BankMobileModify">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
 
     </context>
 </generatorConfiguration>

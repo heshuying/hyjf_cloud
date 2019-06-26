@@ -11,18 +11,25 @@ public class CertClaimVO implements Serializable {
     private Integer id;
 
     /**
-     * 标的编号
+     * 债权编码编号
      *
      * @mbggenerated
      */
     private String claimNid;
 
     /**
-     * 是否是债转标的 1：未转让,2：未还款
+     * 是否是债转标的 1：承接债权,2：原始债权
      *
      * @mbggenerated
      */
     private Integer creditFlg;
+
+    /**
+     * 是否是智投 1：散标,2：智投
+     *
+     * @mbggenerated
+     */
+    private Integer isPlan;
 
     /**
      * 是否上送产品配置信息
@@ -30,8 +37,6 @@ public class CertClaimVO implements Serializable {
      * @mbggenerated
      */
     private Integer isConfig;
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -63,5 +68,13 @@ public class CertClaimVO implements Serializable {
 
     public void setIsConfig(Integer isConfig) {
         this.isConfig = isConfig;
+    }
+
+    public Integer getIsPlan() {
+        return isPlan;
+    }
+
+    public void setIsPlan(Integer isPlan) {
+        this.isPlan = isPlan;
     }
 }

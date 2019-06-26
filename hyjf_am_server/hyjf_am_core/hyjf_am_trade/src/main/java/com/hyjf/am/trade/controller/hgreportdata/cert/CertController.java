@@ -13,6 +13,7 @@ import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertProductResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -31,6 +32,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 import com.hyjf.am.vo.trade.cert.CertClaimVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -226,7 +229,7 @@ public class CertController extends BaseController {
     public CertClaimResponse selectCertBorrowByFlg(){
         CertClaimResponse response = new CertClaimResponse();
         response.setRtn(Response.FAIL);
-        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig();
+        List<CertClaim> certBorrowList =certService.insertCertBorrowConfig();
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
             List<CertClaimVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertClaimVO.class);
             response.setResultList(borrowVOList);
@@ -252,6 +255,39 @@ public class CertController extends BaseController {
         return response;
     }
 
+    /**
+     * 查找未上报的产品信息
+     * @return
+     */
+    @GetMapping("/selectCertProductList")
+    public CertProductResponse selectCertProduct(){
+        CertProductResponse response = new CertProductResponse();
+        response.setRtn(Response.FAIL);
+        List<CertProduct> certProductList =certService.insertCertProductList();
+        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certProductList)){
+            List<CertProductVO> borrowVOList = CommonUtils.convertBeanList(certProductList,CertProductVO.class);
+            response.setResultList(borrowVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    @PostMapping("/updateCertProductBatch")
+    public IntegerResponse updateCertProductBatch(@RequestBody CertProductUpdateVO updateVO){
+        IntegerResponse response = new IntegerResponse();
+        try{
+            certService.updateCertProductBatch(updateVO);
+            response.setResult(1);
+        }catch (Exception e){
+            response.setResult(0);
+        }
+        return response;
+    }
 
     @GetMapping("/getBorrowNidList")
     public StringResponse getBorrowNidList() {

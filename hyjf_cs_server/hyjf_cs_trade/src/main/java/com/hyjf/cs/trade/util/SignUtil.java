@@ -103,6 +103,10 @@ public class SignUtil {
             //aems用户还款验签
             AemsRepayRequestBean bean = (AemsRepayRequestBean)paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
+        }else if("/aems/overdue/query".equals(methodName)){
+            //aems逾期查询
+            AemsOverdueRequestBean bean = (AemsOverdueRequestBean)paramBean;
+            sign = bean.getInstCode() + bean.getTimestamp();
         }
         //  AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

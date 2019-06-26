@@ -57,6 +57,7 @@ public class HjhPlanCapitalController extends BaseController {
                 Date nowDate = GetDate.stringToDate2(GetDate.dateToString2(new Date()));
                 // 取得前一天日期
                 Date yDate = GetDate.countDate(nowDate, 5, -1);
+/*
                 Date date9 = GetDate.countDate(nowDate, 5, 9);
                 // 删除汇计划资本按天统计及预估表的昨天今天及之后9天的记录
                 result = this.hjhPlanCapitalService.deleteHjhPlanCapital(yDate, date9);
@@ -104,6 +105,7 @@ public class HjhPlanCapitalController extends BaseController {
                     }
                 }
                 logger.info("汇计划资本预估统计(每日)任务 更新当日到后9日的汇计划资本预估 OK ");
+*/
 
                 // 更新前一天的汇计划日交易量
                 List<HjhAccountBalanceVO> hjhAccountBalanceList = this.hjhAccountBalanceService.getHjhAccountBalanceForActList(yDate);

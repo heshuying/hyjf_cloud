@@ -3,11 +3,8 @@
  */
 package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.olddata.lendProductConfig;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
-import com.hyjf.am.vo.hgreportdata.cert.CertOldLendProductConfigVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 import com.hyjf.am.vo.trade.cert.CertClaimVO;
@@ -102,7 +99,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
             int intCount = listRepay == null ? 0 : listRepay.size();
             logger.info(logHeader + "查询的产品配置历史数据共: " + intCount + "条" + ",当前时间为:" + GetDate.getNowTime10());
             if (null != listRepay && listRepay.size() > 0) {
-                //转换为list
+               /* //转换为list
                 List<JSONArray> jsonArrayList = new ArrayList<JSONArray>();
                 List<CertOldLendProductConfigVO> certOldRepayPlanBeans = JSONArray.parseArray(listRepay.toJSONString(), CertOldLendProductConfigVO.class);
                 if (null != certOldRepayPlanBeans) {
@@ -117,37 +114,38 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
                 if (null != jsonArrayList && jsonArrayList.size() > 0) {
                     for (int i = 0; i < jsonArrayList.size(); i++) {
                         JSONArray repay = jsonArrayList.get(i);
-                        List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(repay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG);
-                        // 遍历循环上报
-                        for (CertReportEntityVO entity : entitys) {
-                            try {
-                                certLendProductConfigService.insertAndSendPost(entity);
-                            } catch (Exception e) {
-                                throw e;
-                            }
-                            // 批量修改状态  start
-                            List<Integer> ids = new ArrayList<>();
-                            for (CertClaimVO item : certBorrowEntityList) {
-                                ids.add(item.getId());
-                            }
-                            if (ids.size() > 0) {
-                                CertClaimUpdateVO update = new CertClaimUpdateVO();
-                                update.setIds(ids);
-                                CertClaimVO certBorrow = new CertClaimVO();
-                                if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
-                                    // 成功
-                                    certBorrow.setIsConfig(1);
-                                } else {
-                                    // 失败
-                                    certBorrow.setIsConfig(99);
-                                }
-                                update.setCertClaim(certBorrow);
-                                // 批量修改
-                                certLendProductConfigService.updateCertBorrowStatusBatch(update);
-                            }
-                            // 批量修改状态  end
-                        }
+
                     }
+                }*/
+                List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(listRepay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG);
+                // 遍历循环上报
+                for (CertReportEntityVO entity : entitys) {
+                    try {
+                        certLendProductConfigService.insertAndSendPost(entity);
+                    } catch (Exception e) {
+                        throw e;
+                    }
+                    // 批量修改状态  start
+                    List<Integer> ids = new ArrayList<>();
+                    for (CertClaimVO item : certBorrowEntityList) {
+                        ids.add(item.getId());
+                    }
+                    if (ids.size() > 0) {
+                        CertClaimUpdateVO update = new CertClaimUpdateVO();
+                        update.setIds(ids);
+                        CertClaimVO certBorrow = new CertClaimVO();
+                        if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
+                            // 成功
+                            certBorrow.setIsConfig(1);
+                        } else {
+                            // 失败
+                            certBorrow.setIsConfig(99);
+                        }
+                        update.setCertClaim(certBorrow);
+                        // 批量修改
+                        certLendProductConfigService.updateCertBorrowStatusBatch(update);
+                    }
+                    // 批量修改状态  end
                 }
             }else {
                 //查询的数据全部被完全承接的情况下，修改状态

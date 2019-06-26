@@ -1,75 +1,9 @@
 package com.hyjf.am.user.dao.auto;
 
 
+import com.hyjf.am.user.dao.mapper.auto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.hyjf.am.user.dao.mapper.auto.AccountBankMapper;
-import com.hyjf.am.user.dao.mapper.auto.AccountChinapnrMapper;
-import com.hyjf.am.user.dao.mapper.auto.AccountMobileSynchMapper;
-import com.hyjf.am.user.dao.mapper.auto.AppointmentAuthLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.AppointmentRecodLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankSmsAuthCodeMapper;
-import com.hyjf.am.user.dao.mapper.auto.BindUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.BorrowAppointMapper;
-import com.hyjf.am.user.dao.mapper.auto.CallcenterServiceUsersMapper;
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.CorpOpenAccountRecordMapper;
-import com.hyjf.am.user.dao.mapper.auto.EvalationMapper;
-import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
-import com.hyjf.am.user.dao.mapper.auto.LabPlatformMapper;
-import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspAbnormalcreditMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspAbnormalcreditdetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspAnliinfosMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspApplyMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspApplydetailsMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspBlackdataMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspConfigureMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspDegreeresultMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspFqzMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspNormalcreditdetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspQuerydetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspRegionMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspShixininfosMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspTitleMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspZhixinginfosMapper;
-import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
-import com.hyjf.am.user.dao.mapper.auto.ROaDepartmentMapper;
-import com.hyjf.am.user.dao.mapper.auto.ROaUsersMapper;
-import com.hyjf.am.user.dao.mapper.auto.SmsCodeMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserBindEmailLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserContactMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserEvalationBehaviorMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserEvalationMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserEvalationResultMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserLoginLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserPlatMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmPlatMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmSourceMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmVisitMapper;
-import com.hyjf.am.user.dao.mapper.auto.VipAuthMapper;
-import com.hyjf.am.user.dao.mapper.auto.VipInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.VipTransferLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.VipUserTenderMapper;
-import com.hyjf.am.user.dao.mapper.auto.VipUserUpgradeMapper;
-import com.hyjf.am.user.dao.mapper.auto.WhereaboutsPageConfigMapper;
-import com.hyjf.am.user.dao.mapper.auto.WhereaboutsPagePictureMapper;
 
 @Service
 public class AutoMapper {
@@ -285,6 +219,7 @@ public class AutoMapper {
     protected MspQuerydetailMapper mspQueryDetailMapper;
     @Autowired
     protected MspBlackdataMapper mspBlackDataMapper;
-
+    @Autowired
+    protected BankMobileModifyMapper bankMobileModifyMapper;
 }
 

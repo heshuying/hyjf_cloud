@@ -277,5 +277,10 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowRepayLateMapper borrowRepayLateMapper;
 
 	@Autowired
+	protected WjtProjectListCustomizeMapper wjtProjectListCustomizeMapper;
+
+	@Autowired
 	protected CertClaimMapper certClaimMapper;
+	@Autowired
+	protected CertProductMapper certProductMapper;
 }

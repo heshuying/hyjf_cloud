@@ -21,7 +21,7 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
      * @param flag（1代表加入智投，2代表承接智投）
      * @return
      */
-    JSONArray productConfigInfo(String orderId, String flag);
+    JSONArray productConfigInfo(String orderId, String isTender,String flag);
     /**
      * 查找产品配置信息历史数据
      * @return

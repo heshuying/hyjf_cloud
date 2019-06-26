@@ -509,7 +509,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             params.put("flag", "2"); //1（散）2（智投）
                             params.put("status", "1"); //1承接（每笔）
                             // 应急中心二期，添加承接标示 add by nxl
-                            params.put("isTender","1"); //1:承接智投，2：加入智投
+                            params.put("isTender","1"); //1:承接，2：加入
                             commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
                                     MQConstant.HG_REPORT_DELAY_LEVEL);
                             // add 合规数据上报 埋点 liubin 20181122 end

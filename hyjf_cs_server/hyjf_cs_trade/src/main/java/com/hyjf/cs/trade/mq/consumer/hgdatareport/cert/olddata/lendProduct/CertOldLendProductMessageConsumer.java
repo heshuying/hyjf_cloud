@@ -6,9 +6,11 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.olddata.lendProduct;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.cert.CertProductUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertProductVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct.CertLendProductService;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,24 +85,21 @@ public class CertOldLendProductMessageConsumer implements RocketMQListener<Messa
 
         // --> 消息处理
         try {
-            // --> 增加防重校验（根据不同平台不同上送方式校验不同）
-
             // --> 调用service组装数据
-            // 智投历史数据上报，查询所有智投信息，组装上报数据
-            List<HjhPlanVO> hjhPlanVOList = certLendProductService.getAllPlanInfo();
-            if (!CollectionUtils.isNotEmpty(hjhPlanVOList)) {
-                logger.error(logHeader + "线上智投信息获取失败，暂无智投信息！！！");
+            // 产品信息历史数据上报，查询所有产品信息，组装上报数据
+            List<CertProductVO> certProductVOList = certLendProductService.selectCertProductList();
+            if (!CollectionUtils.isNotEmpty(certProductVOList)) {
+                logger.error(logHeader + "暂无上报的产品信息！！！");
                 return;
             }
-            for (HjhPlanVO hjhPlanVO:hjhPlanVOList){
-                JSONArray listRepay = certLendProductService.getPlanProdouct(hjhPlanVO.getPlanNid(),true);
-                logger.info("数据：" + listRepay.toString());
-                if (null == listRepay || listRepay.size() <= 0) {
-                    logger.error(logHeader + "组装参数为空！！！参数为：" + hjhPlanVO.getPlanNid());
-                    return;
-                }
-                // 上送数据
-                List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(listRepay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE);
+            logger.info(logHeader + "查询的未上报的产品信息历史数据共: " + certProductVOList.size() + "条,当前时间为:" + GetDate.getNowTime10());
+            // --> 调用service组装数据
+            JSONArray jsonArrayProduct = certLendProductService.getHistoryDateProduct();
+            logger.info("数据：" + jsonArrayProduct.toString());
+            int intCount = jsonArrayProduct == null ? 0 : jsonArrayProduct.size();
+            logger.info(logHeader + "查询的产品信息历史数据共: " + intCount + "条" + ",当前时间为:" + GetDate.getNowTime10());
+            if (null != jsonArrayProduct && jsonArrayProduct.size() > 0) {
+                List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(jsonArrayProduct, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE);
                 // 遍历循环上报
                 for (CertReportEntityVO entity : entitys) {
                     try {
@@ -107,6 +107,27 @@ public class CertOldLendProductMessageConsumer implements RocketMQListener<Messa
                     } catch (Exception e) {
                         throw e;
                     }
+                    // 批量修改状态  start
+                    List<Integer> ids = new ArrayList<>();
+                    for (CertProductVO item : certProductVOList) {
+                        ids.add(item.getId());
+                    }
+                    if (ids.size() > 0) {
+                        CertProductUpdateVO update = new CertProductUpdateVO();
+                        update.setIds(ids);
+                        CertProductVO certProduct = new CertProductVO();
+                        if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
+                            // 成功
+                            certProduct.setIsProduct(1);
+                        } else {
+                            // 失败
+                            certProduct.setIsProduct(99);
+                        }
+                        update.setCertProduct(certProduct);
+                        // 批量修改
+                        certLendProductService.updateCertProductBatch(update);
+                    }
+                    // 批量修改状态  end
                 }
             }
             logger.info(logHeader + " 处理成功。" + msgBody);

@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.am.vo.admin.SmsLogVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,6 +48,12 @@ public class SmsCountTemp {
     @RequestMapping(value = "/auto", method = RequestMethod.GET)
     @ResponseBody
     public void smsAuto() {
+        if(!RedisUtils.exists("SmsCountTemp")){
+            RedisUtils.set("SmsCountTemp","123",360);
+        }else{
+            return;
+        }
+
         logger.info("短信统计 初始化SmsCountTemp smsAuto 开始运行");
         long startTime = System.currentTimeMillis();   //获取开始时间
 
@@ -66,7 +73,8 @@ public class SmsCountTemp {
         }
 
         smlogCustomize.setPostTimeBegin("2019-3-8");//开始时间 2019-3-8
-        smlogCustomize.setPostTimeEnd(String.valueOf(GetDate.dateToDateFormatStr(new Date(),"yyyy-MM-dd")));//结束时间 当前时间
+        smlogCustomize.setPostTimeEnd("2019-5-23");//结束时间 当前时间
+//        smlogCustomize.setPostTimeEnd(String.valueOf(GetDate.dateToDateFormatStr(new Date(),"yyyy-MM-dd")));//结束时间 当前时间
         //查询当前短信日志的总数
         Integer count = this.smsCodeService.queryLogCount(smlogCustomize);
         logger.info("短信统计 初始化SmsCountTemp smsAuto 短信日志的总数 ="+count);
@@ -86,7 +94,8 @@ public class SmsCountTemp {
                 //一页显示几条
                 request.setPageSize(5000);
                 request.setPostTimeBegin("2019-3-8");//开始时间 2019-3-8
-                request.setPostTimeEnd(String.valueOf(GetDate.dateToDateFormatStr(new Date(),"yyyy-MM-dd")));//结束时间 当前时间
+                request.setPostTimeEnd("2019-5-23");//结束时间 当前时间
+//                request.setPostTimeEnd(String.valueOf(GetDate.dateToDateFormatStr(new Date(),"yyyy-MM-dd")));//结束时间 当前时间
 
                 //根据ID查询，  1000<id<2000
                 List<SmsLogVO> listSmsLog = smsLogService.findSmsLogList(request);

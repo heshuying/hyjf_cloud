@@ -28,7 +28,7 @@ public class UpdCompanyRequest {
 	private String userId;
 	//电子账号
 	private String accountId;
-	//
+	//银行卡id
 	private String bankId;
 	private String bankName;
 	private String payAllianceCode;
