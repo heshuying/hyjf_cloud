@@ -1416,13 +1416,6 @@ public class UserCenterController extends BaseController {
                     userRequest.setUserId(Integer.parseInt(userId));
                     userRequest.setRegIp(GetCilentIP.getIpAddr(request));
                     boolean isOk = this.userCenterService.syncUserMobile(userRequest);
-                    if(isOk){
-                        // 推送数据到MQ 用户信息修改（绑卡异步）
-                        JSONObject params = new JSONObject();
-                        params.put("userId", userId);
-                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
-                                MQConstant.HG_REPORT_DELAY_LEVEL);
-                    }
                    return  new AdminResult<>(SUCCESS, "同步用户手机号成功");
                 } else {
                     return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");
