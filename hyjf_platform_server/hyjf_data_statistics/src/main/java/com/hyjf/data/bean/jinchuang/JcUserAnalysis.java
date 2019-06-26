@@ -20,47 +20,47 @@ public class JcUserAnalysis {
     /**
      * 小于5000出借额数
      */
-    private Integer primaryInvest;
+    private String primaryInvest;
 
     /**
      * 5千至1万出借额
      */
-    private Integer middleInvest;
+    private String middleInvest;
 
     /**
      * 1万至5万出借额
      */
-    private Integer seniorInvest;
+    private String seniorInvest;
 
     /**
      * 5万以上出借额
      */
-    private Integer highestInvest;
+    private String highestInvest;
 
     /**
      * 出借次数为1次数
      */
-    private Integer oneInvest;
+    private String oneInvest;
 
     /**
      * 出借次数为2次数
      */
-    private Integer twoInvest;
+    private String twoInvest;
 
     /**
      * 出借次数为3-5次数
      */
-    private Integer threeInvest;
+    private String threeInvest;
 
     /**
      * 出借次数为6-10次数
      */
-    private Integer fourInvest;
+    private String fourInvest;
 
     /**
      * 出借次数为10次以上数
      */
-    private Integer fiveInvest;
+    private String fiveInvest;
 
     /**
      * 用户收益
@@ -70,12 +70,12 @@ public class JcUserAnalysis {
     /**
      * 男性人数
      */
-    private Integer maleCount;
+    private String maleCount;
 
     /**
      * 女性人数
      */
-    private Integer femaleCount;
+    private String femaleCount;
 
     /**
      * 统计日期
@@ -94,75 +94,75 @@ public class JcUserAnalysis {
         this.id = id;
     }
 
-    public Integer getPrimaryInvest() {
+    public String getPrimaryInvest() {
         return primaryInvest;
     }
 
-    public void setPrimaryInvest(Integer primaryInvest) {
+    public void setPrimaryInvest(String primaryInvest) {
         this.primaryInvest = primaryInvest;
     }
 
-    public Integer getMiddleInvest() {
+    public String getMiddleInvest() {
         return middleInvest;
     }
 
-    public void setMiddleInvest(Integer middleInvest) {
+    public void setMiddleInvest(String middleInvest) {
         this.middleInvest = middleInvest;
     }
 
-    public Integer getSeniorInvest() {
+    public String getSeniorInvest() {
         return seniorInvest;
     }
 
-    public void setSeniorInvest(Integer seniorInvest) {
+    public void setSeniorInvest(String seniorInvest) {
         this.seniorInvest = seniorInvest;
     }
 
-    public Integer getHighestInvest() {
+    public String getHighestInvest() {
         return highestInvest;
     }
 
-    public void setHighestInvest(Integer highestInvest) {
+    public void setHighestInvest(String highestInvest) {
         this.highestInvest = highestInvest;
     }
 
-    public Integer getOneInvest() {
+    public String getOneInvest() {
         return oneInvest;
     }
 
-    public void setOneInvest(Integer oneInvest) {
+    public void setOneInvest(String oneInvest) {
         this.oneInvest = oneInvest;
     }
 
-    public Integer getTwoInvest() {
+    public String getTwoInvest() {
         return twoInvest;
     }
 
-    public void setTwoInvest(Integer twoInvest) {
+    public void setTwoInvest(String twoInvest) {
         this.twoInvest = twoInvest;
     }
 
-    public Integer getThreeInvest() {
+    public String getThreeInvest() {
         return threeInvest;
     }
 
-    public void setThreeInvest(Integer threeInvest) {
+    public void setThreeInvest(String threeInvest) {
         this.threeInvest = threeInvest;
     }
 
-    public Integer getFourInvest() {
+    public String getFourInvest() {
         return fourInvest;
     }
 
-    public void setFourInvest(Integer fourInvest) {
+    public void setFourInvest(String fourInvest) {
         this.fourInvest = fourInvest;
     }
 
-    public Integer getFiveInvest() {
+    public String getFiveInvest() {
         return fiveInvest;
     }
 
-    public void setFiveInvest(Integer fiveInvest) {
+    public void setFiveInvest(String fiveInvest) {
         this.fiveInvest = fiveInvest;
     }
 
@@ -174,19 +174,19 @@ public class JcUserAnalysis {
         this.interest = interest;
     }
 
-    public Integer getMaleCount() {
+    public String getMaleCount() {
         return maleCount;
     }
 
-    public void setMaleCount(Integer maleCount) {
+    public void setMaleCount(String maleCount) {
         this.maleCount = maleCount;
     }
 
-    public Integer getFemaleCount() {
+    public String getFemaleCount() {
         return femaleCount;
     }
 
-    public void setFemaleCount(Integer femaleCount) {
+    public void setFemaleCount(String femaleCount) {
         this.femaleCount = femaleCount;
     }
 

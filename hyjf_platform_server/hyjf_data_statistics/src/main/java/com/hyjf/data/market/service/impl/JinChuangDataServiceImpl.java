@@ -71,45 +71,7 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
         List<Interest> interests;
         Map<String, Object> maps = new HashMap<>();
         List<JcUserAnalysis> analysisList = analysisDao.getUserAnalysis();
-        Integer primaryInvest = 0;
-        Integer middleInvest = 0;
-        Integer seniorInvest = 0;
-        Integer highestInvest = 0;
-        Integer oneInvest = 0;
-        Integer twoInvest = 0;
-        Integer threeInvest = 0;
-        Integer fourInvest = 0;
-        Integer fiveInvest = 0;
-        Integer maleCount = 0;
-        Integer femaleCount = 0;
         if (!CollectionUtils.isEmpty(analysisList)) {
-            for (JcUserAnalysis analysis : analysisList) {
-                primaryInvest += analysis.getPrimaryInvest();
-                middleInvest += analysis.getMiddleInvest();
-                seniorInvest += analysis.getSeniorInvest();
-                highestInvest += analysis.getHighestInvest();
-                oneInvest += analysis.getOneInvest();
-                twoInvest += analysis.getTwoInvest();
-                threeInvest += analysis.getThreeInvest();
-                fourInvest += analysis.getFourInvest();
-                fiveInvest += analysis.getFiveInvest();
-                maleCount += analysis.getMaleCount();
-                femaleCount += analysis.getFemaleCount();
-            }
-            Integer investCount = primaryInvest + middleInvest + seniorInvest + highestInvest;
-            Integer sumInvest = oneInvest + twoInvest + threeInvest + fourInvest + fiveInvest;
-            Integer person = maleCount + femaleCount;
-            analysisVO.setPrimaryInvest(primaryInvest / investCount + "%");
-            analysisVO.setMiddleInvest(middleInvest / investCount + "%");
-            analysisVO.setSeniorInvest(seniorInvest / investCount + "%");
-            analysisVO.setHighestInvest(highestInvest / investCount + "%");
-            analysisVO.setOneInvest(oneInvest / sumInvest + "%");
-            analysisVO.setTwoInvest(twoInvest / sumInvest + "%");
-            analysisVO.setThreeInvest(threeInvest / sumInvest + "%");
-            analysisVO.setFourInvest(fourInvest / sumInvest + "%");
-            analysisVO.setFiveInvest(fiveInvest / sumInvest + "%");
-            analysisVO.setMaleCount(maleCount / person + "%");
-            analysisVO.setFemaleCount(femaleCount / person + "%");
             interests = CommonUtils.convertBeanList(analysisList, Interest.class);
             maps.put("jcUserAnalysis", analysisVO);
             maps.put("interests", interests);
