@@ -25,7 +25,7 @@ public class JcUserAnalysisDao extends BaseMongoDao<JcUserAnalysis> {
     public List<JcUserAnalysis> getUserAnalysis() {
         Query query = new Query();
         query.with(new Sort(Sort.Direction.DESC, "createTime"));
-        query.limit(6);
+        query.limit(1);
         return mongoTemplate.find(query, getEntityClass());
     }
 }

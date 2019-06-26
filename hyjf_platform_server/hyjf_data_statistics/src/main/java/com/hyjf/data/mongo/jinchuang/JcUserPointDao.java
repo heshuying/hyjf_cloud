@@ -27,4 +27,5 @@ public class JcUserPointDao extends BaseMongoDao<JcUserPoint> {
         query.limit(1);
         return mongoTemplate.findOne(new Query(), getEntityClass());
     }
+
 }

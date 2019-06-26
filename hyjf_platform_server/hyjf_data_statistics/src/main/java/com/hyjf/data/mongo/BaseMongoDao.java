@@ -1,11 +1,15 @@
 package com.hyjf.data.mongo;
 
+import com.hyjf.common.util.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -94,6 +98,26 @@ public abstract class BaseMongoDao<T> {
 
 	public Long count(Query query){
 		return this.mongoTemplate.count(query,getEntityClass());
+	}
+
+	/**
+	 * add by yangchnagwei
+	 * 根据变更信息id 和参数类非空字段更新（字段名称需要和目标文档一致）
+	 * @param id
+	 * @param info
+	 */
+	public void updateByParamInfoNotNull(String id, Object info) {
+		Query query = new Query();
+		Criteria criteria = Criteria.where("_id").is(id);
+		query.addCriteria(criteria);
+		Update update = new Update();
+		Map map = ConvertUtils.convertNonNullObjectToJsonMap(info);
+		Set set = map.keySet();
+		for (Object key:set
+				) {
+			update.set((String)key,map.get(key));
+		}
+		mongoTemplate.findAndModify(query, update, getEntityClass());
 	}
 
 }

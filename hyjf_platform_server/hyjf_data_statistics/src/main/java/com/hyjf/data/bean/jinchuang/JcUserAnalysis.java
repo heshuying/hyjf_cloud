@@ -82,9 +82,9 @@ public class JcUserAnalysis {
      */
     private String time;
 
-    private Integer createTime;
+    private String createTime;
 
-    private Integer updateTime;
+    private String updateTime;
 
     public String getId() {
         return id;
@@ -198,19 +198,19 @@ public class JcUserAnalysis {
         this.time = time;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

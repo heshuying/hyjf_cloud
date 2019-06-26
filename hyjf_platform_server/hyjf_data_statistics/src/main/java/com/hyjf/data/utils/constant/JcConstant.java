@@ -23,5 +23,9 @@ public class JcConstant {
      * 神策事件分析
      */
     public static final String INTERFCE_SENSORS_METHOD_EVENTS = "events";
+    /**
+     * 神策分布数据分析
+     */
+    public static final String INTERFCE_SENSORS_METHOD_ADDICTIONS = "addictions";
 
 }
