@@ -627,13 +627,15 @@ public class WebProtocolServiceImpl implements WebProtocolService {
          * 根据协议判断是否下载不准确，由Zha Daojian2019-06-06修改为据居间协议生成状态判断
          */
         if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
-            tenderAgreement = tenderAgreementsAss.get(0);
-            //下载法大大协议--债转
-            if(tenderAgreement!=null && tenderAgreement.getStatus()==3){
-                /** 脱敏规则三期
-                 *  出借债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
-                logger.info("调用下载法大大协议--债转 ---------------------:"+tenderAgreement);
-                files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+            if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0) {
+                tenderAgreement = tenderAgreementsAss.get(0);
+                //下载法大大协议--债转
+                if (tenderAgreement != null && tenderAgreement.getStatus() == 3) {
+                    /** 脱敏规则三期
+                     *  出借债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                    logger.info("调用下载法大大协议--债转 ---------------------:" + tenderAgreement);
+                    files = createFaddPDFImgFile(files, tenderAgreement);//下载脱敏
+                }
             }
             //下载法大大协议--居间
             tenderAgreement = tenderAgreementsNid.get(0);
