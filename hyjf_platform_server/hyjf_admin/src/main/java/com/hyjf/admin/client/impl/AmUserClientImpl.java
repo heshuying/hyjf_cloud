@@ -3119,10 +3119,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public TemplateConfigResponse selectTempConfigList(LandingManagerRequest request) {
 		String url = "http://AM-ADMIN/am-user/landing/selectTempConfigList" ;
 		TemplateConfigResponse response = restTemplate.postForEntity(url,request,TemplateConfigResponse.class).getBody();
-		if (Response.isSuccess(response)) {
-			return response;
-		}
-		return null;
+		return response;
 	}
 	/**
 	 * 根据id查找着陆页配置 add by nxl
