@@ -184,17 +184,17 @@ public class RegistRecordController extends BaseController {
 
         if (StringUtils.isNotBlank(userId)) {
             String jsonStr = "";
-//            try {
-//                JSONObject jsonData = new JSONObject();
-//                jsonData.put("userId", userId);
-//                jsonStr = JSON.toJSONString(jsonData);
-//                commonProducer.messageSend(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(), jsonStr));
-//                logger.info("=====手动发送账户信息到[{}]到mq——wbs [成功]=====", jsonStr);
-//            } catch (Exception e) {
+            try {
+                JSONObject jsonData = new JSONObject();
+                jsonData.put("userId", userId);
+                jsonStr = JSON.toJSONString(jsonData);
+                commonProducer.messageSend(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(), jsonStr));
+                logger.info("=====手动发送账户信息到[{}]到mq——wbs [成功]=====", jsonStr);
+            } catch (Exception e) {
                 logger.error("=====手动发送账户信息[{}]到mq－wbs [失败!!]=====", jsonStr);
                 return new AdminResult<>(FAIL, FAIL_DESC);
-//            }
-            //return new AdminResult<>();
+            }
+            return new AdminResult<>();
         } else {
             return new AdminResult<>(FAIL, "用户id不能为空！");
         }
