@@ -1,4 +1,4 @@
-package com.hyjf.data.vo.jinchuang;
+package com.hyjf.data.bean.jinchuang;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @Auther:yangchangwei
  * @Date:2019/6/25
- * @Description:
+ * @Description: 接口配置
  */
 @Document(collection = "ht_interface_configuration")
 public class InterfaceConfiguration implements Serializable {

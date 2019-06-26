@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -18,13 +19,13 @@ public class JcUserPoint implements Serializable {
 
     private String id;
 
-    private JSONObject jo;
+    private Map jo;
 
     private String time;
 
-    private Integer createTime;
+    private String createTime;
 
-    private Integer updateTime;
+    private String updateTime;
 
     public String getId() {
         return id;
@@ -34,20 +35,12 @@ public class JcUserPoint implements Serializable {
         this.id = id;
     }
 
-    public JSONObject getJo() {
+    public Map getJo() {
         return jo;
     }
 
-    public void setJo(JSONObject jo) {
+    public void setJo(Map jo) {
         this.jo = jo;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 
     public String getTime() {
@@ -58,11 +51,19 @@ public class JcUserPoint implements Serializable {
         this.time = time;
     }
 
-    public Integer getUpdateTime() {
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

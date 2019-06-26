@@ -4,7 +4,7 @@
 package com.hyjf.data.mongo.jinchuang;
 
 import com.hyjf.data.mongo.BaseMongoDao;
-import com.hyjf.data.vo.jinchuang.InterfaceConfiguration;
+import com.hyjf.data.bean.jinchuang.InterfaceConfiguration;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
