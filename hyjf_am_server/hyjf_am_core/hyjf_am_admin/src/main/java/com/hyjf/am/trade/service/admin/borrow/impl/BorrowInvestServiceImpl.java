@@ -233,6 +233,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
         BorrowTender borrowTender=lstBorrowTender.get(0);
         BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
         BeanUtils.copyProperties(borrowTender,vo);
+        vo.setBorrowUserName(borrowTender.getInviteUserName());
 
         build(vo);
 
