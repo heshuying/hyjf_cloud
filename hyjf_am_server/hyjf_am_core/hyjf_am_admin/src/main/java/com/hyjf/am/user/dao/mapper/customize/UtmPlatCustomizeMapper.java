@@ -10,4 +10,5 @@ public interface UtmPlatCustomizeMapper {
 
     UtmPlat selectUtmPlatBySourceIds(Integer sourceId);
 
+    UtmPlat selectUtmPlatByUtmId(Integer utmId);
 }

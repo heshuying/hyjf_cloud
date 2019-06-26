@@ -46,5 +46,16 @@
         </where>
     </select>
 
+    <select id="selectUtmPlatByUtmId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+            plat.source_id,
+            plat.source_name
+        FROM
+            ht_utm_plat plat
+        INNER JOIN ht_utm utm ON plat.source_id = utm.source_id
+        WHERE
+            utm.utm_id = #{utmId};
+    </select>
+
 
 </mapper>

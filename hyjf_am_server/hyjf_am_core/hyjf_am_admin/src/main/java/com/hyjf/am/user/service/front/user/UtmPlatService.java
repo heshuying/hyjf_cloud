@@ -11,4 +11,6 @@ public interface UtmPlatService {
     UtmPlat getUtmPlat(Integer sourceId);
 
     UtmPlat getUtmByUserId(Integer userId);
+
+    UtmPlat getUtmByUtmId(Integer utmId);
 }

@@ -62,7 +62,7 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
 
         if(vo.getTenderUserUtmId()!=null){
             Integer tenderUserUtmId=vo.getTenderUserUtmId();
-            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
+            UtmPlat utmPlat =utmPlatService.getUtmByUtmId(tenderUserUtmId);
 
             if(utmPlat!=null){
                 vo.setUtmName(utmPlat.getSourceName());

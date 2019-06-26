@@ -32,9 +32,14 @@ public class UtmPlatServiceImpl extends BaseServiceImpl implements UtmPlatServic
 		List<UtmReg> lstReg = utmRegMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(lstReg)) {
 			UtmReg utmReg = lstReg.get(0);
-			return utmPlatCustomizeMapper.selectUtmPlatBySourceIds(utmReg.getUtmId());
+			return utmPlatCustomizeMapper.selectUtmPlatByUtmId(utmReg.getUtmId());
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public UtmPlat getUtmByUtmId(Integer utmId) {
+		return utmPlatCustomizeMapper.selectUtmPlatByUtmId(utmId);
 	}
 }

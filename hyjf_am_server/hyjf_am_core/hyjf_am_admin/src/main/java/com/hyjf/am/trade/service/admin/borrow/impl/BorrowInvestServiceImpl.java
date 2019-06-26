@@ -251,8 +251,6 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             vo.setCreateTimeStr(sdf.format(vo.getCreateTime()));
         }
 
-        UtmPlat utmPlatt=utmPlatService.getUtmByUserId(vo.getUserId());
-
         if(vo.getTenderUserAttribute()!=null && vo.getTenderUserAttribute().intValue()<userAttribute.length){
                 vo.setTenderUserAttributeStr(userAttribute[vo.getTenderUserAttribute()]);
         }
@@ -261,13 +259,14 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             vo.setInviteUserAttributeStr(userAttribute[vo.getInviteUserAttribute()]);
         }
 
+        UtmPlat utmPlatt=utmPlatService.getUtmByUserId(vo.getUserId());
         if(utmPlatt!=null){
             vo.setUtmNameNow(utmPlatt.getSourceName());
         }
 
         if(vo.getTenderUserUtmId()!=null){
             Integer tenderUserUtmId=vo.getTenderUserUtmId();
-            UtmPlat utmPlat =utmPlatService.getUtmPlat(tenderUserUtmId);
+            UtmPlat utmPlat =utmPlatService.getUtmByUtmId(tenderUserUtmId);
 
             if(utmPlat!=null){
                 vo.setUtmName(utmPlat.getSourceName());
