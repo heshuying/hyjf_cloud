@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,6 +233,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             throw new IllegalArgumentException("nid="+nid+"订单为空！");
         }
         BorrowTender borrowTender=lstBorrowTender.get(0);
+        logger.info("nid=【{}】tender info is 【{}】",nid,JSONObject.toJSONString(borrowTender));
         BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
         BeanUtils.copyProperties(borrowTender,vo);
         vo.setBorrowUserName(borrowTender.getInviteUserName());

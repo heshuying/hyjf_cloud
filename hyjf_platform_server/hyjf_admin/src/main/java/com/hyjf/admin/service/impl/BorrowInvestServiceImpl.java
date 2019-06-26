@@ -697,7 +697,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     @Override
     public BorrowInvestCustomizeExtVO getBorrowInvestInfo(String nid) {
         BorrowInvestCustomizeExtResponse response=amTradeClient.getBorrowInvestInfo(nid);
-        if(response!=null){
+        if(response!=null && response.getResult()!=null){
             return response.getResult();
         }else{
             logger.error("nid=【{}】订单明细查询失败！");
