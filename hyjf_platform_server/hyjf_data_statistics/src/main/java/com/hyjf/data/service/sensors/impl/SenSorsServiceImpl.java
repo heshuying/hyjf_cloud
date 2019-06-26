@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ import java.util.*;
 /**
  * @Auther:yangchangwei
  * @Date:2019/6/25
- * @Description:
+ * @Description: 获取更新神策数据
  */
 @Service
 public class SenSorsServiceImpl implements SenSorsService{
@@ -44,6 +45,9 @@ public class SenSorsServiceImpl implements SenSorsService{
     @Autowired
     private JcDataStatisticsDao jcDataStatisticsDao;
 
+    @Value("${hyjf.sensors.token}")
+    private String token;
+
     /**
      * 获取接口数据
      * @param parm
@@ -53,7 +57,8 @@ public class SenSorsServiceImpl implements SenSorsService{
     @Override
     public Map getSenSorsData(Map parm, String url) {
 
-        String post = HttpClientUtils.post(url, parm);
+        String jsonString = JSONUtils.toJSONString(parm);
+        String post = HttpClientUtils.postJson(url, jsonString);
         Map map = (Map) JSONUtils.parse(post);
         return map;
     }
@@ -125,7 +130,7 @@ public class SenSorsServiceImpl implements SenSorsService{
         if(info != null){
             url = info.getDomain();
             url = url + info.getUrl();
-            //TODO url = url + token(从配置工程获取)
+            url = url + "&token=" + token;
         }
         return url;
     }
