@@ -62,10 +62,10 @@ public class JcCustomerServerController extends BaseController {
 
 
     @ApiOperation(value = "根据id查询客户服务", notes = "根据id查询客户服务")
-    @GetMapping("/getCustomerServer")
+    @PostMapping("/getCustomerServer")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult getCustomerServer(@RequestParam String id) {
-        CustomerServerResponse response = jcCustomerService.getCustomerServer(id);
+    public AdminResult getCustomerServer(@RequestBody JcCustomerServerRequest request) {
+        CustomerServerResponse response = jcCustomerService.getCustomerServer(request.getId());
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
