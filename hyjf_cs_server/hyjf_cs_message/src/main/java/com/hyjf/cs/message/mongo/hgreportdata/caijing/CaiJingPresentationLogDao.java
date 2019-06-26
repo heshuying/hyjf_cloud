@@ -4,9 +4,12 @@
 package com.hyjf.cs.message.mongo.hgreportdata.caijing;
 
 import com.hyjf.am.resquest.admin.CaiJingLogRequest;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
+import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingRepotDataLog;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import com.mongodb.BasicDBObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -51,6 +54,9 @@ public class CaiJingPresentationLogDao extends BaseMongoDao<CaiJingPresentationL
             int limitStart = (currPage - 1) * pageSize;
             query.skip(limitStart).limit(pageSize);
         }
-        return mongoTemplate.find(query, getEntityClass());
+
+        List<CaiJingRepotDataLog> list = mongoTemplate.find(query, CaiJingRepotDataLog.class);
+        List<CaiJingPresentationLog> logVOS = CommonUtils.convertBeanList(list, CaiJingPresentationLog.class);
+        return logVOS;
     }
 }

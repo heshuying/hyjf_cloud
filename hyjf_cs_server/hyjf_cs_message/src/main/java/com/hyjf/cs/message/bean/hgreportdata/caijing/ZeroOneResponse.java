@@ -18,7 +18,31 @@ public class ZeroOneResponse implements Serializable {
     //报送数据总条数
     public Integer data_num;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Integer getResult_code() {
+        return result_code;
+    }
+
+    public void setResult_code(Integer result_code) {
+        this.result_code = result_code;
+    }
+
+    public String getResult_msg() {
+        return result_msg;
+    }
+
+    public void setResult_msg(String result_msg) {
+        this.result_msg = result_msg;
+    }
+
+    public Integer getData_num() {
+        return data_num;
+    }
+
+    public void setData_num(Integer data_num) {
+        this.data_num = data_num;
+    }
+
+    public String toString(){
+        return "result_code="+result_code+",result_msg="+result_msg+",data_num="+data_num;
     }
 }
