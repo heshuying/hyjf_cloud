@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.config;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.JcCustomerService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CustomerServerResponse;
@@ -27,8 +29,12 @@ public class JcCustomerServerController extends BaseController {
     @Autowired
     private JcCustomerService jcCustomerService;
 
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "customerServer";
+
     @ApiOperation(value = "客户服务列表", notes = "客户服务列表")
     @PostMapping("/serverList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult getServerList(@RequestBody JcCustomerServerRequest request) {
         CustomerServerResponse response = jcCustomerService.getServerList(request);
         if (response == null) {
@@ -42,6 +48,7 @@ public class JcCustomerServerController extends BaseController {
 
     @ApiOperation(value = "添加客户服务", notes = "添加客户服务")
     @PostMapping("/addCustomerServer")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult addCustomerServer(@RequestBody JcCustomerServerRequest request) {
         CustomerServerResponse response = jcCustomerService.addCustomerServer(request);
         if (response == null) {
@@ -56,6 +63,7 @@ public class JcCustomerServerController extends BaseController {
 
     @ApiOperation(value = "根据id查询客户服务", notes = "根据id查询客户服务")
     @GetMapping("/getCustomerServer")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult getCustomerServer(@RequestParam String id) {
         CustomerServerResponse response = jcCustomerService.getCustomerServer(id);
         if (response == null) {
@@ -69,6 +77,7 @@ public class JcCustomerServerController extends BaseController {
 
     @ApiOperation(value = "修改客服服务", notes = "修改客户服务")
     @PostMapping("/updateCustomerServer")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateCustomerServer(@RequestBody JcCustomerServerRequest request) {
         CustomerServerResponse response = jcCustomerService.updateCustomerServer(request);
         if (response == null) {
