@@ -54,7 +54,7 @@ public class LandingManageController extends BaseController {
 
     @ApiOperation(value = "页面初始化", notes = "初始化下拉列表")
     @PostMapping("/init")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult utmListInit(HttpServletRequest request, HttpServletResponse response) {
         // 模板类型
         Map<String, String> tempType = CacheUtil.getParamNameMap("TEMP_TYPE");
@@ -68,14 +68,14 @@ public class LandingManageController extends BaseController {
     @ApiOperation(value = "着陆页管理列表查询", notes = "着陆页管理列表查询")
     @PostMapping(value = "/landinglist")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<TemplateConfigCustomizeVO>> getUserslist(@RequestBody LandingManagerRequestBean landingManagerRequestBean, HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, String> tempType = CacheUtil.getParamNameMap("TEMP_TYPE");
         LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
         BeanUtils.copyProperties(landingManagerRequestBean, landingManagerRequest);
         TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
-        if (!Response.isSuccess(templateConfigResponse)) {
+        if (null==templateConfigResponse||!Response.isSuccess(templateConfigResponse)) {
             return new AdminResult<>(FAIL, templateConfigResponse.getMessage());
         }
         List<TemplateConfigVO> templateConfigVOList = templateConfigResponse.getResultList();
@@ -136,17 +136,32 @@ public class LandingManageController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "删除信息", notes = "删除信息")
+    @ApiOperation(value = "删除&状态修改信息", notes = "删除&状态修改信息")
     @PostMapping("/deleteTemplate")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_DELETE, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult deleteTemplate(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
         AdminResult adminResult = new AdminResult();
-        //根据utmId判断，如存在，则为修改，如不存在，则为新增
         if (null != landingManagerRequestBean.getId()) {
-            boolean flag = landingManagerService.deleteTemplate(landingManagerRequestBean.getId());
-            if (!flag) {
-                adminResult.setStatus(AdminResult.FAIL);
-                adminResult.setStatusDesc("系统异常，请联系管理员!");
+            if (null != landingManagerRequestBean.getStatus()) {
+                //如果有状态代表是状态修改
+                AdminSystemVO adminSystemVO = this.getUser(request);
+                LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
+                TemplateConfigResponse templateConfigResponse = landingManagerService.selectTemplateById(landingManagerRequestBean.getId());
+                TemplateConfigVO templateConfigVO = templateConfigResponse.getResult();
+                //设置状态1启用，0禁用
+                templateConfigVO.setStatus(landingManagerRequestBean.getStatus());
+                BeanUtils.copyProperties(templateConfigVO, landingManagerRequest);
+                landingManagerRequest.setLoginUserId(adminSystemVO.getId());
+                int intFlg = landingManagerService.updateOrInsertTemplate(landingManagerRequest);
+                if (intFlg <= 0) {
+                    return new AdminResult<>(FAIL, FAIL_DESC);
+                }
+            } else {
+                boolean flag = landingManagerService.deleteTemplate(landingManagerRequestBean.getId());
+                if (!flag) {
+                    adminResult.setStatus(AdminResult.FAIL);
+                    adminResult.setStatusDesc("系统异常，请联系管理员!");
+                }
             }
         } else {
             adminResult.setStatus(AdminResult.FAIL);
@@ -154,10 +169,11 @@ public class LandingManageController extends BaseController {
         }
         return adminResult;
     }
+
     @ApiOperation(value = "图片上传", notes = "图片上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY} )
-    public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
             LinkedList<BorrowCommonImage> borrowCommonImages = contentAdsService.uploadFile(request);
@@ -169,4 +185,5 @@ public class LandingManageController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
+
 }
