@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
@@ -302,4 +303,29 @@ public interface CsMessageClient {
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonth(HjhAccountBalanceRequest request);
 
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceDay(HjhAccountBalanceRequest request);
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（预计）
+     * @param hjhPlanCapitalPredictionRequest
+     * @return
+     * @Author : wenxin
+     */
+    HjhPlanCapitalPredictionResponse getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest);
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（实际）
+     * @param hjhPlanCapitalActualRequest
+     * @return
+     * @Author : wenxin
+     */
+    HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest);
+
+    /**
+     * 查询财经日志
+     * @param request
+     * @return
+     */
+    CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request);
+
+    BooleanResponse reQueryCaiJingLog(CaiJingLogRequest request);
 }

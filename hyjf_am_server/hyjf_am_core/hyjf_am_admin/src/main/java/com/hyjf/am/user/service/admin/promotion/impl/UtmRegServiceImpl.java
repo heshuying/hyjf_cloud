@@ -37,4 +37,20 @@ public class UtmRegServiceImpl extends BaseServiceImpl implements UtmRegService 
         String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
         return utmRegCustomizeMapper.getAccountNumber(list, dayStart, dayEnd, type);
     }
+
+    @Override
+    public void insertPcUtmReg(UtmReg utmReg){
+        utmRegMapper.insertSelective(utmReg);
+    }
+
+    @Override
+    public void updatePcUtmReg(UtmReg utmReg){
+        utmRegMapper.updateByPrimaryKeySelective(utmReg);
+    }
+
+    @Override
+    public void deleteUtmReg(Integer id){
+        utmRegMapper.deleteByPrimaryKey(id);
+    }
+
 }
