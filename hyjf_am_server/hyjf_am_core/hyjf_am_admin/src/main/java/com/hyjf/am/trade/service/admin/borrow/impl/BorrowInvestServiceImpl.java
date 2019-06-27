@@ -282,8 +282,13 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     @Override
     public int updateTenderUtm(TenderUtmChangeLog log) {
         BorrowTender borrowTender=new BorrowTender();
-        borrowTender.setTenderUserUtmId(getUtmId(log.getTenderUtmId()));
 
+        Utm utm=utmPlatService.getUtmBySourceId(log.getTenderUtmId());
+        if(utm!=null){
+            borrowTender.setTenderUserUtmId(utm.getUtmId());
+        }else{
+            throw  new IllegalArgumentException("sourceId=【"+log.getTenderUtmId()+"】的UTM为空！");
+        }
         BorrowTenderExample example=new BorrowTenderExample();
         example.or().andNidEqualTo(log.getNid());
 
@@ -291,15 +296,6 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
 
         return tenderUtmChangeLogMapper.insertSelective(log);
     }
-
-    private Integer getUtmId(Integer sourceId) {
-
-        Utm utm=utmPlatService.getUtmBySourceId(sourceId);
-        if(utm!=null){
-            return utm.getUtmId();
-        }
-        throw  new IllegalArgumentException("sourceId=【"+sourceId+"】的UTM为空！");
-    }
-
+    
     private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};
 }

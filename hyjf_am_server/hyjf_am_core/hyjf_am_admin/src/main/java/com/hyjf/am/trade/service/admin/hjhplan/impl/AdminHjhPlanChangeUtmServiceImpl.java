@@ -92,22 +92,18 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
     public int updateTenderUtm(TenderUtmChangeLog log) {
         HjhAccede hjhAccede=new HjhAccede();
         hjhAccede.setAccedeOrderId(log.getNid());
-        hjhAccede.setTenderUserUtmId(getUtmId(log.getTenderUtmId()));
 
+        Utm utm=utmPlatService.getUtmBySourceId(log.getTenderUtmId());
+        if(utm!=null){
+            hjhAccede.setTenderUserUtmId(utm.getUtmId());
+        }else{
+            throw  new IllegalArgumentException("sourceId=【"+log.getTenderUtmId()+"】的UTM为空！");
+        }
         HjhAccedeExample example=new HjhAccedeExample();
         example.or().andAccedeOrderIdEqualTo(log.getNid());
         hjhAccedeMapper.updateByExampleSelective(hjhAccede,example);
 
         return tenderUtmChangeLogMapper.insertSelective(log);
-    }
-
-    private Integer getUtmId(Integer sourceId) {
-
-        Utm utm=utmPlatService.getUtmBySourceId(sourceId);
-        if(utm!=null){
-            return utm.getUtmId();
-        }
-        throw  new IllegalArgumentException("sourceId=【"+sourceId+"】的UTM为空！");
     }
 
     private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};
