@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.controller.app.unbindcardpage;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -127,7 +126,7 @@ public class AppUnBindCardPageController extends BaseUserController {
                 || ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))
                 || (Validator.isNotNull(account.getBankTotal()) && account.getBankTotal().compareTo(BigDecimal.ZERO) > 0)) {
             ret.put("status", "1");
-            ret.put("statusDesc", "抱歉，银行卡解绑错误，请联系客服！");
+            ret.put("statusDesc", "不符合银行卡解绑规则");
             return ret;
         }
         // 根据银行卡Id获取用户的银行卡信息
