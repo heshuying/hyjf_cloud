@@ -2,12 +2,10 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import java.util.List;
 
+import com.hyjf.am.user.dao.model.auto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.user.dao.model.auto.UtmPlat;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.dao.model.auto.UtmRegExample;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 
@@ -41,5 +39,22 @@ public class UtmPlatServiceImpl extends BaseServiceImpl implements UtmPlatServic
 	@Override
 	public UtmPlat getUtmByUtmId(Integer utmId) {
 		return utmPlatCustomizeMapper.selectUtmPlatByUtmId(utmId);
+	}
+
+
+	@Override
+	public Utm getUtmBySourceId(Integer sourceId) {
+		UtmExample example=new UtmExample();
+		example.or().andSourceIdEqualTo(sourceId);
+		List<Utm> lstUtm=utmMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(lstUtm)?null:lstUtm.get(0);
+	}
+
+	@Override
+	public Integer getSourceIdByUtmId(Integer tenderUserUtmId) {
+		UtmExample example=new UtmExample();
+		example.or().andUtmIdEqualTo(tenderUserUtmId);
+		List<Utm> lstUtm=utmMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(lstUtm)?null:lstUtm.get(0).getSourceId();
 	}
 }

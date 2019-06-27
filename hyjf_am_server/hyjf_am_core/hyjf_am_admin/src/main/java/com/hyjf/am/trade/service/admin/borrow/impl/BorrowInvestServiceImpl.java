@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
+import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,7 +234,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             throw new IllegalArgumentException("nid="+nid+"订单为空！");
         }
         BorrowTender borrowTender=lstBorrowTender.get(0);
-        logger.info("nid=【{}】tender info is 【{}】",nid,JSONObject.toJSONString(borrowTender));
+        logger.debug("nid=【{}】tender info is 【{}】",nid,JSONObject.toJSONString(borrowTender));
         BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
         BeanUtils.copyProperties(borrowTender,vo);
         vo.setBorrowUserName(borrowTender.getInviteUserName());
@@ -273,13 +274,15 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             }else{
                 throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
             }
+            vo.setTenderUserUtmId(utmPlatService.getSourceIdByUtmId(tenderUserUtmId));
+
         }
     }
 
     @Override
     public int updateTenderUtm(TenderUtmChangeLog log) {
         BorrowTender borrowTender=new BorrowTender();
-        borrowTender.setTenderUserUtmId(log.getTenderUtmId());
+        borrowTender.setTenderUserUtmId(getUtmId(log.getTenderUtmId()));
 
         BorrowTenderExample example=new BorrowTenderExample();
         example.or().andNidEqualTo(log.getNid());
@@ -287,6 +290,15 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
         borrowTenderMapper.updateByExampleSelective(borrowTender,example);
 
         return tenderUtmChangeLogMapper.insertSelective(log);
+    }
+
+    private Integer getUtmId(Integer sourceId) {
+
+        Utm utm=utmPlatService.getUtmBySourceId(sourceId);
+        if(utm!=null){
+            return utm.getUtmId();
+        }
+        throw  new IllegalArgumentException("sourceId=【"+sourceId+"】的UTM为空！");
     }
 
     private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};

@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanChangeUtmService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
@@ -69,6 +70,7 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
             }else{
                 throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
             }
+            vo.setTenderUserUtmId(utmPlatService.getSourceIdByUtmId(tenderUserUtmId));
         }
 
         UtmPlat utmPlatt=utmPlatService.getUtmByUserId(hjhAccede.getUserId());
@@ -90,13 +92,22 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
     public int updateTenderUtm(TenderUtmChangeLog log) {
         HjhAccede hjhAccede=new HjhAccede();
         hjhAccede.setAccedeOrderId(log.getNid());
-        hjhAccede.setTenderUserUtmId(log.getTenderUtmId());
+        hjhAccede.setTenderUserUtmId(getUtmId(log.getTenderUtmId()));
 
         HjhAccedeExample example=new HjhAccedeExample();
         example.or().andAccedeOrderIdEqualTo(log.getNid());
         hjhAccedeMapper.updateByExampleSelective(hjhAccede,example);
 
         return tenderUtmChangeLogMapper.insertSelective(log);
+    }
+
+    private Integer getUtmId(Integer sourceId) {
+
+        Utm utm=utmPlatService.getUtmBySourceId(sourceId);
+        if(utm!=null){
+            return utm.getUtmId();
+        }
+        throw  new IllegalArgumentException("sourceId=【"+sourceId+"】的UTM为空！");
     }
 
     private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};

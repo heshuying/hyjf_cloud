@@ -131,7 +131,7 @@ public class BorrowInvestCustomizeExtVO{
 
 
     /**
-     * 出借人渠道来源（出借时）
+     * 出借人渠道来源(source_id)（出借时）
      *
      * @mbggenerated
      */
