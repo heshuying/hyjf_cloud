@@ -12,6 +12,7 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -133,7 +134,7 @@ public class CrmTenderRepairServiceImpl extends BaseServiceImpl implements CrmTe
                 recoverFee = interestInfo.getFee(); // 总管理费
             }
             // ht_borrow_recover
-            BorrowRecover borrowRecover = getBorrowRecover(borrowNid).get(0);
+            BorrowRecover borrowRecover = getBorrowRecoverByTenderNidBidNid(ordId, borrowNid);
             borrowRecover.setRecoverAccount(amountTender); // 预还金额
             borrowRecover.setRecoverInterest(interestTender); // 预还利息
             borrowRecover.setRecoverCapital(capitalTender); // 预还本金
@@ -268,5 +269,16 @@ public class CrmTenderRepairServiceImpl extends BaseServiceImpl implements CrmTe
             return detailList.get(0);
         }
         return null;
+    }
+
+    private BorrowRecover getBorrowRecoverByTenderNidBidNid(String tenderNid, String bidNid) {
+        BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria borrowRecoverCra = borrowRecoverExample.createCriteria();
+        borrowRecoverCra.andBorrowNidEqualTo(bidNid).andNidEqualTo(tenderNid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
+        if(CollectionUtils.isEmpty(borrowRecoverList)){
+            return null;
+        }
+        return borrowRecoverList.get(0);
     }
 }
