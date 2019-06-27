@@ -565,10 +565,9 @@ public class SenSorsServiceImpl implements SenSorsService{
         info.setUpdateTime(GetDate.formatTime());
         info.setTime(GetDate.formatTimeYYYYMM());
 
-        List<JcUserAnalysis> userAnalysis = jcUserAnalysisDao.getUserAnalysis();
-        if(userAnalysis != null && userAnalysis.size() > 0){
-            JcUserAnalysis analysis = userAnalysis.get(0);
-            jcUserAnalysisDao.updateByParamInfoNotNull(analysis.getId(),info);
+        JcUserAnalysis userAnalysis = jcUserAnalysisDao.getUserAnalysis();
+        if(userAnalysis != null){
+            jcUserAnalysisDao.updateByParamInfoNotNull(userAnalysis.getId(),info);
         }else{
             info.setCreateTime(GetDate.formatTime());
             jcUserAnalysisDao.save(info);
@@ -629,10 +628,9 @@ public class SenSorsServiceImpl implements SenSorsService{
         info.setUpdateTime(GetDate.formatTime());
         info.setTime(GetDate.formatTimeYYYYMM());
 
-        List<JcUserAnalysis> userAnalysis = jcUserAnalysisDao.getUserAnalysis();
-        if(userAnalysis != null && userAnalysis.size() > 0){
-            JcUserAnalysis analysis = userAnalysis.get(0);
-            jcUserAnalysisDao.updateByParamInfoNotNull(analysis.getId(),info);
+        JcUserAnalysis userAnalysis = jcUserAnalysisDao.getUserAnalysis();
+        if(userAnalysis != null){
+            jcUserAnalysisDao.updateByParamInfoNotNull(userAnalysis.getId(),info);
         }else{
             info.setCreateTime(GetDate.formatTime());
             jcUserAnalysisDao.save(info);
