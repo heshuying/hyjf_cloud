@@ -15,6 +15,7 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,5 +59,11 @@ public class CrmTenderRepairController extends BaseController {
             return response;
         }
         return null;
+    }
+
+    @ApiOperation(value = "修复等额本息数据")
+    @GetMapping("/repayDataRepair/{borrowNid}")
+    public void repayDataRepair(@PathVariable String borrowNid) {
+        crmTenderRepairService.updateRepayData(borrowNid);
     }
 }

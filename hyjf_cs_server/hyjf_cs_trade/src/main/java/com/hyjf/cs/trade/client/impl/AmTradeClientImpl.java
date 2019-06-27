@@ -7594,6 +7594,12 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public void repayDataRepair(String borrowNid) {
+        restTemplate.getForEntity(urlBase + "crm/repayDataRepair/" + borrowNid, String.class).getBody();
+    }
+
     @Override
     @Cached(name="webWjtHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
