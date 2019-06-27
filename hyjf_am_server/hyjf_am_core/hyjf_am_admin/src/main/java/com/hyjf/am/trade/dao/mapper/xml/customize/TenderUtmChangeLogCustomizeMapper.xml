@@ -29,8 +29,7 @@
 		LEFT JOIN ht_r_oa_department dept2 ON utmlog.second_dept_id = dept2.id
 		LEFT JOIN ht_r_oa_department dept3 ON utmlog.third_dept_id = dept3.id
 		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
-		WHERE
-		where nid = #{nid}
+		WHERE nid = #{nid}
 	</select>
     <select id="getPlanTenderChangeLog"  resultMap="BaseResultMap" >
 		SELECT
