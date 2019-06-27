@@ -174,9 +174,9 @@
         hha.invite_user_departmentname,
         hru.attribute AS userCurrentAttribute,
         curSpread.username AS inviteCurrentUserName,
-        hrod.grdfather_name AS inviteUserCurrentRegionName,
-        hrod.parent_name AS inviteUserCurrentBranchName,
-        hrod.name AS inviteUserCurrentDepartmentName,
+        CASE WHEN hru.attribute = 2 OR hru.attribute = 3 THEN hrod.grdfather_name ELSE shrod.grdfather_name END AS inviteUserCurrentRegionName,
+        CASE WHEN hru.attribute = 2 OR hru.attribute = 3 THEN hrod.parent_name ELSE shrod.parent_name END AS inviteUserCurrentBranchName,
+        CASE WHEN hru.attribute = 2 OR hru.attribute = 3 THEN hrod.name ELSE shrod.name END AS inviteUserCurrentDepartmentName,
         hha.expect_apr AS expectApr,
         hha.invite_user_name AS inviteUser,
         hhr.actual_revenue AS actualRevenue,
@@ -199,9 +199,11 @@
 		left join hyjf_user.ht_utm_reg reg on hha.user_id=reg.user_id
 		left join hyjf_user.ht_utm utm2 on utm2.utm_id=reg.utm_id
         LEFT JOIN ht_r_user hru ON hha.user_id = hru.user_id
-        LEFT JOIN ht_r_user curSpread ON curSpread.user_id = hru.spreads_user_id
-        LEFT JOIN ht_r_oa_users hrou ON hrou.hyd_id = curSpread.user_id AND hrou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
+        LEFT JOIN ht_r_oa_users hrou ON hrou.hyd_id = hha.user_id AND hrou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
         LEFT JOIN ht_r_oa_department hrod ON hrod.id = hrou.departmentid
+        LEFT JOIN ht_r_user curSpread ON curSpread.user_id = hru.spreads_user_id
+        LEFT JOIN ht_r_oa_users shrou ON shrou.hyd_id = curSpread.user_id AND shrou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21', 'Q4', 'Q41')
+        LEFT JOIN ht_r_oa_department shrod ON shrod.id = shrou.departmentid
         <include refid="Where_Clause_Repay" />
         ORDER BY repay_should_time desc
         <if test="limitStart != null and limitEnd !=null" >
