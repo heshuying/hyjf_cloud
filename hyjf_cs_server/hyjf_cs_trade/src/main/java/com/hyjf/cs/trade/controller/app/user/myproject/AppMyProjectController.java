@@ -175,7 +175,8 @@ public class AppMyProjectController extends BaseTradeController {
             }
             // 加息收益
             if("4".equals(entity.getType())){
-                vo.setLabel(entity.getData());
+                // app4.0文案修改
+                vo.setLabel("项目加息");
                 investStatusDesc = "未回款";
                 vo.setCouponType("4");
             }
