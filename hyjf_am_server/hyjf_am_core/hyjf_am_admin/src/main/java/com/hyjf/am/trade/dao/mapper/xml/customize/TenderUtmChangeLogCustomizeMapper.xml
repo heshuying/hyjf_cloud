@@ -16,18 +16,15 @@
 		SELECT
 			utmlog.nid,
 			plat.source_name AS tender_utm_name,
-			dept1.`name` AS top_dept_name,
-			dept2.`name` AS second_dept_name,
-			dept3.`name` AS third_dept_name,
+			utmlog.top_dept_name AS top_dept_name,
+			utmlog.second_dept_name AS second_dept_name,
+			utmlog.third_dept_name AS third_dept_name,
 			admin.truename AS operator,
 			utmlog.update_time
 		FROM
 			ht_borrow_tender_utmlog utmlog
 		LEFT JOIN hyjf_user.ht_utm utm ON utmlog.tender_utm_id = utm.utm_id
 		LEFT JOIN hyjf_user.ht_utm_plat plat ON utm.source_id = plat.source_id
-		LEFT JOIN ht_r_oa_department dept1 ON utmlog.top_dept_id = dept1.id
-		LEFT JOIN ht_r_oa_department dept2 ON utmlog.second_dept_id = dept2.id
-		LEFT JOIN ht_r_oa_department dept3 ON utmlog.third_dept_id = dept3.id
 		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
 		WHERE nid = #{nid}
 	</select>

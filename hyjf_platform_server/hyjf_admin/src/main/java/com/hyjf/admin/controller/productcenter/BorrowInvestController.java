@@ -686,8 +686,11 @@ public class BorrowInvestController extends BaseController {
 
         extRequest.setNid(updateTenderUtmRequest.getNid());
         extRequest.setTopDeptId(borrowInvestCustomizeExtVO.getInviteRegionId());
+        extRequest.setTopDeptName(borrowInvestCustomizeExtVO.getInviteRegionName());
         extRequest.setSecondDeptId(borrowInvestCustomizeExtVO.getInviteBranchId());
+        extRequest.setSecondDeptName(borrowInvestCustomizeExtVO.getInviteBranchName());
         extRequest.setThirdDeptId(borrowInvestCustomizeExtVO.getInviteDepartmentId());
+        extRequest.setThirdDeptName(borrowInvestCustomizeExtVO.getInviteDepartmentName());
         extRequest.setUpdateTime(Calendar.getInstance().getTime());
 
         extRequest.setTenderUtmId(updateTenderUtmRequest.getTenderUtmId());
