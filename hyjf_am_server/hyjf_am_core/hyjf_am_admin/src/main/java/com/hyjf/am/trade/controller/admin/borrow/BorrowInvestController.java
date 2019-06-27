@@ -19,6 +19,8 @@ import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
 import com.hyjf.am.trade.service.admin.borrow.TenderUtmChangeLogService;
+import com.hyjf.am.user.dao.model.auto.Utm;
+import com.hyjf.am.user.service.front.user.UtmPlatService;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
@@ -44,6 +46,9 @@ public class BorrowInvestController extends BaseController {
 
     @Autowired
     private TenderUtmChangeLogService tenderUtmChangeLogService;
+
+    @Autowired
+    private UtmPlatService utmPlatService;
 
     /**
      * 出借明细记录 总数COUNT
@@ -228,6 +233,14 @@ public class BorrowInvestController extends BaseController {
     public IntegerResponse updateTenderUtm(@RequestBody UpdateTenderUtmExtRequest extRequest){
         TenderUtmChangeLog log=new TenderUtmChangeLog();
         BeanUtils.copyProperties(extRequest,log);
+
+        Utm utm=utmPlatService.getUtmBySourceId(log.getTenderUtmId());
+        if(utm!=null){
+            log.setTenderUtmId(utm.getUtmId());
+        }else{
+            throw  new IllegalArgumentException("sourceId=【"+log.getTenderUtmId()+"】的UTM为空！");
+        }
+
         int rt=borrowInvestService.updateTenderUtm(log);
         return new IntegerResponse(rt);
     }

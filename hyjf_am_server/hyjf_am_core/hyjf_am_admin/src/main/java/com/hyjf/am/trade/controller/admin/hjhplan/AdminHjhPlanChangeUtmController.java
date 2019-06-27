@@ -10,6 +10,8 @@ import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
 import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
 import com.hyjf.am.trade.service.admin.borrow.TenderUtmChangeLogService;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanChangeUtmService;
+import com.hyjf.am.user.dao.model.auto.Utm;
+import com.hyjf.am.user.service.front.user.UtmPlatService;
 import com.hyjf.am.vo.trade.borrow.TenderUpdateUtmHistoryVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAccedeCustomizeVO;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +36,9 @@ public class AdminHjhPlanChangeUtmController {
     @Autowired
     private AdminHjhPlanChangeUtmService adminHjhPlanChangeUtmService;
 
+    @Autowired
+    private UtmPlatService utmPlatService;
+
     @GetMapping(value = "/plan_tender_info/{planOrderId}")
     public HjhPlanAccedeCustomizeResponse getPlanTenderInfo(@PathVariable(value = "planOrderId") String planOrderId) {
 
@@ -52,6 +57,14 @@ public class AdminHjhPlanChangeUtmController {
 
         TenderUtmChangeLog log=new TenderUtmChangeLog();
         BeanUtils.copyProperties(request,log);
+
+        Utm utm=utmPlatService.getUtmBySourceId(log.getTenderUtmId());
+        if(utm!=null){
+            log.setTenderUtmId(utm.getUtmId());
+        }else{
+            throw  new IllegalArgumentException("sourceId=【"+log.getTenderUtmId()+"】的UTM为空！");
+        }
+
         int rt=adminHjhPlanChangeUtmService.updateTenderUtm(log);
         return new IntegerResponse(rt);
 

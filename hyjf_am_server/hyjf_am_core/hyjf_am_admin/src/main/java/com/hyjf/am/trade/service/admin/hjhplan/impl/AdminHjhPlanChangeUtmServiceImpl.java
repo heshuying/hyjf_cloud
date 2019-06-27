@@ -92,13 +92,8 @@ public class AdminHjhPlanChangeUtmServiceImpl extends BaseServiceImpl implements
     public int updateTenderUtm(TenderUtmChangeLog log) {
         HjhAccede hjhAccede=new HjhAccede();
         hjhAccede.setAccedeOrderId(log.getNid());
+        hjhAccede.setTenderUserUtmId(log.getTenderUtmId());
 
-        Utm utm=utmPlatService.getUtmBySourceId(log.getTenderUtmId());
-        if(utm!=null){
-            hjhAccede.setTenderUserUtmId(utm.getUtmId());
-        }else{
-            throw  new IllegalArgumentException("sourceId=【"+log.getTenderUtmId()+"】的UTM为空！");
-        }
         HjhAccedeExample example=new HjhAccedeExample();
         example.or().andAccedeOrderIdEqualTo(log.getNid());
         hjhAccedeMapper.updateByExampleSelective(hjhAccede,example);
