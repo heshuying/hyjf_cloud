@@ -4,9 +4,7 @@
 package com.hyjf.data.controller;
 
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
-import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
-import com.hyjf.data.bean.jinchuang.JcTradeAmount;
-import com.hyjf.data.bean.jinchuang.JcUserConversion;
+import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.response.Interest;
 import com.hyjf.data.response.JcScreenResponse;
 import com.hyjf.data.result.ApiResult;
@@ -44,7 +42,7 @@ public class JinChuangScreenController {
         JcUserConversion userConversion = jinChuangDataService.getUserConversion();
         String jsonObject = jinChuangDataService.getUserPoint();
         List<JcDataStatisticsVO> dataStatisticsList = jinChuangDataService.getDataStatistics();
-        Map<String, Object> maps = jinChuangDataService.getUserAnalysis();
+        JcUserAnalysis userAnalysis = jinChuangDataService.getUserAnalysis();
         JcTradeAmount tradeAmount = jinChuangDataService.getTradeAmount();
         if (tradeAmount != null) {
             response.setTradeAmount(tradeAmount);
@@ -54,11 +52,12 @@ public class JinChuangScreenController {
             response.setRegisterTrades(registerTrades);
         }
         JcCustomerServiceVO customerService = jinChuangDataService.getCustomerService();
+        List<JcUserInterest> interests = jinChuangDataService.getUserInterest();
+        response.setInterests(interests);
         response.setUserConversion(userConversion);
         response.setJsonObject(jsonObject);
         response.setDataStatisticsList(dataStatisticsList);
-        response.setInterests((List<Interest>) maps.get("interests"));
-        response.setAnalysis((JcUserAnalysisVO) maps.get("jcUserAnalysis"));
+        response.setAnalysis(userAnalysis);
         response.setCustomerService(customerService);
         return new ApiResult(response);
     }
