@@ -132,13 +132,6 @@ public class CrmTenderRepairServiceImpl extends BaseServiceImpl implements CrmTe
                 amountTender = interestInfo.getRepayAccount(); // 本息
                 recoverTime = interestInfo.getRepayTime(); // 估计还款时间
                 recoverFee = interestInfo.getFee(); // 总管理费
-                logger.info("------------------各种信息：");
-                logger.info("------------------投资订单号："+ ordId);
-                logger.info("------------------投资金额："+ account);
-                logger.info("------------------利息："+ interestTender);
-                logger.info("------------------本金："+ capitalTender);
-                logger.info("------------------本息："+ amountTender);
-                logger.info("------------------管理费："+ recoverFee);
             }
             // ht_borrow_recover
             BorrowRecover borrowRecover = getBorrowRecoverByTenderNidBidNid(ordId, borrowNid);
@@ -182,7 +175,7 @@ public class CrmTenderRepairServiceImpl extends BaseServiceImpl implements CrmTe
                     // 更新分期还款计划表(ht_borrow_recover_plan)
                     for (int j = 0; j < interestInfo.getListMonthly().size(); j++) {
                         // 取borrow_recover_plan
-                        BorrowRecoverPlan recoverPlan = getBorrowRecoverPlan(borrowNid, j + 1, ordId);
+                        BorrowRecoverPlan recoverPlan = getBorrowRecoverPlan(borrowNid, j + 1).get(0);
                         InterestInfo monthly = null;
                         monthly = interestInfo.getListMonthly().get(j);
 
@@ -287,18 +280,5 @@ public class CrmTenderRepairServiceImpl extends BaseServiceImpl implements CrmTe
             return null;
         }
         return borrowRecoverList.get(0);
-    }
-
-    private BorrowRecoverPlan getBorrowRecoverPlan(String borrowNid, Integer periodNow, String tenderOrderId) {
-        BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
-        BorrowRecoverPlanExample.Criteria crt = example.createCriteria();
-        crt.andBorrowNidEqualTo(borrowNid);
-        crt.andRecoverPeriodEqualTo(periodNow);
-        crt.andNidEqualTo(tenderOrderId);
-        List<BorrowRecoverPlan> borrowRecoverPlans = this.borrowRecoverPlanMapper.selectByExample(example);
-        if (borrowRecoverPlans != null && borrowRecoverPlans.size() == 1) {
-            return borrowRecoverPlans.get(0);
-        }
-        return null;
     }
 }
