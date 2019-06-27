@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
 import com.hyjf.am.user.dao.mapper.auto.TemplateDisposeMapper;
-import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.TemplateDispose;
 import com.hyjf.am.user.dao.model.auto.TemplateDisposeExample;
 import com.hyjf.am.user.dao.model.auto.TemplateDisposeExample.Criteria;
@@ -69,7 +69,7 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 		TemplateDispose record=new TemplateDispose();
 		record=CommonUtils.convertBean(templateDisposeRequest,TemplateDispose.class);
 		TemplateDisposeResponse tr=new TemplateDisposeResponse();
-		tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKey(record));
+		tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKeySelective(record));
 		return tr;
 	}
 
@@ -81,7 +81,7 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 			record.setUpdateTime(templateDisposeRequest.getUpdateTime());
 			record.setUpdateUserId(templateDisposeRequest.getUpdateUserId());
 			record.setStatus(templateDisposeRequest.getStatus());
-			tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKey(record));
+			tr.setRecordTotal(templateDisposeMapper.updateByPrimaryKeySelective(record));
 		}else {
 			
 			tr.setRecordTotal(templateDisposeMapper.deleteByPrimaryKey(templateDisposeRequest.getId()));
@@ -94,7 +94,16 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 	public TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
 		//templateDisposeRequest.getUrl()+"/landingPage?templateId" 
 		TemplateDisposeResponse tr=new TemplateDisposeResponse();
-		tr.setRecordTotal(templateDisposeMapper.insertSelective(CommonUtils.convertBean(templateDisposeRequest,TemplateDispose.class)));
+		  String urluuid = UUID.randomUUID().toString();
+		  String url=new String();
+		  url=templateDisposeRequest.getUrl();
+		  templateDisposeRequest.setUrl(urluuid);
+		  tr.setRecordTotal(templateDisposeMapper.insertSelective(CommonUtils.convertBean(templateDisposeRequest,TemplateDispose.class)));
+		  TemplateDisposeExample example=new TemplateDisposeExample();
+		  example.or().andUrlEqualTo(urluuid);
+		  TemplateDispose re = templateDisposeMapper.selectByExample(example).get(0);
+		  re.setUrl(url+re.getId());
+		  templateDisposeMapper.updateByPrimaryKeySelective(re);
 		return tr;
 	}
 	

@@ -126,6 +126,7 @@ public class TemplateDisposeController extends BaseController{
 		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUpdateTime(new Date());
 		templateDisposeRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
+		templateDisposeRequest.setUrl(systemConfig.getWechatHost()+"/landingPage?utm_source="+templateDisposeRequest.getUtmId()+"&templateId="+templateDisposeRequest.getId());
 		TemplateDisposeResponse templateDisposeResponse=templateDisposeService.updateTemplateDispose(templateDisposeRequest);
 		if(Response.isSuccess(templateDisposeResponse)) {
 			return new AdminResult();
@@ -145,7 +146,7 @@ public class TemplateDisposeController extends BaseController{
 		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
-		templateDisposeRequest.setUrl(systemConfig.getWechatHost());
+		templateDisposeRequest.setUrl(systemConfig.getWechatHost()+"/landingPage?utm_source="+templateDisposeRequest.getUtmId()+"&templateId=");
 		templateDisposeRequest.setCreateTime(new Date());
 		templateDisposeRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
 		TemplateDisposeResponse templateDisposeResponse=templateDisposeService.insertTemplateDispose(templateDisposeRequest);
