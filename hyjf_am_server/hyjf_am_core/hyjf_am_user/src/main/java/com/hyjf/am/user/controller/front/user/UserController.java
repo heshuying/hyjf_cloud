@@ -1158,15 +1158,16 @@ public class UserController extends BaseController {
      * @return
      */
     @GetMapping("/selectTemplateDisposeById/{landingId}")
-    public TemplateDisposeResponse selectTemplateDisposeById(@PathVariable Integer landingId){
-        TemplateDisposeResponse response = new TemplateDisposeResponse();
+    public UserResponse selectTemplateDisposeById(@PathVariable Integer landingId){
+        UserResponse response = new UserResponse();
         response.setRtn(Response.FAIL);
         response.setMessage(Response.FAIL_MSG);
         TemplateDisposeVO templateDisposeVO = new TemplateDisposeVO();
         TemplateDispose templateDispose =userService.selectTemplateDisposeById(landingId);
         if(null!=templateDispose){
             BeanUtils.copyProperties(templateDispose, templateDisposeVO);
-            response.setResult(templateDisposeVO);
+//            response.setResult(templateDisposeVO);
+            response.setTemplateDispose(templateDisposeVO);
             response.setRtn(Response.SUCCESS);
             response.setMessage(Response.SUCCESS_MSG);
         }
