@@ -1,5 +1,6 @@
 package com.hyjf.data.controller.jinchuang;
 
+import com.hyjf.data.service.db.DBService;
 import com.hyjf.data.service.sensors.SenSorsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,9 @@ public class JinChuangDataController {
 
     @Autowired
     private SenSorsService senSorsService;
+
+    @Autowired
+    private DBService dbService;
 
     @ApiOperation(value = "神策", notes = "神策")
     @GetMapping(value = "/sensors/updatedata")
@@ -49,6 +53,20 @@ public class JinChuangDataController {
         senSorsService.updateSixMonthTenderAmountDistributed();
         //更新用户出借次数
         senSorsService.updateSixMonthTenderNumberDistributed();
+
+        return "true";
+    }
+
+    @ApiOperation(value = "每日数据更新", notes = "每日数据更新")
+    @GetMapping(value = "/day/updatedata")
+    @ResponseBody
+    public String updateDataforDay(){
+        logger.info("--------------金创展厅开始更新每日数据！-------");
+
+        //更新每月用户收益
+        dbService.getUserInterestMonth();
+        //更新近6个月的性别分布
+        dbService.getSixMonthSexDistributed();
 
         return "true";
     }

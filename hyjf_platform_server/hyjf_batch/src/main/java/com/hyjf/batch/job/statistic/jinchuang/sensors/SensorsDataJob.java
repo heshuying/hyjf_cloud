@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.statistic.sensors;
+package com.hyjf.batch.job.statistic.jinchuang.sensors;
 
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.batch.job.BaseJob;
@@ -10,7 +10,7 @@ import org.quartz.JobExecutionException;
 /**
  * @Auther:yangchangwei
  * @Date:2019/6/20
- * @Description: 神策数据统计
+ * @Description: 神策数据统计(金创)
  */
 @DisallowConcurrentExecution
 public class SensorsDataJob extends BaseJob implements Job {

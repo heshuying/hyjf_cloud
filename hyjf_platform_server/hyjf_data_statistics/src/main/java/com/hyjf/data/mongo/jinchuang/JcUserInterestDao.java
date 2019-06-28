@@ -3,9 +3,12 @@
  */
 package com.hyjf.data.mongo.jinchuang;
 
+import com.hyjf.common.util.GetDate;
 import com.hyjf.data.bean.jinchuang.JcUserInterest;
 import com.hyjf.data.mongo.BaseMongoDao;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +20,9 @@ import java.util.List;
  */
 @Repository
 public class JcUserInterestDao extends BaseMongoDao<JcUserInterest> {
+
+
+
     @Override
     protected Class<JcUserInterest> getEntityClass() {
         return JcUserInterest.class;
@@ -27,5 +33,16 @@ public class JcUserInterestDao extends BaseMongoDao<JcUserInterest> {
         query.with(new Sort(Sort.Direction.DESC, "createTime"));
         query.limit(6);
         return mongoTemplate.find(query, getEntityClass());
+    }
+
+    /**
+     * 获取当月数据
+     * @return
+     */
+    public JcUserInterest findMonthInterest() {
+        Query query = new Query();
+        CriteriaDefinition criteria = Criteria.where("time").is(GetDate.formatTimeYYYYMM());
+        query.addCriteria(criteria);
+        return mongoTemplate.findOne(query,getEntityClass());
     }
 }

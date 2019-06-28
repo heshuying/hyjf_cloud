@@ -15,13 +15,13 @@ public interface SenSorsService {
      * @param url
      * @return
      */
-    public Map getSenSorsData(Map parm,String url);
+    Map getSenSorsData(Map parm,String url);
 
     /**
      * 更新当月用户转化（近30天，包扣当天）
      * @return
      */
-    public boolean updateMonthUserConvert();
+    boolean updateMonthUserConvert();
 
     /**
      * 更新用户行为（近30天，包扣当天）
@@ -67,11 +67,5 @@ public interface SenSorsService {
      * 更新6个月的用户出借次数（含当天）
      */
     void updateSixMonthTenderNumberDistributed();
-
-    /**
-     * 获取实时总交易规模
-     * @return
-     */
-    String getTotalInvestAmount();
 
 }
