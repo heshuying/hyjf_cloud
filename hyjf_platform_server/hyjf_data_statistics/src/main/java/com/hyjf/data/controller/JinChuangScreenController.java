@@ -43,7 +43,7 @@ public class JinChuangScreenController {
         String jsonObject = jinChuangDataService.getUserPoint();
         List<JcDataStatisticsVO> dataStatisticsList = jinChuangDataService.getDataStatistics();
         JcUserAnalysis userAnalysis = jinChuangDataService.getUserAnalysis();
-        JcTradeAmount tradeAmount = jinChuangDataService.getTradeAmount();
+        String tradeAmount = jinChuangDataService.getTotalInvestAmount();
         List<JcRegisterTrade> registerTrades = jinChuangDataService.getRegisterTrade();
         if (!CollectionUtils.isEmpty(registerTrades)) {
             response.setRegisterTrades(registerTrades);

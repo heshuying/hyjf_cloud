@@ -35,8 +35,6 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     @Autowired
     private JcUserAnalysisDao analysisDao;
     @Autowired
-    private JcTradeAmountDao tradeAmountDao;
-    @Autowired
     private JcRegisterTradeDao registerTradeDao;
     @Autowired
     private CsMessageClient csMessageClient;
@@ -70,15 +68,6 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
             return analysis;
         }
         return new JcUserAnalysis();
-    }
-
-    @Override
-    public JcTradeAmount getTradeAmount() {
-        JcTradeAmount tradeAmount = tradeAmountDao.getTradeAmount();
-        if (tradeAmount != null) {
-            return tradeAmount;
-        }
-        return new JcTradeAmount();
     }
 
     @Override
@@ -123,7 +112,8 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
      * 获取实时收益规模 add by yangchangwei
      * @return
      */
-    private String getTotalInvestAmount() {
+    @Override
+    public String getTotalInvestAmount() {
 
         DecimalFormat df = new DecimalFormat("#,##0");
         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());

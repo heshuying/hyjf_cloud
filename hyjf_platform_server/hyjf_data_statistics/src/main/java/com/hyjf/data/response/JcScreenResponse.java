@@ -24,7 +24,7 @@ public class JcScreenResponse implements Serializable {
 
     private JcUserAnalysis analysis;
 
-    private JcTradeAmount tradeAmount;
+    private String tradeAmount;
 
     private List<JcRegisterTrade> registerTrades;
 
@@ -64,11 +64,11 @@ public class JcScreenResponse implements Serializable {
         this.analysis = analysis;
     }
 
-    public JcTradeAmount getTradeAmount() {
+    public String getTradeAmount() {
         return tradeAmount;
     }
 
-    public void setTradeAmount(JcTradeAmount tradeAmount) {
+    public void setTradeAmount(String tradeAmount) {
         this.tradeAmount = tradeAmount;
     }
 

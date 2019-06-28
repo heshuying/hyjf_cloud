@@ -38,12 +38,6 @@ public interface JinChuangDataService {
     JcUserAnalysis getUserAnalysis();
 
     /**
-     * 获取累计交易金额
-     * @return
-     */
-    JcTradeAmount getTradeAmount();
-
-    /**
      * 获取注册交易
      * @return
      */
@@ -60,4 +54,10 @@ public interface JinChuangDataService {
      * @return
      */
     List<JcUserInterest> getUserInterest();
+
+    /**
+     * 获取累计投资
+     * @return
+     */
+    String getTotalInvestAmount();
 }
