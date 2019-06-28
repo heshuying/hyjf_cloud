@@ -14,11 +14,16 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.applet.Main;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,6 +73,12 @@ public class OrderInfoController extends BaseController {
             if (tenderAccedeQO.getStartTime().isEmpty()||tenderAccedeQO.getEndTime().isEmpty()){
                 wbsCommonVO.setCode(Response.ERROR);
                 wbsCommonVO.setMsg("请求参数不允许为空");
+                wbsCommonVO.setData("");
+                return wbsCommonVO;
+            }
+            if(compareDateToString(tenderAccedeQO.getStartTime(),tenderAccedeQO.getEndTime())){
+                wbsCommonVO.setCode(Response.ERROR);
+                wbsCommonVO.setMsg("起始时间应小于等于两天");
                 wbsCommonVO.setData("");
                 return wbsCommonVO;
             }
@@ -143,4 +154,25 @@ public class OrderInfoController extends BaseController {
             return null;
         }
     }
+    /**
+     * 字符日期格式比较（起始时间小于两天）
+     * @return
+     */
+    public static Boolean compareDateToString(String startDate,String endDate) {
+        DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Boolean isBefore = false;
+        try {
+            Date d1 = dateFormat.parse(startDate);
+            Date d2 = dateFormat.parse(endDate);
+            if(d2.getTime()-d1.getTime()>48*60*60*1000){
+                isBefore = true;
+            }else {
+                isBefore = false;
+            }
+        } catch (ParseException e) {
+            e.getMessage();
+        }
+        return  isBefore;
+    }
+
 }
