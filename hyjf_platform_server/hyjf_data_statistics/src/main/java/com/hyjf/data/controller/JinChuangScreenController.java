@@ -44,9 +44,6 @@ public class JinChuangScreenController {
         List<JcDataStatisticsVO> dataStatisticsList = jinChuangDataService.getDataStatistics();
         JcUserAnalysis userAnalysis = jinChuangDataService.getUserAnalysis();
         JcTradeAmount tradeAmount = jinChuangDataService.getTradeAmount();
-        if (tradeAmount != null) {
-            response.setTradeAmount(tradeAmount);
-        }
         List<JcRegisterTrade> registerTrades = jinChuangDataService.getRegisterTrade();
         if (!CollectionUtils.isEmpty(registerTrades)) {
             response.setRegisterTrades(registerTrades);
@@ -54,6 +51,7 @@ public class JinChuangScreenController {
         JcCustomerServiceVO customerService = jinChuangDataService.getCustomerService();
         List<JcUserInterest> interests = jinChuangDataService.getUserInterest();
         response.setInterests(interests);
+        response.setTradeAmount(tradeAmount);
         response.setUserConversion(userConversion);
         response.setJsonObject(jsonObject);
         response.setDataStatisticsList(dataStatisticsList);

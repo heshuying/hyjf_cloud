@@ -73,17 +73,29 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
 
     @Override
     public JcTradeAmount getTradeAmount() {
-        return tradeAmountDao.getTradeAmount();
+        JcTradeAmount tradeAmount = tradeAmountDao.getTradeAmount();
+        if (tradeAmount != null) {
+            return tradeAmount;
+        }
+        return new JcTradeAmount();
     }
 
     @Override
     public List<JcRegisterTrade> getRegisterTrade() {
-        return registerTradeDao.getRegisterTrade();
+        List<JcRegisterTrade> registerTrades = registerTradeDao.getRegisterTrade();
+        if (!CollectionUtils.isEmpty(registerTrades)) {
+            return registerTrades;
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public JcCustomerServiceVO getCustomerService() {
-        return csMessageClient.getCustomerService();
+        JcCustomerServiceVO customerServiceVO = csMessageClient.getCustomerService();
+        if (customerServiceVO != null) {
+            return customerServiceVO;
+        }
+        return new JcCustomerServiceVO();
     }
 
     @Override
@@ -92,7 +104,7 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
         if (!CollectionUtils.isEmpty(interests)) {
             return interests;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

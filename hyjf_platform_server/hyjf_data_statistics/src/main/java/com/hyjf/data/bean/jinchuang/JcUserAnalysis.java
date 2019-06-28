@@ -63,11 +63,6 @@ public class JcUserAnalysis {
     private String fiveInvest;
 
     /**
-     * 用户收益
-     */
-    private BigDecimal interest;
-
-    /**
      * 男性人数
      */
     private String maleCount;
@@ -164,14 +159,6 @@ public class JcUserAnalysis {
 
     public void setFiveInvest(String fiveInvest) {
         this.fiveInvest = fiveInvest;
-    }
-
-    public BigDecimal getInterest() {
-        return interest;
-    }
-
-    public void setInterest(BigDecimal interest) {
-        this.interest = interest;
     }
 
     public String getMaleCount() {
