@@ -499,7 +499,7 @@
 		br.id
 		FROM
 		ht_borrow AS b
-		INNER JOIN ht_borrow_info hbi ON binfo.borrow_nid=b.borrow_nid
+		INNER JOIN ht_borrow_info binfo ON binfo.borrow_nid=b.borrow_nid
 		INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid=b.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
