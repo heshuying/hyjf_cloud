@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
@@ -1660,4 +1661,22 @@ public interface AmConfigClient {
 	 * @return
 	 */
     AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
+	/**
+	 * 修改对账状态（重新对账）add by nxl
+	 * @param certLogId
+	 * @return
+	 */
+	int againReconciliation(Integer certLogId);
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param request
+	 * @return
+	 */
+	int batchReconciliation(CertReportLogRequestBean request);
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param logOrderId
+	 * @return
+	 */
+	int insertCertErrorLogByLogOrderId(String logOrderId);
 }

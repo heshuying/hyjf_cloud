@@ -59,4 +59,35 @@ public class CertReportLogController extends BaseController{
         }
         return new AdminResult<>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
     }
+
+    @ApiOperation(value = "应急中心重新对账", notes = "应急中心重新对账")
+    @PostMapping("/againReconciliation")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+    public AdminResult againReconciliation(@RequestBody CertReportLogRequestBean requestBean){
+        int intFlg = certReportLogService.againReconciliation(requestBean.getId());
+        if(intFlg<=0) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>(SUCCESS, "重新对账成功");
+    }
+    @ApiOperation(value = "应急中心批量对账", notes = "应急中心批量对账")
+    @PostMapping("/batchReconciliation")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public AdminResult batchReconciliation(@RequestBody CertReportLogRequestBean requestBean){
+        int intFlg = certReportLogService.batchReconciliation(requestBean);
+        if(intFlg<=0) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>(SUCCESS, "批量对账成功");
+    }
+    @ApiOperation(value = "应急中心重新上报", notes = "应急中心重新上报")
+    @PostMapping("/insertCertErrorLogByLogOrderId")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult insertCertErrorLogByLogOrderId(@RequestBody CertReportLogRequestBean requestBean){
+        int intFlg = certReportLogService.insertCertErrorLogByLogOrderId(requestBean.getLogOrdId());
+        if(intFlg<=0) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>(SUCCESS, "重新上报成功");
+    }
 }
