@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -3140,5 +3141,7 @@ public interface AmTradeClient {
     List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request);
 
     List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
+
+    void repayDataRepair(String borrowNid);
 }
 
