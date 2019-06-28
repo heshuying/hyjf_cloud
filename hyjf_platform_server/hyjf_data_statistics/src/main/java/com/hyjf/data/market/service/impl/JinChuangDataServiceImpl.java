@@ -10,9 +10,12 @@ import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +46,8 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     private CsMessageClient csMessageClient;
     @Autowired
     private JcUserInterestDao userInterestDao;
+    @Autowired
+    private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
 
     @Override
     public JcUserConversion getUserConversion() {
@@ -116,5 +121,19 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
             return statisticsVOS;
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * 获取实时收益规模 add by yangchangwei
+     * @return
+     */
+    private String getTotalInvestAmount() {
+
+        DecimalFormat df = new DecimalFormat("#,##0");
+        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+        if (entity != null) {
+            df.format(entity.getTotalInvestAmount().setScale(0, BigDecimal.ROUND_DOWN));
+        }
+        return null;
     }
 }

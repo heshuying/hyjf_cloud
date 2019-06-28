@@ -643,18 +643,4 @@ public class SenSorsServiceImpl implements SenSorsService{
         logger.info("-------------金创数据，最近6个月的出借次数分布更新完成！----");
     }
 
-    /**
-     * 获取实时总交易规模
-     * @return
-     */
-    @Override
-    public String getTotalInvestAmount() {
-
-        DecimalFormat df = new DecimalFormat("#,##0");
-        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
-        if (entity != null) {
-            df.format(entity.getTotalInvestAmount().setScale(0, BigDecimal.ROUND_DOWN));
-        }
-        return null;
-    }
 }

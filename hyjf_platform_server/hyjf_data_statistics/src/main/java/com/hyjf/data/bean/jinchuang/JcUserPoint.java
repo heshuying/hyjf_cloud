@@ -3,11 +3,9 @@
  */
 package com.hyjf.data.bean.jinchuang;
 
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author yaoyong
