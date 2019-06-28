@@ -19,7 +19,7 @@ public class JcUserPoint implements Serializable {
 
     private String id;
 
-    private Map jo;
+    private String jo;
 
     private String time;
 
@@ -33,14 +33,6 @@ public class JcUserPoint implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Map getJo() {
-        return jo;
-    }
-
-    public void setJo(Map jo) {
-        this.jo = jo;
     }
 
     public String getTime() {
@@ -65,5 +57,13 @@ public class JcUserPoint implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getJo() {
+        return jo;
+    }
+
+    public void setJo(String jo) {
+        this.jo = jo;
     }
 }

@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -44,6 +46,9 @@ public class SenSorsServiceImpl implements SenSorsService{
 
     @Autowired
     private JcDataStatisticsDao jcDataStatisticsDao;
+
+    @Autowired
+    private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
 
     @Value("${hyjf.sensors.token}")
     private String token;
@@ -199,7 +204,7 @@ public class SenSorsServiceImpl implements SenSorsService{
         nodesMap.put("links",linkMap);
 
         JcUserPoint info = new JcUserPoint();
-        info.setJo(nodesMap);
+        info.setJo(JSONUtils.toJSONString(nodesMap));
         info.setUpdateTime(GetDate.formatTime());
         JcUserPoint userPoint = jcUserPointDao.getUserPoint();
         if(userPoint != null){
@@ -262,9 +267,9 @@ public class SenSorsServiceImpl implements SenSorsService{
 
         List<Map> rowsList = (List<Map>) senSorsData.get("rows");
         Map rows = rowsList.get(0);
-        List<List<BigDecimal>> values = (List<List<BigDecimal>>) rows.get("values");
-        BigDecimal value = values.get(0).get(0);
-        info.setDealSize(value);
+        List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+        Integer value = values.get(0).get(0);
+        info.setDealSize(new BigDecimal(value.toString()));
         info.setUpdateTime(GetDate.formatTime());
         info.setTime(GetDate.formatTimeYYYYMM());
 
@@ -523,7 +528,7 @@ public class SenSorsServiceImpl implements SenSorsService{
         meMap.put("event_name","invest");
         meMap.put("aggregator","SUM");
         meMap.put("field","event.$Anything.tender_amount");
-        param.put("measures",meMap);
+        param.put("measure",meMap);
 
         param.put("unit","day");
         param.put("rollup_date",true);
@@ -549,16 +554,16 @@ public class SenSorsServiceImpl implements SenSorsService{
         List<Map> cellsList = (List<Map>) rows.get("cells");
         for (Map map:cellsList
              ) {
-            if(map.get("bucket_end") != null && 5000 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 5000 == (double)map.get("bucket_end")){
                 info.setPrimaryInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") != null && 10000 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 10000 == (double)map.get("bucket_end")){
                 info.setMiddleInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") != null && 50000 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 50000 == (double)map.get("bucket_end")){
                 info.setSeniorInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") == null && 50000 == (Integer)map.get("bucket_start")){
+            if(map.get("bucket_end") == null && 50000 == (double)map.get("bucket_start")){
                 info.setHighestInvest(map.get("percent").toString());
             }
         }
@@ -609,19 +614,19 @@ public class SenSorsServiceImpl implements SenSorsService{
         List<Map> cellsList = (List<Map>) rows.get("cells");
         for (Map map:cellsList
                 ) {
-            if(map.get("bucket_end") != null && 2 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 2 == (double)map.get("bucket_end")){
                 info.setOneInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") != null && 3 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 3 == (double)map.get("bucket_end")){
                 info.setTwoInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") != null && 6 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 6 == (double)map.get("bucket_end")){
                 info.setThreeInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") != null && 11 == (Integer)map.get("bucket_end")){
+            if(map.get("bucket_end") != null && 11 == (double)map.get("bucket_end")){
                 info.setFourInvest(map.get("percent").toString());
             }
-            if(map.get("bucket_end") == null && 11 == (Integer)map.get("bucket_start")){
+            if(map.get("bucket_end") == null && 11 == (double)map.get("bucket_start")){
                 info.setFiveInvest(map.get("percent").toString());
             }
         }
@@ -636,5 +641,20 @@ public class SenSorsServiceImpl implements SenSorsService{
             jcUserAnalysisDao.save(info);
         }
         logger.info("-------------金创数据，最近6个月的出借次数分布更新完成！----");
+    }
+
+    /**
+     * 获取实时总交易规模
+     * @return
+     */
+    @Override
+    public String getTotalInvestAmount() {
+
+        DecimalFormat df = new DecimalFormat("#,##0");
+        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+        if (entity != null) {
+            df.format(entity.getTotalInvestAmount().setScale(0, BigDecimal.ROUND_DOWN));
+        }
+        return null;
     }
 }
