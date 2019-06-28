@@ -68,4 +68,10 @@ public interface SenSorsService {
      */
     void updateSixMonthTenderNumberDistributed();
 
+    /**
+     * 获取实时总交易规模
+     * @return
+     */
+    String getTotalInvestAmount();
+
 }
