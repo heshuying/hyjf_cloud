@@ -1,9 +1,7 @@
 package com.hyjf.data.market.service;
 
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
-import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
-import com.hyjf.data.bean.jinchuang.JcTradeAmount;
-import com.hyjf.data.bean.jinchuang.JcUserConversion;
+import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 
 import java.util.List;
@@ -37,7 +35,7 @@ public interface JinChuangDataService {
      * 获取用户出借数据
      * @return
      */
-    Map<String, Object> getUserAnalysis();
+    JcUserAnalysis getUserAnalysis();
 
     /**
      * 获取累计交易金额
@@ -56,4 +54,10 @@ public interface JinChuangDataService {
      * @return
      */
     JcCustomerServiceVO getCustomerService();
+
+    /**
+     * 获取用户收益
+     * @return
+     */
+    List<JcUserInterest> getUserInterest();
 }

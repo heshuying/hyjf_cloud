@@ -4,11 +4,8 @@
 package com.hyjf.data.response;
 
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
-import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
-import com.hyjf.data.bean.jinchuang.JcTradeAmount;
-import com.hyjf.data.bean.jinchuang.JcUserConversion;
+import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
-import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,15 +22,15 @@ public class JcScreenResponse implements Serializable {
 
     private List<JcDataStatisticsVO> dataStatisticsList;
 
-    private List<Interest> interests;
-
-    private JcUserAnalysisVO analysis;
+    private JcUserAnalysis analysis;
 
     private JcTradeAmount tradeAmount;
 
     private List<JcRegisterTrade> registerTrades;
 
-    JcCustomerServiceVO customerService;
+    private JcCustomerServiceVO customerService;
+
+    private List<JcUserInterest> interests;
 
     public JcUserConversion getUserConversion() {
         return userConversion;
@@ -59,19 +56,11 @@ public class JcScreenResponse implements Serializable {
         this.dataStatisticsList = dataStatisticsList;
     }
 
-    public List<Interest> getInterests() {
-        return interests;
-    }
-
-    public void setInterests(List<Interest> interests) {
-        this.interests = interests;
-    }
-
-    public JcUserAnalysisVO getAnalysis() {
+    public JcUserAnalysis getAnalysis() {
         return analysis;
     }
 
-    public void setAnalysis(JcUserAnalysisVO analysis) {
+    public void setAnalysis(JcUserAnalysis analysis) {
         this.analysis = analysis;
     }
 
@@ -97,5 +86,13 @@ public class JcScreenResponse implements Serializable {
 
     public void setCustomerService(JcCustomerServiceVO customerService) {
         this.customerService = customerService;
+    }
+
+    public List<JcUserInterest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<JcUserInterest> interests) {
+        this.interests = interests;
     }
 }

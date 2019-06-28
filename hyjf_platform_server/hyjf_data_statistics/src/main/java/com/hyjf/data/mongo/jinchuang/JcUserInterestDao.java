@@ -3,7 +3,7 @@
  */
 package com.hyjf.data.mongo.jinchuang;
 
-import com.hyjf.data.bean.jinchuang.JcUserAnalysis;
+import com.hyjf.data.bean.jinchuang.JcUserInterest;
 import com.hyjf.data.mongo.BaseMongoDao;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,19 +13,19 @@ import java.util.List;
 
 /**
  * @author yaoyong
- * @version JcUserAnalysisDao, v0.1 2019/6/20 11:10
+ * @version JcUserInterestDao, v0.1 2019/6/27 9:50
  */
 @Repository
-public class JcUserAnalysisDao extends BaseMongoDao<JcUserAnalysis> {
+public class JcUserInterestDao extends BaseMongoDao<JcUserInterest> {
     @Override
-    protected Class<JcUserAnalysis> getEntityClass() {
-        return JcUserAnalysis.class;
+    protected Class<JcUserInterest> getEntityClass() {
+        return JcUserInterest.class;
     }
 
-    public JcUserAnalysis getUserAnalysis() {
+    public List<JcUserInterest> getUserInterest() {
         Query query = new Query();
         query.with(new Sort(Sort.Direction.DESC, "createTime"));
-        query.limit(1);
-        return mongoTemplate.findOne(query, getEntityClass());
+        query.limit(6);
+        return mongoTemplate.find(query, getEntityClass());
     }
 }

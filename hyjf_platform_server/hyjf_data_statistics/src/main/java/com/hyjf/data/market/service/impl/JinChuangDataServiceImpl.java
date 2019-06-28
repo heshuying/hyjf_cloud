@@ -2,12 +2,7 @@ package com.hyjf.data.market.service.impl;
 
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.data.bean.jinchuang.JcDataStatistics;
-import com.hyjf.data.bean.jinchuang.JcUserConversion;
-import com.hyjf.data.bean.jinchuang.JcUserPoint;
-import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
-import com.hyjf.data.bean.jinchuang.JcTradeAmount;
-import com.hyjf.data.bean.jinchuang.JcUserAnalysis;
+import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.client.CsMessageClient;
 import com.hyjf.data.mongo.jinchuang.*;
 import com.hyjf.data.response.Interest;
@@ -46,6 +41,8 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     private JcRegisterTradeDao registerTradeDao;
     @Autowired
     private CsMessageClient csMessageClient;
+    @Autowired
+    private JcUserInterestDao userInterestDao;
 
     @Override
     public JcUserConversion getUserConversion() {
@@ -66,18 +63,12 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     }
 
     @Override
-    public Map<String, Object> getUserAnalysis() {
-        JcUserAnalysisVO analysisVO = new JcUserAnalysisVO();
-        List<Interest> interests;
-        Map<String, Object> maps = new HashMap<>();
-        List<JcUserAnalysis> analysisList = analysisDao.getUserAnalysis();
-        if (!CollectionUtils.isEmpty(analysisList)) {
-            interests = CommonUtils.convertBeanList(analysisList, Interest.class);
-            maps.put("jcUserAnalysis", analysisVO);
-            maps.put("interests", interests);
-            return maps;
+    public JcUserAnalysis getUserAnalysis() {
+        JcUserAnalysis analysis = analysisDao.getUserAnalysis();
+        if (analysis != null) {
+            return analysis;
         }
-        return null;
+        return new JcUserAnalysis();
     }
 
     @Override
@@ -93,6 +84,15 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     @Override
     public JcCustomerServiceVO getCustomerService() {
         return csMessageClient.getCustomerService();
+    }
+
+    @Override
+    public List<JcUserInterest> getUserInterest() {
+        List<JcUserInterest> interests = userInterestDao.getUserInterest();
+        if (!CollectionUtils.isEmpty(interests)) {
+            return interests;
+        }
+        return null;
     }
 
     @Override
