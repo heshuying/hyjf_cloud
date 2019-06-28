@@ -1126,7 +1126,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
 	/**
 	 * 验证资产风险保证金是否足够（redis）
-	 * 
+	 *
 	 * @param hjhPlanAsset
 	 * @return
 	 */
@@ -1141,42 +1141,59 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 		logger.info("自动录标校验开始：instCode：" + instCode + ",assetId:" + hjhPlanAsset.getAssetId() + " assetAcount:" + hjhPlanAsset.getAccount());
 		BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
 
-		// 日推标额度校验
-		BigDecimal dayAvailable = BigDecimal.ZERO;
-		// 今日已用额度
 		String dayUsedKey = RedisConstants.DAY_USED + instCode + "_" + GetDate.getDate("yyyyMMdd");
-		BigDecimal dayUsed = getValueInRedis(dayUsedKey, new Long(60 * 60 * 24 * 2));
-		logger.info("自动录标校验保证金：dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
-		// 累积可用额度
-		String accumulateKey = RedisConstants.DAY_MARK_ACCUMULATE + instCode;
-		BigDecimal accumulate = getValueInRedis(accumulateKey, null);
-		logger.info("自动录标校验保证金：accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
-		dayAvailable = dayAvailable.add(bailConfig.getDayMarkLine()).subtract(dayUsed);
-		if (bailConfig.getIsAccumulate() == 1) {
-			dayAvailable = dayAvailable.add(accumulate);
-			logger.info("自动录标校验保证金：已开启日累计额度，当前可用额度：" + dayAvailable);
-		}
+		String monthKey = RedisConstants.MONTH_USED + instCode + "_" + GetDate.getDate("yyyyMM");
+		try {
+			// 日推标额度校验
+			BigDecimal dayAvailable = BigDecimal.ZERO;
+			// 今日已用额度
+			RedisUtils.add(dayUsedKey, String.valueOf(hjhPlanAsset.getAccount()));
+			BigDecimal dayUsed = getValueInRedis(dayUsedKey, new Long(60 * 60 * 24 * 2));
+			logger.info("自动录标校验保证金：dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
+			// 累积可用额度
+			String accumulateKey = RedisConstants.DAY_MARK_ACCUMULATE + instCode;
+			BigDecimal accumulate = getValueInRedis(accumulateKey, null);
+			logger.info("自动录标校验保证金：accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
+			dayAvailable = dayAvailable.add(bailConfig.getDayMarkLine()).subtract(dayUsed);
+			if (bailConfig.getIsAccumulate() == 1) {
+				dayAvailable = dayAvailable.add(accumulate);
+				logger.info("自动录标校验保证金：已开启日累计额度，当前可用额度：" + dayAvailable);
+			}
 
-		logger.info("自动录标校验保证金, dayAvailable: " + dayAvailable);
-		if (dayAvailable.compareTo(assetAcount) < 0) {
-			logger.info("自动录标校验保证金：日推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", dayAvailable, assetAcount);
+			logger.info("自动录标校验保证金, dayAvailable: " + dayAvailable);
+			if (dayAvailable.compareTo(BigDecimal.ZERO) < 0) {
+				RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+				logger.info("自动录标校验保证金：日推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", dayAvailable, assetAcount);
+				return 23;
+			}
+		}catch (Exception e) {
+			RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+			logger.error("日推标额度校验异常", e);
 			return 23;
 		}
 
-		// 月推标额度校验
-		BigDecimal monthAvailable = BigDecimal.ZERO;
-		String monthKey = RedisConstants.MONTH_USED + instCode + "_" + GetDate.getDate("yyyyMM");
-		BigDecimal monthUsed = getValueInRedis(monthKey, new Long(60 * 60 * 24 * 31 * 2));
-		logger.info("自动录标校验保证金：monthKey: " + monthKey + " month userd in redis: " + monthUsed);
-		monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
-		logger.info("自动录标校验保证金，monthAvailable：" + monthAvailable);
-		if (monthAvailable.compareTo(assetAcount) < 0) {
-			logger.info("自动录标校验保证金：月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
+		try {
+			// 月推标额度校验
+			BigDecimal monthAvailable = BigDecimal.ZERO;
+			RedisUtils.add(monthKey, String.valueOf(hjhPlanAsset.getAccount()));
+			BigDecimal monthUsed = getValueInRedis(monthKey, new Long(60 * 60 * 24 * 31 * 2));
+			logger.info("自动录标校验保证金：monthKey: " + monthKey + " month userd in redis: " + monthUsed);
+			monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
+			logger.info("自动录标校验保证金，monthAvailable：" + monthAvailable);
+			if (monthAvailable.compareTo(BigDecimal.ZERO) < 0) {
+				RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
+				logger.info("自动录标校验保证金：月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
+				return 24;
+			}
+
+		}catch (Exception e) {
+			RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
+			logger.error("月推标额度校验异常", e);
 			return 24;
 		}
 
 		// 合作额度校验
-		if (!checkNewCredit(bailConfig, assetAcount)) {
+		if (!checkNewCredit(instCode, assetAcount)) {
 			return 21;
 		}
 
@@ -1185,21 +1202,29 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
 	/**
 	 * 新增授信额度校验
-	 * 
+	 *
 	 * @return
 	 */
-	private boolean checkNewCredit(HjhBailConfig bailConfig, BigDecimal account) {
-		// 新增授信额度
-		BigDecimal newCreditLine = bailConfig.getNewCreditLine();
-		// 周期内发标已发额度
-		BigDecimal cycLoanTotal = bailConfig.getCycLoanTotal().add(account);
-		logger.info("周期内发标已发额度+本次推标额度：" + cycLoanTotal);
+	private boolean checkNewCredit(String instCode, BigDecimal account) {
+		// 更新额度
+		int uptResult = updateForSend(instCode, account);
+		if(uptResult > 0){
+			HjhBailConfig bailConfig = this.getBailConfig(instCode);
+			// 新增授信额度
+			BigDecimal newCreditLine = bailConfig.getNewCreditLine();
+			// 周期内发标已发额度
+			BigDecimal cycLoanTotal = bailConfig.getCycLoanTotal();
+			logger.info("周期内发标已发额度+本次推标额度：" + cycLoanTotal);
 
-		if (newCreditLine.compareTo(cycLoanTotal) < 0) {
-			logger.info("周期内发标已发额度超过授信额度");
+			if (newCreditLine.compareTo(cycLoanTotal) < 0) {
+				updateForSend(instCode, account.negate());
+				logger.info("周期内发标已发额度超过授信额度");
+				return false;
+			}
+			return true;
+		}else{
 			return false;
 		}
-		return true;
 	}
 
 	/**
