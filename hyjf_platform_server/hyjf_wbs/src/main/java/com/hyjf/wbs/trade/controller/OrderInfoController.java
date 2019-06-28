@@ -78,7 +78,7 @@ public class OrderInfoController extends BaseController {
             }
             if(compareDateToString(tenderAccedeQO.getStartTime(),tenderAccedeQO.getEndTime())){
                 wbsCommonVO.setCode(Response.ERROR);
-                wbsCommonVO.setMsg("起始时间应小于等于两天");
+                wbsCommonVO.setMsg("起始时间应不允许大于两天");
                 wbsCommonVO.setData("");
                 return wbsCommonVO;
             }
