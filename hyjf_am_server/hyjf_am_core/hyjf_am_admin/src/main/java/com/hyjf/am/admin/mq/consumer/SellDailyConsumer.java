@@ -53,6 +53,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
 	@Override
 	public void onMessage(MessageExt messageExt) {
+		logger.info("销售日报消费端开始消费......");
 		if (MQConstant.SELL_DAILY_SELECT_TAG.equals(messageExt.getTags())) {
 			JSONObject data = JSONObject.parseObject(messageExt.getBody(), JSONObject.class);
 			Date startTime = data.getDate("startTime");
