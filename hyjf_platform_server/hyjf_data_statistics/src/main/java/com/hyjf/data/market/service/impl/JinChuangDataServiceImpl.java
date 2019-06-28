@@ -57,7 +57,7 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
     public String getUserPoint() {
         JcUserPoint userPoint = userPointDao.getUserPoint();
         if (userPoint != null) {
-            return userPoint.getJo().toString();
+            return userPoint.getJo();
         }
         return null;
     }
