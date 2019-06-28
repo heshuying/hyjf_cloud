@@ -5,7 +5,6 @@ package com.hyjf.data.bean.jinchuang;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
 
 /**
  * @author yaoyong

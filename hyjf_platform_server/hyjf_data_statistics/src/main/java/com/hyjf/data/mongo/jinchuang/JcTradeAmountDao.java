@@ -8,9 +8,7 @@ import com.hyjf.data.mongo.BaseMongoDao;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 
 
 /**

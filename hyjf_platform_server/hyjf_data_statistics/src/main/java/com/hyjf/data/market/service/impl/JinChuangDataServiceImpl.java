@@ -5,18 +5,14 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.client.CsMessageClient;
 import com.hyjf.data.mongo.jinchuang.*;
-import com.hyjf.data.response.Interest;
 import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
-import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
