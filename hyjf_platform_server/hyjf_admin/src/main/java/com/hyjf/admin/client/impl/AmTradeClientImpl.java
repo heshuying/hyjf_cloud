@@ -6937,6 +6937,34 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
 
+    @Override
+    public BorrowInvestCustomizeExtResponse getBorrowInvestInfo(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/borrow_invest/select_borrow_invest/" + nid, BorrowInvestCustomizeExtResponse.class).getBody();
+    }
 
+    @Override
+    public IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow_invest/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+    }
 
+    @Override
+    public IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/planutm/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/borrow_invest/update_tender_utm_history/" + nid,TenderUpdateUtmHistoryResponse.class).getBody();
+    }
+
+    @Override
+    public HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId) {
+        HjhPlanAccedeCustomizeResponse response= restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/plan_tender_info/" + planOrderId,HjhPlanAccedeCustomizeResponse.class).getBody();
+        return response.getResult();
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/update_tender_utm_history/" + nid,TenderUpdateUtmHistoryResponse.class).getBody();
+    }
 }
