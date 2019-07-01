@@ -185,6 +185,9 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowRegistCustomizeMapper borrowRegistCustomizeMapper;
 
 	@Autowired
+	protected BorrowDeleteCustomizeMapper borrowDeleteCustomizeMapper;
+
+	@Autowired
 	protected BorrowInvestCustomizeMapper borrowInvestCustomizeMapper;
 
 	@Autowired

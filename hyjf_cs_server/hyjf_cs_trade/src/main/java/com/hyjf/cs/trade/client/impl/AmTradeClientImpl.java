@@ -7613,4 +7613,62 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
 
+    /**
+     * 用户待授权列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean) {
+    	SponsorLogListResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/repay/selectSponsorLog",requestBean,
+                SponsorLogListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 用户待授权列表count
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int selectSponsorLogCount(RepayListRequest requestBean) {
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/selectSponsorLogCount", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+	@Override
+	public int updateSponsorLog(RepayListRequest requestBean) {
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/updateSponsorLog", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 1;
+	}
+    /**
+     * 计划退出查询判断标的是否还款
+     * BorrowNidEqualTo(borrowNid)
+     * ApiTypeEqualTo(1)
+     * StatusNotEqualTo(6);
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid) {
+        BorrowApicronResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrowApicron/selectBorrowApicronListByBorrowNid/" + borrowNid,
+                BorrowApicronResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

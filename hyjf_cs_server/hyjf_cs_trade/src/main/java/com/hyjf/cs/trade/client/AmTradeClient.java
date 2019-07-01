@@ -3143,5 +3143,21 @@ public interface AmTradeClient {
     List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
 
     void repayDataRepair(String borrowNid);
+
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+
+	int selectSponsorLogCount(RepayListRequest requestBean);
+
+	int updateSponsorLog(RepayListRequest requestBean);
+	   /**
+     * 计划退出查询判断标的是否还款
+     * BorrowNidEqualTo(borrowNid)
+     * ApiTypeEqualTo(1)
+     * StatusNotEqualTo(6);
+     *
+     * @param borrowNid
+     * @return
+     */
+	List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
 }
 

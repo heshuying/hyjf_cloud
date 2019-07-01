@@ -646,6 +646,53 @@
 		</if>
 		<include refid="Where_Clause_Repay_Org_List" />
 	</select>
+	<resultMap id="SponsorLogCustomizeVO" type="com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO" >
+	   <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+	   <result column="status" property="status" jdbcType="VARCHAR" />
+	   <result column="account" property="account" jdbcType="VARCHAR" />
+	   <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+	   <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	   <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+	   <result column="oldBailAccountId" property="oldBailAccountId" jdbcType="VARCHAR" />
+	   <result column="id" property="id" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectSponsorLog" resultMap="SponsorLogCustomizeVO" parameterType="Map">
+		SELECT
+			sl.`status`,
+			sl.borrow_nid,
+			bw.account,
+			bw.borrow_period,
+			bw.borrow_apr,
+			date_format( bw.create_time, '%Y-%c-%d' ) AS create_time,
+			CASE
+			WHEN ( bw.borrow_style = 'end' OR bw.borrow_style = 'endday' ) THEN
+			'day' ELSE 'month'
+			END AS borrow_style,
+			sl.old_sponsor as oldBailAccountId,
+			sl.id
+		FROM
+			ht_sponsor_log sl
+			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid
+		WHERE
+			sl.new_sponsor = #{userName}
+			AND sl.del_flag = 0
+		ORDER BY
+			sl.create_time
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="selectSponsorLogCount" resultType="java.lang.Integer" parameterType="Map">
+			SELECT
+			count(1)
+		FROM
+			ht_sponsor_log sl
+			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid
+		WHERE
+			sl.new_sponsor = #{userName}
+			AND sl.del_flag = 0
+	</select>
 
     <select id="selectUserBorrowAccountTotal" resultType="java.math.BigDecimal" parameterType="Map">
 		SELECT
