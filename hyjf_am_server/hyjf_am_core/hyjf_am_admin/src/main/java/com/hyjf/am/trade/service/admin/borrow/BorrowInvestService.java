@@ -6,11 +6,13 @@ package com.hyjf.am.trade.service.admin.borrow;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 
 import java.util.List;
 
@@ -108,4 +110,18 @@ public interface BorrowInvestService extends BaseService {
      * @return
      */
     int updateBorrowRecover(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 根据订单id获取订单详情
+     * @param nid
+     * @return
+     */
+    BorrowInvestCustomizeExtVO selectBorrowInvestByNid(String nid);
+
+    /**
+     * 记录修改渠道操作
+     * @param log
+     * @return
+     */
+    int updateTenderUtm(TenderUtmChangeLog log);
 }

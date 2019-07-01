@@ -309,7 +309,7 @@ public class ProjectConstant {
                                         } else if ("30000".equals(result.toString())) {
                                             detailBean.setVal("办事人员和有关人员");
                                         } else if ("40000".equals(result.toString())) {
-                                            detailBean.setVal("会生产服务和生活服务人员");
+                                            detailBean.setVal("是会生产服务和生活服务人员");
                                         } else if ("50000".equals(result.toString())) {
                                             detailBean.setVal("农、林、牧、渔业生产及辅助人员");
                                         } else if ("60000".equals(result.toString())) {

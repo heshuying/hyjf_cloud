@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.TenderUtmChangeLogCustomizeMapper">
+
+	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.TenderUtmChangeLogCustomize" >
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="tender_utm_name" property="utmName" jdbcType="VARCHAR" />
+		<result column="top_dept_name" property="topDeptName" jdbcType="VARCHAR" />
+		<result column="second_dept_name" property="secondDeptName" jdbcType="VARCHAR" />
+		<result column="third_dept_name" property="thirdDeptName" jdbcType="VARCHAR" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="getUtmChangeLog" resultMap="BaseResultMap">
+		SELECT
+			utmlog.nid,
+			plat.source_name AS tender_utm_name,
+			utmlog.top_dept_name AS top_dept_name,
+			utmlog.second_dept_name AS second_dept_name,
+			utmlog.third_dept_name AS third_dept_name,
+			admin.truename AS operator,
+			utmlog.update_time
+		FROM
+			ht_borrow_tender_utmlog utmlog
+		LEFT JOIN hyjf_user.ht_utm utm ON utmlog.tender_utm_id = utm.utm_id
+		LEFT JOIN hyjf_user.ht_utm_plat plat ON utm.source_id = plat.source_id
+		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
+		WHERE nid = #{nid}
+	</select>
+    <select id="getPlanTenderChangeLog"  resultMap="BaseResultMap" >
+		SELECT
+			utmlog.nid,
+			plat.source_name AS tender_utm_name,
+			utmlog.top_dept_name AS top_dept_name,
+			utmlog.second_dept_name AS second_dept_name,
+			utmlog.third_dept_name AS third_dept_name,
+			admin.truename AS operator,
+			utmlog.update_time
+		FROM
+			ht_borrow_tender_utmlog utmlog
+		LEFT JOIN hyjf_user.ht_utm utm ON utmlog.tender_utm_id = utm.utm_id
+		LEFT JOIN hyjf_user.ht_utm_plat plat ON utm.source_id = plat.source_id
+		LEFT JOIN hyjf_config.ht_admin admin ON utmlog.operator = admin.id
+		WHERE
+		nid = #{planOrderId}
+	</select>
+</mapper>

@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.coupon;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
@@ -19,7 +20,7 @@ public interface AppCouponService extends BaseTradeService {
      * @param couponStatus 优惠券状态
      * @return List
      */
-    List<CouponUserForAppCustomizeVO> getMyCoupon(Integer userId, Integer page, Integer pageSize, String couponStatus);
+    List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
 
     /**
      *  获取我的优惠券总数

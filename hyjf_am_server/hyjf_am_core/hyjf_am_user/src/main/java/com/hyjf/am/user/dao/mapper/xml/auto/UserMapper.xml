@@ -5,6 +5,7 @@
     <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="bank_mobile" property="bankMobile" jdbcType="CHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="salt" property="salt" jdbcType="CHAR" />
@@ -95,10 +96,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, mobile, email, `password`, salt, `status`, open_account, recharge_sms, 
-    withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, reg_esb, eprovince, 
-    send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, is_set_password, 
-    bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+    user_id, username, mobile, bank_mobile, email, `password`, salt, `status`, open_account, 
+    recharge_sms, withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, 
+    reg_esb, eprovince, send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, 
+    is_set_password, bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
     is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserExample" >
@@ -138,27 +139,27 @@
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_user (username, mobile, email, 
-      `password`, salt, `status`, 
-      open_account, recharge_sms, withdraw_sms, 
-      icon_url, if_receive_notice, invest_sms, 
-      recieve_sms, reg_esb, eprovince, 
-      send_sms, is_inst_flag, inst_code, 
-      account_esb, user_type, payment_auth_status, 
-      is_set_password, bank_open_account, bank_account_esb, 
-      is_evaluation_flag, evaluation_expired_time, 
+    insert into ht_user (username, mobile, bank_mobile, 
+      email, `password`, salt, 
+      `status`, open_account, recharge_sms, 
+      withdraw_sms, icon_url, if_receive_notice, 
+      invest_sms, recieve_sms, reg_esb, 
+      eprovince, send_sms, is_inst_flag, 
+      inst_code, account_esb, user_type, 
+      payment_auth_status, is_set_password, bank_open_account, 
+      bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
       is_ca_flag, is_smtp, reg_ip, 
       reg_time, create_time, update_time
       )
-    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, 
-      #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, #{withdrawSms,jdbcType=TINYINT}, 
-      #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, #{investSms,jdbcType=TINYINT}, 
-      #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, 
-      #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, 
-      #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{paymentAuthStatus,jdbcType=TINYINT}, 
-      #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, 
-      #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
+    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankMobile,jdbcType=CHAR}, 
+      #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, 
+      #{status,jdbcType=TINYINT}, #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, 
+      #{withdrawSms,jdbcType=TINYINT}, #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, 
+      #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, 
+      #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, 
+      #{instCode,jdbcType=VARCHAR}, #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
+      #{paymentAuthStatus,jdbcType=TINYINT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
+      #{bankAccountEsb,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
       #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, 
       #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
@@ -174,6 +175,9 @@
       </if>
       <if test="mobile != null" >
         mobile,
+      </if>
+      <if test="bankMobile != null" >
+        bank_mobile,
       </if>
       <if test="email != null" >
         email,
@@ -272,6 +276,9 @@
       </if>
       <if test="mobile != null" >
         #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="bankMobile != null" >
+        #{bankMobile,jdbcType=CHAR},
       </if>
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
@@ -383,6 +390,9 @@
       <if test="record.mobile != null" >
         mobile = #{record.mobile,jdbcType=CHAR},
       </if>
+      <if test="record.bankMobile != null" >
+        bank_mobile = #{record.bankMobile,jdbcType=CHAR},
+      </if>
       <if test="record.email != null" >
         email = #{record.email,jdbcType=VARCHAR},
       </if>
@@ -483,6 +493,7 @@
     set user_id = #{record.userId,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
       mobile = #{record.mobile,jdbcType=CHAR},
+      bank_mobile = #{record.bankMobile,jdbcType=CHAR},
       email = #{record.email,jdbcType=VARCHAR},
       `password` = #{record.password,jdbcType=VARCHAR},
       salt = #{record.salt,jdbcType=CHAR},
@@ -525,6 +536,9 @@
       </if>
       <if test="mobile != null" >
         mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="bankMobile != null" >
+        bank_mobile = #{bankMobile,jdbcType=CHAR},
       </if>
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
@@ -623,6 +637,7 @@
     update ht_user
     set username = #{username,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=CHAR},
+      bank_mobile = #{bankMobile,jdbcType=CHAR},
       email = #{email,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=VARCHAR},
       salt = #{salt,jdbcType=CHAR},

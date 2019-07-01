@@ -11,6 +11,15 @@ import com.hyjf.am.trade.dao.model.auto.ScreenTwoParamExample;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import com.hyjf.am.vo.screen.ScreenTransferVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.*;
 
 /**
@@ -103,13 +114,45 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         /*Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.set(Calendar.MINUTE,2);*/
-        List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails();
+        List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails(getTime());
         vo.setUserCapitalDetailList(userCapitalDetailsVOList);
         logger.info("am-trade层-----环境发版测试日志");
         if (!CollectionUtils.isEmpty(userCapitalDetailsVOList)){
             logger.info("查询结果为:{}", JSON.toJSONString(userCapitalDetailsVOList));
         }
         return vo;
+    }
+
+
+    /**
+     * @Author walter.limeng
+     * @Description //需求，根据当前时间判断数据查询的时间点
+     * 【0，9） 前一天19点（包含）开始，至系统当前时间的数据
+     * 【9，15） 当天9点（包含）开始，至系统当前时间的数据
+     * 【15，19） 当天15点（包含）开始，至系统当前时间的数据
+     * 【19，24） 当天19点（包含）开始，至系统当前时间的数据
+     * @Date 14:40 2019-06-05
+     * @Param []
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     **/
+    public Map<String, Object> getTime(){
+        Map<String, Object> param = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        String startTime = "";
+        Integer t = Integer.valueOf(sdf.format(new Date()));
+        if(t >= 0 && t < 9){
+            startTime = GetDateUtils.forwardDay(1,"yyyy-MM-dd") + " 19:00:00";
+        }else if(t >= 9 && t < 15){
+            startTime = GetDateUtils.getCurrentDate() + " 09:00:00";
+        }else if(t >= 15 && t < 19){
+            startTime = GetDateUtils.getCurrentDate() + " 15:00:00";
+        }else {
+            startTime = GetDateUtils.getCurrentDate() + " 19:00:00";
+        }
+        param.put("startTime",startTime);
+        param.put("endTime", GetDateUtils.getCurrentTime());
+        logger.info("用户资金明细，当前时间：{}，startTime：{},endTime:{}",GetDateUtils.getCurrentTime(),startTime,GetDateUtils.getCurrentTime());
+        return param;
     }
 
     /**

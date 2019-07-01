@@ -16,6 +16,7 @@ import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -433,4 +434,12 @@ public interface AmTradeClient {
 
     /** 用户测评配置 */
     List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
+
+    /**
+     * 根据用户ID获取用户第一笔充值记录
+     *
+     * @param userId
+     * @return
+     */
+    AccountRechargeVO selectAccountRechargeByUserId(Integer userId);
 }
