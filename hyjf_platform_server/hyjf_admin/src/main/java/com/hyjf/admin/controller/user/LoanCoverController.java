@@ -82,10 +82,15 @@ public class LoanCoverController extends BaseController {
             if (!isShow){
                 // 对未取到查看权限的用户查看数据加密
                 loanCoverUserVOList.getResultList().forEach(item ->{
-                    // 企业名称
+                    // 名称
                     item.setName(AsteriskProcessUtil.getAsteriskedCnName(item.getName()));
                     // 证件号码
-                    item.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(item.getIdNo()));
+                    if(item.getIdType() == 0){
+                        // 个人
+                        item.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdNo()));
+                    }else {
+                        item.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(item.getIdNo()));
+                    }
                 });
             }
             loanCoverUserCustomizeVOList = CommonUtils.convertBeanList(loanCoverUserVOList.getResultList(),LoanCoverUserCustomizeVO.class);
@@ -310,7 +315,7 @@ public class LoanCoverController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         if (!isShow){
-            mapValueAdapter = buildValueAdapterNoPermissions();
+            mapValueAdapter = buildValueAdapterNoPermissions(loanCoverUserResponse.getResultList());
         }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -405,7 +410,7 @@ public class LoanCoverController extends BaseController {
         return mapAdapter;
     }
 
-    private Map<String, IValueFormatter> buildValueAdapterNoPermissions() {
+    private Map<String, IValueFormatter> buildValueAdapterNoPermissions(List<LoanCoverUserVO> loanCoverUserVOList) {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         IValueFormatter idTypeAdapter = new IValueFormatter() {
             @Override
@@ -468,7 +473,16 @@ public class LoanCoverController extends BaseController {
             @Override
             public String format(Object object) {
                 String idNo = (String) object;
-                return AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(idNo);
+                String newIdNo = "";
+                for (LoanCoverUserVO loanCoverUserVO : loanCoverUserVOList) {
+                    if (loanCoverUserVO.getIdType() == 0) {
+                        // 个人用户
+                        newIdNo = AsteriskProcessUtil.getAsteriskedIdcard(idNo);
+                    }else {
+                        newIdNo = AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(idNo);
+                    }
+                }
+                return newIdNo;
             }
         };
 
