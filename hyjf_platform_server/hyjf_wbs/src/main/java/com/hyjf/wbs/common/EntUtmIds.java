@@ -3,7 +3,9 @@ package com.hyjf.wbs.common;
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.wbs.configs.EntidsProperties;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +28,7 @@ public class EntUtmIds {
 
     /**
      * 根据utmId获取entid
+     *
      * @param utmid
      * @return
      */
@@ -50,6 +53,7 @@ public class EntUtmIds {
 
     /**
      * 根据entid获取utmid
+     *
      * @param entid
      * @return
      */
@@ -62,5 +66,35 @@ public class EntUtmIds {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取所有启用的utmid list
+     *
+     * @return
+     */
+    public List<Integer> getAllUtmId() {
+        List<Integer> utmId = new ArrayList<Integer>();
+        for (Map.Entry<String, String> entry : flags.entrySet()) {
+            String mapKey = entry.getKey();
+            String mapValue = entry.getValue();
+            if ("1".equals(mapValue)) {
+                if (entids.get(mapKey) != null) {
+                    if (entids.get(mapKey).indexOf(",") != -1) {
+                        String[] strarray = entids.get(mapKey).split(",");
+                        for (String str : strarray) {
+                            utmId.add(Integer.valueOf(str));
+                        }
+
+                    } else {
+                        utmId.add(Integer.valueOf(entids.get(mapKey)));
+                    }
+                }
+
+
+            }
+        }
+
+        return utmId;
     }
 }
