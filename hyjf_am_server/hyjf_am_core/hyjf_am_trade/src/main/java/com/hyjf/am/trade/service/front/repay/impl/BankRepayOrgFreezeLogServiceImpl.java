@@ -44,6 +44,7 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
         log.setCurrentPeriod(requestBean.getCurrentPeriod());// 当前期数
         log.setAllRepayFlag(requestBean.getAllRepayFlag());// 是否全部还款 0 否 1 是
         log.setDelFlag(0);// 0 有效 1 无效
+        log.setLatePeriod(requestBean.getLatePeriod());// 提交的逾期期数
         log.setCreateTime(GetDate.getDate());
         log.setCreateUserId(requestBean.getRepayUserId());
         log.setCreateUserName(requestBean.getRepayUserName());

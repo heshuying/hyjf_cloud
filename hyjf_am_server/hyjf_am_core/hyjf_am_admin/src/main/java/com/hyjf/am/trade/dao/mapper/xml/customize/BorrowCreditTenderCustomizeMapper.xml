@@ -16,7 +16,9 @@
 		select
 		hct.user_name AS userName,
 		hct.credit_user_name AS creditUserName,
-		hct.status AS status,
+		CASE
+        when bw.`status`=8 then 2
+		else hct.status end AS status,
 		hct.bid_nid AS bidNid,
 		hct.credit_nid AS creditNid,
 		hct.credit_tender_nid AS creditTenderNid,
@@ -42,6 +44,7 @@
 		END AS assignRepayNextTime,
 		DATE_FORMAT(hct.create_time,'%Y-%c-%d %h:%i:%s') AS addTime
 		FROM ht_credit_tender hct
+		left join ht_borrow  bw on bw.borrow_nid=hct.bid_nid
 		<include refid="WHERE_COLUMN"/>
 		ORDER BY
 		hct.create_time DESC
@@ -154,7 +157,7 @@
 	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderVO">
 		SELECT
 		ct.assign_nid              AS assignNid,
-		bc.client             	 AS client,
+		ct.client             	 AS client,
 		ct.credit_nid              AS creditNid,
 		ct.bid_nid                 AS bidNid,
 		ct.credit_user_name      AS creditUserName,
@@ -302,7 +305,7 @@
 			</if>
 			<!-- 客户端-->
 			<if test="client != null and client != ''">
-				AND bc.client=#{client}
+				AND ct.client=#{client}
 			</if>
 			<!-- 时间 -->
 			<if test="addTimeStart != null and addTimeStart != ''">

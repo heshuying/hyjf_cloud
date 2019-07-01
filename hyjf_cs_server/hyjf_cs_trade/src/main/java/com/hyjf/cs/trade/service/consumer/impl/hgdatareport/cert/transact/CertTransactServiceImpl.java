@@ -67,7 +67,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
-		logger.info(logHeader + "accountLists.size():"+accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
@@ -94,7 +93,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	private void createParam(CertAccountListCustomizeVO accountList,List<Map<String, Object>> list) throws Exception {
 
 		switch (accountList.getTrade()) {
-		//提现  发送7提现  以及23提现手续费
+		/*//提现  发送7提现  以及23提现手续费
 		case "cash_success":
 			cashSuccess(accountList,list);
 			break;
@@ -110,7 +109,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		case "auto_reverse":
 		case "account_adjustment_up":
 			accountAdjustmentUp(accountList,list);
-			break;
+			break;*/
 		//借款成功  发送1放款   发送5交易手续费（）
 		case "borrow_success":
 			borrowSuccess(accountList,list);
@@ -120,14 +119,14 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			repaySuccess(accountList,list);
 			break;
 			//优惠券回款 上送41红包
-		case "increase_interest_profit":
+		/*case "increase_interest_profit":
 			increaseInerestProfit(accountList,list);
-				break;
-		//优惠券回款 上送41红包
+				break;*/
+		/*//优惠券回款 上送41红包
 		case "experience_profit":
 		case "cash_coupon_profit":
 			couponProfit(accountList,list);
-			break;
+			break;*/
 		//投资收到还款  发送8赎回本金 发送9赎回利息
 		case "tender_recover_yes":
 		case "hjh_repay_balance":
@@ -183,24 +182,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "11");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("11"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", creditTenders.get(0).getCreditTenderNid());
 		//转让项目编号
@@ -225,24 +210,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param1.put("sourceProductName", borrow.getName());
 			//交易类型
 			param1.put("transType", "40");
-			//交易方式
-			param1.put("transPayment", "a");
-			//交易类型描述
-			param1.put("transTypeDec", CertTradeTypeEnum.getName("40"));
 			//交易金额
 			param1.put("transMoney", FORMAT.format(creditTenders.get(0).getCreditFee()));
-			//	交易日期
-			param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-			//交易人员银行（或三方支付名称）
-			param1.put("transBank", "江西银行");
 			//用户标示哈希
 			param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-			//存管银行流水编号
-			param1.put("bankTransId", accountList.getSeqNo());
-			//原产品信息编号
-			param1.put("sourceFinancingCode", "-1");
-			//原产品信息名称
-			param1.put("sourceFinancingName", "-1");
 			//债权编号
 			param1.put("finClaimId", creditTenders.get(0).getCreditTenderNid());
 			//转让项目编号
@@ -276,20 +247,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "11");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("11"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
 		//债权编号
 		param.put("finClaimId", hjhDebtCreditTenders.get(0).getInvestOrderId());
 		//转让项目编号
@@ -314,24 +275,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param1.put("sourceProductName", borrow.getName());
 			//交易类型
 			param1.put("transType", "40");
-			//交易方式
-			param1.put("transPayment", "a");
-			//交易类型描述
-			param1.put("transTypeDec", CertTradeTypeEnum.getName("40"));
 			//交易金额
 			param1.put("transMoney", FORMAT.format(hjhDebtCreditTenders.get(0).getAssignServiceFee()));
-			//	交易日期
-			param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-			//交易人员银行（或三方支付名称）
-			param1.put("transBank", "江西银行");
 			//用户标示哈希
 			param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-			//存管银行流水编号
-			param1.put("bankTransId", accountList.getSeqNo());
-			//原产品信息编号
-			param1.put("sourceFinancingCode", "-1");
-			//原产品信息名称
-			param1.put("sourceFinancingName", "-1");
 			//债权编号
 			param1.put("finClaimId", hjhDebtCreditTenders.get(0).getInvestOrderId());
 			//转让项目编号
@@ -364,24 +311,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "17");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("17"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", hjhDebtCreditTenders.get(0).getInvestOrderId());
 		//转让项目编号
@@ -413,24 +346,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "17");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("17"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", creditTenders.get(0).getCreditTenderNid());
 		//转让项目编号
@@ -497,24 +416,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "8");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("8"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(creditCapital));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", nid);
 		//转让项目编号
@@ -537,24 +442,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param1.put("sourceProductName", borrow.getName());
 		//交易类型
 		param1.put("transType", "9");
-		//交易方式
-		param1.put("transPayment", "a");
-		//交易类型描述
-		param1.put("transTypeDec", CertTradeTypeEnum.getName("9"));
 		//交易金额
 		param1.put("transMoney", FORMAT.format(creditInterest));
-		//	交易日期
-		param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param1.put("transBank", "江西银行");
 		//用户标示哈希
 		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param1.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param1.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param1.put("sourceFinancingName", "-1");
 		//债权编号
 		param1.put("finClaimId", nid);
 		//转让项目编号
@@ -578,6 +469,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		if("end".equals(borrowAndInfoVO.getBorrowStyle())||"endday".equals(borrowAndInfoVO.getBorrowStyle())){
 			CertRequest certRequest=new CertRequest();
 			certRequest.setRepayOrdid(accountList.getNid());
+			certRequest.setBorrowNid(accountList.getRemark());
 			List<BorrowRecoverVO> borrowRecovers=amTradeClient.selectBorrowRecoverListByRequest(certRequest);
 			if(borrowRecovers==null||borrowRecovers.size()==0){
 				return;
@@ -666,24 +558,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "8");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("8"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(capital));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", nid);
 		//转让项目编号
@@ -708,24 +586,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param1.put("sourceProductName", borrow.getName());
 		//交易类型
 		param1.put("transType", "9");
-		//交易方式
-		param1.put("transPayment", "a");
-		//交易类型描述
-		param1.put("transTypeDec", CertTradeTypeEnum.getName("9"));
 		//交易金额
 		param1.put("transMoney", FORMAT.format(interest));
-		//	交易日期
-		param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param1.put("transBank", "江西银行");
 		//用户标示哈希
 		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param1.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param1.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param1.put("sourceFinancingName", "-1");
 		//债权编号
 		param1.put("finClaimId", nid);
 		//转让项目编号
@@ -771,24 +635,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow==null?"-1":borrow.getName());
 		//交易类型
 		param.put("transType", "10");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("10"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		if(couponRealTenders.get(0).getRealTenderId()!=null&&couponRealTenders.get(0).getRealTenderId().length()>0){
 			//债权编号
 			param.put("finClaimId", couponRealTenders.get(0).getRealTenderId());
@@ -813,7 +663,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			return;
 		}
 		CertCouponRecoverVO couponRecover=couponRecovers.get(0);
-        logger.info("couponRecover:" + JSONObject.toJSONString(couponRecover));
 		certRequest.setCouponTenderId(couponRecover.getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
@@ -840,24 +689,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow==null?"-1":borrow.getName());
 		//交易类型
 		param.put("transType", "41");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("41"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		if(couponRealTenders.get(0).getRealTenderId()!=null&&couponRealTenders.get(0).getRealTenderId().length()>0){
 			//债权编号
 			param.put("finClaimId", couponRealTenders.get(0).getRealTenderId());
@@ -866,7 +701,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param.put("finClaimId", "-1");
 
 		}
-
 		//转让项目编号
 		param.put("transferId", "-1");
 		//	还款计划编号
@@ -875,8 +709,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	}
 
 	private void repaySuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
-
-		logger.info("accountList:" + JSONObject.toJSONString(accountList));
 		//还款 发送18还款本金  19还款利息  5交易手续费（还款服务费）
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		BorrowInfoVO borrow = amTradeClient.getBorrowInfoByNid(accountList.getRemark());
@@ -886,10 +718,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		Map<String, Object> param2 = new HashMap<String, Object>();
-		logger.info("borrowAndInfoVO:" + JSONObject.toJSONString(accountList));
-		logger.info("borrow:" + JSONObject.toJSONString(accountList));
 		CertUserVO certUser=this.getCertUserByUserIdBorrowNid(borrow.getUserId(),accountList.getRemark());
-		logger.info("certUser:" + JSONObject.toJSONString(accountList));
 		if(certUser==null){
 			certUser=new CertUserVO();
 			certUser.setUserIdCardHash(getUserHashValue(borrowAndInfoVO));
@@ -923,24 +752,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param.put("sourceProductName", borrow.getName());
 			//交易类型
 			param.put("transType", "18");
-			//交易方式
-			param.put("transPayment", "a");
-			//交易类型描述
-			param.put("transTypeDec", CertTradeTypeEnum.getName("18"));
 			//交易金额
 			param.put("transMoney", FORMAT.format(repayCapitalYes));
-			//	交易日期
-			param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-			//交易人员银行（或三方支付名称）
-			param.put("transBank", "江西银行");
 			//用户标示哈希
 			param.put("userIdcardHash", certUser.getUserIdCardHash());
-			//存管银行流水编号
-			param.put("bankTransId", accountList.getSeqNo());
-			//原产品信息编号
-			param.put("sourceFinancingCode", "-1");
-			//原产品信息名称
-			param.put("sourceFinancingName", "-1");
 			//债权编号
 			param.put("finClaimId", "-1");
 			//转让项目编号
@@ -965,24 +780,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param1.put("sourceProductName", borrow.getName());
 			//交易类型
 			param1.put("transType", "19");
-			//交易方式
-			param1.put("transPayment", "a");
-			//交易类型描述
-			param1.put("transTypeDec", CertTradeTypeEnum.getName("19"));
 			//交易金额
 			param1.put("transMoney", FORMAT.format(repayInterestYes));
-			//	交易日期
-			param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-			//交易人员银行（或三方支付名称）
-			param1.put("transBank", "江西银行");
 			//用户标示哈希
 			param1.put("userIdcardHash", certUser.getUserIdCardHash());
-			//存管银行流水编号
-			param1.put("bankTransId", accountList.getSeqNo());
-			//原产品信息编号
-			param1.put("sourceFinancingCode", "-1");
-			//原产品信息名称
-			param1.put("sourceFinancingName", "-1");
 			//债权编号
 			param1.put("finClaimId", "-1");
 			//转让项目编号
@@ -1006,25 +807,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				//原散标名称
 				param2.put("sourceProductName", borrow.getName());
 				//交易类型
-				param2.put("transType", "42");
-				//交易方式
-				param2.put("transPayment", "a");
-				//交易类型描述
-				param2.put("transTypeDec", CertTradeTypeEnum.getName("42"));
+				param2.put("transType", "4");
 				//交易金额
 				param2.put("transMoney",FORMAT.format( repayFee));
-				//	交易日期
-				param2.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-				//交易人员银行（或三方支付名称）
-				param2.put("transBank", "江西银行");
 				//用户标示哈希
 				param2.put("userIdcardHash", certUser.getUserIdCardHash());
-				//存管银行流水编号
-				param2.put("bankTransId", accountList.getSeqNo());
-				//原产品信息编号
-				param2.put("sourceFinancingCode", "-1");
-				//原产品信息名称
-				param2.put("sourceFinancingName", "-1");
 				//债权编号
 				param2.put("finClaimId", "-1");
 				//转让项目编号
@@ -1041,7 +828,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			certRequest.setNid(accountList.getNid());
 			List<BorrowRepayPlanVO> borrowRepayPlans =this.amTradeClient.getBorrowRepayPlanListByRequest(certRequest) ;
 
-			logger.info("borrowRepayPlans.size():" + borrowRepayPlans.size());
 			for (BorrowRepayPlanVO borrowRepayPlan : borrowRepayPlans) {
 				BigDecimal repayCapitalYes=BigDecimal.ZERO;
 				BigDecimal repayInterestYes=BigDecimal.ZERO;
@@ -1069,24 +855,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				param18.put("sourceProductName", borrow.getName());
 				//交易类型
 				param18.put("transType", "18");
-				//交易方式
-				param18.put("transPayment", "a");
-				//交易类型描述
-				param18.put("transTypeDec", CertTradeTypeEnum.getName("18"));
 				//交易金额
 				param18.put("transMoney", FORMAT.format(repayCapitalYes));
-				//	交易日期
-				param18.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-				//交易人员银行（或三方支付名称）
-				param18.put("transBank", "江西银行");
 				//用户标示哈希
 				param18.put("userIdcardHash", certUser.getUserIdCardHash());
-				//存管银行流水编号
-				param18.put("bankTransId", accountList.getSeqNo());
-				//原产品信息编号
-				param18.put("sourceFinancingCode", "-1");
-				//原产品信息名称
-				param18.put("sourceFinancingName", "-1");
 				//债权编号
 				param18.put("finClaimId", "-1");
 				//转让项目编号
@@ -1111,24 +883,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				param19.put("sourceProductName", borrow.getName());
 				//交易类型
 				param19.put("transType", "19");
-				//交易方式
-				param19.put("transPayment", "a");
-				//交易类型描述
-				param19.put("transTypeDec", CertTradeTypeEnum.getName("19"));
 				//交易金额
 				param19.put("transMoney", FORMAT.format(repayInterestYes));
-				//	交易日期
-				param19.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-				//交易人员银行（或三方支付名称）
-				param19.put("transBank", "江西银行");
 				//用户标示哈希
 				param19.put("userIdcardHash", certUser.getUserIdCardHash());
-				//存管银行流水编号
-				param19.put("bankTransId", accountList.getSeqNo());
-				//原产品信息编号
-				param19.put("sourceFinancingCode", "-1");
-				//原产品信息名称
-				param19.put("sourceFinancingName", "-1");
 				//债权编号
 				param19.put("finClaimId", "-1");
 				//转让项目编号
@@ -1152,25 +910,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 					//原散标名称
 					param5.put("sourceProductName", borrow.getName());
 					//交易类型
-					param5.put("transType", "42");
-					//交易方式
-					param5.put("transPayment", "a");
-					//交易类型描述
-					param5.put("transTypeDec", CertTradeTypeEnum.getName("42"));
+					param5.put("transType", "4");
 					//交易金额
 					param5.put("transMoney", FORMAT.format(repayFee));
-					//	交易日期
-					param5.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-					//交易人员银行（或三方支付名称）
-					param5.put("transBank", "江西银行");
 					//用户标示哈希
 					param5.put("userIdcardHash", certUser.getUserIdCardHash());
-					//存管银行流水编号
-					param5.put("bankTransId", accountList.getSeqNo());
-					//原产品信息编号
-					param5.put("sourceFinancingCode", "-1");
-					//原产品信息名称
-					param5.put("sourceFinancingName", "-1");
 					//债权编号
 					param5.put("finClaimId", "-1");
 					//转让项目编号
@@ -1208,25 +952,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", borrow.getName());
 		//交易类型
 		param.put("transType", "1");
-		//交易方式
-		param.put("transPayment", "a");
-
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("1"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", certUser.getUserIdCardHash());
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", "-1");
 		//转让项目编号
@@ -1260,26 +989,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			//原散标名称
 			param1.put("sourceProductName", borrow.getName());
 			//交易类型
-			param1.put("transType", "42");
-			//交易方式
-			param1.put("transPayment", "a");
-
-			//交易类型描述
-			param1.put("transTypeDec", CertTradeTypeEnum.getName("42"));
+			param1.put("transType", "4");
 			//交易金额
 			param1.put("transMoney", FORMAT.format(recoverFee));
-			//	交易日期
-			param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-			//交易人员银行（或三方支付名称）
-			param1.put("transBank", "江西银行");
 			//用户标示哈希
 			param1.put("userIdcardHash", certUser.getUserIdCardHash());
-			//存管银行流水编号
-			param1.put("bankTransId", accountList.getSeqNo());
-			//原产品信息编号
-			param1.put("sourceFinancingCode", "-1");
-			//原产品信息名称
-			param1.put("sourceFinancingName", "-1");
 			//债权编号
 			param1.put("finClaimId", "-1");
 			//转让项目编号
@@ -1314,24 +1028,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param3.put("sourceProductName", borrow.getName());
 			//交易类型
 			param3.put("transType", "2");
-			//交易方式
-			param3.put("transPayment", "a");
-			//交易类型描述
-			param3.put("transTypeDec", CertTradeTypeEnum.getName("2"));
 			//交易金额
 			param3.put("transMoney", FORMAT.format(accountList2.getAmount()));
-			//	交易日期
-			param3.put("transDate", GetDate.formatDate(accountList2.getCreateTime()));
-			//交易人员银行（或三方支付名称）
-			param3.put("transBank", "江西银行");
 			//用户标示哈希
 			param3.put("userIdcardHash", tool.idCardHash(tenderUsersInfo.getIdcard()));
-			//存管银行流水编号
-			param3.put("bankTransId", accountList2.getSeqNo());
-			//原产品信息编号
-			param3.put("sourceFinancingCode", "-1");
-			//原产品信息名称
-			param3.put("sourceFinancingName", "-1");
 			//债权编号
 			param3.put("finClaimId", accountList2.getNid());
 			//转让项目编号
@@ -1370,24 +1070,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", "-1");
 		//交易类型
 		param.put("transType", "6");
-		//交易方式
-		param.put("transPayment", "a");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("6"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", "-1");
 		//转让项目编号
@@ -1418,30 +1104,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", "-1");
 		//交易类型
 		param.put("transType", "6");
-		if("recharge".equals(accountList.getTrade())){
-			//交易方式
-			param.put("transPayment", "f");
-		}else{
-			//交易方式
-			param.put("transPayment", "d");
-		}
-
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("6"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//	交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", "-1");
 		//转让项目编号
@@ -1478,24 +1144,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", "-1");
 		//交易类型
 		param.put("transType", "7");
-		//交易方式
-		param.put("transPayment", "g");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("7"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountList.getAmount()));
-		//交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", "-1");
 		//转让项目编号
@@ -1532,24 +1184,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param.put("sourceProductName", "-1");
 		//交易类型
 		param.put("transType", "7");
-		//交易方式
-		param.put("transPayment", "g");
-		//交易类型描述
-		param.put("transTypeDec", CertTradeTypeEnum.getName("7"));
 		//交易金额
 		param.put("transMoney", FORMAT.format(accountwithdraws.get(0).getCredited()));
-		//交易日期
-		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param.put("transBank", "江西银行");
 		//用户标示哈希
 		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param.put("sourceFinancingName", "-1");
 		//债权编号
 		param.put("finClaimId", "-1");
 		//转让项目编号
@@ -1572,24 +1210,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		param1.put("sourceProductName", "-1");
 		//交易类型
 		param1.put("transType", "23");
-		//交易方式
-		param1.put("transPayment", "g");
-		//交易类型描述
-		param1.put("transTypeDec", CertTradeTypeEnum.getName("23"));
 		//交易金额
 		param1.put("transMoney", FORMAT.format(accountwithdraws.get(0).getFee()));
-		//	交易日期
-		param1.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
-		//交易人员银行（或三方支付名称）
-		param1.put("transBank", "江西银行");
 		//用户标示哈希
 		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-		//存管银行流水编号
-		param1.put("bankTransId", accountList.getSeqNo());
-		//原产品信息编号
-		param1.put("sourceFinancingCode", "-1");
-		//原产品信息名称
-		param1.put("sourceFinancingName", "-1");
 		//债权编号
 		param1.put("finClaimId", "-1");
 		//转让项目编号

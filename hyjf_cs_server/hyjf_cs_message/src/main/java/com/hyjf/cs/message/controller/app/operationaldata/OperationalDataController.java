@@ -3,6 +3,7 @@ package com.hyjf.cs.message.controller.app.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
 import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
@@ -19,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -32,15 +30,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {
-	
+
 	private Logger logger = LoggerFactory.getLogger(OperationalDataController.class);
-	
+
 	@Autowired
 	private PlatDataStatisticsService platDataStatisticsService;
 
 	/**
 	 * 获取平台实时数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第一页面接口数据获取", notes = "app运营数据第一页面接口数据获取")
@@ -69,7 +67,7 @@ public class OperationalDataController {
 			//加上统计月份
 			int staticMonth=oe.getStatisticsMonth();
 			info.put("CutOffDate", transferIntToDate(staticMonth));
-			
+
 			// 获取12个月的数据
 
 			List<OperationReport> list = platDataStatisticsService.findOperationReportEntityList();
@@ -93,8 +91,13 @@ public class OperationalDataController {
 			detail.put("YAxis", ycountlist);
 			info.put("MonthlyTransactionNumList", detail);
 
+			//安全运营天数
+			Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
+			info.put("survivalYears",totalDays/365);
+			info.put("survivalDays",totalDays%365);
+
 			result.put("info", info);
-			
+
 		} catch (Exception e) {
 			result.put("status", "999");
 			result.put("statusDesc", "失败");
@@ -105,7 +108,7 @@ public class OperationalDataController {
 
 	/**
 	 * 获取借款&&出借数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第二页面和第三页面数据统计", notes = "app运营数据第二页面和第三页面数据统计")
@@ -121,11 +124,11 @@ public class OperationalDataController {
 			if(oe != null){
 				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
 				detail.put("LoanNum", oe.getLoanNum());
-				
+
 				detail.put("investorTotal", oe.getTenderCount());
 				detail.put("perInvestTotal", oe.getPerInvest());
 				float time = oe.getFullBillTimeCurrentMonth();
-				
+
 				detail.put("fullScaleHour", oe.getHour(time));
 				detail.put("fullScaleMinute", oe.getMinutes(time));
 				detail.put("fullScaleSecond", oe.getSeconds(time));
@@ -156,7 +159,7 @@ public class OperationalDataController {
 
 	/**
 	 * 获取出借人地域分布数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第四页面数据统计", notes = "app运营数据第四页面数据统计")
@@ -179,7 +182,7 @@ public class OperationalDataController {
 			List<SubEntity> sublist=oe.formatList(list);
 
 			ObjectMapper mapper = new ObjectMapper();
-			
+
 			result.put("InvestorRegionList", mapper.writeValueAsString(sublist));
 		} catch (Exception e) {
 			result.put("status", "999");
@@ -191,7 +194,7 @@ public class OperationalDataController {
 
 	/**
 	 * 获取出借人性别&&年龄数据
-	 * 
+	 *
 	 * @return
 	 */
 
@@ -259,15 +262,15 @@ public class OperationalDataController {
 		String str=String.valueOf(date);
 		int year=Integer.valueOf(str.substring(0,4));
 		int month=Integer.valueOf(str.substring(4,6))-1;
-		
+
 		cl.set(Calendar.YEAR,year);
 		cl.set(Calendar.MONTH,month);
-		int lastDay = cl.getActualMaximum(Calendar.DAY_OF_MONTH);  
-        cl.set(Calendar.DAY_OF_MONTH, lastDay); 
+		int lastDay = cl.getActualMaximum(Calendar.DAY_OF_MONTH);
+		cl.set(Calendar.DAY_OF_MONTH, lastDay);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
 		return sdf.format(cl.getTime());
 	}
-	
+
 	public String trim(float input,int fenzi){
 		return  BigDecimal.valueOf((float)input/fenzi).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 	}

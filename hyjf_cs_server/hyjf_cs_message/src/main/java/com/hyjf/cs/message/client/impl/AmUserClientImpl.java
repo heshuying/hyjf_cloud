@@ -5,21 +5,21 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
-import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.response.user.UserInfoCustomizeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.annotation.Cilent;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +29,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -311,4 +308,48 @@ public class AmUserClientImpl implements AmUserClient {
 				request, AppUtmRegResponse.class);
 	}
 
+	@Override
+	public List<String> queryUserByBirthday(SmsCodeUserRequest request) {
+		Response response = restTemplate
+				.postForEntity("http://AM-USER/am-user/smsCode/queryUserByBirthday", request, Response.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	/**
+	 * 通过用户id查询 ca客户编号
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<CertificateAuthorityVO> queryCustomerId(Set<Integer> request) {
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/certificateauthority/queryCustomerId", request, CertificateAuthorityResponse.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(CACustomerRequest request1) {
+		String url = "http://AM-USER/am-user/user/getSubjectCertificateAuthorityList";
+		LoanSubjectCertificateAuthorityResponse response = restTemplate.postForEntity(url, request1, LoanSubjectCertificateAuthorityResponse.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+    @Override
+    public List<CertificateAuthorityVO> queryCustomerId(List<Integer> userIds) {
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/certificateauthority/queryCustomerIds", userIds, CertificateAuthorityResponse.class).getBody();
+		if (response != null && response.getResultList() != null) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+    }
 }

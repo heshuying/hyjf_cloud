@@ -32,6 +32,12 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 	
 	/** 用户还款详情 */
 	private List<RepayDetailBean> repayPlanList = new ArrayList<RepayDetailBean>();
+
+	// 还款方式(1逾期还款0其他)
+	private String lateStatus;
+
+	// 多期还款提交的最后一期(带逾期当期还款的当期和多期逾期还款的最后一期,其余默认为0
+	private Integer lastPeriod;
 	
 	public RepayBean() {
 		super();
@@ -89,7 +95,20 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
 
+	public String getLateStatus() {
+		return lateStatus;
+	}
+
+	public void setLateStatus(String lateStatus) {
+		this.lateStatus = lateStatus;
+	}
+
+	public Integer getLastPeriod() {
+		return lastPeriod;
+	}
+
+	public void setLastPeriod(Integer lastPeriod) {
+		this.lastPeriod = lastPeriod;
+	}
 }

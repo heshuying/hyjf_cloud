@@ -128,6 +128,8 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_NC000009 = "NC000009";
     // 免密提现-用户账户余额不足
     public static final String STATUS_NC000010 = "NC000010";
+    // 免密提现-账户余额不同步
+    public static final String STATUS_NC000011 = "NC000011";
     /********************免密提现相关    end***********************/
 
     /********************交易密码相关start***********************/

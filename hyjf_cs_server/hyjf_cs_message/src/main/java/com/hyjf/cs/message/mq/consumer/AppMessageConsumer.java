@@ -40,34 +40,34 @@ public class AppMessageConsumer implements RocketMQListener<MessageExt>, RocketM
 		AppMsMessage appMsMessage = JSONObject.parseObject(message.getBody(), AppMsMessage.class);
 		logger.debug("AppMessageConsumer 收到请求，开始推送app消息....appMsMessage is：{}", appMsMessage);
 
-		if (null != appMsMessage) {
-			switch (appMsMessage.getServiceType()) {
-			case MessageConstant.APP_MS_SEND_FOR_MOBILE:
-				msgPushHandler.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
-						appMsMessage.getMobile());
-				break;
-			case MessageConstant.APP_MS_SEND_FOR_USER:
-				msgPushHandler.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
-						appMsMessage.getUserId());
-				break;
-			case MessageConstant.APP_MS_SEND_FOR_MSG:
-				msgPushHandler.sendMessages(appMsMessage.getMsgId());
-				break;
+		try {
+			if (null != appMsMessage) {
+				switch (appMsMessage.getServiceType()) {
+					case MessageConstant.APP_MS_SEND_FOR_MOBILE:
+						msgPushHandler.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
+								appMsMessage.getMobile());
+						break;
+					case MessageConstant.APP_MS_SEND_FOR_USER:
+						msgPushHandler.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
+								appMsMessage.getUserId());
+						break;
+					case MessageConstant.APP_MS_SEND_FOR_MSG:
+						msgPushHandler.sendMessages(appMsMessage.getMsgId());
+						break;
 
-			case MessageConstant.APP_MS_SEND_REPEAT:
-				MessagePushMsgHistory msg = messagePushErrorService.getRecord(appMsMessage.getMsgId());
-				try {
-					if (msg != null) {
-						msgPushHandler.send(msg);
-					}
-				} catch (Exception e) {
-					logger.error("推送补偿失败...", e);
+					case MessageConstant.APP_MS_SEND_REPEAT:
+						MessagePushMsgHistory msg = messagePushErrorService.getRecord(appMsMessage.getMsgId());
+						if (msg != null) {
+							msgPushHandler.send(msg);
+						}
+						break;
+					default:
+						logger.error("error app push type...");
+						return;
 				}
-				break;
-			default:
-				logger.error("error app push type...");
-				return;
 			}
+		} catch (Exception e) {
+			logger.error("推送失败， 消息体: {}", appMsMessage, e);
 		}
 	}
 

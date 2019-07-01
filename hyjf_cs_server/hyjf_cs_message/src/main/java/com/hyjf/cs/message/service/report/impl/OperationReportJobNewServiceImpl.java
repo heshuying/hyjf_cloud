@@ -52,9 +52,10 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
     public Calendar insertOperationData(OperationReportJobBean bean) {
         logger.info("OperationReportJobBean is: {}", JSONObject.toJSONString(bean));
         // 插入统计日期
-        Calendar cal = bean.getCalendar();
+        Calendar cal = Calendar.getInstance();
         // 要统计前一个月的数据，所以月份要减一
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        cal.add(Calendar.MONTH, -1);
         sdf = new SimpleDateFormat("yyyyMM");
 
         Query query = new Query();
@@ -107,7 +108,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
     @Override
     public void insertOperationGroupData(OperationReportJobBean bean) {
         OperationGroupReport oegroup = new OperationGroupReport();
-        Calendar cal = bean.getCalendar();
+        Calendar cal = Calendar.getInstance();
         // 插入统计日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         oegroup.setInsertDate(transferDateToInt(cal, sdf));

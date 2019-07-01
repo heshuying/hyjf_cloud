@@ -35,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1022,6 +1023,41 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 查找注册记录列表（渠道修改列表专用）
+	 *
+	 * @author wx
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public RegistRecordResponse findRegistRecordOne(RegistRcordRequest request) {
+		RegistRecordResponse response = restTemplate.postForEntity(
+				"http://AM-ADMIN/am-user/registRecord/registRecordOne", request, RegistRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户id查询渠道类型
+	 *
+	 * @author wx
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public RegistRecordResponse selectByUserType(RegistRcordRequest request) {
+		RegistRecordResponse response = restTemplate.postForEntity(
+				"http://AM-ADMIN/am-user/registRecord/selectByUserType", request, RegistRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+
+	/**
 	 * 查找借款盖章用户信息
 	 *
 	 * @author nxl
@@ -1511,7 +1547,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UtmResponse getByPageList(Map<String, Object> map) {
-
 		ResponseEntity<UtmResponse<UtmVO>> response = restTemplate.exchange(
 				"http://AM-ADMIN/am-user/promotion/utm/getbypagelist", HttpMethod.POST, new HttpEntity<>(map),
 				new ParameterizedTypeReference<UtmResponse<UtmVO>>() {
@@ -1566,6 +1601,16 @@ public class AmUserClientImpl implements AmUserClient {
 	public UtmChannelVO getRecord(String utmId) {
 		UtmChannelResponse response = restTemplate
 				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UtmChannelVO getUtmBySourceId(String sourceId) {
+		UtmChannelResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getUtmBySourceId/"+sourceId, UtmChannelResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -2023,11 +2068,6 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request) {
 		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
-	}
-
-	@Override
-	public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
-		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_number_total", request, Integer.class);
 	}
 
 	@Override
@@ -2712,16 +2752,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request) {
-		SmsCountCustomizeResponse response =
-				restTemplate.postForEntity("http://AM-ADMIN/am-user/sms_count/getsmslistforexport", request, SmsCountCustomizeResponse.class).getBody();
-		if(Response.isSuccess(response)){
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
 	public int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest) {
 		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPayAuth/selectUserMemberCount", userPayAuthRequest, IntegerResponse.class);
 		if (response != null) {
@@ -2890,5 +2920,209 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankCancellationAccountList", bankCancellationAccountRequest, BankCancellationAccountResponse.class)
 				.getBody();
 		return response;
+	}
+
+	/**
+	 * 根据userId查询用户推广链接注册
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmRegVO findUtmRegByUserId(Integer userId) {
+		String url = "http://AM-ADMIN/am-user/user/findUtmRegByUserId/" + userId;
+		UtmRegResponse response = restTemplate.getForEntity(url, UtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 新增pc渠道信息
+	 *
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean insertPcUtmReg(UtmRegVO utmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/insertPcUtmReg", utmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 修改pc渠道信息
+	 *
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean updatePcUtmReg(UtmRegVO utmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/updatePcUtmReg", utmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 新增app渠道信息
+	 *
+	 * @param appUtmRegVO
+	 * @return
+	 */
+	@Override
+	public boolean insertAppUtmReg(AppUtmRegVO appUtmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/insertAppUtmReg", appUtmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 修改app渠道信息
+	 *
+	 * @param appUtmRegVO
+	 * @return
+	 */
+	@Override
+	public boolean updateAppUtmReg(AppUtmRegVO appUtmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/updateAppUtmReg", appUtmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 修改渠道插入
+	 *
+	 * @param changeLogVO
+	 * @return
+	 */
+	@Override
+	public boolean insertChangeLogList(ChangeLogVO changeLogVO) {
+		boolean response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/changelog/insertChangeLogList",changeLogVO, Boolean.class)
+				.getBody();
+		return response;
+	}
+
+	/**
+	 * 根据Id删除app渠道信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteAppUtmReg(Long id) {
+		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteAppUtmReg/" + id;
+		return restTemplate.getForEntity(url, boolean.class).getBody();
+	}
+
+	/**
+	 * 根据Id删除pc渠道信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteUtmReg(Integer id) {
+		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteUtmReg/" + id;
+		return restTemplate.getForEntity(url, boolean.class).getBody();
+	}
+
+	@Override
+	public List<SmsCountCustomizeVO>  getuserIdAnddepartmentName() {
+		SmsCountCustomizeResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/sms_count/getuserIdAnddepartmentName", SmsCountCustomizeResponse.class)
+				.getBody();
+		if(response != null && response.getResultList() != null && response.getResultList().size() > 0){
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<UserVO> selectUserListByMobile(ListRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/sms_count/selectUserListByMobile", request, UserResponse.class)
+				.getBody();
+		if(response != null && response.getResultList() != null){
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+	}
+
+	@Override
+	public void insertBatchSmsCount(ListRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/sms_count/insertBatchSmsCount", request, UserResponse.class)
+				.getBody();
+	}
+
+	@Override
+	public void updateOrDelectRepeatData() {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/sms_count/updateOrDelectRepeatData", UserResponse.class)
+				.getBody();
+	}
+
+	/**
+	 * 短信验证码保存
+	 * @param mobile
+	 * @param checkCode
+	 * @param verificationType
+	 * @param ckcodeNew
+	 * @param platform
+	 */
+	@Override
+	public int saveSmsCode(String mobile, String checkCode, String verificationType, Integer ckcodeNew, int platform) {
+		logger.debug("短信验证码入库, mobile is:　{}", mobile);
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(checkCode);
+		request.setVerificationType(verificationType);
+		request.setStatus(ckcodeNew);
+		request.setPlatform(platform+"");
+		SmsCodeResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/smsCode/saveCode", request, SmsCodeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getCnt();
+		} else {
+			logger.warn("response is null, send fail....");
+			throw new RuntimeException("发送验证码失败...");
+		}
+	}
+
+	@Override
+	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+							   Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(verificationCode);
+		request.setVerificationType(verificationType);
+		request.setPlatform(platform);
+		request.setStatus(searchStatus);
+		request.setUpdateStatus(updateStatus);
+		request.setUpdate(isUpdate);
+		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/smsCode/check/", request, IntegerResponse.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result.getResultInt();
+	}
+
+	/**
+	 * 同步用户手机号
+	 *
+	 * @param userRequest
+	 * @return
+	 */
+	@Override
+	public boolean syncUserMobile(UserRequest userRequest) {
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/syncUserMobile", userRequest, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

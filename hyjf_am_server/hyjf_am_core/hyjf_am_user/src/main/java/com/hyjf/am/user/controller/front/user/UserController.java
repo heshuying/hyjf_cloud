@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
@@ -830,16 +831,19 @@ public class UserController extends BaseController {
         return response;
     }
 
-
     /**
-     *
+     * 查询借款主体CA
+     * @return
      */
-    @PostMapping("/getLoanSubjectCertificateAuthorityList")
-    public LoanSubjectCertificateAuthorityResponse getLoanSubjectCertificateAuthorityList(@RequestBody LoanSubjectCertificateAuthorityRequest request) {
+    @PostMapping("/getSubjectCertificateAuthorityList")
+    public LoanSubjectCertificateAuthorityResponse getSubjectCertificateAuthorityList(@RequestBody CACustomerRequest list) {
         LoanSubjectCertificateAuthorityResponse response = new LoanSubjectCertificateAuthorityResponse();
-        List<LoanSubjectCertificateAuthority> resultList = userService.getLoanSubjectCertificateAuthorityList(request);
+        if(list == null){
+            return response;
+        }
+        List<LoanSubjectCertificateAuthorityVO> resultList = userService.getbatchAuthorityList(list);
         if (CollectionUtils.isNotEmpty(resultList)) {
-            response.setResultList(CommonUtils.convertBeanList(resultList, LoanSubjectCertificateAuthorityVO.class));
+            response.setResultList(resultList);
         }
         return response;
     }
@@ -1115,5 +1119,26 @@ public class UserController extends BaseController {
     }
 
 
+
+    /**
+     *  pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     * @param userId
+     * @return
+     */
+    @PostMapping("/unlockUser/{userId}")
+    public BooleanResponse unlockUser(@PathVariable Integer userId) {
+        logger.info("unlockUser...userId is :{}", userId);
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(true);
+        User user = userService.fUserByUserId(userId);
+        try {
+            userService.updateUnlockUser(user);
+        }catch (Exception e){
+            logger.error("解锁失败，原因",e);
+            response.setResultBoolean(false);
+        }
+
+        return response;
+    }
 
 }

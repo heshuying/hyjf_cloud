@@ -65,6 +65,9 @@ public class AutoMapper {
     protected BorrowApicronMapper borrowApicronMapper;
 
     @Resource
+    protected BorrowApicronLogMapper borrowApicronLogMapper;
+
+    @Resource
     protected BorrowBailMapper borrowBailMapper;
 
     @Resource

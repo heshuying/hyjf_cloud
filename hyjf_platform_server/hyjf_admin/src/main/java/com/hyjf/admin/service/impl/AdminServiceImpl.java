@@ -2,6 +2,8 @@ package com.hyjf.admin.service.impl;
 
 
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AdminService;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -10,8 +12,14 @@ import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @package com.hyjf.admin.maintenance.Admin
@@ -23,6 +31,10 @@ import org.springframework.stereotype.Service;
 public class AdminServiceImpl extends BaseAdminServiceImpl implements AdminService {
 	@Autowired
 	private AmConfigClient amConfigClient;
+
+	@Autowired
+	private CommonProducer commonProducer;
+
 	@Override
 	public AdminUserResponse search(AdminRequest adminRequest) {
 		
@@ -127,5 +139,20 @@ public class AdminServiceImpl extends BaseAdminServiceImpl implements AdminServi
 	@Override
 	public AdminRoleResponse checkAction(AdminRoleRequest bean) {
 		return null;
+	}
+
+	/**
+	 * 当用户被删除或者禁用时，发送MQ处理业务流程配置异常处理
+	 */
+	@Override
+	public void sendAdminUser(Object... adminUserId){
+		Map<String,Object> map = new HashMap<>();
+		try {
+			map.put("adminUserId",adminUserId);
+			commonProducer.messageSend(
+					new MessageContent(MQConstant.WORKFLOW_MESSAGE_TOPIC, UUID.randomUUID().toString(), map));
+		} catch (MQException e) {
+			logger.error("app push send error...", e);
+		}
 	}
 }

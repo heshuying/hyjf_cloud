@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @version BaseHgDataReportEntity, v0.1 2018/6/27 10:06
  */
 @Document(collection = "ht_cert_report_send")
-public class CertReportEntity implements Serializable {
+public class  CertReportEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**

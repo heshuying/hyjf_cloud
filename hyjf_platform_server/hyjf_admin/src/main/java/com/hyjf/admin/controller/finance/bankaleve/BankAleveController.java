@@ -244,14 +244,21 @@ public class BankAleveController {
             public String format(Object object) {
                 if (object instanceof Integer) {
                     String inptimeStr = String.valueOf(object);
-                    if (inptimeStr.length() == 8) {
-                        String[] parts = Iterables.toArray(
-                                Splitter
-                                        .fixedLength(2)
-                                        .split(inptimeStr),
-                                String.class
-                        );
-                        return Joiner.on(":").join(parts);
+                    if (inptimeStr.length() <= 8) {
+                        try {
+                            // 时间不满8位前补0
+                            Integer inptime = Integer.valueOf(inptimeStr);
+                            inptimeStr = String.format("%08d",inptime);
+                            String[] parts = Iterables.toArray(
+                                    Splitter
+                                            .fixedLength(2)
+                                            .split(inptimeStr),
+                                    String.class
+                            );
+                            return Joiner.on(":").join(parts);
+                        } catch (NumberFormatException e) {
+                            return inptimeStr;
+                        }
                     } else {
                         return inptimeStr;
                     }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.ActivityUserGuessCustomizeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.AdminActivityUserGuessVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
+    <result column="grade" property="grade" jdbcType="VARCHAR" />
+    <result column="reward" property="reward" jdbcType="VARCHAR" />
+    <result column="style" property="style" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectGuessUserList" resultMap="BaseResultMap">
+    SELECT
+      ug.user_id,
+      u.username as user_name,
+      ui.truename as true_name,
+      CASE
+      WHEN ug.grade = 1 THEN '1-99名'
+      WHEN ug.grade = 2 THEN '100-999名'
+      WHEN ug.grade = 3 THEN '1000-1999名'
+      ELSE '2000以外' END AS grade,
+      CASE
+      WHEN ug.grade = 1 THEN '2%加息券'
+      WHEN ug.grade = 2 THEN '1.5%加息券'
+      WHEN ug.grade = 3 THEN '1%加息券'
+      ELSE '0.5%加息券' END AS reward,
+      '手动发放' AS style
+      FROM ht_activity_user_guess ug
+      LEFT JOIN hyjf_user.ht_user u ON ug.user_id = u.user_id
+      LEFT JOIN hyjf_user.ht_user_info ui ON ug.user_id = ui.user_id
+      <where>
+       <include refid="where_condition"/>
+      </where>
+      <if test="limitStart >= 0" >
+        LIMIT #{limitStart} , #{limitEnd}
+      </if>
+  </select>
+
+  <select id="countGuessList" resultType="java.lang.Integer">
+    SELECT COUNT(1)
+      FROM ht_activity_user_guess ug
+      LEFT JOIN hyjf_user.ht_user u ON ug.user_id = u.user_id
+      LEFT JOIN hyjf_user.ht_user_info ui ON ug.user_id = ui.user_id
+      <where>
+       <include refid="where_condition"/>
+      </where>
+  </select>
+
+  <sql id="where_condition">
+    <if test="userName != null and userName != ''">
+      AND u.username = #{userName}
+    </if>
+    <if test="trueName != null and trueName != ''">
+      AND ui.truename = #{trueName}
+    </if>
+    <if test="grade != null and grade != ''">
+      AND ug.grade = #{grade}
+    </if>
+
+  </sql>
+
+</mapper>

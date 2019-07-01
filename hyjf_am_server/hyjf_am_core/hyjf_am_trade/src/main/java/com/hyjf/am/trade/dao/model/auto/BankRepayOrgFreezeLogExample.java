@@ -1905,6 +1905,66 @@ public class BankRepayOrgFreezeLogExample {
             addCriterion("update_user_name not between", value1, value2, "updateUserName");
             return (Criteria) this;
         }
+
+        public Criteria andLatePeriodIsNull() {
+            addCriterion("late_period is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodIsNotNull() {
+            addCriterion("late_period is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodEqualTo(Integer value) {
+            addCriterion("late_period =", value, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodNotEqualTo(Integer value) {
+            addCriterion("late_period <>", value, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodGreaterThan(Integer value) {
+            addCriterion("late_period >", value, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodGreaterThanOrEqualTo(Integer value) {
+            addCriterion("late_period >=", value, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodLessThan(Integer value) {
+            addCriterion("late_period <", value, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodLessThanOrEqualTo(Integer value) {
+            addCriterion("late_period <=", value, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodIn(List<Integer> values) {
+            addCriterion("late_period in", values, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodNotIn(List<Integer> values) {
+            addCriterion("late_period not in", values, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodBetween(Integer value1, Integer value2) {
+            addCriterion("late_period between", value1, value2, "latePeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLatePeriodNotBetween(Integer value1, Integer value2) {
+            addCriterion("late_period not between", value1, value2, "latePeriod");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -284,12 +284,17 @@ public class MsgPushHandler {
 			history.setMsgDestinationCountIos(amUserClient.countAliasByClient(CustomConstants.CLIENT_IOS));// IOS目标推送数
 		} else {
 			history.setMsgDestination(userAliasVO.getMobile());
-			if (userAliasVO.getClient().equals(CustomConstants.CLIENT_ANDROID)) {
+			//if (userAliasVO.getClient().equals(CustomConstants.CLIENT_ANDROID)) {
+			String client = userAliasVO.getClient();
+			if (CustomConstants.CLIENT_ANDROID.equals(client)) {
 				history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
 				history.setMsgDestinationCountIos(0);// IOS目标推送数
-			} else if (userAliasVO.getClient().equals(CustomConstants.CLIENT_IOS)) {
+			} else if (CustomConstants.CLIENT_IOS.equals(client)) {
 				history.setMsgDestinationCountAndroid(0);// 安卓目标推送数
 				history.setMsgDestinationCountIos(1);// IOS目标推送数
+			} else {
+				logger.warn("client is null, 无法判断的推送类型, alias is: {}", userAliasVO.getAlias());
+
 			}
 		}
 

@@ -6,6 +6,7 @@
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
         <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR"/>
         <result column="user_role" property="userRole" jdbcType="VARCHAR"/>
         <result column="user_type" property="userType" jdbcType="VARCHAR"/>
         <result column="user_property" property="userProperty" jdbcType="VARCHAR"/>
@@ -36,6 +37,7 @@
         hydu.username AS user_name,
         hydui.truename AS real_name,
         hydu.mobile,
+        hydu.bank_mobile,
         hydu.user_type AS type_id,
         hydui.role_id,
         hydui.attribute,
@@ -118,11 +120,11 @@
 			LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
 			LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
 			LEFT JOIN ht_r_oa_users u ON u.hyd_id = hydsu.spreads_user_id 
-			AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+			AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
             LEFT JOIN ht_r_oa_department d3 ON d3.id = u.departmentid AND d3.id IS NOT NULL
             LEFT JOIN ht_r_oa_department d2 ON d2.id = d3.parentid
             LEFT JOIN ht_r_oa_department d1 ON d1.id = d2.parentid
-            LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+        LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
             LEFT JOIN ht_r_oa_department dd3 ON dd3.id = ou.departmentid AND dd3.id IS NOT NULL
             LEFT JOIN ht_r_oa_department dd2 ON dd2.id = dd3.parentid
             LEFT JOIN ht_r_oa_department dd1 ON dd1.id = dd2.parentid
@@ -203,11 +205,11 @@
 				LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
 				LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
 				LEFT JOIN ht_r_oa_users u ON u.hyd_id = hydsu.spreads_user_id 
-				AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+				AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
 				LEFT JOIN ht_r_oa_department d3 ON d3.id = u.departmentid AND d3.id IS NOT NULL 
 				LEFT JOIN ht_r_oa_department d2 ON d2.id = d3.parentid
 				LEFT JOIN ht_r_oa_department d1 ON d1.id = d2.parentid
-				LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+				LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
 				LEFT JOIN ht_r_oa_department dd3 ON dd3.id = ou.departmentid AND dd3.id IS NOT NULL
 				LEFT JOIN ht_r_oa_department dd2 ON dd2.id = dd3.parentid
 			 	LEFT JOIN ht_r_oa_department dd1 ON dd1.id = dd3.parentid
@@ -239,6 +241,7 @@
         <result column="email" property="email" jdbcType="VARCHAR" />
         <result column="email_status" property="emailStatus" jdbcType="INTEGER" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR" />
         <result column="mobile_status" property="mobileStatus" jdbcType="INTEGER" />
         <result column="real_name" property="realName" jdbcType="VARCHAR" />
         <result column="real_name_status" property="realNameStatus" jdbcType="INTEGER" />
@@ -289,6 +292,7 @@
         hydu.email,
         hydui.email_isApprove AS email_status,
         hydu.mobile,
+        hydu.bank_mobile,
         hydui.mobile_isApprove AS mobile_status,
         hydui.truename AS real_name,
         hydui.truename_isApprove AS real_name_status,
@@ -310,7 +314,7 @@
         LEFT JOIN ht_utm_plat hydup1 ON hydup1.source_id = hydutm.source_id
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
         LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
-        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' , 'Q4', 'Q41')
         LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
         LEFT JOIN ht_user_login_log hull ON  hydu.user_id = hull.user_id
         WHERE

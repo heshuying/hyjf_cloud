@@ -152,6 +152,8 @@ public class BatchBorrowRepayController extends BaseController{
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","项目编号");
+        map.put("seqNo","交易流水号");
+        map.put("bankSeqNo","银行交易流水号");
         map.put("instName","资产来源");
         map.put("batchNo","批次号");
         map.put("isRepayOrgFlag","还款角色");

@@ -642,4 +642,33 @@ public interface AmUserClient {
 	 * @return
 	 */
     UtmVO selectUtmBySourceId(String utmId);
+
+	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 * @param userId
+	 */
+	void unlockUser(Integer userId);
+
+	/**
+	 * 插入修改银行预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	boolean insertBankMobileModify(BankMobileModifyVO vo);
+
+	/**
+	 * 更新用户银行预留手机号
+	 *
+	 * @param userId
+	 * @param newBankMobile
+	 */
+    boolean updateBankMobileByUserId(int userId, String newBankMobile);
+
+	/**
+	 * 更新用户修改预留手机号日志表
+	 * @param vo
+	 * @return
+	 */
+	boolean updateBankMobileModify(BankMobileModifyVO vo);
 }

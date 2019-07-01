@@ -32,6 +32,7 @@ public class RepayRecoverPlanBean extends BorrowRecoverPlan implements Serializa
 
 	private BigDecimal creditAmountOld;
 
+	private BigDecimal chargePenaltyInterestOld;
 
 	public BigDecimal getRecoverTotal() {
 		return recoverTotal;
@@ -111,5 +112,13 @@ public class RepayRecoverPlanBean extends BorrowRecoverPlan implements Serializa
 
 	public void setCreditAmountOld(BigDecimal creditAmountOld) {
 		this.creditAmountOld = creditAmountOld;
+	}
+
+	public BigDecimal getChargePenaltyInterestOld() {
+		return chargePenaltyInterestOld;
+	}
+
+	public void setChargePenaltyInterestOld(BigDecimal chargePenaltyInterestOld) {
+		this.chargePenaltyInterestOld = chargePenaltyInterestOld;
 	}
 }

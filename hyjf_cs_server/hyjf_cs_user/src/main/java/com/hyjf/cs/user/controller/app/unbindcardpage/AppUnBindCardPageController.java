@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.controller.app.unbindcardpage;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -22,6 +21,7 @@ import com.hyjf.cs.user.controller.web.bindcard.WebBindCardPageController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -126,7 +126,7 @@ public class AppUnBindCardPageController extends BaseUserController {
                 || ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))
                 || (Validator.isNotNull(account.getBankTotal()) && account.getBankTotal().compareTo(BigDecimal.ZERO) > 0)) {
             ret.put("status", "1");
-            ret.put("statusDesc", "抱歉，银行卡解绑错误，请联系客服！");
+            ret.put("statusDesc", "不符合银行卡解绑规则");
             return ret;
         }
         // 根据银行卡Id获取用户的银行卡信息
@@ -139,7 +139,7 @@ public class AppUnBindCardPageController extends BaseUserController {
         try {
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            String RECHARGE_URL = super.getFrontHost(systemConfig, platform) + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
+            String RECHARGE_URL = BankCommonUtil.getFrontHost(systemConfig, platform) + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
             StringBuffer sbUrl = new StringBuffer(RECHARGE_URL);
             sbUrl.append("&").append("version").append("=").append(version);
             sbUrl.append("&").append("netStatus").append("=").append(netStatus);
@@ -209,7 +209,7 @@ public class AppUnBindCardPageController extends BaseUserController {
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         deleteCardPageBean.setPlatform(request.getParameter("platform"));
         //调用解绑银行卡接口
-        Map<String, Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean, BankCallConstant.CHANNEL_APP, sign, request);
+        Map<String, Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean, BankCallConstant.CHANNEL_APP, sign, request,null);
         result.setStatus(BaseResult.SUCCESS);
         result.setData(data);
         return result;

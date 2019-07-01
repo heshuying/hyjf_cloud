@@ -175,6 +175,11 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
     }
 
     @Override
+    public int countBorrowRepaymentPlan(BorrowRepaymentRequest request) {
+        return this.amTradeClient.countBorrowRepaymentPlan(request);
+    }
+
+    @Override
     public List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request) {
         return  this.amTradeClient.selectBorrowRepaymentPlanList(request);
     }
@@ -246,5 +251,30 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
 
 		return   this.amTradeClient.countBorrowRepayment(request);
     }
-  
+    @Override
+    public RepayInfoBean getRepayInfo2(String borrowNid) {
+        RepayInfoBean bean=new RepayInfoBean();
+        AdminRepayDelayCustomizeVO repayDelay = this.amTradeClient.selectBorrowInfo(borrowNid);
+        bean.setBorrowRepayInfo(repayDelay);
+//        String userId = repayDelay.getUserId();
+//        AccountVO account = this.amTradeClient.getAccountByUserId(Integer.parseInt(userId));
+//        // 借款人账户余额
+//        BigDecimal balance = account.getBankBalance();
+//        bean.setBalance(balance);
+        
+        // 单期标
+//        if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
+//            BorrowRepayBeanVO borrowRepay = this.amTradeClient.getBorrowRepayInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+//            bean.setRepayInfo(borrowRepay);
+//        } else {// 多期标
+//            BorrowRepayPlanBeanVO borrowRepayPlan = this.amTradeClient.getBorrowRepayPlanInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+//            bean.setRepayInfo(borrowRepayPlan);
+//            
+            BorrowRepaymentRequest request=new BorrowRepaymentRequest();
+            request.setBorrowNid(borrowNid);
+			List<BorrowRepaymentPlanCustomizeVO> re = amTradeClient.selectBorrowRepaymentPlanList(request);
+			bean.setList(re);
+        //}
+        return bean;
+    }
 }

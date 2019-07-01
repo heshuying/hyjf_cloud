@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.wechat.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -13,12 +14,15 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.BankCardUtil;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -170,7 +174,25 @@ public class WechatBankWithdrawController extends BaseTradeController {
 
         return resultBean;
     }
-
+    /**
+     * 用户银行提现校验
+     * @param userId
+     * @param sign
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "用户银行提现校验", notes = "用户提现校验")
+    @PostMapping("/userBankWithdrawCheck.do")
+    public WeChatResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
+        // 交易金额
+        String withdrawMoney = request.getParameter("withdrawMoney");
+        withdrawMoney = StringUtils.isBlank(withdrawMoney) ? "0" : withdrawMoney;
+        logger.info("提现金额:" + withdrawMoney);
+        WebResult<Object> webResult =  bankWithdrawService.userBankWithdrawCheck(userId, withdrawMoney);
+        WeChatResult<Object> objectWebResult = new WeChatResult<Object>();
+        objectWebResult.setData(webResult.getData());
+        return objectWebResult;
+    }
 
 
     /**
@@ -182,7 +204,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/withdraw.do")
-    public WeChatResult userBankWithdraw(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,
+    public WeChatResult userBankWithdraw(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,
                                          HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
         logger.info("weChat端提现接口, userId is :{}", userId);
@@ -190,23 +212,54 @@ public class WechatBankWithdrawController extends BaseTradeController {
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
         String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
+        UserVO userVO = bankWithdrawService.getUserByUserId(user.getUserId());
         //是否设置交易密码、是否汇付开户、是否银行开户
-        CheckUtil.check(null!=userVO,MsgEnum.ERR_USER_NOT_EXISTS);
-        CheckUtil.check(1==userVO.getIsSetPassword(),MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
-        CheckUtil.check(1==userVO.getBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        CheckUtil.check(null != userVO, MsgEnum.ERR_USER_NOT_EXISTS);
+        CheckUtil.check(1 == userVO.getIsSetPassword(), MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        CheckUtil.check(1 == userVO.getBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO = bankWithdrawService.getWithdrawRuleConfig(userId, transAmt);
+        if (withdrawRuleConfigVO == null) {
+            String statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            // 个人用户
+//            if (user.getUserType() == 0 &&
+//                    new BigDecimal(transAmt).compareTo(new BigDecimal(systemConfig.getPersonalWithdrawLimit())) > 0) {
+//                // 提现金额> 个人最大提现金额
+//                logger.info("个人提现金额超限");
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getPersonalWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else if (user.getUserType() == 1 && new BigDecimal(transAmt).compareTo(new BigDecimal(systemConfig.getCompanyWithdrawLimit())) > 0) {
+//                statusDesc = "非工作时间提现,超过单笔最大提现金额" + new BigDecimal(systemConfig.getCompanyWithdrawLimit()).divide(new BigDecimal(10000)) + "万元";
+//            } else {
+//                statusDesc = "提现金额超限，请参考提现温馨提示。";
+//            }
+            throw new CheckException(statusDesc);
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
-        String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/handing?token=1";
+        String host = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,wjtClient);
+        }
+        String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, request, systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, request, systemConfig);
+        }
+        String retUrl = host + "/user/withdraw/result/handing?token=1";
         String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
-        String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/handing?token=1";
-        String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
+        String successfulUrl = host + "/user/withdraw/result/handing?token=1";
+
+
+
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, transAmt, cardNo, payAllianceCode, CommonConstant.CLIENT_WECHAT, BankCallConstant.CHANNEL_WEI, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl, withdrawRuleConfigVO);
         if (null == bean) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         try {
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {

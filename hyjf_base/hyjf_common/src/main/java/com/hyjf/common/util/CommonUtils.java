@@ -1,31 +1,26 @@
 package com.hyjf.common.util;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.validator.Validator;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author xiasq
@@ -220,7 +215,7 @@ public class CommonUtils {
 		Pattern p = null;
 		Matcher m = null;
 		boolean b = false;
-		p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
+		p = Pattern.compile("^[1][3,4,5,6,7,8][0-9]{9}$"); // 验证手机号
 		m = p.matcher(str);
 		b = m.matches();
 		return b;
@@ -277,8 +272,8 @@ public class CommonUtils {
 			try {
 				amount = new BigDecimal(money);
 			} catch (Exception e) {
-				logger.info("money is : {}", money);
-				logger.error("金额转换失败...", e);
+				//logger.info("money is : {}", money);
+				//logger.error("金额转换失败...", e);
 				return money;
 			}
 			return formatAmount(version, amount);
@@ -494,5 +489,36 @@ public class CommonUtils {
 			}
 		}
 		return bolStr;
+	}
+
+	/**
+	 * 数字格式化为以万和亿为单位i
+	 * @param num
+	 * @return
+	 */
+	public static Map<String,String> formatNum(BigDecimal num) {
+		Map<String,String> resultMap = new HashMap<>();
+		StringBuffer sb = new StringBuffer();
+		BigDecimal b1 = new BigDecimal("10000");
+		BigDecimal b2 = new BigDecimal("100000000");
+
+		String unit = "";
+
+
+		// 以万为单位处理
+		if (num.compareTo(b1) == -1) {
+			unit = "";
+		} else if ((num.compareTo(b1) == 0 || num.compareTo(b1) == 1)
+				&& num.compareTo(b2) == -1) {
+			num = num.divide(b1);
+			unit = "万";
+		} else if (num.compareTo(b2) == 0 || num.compareTo(b2) == 1) {
+			num = num.divide(b2);
+			unit = "亿";
+		}
+
+		resultMap.put("data", num.setScale(2, BigDecimal.ROUND_DOWN).toString());
+		resultMap.put("unit", unit);
+		return resultMap;
 	}
 }

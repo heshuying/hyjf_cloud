@@ -91,6 +91,14 @@ public class AdminUserController extends BaseController {
 		adminRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
 		AdminUserResponse ap = adminService.updateAction(adminRequest);
 		if (Response.isSuccess(ap)) {
+			//当用户为禁用的时候发送
+			if(adminRequest.getState() != null && "1".equals(adminRequest.getState())){
+				//当用户被删除或者禁用时，发送MQ处理业务流程配置异常处理
+				if(adminRequest.getId() != null){
+					adminService.sendAdminUser(adminRequest.getId());
+				}
+
+			}
 			return new AdminResult<>();
 		}
 		return new AdminResult<>(FAIL, ap.getMessage());
@@ -110,6 +118,10 @@ public class AdminUserController extends BaseController {
 		adminRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
 		AdminUserResponse ap = adminService.deleteRecordAction(adminRequest);
 		if (Response.isSuccess(ap)) {
+			//当用户被删除或者禁用时，发送MQ处理业务流程配置异常处理
+			if(adminRequest.getIds() != null && adminRequest.getIds().size() > 0){
+				adminService.sendAdminUser(adminRequest.getIds().toArray());
+			}
 			return new AdminResult<>();
 		}
 		return new AdminResult<>(FAIL, ap.getMessage());
@@ -150,6 +162,7 @@ public class AdminUserController extends BaseController {
 		}
 		return new AdminResult<>(FAIL, ap.getMessage());
 	}
+
 	/**
 	 * 菜单管理画面初始化
 	 *

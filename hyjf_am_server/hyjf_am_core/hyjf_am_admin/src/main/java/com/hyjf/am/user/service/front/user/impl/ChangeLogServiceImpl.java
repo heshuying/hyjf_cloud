@@ -3,11 +3,13 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.hyjf.am.user.dao.model.auto.UserChangeLog;
 import com.hyjf.am.user.dao.model.auto.UserChangeLogExample;
 import com.hyjf.am.user.dao.model.customize.ChangeLogCustomize;
+import com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize;
 import com.hyjf.am.user.service.front.user.ChangeLogService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -90,4 +92,70 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
         return changeLogCustomizeMapper.queryChangeLogCount(userChangeLog);
     }
 
+    /**
+     * 新增用户信息修改记录数
+     *
+     * @param userChangeLog
+     * @return
+     */
+    @Override
+    public boolean insertSelective(ChangeLogCustomize userChangeLog) {
+        if (userChangeLog!=null) {
+            if(userChangeLog.getUserId()==null||userChangeLog.getUtmName()==null){
+                logger.info("用户信息修改日志保存失败! 数据为空：UserId：【"+userChangeLog.getUserId()+"】  UtmName：【"+userChangeLog.getUtmName()+"】");
+                return false;
+            }
+            // 插入操作日志表
+            ChangeLogCustomize changeLog = new ChangeLogCustomize();
+            List<UserInfoForLogCustomize> users = userManagerCustomizeMapper.selectUserInfoByUserId(userChangeLog.getUserId());
+            UserInfoForLogCustomize logRecord = users.get(0);
+            changeLog.setUserId(logRecord.getUserId());
+            changeLog.setUsername(logRecord.getUserName());
+            changeLog.setAttribute(String.valueOf(logRecord.getAttribute()));
+            changeLog.setIs51(logRecord.getIs51());
+            changeLog.setRealName(logRecord.getRealName());
+            changeLog.setRecommendUser(logRecord.getRecommendName());
+            changeLog.setUpdateType(2);//2用户信息修改
+            changeLog.setMobile(logRecord.getMobile());
+            changeLog.setRole(logRecord.getUserRole());
+            changeLog.setStatus(logRecord.getUserStatus());
+            changeLog.setIdcard(logRecord.getIdCard());
+            changeLog.setUtmName(userChangeLog.getUtmName());
+            changeLog.setRemark(userChangeLog.getRemark());
+            changeLog.setUtmType(userChangeLog.getUtmType());
+            changeLog.setUtmSourceId(userChangeLog.getUtmSourceId());
+            if (users != null && !users.isEmpty()) {
+                changeLog.setRemark("渠道修改");
+                changeLog.setUpdateUser(userChangeLog.getLoginUserName());
+                changeLog.setUpdateUserid(userChangeLog.getLoginUserId());
+                changeLog.setUpdateTime(new Date());
+                ChangeLogCustomize changeLogByUser = new ChangeLogCustomize();
+                changeLogByUser.setUserId(logRecord.getUserId());
+                // 判断是否为第一次修改
+                int userLogCount =  changeLogCustomizeMapper.queryChangeLogByUserIdCount(changeLogByUser);
+                // 修改渠道
+                int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
+                // 没有过修改记录且用户有渠道的多增加一条原渠道记录
+                // if(userLogCount < 1 && !("NoChannelInformation").equals(userChangeLog.getSourceIdWasName())){
+                // 根据测试给的需求变动更改为没有过修改记录的多增加一条原渠道记录
+                if(userLogCount < 1){
+                    // 原渠道记录
+                    changeLog.setRemark("该记录为用户原渠道记录");
+                    changeLog.setUtmName(userChangeLog.getSourceIdWasName());
+                    int userLogFlgWas =  changeLogCustomizeMapper.insertSelective(changeLog);
+                    if (userLogFlgWas > 0) {
+                        logger.info("==================用户信息修改日志保存成功!（原渠道信息新增）======");
+                    } else {
+                        throw new RuntimeException("============用户信息修改日志保存失败!========");
+                    }
+                }
+                if (userLogFlg > 0) {
+                    logger.info("==================用户信息修改日志保存成功!======");
+                } else {
+                    throw new RuntimeException("============用户信息修改日志保存失败!========");
+                }
+            }
+        }
+       return true;
+    }
 }

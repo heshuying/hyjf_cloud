@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.controller.app.user.calendar;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.calendar.RepayCalendarService;
 import io.swagger.annotations.Api;
@@ -105,6 +106,9 @@ public class RepayCalendarController extends BaseTradeController {
         if (recordTotal > 0) {
             //查询回款日历明细
             List<AppReapyCalendarResultVO> repayPlanDetail = repayCalendarService.searchRepaymentCalendar(params);
+            for (AppReapyCalendarResultVO appReapyCalendarResultVO : repayPlanDetail) {
+            	appReapyCalendarResultVO.setLabel(FormatRateUtil.formatBorrowApr(appReapyCalendarResultVO.getLabel()));
+			}
             //返回用户最近回款时间戳-秒
             info.put("beginTime", repayCalendarService.searchNearlyRepaymentTime(params));
 

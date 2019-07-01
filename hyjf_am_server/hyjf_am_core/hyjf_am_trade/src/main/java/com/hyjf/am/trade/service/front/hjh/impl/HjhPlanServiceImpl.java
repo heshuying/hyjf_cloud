@@ -205,11 +205,17 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
 
     @Override
     public Map<String, Object> getPlanAccecdeTotal(Map<String, Object> params) {
+        //add by nxl 显示最后三天服务记录
+        Map<String,Object> mapParam = getLastDays(params.get("planNid").toString());
+        params.putAll(mapParam);
         return hjhPlanCustomizeMapper.getPlanAccedeTotal(params);
     }
 
     @Override
     public List<HjhAccedeCustomizeVO> getPlanAccecdeList(Map<String, Object> params) {
+        //add by nxl 显示最后三天服务记录
+        Map<String,Object> mapParam = getLastDays(params.get("planNid").toString());
+        params.putAll(mapParam);
         return hjhPlanCustomizeMapper.getPlanAccedeList(params);
     }
 
@@ -286,6 +292,9 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      */
     @Override
     public List<DebtPlanAccedeCustomize> selectPlanAccedeList(Map<String, Object> params) {
+        //add by nxl 显示最后三天服务记录
+        Map<String,Object> mapParam = getLastDays(params.get("planNid").toString());
+        params.putAll(mapParam);
         List<DebtPlanAccedeCustomize> planAccedeList = this.hjhPlanCustomizeMapper.selectPlanAccedeList(params);
         return planAccedeList;
     }
@@ -408,7 +417,28 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      */
     @Override
     public Integer countPlanAccedeRecord(String  planNid) {
-        Integer countPlanAccedeRecord = this.hjhPlanCustomizeMapper.countPlanAccedeRecord(planNid);
+        //add by nxl 显示最后三天服务记录
+        Map<String,Object> mapParam = getLastDays(planNid);
+        mapParam.put("planNid",planNid);
+        Integer countPlanAccedeRecord = this.hjhPlanCustomizeMapper.countPlanAccedeRecord(mapParam);
         return countPlanAccedeRecord;
+    }
+
+    /**
+     * 获取最后三天的开始以及结束日期
+     * add by nxl
+     * @param planNid
+     * @return
+     */
+    public Map<String,Object> getLastDays(String  planNid){
+        List<HjhAccedeCustomizeVO> accList = hjhPlanCustomizeMapper.selectLastThreeDate(planNid);
+        Map<String,Object> mapParam = new HashMap<String,Object>();
+        if(null!=accList&&accList.size()>0){
+            String startTime= accList.get(accList.size()-1).getAccedeTime()+" 00:00:00";
+            String endTime = accList.get(0).getAccedeTime()+" 23:59:59";
+            mapParam.put("startTime",startTime);
+            mapParam.put("endTime",endTime);
+        }
+        return mapParam;
     }
 }

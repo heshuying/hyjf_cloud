@@ -454,4 +454,146 @@
      ) b
   </select>
 
+	<select id="getActivityInvestAmount" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(account)
+		FROM
+		(
+		SELECT
+		br.account AS account
+		FROM
+		ht_borrow_tender br
+		WHERE
+		br.accede_order_id IS NULL
+		AND br.create_time <![CDATA[>=]]> #{startTime}
+		AND br.create_time <![CDATA[<=]]> #{endTime}
+		UNION ALL
+		SELECT
+		a.accede_account AS account
+		FROM
+		ht_hjh_accede a
+		WHERE
+		a.create_time <![CDATA[>=]]> #{startTime}
+		AND a.create_time <![CDATA[<=]]> #{endTime}
+		) AS t;
+	</select>
+
+	<select id="getAnnualInvestAmount" resultType="java.math.BigDecimal">
+		SELECT SUM(account)
+        FROM(
+		SELECT IFNULL(
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+				ROUND( IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,2)
+				END,0) + IFNULL(
+				CASE
+				WHEN hb.borrow_style <![CDATA[<>]]>  'endday' THEN
+				ROUND(IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 12,2)
+				END,0) AS account
+		FROM
+			ht_borrow_tender hbt
+		LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+		WHERE
+			hbt.accede_order_id IS NULL
+		AND hbt.user_id = #{userId,jdbcType=INTEGER}
+		AND hbt.create_time <![CDATA[>=]]> #{startTime}
+		AND hbt.create_time <![CDATA[<=]]> #{endTime}
+	) t
+	</select>
+
+	<select id="getPlanAnnualAmount" resultType="java.math.BigDecimal">
+		SELECT IFNULL(
+				(SELECT
+		    sum(IFNULL(
+		    CASE
+		    WHEN hhp.is_month = '0' THEN
+		    IFNULL(
+		    ROUND(
+		    IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 360,
+		    2
+		    ),
+		    0
+		    )
+		    END,
+		    0
+		    ) + IFNULL(
+		    CASE
+		    WHEN hhp.is_month = '1' THEN
+		    ROUND(
+		    IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 12,
+		    2
+		    )
+		    END,
+		    0
+		    ) )AS mPlanAccount
+		    FROM
+		    ht_hjh_plan hhp
+		    LEFT JOIN ht_hjh_accede hha ON hhp.plan_nid = hha.plan_nid
+		    WHERE
+		    hha.user_id = #{userId,jdbcType=INTEGER}
+		    AND hha.create_time <![CDATA[>=]]> #{startTime}
+		    AND hha.create_time <![CDATA[<=]]> #{endTime}
+		    ),0)
+	</select>
+
+	<select id="getUserInvestAmount" resultType="java.math.BigDecimal">
+		SELECT SUM(t.account) FROM (
+		 	SELECT IFNULL(SUM(IFNULL(hbt.account,0)),0) AS account
+			 FROM ht_borrow_tender hbt
+			 WHERE hbt.user_id = #{userId,jdbcType=INTEGER}
+				AND hbt.create_time <![CDATA[>=]]> #{startTime}
+				AND hbt.create_time <![CDATA[<=]]> #{endTime}
+				AND hbt.accede_order_id IS NULL
+				<if test="client != null and client != ''">
+					AND hbt.client = #{client,jdbcType=INTEGER}
+				</if>
+
+		   UNION ALL
+
+			SELECT IFNULL(SUM(IFNULL(hha.accede_account,0)),0) AS account
+			FROM `ht_hjh_accede`  hha
+			   WHERE  hha.user_id = #{userId,jdbcType=INTEGER}
+				AND hha.create_time <![CDATA[>=]]> #{startTime}
+				AND hha.create_time <![CDATA[<=]]> #{endTime}
+				<if test="client != null and client != ''">
+					AND hha.client = #{client,jdbcType=INTEGER}
+				</if>
+			 ) AS t
+	</select>
+
+
+	<resultMap id="sumAnnualInvestAmountTop5Map" type="com.hyjf.am.vo.activity.UserTenderVO">
+		<result column="userId" property="user_id" jdbcType="INTEGER" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<select id="getSumAnnualInvestAmountTop5" resultMap="sumAnnualInvestAmountTop5Map">
+		SELECT t.user_id, r.mobile, SUM(t.account) AS amount FROM (
+			SELECT hbt.user_id, hbt.create_time, IFNULL(CASE WHEN hb.borrow_style = 'endday' THEN ROUND( IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,2) END,0)
+						   + IFNULL(CASE WHEN hb.borrow_style <![CDATA[<>]]>  'endday' THEN ROUND(IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 12,2) END,0) AS account
+					FROM
+					 ht_borrow_tender hbt
+				 LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+					WHERE hbt.accede_order_id IS NULL
+					AND hbt.create_time <![CDATA[>=]]> #{startTime}
+					AND hbt.create_time <![CDATA[<=]]> #{endTime}
+
+			 UNION ALL
+
+			SELECT hha.user_id, hhp.create_time, IFNULL(CASE WHEN hhp.is_month = '0' THEN
+						IFNULL(ROUND(IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 360,2), 0) END, 0 ) + IFNULL(
+						CASE WHEN hhp.is_month = '1' THEN
+						ROUND(IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 12,2) END,0)  AS account
+						FROM
+						ht_hjh_plan hhp
+						LEFT JOIN ht_hjh_accede hha ON hhp.plan_nid = hha.plan_nid
+						WHERE hha.create_time <![CDATA[>=]]> #{startTime}
+						AND hha.create_time <![CDATA[<=]]> #{endTime}
+			) AS t
+			 left join ht_r_user r on r.user_id = t.user_id
+			 GROUP BY user_id having SUM(t.account)>=200000	ORDER BY SUM(t.account) DESC,max(t.create_time) ASC LIMIT 5
+	</select>
+
+
 </mapper>

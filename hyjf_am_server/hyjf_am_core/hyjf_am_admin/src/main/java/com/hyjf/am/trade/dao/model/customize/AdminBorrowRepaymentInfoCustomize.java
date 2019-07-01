@@ -59,7 +59,127 @@ public class AdminBorrowRepaymentInfoCustomize extends BaseVO implements Seriali
     private String repayBatchNo; //还款批次号
     private String instName; //机构名称
 
-    /**
+    private String repayAccountAll;
+    private String repayAccountCapital;
+    private String repayAccountInterest;
+    private String borrowManager;
+    private String chargeDays;
+    private String jianxi;
+    private String chargeInterest;
+    private String lateDays;
+    private String lateInterest;
+    private String repayMoneySource;
+    private String repayUsername;
+    private String autoRepay;
+    private String submitter;
+    
+    
+    
+    public String getRepayAccountAll() {
+		return repayAccountAll;
+	}
+
+	public void setRepayAccountAll(String repayAccountAll) {
+		this.repayAccountAll = repayAccountAll;
+	}
+
+	public String getRepayAccountCapital() {
+		return repayAccountCapital;
+	}
+
+	public void setRepayAccountCapital(String repayAccountCapital) {
+		this.repayAccountCapital = repayAccountCapital;
+	}
+
+	public String getRepayAccountInterest() {
+		return repayAccountInterest;
+	}
+
+	public void setRepayAccountInterest(String repayAccountInterest) {
+		this.repayAccountInterest = repayAccountInterest;
+	}
+
+	public String getBorrowManager() {
+		return borrowManager;
+	}
+
+	public void setBorrowManager(String borrowManager) {
+		this.borrowManager = borrowManager;
+	}
+
+	public String getChargeDays() {
+		return chargeDays;
+	}
+
+	public void setChargeDays(String chargeDays) {
+		this.chargeDays = chargeDays;
+	}
+
+	public String getJianxi() {
+		return jianxi;
+	}
+
+	public void setJianxi(String jianxi) {
+		this.jianxi = jianxi;
+	}
+
+	public String getChargeInterest() {
+		return chargeInterest;
+	}
+
+	public void setChargeInterest(String chargeInterest) {
+		this.chargeInterest = chargeInterest;
+	}
+
+	public String getLateDays() {
+		return lateDays;
+	}
+
+	public void setLateDays(String lateDays) {
+		this.lateDays = lateDays;
+	}
+
+	public String getLateInterest() {
+		return lateInterest;
+	}
+
+	public void setLateInterest(String lateInterest) {
+		this.lateInterest = lateInterest;
+	}
+
+	public String getRepayMoneySource() {
+		return repayMoneySource;
+	}
+
+	public void setRepayMoneySource(String repayMoneySource) {
+		this.repayMoneySource = repayMoneySource;
+	}
+
+	public String getRepayUsername() {
+		return repayUsername;
+	}
+
+	public void setRepayUsername(String repayUsername) {
+		this.repayUsername = repayUsername;
+	}
+
+	public String getAutoRepay() {
+		return autoRepay;
+	}
+
+	public void setAutoRepay(String autoRepay) {
+		this.autoRepay = autoRepay;
+	}
+
+	public String getSubmitter() {
+		return submitter;
+	}
+
+	public void setSubmitter(String submitter) {
+		this.submitter = submitter;
+	}
+
+	/**
      * 还款冻结订单号
      */
     private String freezeOrderId;

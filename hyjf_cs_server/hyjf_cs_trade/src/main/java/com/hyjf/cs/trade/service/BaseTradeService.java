@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -11,6 +12,7 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.BaseBean;
 
@@ -210,5 +212,41 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     boolean writeZip(StringBuffer sb, String zipName);
+
+
+    /**
+     * 用户提现校验
+     *
+     * @param userId
+     * @param withdrawMoney
+     * @return
+     */
+    WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawMoney);
+
+
+
+    /**
+     * 获取提现规则配置
+     *
+     * @param userId
+     * @param withdrawMoney
+     * @return
+     */
+    WithdrawRuleConfigVO getWithdrawRuleConfig(int userId, String withdrawMoney);
+    /**
+     * 资金支出校验共通方法
+     * @param userId
+     * @param accountMoney
+     * @return boolean
+     */
+    boolean capitalExpendituresCheck(Integer userId, BigDecimal accountMoney);
+
+    /**
+     * 获得江西银行的账面余额  调用江西银行接口
+     * @param userId
+     * @param accountId
+     * @return bigDecimal
+     */
+    BigDecimal getBankCurrBal(Integer userId, String accountId);
 
 }

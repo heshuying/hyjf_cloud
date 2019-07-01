@@ -3,8 +3,10 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
+import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.ScreenDataCustomizeMapper;
@@ -40,6 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -59,8 +62,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Autowired
     ScreenDataCustomizeMapper screenDataCustomizeMapper;
     @Autowired
+    AppUtmRegMapper appUtmRegMapper;
+    @Autowired
     private CommonProducer smsProducer;
-
     @Autowired
     SystemConfig systemConfig;
     /**
@@ -115,10 +119,13 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             this.insertSpreadsUser(userId, refferUser.getUserId(), loginIp);
         }
 
+        // 5. 注册用户有推荐人并插入推荐人对应渠道信息 否则 有推广，插入utmReg表
+        this.insertRefferUtmReg(refferUser,user,utmId,platform,attribute);
+
         // 5. 有推广，插入utmReg表
-        if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
-            this.insertUtmReg(userId, utmId);
-        }
+        //if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
+        //    this.insertUtmReg(userId, utmId);
+        //}
 
         // 6. 保存用户注册日志
         this.insertRegLog(userId, loginIp);
@@ -129,6 +136,69 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         return user;
     }
 
+    /**
+     * 用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道
+     * 推荐人ID ： refferUserId
+     * 注册用户ID ： userId
+     * 前端回传固定渠道信息 ： utmId
+     * 前端回传客户端类型 ： platform
+     * */
+    @Override
+    public void insertRefferUtmReg(User refferUser, User user, String utmId, String platform, Integer attribute){
+        Boolean refferUtmFlag = true;
+        // 判断是否为线下线上员工（是员工走以下逻辑）
+        if(attribute!=null&&attribute == 1){
+            // 推荐人不为空时
+            if (refferUser != null) {
+                String regUtmid;
+                // 查询推荐人渠道（PC）
+                UtmReg reg = this.findUtmRegByUserId(refferUser.getUserId());
+                // 查询推荐人渠道（APP）
+                AppUtmReg appUtmRegVO = this.findAppUtmRegByUserId(refferUser.getUserId());
+                // 判断推荐人渠道是pc还是app
+                if(reg != null){
+                    // 插入一条新数据 （PC）
+                    // 类型转换
+                    regUtmid = String.valueOf(reg.getUtmId());
+                    // 是否为空
+                    if (StringUtils.isNotEmpty(regUtmid) &&  Validator.isNumber(regUtmid) && !(platform.equals(String.valueOf(ClientConstants.APP_CLIENT)) || platform.equals(String.valueOf(ClientConstants.APP_CLIENT_IOS)))) {
+                        // 插入推荐人渠道
+                        this.insertUtmReg(user.getUserId(), regUtmid);
+                        // 不再进行默认渠道插入
+                        refferUtmFlag = false;
+                        logger.info("插入推荐人渠道 如果有推荐人（PC），用户注册渠道=推荐人注册渠道 userId：" + user.getUserId() +"  regUtmid： "+ regUtmid);
+                    }
+                }else if(appUtmRegVO != null && !(platform.equals(String.valueOf(ClientConstants.APP_CLIENT)) || platform.equals(String.valueOf(ClientConstants.APP_CLIENT_IOS)))){
+                    // 插入一条新数据 （APP）
+                    AppUtmReg appUtmRegIns = new AppUtmReg();
+                    appUtmRegIns.setSourceId(appUtmRegVO.getSourceId());
+                    appUtmRegIns.setSourceName(appUtmRegVO.getSourceName());
+                    appUtmRegIns.setUserId(user.getUserId());
+                    appUtmRegIns.setUserName(user.getUsername());
+                    appUtmRegIns.setInvestAmount(new BigDecimal(0.00));
+                    appUtmRegIns.setFirstInvestTime(0);
+                    appUtmRegIns.setRegisterTime(new Date());
+                    appUtmRegIns.setCumulativeInvest(BigDecimal.ZERO);
+                    // app渠道
+                    this.insertAppUtmReg(appUtmRegIns);
+                    logger.info("插入推荐人渠道 如果有推荐人（APP），用户注册渠道=推荐人注册渠道 userId：" + user.getUserId() +"  regUtmid： "+ appUtmRegVO.getSourceName());
+                }else {
+                    logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人渠道为空！ （走默认推广）");
+                }
+            }else{
+                logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人为空！ （走默认推广）");
+            }
+        }else{
+            logger.info("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人非员工！ （走默认推广）");
+        }
+        if(refferUtmFlag){
+            // 默认推广，插入utmReg表
+            if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
+                this.insertUtmReg(user.getUserId(), utmId);
+                logger.info("插入推荐人渠道 默认推广 userId：" + user.getUserId() +"  utmId： "+ utmId);
+            }
+        }
+    }
 
     /** 获取唯一username */
     @Override
@@ -283,32 +353,32 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public void updateUser(int userId, String ip,User user) {
-        UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
-        if (userLoginLog == null) {
-            userLoginLog = new UserLoginLog();
-            userLoginLog.setUserId(userId);
-            userLoginLog.setLoginIp(ip);
-            userLoginLog.setLoginTime(new Date());
-            userLoginLog.setLastIp(userLoginLog.getLoginIp());
-            userLoginLog.setLastTime(userLoginLog.getLoginTime());
-            userLoginLog.setLoginTimes(1);
-            userLoginLog.setCreateTime(new Date());
-            userLoginLogMapper.insertSelective(userLoginLog);
-        } else {
-            if (userLoginLog.getLoginIp() != null) {
-                userLoginLog.setLastIp(userLoginLog.getLoginIp());
-            }
-            if (userLoginLog.getLoginTime() != null) {
-                userLoginLog.setLastTime(userLoginLog.getLoginTime());
-            }
-            userLoginLog.setLoginIp(ip);
-            userLoginLog.setLoginTime(new Date());
-            // 登录次数
-            userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);
-            userLoginLog.setUpdateTime(new Date());
-            userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
-        }
+        updateLoginUser(userId, ip);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     *
+     * @param user
+     */
+    @Override
+    public void updateUnlockUser(User user) {
+        String key = RedisConstants.PASSWORD_ERR_COUNT_ALL+String.valueOf(user.getUserId());
+        if(RedisUtils.exists(key)){
+            RedisUtils.del(key);
+        }
+        LockedUserInfo lockedUser = new LockedUserInfo();
+        lockedUser.setUnlocked(1);
+        lockedUser.setUnlockTime(new Date());
+        lockedUser.setOperator(user.getUserId());
+        // 是否是前端锁定用户1：前端 0：后台
+        lockedUser.setFront(1);
+        LockedUserInfoExample example = new LockedUserInfoExample();
+        example.or().andUsernameEqualTo(user.getUsername()).andUseridEqualTo(user.getUserId());
+        int result = lockedUserInfoMapper.updateByExampleSelective(lockedUser, example);
+        String logInfo = "前端解除前台锁定用户【{}】成功！更新记录个数【{}】" ;
+        logger.info(logInfo, user.getUsername(), result);
     }
 
     /**
@@ -318,7 +388,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @param reffer
      * @return
      */
-    private User getRefferUsers(String mobile, String reffer) {
+    @Override
+    public User getRefferUsers(String mobile, String reffer) {
         List<User> recommends = new ArrayList<User>();
         // 以下语句用来设置用户有无主单开始 2015年12月30日18:28:34 孙亮
         // 1.注册成功时，推荐人关联
@@ -386,6 +457,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         user.setIsInstFlag(0);
         user.setUsername(userName);
         user.setMobile(mobile);
+        // 该方法两个地方调用均为注册插入用户信息、注册时用户平台手机号与银行预留手机号相同 add by liushouyi
+        user.setBankMobile(mobile);
         user.setRechargeSms(0);
         user.setWithdrawSms(0);
         user.setInvestSms(0);
@@ -512,7 +585,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @param userId
      * @param utmId
      */
-    private void insertUtmReg(int userId, String utmId) {
+    @Override
+    public void insertUtmReg(int userId, String utmId) {
         UtmReg utmReg = new UtmReg();
         utmReg.setCreateTime(new Date());
         utmReg.setUtmId(Integer.parseInt(utmId));
@@ -1202,22 +1276,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 借款主体CA认证记录表
-     * @param request
-     * @return
-     */
-    @Override
-    public List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request) {
-        LoanSubjectCertificateAuthorityExample loanSubjectCertificateAuthorityExample = new LoanSubjectCertificateAuthorityExample();
-        LoanSubjectCertificateAuthorityExample.Criteria  loanSubjectCra = loanSubjectCertificateAuthorityExample.createCriteria();
-        loanSubjectCra.andNameEqualTo(request.getName());
-        loanSubjectCra.andIdTypeEqualTo(request.getIdType());
-        loanSubjectCra.andIdNoEqualTo(request.getIdNo());
-        return this.loanSubjectCertificateAuthorityMapper.selectByExample(loanSubjectCertificateAuthorityExample);
-
-    }
-
-    /**
      * 通过userID获得CA认证的客户ID
      * @param userId
      * @param code
@@ -1597,6 +1655,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if (StringUtils.isNotBlank(user.getMobile())) {
             result.setMobile(user.getMobile());
         }
+        // 获取用户信息时增加银行预留手机号获取
+        if (StringUtils.isNotBlank(user.getBankMobile())) {
+            result.setBankMobile(user.getBankMobile());
+        }
         if (StringUtils.isNotBlank(user.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
@@ -1688,15 +1750,28 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String taskTime = formatter.format(currentTime);
         return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
     }
-    /**
-     * 获取现在时间
-     *
-     * @return 返回时间类型 yyyyMM
-     */
-    private  String getNowDateOfDay() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
-        String dateString = formatter.format(currentTime);
-        return dateString;
+
+
+    @Override
+    public List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list) {
+        return userCustomizeMapper.getbatchAuthorityList(list.getIdNoList(),list.getIdType());
     }
+
+    @Override
+    public AppUtmReg findAppUtmRegByUserId(Integer userId) {
+        AppUtmRegExample example = new AppUtmRegExample();
+        AppUtmRegExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        List<AppUtmReg> list = appUtmRegMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public void insertAppUtmReg(AppUtmReg entity) {
+        appUtmRegMapper.insertSelective(entity);
+    }
+
 }

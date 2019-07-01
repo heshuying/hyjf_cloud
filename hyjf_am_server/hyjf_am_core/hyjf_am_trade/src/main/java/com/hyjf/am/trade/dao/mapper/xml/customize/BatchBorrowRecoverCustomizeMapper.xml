@@ -13,7 +13,7 @@
 			hbr.recover_interest_wait = IFNULL(hbr.recover_interest_wait,0) - #{recoverInterestWait,jdbcType=DECIMAL},
 			hbr.recover_capital_wait = IFNULL(hbr.recover_capital_wait,0) - #{recoverCapitalWait,jdbcType=DECIMAL},
 			hbr.repay_charge_interest = IFNULL(hbr.repay_charge_interest,0) + #{repayChargeInterest,jdbcType=DECIMAL},
-			hbr.repay_delay_interest = IFNULL(hbr.repay_delay_interest,0) + #{repayDelayInterest,jdbcType=DECIMAL},
+			hbr.repay_charge_penalty_interest = IFNULL(hbr.repay_charge_penalty_interest,0) + #{repayChargePenaltyInterest,jdbcType=DECIMAL},
 			hbr.repay_late_interest = IFNULL(hbr.repay_late_interest,0) + #{repayLateInterest,jdbcType=DECIMAL},
 			hbr.recover_fee_yes = IFNULL(hbr.recover_fee_yes,0) + #{recoverFeeYes,jdbcType=DECIMAL}
 		WHERE

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -292,6 +291,65 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 *
+	 * @param userId
+	 */
+	@Override
+	public void unlockUser(Integer userId) {
+		String url = userService+"/user/unlockUser/"+userId;
+		restTemplate.postForEntity(url, null, BooleanResponse.class);
+	}
+
+	/**
+	 * 插入修改银行预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	@Override
+	public boolean insertBankMobileModify(BankMobileModifyVO vo) {
+		String url = userService + "/bankMobileModify/insertBankMobileModify";
+		BooleanResponse response = restTemplate.postForEntity(url,vo,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 更新用户银行预留手机号
+	 *
+	 * @param userId
+	 * @param newBankMobile
+	 */
+	@Override
+	public boolean updateBankMobileByUserId(int userId, String newBankMobile) {
+		String url = userService + "/bankMobileModify/updateBankMobileByUserId/" +userId + "/" + newBankMobile;
+		BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 更新用户修改预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	@Override
+	public boolean updateBankMobileModify(BankMobileModifyVO vo) {
+		String url = userService + "/bankMobileModify/updateBankMobileModify";
+		BooleanResponse response = restTemplate.postForEntity(url,vo,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

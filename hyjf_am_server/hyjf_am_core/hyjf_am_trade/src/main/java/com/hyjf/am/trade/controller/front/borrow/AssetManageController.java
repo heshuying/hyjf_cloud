@@ -19,6 +19,7 @@ import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class AssetManageController extends BaseController {
         List<CurrentHoldObligatoryRightListCustomize> list = assetManageService.selectCurrentHoldObligatoryRightList(request);
         if(!CollectionUtils.isEmpty(list)){
             for (CurrentHoldObligatoryRightListCustomize currentHoldObligatoryRightListCustomize : list) {
+            	currentHoldObligatoryRightListCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(currentHoldObligatoryRightListCustomize.getBorrowExtraYield()));
                 String nid = currentHoldObligatoryRightListCustomize.getNid();
                 //法大大居间服务协议（type=2时候，为债转协议）
                 List<TenderAgreement> tenderAgreementsNid= tenderAgreementService.selectTenderAgreementByNid(nid);//居间协议
@@ -131,6 +133,9 @@ public class AssetManageController extends BaseController {
         AssetManageResponse response = new AssetManageResponse();
         List<RepayMentListCustomize> list = assetManageService.selectRepaymentList(request);
         if(!CollectionUtils.isEmpty(list)){
+        	for (RepayMentListCustomize repayMentListCustomize : list) {
+        		repayMentListCustomize.setData(FormatRateUtil.formatBorrowApr(repayMentListCustomize.getData()));
+			}
             List<RepayMentListCustomizeVO> voList = CommonUtils.convertBeanList(list, RepayMentListCustomizeVO.class);
             response.setRepayMentList(voList);
         }

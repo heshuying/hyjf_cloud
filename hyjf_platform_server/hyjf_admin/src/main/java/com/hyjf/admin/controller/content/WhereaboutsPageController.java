@@ -43,8 +43,8 @@ public class WhereaboutsPageController extends BaseController {
 	public static final String PERMISSIONS = "WHEREABOUTSPAGE";
 	@Value("${wx.preview.url}")
 	private String wxUrl;
-	@Value("${wxcunguan.preview.url}")
-	private String wxcunguanUrl;
+//	@Value("${wxcunguan.preview.url}")
+//	private String wxcunguanUrl;
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "移动端着陆页管理列表查询")
 	@PostMapping("/searchaction")
@@ -62,9 +62,9 @@ public class WhereaboutsPageController extends BaseController {
 			if(null == vo.getStyle()){
 
 			}else if (1 == vo.getStyle().intValue()){
-				vo.setJumpPath(wxcunguanUrl.replace("xxxx", vo.getId()+""));
+//				vo.setJumpPath(wxcunguanUrl.replace("xxxx", vo.getId()+""));
 			} else {
-				vo.setJumpPath(wxUrl.replace("xxxx", vo.getId()+""));
+				vo.setJumpPath(wxUrl.replace("xxxx", vo.getUtmId()+""));
 			}
 		}
 		return new AdminResult<>(ListResult.build(vos, response.getCount()));

@@ -4,6 +4,9 @@
 package com.hyjf.cs.user.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -14,6 +17,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.AppRechargeRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -26,10 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +53,7 @@ public class AppRechargeController extends BaseUserController {
 
 
     /** 充值描述 */
-    private final String CARD_DESC = "限额:{0}{1}{2}";
+    private final String CARD_DESC = "限额：{0}{1}{2}";
     private final String RECHARGE_KINDLY_REMINDER = "注：网银转账时，银行请选择（城市商业银行）江西银行或南昌银行。线下充值的到账时间一般为1-3天（具体到账时间以银行的实际到账时间为准）。";
     private final String RCV_ACCOUNT_NAME = "惠众商务顾问（北京）有限公司";
     private final String RCV_ACCOUNT = "791913149300306";
@@ -267,8 +268,9 @@ public class AppRechargeController extends BaseUserController {
                                 if (monthLimitAmount == null) {
                                     monthLimitAmount = BigDecimal.ZERO;
                                 }
-                                String symbol = ",";
-                                String symBol2 = ",";
+                                // modify by wj app4.0改成中文逗号 2019-06-21
+                                String symbol = "，";
+                                String symBol2 = "，";
                                 if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
                                     symbol = "";
                                 }
@@ -280,6 +282,9 @@ public class AppRechargeController extends BaseUserController {
                                         (BigDecimal.ZERO.compareTo(monthLimitAmount)==0)?"":"单月 " + monthLimitAmount.toString() + "万元");
 
                                 result.setMoneyInfo(moneyInfo);
+                                // 添加应用市场链接  update by wgx 2019/05/21
+                                result.setAndroidMarket(jxBankConfigVO.getAndroidMarket());
+                                result.setIosMarket(jxBankConfigVO.getIosMarket());
                             }
                         }
                     } else {
@@ -343,4 +348,30 @@ public class AppRechargeController extends BaseUserController {
         }
 
     }
+
+    /**
+     * app获取充值说明
+     * @param
+     * @return
+     * @author wgx
+     */
+    @ApiOperation(value = "获取充值说明", notes = "获取充值说明")
+    @PostMapping(value = "/getRechargeDetail")
+    @ResponseBody
+    public WebResult<AppRechargeVO> getRechargeRule() {
+        WebResult webResult = new WebResult("0","成功");
+        try {
+            List<AppRechargeRuleVO> rechargeRuleList = appRechargeService.getRechargeRule();
+            List<AppRechargeLimitVO> rechargeLimitList = appRechargeService.getRechargeLimit();
+            AppRechargeVO appRechargeVo = new AppRechargeVO();
+            appRechargeVo.setRechargeRule(rechargeRuleList);
+            appRechargeVo.setRechargeLimit(rechargeLimitList);
+            webResult.setData(appRechargeVo);
+        } catch (Exception e) {
+            webResult.setStatus("1");
+            webResult.setStatusDesc("充值说明获取失败");
+        }
+        return webResult;
+    }
+
 }

@@ -300,7 +300,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 出借金额
             data.put("assignCapital",bean.getAssignCapital());
             // 历史回报
-            data.put("assignInterest",bean.getAssignInterest());
+//            data.put("assignInterest",bean.getAssignInterest());
+            data.put("assignInterest",bean.getAssignAccount().subtract(bean.getAssignPay()));
             WebResult<Map<String, Object>> result = new WebResult();
             result.setData(data);
             return result;
@@ -428,7 +429,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setCouponType("");
             result.setCouponAvailableCount("");
             result.setAssignPay("");
-            result.setBorrowApr(creditAssign.getCreditDiscount()+"%");
+            result.setBorrowApr(FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%");
             if (StringUtils.isNotEmpty(money) && !"0".equals(money)) {
                 // 实际支付金额
                 result.setRealAmount("¥" + creditAssign.getAssignPay());
@@ -438,11 +439,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 //BigDecimal assignInterest = new BigDecimal(bean.getAssignInterest()).add(new BigDecimal(money));
                 //result.setProspectiveEarnings(assignInterest+"元");
                 //备注
-                result.setDesc("折让率: "+creditAssign.getCreditDiscount()+"%      历史回报: " + creditAssign.getAssignInterest() +"元");
+                result.setDesc("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%      历史回报: " + creditAssign.getAssignInterest() +"元");
                 //折让率
-                result.setDesc0("折让率: "+creditAssign.getCreditDiscount()+"%");
+                result.setDesc0("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%");
                 //历史回报
-                result.setDesc1("历史回报: "+creditAssign.getAssignInterest()+"元");
+                result.setDesc1("历史回报: "+FormatRateUtil.formatBorrowApr(creditAssign.getAssignInterest())+"元");
                 // 实际支付金额
                 result.setAssignPay(creditAssign.getAssignPay());
                 // 认购本金
@@ -454,7 +455,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 实际支付计算式
                 result.setAssignPayText(creditAssign.getAssignPayText());
                 // 折价率
-                result.setCreditDiscount(creditAssign.getCreditDiscount() + "%");
+                result.setCreditDiscount(FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+ "%");
                 //按钮上的文字
                 result.setButtonWord("实际支付"+creditAssign.getAssignPay()+"元");
             } else {
@@ -466,9 +467,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 垫付利息
                 result.setPaymentOfInterest("0.00" + "元");
                 //备注
-                result.setDesc("折让率: "+creditAssign.getCreditDiscount()+"%      历史回报: 0.00元");
+                result.setDesc("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%      历史回报: 0.00元");
                 //折让率
-                result.setDesc0("折让率: "+creditAssign.getCreditDiscount()+"%");
+                result.setDesc0("折让率: "+FormatRateUtil.formatBorrowApr(creditAssign.getCreditDiscount())+"%");
                 //历史回报
                 result.setDesc1("历史回报: "+"0.00元");
                 // 实际支付计算式
@@ -980,7 +981,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         // 承接成功后,发送大屏数据统计MQ
                         ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,sellerUserId,sellerAccount.getUserName(),creditTenderLog.getAssignCapital(),3);
                         screenDataBean.setTenderUserId(assignAccount.getUserId());
-                        this.sendScreenDataMQ(screenDataBean);
+                        //暂时取消债转数据
+                        //this.sendScreenDataMQ(screenDataBean);
                     } catch (Exception e) {
                         logger.error("承接成功后,发送大屏数据统计MQ失败",e.getMessage());
                     }
@@ -1475,6 +1477,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 将出借金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));
         BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
+        Integer userId = Integer.valueOf(request.getUserId());
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(userId,new BigDecimal(assignPay))) {
+            // 账户余额不同步
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
+        }
         // 剩余可投金额
         Integer min = 1;
         if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {

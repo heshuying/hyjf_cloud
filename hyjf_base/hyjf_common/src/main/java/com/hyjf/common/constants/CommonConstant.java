@@ -26,6 +26,16 @@ public class CommonConstant {
      /** 其他*/
     public static final String CLIENT_OTHER = "4";
 
+    /**
+     * wjt端
+     */
+    public static final String WJT_PC_CLIENT = "5";
+
+    /**
+     * wjt 微信端
+     */
+    public static final String WJT_WEI_CLIENT = "6";
+
     /** 短信验证码状态,新验证码 */
     public static final Integer CKCODE_NEW = 0;
     /** 短信验证码状态,失效 */
@@ -51,6 +61,9 @@ public class CommonConstant {
 
     /** 更换手机号-绑定新手机号 */
     public static final String PARAM_TPL_BDYSJH = "TPL_BDYSJH";
+
+    /** 验证码登录 */
+    public static final String PARAM_TPL_DUANXINDENGLU = "TPL_DUANXINDENGLU";
 
 
 
@@ -209,6 +222,10 @@ public class CommonConstant {
      * 解绑银行卡
      */
     public static final String APP_BANK_REQUEST_TYPE_UNBINDCARD = "14";
+    /**
+     * 修改银行预留手机号
+     */
+    public static final String APP_BANK_MOBILE_MODIFY = "16";
 
 
 

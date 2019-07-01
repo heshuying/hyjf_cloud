@@ -17,6 +17,8 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private String mobile;
 
+	private String bankMobile;
+
 	private String email;
 
 	private String password;
@@ -78,6 +80,8 @@ public class UserVO extends BaseVO implements Serializable {
 	private Date createTime;
 
 	private Date updateTime;
+
+	private Integer referrer;
 
 	public String getIconUrl() {
 		return iconUrl;
@@ -351,12 +355,21 @@ public class UserVO extends BaseVO implements Serializable {
 		this.updateTime = updateTime;
 	}
 
+	public Integer getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(Integer referrer) {
+		this.referrer = referrer;
+	}
+
 	@Override
 	public String toString() {
 		return "UserVO{" +
 				"userId=" + userId +
 				", username='" + username + '\'' +
 				", mobile='" + mobile + '\'' +
+				", bankMobile'" + bankMobile + '\'' +
 				", email='" + email + '\'' +
 				", status=" + status +
 				", openAccount=" + openAccount +
@@ -380,5 +393,13 @@ public class UserVO extends BaseVO implements Serializable {
 				", isCaFlag=" + isCaFlag +
 				", isSmtp=" + isSmtp +
 				'}';
+	}
+
+	public String getBankMobile() {
+		return bankMobile;
+	}
+
+	public void setBankMobile(String bankMobile) {
+		this.bankMobile = bankMobile;
 	}
 }

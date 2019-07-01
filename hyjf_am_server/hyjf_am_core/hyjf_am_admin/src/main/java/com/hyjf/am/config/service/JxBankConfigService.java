@@ -34,5 +34,5 @@ public interface JxBankConfigService {
      * 根据银行卡名获取江西银行配置
      * @Author : nxl
      */
-    JxBankConfig selectBankConfigByName(String bankName);
+    List<JxBankConfig> selectBankConfigByName(String bankName);
 }

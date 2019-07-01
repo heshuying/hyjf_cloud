@@ -424,6 +424,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     params.put("assignOrderId", bean.getOrderId());
                     params.put("flag", "2");//1（散）2（智投）
                     params.put("status", "1"); //1承接（每笔）
+                    // 应急中心二期，添加承接标示 add by nxl
+                    params.put("isTender","1"); //1:承接，2：加入
                     // 推送数据到MQ 承接（每笔）
                     commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
                                                     MQConstant.HG_REPORT_DELAY_LEVEL);
@@ -560,6 +562,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(), bean);
                         logger.info(logMsgHeader + "#### BD更新出借数据成功" + borrow.getBorrowNid() + "####");
                         logger.info(logMsgHeader + "删除临时表：hjhPlanBorrowTmp，（BorrowNid：" + borrow.getBorrowNid() + "，AccedeOrderId：" + hjhAccede.getOrderStatus() + "）");
+
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"

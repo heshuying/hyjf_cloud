@@ -266,5 +266,4 @@ public interface ProjectListService {
      */
     List<AppProjectListCustomizeVO> getHomeRepayProjecList(Map map);
 
-
 }

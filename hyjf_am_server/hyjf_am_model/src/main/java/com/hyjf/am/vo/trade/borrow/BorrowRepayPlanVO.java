@@ -94,6 +94,9 @@ public class BorrowRepayPlanVO extends BaseVO implements Serializable {
     private Integer autoRepay;
     private Date createTime;
 
+    // 提前还款罚息
+    public BigDecimal chargePenaltyInterest;
+
     public Integer getId() {
         return id;
     }
@@ -404,5 +407,13 @@ public class BorrowRepayPlanVO extends BaseVO implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public BigDecimal getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
     }
 }

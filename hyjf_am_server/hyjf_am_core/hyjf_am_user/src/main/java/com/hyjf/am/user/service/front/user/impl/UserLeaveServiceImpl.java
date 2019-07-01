@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.UserUpdateParamCustomize;
 import com.hyjf.am.user.service.front.user.UserLeaveService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.common.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -61,24 +61,67 @@ public class UserLeaveServiceImpl extends BaseServiceImpl implements UserLeaveSe
      * @return
      * @throws Exception
      */
-    private void updateEmployeeByExampleSelective(User employee) throws Exception {
-        // 用户id
+    private void updateEmployeeByExampleSelective(User employee) throws RuntimeException {
+        // 当前用户的userId
         int userId = employee.getUserId();
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(Validator.isNotNull(user)){
+            // 推荐人用户id
+            Integer spreadUserId = null;
+            // 用户属性
+            int attribute = 0;
+            // 查找推荐人
+            SpreadsUserExample example = new SpreadsUserExample();
+            SpreadsUserExample.Criteria crt = example.createCriteria();
+            crt.andUserIdEqualTo(userId);
+            List<SpreadsUser> spreadUsers = spreadsUserMapper.selectByExample(example);
+            if (spreadUsers != null && spreadUsers.size() > 0) {
+                if (spreadUsers.size() == 1) {
+                    SpreadsUser spreadUser = spreadUsers.get(0);
+                    //获取推荐人的用户id
+                    spreadUserId = spreadUser.getSpreadsUserId();
+                    User sprUser =userMapper.selectByPrimaryKey(spreadUserId);
+                    if(Validator.isNotNull(sprUser)){
+                        // 从oa表中查询线上线下部门属性
+                        List<UserUpdateParamCustomize> userUpdateParamList = userLeaveCustomizeMapper.queryUserAndDepartment(spreadUserId);
+                        if (userUpdateParamList != null && userUpdateParamList.size() > 0) {
+                            if (userUpdateParamList.size() == 1) {
+                                UserUpdateParamCustomize userParam = userUpdateParamList.get(0);
+                                if (userParam.getCuttype() != null) {
+                                    // 线上
+                                    if ("1".equals(userParam.getCuttype())) {
+                                        attribute = 1;
+                                    } else if ("2".equals(userParam.getCuttype())) {
+                                        // 线下
+                                        attribute = 1;
+                                    }
+                                } else {
+                                    throw new RuntimeException("推荐人的cuttype为空！userId:" + userId);
+                                }
+                            } else {
+                                throw new RuntimeException("数据错误，查询到多条部门信息！userId:" + userId);
+                            }
+                        } else {
+                            attribute = 0;
+                        }
+                    }else{
+                        throw new RuntimeException("用户推荐人users不存在，数据错误！推荐人userId:" + spreadUserId);
+                    }
+                } else {
+                    throw new RuntimeException("spreadUsers推荐人记录有多条，数据错误！userId:" + userId);
+                }
+            }
 
-        // 入职员工没有推荐人 原代码获取推荐人之后的逻辑全部删除
-
-        // 初始化用户属性对象
-        UserInfo userInfo = new UserInfo();
-        // 用户属性(无主单)
-        userInfo.setAttribute(0);
-        // 为了拦截器正确发送MQ，设置一下userId
-        userInfo.setUserId(userId);
-        UserInfoExample usersInfoExample = new UserInfoExample();
-        UserInfoExample.Criteria uCriteria = usersInfoExample.createCriteria();
-        uCriteria.andUserIdEqualTo(userId);
-        boolean usersInfoFlag = this.userInfoMapper.updateByExampleSelective(userInfo, usersInfoExample) > 0 ? true : false;
-        if (!usersInfoFlag) {
-            throw new Exception("usersInfo更新用户的属性错误错误！userId:" + userId);
+            // 初始化用户属性对象
+            UserInfo usersInfo = new UserInfo();
+            // 用户属性
+            usersInfo.setAttribute(attribute);
+            UserInfoExample usersInfoExample = new UserInfoExample();
+            UserInfoExample.Criteria uCriteria = usersInfoExample.createCriteria();
+            uCriteria.andUserIdEqualTo(userId);
+            userInfoMapper.updateByExampleSelective(usersInfo, usersInfoExample);
+        }else{
+            logger.error("用户离职更新消息时查询不到用户信息，userId：" + userId);
         }
     }
 

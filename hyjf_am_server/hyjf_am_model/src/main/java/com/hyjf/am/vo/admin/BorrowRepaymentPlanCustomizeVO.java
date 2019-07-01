@@ -45,6 +45,164 @@ public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializab
     private String repayAccountCapitalWait;// 未还本金
     private String repayAccountInterestWait;// 未还利息
 
+    private String userName;//还款人
+    private String submitter;// 发起人
+    private String autoRepay;// 还款方式
+    private String planNid;// 智投编号
+    private String repayAccountYes;//实际还款总额
+    private String extraYieldRepayStatus;// 期次状态
+    //private String borrowUserName;//借款人
+    
+    private String repayOrgName;//担保人
+    private String borrowFullTime; //满标书简
+    private String recoverLastTime; //最后一笔的放款完成时间
+    
+    private String repayAccountCapitalYes; //已还本金
+    private String repayAccountInterestYes;//已还利息
+    private String chargeInterest;//已提前减息
+    private String chargePenaltyInterest;//已收提前还款违约金
+    private String yihuanfuwufei;//已还服务费
+    
+    private String entrustedUserName;
+    private String borrowPeriodExcl;
+    
+    
+    
+    
+    public String getBorrowPeriodExcl() {
+    	if(repayType!=null) {
+        	if(repayType.contains("天")) {
+        		return borrowPeriod+ "天";
+              }else{
+            	  return borrowPeriod+ "个月";
+              }
+    	}
+    	return null;
+	}
+
+	public void setBorrowPeriodExcl(String borrowPeriodExcl) {
+		this.borrowPeriodExcl = borrowPeriodExcl;
+	}
+
+    public String getEntrustedUserName() {
+		return entrustedUserName;
+	}
+
+	public void setEntrustedUserName(String entrustedUserName) {
+		this.entrustedUserName = entrustedUserName;
+	}
+
+    
+    public String getRepayAccountCapitalYes() {
+		return repayAccountCapitalYes;
+	}
+
+	public void setRepayAccountCapitalYes(String repayAccountCapitalYes) {
+		this.repayAccountCapitalYes = repayAccountCapitalYes;
+	}
+
+	public String getRepayAccountInterestYes() {
+		return repayAccountInterestYes;
+	}
+
+	public void setRepayAccountInterestYes(String repayAccountInterestYes) {
+		this.repayAccountInterestYes = repayAccountInterestYes;
+	}
+
+	public String getChargeInterest() {
+		return chargeInterest;
+	}
+
+	public void setChargeInterest(String chargeInterest) {
+		this.chargeInterest = chargeInterest;
+	}
+
+	public String getChargePenaltyInterest() {
+		return chargePenaltyInterest;
+	}
+
+	public void setChargePenaltyInterest(String chargePenaltyInterest) {
+		this.chargePenaltyInterest = chargePenaltyInterest;
+	}
+
+	public String getYihuanfuwufei() {
+		return yihuanfuwufei;
+	}
+
+	public void setYihuanfuwufei(String yihuanfuwufei) {
+		this.yihuanfuwufei = yihuanfuwufei;
+	}
+
+	public String getBorrowFullTime() {
+		return borrowFullTime;
+	}
+
+	public void setBorrowFullTime(String borrowFullTime) {
+		this.borrowFullTime = borrowFullTime;
+	}
+
+	public String getRecoverLastTime() {
+		return recoverLastTime;
+	}
+
+	public void setRecoverLastTime(String recoverLastTime) {
+		this.recoverLastTime = recoverLastTime;
+	}
+
+	public String getRepayOrgName() {
+		return repayOrgName;
+	}
+
+	public void setRepayOrgName(String repayOrgName) {
+		this.repayOrgName = repayOrgName;
+	}
+    public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getSubmitter() {
+		return submitter;
+	}
+
+	public void setSubmitter(String submitter) {
+		this.submitter = submitter;
+	}
+
+	public String getAutoRepay() {
+		return autoRepay;
+	}
+
+	public void setAutoRepay(String autoRepay) {
+		this.autoRepay = autoRepay;
+	}
+
+	public String getPlanNid() {
+		return planNid;
+	}
+
+	public void setPlanNid(String planNid) {
+		this.planNid = planNid;
+	}
+
+	public String getRepayAccountYes() {
+		return repayAccountYes;
+	}
+
+	public void setRepayAccountYes(String repayAccountYes) {
+		this.repayAccountYes = repayAccountYes;
+	}
+
+	public String getExtraYieldRepayStatus() {
+		return extraYieldRepayStatus;
+	}
+
+	public void setExtraYieldRepayStatus(String extraYieldRepayStatus) {
+		this.extraYieldRepayStatus = extraYieldRepayStatus;
+	}
     public String getNid() {
         return nid;
     }

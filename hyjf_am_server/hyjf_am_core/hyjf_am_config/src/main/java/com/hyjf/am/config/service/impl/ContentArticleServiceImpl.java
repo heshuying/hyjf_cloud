@@ -14,21 +14,17 @@ import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {
@@ -61,7 +57,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
                 example.setLimitEnd(limitEnd);
             }
             ContentArticleExample.Criteria crt = example.createCriteria();
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(request.getNoticeType())) {
+            if (StringUtils.isNotBlank(request.getNoticeType())) {
                 crt.andTypeEqualTo(request.getNoticeType());
             }
             crt.andStatusEqualTo(1);
@@ -402,6 +398,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
                 "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", type)
                 + "?ignoreSign=true"
         );
+        customize.setImgurl(contentArticle.getImgurl());
         logger.debug("customize is: {}", customize);
         return customize;
     }

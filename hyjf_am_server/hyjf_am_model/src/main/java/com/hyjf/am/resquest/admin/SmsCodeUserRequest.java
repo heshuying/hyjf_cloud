@@ -85,6 +85,9 @@ public class SmsCodeUserRequest extends BasePage {
     @ApiModelProperty(value = "定时发送时间 yyyy-MM-dd HH:mm:ss")
     private String on_time;
 
+    //用户生日
+    private String birthday;
+
     /**
      * @return the sender
      */
@@ -229,5 +232,13 @@ public class SmsCodeUserRequest extends BasePage {
 
     public void setOn_time(String on_time) {
         this.on_time = on_time;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }

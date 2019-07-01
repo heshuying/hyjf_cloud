@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.app.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
@@ -109,8 +110,14 @@ public class AppSmsCodeController extends BaseUserController {
             return ret;
         }
         mobile = DES.decodeValue(key, mobile);
-        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
-        CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
+        int cnt = 0;
+        // app4.0 注册验证码单独验证，不失效
+        if(verificationType.equals(CommonConstant.PARAM_TPL_ZHUCE)){
+            cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,false);
+        } else {
+            cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
+        }
+        CheckUtil.check(cnt > 0, MsgEnum.STATUS_ZC000015);
 
         ret.put("status", "0");
         ret.put("statusDesc", CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -201,13 +208,25 @@ public class AppSmsCodeController extends BaseUserController {
             if(ret.get("status")!=null){
                 return ret;
             }
+
+            // PC1.1.3 新增 短信验证码登录
+            if(verificationType.equals(CommonConstant.PARAM_TPL_DUANXINDENGLU)){
+
+                UserVO userVO = smsCodeService.getUsersByMobile(mobile);
+                CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+                smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
+                ret.put("status", "0");
+                ret.put("statusDesc", "发送验证码成功");
+
+                return ret;
+            }
             if(!verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
                 //判断用户是否登录
                 //UserVO userVO = smsCodeService.getUsersById(userId);
                 // 发送短信
                 smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
-                    ret.put("status", "0");
-                    ret.put("statusDesc", "发送验证码成功");
+                ret.put("status", "0");
+                ret.put("statusDesc", "发送验证码成功");
             }else{
                 // 判断是否开户  假如未开户  发送平台的验证码  假如已开户  发送江西银行的验证码
                 BankOpenAccountVO bankAccount = amUserClient.selectById(userId);

@@ -94,4 +94,5 @@ public interface BorrowTenderCustomizeMapper {
 
 	List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(@Param("sourceIdSrch") String sourceIdSrch,@Param("timeStartSrch") String dayStart,
 															 @Param("timeEndSrch") String dayEnd);
+
 }

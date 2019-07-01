@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.WithdrawRuleConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="customer_type" property="customerType" jdbcType="TINYINT" />
+    <result column="min_money" property="minMoney" jdbcType="DECIMAL" />
+    <result column="max_money" property="maxMoney" jdbcType="DECIMAL" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="could_withdraw" property="couldWithdraw" jdbcType="TINYINT" />
+    <result column="route_code" property="routeCode" jdbcType="CHAR" />
+    <result column="pay_alliance_code" property="payAllianceCode" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_holiday" property="isHoliday" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, customer_type, min_money, max_money, start_time, end_time, could_withdraw, route_code, 
+    pay_alliance_code, del_flag, create_by, create_time, update_by, update_time, is_holiday
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_withdraw_rule_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_withdraw_rule_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_withdraw_rule_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample" >
+    delete from ht_withdraw_rule_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_withdraw_rule_config (customer_type, min_money, max_money, 
+      start_time, end_time, could_withdraw, 
+      route_code, pay_alliance_code, del_flag, 
+      create_by, create_time, update_by, 
+      update_time, is_holiday)
+    values (#{customerType,jdbcType=TINYINT}, #{minMoney,jdbcType=DECIMAL}, #{maxMoney,jdbcType=DECIMAL}, 
+      #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{couldWithdraw,jdbcType=TINYINT}, 
+      #{routeCode,jdbcType=CHAR}, #{payAllianceCode,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isHoliday,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_withdraw_rule_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="customerType != null" >
+        customer_type,
+      </if>
+      <if test="minMoney != null" >
+        min_money,
+      </if>
+      <if test="maxMoney != null" >
+        max_money,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="couldWithdraw != null" >
+        could_withdraw,
+      </if>
+      <if test="routeCode != null" >
+        route_code,
+      </if>
+      <if test="payAllianceCode != null" >
+        pay_alliance_code,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isHoliday != null" >
+        is_holiday,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="customerType != null" >
+        #{customerType,jdbcType=TINYINT},
+      </if>
+      <if test="minMoney != null" >
+        #{minMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="maxMoney != null" >
+        #{maxMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="couldWithdraw != null" >
+        #{couldWithdraw,jdbcType=TINYINT},
+      </if>
+      <if test="routeCode != null" >
+        #{routeCode,jdbcType=CHAR},
+      </if>
+      <if test="payAllianceCode != null" >
+        #{payAllianceCode,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isHoliday != null" >
+        #{isHoliday,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_withdraw_rule_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_withdraw_rule_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.customerType != null" >
+        customer_type = #{record.customerType,jdbcType=TINYINT},
+      </if>
+      <if test="record.minMoney != null" >
+        min_money = #{record.minMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.maxMoney != null" >
+        max_money = #{record.maxMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.startTime != null" >
+        start_time = #{record.startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endTime != null" >
+        end_time = #{record.endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.couldWithdraw != null" >
+        could_withdraw = #{record.couldWithdraw,jdbcType=TINYINT},
+      </if>
+      <if test="record.routeCode != null" >
+        route_code = #{record.routeCode,jdbcType=CHAR},
+      </if>
+      <if test="record.payAllianceCode != null" >
+        pay_alliance_code = #{record.payAllianceCode,jdbcType=TINYINT},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isHoliday != null" >
+        is_holiday = #{record.isHoliday,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_withdraw_rule_config
+    set id = #{record.id,jdbcType=INTEGER},
+      customer_type = #{record.customerType,jdbcType=TINYINT},
+      min_money = #{record.minMoney,jdbcType=DECIMAL},
+      max_money = #{record.maxMoney,jdbcType=DECIMAL},
+      start_time = #{record.startTime,jdbcType=VARCHAR},
+      end_time = #{record.endTime,jdbcType=VARCHAR},
+      could_withdraw = #{record.couldWithdraw,jdbcType=TINYINT},
+      route_code = #{record.routeCode,jdbcType=CHAR},
+      pay_alliance_code = #{record.payAllianceCode,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_holiday = #{record.isHoliday,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig" >
+    update ht_withdraw_rule_config
+    <set >
+      <if test="customerType != null" >
+        customer_type = #{customerType,jdbcType=TINYINT},
+      </if>
+      <if test="minMoney != null" >
+        min_money = #{minMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="maxMoney != null" >
+        max_money = #{maxMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="couldWithdraw != null" >
+        could_withdraw = #{couldWithdraw,jdbcType=TINYINT},
+      </if>
+      <if test="routeCode != null" >
+        route_code = #{routeCode,jdbcType=CHAR},
+      </if>
+      <if test="payAllianceCode != null" >
+        pay_alliance_code = #{payAllianceCode,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isHoliday != null" >
+        is_holiday = #{isHoliday,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig" >
+    update ht_withdraw_rule_config
+    set customer_type = #{customerType,jdbcType=TINYINT},
+      min_money = #{minMoney,jdbcType=DECIMAL},
+      max_money = #{maxMoney,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR},
+      could_withdraw = #{couldWithdraw,jdbcType=TINYINT},
+      route_code = #{routeCode,jdbcType=CHAR},
+      pay_alliance_code = #{payAllianceCode,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_holiday = #{isHoliday,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
