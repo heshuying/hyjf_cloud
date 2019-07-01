@@ -117,8 +117,7 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
         DecimalFormat df = new DecimalFormat("#,##0");
         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
         if (entity != null) {
-            df.format(entity.getTotalInvestAmount().setScale(0, BigDecimal.ROUND_DOWN));
-            return entity.getTotalInvestAmount().toString();
+            return df.format(entity.getTotalInvestAmount().setScale(0, BigDecimal.ROUND_DOWN));
         }
         return "0";
     }
