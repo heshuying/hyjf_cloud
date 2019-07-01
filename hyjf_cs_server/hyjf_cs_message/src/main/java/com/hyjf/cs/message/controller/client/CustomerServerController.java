@@ -95,7 +95,7 @@ public class CustomerServerController extends BaseController {
         if (customerService != null) {
             BeanUtils.copyProperties(customerService, customerServiceVO);
             double complaint = (double) (customerService.getComplaintNum() * 100) / (customerService.getPhoneReception() + customerService.getQqReception() + customerService.getWxReception());
-            customerServiceVO.setComplaint(String.format("%.2f", complaint) + "%");
+            customerServiceVO.setComplaint(String.format("%.2f", complaint));
             response.setResult(customerServiceVO);
         }
         return response;
