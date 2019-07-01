@@ -592,7 +592,6 @@ public class RedisConstants {
      *
      */
     public static final String  CUSTOMER_SERVICE_SWITCH ="CUSTOMER_SERVICE_SWITCH:";
-}
 
     /**
      * redis配置是否可修改手机号
