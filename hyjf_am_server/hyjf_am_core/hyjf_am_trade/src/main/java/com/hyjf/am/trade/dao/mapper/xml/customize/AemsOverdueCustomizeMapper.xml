@@ -25,12 +25,11 @@
     </resultMap>
     <select id="selectRepayOverdue" resultMap="selectOverdue" parameterType="java.util.Map">
         select  b.borrow_nid,b.repay_period,b.repay_status,FROM_UNIXTIME(b.repay_time,'%Y-%m-%d') repay_time,b.delay_days delay_days,
-        (select i.borrow_style from ht_borrow i  where i.borrow_nid = b.borrow_nid) borrow_style,b.repay_account,b.repay_fee,ui.idcard,
-        '0.00' repay_account_all,b.delay_days,date_format(NOW(),'%Y-%m-%d %H:%i:%s')confirmStatusTime,u.mobile,ui.truename,b.nid,
+        (select i.borrow_style from ht_borrow i  where i.borrow_nid = b.borrow_nid) borrow_style,b.repay_account,b.repay_fee,
+        '0.00' repay_account_all,b.delay_days,date_format(NOW(),'%Y-%m-%d %H:%i:%s')confirmStatusTime,u.mobile,u.truename,b.nid,
         (b.repay_account+b.repay_fee+b.delay_interest)targetAmount,0 status
         from ht_borrow_repay b
         inner JOIN ht_r_user u on u.user_id=b.user_id
-        inner JOIN hyjf_user.ht_user_info ui on u.user_id=ui.user_id
         WHERE b.repay_status=0 and b.repay_time<![CDATA[ <]]>#{repayTime} and b.repay_time <![CDATA[ >]]>#{repayTimeStart} and  b.borrow_nid in
         <foreach collection="borrowNids" item="item" index="index" open="(" separator="," close=")">
             #{item}
@@ -38,7 +37,7 @@
     </select>
 
     <select id="selectRepayPlanOverdue" resultMap="selectOverdue" parameterType="java.util.Map">
-        select  b.borrow_nid,u.mobile,ui.truename,ui.idcard,b.repay_status,0 status,b.nid,
+        select  b.borrow_nid,u.mobile,u.truename,b.repay_status,0 status,b.nid,
         (select b1.repay_period from ht_borrow_repay_plan b1 where b1.borrow_nid=b.borrow_nid and b1.repay_time<![CDATA[ <]]>#{repayTime} and b1.repay_time <![CDATA[ >]]>#{repayTimeStart} b1.repay_status=0  order by b1.repay_period  desc limit 1)repay_period,
         (select FROM_UNIXTIME(b2.repay_time,'%Y-%m-%d') from ht_borrow_repay_plan b2 where b2.borrow_nid=b.borrow_nid and b2.repay_time<![CDATA[ <]]>#{repayTime} and b2.repay_time <![CDATA[ >]]>#{repayTimeStart} and b2.repay_status=0  order by b2.repay_period desc limit 1)repay_time,
         (select b4.repay_account from ht_borrow_repay_plan b4 where b4.borrow_nid=b.borrow_nid and b4.repay_time<![CDATA[ <]]>#{repayTime} and b4.repay_time <![CDATA[ >]]>#{repayTimeStart} and b4.repay_status=0  order by b4.repay_period desc limit 1)repay_account,
@@ -47,7 +46,6 @@
         (select ii.borrow_style from ht_borrow ii  where ii.borrow_nid = b.borrow_nid) borrow_style, date_format(NOW(),'%Y-%m-%d %H:%i:%s') confirmStatusTime,'0.00' repay_account_all
         from ht_borrow_repay_plan b
         inner JOIN ht_r_user u on u.user_id=b.user_id
-        inner JOIN hyjf_user.ht_user_info ui on u.user_id=ui.user_id
         where b.repay_status=0  and b.repay_time<![CDATA[ <]]>#{repayTime} and b.repay_time <![CDATA[ >]]>#{repayTimeStart} and b.borrow_nid in
         <foreach collection="borrowNids" item="item" index="index" open="(" separator="," close=")">
             #{item}

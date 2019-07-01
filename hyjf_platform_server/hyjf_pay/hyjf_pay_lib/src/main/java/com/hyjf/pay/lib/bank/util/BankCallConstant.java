@@ -107,6 +107,7 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String BANK_URL_TERMS_AUTH_PAGE = "/p2p/page/termsAuthPage";
 	public static final String BANK_URL_REFINANCE_FREEZE_PAGE = "/p2p/page/refinanceFreezePage";
 	public static final String BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE = "/p2p/page/accountOpenEncryptPage";
+	public static final String BANK_URL_MOBILE_MODIFY_PAGE = "/p2p/page/mobileModifyPage";
 	// 解卡页面(合规)
 	public static final String BANK_URL_UNBIND_CARD_PAGE = "/p2p/page/unbindCardPage";
 	/** 签约状态查询 1 自动投标签约*/
@@ -235,4 +236,14 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE = "accountOpenEncryptPage";
 	/**解绑银行卡*/
 	public  static final String TXCODE_ACCOUNT_UNBINDCARD_PAGE = "unbindCardPage";
+
+	/**
+	 * 修改银行预留手机号
+	 */
+	public  static final String TXCODE_MOBILE_MODIFY_PAGE = "mobileModifyPage";
+
+	/**
+	 * 查询银行预留手机号
+	 */
+	public  static final String TXCODE_MOBILE_MODIFY_QUERY = "mobileQueryByAccount";
 }

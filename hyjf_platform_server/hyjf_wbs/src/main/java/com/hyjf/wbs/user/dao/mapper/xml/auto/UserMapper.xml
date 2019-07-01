@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.user.dao.mapper.auto.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.user.dao.model.auto.User" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="open_account" property="openAccount" jdbcType="TINYINT" />
+    <result column="recharge_sms" property="rechargeSms" jdbcType="TINYINT" />
+    <result column="withdraw_sms" property="withdrawSms" jdbcType="TINYINT" />
+    <result column="icon_url" property="iconUrl" jdbcType="VARCHAR" />
+    <result column="if_receive_notice" property="ifReceiveNotice" jdbcType="TINYINT" />
+    <result column="invest_sms" property="investSms" jdbcType="TINYINT" />
+    <result column="recieve_sms" property="recieveSms" jdbcType="TINYINT" />
+    <result column="reg_esb" property="regEsb" jdbcType="TINYINT" />
+    <result column="eprovince" property="eprovince" jdbcType="VARCHAR" />
+    <result column="send_sms" property="sendSms" jdbcType="TINYINT" />
+    <result column="is_inst_flag" property="isInstFlag" jdbcType="TINYINT" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="account_esb" property="accountEsb" jdbcType="TINYINT" />
+    <result column="user_type" property="userType" jdbcType="TINYINT" />
+    <result column="payment_auth_status" property="paymentAuthStatus" jdbcType="TINYINT" />
+    <result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
+    <result column="bank_open_account" property="bankOpenAccount" jdbcType="TINYINT" />
+    <result column="bank_account_esb" property="bankAccountEsb" jdbcType="TINYINT" />
+    <result column="is_evaluation_flag" property="isEvaluationFlag" jdbcType="TINYINT" />
+    <result column="evaluation_expired_time" property="evaluationExpiredTime" jdbcType="TIMESTAMP" />
+    <result column="is_ca_flag" property="isCaFlag" jdbcType="TINYINT" />
+    <result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
+    <result column="reg_ip" property="regIp" jdbcType="VARCHAR" />
+    <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, username, mobile, email, `password`, salt, `status`, open_account, recharge_sms, 
+    withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, reg_esb, eprovince, 
+    send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, is_set_password, 
+    bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+    is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.wbs.user.dao.model.auto.UserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.wbs.user.dao.model.auto.UserExample" >
+    delete from ht_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.wbs.user.dao.model.auto.User" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_user (username, mobile, email, 
+      `password`, salt, `status`, 
+      open_account, recharge_sms, withdraw_sms, 
+      icon_url, if_receive_notice, invest_sms, 
+      recieve_sms, reg_esb, eprovince, 
+      send_sms, is_inst_flag, inst_code, 
+      account_esb, user_type, payment_auth_status, 
+      is_set_password, bank_open_account, bank_account_esb, 
+      is_evaluation_flag, evaluation_expired_time, 
+      is_ca_flag, is_smtp, reg_ip, 
+      reg_time, create_time, update_time
+      )
+    values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, 
+      #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, #{withdrawSms,jdbcType=TINYINT}, 
+      #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, #{investSms,jdbcType=TINYINT}, 
+      #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, 
+      #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, 
+      #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{paymentAuthStatus,jdbcType=TINYINT}, 
+      #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, 
+      #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
+      #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, 
+      #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.wbs.user.dao.model.auto.User" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="password != null" >
+        `password`,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="openAccount != null" >
+        open_account,
+      </if>
+      <if test="rechargeSms != null" >
+        recharge_sms,
+      </if>
+      <if test="withdrawSms != null" >
+        withdraw_sms,
+      </if>
+      <if test="iconUrl != null" >
+        icon_url,
+      </if>
+      <if test="ifReceiveNotice != null" >
+        if_receive_notice,
+      </if>
+      <if test="investSms != null" >
+        invest_sms,
+      </if>
+      <if test="recieveSms != null" >
+        recieve_sms,
+      </if>
+      <if test="regEsb != null" >
+        reg_esb,
+      </if>
+      <if test="eprovince != null" >
+        eprovince,
+      </if>
+      <if test="sendSms != null" >
+        send_sms,
+      </if>
+      <if test="isInstFlag != null" >
+        is_inst_flag,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="accountEsb != null" >
+        account_esb,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="paymentAuthStatus != null" >
+        payment_auth_status,
+      </if>
+      <if test="isSetPassword != null" >
+        is_set_password,
+      </if>
+      <if test="bankOpenAccount != null" >
+        bank_open_account,
+      </if>
+      <if test="bankAccountEsb != null" >
+        bank_account_esb,
+      </if>
+      <if test="isEvaluationFlag != null" >
+        is_evaluation_flag,
+      </if>
+      <if test="evaluationExpiredTime != null" >
+        evaluation_expired_time,
+      </if>
+      <if test="isCaFlag != null" >
+        is_ca_flag,
+      </if>
+      <if test="isSmtp != null" >
+        is_smtp,
+      </if>
+      <if test="regIp != null" >
+        reg_ip,
+      </if>
+      <if test="regTime != null" >
+        reg_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="openAccount != null" >
+        #{openAccount,jdbcType=TINYINT},
+      </if>
+      <if test="rechargeSms != null" >
+        #{rechargeSms,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawSms != null" >
+        #{withdrawSms,jdbcType=TINYINT},
+      </if>
+      <if test="iconUrl != null" >
+        #{iconUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ifReceiveNotice != null" >
+        #{ifReceiveNotice,jdbcType=TINYINT},
+      </if>
+      <if test="investSms != null" >
+        #{investSms,jdbcType=TINYINT},
+      </if>
+      <if test="recieveSms != null" >
+        #{recieveSms,jdbcType=TINYINT},
+      </if>
+      <if test="regEsb != null" >
+        #{regEsb,jdbcType=TINYINT},
+      </if>
+      <if test="eprovince != null" >
+        #{eprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="sendSms != null" >
+        #{sendSms,jdbcType=TINYINT},
+      </if>
+      <if test="isInstFlag != null" >
+        #{isInstFlag,jdbcType=TINYINT},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountEsb != null" >
+        #{accountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="paymentAuthStatus != null" >
+        #{paymentAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isSetPassword != null" >
+        #{isSetPassword,jdbcType=TINYINT},
+      </if>
+      <if test="bankOpenAccount != null" >
+        #{bankOpenAccount,jdbcType=TINYINT},
+      </if>
+      <if test="bankAccountEsb != null" >
+        #{bankAccountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="isEvaluationFlag != null" >
+        #{isEvaluationFlag,jdbcType=TINYINT},
+      </if>
+      <if test="evaluationExpiredTime != null" >
+        #{evaluationExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCaFlag != null" >
+        #{isCaFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isSmtp != null" >
+        #{isSmtp,jdbcType=TINYINT},
+      </if>
+      <if test="regIp != null" >
+        #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.wbs.user.dao.model.auto.UserExample" resultType="java.lang.Integer" >
+    select count(*) from ht_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_user
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        `password` = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.salt != null" >
+        salt = #{record.salt,jdbcType=CHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.openAccount != null" >
+        open_account = #{record.openAccount,jdbcType=TINYINT},
+      </if>
+      <if test="record.rechargeSms != null" >
+        recharge_sms = #{record.rechargeSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.withdrawSms != null" >
+        withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.iconUrl != null" >
+        icon_url = #{record.iconUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ifReceiveNotice != null" >
+        if_receive_notice = #{record.ifReceiveNotice,jdbcType=TINYINT},
+      </if>
+      <if test="record.investSms != null" >
+        invest_sms = #{record.investSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.recieveSms != null" >
+        recieve_sms = #{record.recieveSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.regEsb != null" >
+        reg_esb = #{record.regEsb,jdbcType=TINYINT},
+      </if>
+      <if test="record.eprovince != null" >
+        eprovince = #{record.eprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendSms != null" >
+        send_sms = #{record.sendSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.isInstFlag != null" >
+        is_inst_flag = #{record.isInstFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountEsb != null" >
+        account_esb = #{record.accountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="record.userType != null" >
+        user_type = #{record.userType,jdbcType=TINYINT},
+      </if>
+      <if test="record.paymentAuthStatus != null" >
+        payment_auth_status = #{record.paymentAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.isSetPassword != null" >
+        is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankOpenAccount != null" >
+        bank_open_account = #{record.bankOpenAccount,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankAccountEsb != null" >
+        bank_account_esb = #{record.bankAccountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="record.isEvaluationFlag != null" >
+        is_evaluation_flag = #{record.isEvaluationFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.evaluationExpiredTime != null" >
+        evaluation_expired_time = #{record.evaluationExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isCaFlag != null" >
+        is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.isSmtp != null" >
+        is_smtp = #{record.isSmtp,jdbcType=TINYINT},
+      </if>
+      <if test="record.regIp != null" >
+        reg_ip = #{record.regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regTime != null" >
+        reg_time = #{record.regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_user
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      `password` = #{record.password,jdbcType=VARCHAR},
+      salt = #{record.salt,jdbcType=CHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      open_account = #{record.openAccount,jdbcType=TINYINT},
+      recharge_sms = #{record.rechargeSms,jdbcType=TINYINT},
+      withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
+      icon_url = #{record.iconUrl,jdbcType=VARCHAR},
+      if_receive_notice = #{record.ifReceiveNotice,jdbcType=TINYINT},
+      invest_sms = #{record.investSms,jdbcType=TINYINT},
+      recieve_sms = #{record.recieveSms,jdbcType=TINYINT},
+      reg_esb = #{record.regEsb,jdbcType=TINYINT},
+      eprovince = #{record.eprovince,jdbcType=VARCHAR},
+      send_sms = #{record.sendSms,jdbcType=TINYINT},
+      is_inst_flag = #{record.isInstFlag,jdbcType=TINYINT},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      account_esb = #{record.accountEsb,jdbcType=TINYINT},
+      user_type = #{record.userType,jdbcType=TINYINT},
+      payment_auth_status = #{record.paymentAuthStatus,jdbcType=TINYINT},
+      is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
+      bank_open_account = #{record.bankOpenAccount,jdbcType=TINYINT},
+      bank_account_esb = #{record.bankAccountEsb,jdbcType=TINYINT},
+      is_evaluation_flag = #{record.isEvaluationFlag,jdbcType=TINYINT},
+      evaluation_expired_time = #{record.evaluationExpiredTime,jdbcType=TIMESTAMP},
+      is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT},
+      is_smtp = #{record.isSmtp,jdbcType=TINYINT},
+      reg_ip = #{record.regIp,jdbcType=VARCHAR},
+      reg_time = #{record.regTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.wbs.user.dao.model.auto.User" >
+    update ht_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="openAccount != null" >
+        open_account = #{openAccount,jdbcType=TINYINT},
+      </if>
+      <if test="rechargeSms != null" >
+        recharge_sms = #{rechargeSms,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawSms != null" >
+        withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
+      </if>
+      <if test="iconUrl != null" >
+        icon_url = #{iconUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ifReceiveNotice != null" >
+        if_receive_notice = #{ifReceiveNotice,jdbcType=TINYINT},
+      </if>
+      <if test="investSms != null" >
+        invest_sms = #{investSms,jdbcType=TINYINT},
+      </if>
+      <if test="recieveSms != null" >
+        recieve_sms = #{recieveSms,jdbcType=TINYINT},
+      </if>
+      <if test="regEsb != null" >
+        reg_esb = #{regEsb,jdbcType=TINYINT},
+      </if>
+      <if test="eprovince != null" >
+        eprovince = #{eprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="sendSms != null" >
+        send_sms = #{sendSms,jdbcType=TINYINT},
+      </if>
+      <if test="isInstFlag != null" >
+        is_inst_flag = #{isInstFlag,jdbcType=TINYINT},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountEsb != null" >
+        account_esb = #{accountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="paymentAuthStatus != null" >
+        payment_auth_status = #{paymentAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isSetPassword != null" >
+        is_set_password = #{isSetPassword,jdbcType=TINYINT},
+      </if>
+      <if test="bankOpenAccount != null" >
+        bank_open_account = #{bankOpenAccount,jdbcType=TINYINT},
+      </if>
+      <if test="bankAccountEsb != null" >
+        bank_account_esb = #{bankAccountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="isEvaluationFlag != null" >
+        is_evaluation_flag = #{isEvaluationFlag,jdbcType=TINYINT},
+      </if>
+      <if test="evaluationExpiredTime != null" >
+        evaluation_expired_time = #{evaluationExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCaFlag != null" >
+        is_ca_flag = #{isCaFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isSmtp != null" >
+        is_smtp = #{isSmtp,jdbcType=TINYINT},
+      </if>
+      <if test="regIp != null" >
+        reg_ip = #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        reg_time = #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.wbs.user.dao.model.auto.User" >
+    update ht_user
+    set username = #{username,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=CHAR},
+      email = #{email,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=CHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      open_account = #{openAccount,jdbcType=TINYINT},
+      recharge_sms = #{rechargeSms,jdbcType=TINYINT},
+      withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
+      icon_url = #{iconUrl,jdbcType=VARCHAR},
+      if_receive_notice = #{ifReceiveNotice,jdbcType=TINYINT},
+      invest_sms = #{investSms,jdbcType=TINYINT},
+      recieve_sms = #{recieveSms,jdbcType=TINYINT},
+      reg_esb = #{regEsb,jdbcType=TINYINT},
+      eprovince = #{eprovince,jdbcType=VARCHAR},
+      send_sms = #{sendSms,jdbcType=TINYINT},
+      is_inst_flag = #{isInstFlag,jdbcType=TINYINT},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      account_esb = #{accountEsb,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT},
+      payment_auth_status = #{paymentAuthStatus,jdbcType=TINYINT},
+      is_set_password = #{isSetPassword,jdbcType=TINYINT},
+      bank_open_account = #{bankOpenAccount,jdbcType=TINYINT},
+      bank_account_esb = #{bankAccountEsb,jdbcType=TINYINT},
+      is_evaluation_flag = #{isEvaluationFlag,jdbcType=TINYINT},
+      evaluation_expired_time = #{evaluationExpiredTime,jdbcType=TIMESTAMP},
+      is_ca_flag = #{isCaFlag,jdbcType=TINYINT},
+      is_smtp = #{isSmtp,jdbcType=TINYINT},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

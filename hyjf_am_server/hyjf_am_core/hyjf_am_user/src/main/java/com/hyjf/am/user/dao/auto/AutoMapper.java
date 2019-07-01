@@ -220,6 +220,8 @@ public class AutoMapper {
     protected MspQuerydetailMapper mspQueryDetailMapper;
     @Autowired
     protected MspBlackdataMapper mspBlackDataMapper;
+    @Autowired
+    protected BankMobileModifyMapper bankMobileModifyMapper;
 
     @Autowired
     protected AppUtmRegMapper appUtmRegMapper;

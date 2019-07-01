@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -22,6 +23,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
@@ -32,6 +34,8 @@ import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -70,6 +74,9 @@ public class AppLoginController extends BaseUserController {
 
     @Autowired
     private PassWordService passWordService;
+
+    @Autowired
+    AmUserClient amUserClient;
     /**
      * 登录
      *
@@ -211,6 +218,13 @@ public class AppLoginController extends BaseUserController {
                 }else{
                     SecretUtil.clearToken(sign);
                 }
+                //清除alias start add by nxl
+                UserAliasVO userAliasVO = amUserClient.findAliasesByUserId(userId);
+                if(userAliasVO != null){
+                    userAliasVO.setAlias("");
+                    amUserClient.updateAliases(userAliasVO);
+                }
+                //清除alias end add by nxl
                 ret.put("status", "0");
                 ret.put("statusDesc", "退出登录成功");
             } else {
@@ -234,6 +248,15 @@ public class AppLoginController extends BaseUserController {
     @ResponseBody
     @PostMapping(value = "/getUserinfoAction")
     @ApiOperation(value = "获取用户相关数据",notes = "获取用户相关数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "version", value = "版本号", dataType = "String", required = true),
+            @ApiImplicitParam(paramType="query", name = "netStatus", value = "网络状态", dataType = "String", required = true),
+            @ApiImplicitParam(paramType="query", name = "platform", value = "平台类型 2：Android，3：IOS", dataType = "String", required = true),
+            @ApiImplicitParam(paramType="query", name = "token", value = "token", dataType = "String", required = true),
+            @ApiImplicitParam(paramType="query", name = "sign", value = "用户唯一标识", dataType = "String", required = true),
+            @ApiImplicitParam(paramType="query", name = "randomString", value = "随机字符串", dataType = "String", required = true),
+            @ApiImplicitParam(paramType="query", name = "order", value = "order", dataType = "String", required = true)
+    })
     public JSONObject getUserinfoAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/getUserinfoAction");

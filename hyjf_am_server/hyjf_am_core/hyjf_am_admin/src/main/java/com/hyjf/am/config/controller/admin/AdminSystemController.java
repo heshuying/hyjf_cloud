@@ -78,8 +78,14 @@ public class AdminSystemController extends BaseConfigController {
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
+			AdminRole role = adminRoleService.getRecord(adminSystemr.getRoleId());
+			if(role.getRoleName()!=null&&role.getRoleName().startsWith("wjt")){
+				asr.setRtn(Response.ERROR);
+				asr.setMessage("该用户角色状态异常");
+				return asr;
+			}
 			// 如果状态不可用
-			if ("1".equals(adminSystem.getState())) {
+			if ("1".equals(adminSystemr.getState())) {
 				asr.setMessage("该用户已禁用");
 				asr.setRtn(Response.ERROR);
 				return asr;
@@ -114,7 +120,7 @@ public class AdminSystemController extends BaseConfigController {
 				}
 				if (adminAndRole != null) {
 					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
-					if(role.getStatus()!=0) {
+					if(role.getStatus()!=0||(role.getRoleName()!=null&&role.getRoleName().startsWith("wjt"))) {
 						asr.setRtn(Response.ERROR);
 						asr.setMessage("该用户角色状态异常");
 						return asr;
@@ -128,15 +134,11 @@ public class AdminSystemController extends BaseConfigController {
 					return asr;
 				}
 				//判断用户输入的密码错误次数---结束
-
-
 			}
-
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;
 		}
-
 	}
 	/**
 	 * 获取该用户权限

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -39,6 +40,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
@@ -2927,6 +2929,27 @@ public interface AmTradeClient {
     BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId);
 
     /**
+     * 统计预计新增复投额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date);
+
+    /**
+     * 统计预计新增债转额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
+
+    /**
+     * 统计实际资金计划
+     *  @author wenxin
+     * @date 2019/4/23 11:48
+     */
+    List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date);
+
+    /**
      * 插入大屏数据
      * @param screenDataBean
      * @return
@@ -3007,6 +3030,13 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+
+    /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    List<HjhPlanVO> selectWbsSendHjhPlanList();
     /**
      * 根据计划订单号查找投资详情
      * @param accedeOrderId
@@ -3052,7 +3082,66 @@ public interface AmTradeClient {
 
     List<String> getBorrowNidList();
 
+    /**
+     * @Author walter.limeng
+     * @Description //获取投屏采集到的所有的数据
+     * @Date 15:06 2019-05-29
+     * @Param [start, sizes]
+     * @return java.util.List<java.lang.Integer>
+     **/
+    List<ScreenTransferVO> getAllUser(int start, int sizes);
+
+    /**
+     * @Author walter.limeng
+     * @Description //对ht_user_operate_list表执行更新操作
+     * @Date 17:18 2019-05-29
+     * @Param [updateList]
+     * @return void
+     **/
+    boolean updateOperatieList(List<ScreenTransferVO> updateList);
+
+    /**
+     * @Author walter.limeng
+     * @Description //对ht_user_operate_list表执行删除操作
+     * @Date 17:59 2019-05-29
+     * @Param [deleteList]
+     * @return void
+     **/
+    boolean deleteOperatieList(List<ScreenTransferVO> deleteList);
+
+    /**
+     * @Author walter.limeng
+     * @Description //对ht_repayment_plan表执行更新操作
+     * @Date 17:59 2019-05-29
+     * @Param [updateList]
+     * @return void
+     **/
+    boolean updateRepaymentPlan(List<ScreenTransferVO> updateList);
+
+    /**
+     * @Author walter.limeng
+     * @Description //对ht_repayment_plan表执行删除操作
+     * @Date 18:00 2019-05-29
+     * @Param [deleteList]
+     * @return void
+     **/
+    boolean deleteRepaymentPlan(List<ScreenTransferVO> deleteList);
+
     // 应急中心二期，历史数据上报 add by nxl end
 
+    /**
+     * 温金投web端首页列表数量
+     * @return
+     */
+    Integer countWjtWebProjectList(ProjectListRequest request);
+    /**
+     * 温金投web端首页列表
+     * @return
+     */
+    List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request);
+
+    List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
+
+    void repayDataRepair(String borrowNid);
 }
 

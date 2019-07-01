@@ -4,8 +4,11 @@ import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.service.admin.promotion.UtmRegService;
 import com.hyjf.am.user.service.front.user.AppUtmRegService;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +30,9 @@ import java.util.List;
 public class AppUtmRegController extends BaseController {
     @Autowired
     private AppUtmRegService appUtmRegService;
+
+    @Autowired
+    private UtmRegService utmRegService;
 
     /**
      * 导出app渠道数据
@@ -64,6 +70,7 @@ public class AppUtmRegController extends BaseController {
         response.setCount(count);
         return response;
     }
+
     /**
      * 查询app渠道信息
      * @param userId
@@ -80,4 +87,76 @@ public class AppUtmRegController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 新增app渠道信息
+     * @param appUtmReg
+     * @return
+     */
+    @RequestMapping("/insertAppUtmReg")
+    public boolean insertAppUtmReg(@RequestBody  AppUtmRegVO appUtmReg) {
+        AppUtmReg appUtmRegConvert = CommonUtils.convertBean(appUtmReg,AppUtmReg.class);
+        appUtmRegService.insert(appUtmRegConvert);
+        return true;
+    }
+
+    /**
+     * 修改app渠道信息
+     * @param appUtmReg
+     * @return
+     */
+    @RequestMapping("/updateAppUtmReg")
+    public boolean updateAppUtmReg(@RequestBody  AppUtmRegVO appUtmReg) {
+        AppUtmReg appUtmRegConvert = CommonUtils.convertBean(appUtmReg,AppUtmReg.class);
+        appUtmRegService.updateByPrimaryKeySelective(appUtmRegConvert);
+        return true;
+    }
+
+    /**
+     * 删除app渠道信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/deleteAppUtmReg/{id}")
+    public boolean deleteAppUtmReg(@PathVariable Long id) {
+        appUtmRegService.deleteAppUtmReg(id);
+        return true;
+    }
+
+    /**
+     * 删除pc渠道信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/deleteUtmReg/{id}")
+    public boolean deleteUtmReg(@PathVariable Integer id) {
+        utmRegService.deleteUtmReg(id);
+        return true;
+    }
+
+    /**
+     * 新增pc渠道信息
+     * @param appUtmReg
+     * @return
+     */
+    @RequestMapping("/insertPcUtmReg")
+    public boolean insertPcUtmReg(@RequestBody UtmRegVO appUtmReg) {
+        UtmReg appUtmRegConvert = CommonUtils.convertBean(appUtmReg,UtmReg.class);
+        utmRegService.insertPcUtmReg(appUtmRegConvert);
+
+        return true;
+    }
+
+    /**
+     * 修改pc渠道信息
+     * @param appUtmReg
+     * @return
+     */
+    @RequestMapping("/updatePcUtmReg")
+    public boolean updatePcUtmReg(@RequestBody  UtmRegVO appUtmReg) {
+        UtmReg appUtmRegConvert = CommonUtils.convertBean(appUtmReg,UtmReg.class);
+        utmRegService.updatePcUtmReg(appUtmRegConvert);
+        return true;
+    }
+
 }

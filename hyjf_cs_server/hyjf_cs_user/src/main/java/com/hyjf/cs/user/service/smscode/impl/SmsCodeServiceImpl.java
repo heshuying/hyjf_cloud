@@ -230,8 +230,9 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 return ret;
             }
         }
-        if (validCodeType.equals(CommonConstant.PARAM_TPL_DUANXINDENGLU)) {
-            //
+        // app4.0 bug-1426 逻辑修改 找回密码先判断用户是否存在
+        if (validCodeType.equals(CommonConstant.PARAM_TPL_DUANXINDENGLU) || validCodeType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA)) {
+            // 不存在用户时，直接返回错误
             if(!existUser(mobile)){
                 ret.put("status", "1");
                 ret.put("statusDesc", "不存在用户");

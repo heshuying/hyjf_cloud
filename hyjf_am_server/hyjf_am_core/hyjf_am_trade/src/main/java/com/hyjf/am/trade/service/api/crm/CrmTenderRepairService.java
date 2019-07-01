@@ -20,4 +20,6 @@ public interface CrmTenderRepairService extends BaseService {
     List<BorrowTender> selectCrmBorrowTenderList();
 
     List<HjhAccede> selectCrmHjhAccedeList();
+
+    void updateRepayData(String borrowNid);
 }

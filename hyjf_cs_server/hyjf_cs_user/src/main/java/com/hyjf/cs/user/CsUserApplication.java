@@ -1,5 +1,7 @@
 package com.hyjf.cs.user;
 
+import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @ComponentScan(basePackages = {"com.hyjf.cs.user","com.hyjf.common","com.hyjf.cs.common","com.hyjf.pay.lib"})
+@EnableMethodCache(basePackages = "com.hyjf.cs.user")
+@EnableCreateCacheAnnotation
 public class CsUserApplication {
 
 	@Bean

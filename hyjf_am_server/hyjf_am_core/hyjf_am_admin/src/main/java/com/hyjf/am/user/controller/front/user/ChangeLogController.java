@@ -60,5 +60,17 @@ public class ChangeLogController extends BaseController {
 	}
 
 
-
+	/**
+	 * 插入用户渠道操作日志
+	 * @param changeLogVO
+	 * @return
+	 */
+	@RequestMapping("/insertChangeLogList")
+	public boolean insertChangeLogList(@RequestBody @Valid ChangeLogVO changeLogVO){
+		if(null!=changeLogVO){
+			ChangeLogCustomize userChangeLog =  CommonUtils.convertBean(changeLogVO,ChangeLogCustomize.class);
+			return changeLogService.insertSelective(userChangeLog);
+		}
+		return true;
+	}
 }

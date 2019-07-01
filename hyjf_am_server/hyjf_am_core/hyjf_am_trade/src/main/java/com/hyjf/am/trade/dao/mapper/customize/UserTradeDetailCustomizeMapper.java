@@ -29,4 +29,6 @@ public interface UserTradeDetailCustomizeMapper {
     int countTradeDetailListRecordTotal(Map<String, Object> params);
 
     List<AppTradeListCustomize> searchAppTradeDetailList(Map<String,Object> params);
+
+    String getPlanNameByAccedeOrderId(String accedeOrderId);
 }
