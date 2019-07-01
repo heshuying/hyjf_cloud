@@ -19,10 +19,7 @@ import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
-import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
-import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
-import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -3114,6 +3111,48 @@ public interface AmTradeClient {
      * @return
      */
     String getBorrowLevelAction(@Valid String borrowLevel);
+
+    /**
+     * 获取订单详细信息
+     * @param nid
+     * @return
+     */
+    BorrowInvestCustomizeExtResponse getBorrowInvestInfo(String nid);
+
+    /**
+     * 修改订单渠道确认
+     * @param updateTenderUtmRequest
+     * @return
+     */
+    IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
+
+    /**
+     * 修改订单渠道历史记录查询
+     * @param nid
+     * @return
+     */
+    TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid);
+
+    /**
+     * 加入计划订单详情
+     * @param planOrderId
+     * @return
+     */
+    HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId);
+
+    /**
+     * 修改智投订单渠道
+     * @param updateTenderUtmRequest
+     * @return
+     */
+    IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest);
+
+    /**
+     * 修改智投订单渠道历史记录查询
+     * @param nid
+     * @return
+     */
+    TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid);
 
 
     /** 加息接口开始*/
