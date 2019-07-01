@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.trade.dao.mapper.customize.FundDetailsCustomizeMapper">
+
+    <sql id="where-withdraw-condition">
+        <if test="assetCustomerIdInt != null and assetCustomerIdInt != 0">
+            AND utm.user_id = #{assetCustomerIdInt}
+        </if>
+        <if test="detailNo != null and detailNo != ''">
+            AND withdraw.nid = #{detailNo}
+        </if>
+        <if test="assetEntId != null and assetEntId != 0">
+            AND utm.utm_id = #{assetEntId}
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND withdraw.create_time <![CDATA[>=]]> STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND withdraw.create_time  <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+    </sql>
+
+    <select id="queryWithdrawFundDetails" resultType="com.hyjf.wbs.qvo.FundDetailsVO">
+        SELECT
+            utm.user_id AS assetCustomerId,
+            withdraw.nid AS detailNo,
+            '江西银行' AS investPlatform,
+            CASE
+        WHEN withdraw.withdraw_type = 0 THEN
+            '主动提现'
+        WHEN withdraw.withdraw_type = 1 THEN
+            '代提现'
+        END investType,
+         withdraw.bank AS bank,
+         withdraw.total AS operateAmount,
+         withdraw.fee AS serviceCharge,
+         withdraw.credited AS arriveAmount,
+         3 AS STATUS,
+         date_format(
+            withdraw.create_time,
+            '%Y-%c-%d %H:%i:%s'
+        ) AS operateTime
+        FROM
+            hyjf_user.ht_utm_reg utm
+        LEFT JOIN ht_account_withdraw withdraw ON utm.user_id = withdraw.user_id
+        WHERE
+            STATUS = 2
+        AND withdraw.bank_flag = 1
+        <include refid="where-withdraw-condition" />
+</select>
+
+
+    <sql id="where-recharge-condition">
+        <if test="assetCustomerIdInt != null and assetCustomerIdInt != 0">
+            AND utm.user_id = #{assetCustomerIdInt}
+        </if>
+        <if test="detailNo != null and detailNo != ''">
+            AND recharge.nid = #{detailNo}
+        </if>
+        <if test="assetEntId != null and assetEntId != 0">
+            AND utm.utm_id = #{assetEntId}
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND recharge.create_time <![CDATA[>=]]> STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND recharge.create_time  <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+    </sql>
+
+    <select id="queryRechargeFundDetails" resultType="com.hyjf.wbs.qvo.FundDetailsVO">
+        SELECT
+            utm.user_id AS assetCustomerId,
+            recharge.nid AS detailNo,
+            '江西银行' AS investPlatform,
+            recharge.type AS investType,
+            recharge.payment AS bank,
+            recharge.money AS operateAmount,
+            recharge.fee AS serviceCharge,
+            recharge.balance AS arriveAmount,
+            3 AS STATUS,
+            recharge.create_time AS operateTime
+        FROM
+            hyjf_user.ht_utm_reg utm
+        LEFT JOIN ht_account_recharge recharge ON utm.user_id = recharge.user_id
+        WHERE
+            `status` = 2
+        AND is_bank = 1
+        <include refid="where-recharge-condition" />
+    </select>
+</mapper>
