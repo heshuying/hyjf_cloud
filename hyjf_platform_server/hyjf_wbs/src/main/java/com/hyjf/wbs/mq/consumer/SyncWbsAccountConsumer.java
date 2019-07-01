@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.MD5;
+import com.hyjf.wbs.common.EntUtmIds;
+import com.hyjf.wbs.configs.EntidsProperties;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.CustomerSyncQO;
@@ -48,6 +50,8 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 
     public static final String CONSUMER_NAME = "<<客户信息同步到WBS财富管理系统>>: ";
     @Autowired
+    private EntidsProperties entidsProperties;
+    @Autowired
     private WbsConfig wbsConfig;
     @Autowired
     private AccountService accountService;
@@ -76,17 +80,24 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 return;
             }
 
-            //根据渠道注册表查询用户是否是属于财富端对应的渠道
-            List<Integer> utmId = new ArrayList<Integer>();
-            utmId.add(wbsConfig.getUtmNami());//纳觅渠道编号
-            utmId.add(wbsConfig.getUtmYufengrui());//纳觅渠道编号
+            EntUtmIds entUtmIds = new EntUtmIds();
 
-            //TODO:第一期只推送纳觅数据
-            //utmId.add(wbsConfig.getUtmDatang());//大唐渠道编号
-            //utmId.add(wbsConfig.getUtmQianle());//千乐渠道编号
+//            //根据渠道注册表查询用户是否是属于财富端对应的渠道
+//            List<Integer> utmId = new ArrayList<Integer>();
+//            utmId.add(wbsConfig.getUtmNami());//纳觅渠道编号
+//            utmId.add(wbsConfig.getUtmYufengrui());//纳觅渠道编号
+//
+//            //TODO:第一期只推送纳觅数据
+//            //utmId.add(wbsConfig.getUtmDatang());//大唐渠道编号
+//            //utmId.add(wbsConfig.getUtmQianle());//千乐渠道编号
 
-
+            List<Integer> utmId  = entUtmIds.getAllUtmId();
+            if(utmId==null||utmId.size()==0){
+                logger.error("=====" + CONSUMER_NAME + " 开启的utmid为null=====userId = " + userId);
+                return;
+            }
             UtmReg utmReg = utmRegService.selectUtmInfo(Integer.valueOf(userId), utmId);
+
             //符合资产端客户信息，推送账户变更信息
             if (utmReg != null) {
                 CustomerSyncQO customerSyncQO = new CustomerSyncQO();
@@ -111,10 +122,12 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 
                 }
                 customerSyncQO.setAssetCustomerId(userId);
-                if (!getEntId(utmReg.getUtmId()).isEmpty()) {
-                    customerSyncQO.setEntId(Integer.valueOf(getEntId(utmReg.getUtmId())));
+                if (entUtmIds.getEntId(String.valueOf(utmReg.getUtmId()))!=null) {
+                    customerSyncQO.setEntId(Integer.valueOf(entUtmIds.getEntId(String.valueOf(utmReg.getUtmId()))));
+
+
                 } else {
-                    logger.error("=====" + CONSUMER_NAME + " 查询不到财富端id, utmim = [{}]=====", utmReg.getUtmId());
+                    logger.error("=====" + CONSUMER_NAME + " 查询不到财富端id, utmid = [{}]=====", utmReg.getUtmId());
                     return;
                 }
 
@@ -142,21 +155,6 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
         return;
     }
 
-    public String getEntId(Integer utmId) {
-        String thirdIds = wbsConfig.getThridPropertyIds();
-        String[] thirdIdsArr = thirdIds.split(",");
-        if (utmId.equals(wbsConfig.getUtmNami()) || utmId.equals(wbsConfig.getUtmYufengrui())) {
-            return thirdIdsArr[0];
-        } else if (utmId.equals(wbsConfig.getUtmDatang())) {
-            return thirdIdsArr[1];
-        } else if (utmId.equals(wbsConfig.getUtmQianle())) {
-            return thirdIdsArr[2];
-        } else {
-            return null;
-        }
-
-
-    }
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {

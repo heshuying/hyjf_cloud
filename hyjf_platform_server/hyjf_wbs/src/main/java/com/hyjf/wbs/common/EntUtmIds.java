@@ -79,7 +79,7 @@ public class EntUtmIds {
             String mapKey = entry.getKey();
             String mapValue = entry.getValue();
             if ("1".equals(mapValue)) {
-                if (entids.get(mapKey) != null) {
+                if (entids.get(mapKey) != null&&!"".equals(entids.get(mapKey))) {
                     if (entids.get(mapKey).indexOf(",") != -1) {
                         String[] strarray = entids.get(mapKey).split(",");
                         for (String str : strarray) {
