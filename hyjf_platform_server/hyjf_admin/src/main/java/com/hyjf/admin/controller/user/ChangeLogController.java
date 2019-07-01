@@ -45,7 +45,7 @@ public class ChangeLogController extends BaseController {
 	@Autowired
 	private ChangeLogService changeLogService;
 
-    public static final String PERMISSIONS = "changeLog";
+    public static final String PERMISSIONS = "changeloglist";
 
 	/**
 	 * 权限维护画面初始化

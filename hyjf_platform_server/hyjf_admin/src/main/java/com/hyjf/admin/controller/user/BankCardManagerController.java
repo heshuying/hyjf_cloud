@@ -59,7 +59,7 @@ public class BankCardManagerController extends BaseController {
     @Autowired
     private SystemConfig systemConfig;
 
-    public static final String PERMISSIONS = "bankCardList";
+    public static final String PERMISSIONS = "bankcardlist";
 
     @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
