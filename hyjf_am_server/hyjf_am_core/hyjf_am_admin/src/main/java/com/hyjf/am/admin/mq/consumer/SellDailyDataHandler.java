@@ -59,7 +59,8 @@ public class SellDailyDataHandler {
 		SellDailyVO qlSellDaily = null;
 		// 债转数
 		List<SellDailyVO> creditSellDailyList = null;
-
+		//当日债转数
+		List<SellDailyVO> creditRepayList = null;
 		// 辅助参数
 		List<SellDailyVO> operSellDailyList = null;
 		switch (column) {
@@ -199,7 +200,7 @@ public class SellDailyDataHandler {
 			qlSellDaily = sellDailyService.countNoneRepayTodayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 
-			creditSellDailyList = sellDailyService.countTotalCredit(startTime, endTime);
+			creditRepayList = sellDailyService.countTotalRepayCredit(startTime, endTime);
 			break;
 		case 18:
 			list = sellDailyService.countRegisterTotalYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
@@ -254,12 +255,14 @@ public class SellDailyDataHandler {
 		//dto.setAppSellDailyList(appSellDailyList);
 		dto.setCreditSellDaily(creditSellDailyList);
 
+		dto.setCreditRepayList(creditRepayList);
+
 		if (operationSellDaily != null) {
 			dto.setOperationSellDaily(setValue(operationSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
 		}
 
 		if (qlSellDaily != null) {
-			logger.info("千乐数据qlSellDaily: {}", qlSellDaily.print());
+			logger.info("千乐数据qlSellDaily: {}, column is: {}", qlSellDaily.print(), column);
 			dto.setQlSellDaily(setValue(qlSellDaily, QIANLE_DIVISION_NAME, "千乐", 2, 0));
 		}
 		return dto;

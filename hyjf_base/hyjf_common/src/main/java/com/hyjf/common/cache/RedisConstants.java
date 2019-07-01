@@ -587,6 +587,11 @@ public class RedisConstants {
      * app发现页默认图片列表
      */
     public static final String APP_FIND_IMAGE = "app_find_image:";
+    /**
+     * 老带新活动状态
+     *
+     */
+    public static final String  CUSTOMER_SERVICE_SWITCH ="CUSTOMER_SERVICE_SWITCH:";
 
     /**
      * redis配置是否可修改手机号
