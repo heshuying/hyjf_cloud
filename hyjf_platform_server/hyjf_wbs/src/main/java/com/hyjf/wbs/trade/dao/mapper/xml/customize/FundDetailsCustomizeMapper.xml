@@ -9,13 +9,17 @@
         <if test="detailNo != null and detailNo != ''">
             AND withdraw.nid = #{detailNo}
         </if>
-        <if test="assetEntId != null and assetEntId != 0">
-            AND utm.utm_id = #{assetEntId}
+        <if test="assetEntId != null">
+            AND utm.utm_id in
+            <foreach collection="assetEntId" item="item" index="index" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
-        <if test="startDate != null and startDate != ''">
+
+        <if test="startTime != null and startTime != ''">
             AND withdraw.create_time <![CDATA[>=]]> STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
         </if>
-        <if test="endDate != null and endDate != ''">
+        <if test="endTime != null and endTime != ''">
             AND withdraw.create_time  <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
         </if>
     </sql>
@@ -57,13 +61,16 @@
         <if test="detailNo != null and detailNo != ''">
             AND recharge.nid = #{detailNo}
         </if>
-        <if test="assetEntId != null and assetEntId != 0">
-            AND utm.utm_id = #{assetEntId}
+        <if test="assetEntId != null">
+            AND utm.utm_id in
+            <foreach collection="assetEntId" item="item" index="index" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
-        <if test="startDate != null and startDate != ''">
+        <if test="startTime != null and startTime != ''">
             AND recharge.create_time <![CDATA[>=]]> STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
         </if>
-        <if test="endDate != null and endDate != ''">
+        <if test="endTime != null and endTime != ''">
             AND recharge.create_time  <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
         </if>
     </sql>

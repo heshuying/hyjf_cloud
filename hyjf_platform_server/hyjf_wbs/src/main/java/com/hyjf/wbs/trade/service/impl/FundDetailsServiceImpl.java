@@ -3,6 +3,7 @@
  */
 package com.hyjf.wbs.trade.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.hyjf.wbs.common.EntUtmIds;
@@ -78,7 +79,9 @@ public class FundDetailsServiceImpl implements FundDetailsService {
         if(Strings.isNullOrEmpty(utmId)){
             throw new WbsFundDetailsException("未找到entId【"+fundDetailsQO.getEntId()+"】对应的UTMID");
         }
-        customize.setAssetEntId(Integer.valueOf(utmId));
+
+        List<String> lstUtm=Splitter.on(",").trimResults().splitToList(utmId);
+        lstUtm.forEach(utmIdd->customize.getAssetEntId().add(Integer.valueOf(utmIdd)));
         return customize;
     }
 

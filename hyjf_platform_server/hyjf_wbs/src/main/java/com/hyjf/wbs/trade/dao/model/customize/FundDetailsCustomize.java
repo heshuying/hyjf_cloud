@@ -3,7 +3,10 @@
  */
 package com.hyjf.wbs.trade.dao.model.customize;
 
+import com.google.common.collect.Lists;
 import com.hyjf.wbs.qvo.FundDetailsQO;
+
+import java.util.List;
 
 /**
  * @author cui
@@ -15,7 +18,7 @@ public class FundDetailsCustomize extends FundDetailsQO {
     private Integer assetCustomerIdInt;
 
     //资产端财富ID
-    private Integer assetEntId;
+    private List<Integer> assetEntId;
 
     public Integer getAssetCustomerIdInt() {
         return assetCustomerIdInt;
@@ -25,11 +28,14 @@ public class FundDetailsCustomize extends FundDetailsQO {
         this.assetCustomerIdInt = assetCustomerIdInt;
     }
 
-    public Integer getAssetEntId() {
+    public List<Integer> getAssetEntId() {
+        if(assetEntId==null){
+            assetEntId= Lists.newArrayList();
+        }
         return assetEntId;
     }
 
-    public void setAssetEntId(Integer assetEntId) {
+    public void setAssetEntId(List<Integer> assetEntId) {
         this.assetEntId = assetEntId;
     }
 }
