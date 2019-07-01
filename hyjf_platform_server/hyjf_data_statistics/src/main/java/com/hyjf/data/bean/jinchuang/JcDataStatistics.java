@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author yaoyong
  * @version JcDataStatistics, v0.1 2019/6/19 16:01
+ * 金创统计出借笔数表
  */
 @Document(collection = "ht_jc_data_statistics")
 public class JcDataStatistics {
@@ -25,9 +26,9 @@ public class JcDataStatistics {
 
     private String time;          //统计时间
 
-    private Integer createTime;
+    private String createTime;
 
-    private Integer updateTime;
+    private String updateTime;
 
     public String getId() {
         return id;
@@ -77,19 +78,19 @@ public class JcDataStatistics {
         this.time = time;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

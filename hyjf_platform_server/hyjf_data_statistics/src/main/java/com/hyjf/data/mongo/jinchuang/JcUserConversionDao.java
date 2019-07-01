@@ -3,11 +3,17 @@
  */
 package com.hyjf.data.mongo.jinchuang;
 
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.data.bean.jinchuang.JcUserConversion;
 import com.hyjf.data.mongo.BaseMongoDao;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author yaoyong
@@ -27,4 +33,5 @@ public class JcUserConversionDao extends BaseMongoDao<JcUserConversion> {
         query.limit(1);
         return mongoTemplate.findOne(query, getEntityClass());
     }
+
 }

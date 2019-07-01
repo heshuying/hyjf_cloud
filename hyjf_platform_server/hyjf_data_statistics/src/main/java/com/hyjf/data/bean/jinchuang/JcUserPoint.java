@@ -3,7 +3,6 @@
  */
 package com.hyjf.data.bean.jinchuang;
 
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -11,19 +10,20 @@ import java.io.Serializable;
 /**
  * @author yaoyong
  * @version JcUserPoint, v0.1 2019/6/19 11:38
+ * 金创用户行为表
  */
 @Document(collection = "ht_jc_user_point")
 public class JcUserPoint implements Serializable {
 
     private String id;
 
-    private JSONObject jo;
+    private String jo;
 
     private String time;
 
-    private Integer createTime;
+    private String createTime;
 
-    private Integer updateTime;
+    private String updateTime;
 
     public String getId() {
         return id;
@@ -31,22 +31,6 @@ public class JcUserPoint implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public JSONObject getJo() {
-        return jo;
-    }
-
-    public void setJo(JSONObject jo) {
-        this.jo = jo;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 
     public String getTime() {
@@ -57,11 +41,27 @@ public class JcUserPoint implements Serializable {
         this.time = time;
     }
 
-    public Integer getUpdateTime() {
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getJo() {
+        return jo;
+    }
+
+    public void setJo(String jo) {
+        this.jo = jo;
     }
 }

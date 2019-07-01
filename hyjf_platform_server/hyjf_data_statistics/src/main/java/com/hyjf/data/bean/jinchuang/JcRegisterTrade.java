@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * @author yaoyong
  * @version JcRegisterTrade, v0.1 2019/6/20 14:56
+ * 金创注册、交易规模表
  */
 @Document(collection = "ht_jc_register_trade")
 public class JcRegisterTrade {
@@ -22,9 +23,9 @@ public class JcRegisterTrade {
 
     private String time;
 
-    private Integer createTime;
+    private String createTime;
 
-    private Integer updateTime;
+    private String updateTime;
 
     public String getId() {
         return id;
@@ -58,19 +59,19 @@ public class JcRegisterTrade {
         this.time = time;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

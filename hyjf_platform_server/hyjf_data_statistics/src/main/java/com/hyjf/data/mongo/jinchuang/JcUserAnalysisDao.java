@@ -22,10 +22,10 @@ public class JcUserAnalysisDao extends BaseMongoDao<JcUserAnalysis> {
         return JcUserAnalysis.class;
     }
 
-    public List<JcUserAnalysis> getUserAnalysis() {
+    public JcUserAnalysis getUserAnalysis() {
         Query query = new Query();
         query.with(new Sort(Sort.Direction.DESC, "createTime"));
-        query.limit(6);
-        return mongoTemplate.find(query, getEntityClass());
+        query.limit(1);
+        return mongoTemplate.findOne(query, getEntityClass());
     }
 }

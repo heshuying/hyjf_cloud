@@ -3,16 +3,14 @@
  */
 package com.hyjf.data.controller;
 
-import com.hyjf.data.bean.jinchuang.JcRegisterTrade;
-import com.hyjf.data.bean.jinchuang.JcTradeAmount;
+import com.hyjf.am.vo.admin.JcCustomerServiceVO;
+import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.response.Interest;
 import com.hyjf.data.response.JcScreenResponse;
 import com.hyjf.data.result.ApiResult;
-import com.hyjf.data.service.JinChuangDataService;
-import com.hyjf.data.vo.jinchuang.JcCustomerServiceVO;
+import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
 import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
-import com.hyjf.data.vo.jinchuang.JcUserConversionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,28 +39,24 @@ public class JinChuangScreenController {
     @RequestMapping(value = "/getData", method = RequestMethod.POST)
     public ApiResult getData() {
         JcScreenResponse response = new JcScreenResponse();
-        JcUserConversionVO userConversion = jinChuangDataService.getUserConversion();
+        JcUserConversion userConversion = jinChuangDataService.getUserConversion();
         String jsonObject = jinChuangDataService.getUserPoint();
         List<JcDataStatisticsVO> dataStatisticsList = jinChuangDataService.getDataStatistics();
-        Map<String, Object> maps = jinChuangDataService.getUserAnalysis();
-        JcTradeAmount tradeAmount = jinChuangDataService.getTradeAmount();
-        if (tradeAmount != null) {
-            response.setTradeAmount(tradeAmount);
-        }
+        JcUserAnalysis userAnalysis = jinChuangDataService.getUserAnalysis();
+        String tradeAmount = jinChuangDataService.getTotalInvestAmount();
         List<JcRegisterTrade> registerTrades = jinChuangDataService.getRegisterTrade();
         if (!CollectionUtils.isEmpty(registerTrades)) {
             response.setRegisterTrades(registerTrades);
         }
         JcCustomerServiceVO customerService = jinChuangDataService.getCustomerService();
+        List<JcUserInterest> interests = jinChuangDataService.getUserInterest();
+        response.setInterests(interests);
+        response.setTradeAmount(tradeAmount);
         response.setUserConversion(userConversion);
         response.setJsonObject(jsonObject);
         response.setDataStatisticsList(dataStatisticsList);
-        response.setInterests((List<Interest>) maps.get("interests"));
-        response.setAnalysis((JcUserAnalysisVO) maps.get("jcUserAnalysis"));
+        response.setAnalysis(userAnalysis);
         response.setCustomerService(customerService);
-        if (response != null) {
-            return new ApiResult(response);
-        }
-        return new ApiResult();
+        return new ApiResult(response);
     }
 }

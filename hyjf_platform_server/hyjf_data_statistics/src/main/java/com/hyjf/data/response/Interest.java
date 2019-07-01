@@ -14,11 +14,21 @@ public class Interest implements Serializable {
 
     private BigDecimal interest;
 
+    private String time;
+
     public BigDecimal getInterest() {
         return interest;
     }
 
     public void setInterest(BigDecimal interest) {
         this.interest = interest;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
