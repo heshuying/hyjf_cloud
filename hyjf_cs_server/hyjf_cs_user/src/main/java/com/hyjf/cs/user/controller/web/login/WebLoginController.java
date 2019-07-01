@@ -97,13 +97,17 @@ public class WebLoginController extends BaseUserController {
         long start1 = System.currentTimeMillis();
         // 汇盈的用户不能登录温金投
         if(wjtClient!=null ){
-            if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
-                    && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
-                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
-            }
-            UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
-            if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
-                //借款人不让登录
+            if(userVO.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
                 throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
             }
         }
@@ -235,6 +239,7 @@ public class WebLoginController extends BaseUserController {
     @ApiOperation(value = "短信验证码登录", notes = "短信验证码登录")
     @PostMapping(value = "/mobileCodeLogin", produces = "application/json; charset=utf-8")
     public WebResult<WebViewUserVO> mobileCodeLogin(@RequestBody LoginRequestVO user,
+                                                    @RequestHeader(value = "wjtClient",required = false) String wjtClient,
                                           HttpServletRequest request) {
         logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
         String loginUserName = user.getUsername();
@@ -260,6 +265,23 @@ public class WebLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(errorInfo.get("statusDesc"));
             return result;
+        }
+
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null ){
+            if(userVO.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
         }
 
         // 执行登录(登录时间，登录ip)

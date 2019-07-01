@@ -43,7 +43,7 @@ public class AppUserWithdrawController extends BaseUserController {
     /**
      * 卡片描述
      */
-    private final String CARD_DESC = "充值限额:{0}{1}{2}";
+    private final String CARD_DESC = "充值限额：{0}{1}{2}";
     /**
      * 温馨提示URL
      */
@@ -94,7 +94,7 @@ public class AppUserWithdrawController extends BaseUserController {
                         bankCardBean.setBank(bankConfig.getName());
                         bankCardBean.setBankCode(bankConfig.getCode());
                         bankCardBean.setCardNo(bank.getAccount());
-                        bankCardBean.setCardNo_info(BankCardUtil.getCardNo(bank.getAccount()));
+                        bankCardBean.setCardNo_info(BankCardUtil.getCardNoNew(bank.getAccount()));
                         // 卡类型
                         bankCardBean.setIsDefault(bank.getCardType());
                         // 0普通提现卡1默认卡2快捷支付卡
@@ -117,7 +117,7 @@ public class AppUserWithdrawController extends BaseUserController {
                         //通用赋值
                         bankCardBean.setBankCode(bank.getBank());
                         bankCardBean.setCardNo(bank.getCardNo());
-                        bankCardBean.setCardNo_info(BankCardUtil.getCardNo(bank.getCardNo()));
+                        bankCardBean.setCardNo_info(BankCardUtil.getCardNoNew(bank.getCardNo()));
                         bankCardBean.setNotice(WARM_AND_SWEET_REMINDERS_URL);
                         bankCardBean.setBank(bank.getBank());
                         // 每次限额 单位：万元
@@ -164,8 +164,9 @@ public class AppUserWithdrawController extends BaseUserController {
                         // 是否支持快捷支付1:支持 2:不支持
                         //Integer quickPayment = jxBankConfigVO.getQuickPayment();
                         // modify by yangchangwei app3.1.1 迁移 2018-10-15
-                        String symbol = ",";
-                        String symBol2 = ",";
+                        // modify by wj app4.0改成中文逗号 2019-06-21
+                        String symbol = "，";
+                        String symBol2 = "，";
                         if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
                             symbol = "";
                             symBol2 = "";

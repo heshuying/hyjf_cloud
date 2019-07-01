@@ -54,7 +54,7 @@
     WHERE br.recover_status=0 and br.accede_order_id is null
     AND b.borrow_style IN ( 'endday', 'end' )
     AND br.credit_status <![CDATA[<>]]> 2
-    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -106,7 +106,7 @@
     WHERE brp.recover_status=0
     and brp.accede_order_id is null
     AND brp.credit_status <![CDATA[<>]]> 2
-    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -140,7 +140,7 @@
     LEFT JOIN hyjf_user.ht_utm_reg ur ON cr.user_id = ur.user_id
     WHERE
     cr.`status` = 0
-    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND cr.user_id = #{assetCustomerId}
     </if>
@@ -175,7 +175,7 @@
     LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
     WHERE
     hr.repay_status IN ( 0, 1 )
-    AND ha.acctual_payment_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND hr.user_id = #{assetCustomerId}
     </if>
@@ -203,7 +203,7 @@
     WHERE br.recover_status=0 and br.accede_order_id is null
     AND b.borrow_style IN ( 'endday', 'end' )
     AND br.credit_status <![CDATA[<>]]> 2
-    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -223,7 +223,7 @@
     WHERE brp.recover_status=0
     and brp.accede_order_id is null
     AND brp.credit_status <![CDATA[<>]]> 2
-    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
@@ -242,7 +242,7 @@
     LEFT JOIN hyjf_user.ht_utm_reg ur ON cr.user_id = ur.user_id
     WHERE
     cr.`status` = 0
-    AND b.recover_last_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND cr.user_id = #{assetCustomerId}
     </if>
@@ -262,7 +262,7 @@
     LEFT JOIN hyjf_user.ht_utm_reg ur ON hr.user_id = ur.user_id
     WHERE
     hr.repay_status IN ( 0, 1 )
-    AND ha.acctual_payment_time <![CDATA[>=]]> unix_timestamp( '2018-06-01' )
+
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND hr.user_id = #{assetCustomerId}
     </if>

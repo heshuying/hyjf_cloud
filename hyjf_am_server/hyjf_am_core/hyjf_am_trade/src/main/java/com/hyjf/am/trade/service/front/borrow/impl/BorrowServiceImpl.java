@@ -527,14 +527,16 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // add by liuyang wbs系统推送标的信息 20190517 start
             try{
                 // 满标后,发送标的募集结束MQ
-                JSONObject borrowParams = new JSONObject();
-                // 产品编号
-                borrowParams.put("productNo", borrowNid);
-                // 产品状态 :3:募集结束
-                borrowParams.put("productStatus", "3");
-                // 产品类型 0 散标类, 1 计划类
-                borrowParams.put("productType", 0);
-                commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), borrowParams));
+                if("10000000".equals(borrowInfo.getPublishInstCode())) {
+                    JSONObject borrowParams = new JSONObject();
+                    // 产品编号
+                    borrowParams.put("productNo", borrowNid);
+                    // 产品状态 :3:募集结束
+                    borrowParams.put("productStatus", "3");
+                    // 产品类型 0 散标类, 1 计划类
+                    borrowParams.put("productType", 0);
+                    commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), borrowParams));
+                }
             }catch (Exception e){
                 logger.error(e.getMessage());
                 logger.error("wbs系统推送标的信息发送MQ失败");

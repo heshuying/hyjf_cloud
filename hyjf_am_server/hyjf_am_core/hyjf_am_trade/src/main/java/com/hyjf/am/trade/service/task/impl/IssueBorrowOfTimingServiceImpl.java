@@ -60,7 +60,10 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 						MQConstant.HG_REPORT_DELAY_LEVEL);
 				// add by liuyang 20190415 wbs系统标的信息 start
 				try {
-					sendWbsBorrowInfo(borrowCustomize.getBorrowNid(),"2",0);
+					BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowCustomize.getBorrowNid());
+					if("10000000".equals(borrowInfo.getPublishInstCode())) {
+						sendWbsBorrowInfo(borrowCustomize.getBorrowNid(), "2", 0);
+					}
 				} catch (Exception e) {
 					logger.error("WBS系统标的信息发送MQ失败,[" + e + "].");
 				}

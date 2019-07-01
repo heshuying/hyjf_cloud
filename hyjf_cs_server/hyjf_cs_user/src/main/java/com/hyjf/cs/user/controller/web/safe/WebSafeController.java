@@ -9,6 +9,8 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -88,6 +90,18 @@ public class WebSafeController extends BaseUserController {
             inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId+"&action=scan";
 //        }
         result.put("inviteLink", inviteLink);
+
+        // 从redis获取是否可修改银行预留手机号
+        String isBankMobileModify = RedisConstants.BANK_MOBILE_MODIFY_FLAG;
+        try{
+            String flag = RedisUtils.get(isBankMobileModify);
+            if(StringUtils.isNotBlank(flag)) {
+                result.put("bankMobileModifyFlag",flag);
+            }
+        } catch(Exception e) {
+            result.put("bankMobileModifyFlag","0");
+            logger.error("获取银行预留手机号修改按钮展示flag失败！");
+        }
 
         if (null == result) {
             response.setStatus(ApiResult.FAIL);

@@ -76,6 +76,8 @@ public class ScreenDataTransferController {
             List<ScreenTransferVO> transferDataList = userLargeScreenService.getAllUser(start,step);
             logger.info("执行用户画像投屏数据划转，本次划转数据：{}",transferDataList);
             if(null != transferDataList && 0 < transferDataList.size()){
+                String delUser = ",";
+                String updateUser = ",";
                 List<ScreenTransferVO> updateList = new ArrayList<>();
                 List<ScreenTransferVO> deleteList = new ArrayList<>();
                 for (ScreenTransferVO screenTransferVO:transferDataList) {
@@ -87,16 +89,19 @@ public class ScreenDataTransferController {
                         if(StringUtils.isNotBlank(sourceId) && "349".equals(sourceId)){
                             //此为千乐数据，删除
                             deleteList.add(new ScreenTransferVO(screenTransferVO.getUserId(),null,null));
+                            delUser = delUser + screenTransferVO.getUserId() + ",";
                         }else{
                             String owner = screenTransferVO.getCurrentOwner();
                             if(StringUtils.isNotBlank(owner)){
                                 //数据为新老客组，设置数据拥有人为用户画像拥有人，坐席分组为 拥有人坐席组
                                 ScreenTransferVO screenTransfer = new ScreenTransferVO(screenTransferVO.getUserId(),screenTransferVO.getCurrentOwner(),screenTransferVO.getGroups());
                                 updateList.add(screenTransfer);
+                                updateUser = updateUser + screenTransferVO.getUserId() + ",";
                             }else{
                                 //数据为其他，设置数据拥有人为null，坐席分组为 0
                                 ScreenTransferVO screenTransfer = new ScreenTransferVO(screenTransferVO.getUserId(),null,0);
                                 updateList.add(screenTransfer);
+                                updateUser = updateUser + screenTransferVO.getUserId() + ",";
                             }
                         }
                     }else if("惠众商务".equals(screenTransferVO.getGrdfatherName())){
@@ -106,15 +111,18 @@ public class ScreenDataTransferController {
                             //数据为惠众数据，设置数据拥有人为null，坐席分组为 3
                             ScreenTransferVO screenTransfer = new ScreenTransferVO(screenTransferVO.getUserId(),null,3);
                             updateList.add(screenTransfer);
+                            updateUser = updateUser + screenTransferVO.getUserId() + ",";
                         }else{
                             //此数据，删除
                             deleteList.add(new ScreenTransferVO(screenTransferVO.getUserId(),null,null));
+                            delUser = delUser + screenTransferVO.getUserId() + ",";
                         }
 
                     }else{
                         //处理一级部门为其他部门
                         //此为线下数据，删除
                         deleteList.add(new ScreenTransferVO(screenTransferVO.getUserId(),null,null));
+                        delUser = delUser + screenTransferVO.getUserId() + ",";
                     }
                 }
                 if(0 < updateList.size()){
@@ -124,7 +132,7 @@ public class ScreenDataTransferController {
                     userLargeScreenService.updateRepaymentPlan(updateList);
                 }
 
-                logger.info("对采集表执行内部划转的修改数据：{}",updateList);
+                logger.info("对采集表执行内部划转的修改数据：{}",updateUser.substring(1));
                 if(0 < deleteList.size()){
                     //对ht_user_operate_list表执行删除操作
                     userLargeScreenService.deleteOperatieList(deleteList);
@@ -132,7 +140,7 @@ public class ScreenDataTransferController {
                     userLargeScreenService.deleteRepaymentPlan(deleteList);
                 }
 
-                logger.info("对采集表执行内划外部划转的删除数据：{}",deleteList);
+                logger.info("对采集表执行内划外部划转的删除数据：{}",delUser.substring(1));
 
                 //采用递归调用方式，每次处理100条数据
                 screenTransfer(flag + 1);

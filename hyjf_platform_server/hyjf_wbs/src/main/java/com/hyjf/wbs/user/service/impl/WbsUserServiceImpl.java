@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.base.CommonProducer;
+import com.hyjf.wbs.qvo.csuser.ResultEnum;
 import com.hyjf.wbs.user.service.SyncCustomerService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -150,14 +151,14 @@ public class WbsUserServiceImpl implements WbsUserService {
 			userId = Integer.parseInt(assetCustomerId);
 		} catch (NumberFormatException e) {
 			logger.error("客户ID=【{}】不是INTEGER类型", assetCustomerId);
-			throw new CheckException("999", "客户ID【" + assetCustomerId + "】不是INTEGER类型！");
+			throw new CheckException(ResultEnum.FAIL.getStatus(), "客户ID【" + assetCustomerId + "】不是INTEGER类型！");
 		}
 
 		User user = userService.findUserById(userId);
 
 		if (null == user) {
 			logger.error("未找到ID=【" + assetCustomerId + "】的客户信息");
-			throw new CheckException("999", "未找到ID=【" + assetCustomerId + "】的客户信息");
+			throw new CheckException(ResultEnum.FAIL.getStatus(), "未找到ID=【" + assetCustomerId + "】的客户信息");
 		}
 
 		wbsUserAuthInfo.setUserName(user.getUsername());
@@ -206,7 +207,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 		User user = userService.findUserById(userVO.getUserId());
 
 		if (!user.getUsername().equals(userVO.getUsername())) {
-			throw new CheckException("999",
+			throw new CheckException(ResultEnum.FAIL.getStatus(),
 					"汇盈查询的用户名【" + user.getUsername() + "】与newBanker提供的【" + userVO.getUsername() + "】不一致！");
 		}
 
@@ -266,7 +267,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 				vo.setRetUrl(buildRetUrl(qo,WbsConstants.CHANNEL_PC));
 				return vo;
 			} else {
-				throw new CheckException("999", "不支持的channel【" + channel + "】");
+				throw new CheckException("99", "不支持的channel【" + channel + "】");
 			}
 		} else {
 			throw new CheckException(ApiResult.FAIL, "登录失败,账号或密码错误");
@@ -298,7 +299,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 				return redirectTypeEnum.getWechatUrl();
 			}
 		}else {
-			throw new CheckException("999","不支持的channel【"+channel+"】");
+			throw new CheckException(ResultEnum.FAIL.getStatus(),"不支持的channel【"+channel+"】");
 		}
 
 	}
@@ -334,18 +335,18 @@ public class WbsUserServiceImpl implements WbsUserService {
 	private void verifyParameters(WbsRedirectQO qo) {
 
 		if (Strings.isNullOrEmpty(qo.getType())) {
-			throw new CheckException("999", "重定向Type为空！");
+			throw new CheckException(ResultEnum.FAIL.getStatus(), "重定向Type为空！");
 		}
 
 		if (RedirectTypeEnum.BORROW_TYPE.getType().equals(qo.getType())) {
 			if (Strings.isNullOrEmpty(qo.getBorrowNid())) {
-				throw new CheckException("999", "重定向到标的详情页标的号为必填项！");
+				throw new CheckException(ResultEnum.FAIL.getStatus(), "重定向到标的详情页标的号为必填项！");
 			}
 		}
 
 		if(RedirectTypeEnum.PANDECT_TYPE.equals(qo.getType())){
 			if (Strings.isNullOrEmpty(qo.getEntId()) || Strings.isNullOrEmpty(qo.getToken())) {
-				throw new CheckException("999", "跳转个人主面token或entId不能为空！");
+				throw new CheckException(ResultEnum.FAIL.getStatus(), "跳转个人主面token或entId不能为空！");
 			}
 		}
 

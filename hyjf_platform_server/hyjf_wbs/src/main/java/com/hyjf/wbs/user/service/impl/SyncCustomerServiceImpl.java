@@ -40,7 +40,7 @@ public class SyncCustomerServiceImpl implements SyncCustomerService {
 			return;
 		} else {
 			logger.error("客户信息回调接口返回失败！详细信息【{}】", map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY));
-			throw new CheckException("999", String.valueOf(map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY)));
+			throw new CheckException("99", String.valueOf(map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY)));
 		}
 	}
 

@@ -71,6 +71,14 @@ public class OrderInfoController extends BaseController {
                 wbsCommonVO.setData("");
                 return wbsCommonVO;
             }
+            if(tenderAccedeQO.getAssetId()!=null){
+                if(tenderAccedeQO.getAssetId()==2 ||tenderAccedeQO.getAssetId()==3){
+                    wbsCommonVO.setCode(Response.ERROR);
+                    wbsCommonVO.setMsg("请输入正确的assetId");
+                    wbsCommonVO.setData("");
+                    return wbsCommonVO;
+                }
+            }
             if(tenderAccedeQO.getEntId()!=null&&getUtmIdList(tenderAccedeQO.getEntId())!=null){
                 tenderAccedeQO.setUtmIds(getUtmIdList(tenderAccedeQO.getEntId()));
             }else {

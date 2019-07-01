@@ -13,6 +13,8 @@ public class UserRequest {
 
     private String mobile;
 
+    private String bankMobile;
+
     private String email;
 
     private String password;
@@ -347,4 +349,11 @@ public class UserRequest {
         this.updateTime = updateTime;
     }
 
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile;
+    }
 }

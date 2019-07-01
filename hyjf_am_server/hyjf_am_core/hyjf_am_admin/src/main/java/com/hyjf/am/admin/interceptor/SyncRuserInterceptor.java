@@ -3,6 +3,10 @@ package com.hyjf.am.admin.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoExample;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -40,19 +45,13 @@ public class SyncRuserInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        
         Object[] args = invocation.getArgs();
         MappedStatement mappedStatement = (MappedStatement)args[0];
         Object paramObj = args[1];
         BoundSql boundSql = mappedStatement.getBoundSql(paramObj);
-        
-//        String sqlId = mappedStatement.getId();
-//        String namespace = sqlId.substring(0, sqlId.indexOf('.'));
-//        Executor exe = (Executor)invocation.getTarget();
         String realSql = boundSql.getSql();
         String idMethod = mappedStatement.getId();
         String methodName = invocation.getMethod().getName();
-        
         // 执行sql
         Object result = invocation.proceed();
 
@@ -65,6 +64,31 @@ public class SyncRuserInterceptor implements Interceptor {
                 if (paramObj instanceof Map) {
                     Object record = ((Map) paramObj).get("record");
                     if (record != null) {
+                        try {
+                            UserInfo user = (UserInfo) (record);
+                            if (user.getUserId() == null) {
+                                Object example = ((Map) paramObj).get("example");
+                                if (example != null) {
+                                    logger.info("【am-admin/{}/ht_user_info】user_id为null,取example中的user_id", methodName);
+                                    UserInfoExample userExample = (UserInfoExample) example;
+                                    for (UserInfoExample.Criterion criterion : userExample.getOredCriteria().get(0).getAllCriteria()) {
+                                        if ("user_id =".equals(criterion.getCondition())) {
+                                            if (criterion.getValue() != null) {
+                                                user.setUserId((int) criterion.getValue());
+                                                sendToMq(user, methodName, "ht_user_info");
+                                                return result;
+                                            }
+                                        }
+                                    }
+                                    logger.error("【am-admin/{}/ht_user_info】example中user_id为null", methodName);
+                                } else {
+                                    logger.error("【am-admin/{}/ht_user_info】user_id为null", methodName);
+                                }
+                                return result;
+                            }
+                        } catch (Exception e) {
+                            logger.error("【am-admin/{}/ht_user_info】发生异常！", methodName, e);
+                        }
                         sendToMq(record, methodName, "ht_user_info");
                     } else {
                         logger.info("【am-admin/{}/ht_user_info】record为null", methodName);
@@ -73,15 +97,14 @@ public class SyncRuserInterceptor implements Interceptor {
                 } else {
                     sendToMq(paramObj, methodName, "ht_user_info");
                 }
-                // 注册一般，更新用户表基本不需要同步rUser
             } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.insert")) {
-                sendToMq(paramObj, methodName, "ht_user");
-
-                // 更新用户状态
+                sendToMq(paramObj, methodName, "ht_user");// 注册
             } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.updateByPrimaryKey")) {
-
-                sendToMq(paramObj, methodName, "up_ht_user");
-
+                sendToMq(paramObj, methodName, "up_ht_user");// 更新用户状态
+            } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.deleteByPrimaryKey")) {
+                Map<String,Object> userMap = new HashMap<>();
+                userMap.put("userId",paramObj);
+                sendToMq(userMap, methodName, "del_ht_user");// 未开户用户销户
             } else if (StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user")) {
                 sendToMq(paramObj, methodName, "ht_spreads_user");
             } else if (StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {
@@ -89,25 +112,44 @@ public class SyncRuserInterceptor implements Interceptor {
                 if (paramObj instanceof Map) {
                     Object record = ((Map) paramObj).get("record");
                     if (record != null) {
+                        try {
+                            SpreadsUser spreadsUser = (SpreadsUser) (record);
+                            if (spreadsUser.getUserId() == null) {
+                                Object example = ((Map) paramObj).get("example");
+                                if (example != null) {
+                                    logger.info("【am-admin/{}/ht_spreads_user】record中user_id为null,取example中的user_id", methodName);
+                                    SpreadsUserExample spreadsUserExample = (SpreadsUserExample) example;
+                                    for (SpreadsUserExample.Criterion criterion : spreadsUserExample.getOredCriteria().get(0).getAllCriteria()) {
+                                        if ("user_id =".equals(criterion.getCondition())) {
+                                            if (criterion.getValue() != null) {
+                                                spreadsUser.setUserId((int) criterion.getValue());
+                                                sendToMq(spreadsUser, methodName, "ht_spreads_user");
+                                                return result;
+                                            }
+                                        }
+                                    }
+                                    logger.error("【am-admin/{}/ht_spreads_user】example中user_id为null", methodName);
+                                } else {
+                                    logger.error("【am-admin/{}/ht_spreads_user】user_id为null", methodName);
+                                }
+                                return result;
+                            }
+                        } catch (Exception e) {
+                            logger.error("【am-admin/{}/ht_spreads_user】发生异常！", methodName, e);
+                        }
                         sendToMq(record, methodName, "ht_spreads_user");
                     } else {
-                        logger.info("【am-admin/{}/ht_spreads_user】record为null");
+                        logger.info("【am-admin/{}/ht_spreads_user】record为null", methodName);
                         sendToMq(paramObj, methodName, "ht_spreads_user");
                     }
-                } else {
-                    sendToMq(paramObj, methodName, "ht_spreads_user");
                 }
             } else {
                 return result;
             }
-            
-            
         } catch (MQException e) {
             logger.error("发送用户信息同步失败....", e);
         }
-        
         return result;
-
     }
 
     private void sendToMq(Object parameterObject, String methodName, String tagName) throws MQException {

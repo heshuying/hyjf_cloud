@@ -483,5 +483,8 @@ public class AutoMapper {
 
     @Resource
     protected NifaReportLogMapper nifaReportLogMapper;
+
+    @Resource
+    protected TenderUtmChangeLogMapper tenderUtmChangeLogMapper;
 }
 
