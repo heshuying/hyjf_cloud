@@ -371,4 +371,12 @@ public interface SellDailyService {
      * @return
      */
     SellDailyVO addValue(SellDailyVO source, SellDailyVO target, int column, int operateType);
+
+    /**
+     * 债转数据
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<SellDailyVO> countTotalRepayCredit(Date startTime, Date endTime);
 }

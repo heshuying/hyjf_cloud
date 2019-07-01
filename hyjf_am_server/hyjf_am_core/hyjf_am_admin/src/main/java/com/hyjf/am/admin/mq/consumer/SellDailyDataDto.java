@@ -29,6 +29,8 @@ public class SellDailyDataDto {
 
 	private List<SellDailyVO> creditSellDailyList;
 
+	private List<SellDailyVO> creditRepayList;
+
     public List<SellDailyVO> getCreditSellDailyList() {
         return creditSellDailyList;
     }
@@ -59,5 +61,13 @@ public class SellDailyDataDto {
 
     public void setQlSellDaily(SellDailyVO qlSellDaily) {
         this.qlSellDaily = qlSellDaily;
+    }
+
+    public List<SellDailyVO> getCreditRepayList() {
+        return creditRepayList;
+    }
+
+    public void setCreditRepayList(List<SellDailyVO> creditRepayList) {
+        this.creditRepayList = creditRepayList;
     }
 }

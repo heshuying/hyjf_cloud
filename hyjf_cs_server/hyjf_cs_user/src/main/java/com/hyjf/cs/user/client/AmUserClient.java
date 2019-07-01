@@ -2,12 +2,15 @@ package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -671,4 +674,79 @@ public interface AmUserClient {
 	 * @return
 	 */
 	boolean updateBankMobileModify(BankMobileModifyVO vo);
+
+	/**
+	 * 获取前一天注册的用户
+	 * @return
+	 */
+	List<UserVO> selectBeforeDayRegisterUserList();
+
+	/**
+	 * 根据用户ID查询PC推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UtmRegVO selectUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询APP推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppUtmRegVO selectAppUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUserVO selectSpreadsUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserPortraitVO selectUserPortraitByUserId(Integer userId);
+
+	/**
+	 * 生成电销数据
+	 *
+	 * @param request
+	 */
+	void generateElectricitySalesData(ElectricitySalesDataPushListRequest request);
+
+	/**
+	 * 获取需要推送的电销数据
+	 *
+	 * @return
+	 */
+	List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList();
+
+	/**
+	 * 上送数据成功后,更新电销数据状态
+	 *
+	 * @param request
+	 */
+	void updateElectricitySalesDataPushList(ElectricitySalesDataPushListRequest request);
+
+	/**
+	 * 根据用户Id查询用户是否已经存在
+	 *
+	 * @param userId
+	 * @return
+	 */
+	ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId);
+
+	/**
+	 * 根据UtmId查询推广渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	UtmVO selectUtmByUtmId(Integer utmId);
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.admin.beans.request.BorrowInvestDebtInfoRequest;
@@ -18,12 +19,19 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.BorrowRegistService;
+import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
+import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmRequest;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.TenderUpdateUtmHistoryVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -40,10 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wangjun
@@ -61,6 +66,9 @@ public class BorrowInvestController extends BaseController {
 
     @Autowired
     AdminCommonService adminCommonService;
+
+    @Autowired
+    private UtmService utmService;
 
     /**
      * 权限
@@ -639,5 +647,66 @@ public class BorrowInvestController extends BaseController {
         BeanUtils.copyProperties(requestBean, borrowInvestRequest);
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
+    }
+
+    /**
+     * 订单id查询出借明细
+     *
+     * @param nid
+     * @return
+     */
+    @ApiOperation(value = "出借明细-修改渠道-订单信息", notes = "出借明细-修改渠道-订单信息")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @GetMapping("/tender_info/{nid}")
+    public AdminResult<BorrowInvestCustomizeExtVO> getBorrowInvestInfo(@PathVariable String nid) {
+        BorrowInvestCustomizeExtVO responseBean = borrowInvestService.getBorrowInvestInfo(nid);
+        return new AdminResult(responseBean);
+    }
+
+    @ApiOperation(value = "出借明细-修改渠道-渠道列表", notes = "出借明细-修改渠道-渠道列表")
+    @GetMapping("/pcutms")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public UtmResultResponse getPcUtms(){
+        return utmService.getPcUtms();
+    }
+
+    @ApiOperation(value = "出借明细-修改渠道-修改渠道确认", notes = "出借明细-修改渠道-修改渠道确认")
+    @PostMapping("/update_utm")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult updateTenderUtm(HttpServletRequest request,@RequestBody UpdateTenderUtmRequest updateTenderUtmRequest){
+
+        String nid=updateTenderUtmRequest.getNid();
+        if(Strings.isNullOrEmpty(nid)){
+            throw new IllegalArgumentException("订单ID为空！");
+        }
+
+        UpdateTenderUtmExtRequest extRequest=new UpdateTenderUtmExtRequest();
+
+        BorrowInvestCustomizeExtVO borrowInvestCustomizeExtVO=borrowInvestService.getBorrowInvestInfo(nid);
+
+        extRequest.setNid(updateTenderUtmRequest.getNid());
+        extRequest.setTopDeptId(borrowInvestCustomizeExtVO.getInviteRegionId());
+        extRequest.setTopDeptName(borrowInvestCustomizeExtVO.getInviteRegionName());
+        extRequest.setSecondDeptId(borrowInvestCustomizeExtVO.getInviteBranchId());
+        extRequest.setSecondDeptName(borrowInvestCustomizeExtVO.getInviteBranchName());
+        extRequest.setThirdDeptId(borrowInvestCustomizeExtVO.getInviteDepartmentId());
+        extRequest.setThirdDeptName(borrowInvestCustomizeExtVO.getInviteDepartmentName());
+        extRequest.setUpdateTime(Calendar.getInstance().getTime());
+
+        extRequest.setTenderUtmId(updateTenderUtmRequest.getTenderUtmId());
+
+        extRequest.setOperator(Integer.valueOf(getUser(request).getId()));
+
+        return borrowInvestService.updateTenderUtm(extRequest);
+
+    }
+
+
+    @ApiOperation(value = "出借明细-修改渠道-修改记录",notes = "出借明细-修改渠道-修改记录")
+    @GetMapping("/update_tender_utm_history/{nid}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult<TenderUpdateUtmHistoryResponse> getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
+        TenderUpdateUtmHistoryResponse response=borrowInvestService.getTenderUtmChangeLog(nid);
+        return new AdminResult(response);
     }
 }

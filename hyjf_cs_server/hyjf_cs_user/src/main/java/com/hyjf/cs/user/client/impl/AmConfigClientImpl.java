@@ -320,4 +320,81 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    /**
+     * 获取客组配置List
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList() {
+        CustomerServiceGroupConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceGroupConfig/selectCustomerServiceGroupConfigList", CustomerServiceGroupConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取客组类型为新客组的坐席配置
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig() {
+        CustomerServiceRepresentiveConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectCustomerServiceRepresentiveConfig", CustomerServiceRepresentiveConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据sourceId查询该渠道是否被禁用
+     *
+     * @param sourceId
+     * @return
+     */
+    @Override
+    public CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId) {
+        CustomerServiceChannelResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceChannel/selectCustomerServiceChannelBySourceId/" + sourceId, CustomerServiceChannelResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner) {
+        CustomerServiceRepresentiveConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectCustomerServiceRepresentiveConfigByUserName/"+currentOwner, CustomerServiceRepresentiveConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取状态为开启的坐席配置
+     *
+     * @return
+     */
+    @Override
+    public List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig() {
+        CustomerServiceRepresentiveConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/customerServiceRepresentiveConfig/selectRepresentiveConfig", CustomerServiceRepresentiveConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
