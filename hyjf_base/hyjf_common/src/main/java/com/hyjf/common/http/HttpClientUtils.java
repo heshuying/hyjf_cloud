@@ -103,7 +103,58 @@ public class HttpClientUtils {
         return content;
     }
 
-    
+    /**
+     * 处理post请求，增加对请求头的处理 add by yangchangwei
+     *
+     * @param url
+     *            参数
+     * @return json
+     */
+    public static String postJson(String url, String jsonStr,Map<String, String> header) {
+
+        // 实例化httpClient
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        // 实例化post方法
+        HttpPost httpPost = new HttpPost(url);
+
+        // 结果
+        CloseableHttpResponse response = null;
+        String content = "";
+        try {
+            // 提交的参数
+            StringEntity uefEntity = new StringEntity(jsonStr,"utf-8");
+            uefEntity.setContentEncoding("UTF-8");
+            uefEntity.setContentType("application/json");
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPost.setHeader(entry.getKey(),entry.getValue());
+            }
+            // 将参数给post方法
+            httpPost.setEntity(uefEntity);
+            // 执行post方法
+            response = httpclient.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                content = EntityUtils.toString(response.getEntity());
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage());
+                }
+            }
+            if (httpclient != null) {
+                try {
+                    httpclient.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage());
+                }
+            }
+        }
+        return content;
+    }
     
     
   

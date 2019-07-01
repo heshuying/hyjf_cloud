@@ -53,6 +53,8 @@ public class SenSorsServiceImpl implements SenSorsService{
     @Value("${hyjf.sensors.token}")
     private String token;
 
+    @Value("${hyjf.sensors.project}")
+    private String sensorsProject;
     /**
      * 获取接口数据
      * @param parm
@@ -63,7 +65,9 @@ public class SenSorsServiceImpl implements SenSorsService{
     public Map getSenSorsData(Map parm, String url) {
 
         String jsonString = JSONUtils.toJSONString(parm);
-        String post = HttpClientUtils.postJson(url, jsonString);
+        Map header = new HashMap();
+        header.put("sensorsdata-project",sensorsProject);
+        String post = HttpClientUtils.postJson(url, jsonString,header);
         Map map = (Map) JSONUtils.parse(post);
         return map;
     }
