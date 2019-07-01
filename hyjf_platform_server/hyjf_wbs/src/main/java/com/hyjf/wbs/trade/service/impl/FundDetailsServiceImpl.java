@@ -14,6 +14,7 @@ import com.hyjf.wbs.trade.dao.model.customize.FundDetailsCustomize;
 import com.hyjf.wbs.trade.service.FundDetailsService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author cui
  * @version FundDetailsServiceImpl, v0.1 2019/7/1 10:29
  */
+@Service
 public class FundDetailsServiceImpl implements FundDetailsService {
 
 	private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
