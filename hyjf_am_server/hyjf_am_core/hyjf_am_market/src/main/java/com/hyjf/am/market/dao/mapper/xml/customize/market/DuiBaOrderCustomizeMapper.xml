@@ -20,14 +20,6 @@
 	<sql id="Where_Clause_Total">
 		<where>
 			user_id = #{userId}
-			<!--兑吧需求调整 统计总获取时，不包含订单取消的明细 -->
-			<if test="type == 0">
-				AND `type` = #{type}
-				AND `business_name` != 2
-			</if>
-			<if test="type == 1">
-				AND `type` = #{type}
-			</if>
 			<if test="startTime != null and startTime != ''">
 				AND create_time <![CDATA[>=]]> STR_TO_DATE(#{startTime}, '%Y-%m-%d %H:%i:%s')
 			</if>
@@ -66,7 +58,39 @@
 	<select id="selectPointsTotal" resultType="java.lang.Integer"
 			parameterType="com.hyjf.am.resquest.market.DuiBaPointsDetailRequest">
 		SELECT
-			IFNULL(SUM(points), 0)
+		<choose>
+			<when test="type == 0">
+				IFNULL(
+					SUM(
+						CASE business_name
+						WHEN 0 THEN
+							points
+						WHEN 3 THEN
+							points
+						WHEN 4 THEN
+							points * - 1
+						END
+					),
+					0
+				)
+			</when>
+			<when test="type == 1">
+				IFNULL(
+					SUM(
+						CASE business_name
+						WHEN 1 THEN
+							points
+						WHEN 2 THEN
+							points * - 1
+						END
+					),
+					0
+				)
+			</when>
+			<otherwise>
+				0
+			</otherwise>
+		</choose>
 		FROM ht_duiba_points
 		<include refid="Where_Clause_Total" />
 	</select>

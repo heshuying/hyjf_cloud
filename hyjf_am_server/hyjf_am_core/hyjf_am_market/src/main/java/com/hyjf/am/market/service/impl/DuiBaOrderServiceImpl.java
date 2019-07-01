@@ -143,6 +143,8 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         // 防止没查到数据的情况，直接给前端格式化
         DuiBaPointsDetailVO duiBaPointsDetailVO = new DuiBaPointsDetailVO();
         duiBaPointsDetailVO.setList(new ArrayList<>());
+        // 获取积分 = 出借 + 调增 - 调减
+        // 使用积分 = 兑换 - 订单取消
         // 查询获取总积分
         request.setType(0);
         Integer pointsGetTotal = duiBaOrderCustomizeMapper.selectPointsTotal(request);
