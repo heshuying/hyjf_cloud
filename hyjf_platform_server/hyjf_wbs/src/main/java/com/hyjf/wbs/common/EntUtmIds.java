@@ -15,15 +15,15 @@ import java.util.Map;
  */
 public class EntUtmIds {
 
-    private final EntidsProperties entidsProperties;
-    private Map<String, String> entids;
-    private Map<String, String> flags;
+    private static final  EntidsProperties entidsProperties;
+    private static Map<String, String> entids;
+    private static Map<String, String> flags;
 
-    public EntUtmIds() {
+    static{
 
         entidsProperties = SpringUtils.getBean(EntidsProperties.class);
-        this.entids = entidsProperties.getEntids();
-        this.flags = entidsProperties.getFlags();
+        entids = entidsProperties.getEntids();
+        flags = entidsProperties.getFlags();
     }
 
     /**
@@ -32,7 +32,7 @@ public class EntUtmIds {
      * @param utmid
      * @return
      */
-    public String getEntId(String utmid) {
+    public static String getEntId(String utmid) {
         for (Map.Entry<String, String> entry : entids.entrySet()) {
             String mapKey = entry.getKey();
             String mapValue = entry.getValue();
@@ -57,7 +57,7 @@ public class EntUtmIds {
      * @param entid
      * @return
      */
-    public String getUtmId(String entid) {
+    public static String getUtmId(String entid) {
         for (Map.Entry<String, String> entry : entids.entrySet()) {
             String mapKey = entry.getKey();
             String mapValue = entry.getValue();
@@ -73,7 +73,7 @@ public class EntUtmIds {
      *
      * @return
      */
-    public List<Integer> getAllUtmId() {
+    public static List<Integer> getAllUtmId() {
         List<Integer> utmId = new ArrayList<Integer>();
         for (Map.Entry<String, String> entry : flags.entrySet()) {
             String mapKey = entry.getKey();

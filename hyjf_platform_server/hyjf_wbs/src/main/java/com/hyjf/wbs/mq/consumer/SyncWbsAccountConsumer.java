@@ -80,7 +80,6 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 return;
             }
 
-            EntUtmIds entUtmIds = new EntUtmIds();
 
 //            //根据渠道注册表查询用户是否是属于财富端对应的渠道
 //            List<Integer> utmId = new ArrayList<Integer>();
@@ -91,7 +90,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 //            //utmId.add(wbsConfig.getUtmDatang());//大唐渠道编号
 //            //utmId.add(wbsConfig.getUtmQianle());//千乐渠道编号
 
-            List<Integer> utmId  = entUtmIds.getAllUtmId();
+            List<Integer> utmId  = EntUtmIds.getAllUtmId();
             if(utmId==null||utmId.size()==0){
                 logger.error("=====" + CONSUMER_NAME + " 开启的utmid为null=====userId = " + userId);
                 return;
@@ -122,8 +121,8 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 
                 }
                 customerSyncQO.setAssetCustomerId(userId);
-                if (entUtmIds.getEntId(String.valueOf(utmReg.getUtmId()))!=null) {
-                    customerSyncQO.setEntId(Integer.valueOf(entUtmIds.getEntId(String.valueOf(utmReg.getUtmId()))));
+                if (EntUtmIds.getEntId(String.valueOf(utmReg.getUtmId()))!=null) {
+                    customerSyncQO.setEntId(Integer.valueOf(EntUtmIds.getEntId(String.valueOf(utmReg.getUtmId()))));
 
 
                 } else {
