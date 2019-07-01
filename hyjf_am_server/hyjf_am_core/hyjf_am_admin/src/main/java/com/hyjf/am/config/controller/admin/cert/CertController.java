@@ -113,14 +113,14 @@ public class CertController extends BaseConfigController {
 
     /**
      * 修改对账状态（重新对账）add by nxl
-     * @param id
+     * @param certLogId
      * @return
      */
-    @GetMapping("/againReconciliation")
-    public IntegerResponse againReconciliation(@RequestBody @Valid Integer id) {
+    @GetMapping("/againReconciliation/{certLogId}")
+    public IntegerResponse againReconciliation(@PathVariable Integer certLogId) {
         IntegerResponse response =new IntegerResponse();
         try{
-            certService.updateCertLogById(id);
+            certService.updateCertLogById(certLogId);
             response.setRtn(Response.SUCCESS);
             response.setResultInt(1);
         }catch (Exception e){
@@ -165,8 +165,8 @@ public class CertController extends BaseConfigController {
      * @param logOrderId
      * @return
      */
-    @GetMapping("/insertCertErrorLogByLogOrderId")
-    public IntegerResponse insertCertErrorLogByLogOrderId(@RequestBody @Valid String logOrderId){
+    @GetMapping("/insertCertErrorLogByLogOrderId/{logOrderId}")
+    public IntegerResponse insertCertErrorLogByLogOrderId(@PathVariable String logOrderId){
         IntegerResponse response =new IntegerResponse();
         response.setResultInt(0);
         response.setRtn(Response.FAIL);

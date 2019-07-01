@@ -2652,10 +2652,10 @@ public class AmConfigClientImpl implements AmConfigClient {
         String url = "http://AM-ADMIN/am-config/cert/againReconciliation/"+certLogId;
         IntegerResponse response = restTemplate
                 .getForEntity(url,IntegerResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
-            return response.getResultInt();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
         }
-        return 0;
+        return response.getResultInt();
     }
     /**
      * 批量修改对账状态 add by nxl
@@ -2667,10 +2667,10 @@ public class AmConfigClientImpl implements AmConfigClient {
         String url = "http://AM-ADMIN/am-config/cert/batchReconciliation";
         IntegerResponse response = restTemplate
                 .postForEntity(url,request,IntegerResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
-            return response.getResultInt();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
         }
-        return 0;
+        return response.getResultInt();
     }
     /**
      * 批量修改对账状态 add by nxl
@@ -2682,9 +2682,9 @@ public class AmConfigClientImpl implements AmConfigClient {
         String url = "http://AM-ADMIN/am-config/cert/insertCertErrorLogByLogOrderId/"+logOrderId;
         IntegerResponse response = restTemplate
                 .getForEntity(url,IntegerResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
-            return response.getResultInt();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
         }
-        return 0;
+        return response.getResultInt();
     }
 }
