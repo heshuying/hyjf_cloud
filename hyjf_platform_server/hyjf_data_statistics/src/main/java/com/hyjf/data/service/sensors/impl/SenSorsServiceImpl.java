@@ -12,11 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -46,9 +44,6 @@ public class SenSorsServiceImpl implements SenSorsService{
 
     @Autowired
     private JcDataStatisticsDao jcDataStatisticsDao;
-
-    @Autowired
-    private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
 
     @Value("${hyjf.sensors.token}")
     private String token;
