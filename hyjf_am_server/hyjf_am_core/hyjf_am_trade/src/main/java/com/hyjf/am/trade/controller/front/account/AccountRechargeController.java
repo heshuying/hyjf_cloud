@@ -3,12 +3,14 @@
  */
 package com.hyjf.am.trade.controller.front.account;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.account.AccountRecharge;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,4 +78,22 @@ public class AccountRechargeController extends BaseController {
 
     }
 
+    /**
+     * 根据用户Id查询用户第一笔充值记录
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/selectAccountRechargeByUserId/{userId}")
+    public AccountRechargeResponse selectAccountRechargeByUserId(@PathVariable Integer userId) {
+        AccountRechargeResponse response = new AccountRechargeResponse();
+        com.hyjf.am.trade.dao.model.auto.AccountRecharge accountRecharge = this.accountRecharge.selectAccountRechargeByUserId(userId);
+        if (accountRecharge != null) {
+            com.hyjf.am.vo.trade.account.AccountRechargeVO accountRechargeVO = new com.hyjf.am.vo.trade.account.AccountRechargeVO();
+            BeanUtils.copyProperties(accountRecharge, accountRechargeVO);
+            response.setResult(accountRechargeVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }

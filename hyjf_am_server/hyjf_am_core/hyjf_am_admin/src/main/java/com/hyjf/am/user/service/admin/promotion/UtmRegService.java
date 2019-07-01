@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.promotion;
 
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.service.BaseService;
 
@@ -54,4 +55,8 @@ public interface UtmRegService extends BaseService {
      * @return
      */
     void deleteUtmReg(Integer id);
+
+	UtmReg selectUtmRegByUserId(Integer userId);
+
+	AppUtmReg selectAppUtmRegByUserId(Integer userId);
 }
