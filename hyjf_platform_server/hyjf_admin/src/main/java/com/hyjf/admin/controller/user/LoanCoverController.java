@@ -475,6 +475,7 @@ public class LoanCoverController extends BaseController {
                 String idNo = (String) object;
                 String newIdNo = "";
                 for (LoanCoverUserVO loanCoverUserVO : loanCoverUserVOList) {
+                    logger.info("借款用户盖章导出数据打印:idType:" + loanCoverUserVO.getIdType() + ";idNo:" + loanCoverUserVO.getIdNo() + ";"+ loanCoverUserVO.getName());
                     if (loanCoverUserVO.getIdType() == 0) {
                         // 个人用户
                         newIdNo = AsteriskProcessUtil.getAsteriskedIdcard(idNo);
