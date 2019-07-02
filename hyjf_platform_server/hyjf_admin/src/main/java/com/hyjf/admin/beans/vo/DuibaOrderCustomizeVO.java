@@ -93,6 +93,14 @@ public class DuibaOrderCustomizeVO implements Serializable {
     private BigDecimal sellingPrice;
 
     /**
+     * 售价（积分）
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "售价（积分）")
+    private Integer sellingPricePoints;
+
+    /**
      * 划线价
      *
      * @mbggenerated
@@ -525,5 +533,14 @@ public class DuibaOrderCustomizeVO implements Serializable {
 
     public void setOrderTypeTab(String orderTypeTab) {
         this.orderTypeTab = orderTypeTab;
+    }
+
+    public Integer getSellingPricePoints() {
+        sellingPricePoints = sellingPrice.intValue();
+        return sellingPricePoints;
+    }
+
+    public void setSellingPricePoints(Integer sellingPricePoints) {
+        this.sellingPricePoints = sellingPricePoints;
     }
 }
