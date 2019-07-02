@@ -57,7 +57,10 @@ public class StzfWhiteConfigController extends BaseController {
 		boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
 		if(!isShow){
 			for (STZHWhiteListVO vo : response.getResultList()) {
+				//手机号脱敏
 				vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+				//收款人手机号脱敏
+				vo.setStMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getStMobile()));
 			}
 		}
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
@@ -74,7 +77,10 @@ public class StzfWhiteConfigController extends BaseController {
 			boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
 			if(!isShow){
 				STZHWhiteListVO vo=response.getResult();
+				//手机号脱敏
 				vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+				//收款人手机号脱敏
+				vo.setStMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getStMobile()));
 			}
 			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
 			response.setRegionList(regionList);

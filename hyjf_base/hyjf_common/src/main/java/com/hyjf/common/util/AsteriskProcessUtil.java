@@ -109,7 +109,12 @@ public class AsteriskProcessUtil {
         if (StringUtils.isEmpty(mobile)) {
             return mobile;
         }
-        return mobile.replaceAll("(?<=\\w{1})\\w(?=\\w{1})", "*");
+        //如果是手机号才脱敏
+        if (Validator.isMobile(mobile)){
+            return mobile.replaceAll("(?<=\\w{1})\\w(?=\\w{1})", "*");
+        }
+        //如果不是手机号，则直接返回
+        return mobile;
     }
 
     /**

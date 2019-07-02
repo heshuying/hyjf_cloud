@@ -2217,7 +2217,7 @@ public class BorrowCommonController extends BaseController {
 	        map.put("registTime", "备案时间");
 	      //  map.put("reverifyUserName", "复审人员");
 	        map.put("location", "所在地区");
-	        map.put("borrowerName", "借款人姓名");
+	        map.put("borrowerName", "借款主体");
 	        map.put("attribute", "属性");
 	        map.put("entrustedFlg", "是否受托支付");
 	        map.put("entrustedUsername", "收款人用户名");

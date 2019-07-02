@@ -192,6 +192,10 @@ public class UserCenterController extends BaseController {
         CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
         CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
         if(null!=companyInfo){
+            //企业证件号脱敏
+            companyInfo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(companyInfo.getIdNo()));
+            //企业银行卡号脱敏（按照银行卡号脱敏）
+            companyInfo.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(companyInfo.getAccount()));
             BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
         userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);
