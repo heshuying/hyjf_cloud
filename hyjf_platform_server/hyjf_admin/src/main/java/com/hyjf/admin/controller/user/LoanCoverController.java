@@ -315,7 +315,8 @@ public class LoanCoverController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         if (!isShow){
-            mapValueAdapter = buildValueAdapterNoPermissions(loanCoverUserResponse.getResultList());
+            List<LoanCoverUserVO> voList = loanCoverUserResponse.getResultList();
+            mapValueAdapter = buildValueAdapterNoPermissions(voList);
         }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -473,17 +474,17 @@ public class LoanCoverController extends BaseController {
             @Override
             public String format(Object object) {
                 String idNo = (String) object;
-                String newIdNo = "";
-                for (LoanCoverUserVO loanCoverUserVO : loanCoverUserVOList) {
-                    logger.info("借款用户盖章导出数据打印:idType:" + loanCoverUserVO.getIdType() + ";idNo:" + loanCoverUserVO.getIdNo() + ";"+ loanCoverUserVO.getName());
-                    if (loanCoverUserVO.getIdType() == 0) {
-                        // 个人用户
-                        newIdNo = AsteriskProcessUtil.getAsteriskedIdcard(idNo);
-                    }else {
-                        newIdNo = AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(idNo);
+                for(LoanCoverUserVO vo:loanCoverUserVOList){
+                    if (idNo.equals(vo.getIdNo()) && vo.getIdType() == 0) {
+                        logger.info("foreach id:[{}]",idNo);
+                        return AsteriskProcessUtil.getAsteriskedIdcard(idNo);
+                    }else if (idNo.equals(vo.getIdNo()) && vo.getIdType() == 1){
+                        logger.info("foreach id:[{}]",idNo);
+                        return AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(idNo);
                     }
                 }
-                return newIdNo;
+                logger.info("foreach ---- id:[{}]",idNo);
+                return "";
             }
         };
 
