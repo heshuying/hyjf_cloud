@@ -114,19 +114,19 @@ public class SenSorsServiceImpl implements SenSorsService{
             for (Map info:step
                  ) {
                 if(info.get("event_name") != null && "sign_up".equals(info.get("event_name"))){
-                    entity.setRegisterRate(info.get("conversion_rate").toString());
+                    entity.setRegisterRate(info.get("converted_user").toString());
                 }
                 if(info.get("event_name") != null && "open_success".equals(info.get("event_name"))){
-                    entity.setOpenAccountRate(info.get("conversion_rate").toString());
+                    entity.setOpenAccountRate(info.get("converted_user").toString());
                 }
                 if(info.get("event_name") != null && "recharge_result".equals(info.get("event_name"))){
-                    entity.setRechargeRate(info.get("conversion_rate").toString());
+                    entity.setRechargeRate(info.get("converted_user").toString());
                 }
                 if(info.get("event_name") != null && "allTender".equals(info.get("event_name"))){
-                    entity.setInvestRate(info.get("conversion_rate").toString());
+                    entity.setInvestRate(info.get("converted_user").toString());
                 }
                 if(info.get("event_name") != null && "investagain".equals(info.get("event_name"))){
-                    entity.setReInvestRate(info.get("conversion_rate").toString());
+                    entity.setReInvestRate(info.get("converted_user").toString());
                 }
             }
             entity.setUpdateTime(GetDate.formatTime());
