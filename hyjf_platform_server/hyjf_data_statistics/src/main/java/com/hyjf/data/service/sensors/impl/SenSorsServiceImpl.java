@@ -207,7 +207,7 @@ public class SenSorsServiceImpl implements SenSorsService{
             }
 
             List<List<Map>> linksList = (List<List<Map>>) senSorsData.get("links");
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size-1; i++) {
                 List<Map> node = linksList.get(i);
                 for (Map map:node
                         ) {
