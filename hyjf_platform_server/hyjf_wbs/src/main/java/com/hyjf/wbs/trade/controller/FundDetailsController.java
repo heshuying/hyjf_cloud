@@ -8,6 +8,8 @@ import java.net.URLDecoder;
 import java.util.List;
 
 import com.hyjf.wbs.qvo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping(value = "/hyjf-wbs/trade/funddetail")
 public class FundDetailsController {
+    private Logger logger=LoggerFactory.getLogger(getClass());
 
     @Autowired
     private FundDetailsService fundDetailsService;
@@ -52,6 +55,8 @@ public class FundDetailsController {
 
         try {
             String data=URLDecoder.decode(wbsCommonQO.getData(),"utf-8");
+
+            logger.info("资金明细接口接收到参数【{}】",data);
 
             FundDetailsQO fundDetailsQO=JSONObject.parseObject(data,FundDetailsQO.class);
 

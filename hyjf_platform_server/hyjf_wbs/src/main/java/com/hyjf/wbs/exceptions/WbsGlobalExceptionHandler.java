@@ -60,6 +60,7 @@ public class WbsGlobalExceptionHandler {
 	@ExceptionHandler(WbsFundDetailsException.class)
 	@ResponseBody
 	public WbsCommonVO fundDetailsExceptionHandler(HttpServletRequest request,WbsFundDetailsException ex){
+		logger.error("资金明细接口异常！", ex);
 		WbsCommonVO vo=new WbsCommonVO();
 		vo.setCode(Response.ERROR);
 		vo.setMsg(ex.getMessage());
