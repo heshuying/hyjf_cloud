@@ -37,9 +37,9 @@ public class JcDataStatisticsDao extends BaseMongoDao<JcDataStatistics> {
      * 获取当月数据
      * @return
      */
-    public JcDataStatistics getDataStatisticsByNowMonth() {
+    public JcDataStatistics getDataStatisticsByNowMonth(String month) {
         Query query = new Query();
-        CriteriaDefinition criteria = Criteria.where("time").is(GetDate.formatTimeYYYYMM());
+        CriteriaDefinition criteria = Criteria.where("time").is(month);
         query.addCriteria(criteria);
         return mongoTemplate.findOne(query,getEntityClass());
     }

@@ -17,18 +17,58 @@ public class JcDataStatistics {
 
     /**总出借笔数**/
     private Integer investCount;
+    /**
+     * 结束状态 0：初始 1：结束
+     */
+    private Integer investStatus;
 
     private Integer ztInvestCount; //散标出借笔数
 
+    private Integer ztInvestStatus;
+
     private Integer jhInvestCount; //智投出借笔数
+    private Integer jhInvestStatus;
 
     private Integer creditCount;  //承接债转笔数
+    private Integer creditStatus;
 
     private String time;          //统计时间
 
     private String createTime;
 
     private String updateTime;
+
+    public Integer getInvestStatus() {
+        return investStatus;
+    }
+
+    public void setInvestStatus(Integer investStatus) {
+        this.investStatus = investStatus;
+    }
+
+    public Integer getZtInvestStatus() {
+        return ztInvestStatus;
+    }
+
+    public void setZtInvestStatus(Integer ztInvestStatus) {
+        this.ztInvestStatus = ztInvestStatus;
+    }
+
+    public Integer getJhInvestStatus() {
+        return jhInvestStatus;
+    }
+
+    public void setJhInvestStatus(Integer jhInvestStatus) {
+        this.jhInvestStatus = jhInvestStatus;
+    }
+
+    public Integer getCreditStatus() {
+        return creditStatus;
+    }
+
+    public void setCreditStatus(Integer creditStatus) {
+        this.creditStatus = creditStatus;
+    }
 
     public String getId() {
         return id;

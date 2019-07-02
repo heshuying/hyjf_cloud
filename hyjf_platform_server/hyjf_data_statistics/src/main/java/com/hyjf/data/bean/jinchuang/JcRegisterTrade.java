@@ -19,13 +19,38 @@ public class JcRegisterTrade {
 
     private BigDecimal dealSize;
 
+    /**
+     * 结束状态 0初始，1结束
+     */
+    private Integer dealStatus;
+
     private Integer registerCount;
+    /**
+     * 结束状态 0初始，1结束
+     */
+    private Integer registerStatus;
 
     private String time;
 
     private String createTime;
 
     private String updateTime;
+
+    public Integer getDealStatus() {
+        return dealStatus;
+    }
+
+    public void setDealStatus(Integer dealStatus) {
+        this.dealStatus = dealStatus;
+    }
+
+    public Integer getRegisterStatus() {
+        return registerStatus;
+    }
+
+    public void setRegisterStatus(Integer registerStatus) {
+        this.registerStatus = registerStatus;
+    }
 
     public String getId() {
         return id;
