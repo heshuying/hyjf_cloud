@@ -191,8 +191,12 @@ public class SenSorsServiceImpl implements SenSorsService{
         List<List<Map>> nodesList = (List<List<Map>>) senSorsData.get("nodes");
         if(nodesList != null && nodesList.size() > 0){
 
-            for (List<Map> node: nodesList
-                    ) {
+            int size = nodesList.size();
+            if(size > 4){
+                size = 4;
+            }
+            for (int i = 0; i < size; i++) {
+                List<Map> node = nodesList.get(i);
                 for (Map map:node
                         ) {
                     Map info = new HashMap();
@@ -203,8 +207,8 @@ public class SenSorsServiceImpl implements SenSorsService{
             }
 
             List<List<Map>> linksList = (List<List<Map>>) senSorsData.get("links");
-            for (List<Map> node: linksList
-                    ) {
+            for (int i = 0; i < size; i++) {
+                List<Map> node = linksList.get(i);
                 for (Map map:node
                         ) {
                     if(map.get("is_wastage") != null && (boolean)map.get("is_wastage") == true){
@@ -217,6 +221,7 @@ public class SenSorsServiceImpl implements SenSorsService{
                     linkMap.add(info);
                 }
             }
+
             nodesMap.put("nodes",nodeMap);
             nodesMap.put("links",linkMap);
 
