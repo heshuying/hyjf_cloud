@@ -242,6 +242,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
         params.put("status",request.getStatus());
+        params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
         return webProjectListCustomizeMapper.countAppProject(params);
     }
 
@@ -269,6 +270,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
         params.put("status",request.getStatus());
+        params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 
