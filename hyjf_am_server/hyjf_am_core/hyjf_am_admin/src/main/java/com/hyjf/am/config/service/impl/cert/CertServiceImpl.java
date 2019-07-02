@@ -21,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -242,7 +243,7 @@ public class CertServiceImpl implements CertService {
         criteria.andLogOrdIdEqualTo(logOrderId);
         List<CertErrLog> certErrLogList = certErrLogMapper.selectByExample(example);
         if(CollectionUtils.isNotEmpty(certErrLogList)){
-            return 0;
+            return 2;
         }
         CertErrLog certErrLog = new CertErrLog();
         CertReportLogRequestBean certReportLogRequestBean = new CertReportLogRequestBean();
@@ -251,6 +252,7 @@ public class CertServiceImpl implements CertService {
         CertLog certLog = certLogs.get(0);
         BeanUtils.copyProperties(certLog, certErrLog);
         certErrLog.setId(null);
+        certErrLog.setUpdateTime(new Date());
         return certErrLogMapper.insertSelective(certErrLog);
     }
 }

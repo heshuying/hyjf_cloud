@@ -88,6 +88,9 @@ public class CertReportLogController extends BaseController{
         if(intFlg<=0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        if(intFlg==2){
+            return new AdminResult<>(SUCCESS, "该记录已存在！");
+        }
         return new AdminResult<>(SUCCESS, "重新上报成功");
     }
 }

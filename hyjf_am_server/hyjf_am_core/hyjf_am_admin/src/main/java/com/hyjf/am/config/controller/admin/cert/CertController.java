@@ -172,7 +172,7 @@ public class CertController extends BaseConfigController {
         response.setRtn(Response.FAIL);
         int intflg =certService.insertCertErrorLogByLogOrderId(logOrderId);
         if(intflg>0){
-            response.setResultInt(1);
+            response.setResultInt(intflg);
             response.setRtn(Response.SUCCESS);
         }
         return response;
