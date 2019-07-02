@@ -115,6 +115,7 @@
         JOIN ht_r_user u2 ON bce.tender_user_id = u2.user_id
         WHERE 1=1
         <include refid="where-list"/>
+        ORDER BY bce.id desc
 		<if test="limitStart != null and limitStart >= 0">
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>

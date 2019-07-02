@@ -284,6 +284,8 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
                 newEnd.setStatus(11); // 业务部分成功
             }else {
                 newEnd.setStatus(5); // 业务全部成功
+                newEnd.setState("S");
+                newEnd.setFailmsg("");
             }
         }else {
             newEnd.setStatus(12); // 业务全部失败
@@ -374,6 +376,8 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
                 newEnd.setStatus(11); // 业务部分成功
             }else {
                 newEnd.setStatus(5); // 业务全部成功
+                newEnd.setState("S");
+                newEnd.setFailmsg("");
             }
         }else {
             newEnd.setStatus(12); // 业务全部失败

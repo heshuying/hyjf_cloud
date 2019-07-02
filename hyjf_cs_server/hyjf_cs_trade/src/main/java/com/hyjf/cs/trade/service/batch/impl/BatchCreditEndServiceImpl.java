@@ -98,7 +98,7 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
     public int updateForCallBackFail(BankCallBean bean) {
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
-        return this.amTradeClient.updateBatchCreditEndFinish(bankCallBeanVO);
+        return this.amTradeClient.updateForCallBackFail(bankCallBeanVO);
     }
 
     /**
@@ -218,7 +218,7 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
         String orderDate = GetOrderIdUtils.getOrderDate();
         // 调用批次状态查询接口
         BankCallBean bankCallBean = new BankCallBean();
-        bankCallBean.setTxCode(BankCallConstant.TXCODE_BATCH_DETAILS_QUERY);
+        bankCallBean.setTxCode(BankCallConstant.TXCODE_BATCH_QUERY);
         bankCallBean.setChannel(channel);
         bankCallBean.setBatchNo(creditEndVO.getBatchNo());
         bankCallBean.setBatchTxDate(batchTxDate);
