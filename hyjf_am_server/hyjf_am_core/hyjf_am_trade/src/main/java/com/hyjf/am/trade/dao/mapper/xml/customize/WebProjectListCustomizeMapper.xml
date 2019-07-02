@@ -873,6 +873,7 @@
         FROM
         ht_borrow hydb
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        LEFT JOIN ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
         <include refid="App_Where_Clause" />
     </select>
 
@@ -1130,7 +1131,7 @@
             AND hydb.is_show <![CDATA[<>]]> 1
 
             <if test="publishInstCode != null and publishInstCode != ''">
-                AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hi.publish_inst_code ='0')
+                AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
             </if>
 
         </where>
