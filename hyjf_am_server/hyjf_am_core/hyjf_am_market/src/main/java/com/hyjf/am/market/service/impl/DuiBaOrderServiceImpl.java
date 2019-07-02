@@ -79,7 +79,8 @@ public class DuiBaOrderServiceImpl implements DuiBaOrderService {
         }
         // 售价
         BigDecimal duiBaRate = new BigDecimal(RedisUtils.get(RedisConstants.DUIBA_EXCHANGE_RATE));
-        duibaOrders.setSellingPrice(new BigDecimal(consumeParams.getCredits()).divide(duiBaRate,2, BigDecimal.ROUND_DOWN));
+        // 2019-07-02 需求更改，直接存兑吧返回的积分，不需要处理
+        duibaOrders.setSellingPrice(new BigDecimal(consumeParams.getCredits()));
         // 划线价 返回单位为分，转换一下
         if(null != consumeParams.getFacePrice()){
             duibaOrders.setMarkingPrice(new BigDecimal(consumeParams.getFacePrice()).multiply(new BigDecimal("0.01")));
