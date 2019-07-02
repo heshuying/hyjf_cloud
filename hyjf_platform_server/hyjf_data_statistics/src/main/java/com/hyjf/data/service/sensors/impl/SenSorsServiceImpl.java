@@ -322,11 +322,12 @@ public class SenSorsServiceImpl implements SenSorsService{
 
 
 
-    public static void main(String[] args) {
-
-        String substring = "2019-09-09 14:29:00".substring(0, 10);
-        System.out.println(substring);
-    }
+//    public static void main(String[] args) {
+//
+//        String s = GetDate.formatTimeYYYYMM();
+//
+//        System.out.println(s);
+//    }
 
 
     /**
