@@ -65,10 +65,10 @@
                     br.user_id
                     FROM
                     hyjf_trade.ht_borrow_tender br
-                    INNER JOIN hyjf_trade.ht_borrow b ON b.borrow_nid = br.borrow_nid
                     WHERE
-                    b.recover_last_time <![CDATA[ <= ]]>  unix_timestamp(#{endDate})
-                    AND b.recover_last_time <![CDATA[ > ]]> unix_timestamp(#{beginDate})
+                    br.create_time <![CDATA[ <= ]]>  #{endDate)
+                    AND br.create_time <![CDATA[ >= ]]> #{beginDate}
+		            AND br.accede_order_id is NULL
                 UNION
                 SELECT
                     user_id
@@ -76,25 +76,15 @@
                     hyjf_trade.ht_credit_tender
                     WHERE
                     create_time <![CDATA[ <= ]]> #{endDate}
-                    AND create_time <![CDATA[ > ]]> #{beginDate}
+                    AND create_time <![CDATA[ >= ]]> #{beginDate}
                 UNION
                 SELECT
-                    hdpa.user_id
-                    FROM
-                    hyjf_trade.ht_debt_plan_accede hdpa
-                    LEFT JOIN hyjf_trade.ht_debt_plan hdp ON hdpa.plan_nid = hdp.debt_plan_nid
-                    WHERE
-                    hdp.plan_lock_time <![CDATA[ <= ]]> unix_timestamp(#{endDate})
-                    AND hdp.plan_lock_time <![CDATA[ > ]]> unix_timestamp(#{beginDate})
-                UNION
-                SELECT
-                    user_id
-                    FROM
-                    hyjf_trade.ht_product_list
-                    WHERE
-                    invest_time <![CDATA[ <= ]]> unix_timestamp(#{endDate})
-                    AND invest_time <![CDATA[ > ]]> unix_timestamp(#{beginDate})
-                    AND invest_status = 0
+                user_id
+                FROM
+                hyjf_trade.ht_hjh_accede
+                WHERE
+                    create_time <![CDATA[ <= ]]> #{endDate}
+                    AND create_time <![CDATA[ >= ]]> #{beginDate}
                 ) t
             LEFT JOIN hyjf_user.ht_user u ON t.user_id = u.user_id
             LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
