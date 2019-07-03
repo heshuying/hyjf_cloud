@@ -26,7 +26,7 @@ public class JcCustomerServiceDao extends BaseMongoDao<JcCustomerService> {
 
     public JcCustomerService getCustomerService() {
         Query query = new Query();
-        query.with(new Sort(Sort.Direction.DESC, "createTime"));
+        query.with(new Sort(Sort.Direction.DESC, "updateTime"));
         return mongoTemplate.findOne(query, getEntityClass());
     }
 
