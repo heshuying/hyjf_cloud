@@ -91,5 +91,6 @@ public class DBServiceImpl implements DBService {
                 jcUserAnalysisDao.save(jcUserAnalysis);
             }
         }
+        logger.info("----------金创更新最近6个月的用户性别分布完成！----------");
     }
 }
