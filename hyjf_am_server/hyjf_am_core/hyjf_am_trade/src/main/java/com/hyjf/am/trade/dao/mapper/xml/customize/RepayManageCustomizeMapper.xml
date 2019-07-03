@@ -473,8 +473,7 @@
 		<where>
 			hba.status = 6
 			AND hba.api_type = 1
-			<!--AND hbi.repay_org_user_id = #{userId}
-			<!-- 只显示垫付机构还款-->
+			<!--AND hbi.repay_org_user_id = #{userId} 只显示垫付机构还款-->
 			AND hbi.repay_org_user_id= #{userId}
 			AND (
 			(
