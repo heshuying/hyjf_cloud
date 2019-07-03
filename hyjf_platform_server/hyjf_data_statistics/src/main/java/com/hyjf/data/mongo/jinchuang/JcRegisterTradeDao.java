@@ -36,9 +36,9 @@ public class JcRegisterTradeDao extends BaseMongoDao<JcRegisterTrade> {
      * 获取当月数据
      * @return
      */
-    public JcRegisterTrade getRegisterTradeByNowMonth() {
+    public JcRegisterTrade getRegisterTradeByNowMonth(String month) {
         Query query = new Query();
-        CriteriaDefinition criteria = Criteria.where("time").is(GetDate.formatTimeYYYYMM());
+        CriteriaDefinition criteria = Criteria.where("time").is(month);
         query.addCriteria(criteria);
         return mongoTemplate.findOne(query,getEntityClass());
     }

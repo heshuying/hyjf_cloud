@@ -5,12 +5,10 @@ package com.hyjf.data.controller;
 
 import com.hyjf.am.vo.admin.JcCustomerServiceVO;
 import com.hyjf.data.bean.jinchuang.*;
-import com.hyjf.data.response.Interest;
 import com.hyjf.data.response.JcScreenResponse;
 import com.hyjf.data.result.ApiResult;
 import com.hyjf.data.market.service.JinChuangDataService;
 import com.hyjf.data.vo.jinchuang.JcDataStatisticsVO;
-import com.hyjf.data.vo.jinchuang.JcUserAnalysisVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**

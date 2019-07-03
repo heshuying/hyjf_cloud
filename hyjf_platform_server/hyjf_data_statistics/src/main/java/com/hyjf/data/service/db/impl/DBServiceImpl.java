@@ -43,6 +43,9 @@ public class DBServiceImpl implements DBService {
 
         String startDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
         String endDate = GetDate.formatDate();
+        if(startDate.equals(endDate)){//如果当天为月初，则统计上个整月的数据
+            startDate = GetDate.countDateYYYYMMDDHHMMSS(startDate,2,-1);
+        }
         BigDecimal monthInterest = jcDataStatisticsCustomerMapper.getUserMonthInterest(startDate, endDate);
 
         JcUserInterest jcUserInterest = new JcUserInterest();
@@ -66,8 +69,7 @@ public class DBServiceImpl implements DBService {
     public void getSixMonthSexDistributed() {
 
 
-//        String startDate  = GetDate.formatDate(GetDate.getFirstDayOnMonth(GetDate.stringToDate2(GetDate.getCountDate(2,-5))));
-        String startDate  = "2017-06-01";
+        String startDate  = GetDate.formatDate(GetDate.getFirstDayOnMonth(GetDate.stringToDate2(GetDate.getCountDate(2,-5))));
         String endDate = GetDate.formatDate();
         List<SexDistributedInfo> list = jcDataStatisticsCustomerMapper.getSexDistributed(startDate, endDate);
         JcUserAnalysis jcUserAnalysis = new JcUserAnalysis();
