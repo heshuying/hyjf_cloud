@@ -63,9 +63,13 @@ public class LoanCoverController extends BaseController {
     @PostMapping(value = "/selectLoancoverList")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+    public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(HttpServletRequest request, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         LoanCoverUserResponse loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
         if (loanCoverUserVOList == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -75,6 +79,20 @@ public class LoanCoverController extends BaseController {
         }
         List<LoanCoverUserCustomizeVO> loanCoverUserCustomizeVOList= new ArrayList<LoanCoverUserCustomizeVO>();
         if(null!=loanCoverUserVOList.getResultList()&&loanCoverUserVOList.getResultList().size()>0){
+            if (!isShow){
+                // 对未取到查看权限的用户查看数据加密
+                loanCoverUserVOList.getResultList().forEach(item ->{
+                    // 名称
+                    item.setName(AsteriskProcessUtil.getAsteriskedCnName(item.getName()));
+                    // 证件号码
+                    if(item.getIdType() == 0){
+                        // 个人
+                        item.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdNo()));
+                    }else {
+                        item.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(item.getIdNo()));
+                    }
+                });
+            }
             loanCoverUserCustomizeVOList = CommonUtils.convertBeanList(loanCoverUserVOList.getResultList(),LoanCoverUserCustomizeVO.class);
         }
         return new AdminResult<ListResult<LoanCoverUserCustomizeVO>>(ListResult.build(loanCoverUserCustomizeVOList, loanCoverUserVOList.getCount()));
@@ -270,6 +288,10 @@ public class LoanCoverController extends BaseController {
     @PostMapping(value = "/exportLoancover")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcelAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         // 封装查询条件
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
@@ -292,6 +314,10 @@ public class LoanCoverController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (!isShow){
+            List<LoanCoverUserVO> voList = loanCoverUserResponse.getResultList();
+            mapValueAdapter = buildValueAdapterNoPermissions(voList);
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -378,6 +404,92 @@ public class LoanCoverController extends BaseController {
             }
         };
 
+        mapAdapter.put("idType", idTypeAdapter);
+        mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("createTime", createTimeAdapter);
+        mapAdapter.put("updateTime", updateTimeAdapter);
+        return mapAdapter;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterNoPermissions(List<LoanCoverUserVO> loanCoverUserVOList) {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter idTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer idType = (Integer) object;
+                if (idType == 0) {
+                    return ("个人");
+                } else {
+                    return ("企业");
+                }
+            }
+        };
+
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String status = (String) object;
+                if(status ==null){
+                    status = ("未认证");
+                } else if ("success".equals(status)) {
+                    status = ("认证成功");
+                } else if ("error".equals(status)) {
+                    status = ("认证失败");
+                } else {
+                    status = (status);
+                }
+                return status;
+            }
+        };
+
+        IValueFormatter createTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date createTime = (Date) object;
+                String strCreateTime = format.format(createTime);
+                return strCreateTime;
+            }
+        };
+
+        IValueFormatter updateTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date updateTime = (Date) object;
+                String strUpdateTime = format.format(updateTime);
+                return strUpdateTime;
+            }
+        };
+
+        IValueFormatter nameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String name = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(name);
+            }
+        };
+
+        IValueFormatter idNoAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String idNo = (String) object;
+                for(LoanCoverUserVO vo:loanCoverUserVOList){
+                    if (idNo.equals(vo.getIdNo()) && vo.getIdType() == 0) {
+                        logger.info("foreach id:[{}]",idNo);
+                        return AsteriskProcessUtil.getAsteriskedIdcard(idNo);
+                    }else if (idNo.equals(vo.getIdNo()) && vo.getIdType() == 1){
+                        logger.info("foreach id:[{}]",idNo);
+                        return AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(idNo);
+                    }
+                }
+                logger.info("foreach ---- id:[{}]",idNo);
+                return "";
+            }
+        };
+
+        mapAdapter.put("name", nameAdapter);
+        mapAdapter.put("idNo", idNoAdapter);
         mapAdapter.put("idType", idTypeAdapter);
         mapAdapter.put("status", statusAdapter);
         mapAdapter.put("createTime", createTimeAdapter);

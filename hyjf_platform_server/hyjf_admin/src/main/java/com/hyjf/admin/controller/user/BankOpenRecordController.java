@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
 import com.hyjf.admin.beans.request.BankCancellationAccountRequestBean;
@@ -26,14 +25,12 @@ import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.resquest.user.BankCancellationAccountRequest;
 import com.hyjf.am.vo.user.BankCancellationAccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,8 +96,10 @@ public class BankOpenRecordController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for (BankOpenAccountRecordVO registRecordVO:bankOpenAccountRecordVOList){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
-                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getIdCard()));
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
+                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(registRecordVO.getIdCard()));
+                    // 姓名
+                    registRecordVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(registRecordVO.getRealName()));
                 }
             }
             bankOpenAccountRecordCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountRecordVOList,BankOpenAccountRecordCustomizeVO.class);
@@ -136,8 +135,12 @@ public class BankOpenRecordController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for (BankOpenAccountRecordVO registRecordVO:bankOpenAccountRecordVOList){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
-                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getIdCard()));
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
+                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(registRecordVO.getIdCard()));
+                    // 用户姓名
+                    registRecordVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(registRecordVO.getRealName()));
+                    // 银行卡号
+                    registRecordVO.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(registRecordVO.getAccount()));
                 }
             }
             bankOpenAccountRecordCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountRecordVOList,BankOpenAccountRecordCustomizeVO.class);
@@ -390,7 +393,16 @@ public class BankOpenRecordController extends BaseController {
             @Override
             public String format(Object object) {
                 String idCard = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(idCard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idCard);
+            }
+        };
+
+        // 真实姓名
+        IValueFormatter realNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String realName = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(realName);
             }
         };
 
@@ -398,6 +410,7 @@ public class BankOpenRecordController extends BaseController {
         mapAdapter.put("age", ageAdapter);
         mapAdapter.put("area", areaAdapter);
         mapAdapter.put("idCard", idCardAdapter);
+        mapAdapter.put("realName", realNameAdapter);
         return mapAdapter;
     }
 
@@ -569,18 +582,38 @@ public class BankOpenRecordController extends BaseController {
             @Override
             public String format(Object object) {
                 String idCard = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(idCard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idCard);
             }
         };
         IValueFormatter mobileAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
+            }
+        };
+
+        // 真实姓名
+        IValueFormatter realNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String realName = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(realName);
+            }
+        };
+
+        // 银行卡号
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String account = (String) object;
+                return AsteriskProcessUtil.getAsteriskedBankCard(account);
             }
         };
         mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("idCard", idCardAdapter);
+        mapAdapter.put("realName", realNameAdapter);
+        mapAdapter.put("account", accountAdapter);
         return mapAdapter;
     }
 
@@ -618,6 +651,26 @@ public class BankOpenRecordController extends BaseController {
         BankCancellationAccountRequest  bankCancellationAccountRequest = new  BankCancellationAccountRequest();
         BeanUtils.copyProperties(requestBean,bankCancellationAccountRequest);
         BankCancellationAccountResponse response = this.userCenterService.getBankCancellationAccountList(bankCancellationAccountRequest);
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        List<BankCancellationAccountVO> bankCancellationList = response.getResultList();
+        if (null != bankCancellationList && bankCancellationList.size() > 0){
+            // 判断是否具有查看权限
+            if (!isShow){
+                bankCancellationList.forEach(item ->{
+                    // 手机号码
+                    item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
+                    // 身份证号码
+                    item.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdcard()));
+                    // 姓名
+                    item.setTruename(AsteriskProcessUtil.getAsteriskedCnName(item.getTruename()));
+                    // 银行卡号
+                    item.setCardNo(AsteriskProcessUtil.getAsteriskedBankCard(item.getCardNo()));
+                });
+            }
+        }
+
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
