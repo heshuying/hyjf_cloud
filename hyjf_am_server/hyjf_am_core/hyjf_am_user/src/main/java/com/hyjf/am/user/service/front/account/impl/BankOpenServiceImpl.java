@@ -157,6 +157,8 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         user.setWithdrawSms(0);
         user.setUserType(0);
         //user.setMobile(mobile);
+        // 开户成功后将用户在页面填写的手机号存到银行预留手机号 add by liushouyi
+        user.setBankMobile(mobile);
         user.setIsSetPassword(isSetPassword);
         // 更新相应的用户表
         boolean usersFlag = usersMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;

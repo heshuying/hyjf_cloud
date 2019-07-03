@@ -5,6 +5,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 
 import java.util.List;
 
@@ -33,4 +34,11 @@ public interface BorrowRegistCustomizeMapper {
      * @return
      */
     String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 标的备案撤销确认页面数据
+     * @param borrowNid
+     * @return
+     */
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
 }

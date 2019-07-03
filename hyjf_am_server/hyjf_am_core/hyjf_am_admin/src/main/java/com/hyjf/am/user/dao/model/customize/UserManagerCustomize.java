@@ -16,6 +16,8 @@ public class UserManagerCustomize {
     public String realName;
     //用户手机号
     public String mobile;
+    // 银行预留手机号
+    private String bankMobile;
     //用戶角色
     public String userRole;
     //用户类型
@@ -327,5 +329,13 @@ public class UserManagerCustomize {
 
     public void setInstName(String instName) {
         this.instName = instName;
+    }
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile;
     }
 }

@@ -90,6 +90,9 @@ public class CouponUserForAppCustomizeVO extends BaseVO implements Serializable 
     //出借金额类别
     private Integer tenderQuotaType;
 
+    //到期时间
+    private String endTimeStamp;
+
     public Integer getId() {
         return id;
     }
@@ -282,7 +285,11 @@ public class CouponUserForAppCustomizeVO extends BaseVO implements Serializable 
         this.tenderQuotaValue = tenderQuotaValue;
     }
 
+    public String getEndTimeStamp() {
+        return endTimeStamp;
+    }
 
-
-
+    public void setEndTimeStamp(String endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
+    }
 }

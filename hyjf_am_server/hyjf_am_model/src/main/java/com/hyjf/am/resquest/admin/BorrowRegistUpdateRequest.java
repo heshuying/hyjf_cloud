@@ -24,6 +24,11 @@ public class BorrowRegistUpdateRequest implements Serializable {
     private BorrowInfoVO borrowInfoVO;
 
     /**
+     * 项目编号
+     */
+    private String borrowNid;
+
+    /**
      * 借款人电子账户
      */
     private String AccountId;
@@ -57,6 +62,13 @@ public class BorrowRegistUpdateRequest implements Serializable {
      * 更新类型（1更新标的备案 2更新受托支付标的备案）-admin银行标的备案异常处理异常时用到
      */
     private int type;
+
+    /** 银行返回码*/
+    String retCode = "";
+    /** 标的状态*/
+    String state = "";
+    /** 银行返回描述信息*/
+    String bankRetmsg = "";
 
     public BorrowAndInfoVO getBorrowVO() {
         return borrowVO;
@@ -128,5 +140,37 @@ public class BorrowRegistUpdateRequest implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
+
+    public String getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(String retCode) {
+        this.retCode = retCode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getBankRetmsg() {
+        return bankRetmsg;
+    }
+
+    public void setBankRetmsg(String bankRetmsg) {
+        this.bankRetmsg = bankRetmsg;
     }
 }

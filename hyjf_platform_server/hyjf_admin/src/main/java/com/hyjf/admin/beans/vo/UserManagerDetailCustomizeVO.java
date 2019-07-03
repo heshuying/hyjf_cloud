@@ -88,6 +88,9 @@ public class UserManagerDetailCustomizeVO implements Serializable {
     /** 手机号码 */
     @ApiModelProperty(value = "手机号码")
     public String mobile;
+    /** 银行预留手机号*/
+    @ApiModelProperty(value = "银行预留手机号")
+    private String bankMobile;
     /** 手机号码认证状态 */
     @ApiModelProperty(value = "手机号码认证状态")
     public String mobileStatus;
@@ -441,5 +444,13 @@ public class UserManagerDetailCustomizeVO implements Serializable {
 
     public void setIsSetPassword(Integer isSetPassword) {
         this.isSetPassword = isSetPassword;
+    }
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile;
     }
 }
