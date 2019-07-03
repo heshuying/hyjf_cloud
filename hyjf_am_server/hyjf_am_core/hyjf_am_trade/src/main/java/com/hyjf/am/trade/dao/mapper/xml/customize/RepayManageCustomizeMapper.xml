@@ -666,7 +666,7 @@
 			bw.borrow_apr,
 			date_format( bw.create_time, '%Y-%c-%d' ) AS create_time,
 			CASE
-			WHEN  bw.borrow_style = 'endday'  THEN
+			WHEN bw.borrow_style = 'endday'  THEN
 			'day' ELSE 'month'
 			END AS borrow_style,
 			sl.old_sponsor as oldBailAccountId,

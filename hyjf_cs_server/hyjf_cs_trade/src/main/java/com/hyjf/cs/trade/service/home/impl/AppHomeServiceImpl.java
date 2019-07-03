@@ -1290,6 +1290,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setStatus(statusNewInvest);
         request.setType("4");
         request.setHost(host);
+        request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        request.setWjtInstCode(systemConfig.getWjtInstCode());
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewInvestTemp = amTradeClient.searchAppProjectList(request);
         List<AppProjectListCustomizeVO> listNewInvest = new ArrayList<>();
@@ -1311,6 +1313,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         String statusNewOnTime = "14";
         AppProjectListRequest request2= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request2.setStatus(statusNewOnTime);
+
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewOnTimeTemp = amTradeClient.searchAppProjectList(request2);
         List<AppProjectListCustomizeVO> listNewOnTime = new ArrayList<>();
@@ -1332,6 +1335,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         String status = "16";
         AppProjectListRequest request3= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request3.setStatus(status);
+        request3.setPublishInstCode(null);
+        request3.setWjtInstCode(null);
         List<AppProjectListCustomizeVO> reviewListTemp = amTradeClient.searchAppProjectList(request3);
         List<AppProjectListCustomizeVO> reviewList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(reviewListTemp)){
@@ -1351,6 +1356,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         status = "17";
         AppProjectListRequest request4= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request4.setStatus(status);
+        request4.setPublishInstCode(null);
+        request4.setWjtInstCode(null);
         List<AppProjectListCustomizeVO> repaymentListTemp = amTradeClient.searchAppProjectList(request4);
         List<AppProjectListCustomizeVO> repaymentList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(repaymentListTemp)){
