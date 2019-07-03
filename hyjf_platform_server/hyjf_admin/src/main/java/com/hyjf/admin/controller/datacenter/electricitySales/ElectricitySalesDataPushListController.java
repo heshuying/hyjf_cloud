@@ -313,7 +313,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 							return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,"坐席姓名或客户账号不可为空，请修改后重新上传");
 						}
 						if(StringUtils.isEmpty(this.getValue(hssfRow.getCell(0)))){
-							return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,"坐席姓名，请修改后重新上传");
+							return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,"坐席姓名不可为空，请修改后重新上传");
 						}
 						if(StringUtils.isEmpty(this.getValue(hssfRow.getCell(1)))){
 							return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,"客户账号不可为空，请修改后重新上传");
