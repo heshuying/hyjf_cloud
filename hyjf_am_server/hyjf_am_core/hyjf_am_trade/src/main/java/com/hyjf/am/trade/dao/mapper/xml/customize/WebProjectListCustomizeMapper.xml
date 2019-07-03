@@ -1068,9 +1068,9 @@
                 </if>
                 )
                 or (
-                ((htb.`status` = 3)
-                OR ( htb.`status` = 4)
-                OR ( htb.`status` = 8))
+                ((hydb.`status` = 3)
+                OR ( hydb.`status` = 4)
+                OR ( hydb.`status` = 8))
                 AND hbi.publish_inst_code = #{wjtInstCode,jdbcType=VARCHAR}
                 )
                 )
