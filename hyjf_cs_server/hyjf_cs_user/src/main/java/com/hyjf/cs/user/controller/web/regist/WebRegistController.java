@@ -5,8 +5,10 @@ package com.hyjf.cs.user.controller.web.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
@@ -93,7 +95,9 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult register(@RequestBody RegisterRequest registerRequest,HttpServletRequest request) {
+    public WebResult register(@RequestBody RegisterRequest registerRequest,
+                              @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                              HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
         WebResult result = new WebResult();
         // 1. 参数检查
@@ -102,9 +106,13 @@ public class WebRegistController extends BaseUserController {
         password = RSAJSPUtil.rsaToPassword(password);
         registerRequest.setPassword(password);
         registService.checkParam(registerRequest);
+        if(wjtClient!=null){
+            logger.info("温金投用户注册开始");
+            registerRequest.setIsWjt("1");
+        }
         WebViewUserVO webViewUserVO = registService.register(registerRequest.getMobile(),
                 registerRequest.getVerificationCode(), registerRequest.getPassword(),
-                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request), registerRequest.getUserType());
+                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request), registerRequest.getUserType(),registerRequest.getIsWjt());
 
         if (webViewUserVO != null) {
             // add by liuyang 神策数据统计追加 20181029 start
@@ -124,6 +132,24 @@ public class WebRegistController extends BaseUserController {
                 }
             }
             // add by liuyang 神策数据统计追加 20181029 end
+
+            // add by cuigq wbs客户信息回调 20190417 start
+            if(!(Strings.isNullOrEmpty(registerRequest.getUtmId()) || Strings.isNullOrEmpty(registerRequest.getCustomerId()))){
+
+                WbsRegisterMqVO wbsRegisterMqVO=new WbsRegisterMqVO();
+                wbsRegisterMqVO.setUtmId(registerRequest.getUtmId());
+                wbsRegisterMqVO.setCustomerId(registerRequest.getCustomerId());
+                wbsRegisterMqVO.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
+
+                try {
+                    registService.sendWbsMQ(wbsRegisterMqVO);
+                } catch (MQException e) {
+                    logger.info("用户【{}】注册后，发达MQ到Wbs失败！",webViewUserVO.getUsername());
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            // add by cuigq wbs客户信息回调 20190417 end
+
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
             result.setData(webViewUserVO);
         } else {

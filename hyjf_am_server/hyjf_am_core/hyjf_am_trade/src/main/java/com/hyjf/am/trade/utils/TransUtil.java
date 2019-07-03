@@ -4,7 +4,6 @@ import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
 import com.hyjf.am.trade.dao.model.auto.AleveLog;
 import com.hyjf.am.trade.dao.model.auto.EveLog;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -409,5 +411,126 @@ public class TransUtil {
 
     }
 
+    /**
+     * 循环拼接日期到List并+N天
+     *
+     * @param dBegin   开始日期
+     * @param dEnd 结束日期
+     * @return List<Date>
+     */
+    public static List<Date> findDates(Date dBegin, Date dEnd, int n) throws ParseException {
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
 
+        //设置结束时间
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(dEnd);
+
+        //装返回的日期集合容器
+        List<Date> Datelist = new ArrayList<Date>();
+
+        // 每次循环给calBegin日期加一天，直到calBegin.getTime()时间等于dEnd
+        while (dEnd.after(calBegin.getTime()))  {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            calBegin.add(Calendar.DAY_OF_MONTH, n);
+            Datelist.add(calBegin.getTime());
+        }
+        return Datelist;
+    }
+
+    /**
+     * 循环拼接日期到List
+     *
+     * @param dBegin   开始日期
+     * @param dEnd 结束日期
+     * @return List<Date>
+     */
+    public static List<Date> findDates(Date dBegin, Date dEnd) throws ParseException {
+        boolean flag = true;
+
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
+
+        //设置结束时间
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(dEnd);
+
+        //装返回的日期集合容器
+        List<Date> Datelist = new ArrayList<Date>();
+
+        if(calBegin.getTime().equals(calEnd.getTime())){
+            Datelist.add(calBegin.getTime());
+        }else{
+            // 每次循环给calBegin日期加一天，直到calBegin.getTime()时间等于dEnd
+            while (dEnd.after(calBegin.getTime()))  {
+                // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+                if(flag){
+                    Datelist.add(calBegin.getTime());
+                    flag = false;
+                }else{
+                    calBegin.add(Calendar.DAY_OF_MONTH, 1);
+                    Datelist.add(calBegin.getTime());
+                }
+            }
+        }
+        return Datelist;
+    }
+
+    /**
+     * 循环拼接日期到List 循环到N天
+     *
+     * @param dBegin   开始日期
+     * @return List<Date>
+     */
+    public static List<Date> findDates(Date dBegin,int n) {
+        boolean flag = true;
+        // 初始化循环锁止状态
+        int t = 0;
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
+        // 装返回的日期集合容器
+        List<Date> Datelist = new ArrayList<Date>();
+        // 循环到指定设置天数
+        while (t<=n)  {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            if(flag){
+                Datelist.add(calBegin.getTime());
+                flag = false;
+            }else{
+                calBegin.add(Calendar.DAY_OF_MONTH, 1);
+                Datelist.add(calBegin.getTime());
+            }
+            t++;
+        }
+        return Datelist;
+    }
+
+    /**
+     * 日期+N天
+     *
+     * @param d  日期
+     * @return Date
+     */
+    public static Date datesAdd(Date d, int n)  {
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(d);
+        calBegin.add(Calendar.DAY_OF_MONTH, n);
+        return calBegin.getTime();
+    }
+
+    /**
+     * 日期+N天
+     *
+     * @param d  日期
+     * @return String
+     */
+    public static String datesAddStr(String d, int n)  {
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(GetDate.stringToDate2(d));
+        calBegin.add(Calendar.DAY_OF_MONTH, n);
+        return GetDate.dateToString2(calBegin.getTime());
+    }
 }

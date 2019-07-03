@@ -5,23 +5,30 @@ import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingBorrowResponse;
+import com.hyjf.am.response.trade.hgreportdata.caijing.ZeroOneCaiJingResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneBorrowDataVO;
+import com.hyjf.am.vo.hgreportdata.caijing.ZeroOneDataVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmTradeClient;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author lisheng
@@ -150,18 +157,37 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public List<String> queryUser(SmsCodeUserRequest request) {
-		Response tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
-				Response.class);
-		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
-		if (tradeResponse != null && userResponse != null) {
-			List<String> tradeList = tradeResponse.getResultList();
-			List<String> userList = userResponse.getResultList();
-            if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
-                tradeList.retainAll(userList);
-            }
-			return tradeList;
+		List<String> list = new ArrayList<>();
+		//所以未开户用户 并且 累计出借金额 or 出借日期 不为空
+		if(request.getOpen_account() == 0 && (StringUtils.isNotBlank(request.getAdd_money_count())
+				|| StringUtils.isNotBlank(request.getAdd_time_begin())
+				|| StringUtils.isNotBlank(request.getAdd_time_end()))){
+			return list;
 		}
-		return null;
+
+		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
+		Response tradeResponse = null;
+		if((request.getOpen_account() != null && request.getOpen_account() != 0) && (StringUtils.isNotBlank(request.getAdd_money_count())
+				|| StringUtils.isNotBlank(request.getAdd_time_begin())
+				|| StringUtils.isNotBlank(request.getAdd_time_end()))){
+
+			tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
+					Response.class);
+		}
+
+		if (userResponse != null) {
+			List<String> userList = userResponse.getResultList();
+            if (!CollectionUtils.isEmpty(userList)) {
+				list.addAll(userList);
+            }
+		}
+		if (tradeResponse != null ) {
+			List<String> tradeList = tradeResponse.getResultList();
+//			if (!CollectionUtils.isEmpty(tradeList) ) {
+				list.retainAll(tradeList);
+//			}
+		}
+		return list;
 	}
 
 	@Override
@@ -243,4 +269,83 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
 	}
+
+	@Override
+	public List<ZeroOneDataVO> queryInvestRecordSub(String startDate, String endDate) {
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getInvestRecordSub/"+startDate+"/"+endDate;
+		ZeroOneCaiJingResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<ZeroOneDataVO> queryAdvancedRepay(String startDate, String endDate) {
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getAdvancedRepay/"+startDate+"/"+endDate;
+		ZeroOneCaiJingResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
+    public List<ZeroOneBorrowDataVO> queryBorrowRecordSub(String dateStart, String dateEnd) {
+		String url = "http://AM-TRADE/am-trade/zeroOneCaiJingData/getBorrowDataInfo/" + dateStart + "/" + dateEnd;
+		ZeroOneCaiJingBorrowResponse response = restTemplate.getForEntity(url, ZeroOneCaiJingBorrowResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+    }
+
+	@Override
+	public BorrowAndInfoVO getBorrowByNid(String borrowId) {
+		String url = "http://AM-TRADE/am-trade/borrow/getBorrowByNid/"+borrowId;
+		BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public BorrowUserVO getBorrowUser(String borrowNid) {
+		BorrowUserResponse response = restTemplate.getForEntity(
+				"http://AM-TRADE/am-trade/borrow/borrowUserInfo/" + borrowNid,
+				BorrowUserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public BorrowManinfoVO getBorrowManinfo(String borrowNid) {
+		BorrowManinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowManinfo/" + borrowNid ,BorrowManinfoResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
+    @Override
+    public List<BorrowUserVO> getBorrowUserInfo(List<String> borrowNids) {
+		BorrowUserResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/borrowUserInfoList", borrowNids, BorrowUserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<BorrowManinfoVO> getBorrowManList(List<String> nids) {
+		BorrowManinfoResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/borrowManinfoList", nids, BorrowManinfoResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return new ArrayList<>();
+    }
+
 }

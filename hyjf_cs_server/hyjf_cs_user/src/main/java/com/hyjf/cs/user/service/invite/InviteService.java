@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.invite;
 
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
@@ -25,4 +26,11 @@ public interface InviteService extends BaseUserService {
     Integer selectMyInviteCount(String userId);
 
     Map<String,String> selectInvitePageData(String userId);
+
+    /**
+     * 获取分享信息
+     * @author wgx
+     * @date 2019/05/09
+     */
+    ShareNewsBeanVO queryShareNews();
 }

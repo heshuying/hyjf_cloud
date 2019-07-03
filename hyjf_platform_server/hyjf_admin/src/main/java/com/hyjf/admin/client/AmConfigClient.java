@@ -1467,7 +1467,7 @@ public interface AmConfigClient {
 	 * @return
 	 * @auth nxl
 	 */
-	JxBankConfigVO getBankConfigByBankName(String bankName);
+	List<JxBankConfigVO> getBankConfigByBankName(String bankName);
 	/**
 	 * 授權配置
 	 * @return

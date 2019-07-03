@@ -12,7 +12,6 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetCilentIP;
@@ -136,7 +135,7 @@ public class AppRegistController extends BaseUserController {
         }
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
-                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request), userType);
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request), userType,null);
 
         // add by liuyang 神策数据统计追加 20181029 start
         if (webViewUserVO != null && webViewUserVO.getUserId() != null && webViewUserVO.getUserId() != 0) {
@@ -158,7 +157,7 @@ public class AppRegistController extends BaseUserController {
         // add by liuyang 神策数据统计追加 20181029 end
 
         //发送mq同步推广表
-        registService.sendMqToSaveAppChannel(version,webViewUserVO);
+        registService.sendMqToSaveAppChannel(version,webViewUserVO,register);
         String statusDesc = "注册成功";
         boolean active = false;
         try {

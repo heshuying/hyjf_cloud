@@ -142,6 +142,17 @@
 
 	</select>
 
+	<select id="getUtmBySourceId" resultType="com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO" parameterType="String" >
+		SELECT utm_id utmId, utm_source utmSource,source_id sourceId,utm_medium utmMedium,utm_term utmTerm,utm_content utmContent,
+		utm_campaign utmCampaign,utm_referrer utmReferrer,link_address linkAddress,remark remark,STATUS STATUS
+		FROM ht_utm
+		where 1=1
+		<!-- <if test="sourceId != null and sourceId != ''" > -->
+			AND source_id = #{sourceId}
+		<!-- </if> -->
+		limit 1
+	</select>
+
 	<select id="getRegistNumber" resultType="INTEGER" parameterType="map">
 		SELECT
 		count(*)

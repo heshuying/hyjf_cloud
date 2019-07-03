@@ -17,6 +17,7 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -91,8 +92,8 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/setting/authorization/result/failed";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;;
-        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;;
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;;
+        String successUrl = BankCommonUtil.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_CREDIT_CLASS_NAME+APP_CREDIT_BG_AUTH;
 
@@ -113,7 +114,7 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         authBean.setPlatform(platform);
         authBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_CREDIT);
         authBean.setChannel(BankCallConstant.CHANNEL_APP);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform, request, systemConfig));
+        authBean.setForgotPwdUrl( BankCommonUtil.getForgotPwdUrl(platform, request.getParameter("sign"), systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(String.valueOf(usersInfo.getRoleId()));

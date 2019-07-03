@@ -237,7 +237,7 @@ public interface UserManagerService extends BaseService {
      * @param updCompanyRequest
      * @return
      */
-    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user,String bankId);
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user);
 
 	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
 
@@ -369,4 +369,15 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     List<BankCancellationAccount> getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest, int limitStart, int limitEnd);
+
+
+    /**
+     * 更新用户预留手机号
+     *
+     * @param userId
+     * @param bankMobile
+     * @param ip
+     * @return
+     */
+    boolean updateUserMobile(Integer userId, String bankMobile,String ip);
 }

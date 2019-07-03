@@ -400,6 +400,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
         if (StringUtils.isNotBlank(authCode)) {
             borrowTender.setAuthCode(authCode);
         }
+        // 出借时渠道
+        borrowTender.setTenderUserUtmId(hjhAccede.getTenderUserUtmId());
         borrowTender.setRemark("自动出借");
         boolean trenderFlag = borrowTenderMapper.insertSelective(borrowTender) > 0 ? true : false;
         if (!trenderFlag) {
