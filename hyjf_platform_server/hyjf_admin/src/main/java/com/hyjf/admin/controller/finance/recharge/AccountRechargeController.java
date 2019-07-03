@@ -381,6 +381,7 @@ public class AccountRechargeController extends BaseController {
             if (!isShow){
                 rechargeResponse.getResultList().forEach(accountRechargeCustomizeVO -> {
                     accountRechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(accountRechargeCustomizeVO.getMobile()));
+                    accountRechargeCustomizeVO.setCardid(AsteriskProcessUtil.getAsteriskedBankCard(accountRechargeCustomizeVO.getCardid()));
                 });
             }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, rechargeResponse.getResultList());
@@ -393,6 +394,7 @@ public class AccountRechargeController extends BaseController {
                 if (!isShow){
                     rechargeCustomizeResponse.getResultList().forEach(accountRechargeCustomizeVO -> {
                         accountRechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(accountRechargeCustomizeVO.getMobile()));
+                        accountRechargeCustomizeVO.setCardid(AsteriskProcessUtil.getAsteriskedBankCard(accountRechargeCustomizeVO.getCardid()));
                     });
                 }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
