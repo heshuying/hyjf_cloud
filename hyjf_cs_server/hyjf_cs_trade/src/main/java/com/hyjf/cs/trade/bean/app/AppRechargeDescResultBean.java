@@ -24,6 +24,8 @@ public class AppRechargeDescResultBean extends BaseResultBeanFrontEnd implements
         private String once;
         private String day;
         private String month;
+        // 银行ICON add by wgx
+        private String bankIcon;
 
         public String getBankName() {
             return bankName;
@@ -55,6 +57,14 @@ public class AppRechargeDescResultBean extends BaseResultBeanFrontEnd implements
 
         public void setMonth(String month) {
             this.month = month;
+        }
+
+        public String getBankIcon() {
+            return bankIcon;
+        }
+
+        public void setBankIcon(String bankIcon) {
+            this.bankIcon = bankIcon;
         }
     }
 

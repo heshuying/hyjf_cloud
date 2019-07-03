@@ -81,8 +81,56 @@ public class BorrowRepaymentRequest extends BasePage {
      */
     private int limitEnd = -1;
 
+    private String planNid;// 智投编号
+    private String repayPeriod;// 还款期数
+    private String period;// 借款期数
+  //  private String borrowUserName;//借款人
+    private String autoRepay;// 还款方式
+    private String extraYieldRepayStatus;// 期次状态
 
-    public String getRepayLastTimeStartSrch() {
+    
+    
+    public String getPlanNid() {
+		return planNid;
+	}
+
+	public void setPlanNid(String planNid) {
+		this.planNid = planNid;
+	}
+
+	public String getRepayPeriod() {
+		return repayPeriod;
+	}
+
+	public void setRepayPeriod(String repayPeriod) {
+		this.repayPeriod = repayPeriod;
+	}
+
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+
+	public String getAutoRepay() {
+		return autoRepay;
+	}
+
+	public void setAutoRepay(String autoRepay) {
+		this.autoRepay = autoRepay;
+	}
+
+	public String getExtraYieldRepayStatus() {
+		return extraYieldRepayStatus;
+	}
+
+	public void setExtraYieldRepayStatus(String extraYieldRepayStatus) {
+		this.extraYieldRepayStatus = extraYieldRepayStatus;
+	}
+
+	public String getRepayLastTimeStartSrch() {
         return repayLastTimeStartSrch;
     }
 

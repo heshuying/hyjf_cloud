@@ -255,4 +255,21 @@ public interface BaseService {
      * @return
      */
     String getSystemEmailList();
+
+	/**
+	 * @Author liushouyi
+	 * @Description  根据债转ID获取债转标签
+	 * @Date  2019/4/16
+	 * @Param credit
+	 * @return
+	 */
+	HjhLabel getLabelIdCommon(HjhDebtCredit credit);
+
+	/**
+	 * 更新还款日志表
+	 * @param apicron
+	 * @param status
+	 * @return
+	 */
+	boolean updateBorrowApicronLog(BorrowApicron apicron, int status);
 }

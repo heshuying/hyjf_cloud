@@ -32,6 +32,7 @@ public class BankAccountManageRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "是否具有组织架构查看权限")
     private String isOrganizationView;
 
+
     /**
      * 分页变量
      */
@@ -103,4 +104,5 @@ public class BankAccountManageRequest extends BasePage implements Serializable {
     public void setIsOrganizationView(String isOrganizationView) {
         this.isOrganizationView = isOrganizationView;
     }
+
 }

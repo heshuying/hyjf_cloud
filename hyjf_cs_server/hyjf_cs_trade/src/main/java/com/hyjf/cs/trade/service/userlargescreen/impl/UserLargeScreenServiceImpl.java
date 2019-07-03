@@ -3,23 +3,19 @@
  */
 package com.hyjf.cs.trade.service.userlargescreen.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
 import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
-import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.userlargescreen.UserLargeScreenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +24,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * @author: tanyy
@@ -47,6 +44,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
 
     @Override
     public UserLargeScreenResultBean getOnePage(){
+        logger.info("cs-trade层-----屏幕一接口已调用");
         UserLargeScreenResultBean bean = new UserLargeScreenResultBean();
         UserLargeScreenRequest request = new UserLargeScreenRequest();
         String dateString = getNowDateOfDay();
@@ -77,6 +75,10 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
         bean.setUserCapitalDetailList(userCapitalDetailsVo.getUserCapitalDetailList());
         bean.setCustomerTaskConfigVOList(taskConfigResponse.getResultList());
+        logger.info("cs-trade层-----环境发版测试日志");
+        if (userCapitalDetailsVo != null){
+            logger.info("查询结果为:{}", JSON.toJSONString(userCapitalDetailsVo.getUserCapitalDetailList()));
+        }
         return bean;
     }
 
@@ -86,15 +88,6 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
      */
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
-        JSONObject param = new JSONObject();
-        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key)) &&
-                !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
-            param.put("flag", "all");
-            sendMQ(param);
-        }else {
-            param.put("flag", "now");
-            sendMQ(param);
-        }
         UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
         // 日业绩(新客组、老客组)
         UserLargeScreenTwoVO dayScalePerformanceListVo = amTradeClient.getDayScalePerformanceList();
@@ -105,15 +98,44 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setDayReceivedPaymentsNew(dayReceivedPaymentsVo.getDayReceivedPaymentsNew());
         bean.setDayReceivedPaymentsOld(dayReceivedPaymentsVo.getDayReceivedPaymentsOld());
         // 所有坐席和坐席下用户查询
-        UserLargeScreenTwoVO result = amUserClient.getCurrentOwnersAndUserIds();
+        // UserLargeScreenTwoVO result = amUserClient.getCurrentOwnersAndUserIds();
         // 本月数据统计(新客组、老客组)
-        UserLargeScreenTwoVO monthDataStatisticsVo = amTradeClient.getMonthDataStatistics(result.getMonthDataStatisticsNew());
+        UserLargeScreenTwoVO monthDataStatisticsVo = amTradeClient.getMonthDataStatistics();
         bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
         // 运营部月度业绩数据
         UserLargeScreenTwoVO operMonthPerformanceDataVo = amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
+    }
+
+    @Override
+    public List<ScreenTransferVO> getAllUser(int start, int sizes) {
+        List<ScreenTransferVO> userList = amTradeClient.getAllUser(start,sizes);
+        if(null != userList && 0 < userList.size()){
+            return amUserClient.getScreenTransferData(userList);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void updateOperatieList(List<ScreenTransferVO> updateList) {
+        amTradeClient.updateOperatieList(updateList);
+    }
+
+    @Override
+    public void deleteOperatieList(List<ScreenTransferVO> deleteList) {
+        amTradeClient.deleteOperatieList(deleteList);
+    }
+
+    @Override
+    public void updateRepaymentPlan(List<ScreenTransferVO> updateList) {
+        amTradeClient.updateRepaymentPlan(updateList);
+    }
+
+    @Override
+    public void deleteRepaymentPlan(List<ScreenTransferVO> deleteList) {
+        amTradeClient.deleteRepaymentPlan(deleteList);
     }
 
     /**
@@ -126,18 +148,5 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
         String dateString = formatter.format(currentTime);
         return dateString;
-    }
-
-    /**
-     * 屏幕二运营部用户站岗资金获取MQ
-     * @param param
-     */
-    private void sendMQ(JSONObject param){
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), param));
-        } catch (MQException e) {
-            logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
-        }
     }
 }

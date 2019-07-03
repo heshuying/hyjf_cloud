@@ -10,6 +10,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -795,6 +796,15 @@ public interface AmUserClient {
 
     /**
      * @return
+     * @Author walter.wx
+     * @Description 获取Utm对象
+     * @Date 15:14 2019/5/9
+     * @Param utmId
+     */
+    UtmChannelVO getUtmBySourceId(String sourceId);
+
+    /**
+     * @return
      * @Author walter.limeng
      * @Description 根据userId获取用户对象
      * @Date 15:15 2018/7/14
@@ -1019,13 +1029,6 @@ public interface AmUserClient {
      * @return
      */
     SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
-
-    /**
-     * 查询短信总条数+总费用
-     * @param request
-     * @return
-     */
-    Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
 
     /**
      * 获取部门列表
@@ -1338,13 +1341,6 @@ public interface AmUserClient {
     Integer getSmsCountForExport(SmsCountRequest request);
 
     /**
-     * 查询短信统计导出列表
-     * @param request
-     * @return
-     */
-    List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
-
-    /**
      * 查询满足条件的服务费授权的条数
      * @param userPayAuthRequest
      * @return
@@ -1416,6 +1412,19 @@ public interface AmUserClient {
      */
     int cancellationAccountAction(String userId, Integer bankOpenAccount);
 
+    int saveSmsCode(String mobile, String checkCode, String verificationType, Integer ckcodeNew, int clientPc);
+
+    /**
+     * 验证验证码
+     * @param mobile
+     * @param code
+     * @param validCodeType
+     * @param clientPc
+     * @param ckcodeYiyan
+     * @param ckcodeYiyan1
+     * @return
+     */
+    int checkMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
     /**
      * 用户销户成功后,保存销户记录表
      *
@@ -1431,4 +1440,107 @@ public interface AmUserClient {
      * @return
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     * 查找注册记录列表（渠道修改列表专用）
+     *
+     * @author wx
+     * @param request
+     * @return
+     */
+    RegistRecordResponse findRegistRecordOne(RegistRcordRequest request);
+
+    /**
+     * 根据userId查询用户推广链接注册
+     *
+     * @param userId
+     * @return
+     */
+    UtmRegVO findUtmRegByUserId(Integer userId);
+
+    /**
+     * 修改app渠道信息
+     *
+     * @param appUtmRegVO
+     * @return
+     */
+    boolean updateAppUtmReg(AppUtmRegVO appUtmRegVO);
+
+    /**
+     * 新增app渠道信息
+     *
+     * @param appUtmRegVO
+     * @return
+     */
+    boolean insertAppUtmReg(AppUtmRegVO appUtmRegVO);
+
+    /**
+     * 新增pc渠道信息
+     *
+     * @param
+     * @return
+     */
+    boolean insertPcUtmReg(UtmRegVO utmRegVO);
+
+    /**
+     * 修改pc渠道信息
+     *
+     * @param
+     * @return
+     */
+    boolean updatePcUtmReg(UtmRegVO utmRegVO);
+
+    /**
+     * 修改渠道插入
+     *
+     * @param changeLogVO
+     * @return
+     */
+    boolean insertChangeLogList(ChangeLogVO changeLogVO);
+
+    /**
+     * 根据用户id查询渠道类型
+     *
+     * @param request
+     * @return
+     */
+    RegistRecordResponse selectByUserType(RegistRcordRequest request);
+
+    /**
+     * 根据渠道id删除渠道记录
+     *
+     * @param id
+     * @return
+     */
+    boolean deleteAppUtmReg(Long id);
+
+    /**
+     * 根据渠道id删除渠道记录
+     *
+     * @param id
+     * @return
+     */
+    boolean deleteUtmReg(Integer id);
+
+    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
+
+    List<UserVO> selectUserListByMobile(ListRequest request);
+
+    void insertBatchSmsCount(ListRequest request);
+
+    void updateOrDelectRepeatData();
+
+    /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    boolean syncUserMobile(UserRequest userRequest);
+
+	ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
+
+	ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
 }

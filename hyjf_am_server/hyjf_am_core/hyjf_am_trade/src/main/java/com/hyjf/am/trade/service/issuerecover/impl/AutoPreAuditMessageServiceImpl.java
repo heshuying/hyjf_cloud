@@ -1,14 +1,20 @@
 package com.hyjf.am.trade.service.issuerecover.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.mq.base.CommonProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.issuerecover.AutoPreAuditMessageService;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @Auther: walter.limeng
@@ -17,7 +23,8 @@ import java.util.Date;
  */
 @Service
 public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements AutoPreAuditMessageService {
-
+	@Autowired
+	private CommonProducer commonProducer;
 	@Override
 	public boolean updateRecordBorrow(Borrow borrow, BorrowInfo borrowInfo) {
 
@@ -42,7 +49,20 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 			// 更新时间
 			borrow.setUpdatetime(systemNowDate);
 			this.borrowMapper.updateByPrimaryKey(borrow);
-
+			//应急中心二期，散标发标时，报送数据 start
+            if(borrow.getVerifyStatus()==4){
+                //已发标
+                try {
+                    JSONObject param = new JSONObject();
+                    param.put("planNid", borrow.getBorrowNid());
+					param.put("isPlan","0");
+                    commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.BORROW_MODIFY_TAG, UUID.randomUUID().toString(), param),
+                            MQConstant.HG_REPORT_DELAY_LEVEL);
+                } catch (Exception e) {
+                    logger.error("散标发标时，应急中心上报失败！borrowNid : " + borrow.getBorrowNid() ,e);
+                }
+            }
+            //应急中心二期，散标发标时，报送数据 end
 			return true;
 
 		}
@@ -86,6 +106,20 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 			// 更新时间
 			borrow.setUpdatetime(systemNowDate);
 			this.borrowMapper.updateByPrimaryKeySelective(borrow);
+            //应急中心二期，散标发标时，报送数据 start
+            if(borrow.getVerifyStatus()==4){
+                //已发标
+                try {
+                    JSONObject param = new JSONObject();
+                    param.put("planNid", borrow.getBorrowNid());
+                    param.put("isPlan","0");
+                    commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.BORROW_MODIFY_TAG, UUID.randomUUID().toString(), param),
+                            MQConstant.HG_REPORT_DELAY_LEVEL);
+                } catch (Exception e) {
+                    logger.error("散标发标时，应急中心上报失败！borrowNid : " + borrow.getBorrowNid() ,e);
+                }
+            }
+            //应急中心二期，散标发标时，报送数据 end
 			return true;
 		}
 		return false;

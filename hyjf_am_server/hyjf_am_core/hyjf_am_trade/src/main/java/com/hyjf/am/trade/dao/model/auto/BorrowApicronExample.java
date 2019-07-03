@@ -2475,6 +2475,196 @@ public class BorrowApicronExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andSubmitterIsNull() {
+            addCriterion("submitter is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterIsNotNull() {
+            addCriterion("submitter is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterEqualTo(String value) {
+            addCriterion("submitter =", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotEqualTo(String value) {
+            addCriterion("submitter <>", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterGreaterThan(String value) {
+            addCriterion("submitter >", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterGreaterThanOrEqualTo(String value) {
+            addCriterion("submitter >=", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterLessThan(String value) {
+            addCriterion("submitter <", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterLessThanOrEqualTo(String value) {
+            addCriterion("submitter <=", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterLike(String value) {
+            addCriterion("submitter like", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotLike(String value) {
+            addCriterion("submitter not like", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterIn(List<String> values) {
+            addCriterion("submitter in", values, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotIn(List<String> values) {
+            addCriterion("submitter not in", values, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterBetween(String value1, String value2) {
+            addCriterion("submitter between", value1, value2, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotBetween(String value1, String value2) {
+            addCriterion("submitter not between", value1, value2, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateIsNull() {
+            addCriterion("is_late is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateIsNotNull() {
+            addCriterion("is_late is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateEqualTo(Integer value) {
+            addCriterion("is_late =", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateNotEqualTo(Integer value) {
+            addCriterion("is_late <>", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateGreaterThan(Integer value) {
+            addCriterion("is_late >", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_late >=", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateLessThan(Integer value) {
+            addCriterion("is_late <", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateLessThanOrEqualTo(Integer value) {
+            addCriterion("is_late <=", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateIn(List<Integer> values) {
+            addCriterion("is_late in", values, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateNotIn(List<Integer> values) {
+            addCriterion("is_late not in", values, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateBetween(Integer value1, Integer value2) {
+            addCriterion("is_late between", value1, value2, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_late not between", value1, value2, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodIsNull() {
+            addCriterion("last_period is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodIsNotNull() {
+            addCriterion("last_period is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodEqualTo(Integer value) {
+            addCriterion("last_period =", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodNotEqualTo(Integer value) {
+            addCriterion("last_period <>", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodGreaterThan(Integer value) {
+            addCriterion("last_period >", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodGreaterThanOrEqualTo(Integer value) {
+            addCriterion("last_period >=", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodLessThan(Integer value) {
+            addCriterion("last_period <", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodLessThanOrEqualTo(Integer value) {
+            addCriterion("last_period <=", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodIn(List<Integer> values) {
+            addCriterion("last_period in", values, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodNotIn(List<Integer> values) {
+            addCriterion("last_period not in", values, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodBetween(Integer value1, Integer value2) {
+            addCriterion("last_period between", value1, value2, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodNotBetween(Integer value1, Integer value2) {
+            addCriterion("last_period not between", value1, value2, "lastPeriod");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

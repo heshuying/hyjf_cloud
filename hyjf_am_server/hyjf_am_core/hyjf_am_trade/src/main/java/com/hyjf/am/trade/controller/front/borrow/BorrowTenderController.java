@@ -5,10 +5,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
-import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
-import com.hyjf.am.response.trade.BorrowTenderResponse;
-import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
-import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
@@ -521,4 +518,24 @@ public class BorrowTenderController extends BaseController {
 
         return response;
     }
+
+    /**
+     * 根据计划订单号查找投资详情
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    @RequestMapping("/getBorrowTenderByAccede/{accedeOrderId}")
+    public BorrowTenderResponse getBorrowTenderByAccede(@PathVariable String accedeOrderId){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        response.setRtn(Response.FAIL);
+        List<BorrowTender> borrowTenderList = this.borrowTenderService.getBorrowTenderByAccede(accedeOrderId);
+        if (CollectionUtils.isNotEmpty(borrowTenderList)){
+            List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(borrowTenderVOList);
+        }
+        return response;
+    }
+
 }

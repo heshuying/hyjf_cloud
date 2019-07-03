@@ -167,7 +167,7 @@ public class BorrowRepay implements Serializable {
     private Integer chargeDays;
 
     /**
-     * 提前还款减息
+     * 提前还款减息(已加罚息)
      *
      * @mbggenerated
      */
@@ -270,6 +270,20 @@ public class BorrowRepay implements Serializable {
      * @mbggenerated
      */
     private Date createTime;
+
+    /**
+     * 提前还款罚息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal chargePenaltyInterest;
+
+    /**
+     * 逾期待还利息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal lateInterestWait;
 
     private static final long serialVersionUID = 1L;
 
@@ -575,5 +589,21 @@ public class BorrowRepay implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public BigDecimal getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
+    }
+
+    public BigDecimal getLateInterestWait() {
+        return lateInterestWait;
+    }
+
+    public void setLateInterestWait(BigDecimal lateInterestWait) {
+        this.lateInterestWait = lateInterestWait;
     }
 }

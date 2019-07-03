@@ -1,16 +1,14 @@
 package com.hyjf.am.user.service.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -183,13 +181,6 @@ public interface UserService extends BaseService {
 	List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request);
 
 	/**
-	 * 借款主体CA认证记录表
-	 * @param request
-	 * @return
-	 */
-	List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
-
-	/**
 	 * 通过userID获得CA认证的客户ID
 	 * @param userId
 	 * @param code
@@ -347,9 +338,104 @@ public interface UserService extends BaseService {
 	void updateUser(int userId, String ip, User user);
 
 	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 * @param user
+	 */
+    void updateUnlockUser(User user);
+
+	/**
 	 * 查询用户属于的分组
 	 * @param userId
 	 * @return
 	 */
 	HashMap<String, String> findUserGroup(Integer userId);
+
+	/**
+	 * 用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道
+	 * @param refferUser
+	 * @param user
+	 * @param utmId
+	 * @param platform
+	 * @return
+	 */
+	void insertRefferUtmReg(User refferUser, User user, String utmId, String platform, Integer attribute);
+
+	/**
+	 * 注册查询推荐人信息
+	 *
+	 * @param mobile
+	 * @param reffer
+	 * @return
+	 */
+	User getRefferUsers(String mobile, String reffer);
+
+	/**
+	 * 查询用户渠道（app）
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppUtmReg findAppUtmRegByUserId(Integer userId);
+
+	/**
+	 * 新增用户渠道（app）
+	 *
+	 * @param appUtmReg
+	 * @return
+	 */
+	void insertAppUtmReg(AppUtmReg appUtmReg);
+
+	/**
+	 * 新增用户渠道（pc）
+	 *
+	 * @param userId
+	 * @param utmId
+	 * @return
+	 */
+	void insertUtmReg(int userId, String utmId);
+
+	/**
+	 * 查询借款主体CA
+	 * @return
+	 */
+	List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list);
+
+	/**
+	 * 获取前一天注册的用户
+	 *
+	 * @return
+	 */
+	List<User> selectBeforeDayRegisterUserList();
+
+	/**
+	 * 根据用户ID查询PC推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UtmReg selectUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询App推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppUtmReg selectAppUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUser selectSpreadsUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID获取用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserPortrait selectUserPortraitByUserId(Integer userId);
 }

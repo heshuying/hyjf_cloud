@@ -27,6 +27,13 @@ public class LoginRequestVO {
     @ApiModelProperty(value = "神策预置属性")
     private String presetProps;
 
+    /**
+     * 短信验证码
+     */
+    @ApiModelProperty(value = "smsCode")
+    private String smsCode;
+
+
     public String getPlatform() {
         return platform;
     }
@@ -81,5 +88,13 @@ public class LoginRequestVO {
 
     public void setPresetProps(String presetProps) {
         this.presetProps = presetProps;
+    }
+
+    public String getSmsCode() {
+        return smsCode;
+    }
+
+    public void setSmsCode(String smsCode) {
+        this.smsCode = smsCode;
     }
 }

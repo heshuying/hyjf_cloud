@@ -15,7 +15,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.market.bean.ContentArticleBean;
-import com.hyjf.cs.market.bean.RechargeDescResultBean;
+import com.hyjf.cs.market.vo.RechargeDescVO;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.AppFindService;
 import com.hyjf.cs.market.util.CdnUrlUtil;
@@ -23,7 +23,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -224,7 +223,7 @@ public class AboutUsController extends BaseController {
 	public WebResult<List<JobsVo>> getRecurit(){
 		List<JobsVo> jobsList = aboutUsService.getJobsList();
 		if(CollectionUtils.isEmpty(jobsList)){
-			jobsList = new ArrayList<JobsVo>();
+			jobsList = new ArrayList<>();
 		}
 		WebResult webResult = new WebResult(jobsList);
 		return webResult;
@@ -257,15 +256,8 @@ public class AboutUsController extends BaseController {
         ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
         contentArticleRequest.setNoticeType("3");
 		ContentArticleResponse response = aboutUsService.getHomeNoticeList(contentArticleRequest);
-		WebResult webResult = new WebResult(response.getResultList());
-		Page page = new Page();
-		page.setTotal(response.getRecordTotal());
-		page.setCurrPage(request.getCurrPage());
-        page.setPageSize(request.getPageSize());
-		webResult.setPage(page);
-		return webResult;
+		return buildWebResult(response, request.getCurrPage(), request.getPageSize());
 	}
-
 
 	/**
 	 * 风险教育信息
@@ -276,16 +268,9 @@ public class AboutUsController extends BaseController {
 	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleBean request ){
 		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
 		contentArticleRequest.setNoticeType("101");
-		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(contentArticleRequest);
-		WebResult webResult = new WebResult(homeNoticeList.getResultList());
-		Page page = new Page();
-		page.setTotal(homeNoticeList.getRecordTotal());
-		page.setCurrPage(request.getCurrPage());
-		page.setPageSize(request.getPageSize());
-		webResult.setPage(page);
-		return webResult;
+		ContentArticleResponse response = aboutUsService.getHomeNoticeList(contentArticleRequest);
+		return buildWebResult(response, request.getCurrPage(), request.getPageSize());
 	}
-
 
 
 	/**
@@ -342,7 +327,7 @@ public class AboutUsController extends BaseController {
 	public WebResult<JxBankConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
-			//modelAndView = new ModelAndView("/contentarticle/bank-page");
+
 		}else{
 			List<JxBankConfigVO> list = aboutUsService.getBanksList();
 			for (JxBankConfigVO banksConfig : list) {
@@ -360,10 +345,10 @@ public class AboutUsController extends BaseController {
 	@ApiOperation(value = "充值限额", notes = "充值限额")
 	@ResponseBody
 	@GetMapping("/rechargeRule")
-	public WebResult<RechargeDescResultBean> rechargeRule() {
+	public WebResult<RechargeDescVO> rechargeRule() {
 		WebResult webResult=null;
 		List<JxBankConfigVO> list = aboutUsService.getBanksList();
-		List<RechargeDescResultBean> result = new ArrayList<RechargeDescResultBean>();
+		List<RechargeDescVO> result = new ArrayList<RechargeDescVO>();
 		if (list != null) {
 			result = this.conventBanksConfigToResult(list);
 		}
@@ -473,12 +458,12 @@ public class AboutUsController extends BaseController {
 	}
 
 
-	private List<RechargeDescResultBean> conventBanksConfigToResult( List<JxBankConfigVO> configs) {
-		List<RechargeDescResultBean> list = new ArrayList<RechargeDescResultBean>();
+	private List<RechargeDescVO> conventBanksConfigToResult(List<JxBankConfigVO> configs) {
+		List<RechargeDescVO> list = new ArrayList<RechargeDescVO>();
 		if (!CollectionUtils.isEmpty(configs)) {
-			//RechargeDescResultBean bean = null;
+			//RechargeDescVO bean = null;
 			for (JxBankConfigVO config : configs) {
-				RechargeDescResultBean bean = new RechargeDescResultBean();
+				RechargeDescVO bean = new RechargeDescVO();
 				bean.setBankName(config.getBankName());
 				//单卡单日限额
 				if(config.getSingleCardQuota().compareTo(BigDecimal.ZERO)==0){
@@ -502,5 +487,15 @@ public class AboutUsController extends BaseController {
 			}
 		}
 		return list;
+	}
+
+	private WebResult buildWebResult(ContentArticleResponse response, Integer currPage, Integer pageSize){
+		WebResult webResult = new WebResult(response.getResultList());
+		Page page = new Page();
+		page.setTotal(response.getRecordTotal());
+		page.setCurrPage(currPage);
+		page.setPageSize(pageSize);
+		webResult.setPage(page);
+		return webResult;
 	}
 }

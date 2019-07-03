@@ -6,6 +6,8 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.assetmanage.TenderCreditAssignedCustomizeVO;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -211,6 +214,11 @@ public class WebAssetManageController extends BaseTradeController {
         if(myCreditDetailBean.getRecordList() == null){
             myCreditDetailBean.setRecordList(new ArrayList<>());
         }
+        List<TenderCreditAssignedCustomizeVO> list = myCreditDetailBean.getRecordList();
+        for (TenderCreditAssignedCustomizeVO tenderCreditAssignedCustomizeVO : list) {
+        	tenderCreditAssignedCustomizeVO.setBidApr(FormatRateUtil.formatBorrowApr(tenderCreditAssignedCustomizeVO.getBidApr()));
+        	tenderCreditAssignedCustomizeVO.setCreditDiscount(FormatRateUtil.formatBorrowApr(tenderCreditAssignedCustomizeVO.getCreditDiscount()));
+		}
         result.setData(myCreditDetailBean);
         return result;
     }

@@ -173,6 +173,10 @@ public class NifaRepairController {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", vo.getBorrowNid());
                     params.put("historyData", historyData);
+                    //应急中心添加参数Strart
+                    params.put("isTender", "2"); //1:承接智投，2：出借智投
+                    params.put("assignOrderId", vo.getBorrowNid());
+                    //应急中心添加参数End
                     commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG, UUID.randomUUID().toString(), params),
                             MQConstant.HG_REPORT_DELAY_LEVEL);
                 }

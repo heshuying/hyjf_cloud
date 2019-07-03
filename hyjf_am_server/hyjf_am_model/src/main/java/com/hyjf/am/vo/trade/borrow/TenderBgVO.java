@@ -55,6 +55,13 @@ public class TenderBgVO extends BaseVO implements Serializable {
     private String txTime;
     private String seqNo;
 
+    /**
+     * 出借人渠道来源（出借时）
+     *
+     * @mbggenerated
+     */
+    private Integer tenderUserUtmId;
+
 
     public String getOrderId() {
         return orderId;
@@ -262,5 +269,13 @@ public class TenderBgVO extends BaseVO implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Integer getTenderUserUtmId() {
+        return tenderUserUtmId;
+    }
+
+    public void setTenderUserUtmId(Integer tenderUserUtmId) {
+        this.tenderUserUtmId = tenderUserUtmId;
     }
 }

@@ -4,8 +4,10 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
 import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
 import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
@@ -19,12 +21,14 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
@@ -353,7 +357,7 @@ public class BorrowController extends BaseController {
 	 */
 	@PostMapping("/borrowTender")
 	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
-		logger.info("原子层  散标出借 开始操作数据库表");
+		logger.info("原子层  散标出借 开始操作数据库表tenderBg:{}", JSONObject.toJSONString(tenderBg));
 		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
@@ -670,6 +674,22 @@ public class BorrowController extends BaseController {
 		mcr.setResultList(recordList);
 		return mcr;
 
+	}
+
+	/**
+	 * @Author: wenxin
+	 * @Desc :查询用户账户信息金额信息
+	 */
+	@ApiOperation(value = "银行账户管理查询列表")
+	@GetMapping("/query_account_userMoney/{userId}")
+	public BankAccountManageCustomizeResponse queryAccountUserMoney(@PathVariable Integer userId) {
+		BankAccountManageCustomizeResponse response = new BankAccountManageCustomizeResponse();
+		BankAccountManageCustomize bankAccount = this.borrowService.queryAccountUserMoney(userId);
+		if(bankAccount != null){
+			BankAccountManageCustomizeVO bankAccountManageCustomizeVOS = CommonUtils.convertBean(bankAccount, BankAccountManageCustomizeVO.class);
+			response.setResult(bankAccountManageCustomizeVOS);
+		}
+		return response;
 	}
 
 }

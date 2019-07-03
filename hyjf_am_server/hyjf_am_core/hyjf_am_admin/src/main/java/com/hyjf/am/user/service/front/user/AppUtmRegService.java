@@ -61,4 +61,10 @@ public interface AppUtmRegService {
      * @return
      */
     List<AppUtmReg> findAppUtmReg(AppChannelStatisticsDetailRequest request,Paginator paginator);
+
+    /**
+     * 删除app推广用户信息
+     * @param id
+     */
+    void deleteAppUtmReg (Long id);
 }

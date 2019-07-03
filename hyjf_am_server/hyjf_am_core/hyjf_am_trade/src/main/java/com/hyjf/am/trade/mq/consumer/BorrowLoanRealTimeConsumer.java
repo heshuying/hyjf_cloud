@@ -6,6 +6,7 @@ package com.hyjf.am.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanService;
@@ -190,11 +191,34 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
             // 推送数据到MQ 放款成功
             params = new JSONObject();
             params.put("borrowNid",borrowApicron.getBorrowNid());
+            //应急中心添加参数Strart
+            params.put("isTender", "2"); //1:承接智投，2：出借智投
+            params.put("assignOrderId", borrowApicron.getBorrowNid());//投资订单号
+            //应急中心添加参数End
             commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG, UUID.randomUUID().toString(), params),
                     MQConstant.HG_REPORT_DELAY_LEVEL);
             // add 合规数据上报 埋点 liubin 20181122 end
         } catch (Exception e){
             logger.error("发送合规数据上报MQ失败,放款标的:" + borrowApicron.getBorrowNid());
         }
+
+        // add by liuyang WBS系统散标信息推送 20190416 start
+        try {
+            // 放款成功后,发送标的募集结束信息
+            BorrowInfo borrowInfo = this.realTimeBorrowLoanService.getBorrowInfoByNid(borrowApicron.getBorrowNid());
+            if ("10000000".equals(borrowInfo.getPublishInstCode())) {
+                params = new JSONObject();
+                // 产品编号
+                params.put("productNo", borrowApicron.getBorrowNid());
+                // 产品状态 :5:还款中
+                params.put("productStatus", "5");
+                // 产品类型 0 散标类, 1 计划类,
+                params.put("productType", 0);
+                commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+            }
+        } catch (Exception e) {
+            logger.error("WBS系统发送散标数据MQ失败,放款标的:" + borrowApicron.getBorrowNid());
+        }
+        // add by liuyang WBS系统散标信息推送 20190416 end
     }
 }

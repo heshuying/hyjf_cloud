@@ -46,6 +46,17 @@ public class ClientConstants implements Serializable {
 	public static final int API_CLIENT = 3;
 
 	/**
+	 * wjt端
+	 */
+	public static final int WJT_PC_CLIENT = 5;
+
+	/**
+	 * wjt 微信端
+	 */
+	public static final int WJT_WEI_CLIENT = 6;
+
+
+	/**
 	 * 用户授权自动债转
 	 */
 	public static final String CREDIT_AUTO_TYPE = "1";
@@ -283,7 +294,8 @@ public class ClientConstants implements Serializable {
 
 	public static final String BANKOPEN_OPEN_ACTION = "/user/open";
 
-	public static final String USER_RISKTEST = "/user/riskTest";
+	/** 风险测评 */
+	public static final String USER_RISKTEST = "/user/riskTest?evaluation=";
 
 	public static final String USER_AUTH_INVES_ACTION = "/bank/user/auto/userAuthInves";
 
@@ -317,4 +329,10 @@ public class ClientConstants implements Serializable {
 
 	/** @RequestMapping值 */
 	public static final String GET_WITHDRAW_RULE_MAPPING = "/getRule";
+
+	/** 发现页 运营报告 */
+	public static final String FIND_REPORT = "/find/report";
+
+	/** 发现页 运营报告详情 */
+	public static final String FIND_REPORT_DETAIL ="/reportYear/{year}/{month}";
 }

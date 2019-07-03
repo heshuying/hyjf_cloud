@@ -364,7 +364,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             // 更改加入明细状态和出借临时表状态
                             // 更改加入明细状态
                             updateTenderByParam(orderStatus,hjhAccede.getId());
-
                             // 如果标的可投金额非0，推回队列的头部
                             String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                             redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));
@@ -509,6 +508,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             params.put("assignOrderId", bean.getOrderId());
                             params.put("flag", "2"); //1（散）2（智投）
                             params.put("status", "1"); //1承接（每笔）
+                            // 应急中心二期，添加承接标示 add by nxl
+                            params.put("isTender","1"); //1:承接，2：加入
                             commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
                                     MQConstant.HG_REPORT_DELAY_LEVEL);
                             // add 合规数据上报 埋点 liubin 20181122 end

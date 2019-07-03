@@ -26,6 +26,8 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     private String endTime;
 
+    private String endTimeStamp;
+
     private String couponSystem;
 
     private String projectType;
@@ -55,6 +57,10 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     //优惠券使用标识 0：未使用，1：已使用，2：审核不通过，3：待审核，4：已失效
     private Integer usedFlag;
+
+    private String time;
+    //0新手   1散标  2计划与前端约定去使用跳转地址标识
+    private Integer hrefType;
 
     public Integer getId() {
         return id;
@@ -238,5 +244,29 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setTenderQuotaType(Integer tenderQuotaType) {
         this.tenderQuotaType = tenderQuotaType;
+    }
+
+    public String getEndTimeStamp() {
+        return endTimeStamp;
+    }
+
+    public void setEndTimeStamp(String endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Integer getHrefType() {
+        return hrefType;
+    }
+
+    public void setHrefType(Integer hrefType) {
+        this.hrefType = hrefType;
     }
 }

@@ -2,6 +2,7 @@ package com.hyjf.am.vo.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,6 +22,9 @@ public class HjhInstConfigWrapVo extends BaseVO implements Serializable {
     private Integer instType;
 
     private BigDecimal capitalToplimit;
+
+    @ApiModelProperty(value = "担保公司")
+    private String cooperativeAgency;
 
     private BigDecimal commissionFee;
 
@@ -152,5 +156,13 @@ public class HjhInstConfigWrapVo extends BaseVO implements Serializable {
 
     public void setRepayCapitalType(Integer repayCapitalType) {
         this.repayCapitalType = repayCapitalType;
+    }
+
+    public String getCooperativeAgency() {
+        return cooperativeAgency;
+    }
+
+    public void setCooperativeAgency(String cooperativeAgency) {
+        this.cooperativeAgency = cooperativeAgency;
     }
 }

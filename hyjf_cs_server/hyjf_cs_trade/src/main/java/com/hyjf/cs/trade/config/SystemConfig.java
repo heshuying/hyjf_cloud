@@ -81,6 +81,15 @@ public class SystemConfig {
     @Value("${hyjf.notice.ios.version}")
     public String iosNoticeVersion;
 
+    @Value("${hyjf.notice.halt.status}")
+    public String haltStatus;
+
+//    @Value("${hyjf.notice.halt.timerange}")
+//    public String haltTimeRange;
+
+    @Value("${hyjf.notice.halt.requesturl}")
+    public String haltUrl;
+
     @Value("${hyjf.ftp.ip}")
     private String hyjfFtpIp;
 
@@ -165,6 +174,56 @@ public class SystemConfig {
     /*角色验证是否开启 add by cwyang 合规角色验证需求 */
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
+
+
+
+    /**
+     * 温金投机构编号
+     */
+    @Value("${wjt.instCode}")
+    public String wjtInstCode;
+
+    /**
+     * 温金投渠道编号
+     */
+    @Value("${wjt.channel}")
+    public String wjtChannel;
+    /**
+     * wjt前端地址
+     */
+    @Value("${hyjf.front.wjt.host}")
+    public String wjtFrontHost;
+
+    /**
+     * wjt 微信前端地址
+     */
+    @Value("${hyjf.front.wjt.wei.host}")
+    public String wjtWeiFrontHost;
+
+    public String getWjtFrontHost() {
+        return wjtFrontHost;
+    }
+
+    public void setWjtFrontHost(String wjtFrontHost) {
+        this.wjtFrontHost = wjtFrontHost;
+    }
+
+    public String getWjtWeiFrontHost() {
+        return wjtWeiFrontHost;
+    }
+
+    public void setWjtWeiFrontHost(String wjtWeiFrontHost) {
+        this.wjtWeiFrontHost = wjtWeiFrontHost;
+    }
+
+
+    /* 个人用户提现最大限额**/
+    @Value("${hyjf.personal.withdraw.limit}")
+    private String personalWithdrawLimit;
+
+    /* 企业用户提现最大限额**/
+    @Value("${hyjf.company.withdraw.limit}")
+    private String companyWithdrawLimit;
 
     public String getAppRegistAgreementUrl() {
         return appRegistAgreementUrl;
@@ -296,6 +355,12 @@ public class SystemConfig {
     @Value("${hyjf.cert.yibu.path}")
     public String certWebYibu;
     //国家应急中心配置文件添加 add by nxl end
+
+    /**
+     * 微信分享地址 add by wgx 2019/05/09
+     */
+    @Value("${hyjf.wechat.qrcode.url}")
+    private String wechatQrcodeUrl;
 
     public String getHyjfOnlineType() {
         return hyjfOnlineType;
@@ -917,5 +982,69 @@ public class SystemConfig {
 
     public void setCertWebYibu(String certWebYibu) {
         this.certWebYibu = certWebYibu;
+    }
+
+    public String getHaltStatus() {
+        return haltStatus;
+    }
+
+    public void setHaltStatus(String haltStatus) {
+        this.haltStatus = haltStatus;
+    }
+
+//    public String getHaltTimeRange() {
+//        return haltTimeRange;
+//    }
+//
+//    public void setHaltTimeRange(String haltTimeRange) {
+//        this.haltTimeRange = haltTimeRange;
+//    }
+
+    public String getHaltUrl() {
+        return haltUrl;
+    }
+
+    public void setHaltUrl(String haltUrl) {
+        this.haltUrl = haltUrl;
+    }
+
+    public String getPersonalWithdrawLimit() {
+        return personalWithdrawLimit;
+    }
+
+    public void setPersonalWithdrawLimit(String personalWithdrawLimit) {
+        this.personalWithdrawLimit = personalWithdrawLimit;
+    }
+
+    public String getCompanyWithdrawLimit() {
+        return companyWithdrawLimit;
+    }
+
+    public void setCompanyWithdrawLimit(String companyWithdrawLimit) {
+        this.companyWithdrawLimit = companyWithdrawLimit;
+    }
+
+    public String getWechatQrcodeUrl() {
+        return wechatQrcodeUrl;
+    }
+
+    public void setWechatQrcodeUrl(String wechatQrcodeUrl) {
+        this.wechatQrcodeUrl = wechatQrcodeUrl;
+    }
+
+    public String getWjtInstCode() {
+        return wjtInstCode;
+    }
+
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
+    }
+
+    public String getWjtChannel() {
+        return wjtChannel;
+    }
+
+    public void setWjtChannel(String wjtChannel) {
+        this.wjtChannel = wjtChannel;
     }
 }

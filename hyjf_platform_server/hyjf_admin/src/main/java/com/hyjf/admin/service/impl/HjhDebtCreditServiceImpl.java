@@ -65,7 +65,11 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
         //汇计划债转还款状态
         for (HjhDebtCreditVo vo: hjhDebtCreditVoList
              ) {
-            vo.setRepayStatusName(repayMap.get(vo.getRepayStatus()));
+        	if(vo.getRepayStatus().equals("99")) {
+        		 vo.setRepayStatusName("逾期中");
+        	}else {
+        		 vo.setRepayStatusName(repayMap.get(vo.getRepayStatus()));
+        	}
             vo.setCreditStatusName(creditMap.get(vo.getCreditStatus()));
             vo.setProjectApr(vo.getLiquidatesPeriod() + "/" + vo.getBorrowPeriod());
         }

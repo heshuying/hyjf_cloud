@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -74,6 +75,9 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BatchCenterCustomizeMapper batchCenterCustomizeMapper;
+
+	@Autowired
+	protected BatchCenterLogCustomizeMapper batchCenterLogCustomizeMapper;
 
 	@Autowired
 	protected TzjCustomizeMapper tzjCustomizeMapper;
@@ -222,4 +226,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected EvaluationConfigLogMapper evaluationConfigLogMapper;
+
+	@Autowired
+	protected AdminBorrowRepayInfoCurrentCustomizeMapper adminBorrowRepayInfoCurrentCustomizeMapper;
 }

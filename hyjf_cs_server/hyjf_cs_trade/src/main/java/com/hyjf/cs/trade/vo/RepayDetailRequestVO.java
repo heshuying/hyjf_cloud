@@ -11,6 +11,8 @@ public class RepayDetailRequestVO {
     String borrowNid;
     @ApiModelProperty(value = "是否一次性还款：1 是 0 否")
     String isAllRepay;
+    @ApiModelProperty(value = "逾期还款选择的期数")
+    Integer latePeriod;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -26,5 +28,13 @@ public class RepayDetailRequestVO {
 
     public void setIsAllRepay(String isAllRepay) {
         this.isAllRepay = isAllRepay;
+    }
+
+    public Integer getLatePeriod() {
+        return latePeriod;
+    }
+
+    public void setLatePeriod(Integer latePeriod) {
+        this.latePeriod = latePeriod;
     }
 }

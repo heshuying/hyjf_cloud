@@ -67,8 +67,6 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 					param.put("transferStatus", map.get("transferStatus"));
 					//成功转让本金金额(元)
 					param.put("amount", map.get("amount"));
-					//成功转让利息金额 (元)
-					param.put("interest", map.get("interest"));
 					//成功转让浮动金额 (元)
 					param.put("floatMoney", map.get("floatMoney"));
 					//状态更新时间
@@ -102,8 +100,6 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 						param.put("transferStatus", map.get("transferStatus"));
 						//成功转让本金金额(元)
 						param.put("amount", map.get("amount"));
-						//成功转让利息金额 (元)
-						param.put("interest", map.get("interest"));
 						//成功转让浮动金额 (元)
 						param.put("floatMoney", map.get("floatMoney"));
 						//状态更新时间
@@ -127,8 +123,6 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 						param.put("transferStatus", map.get("transferStatus"));
 						//成功转让本金金额(元)
 						param.put("amount", map.get("amount"));
-						//成功转让利息金额 (元)
-						param.put("interest", map.get("interest"));
 						//成功转让浮动金额 (元)
 						param.put("floatMoney", map.get("floatMoney"));
 						//状态更新时间

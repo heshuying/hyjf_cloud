@@ -23,7 +23,7 @@ public interface UserLeaveCustomizeMapper {
     List<User> queryEmployeeList();
 
     /**
-     * 客户变员工后，其所推荐客户变为‘有主单’
+     * 员工离职后，其所推荐客户变为‘无主单’
      * @param referrer
      * @return
      */

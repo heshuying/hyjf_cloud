@@ -1,6 +1,7 @@
 package com.hyjf.zuul;
 
 import com.hyjf.zuul.filter.AccessFilter;
+import com.hyjf.zuul.filter.ReturnFilter;
 import com.hyjf.zuul.filter.XSSFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,6 +35,11 @@ public class ZuulApplication {
     @Bean
     public AccessFilter accessFilter() {
         return new AccessFilter();
+    }
+
+    @Bean
+    public ReturnFilter returnFilter() {
+        return new ReturnFilter();
     }
 
     @Bean

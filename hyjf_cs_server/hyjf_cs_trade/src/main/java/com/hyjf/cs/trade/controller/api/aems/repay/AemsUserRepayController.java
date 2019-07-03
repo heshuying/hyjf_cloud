@@ -178,7 +178,7 @@ public class AemsUserRepayController extends BaseTradeController {
                         return resultBean;
                     }
                     //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
-                    repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, requestBean.getProductId(), repay, user.getUsername(), isAllRepay);
+                    repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, requestBean.getProductId(), repay, user.getUsername(), isAllRepay, 0);
                     Map<String, Object> map = repayManageService.getBankRefinanceFreezePage(userId, user.getUsername(), ip, orderId, requestBean.getProductId(), repayTotal, account);
                     resultBean.setData(map);
                     return resultBean;

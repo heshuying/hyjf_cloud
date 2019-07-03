@@ -19,6 +19,9 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="borrower_type" property="borrowerType" jdbcType="VARCHAR" />
     <result column="idcard" property="idCard" jdbcType="VARCHAR" />
+	<result column="utm_type" property="utmType" jdbcType="VARCHAR" />
+	<result column="utm_source_id" property="utmSourceId" jdbcType="VARCHAR" />
+	<result column="utm_name" property="utmName" jdbcType="VARCHAR" />
   </resultMap>
 
 	<sql id="where-all-page-condition">
@@ -58,6 +61,12 @@
 		<if test="email != null and email != ''">
 			AND l.email =#{email}
 		</if>
+		<if test="utmType != null and utmType != ''">
+			AND l.utm_type =#{utmType}
+		</if>
+		<if test="utmSourceId != null and utmSourceId != ''">
+			AND l.utm_source_id =#{utmSourceId}
+		</if>
 	</sql>
 	<select id="queryChangeLogCount" resultType="java.lang.Integer"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
@@ -67,7 +76,15 @@
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 	</select>
-
+	<select id="queryChangeLogByUserIdCount" resultType="java.lang.Integer"
+			parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
+		SELECT COUNT(1)
+		from ht_user_change_log l
+		WHERE
+		l.user_id = #{userId}
+		AND utm_source_id is not null
+		<include refid="where-all-page-condition"/>
+	</select>
 	<select id="queryChangeLogList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
 		SELECT
@@ -96,7 +113,10 @@
 		remark,
 		borrower_type,
 		<!--add by nxl 合规四期修改,邮箱显示-->
-		email
+		email,
+		<!-- add by wx 增加修改渠道记录 -->
+		<!-- ALTER TABLE `ht_user_change_log` ADD COLUMN `utm_name` VARCHAR(255) NULL DEFAULT NULL COMMENT '注册渠道' AFTER `email`; -->
+		utm_name
 		FROM
 		ht_user_change_log l
 		WHERE 1=1 
@@ -106,6 +126,135 @@
 	      LIMIT #{limitStart} , #{limitEnd}
 	    </if>
 	</select>
-
+	<insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.customize.ChangeLogCustomize" >
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into ht_user_change_log
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId != null" >
+				user_id,
+			</if>
+			<if test="username != null" >
+				username,
+			</if>
+			<if test="realName != null" >
+				real_name,
+			</if>
+			<if test="mobile != null" >
+				mobile,
+			</if>
+			<if test="idcard != null" >
+				idcard,
+			</if>
+			<if test="role != null" >
+				`role`,
+			</if>
+			<if test="attribute != null" >
+				`attribute`,
+			</if>
+			<if test="recommendUser != null" >
+				recommend_user,
+			</if>
+			<if test="is51 != null" >
+				is51,
+			</if>
+			<if test="status != null" >
+				`status`,
+			</if>
+			<if test="remark != null" >
+				remark,
+			</if>
+			<if test="borrowerType != null" >
+				borrower_type,
+			</if>
+			<if test="updateType != null" >
+				update_type,
+			</if>
+			<if test="updateUserid != null" >
+				update_user_id,
+			</if>
+			<if test="updateUser != null" >
+				update_user,
+			</if>
+			<if test="updateTime != null" >
+				update_time,
+			</if>
+			<if test="email != null" >
+				email,
+			</if>
+			<if test="utmName != null" >
+				utm_name,
+			</if>
+			<if test="utmType != null" >
+				utm_type,
+			</if>
+			<if test="utmSourceId != null" >
+				utm_source_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="userId != null" >
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="username != null" >
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null" >
+				#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null" >
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="idcard != null" >
+				#{idcard,jdbcType=VARCHAR},
+			</if>
+			<if test="role != null" >
+				#{role,jdbcType=TINYINT},
+			</if>
+			<if test="attribute != null" >
+				#{attribute,jdbcType=TINYINT},
+			</if>
+			<if test="recommendUser != null" >
+				#{recommendUser,jdbcType=VARCHAR},
+			</if>
+			<if test="is51 != null" >
+				#{is51,jdbcType=TINYINT},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null" >
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="borrowerType != null" >
+				#{borrowerType,jdbcType=TINYINT},
+			</if>
+			<if test="updateType != null" >
+				#{updateType,jdbcType=TINYINT},
+			</if>
+			<if test="updateUserid != null" >
+				#{updateUserid,jdbcType=INTEGER},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="email != null" >
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="utmName != null" >
+				#{utmName,jdbcType=VARCHAR},
+			</if>
+			<if test="utmType != null" >
+				#{utmType,jdbcType=VARCHAR},
+			</if>
+			<if test="utmSourceId != null" >
+				#{utmSourceId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
 </mapper>
 

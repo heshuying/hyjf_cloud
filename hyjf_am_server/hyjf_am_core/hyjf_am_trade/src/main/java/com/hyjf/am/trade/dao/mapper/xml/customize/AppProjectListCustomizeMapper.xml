@@ -866,7 +866,7 @@
 		<where>
 			hydbt.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</where>
-		ORDER BY hydbt.create_time DESC
+		ORDER BY hydbt.create_time DESC,hydbt.id DESC
 		<if test="limitStart != null and limitEnd !=null" >
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>

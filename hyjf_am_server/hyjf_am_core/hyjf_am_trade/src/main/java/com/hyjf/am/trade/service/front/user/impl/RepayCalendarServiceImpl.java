@@ -201,7 +201,11 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
                 } else {
                     borrowUrl = borrowUrl.concat("&orderId=").concat(customize.getOrderId());
                     if("0".equals(customize.getCouponType())){ //本金出借
-                        borrowUrl = borrowUrl.concat("&investStatusDesc=还款中");
+                        if("8".equals(customize.getBorrowStatus())){
+                            borrowUrl = borrowUrl.concat("&investStatusDesc=逾期中");
+                        }else{
+                            borrowUrl = borrowUrl.concat("&investStatusDesc=还款中");
+                        }
                     } else { //优惠券出借
                         borrowUrl = borrowUrl.concat("&investStatusDesc=未回款");
                     }

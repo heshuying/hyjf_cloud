@@ -678,6 +678,18 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     }
 
     /**
+     * 查询用户账户信息金额信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomize queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomize accountInfos = adminBankAccountManageCustomizeMapper.queryAccountUserMoney(userId);
+        return accountInfos;
+    }
+
+    /**
      * add by liushouyi 时间转换工具类
      * 根据type的类型进行转换
      * 转换成 对应格式的字符串时间

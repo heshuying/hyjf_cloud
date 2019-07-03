@@ -2,6 +2,7 @@ package com.hyjf.am.config.dao.mapper.customize;
 
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.vo.admin.MenuVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -50,6 +51,12 @@ public interface AdminSystemMapper {
 	Integer updatePassword(AdminSystem adminSystem);
 	
 	List<MenuVO> selectLeftMenuTree1(AdminSystem adminSystem);
-	
 
+
+	/**
+	 * 根据手机号查询用户
+	 * @param mobile
+	 * @return
+	 */
+    AdminSystem getUserInfoByMobile(@Param("mobile") String mobile);
 }

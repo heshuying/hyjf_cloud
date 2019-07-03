@@ -76,6 +76,12 @@ public class ProjectRepayDetailBean implements Serializable {
     // 还款状态
     public String status;
 
+    // 原始提前还款利息
+    public String chargeOriginalInterest;
+
+    // 提前还款罚息
+    public String chargePenaltyInterest;
+
     /**
      * 构造方法
      */
@@ -227,4 +233,19 @@ public class ProjectRepayDetailBean implements Serializable {
         this.advanceInterest = advanceInterest;
     }
 
+    public String getChargeOriginalInterest() {
+        return chargeOriginalInterest;
+    }
+
+    public void setChargeOriginalInterest(String chargeOriginalInterest) {
+        this.chargeOriginalInterest = chargeOriginalInterest;
+    }
+
+    public String getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(String chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
+    }
 }

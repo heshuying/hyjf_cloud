@@ -195,4 +195,6 @@ public interface AdminService {
      * @return
      */
     public AdminRoleResponse checkAction( AdminRoleRequest bean);
+
+	void sendAdminUser(Object... adminUserId);
 }

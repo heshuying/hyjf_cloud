@@ -8,19 +8,27 @@ import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.response.trade.EvaluationConfigResponse;
+import com.hyjf.am.response.trade.UserTenderResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.resquest.trade.UserTenderRequest;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.EvaluationConfigVO;
+import com.hyjf.am.resquest.trade.SumTenderAmountRequest;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +39,8 @@ import java.util.Set;
  */
 @Cilent
 public class AmTradeClientImpl implements AmTradeClient {
+	private Logger logger = LoggerFactory.getLogger(AmMarketClientImpl.class);
+	private DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -294,4 +304,52 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return null;
 	}
 
+	@Override
+	public BigDecimal getSumAmount(Date startDate, Date endDate) {
+		logger.info("getSumAmount, startDate is: {}, endDate is: {}", sdf.format(startDate), sdf.format(endDate));
+		String url = "http://AM-TRADE/am-trade/investAmount/sum";
+		BigDecimalResponse response = restTemplate.postForEntity(url, new UserTenderRequest(startDate, endDate), BigDecimalResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultDec();
+		}
+		return null;
+	}
+
+	@Override
+	public BigDecimal getUserTender(int userId, Date startDate, Date endDate) {
+		logger.info("getUserTender, userId is: {}, startDate is: {}, endDate is: {}", userId, sdf.format(startDate), sdf.format(endDate));
+		String url = "http://AM-TRADE/am-trade/investAmount/annual";
+		BigDecimalResponse response = restTemplate.postForEntity(url, new UserTenderRequest(userId, startDate, endDate), BigDecimalResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultDec();
+		}
+		return null;
+	}
+
+	@Override
+	public BigDecimal getTenderAmount(int userId, Date activityStartDate, Date activityEndDate, Integer client) {
+		SumTenderAmountRequest request = new SumTenderAmountRequest();
+		request.setUserId(userId);
+		request.setStartDate(activityStartDate);
+		request.setEndDate(activityEndDate);
+		request.setClient(client);
+
+		String url = "http://AM-TRADE/am-trade/investAmount/";
+		BigDecimalResponse response = restTemplate.postForEntity(url, request, BigDecimalResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultDec();
+		}
+		return null;
+	}
+
+	@Override
+	public List<UserTenderVO> getLeaderboard(Date startDate, Date endDate) {
+		logger.info("getLeaderboard, startDate is: {}, endDate is: {}", sdf.format(startDate), sdf.format(endDate));
+		String url = "http://AM-TRADE/am-trade/investAmount/top5";
+		UserTenderResponse response = restTemplate.postForEntity(url, new UserTenderRequest(null, startDate, endDate), UserTenderResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

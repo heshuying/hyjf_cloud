@@ -129,6 +129,9 @@ public class DebtCreditRepayVO implements Serializable {
 
     private Date updateTime;
 
+    // 提前还款罚息
+    public BigDecimal repayAdvancePenaltyInterest;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -609,5 +612,13 @@ public class DebtCreditRepayVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getRepayAdvancePenaltyInterest() {
+        return repayAdvancePenaltyInterest;
+    }
+
+    public void setRepayAdvancePenaltyInterest(BigDecimal repayAdvancePenaltyInterest) {
+        this.repayAdvancePenaltyInterest = repayAdvancePenaltyInterest;
     }
 }

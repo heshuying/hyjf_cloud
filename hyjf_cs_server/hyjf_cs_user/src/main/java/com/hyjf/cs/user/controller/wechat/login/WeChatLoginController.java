@@ -14,14 +14,17 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.AppUserToken;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.LoginResultBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
@@ -59,6 +62,8 @@ public class WeChatLoginController extends BaseUserController {
     private LoginService loginService;
     @Autowired
     private CommonProducer commonProducer;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 登录接口
@@ -72,7 +77,7 @@ public class WeChatLoginController extends BaseUserController {
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
     @PostMapping(value = "/doLogin.do")
-    public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
+    public BaseResultBean login(HttpServletRequest request,@RequestHeader(value = "wjtClient",required = false) String wjtClient, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
         LoginResultBean result = new LoginResultBean();
         // 从payload里面获取预置属性
@@ -90,6 +95,28 @@ public class WeChatLoginController extends BaseUserController {
         }
         //判断用户输入的密码错误次数---开始
         UserVO user = loginService.getUser(userName);
+        if(user==null){
+            logger.error("weChat端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
+            return result;
+        }
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null ){
+            if(user.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !user.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(user.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
+        }
         Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI,user);
         if (!errorInfo.isEmpty()){
             logger.error("weChat端登录失败...");
@@ -219,5 +246,92 @@ public class WeChatLoginController extends BaseUserController {
             logger.error(e.getMessage());
             return "";
         }
+    }
+
+
+
+    @ApiOperation(value = "短信验证码登录", notes = "短信验证码登录")
+    @ResponseBody
+    @PostMapping(value = "/mobileCodeLogin.do")
+    public BaseResultBean mobileCodeLogin(HttpServletRequest request, @RequestParam String userName, @RequestParam String smsCode,
+                                @RequestParam(value = "env", defaultValue = "") String env) {
+        LoginResultBean result = new LoginResultBean();
+        // 从payload里面获取预置属性
+        String presetProps = getStringFromStream(request);
+        CheckUtil.check(null != userName && null != smsCode, MsgEnum.STATUS_CE000001);
+
+        // 现只支持两个参数  1微信  2风车理财
+        if (!"1".equals(env) && !"2".equals(env)) {
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
+        }
+
+        // weChat 只支持手机号登录
+        if (!CommonUtils.isMobile(userName)) {
+            throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
+        }
+
+        UserVO userVO = loginService.getUsersByMobile(userName);
+        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,BankCallConstant.CHANNEL_APP,userVO);
+        if (!errorInfo.isEmpty()){
+            logger.error("web端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(errorInfo.get("info"));
+            return result;
+        }
+
+        // 执行登录(登录时间，登录ip)
+        WebViewUserVO webViewUserVO = loginService.loginByCode(userName, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,userVO);
+        if (webViewUserVO != null) {
+            // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
+            // 登录成功后,将用户ID返回给前端
+            result.setUserId(String.valueOf(userVO.getUserId()));
+            // 预置属性不为空,发送神策登陆事件MQ
+            logger.info("presetProps:" + presetProps);
+            if (StringUtils.isNotBlank(presetProps)){
+                try {
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(userVO.getUserId());
+                    // 发送神策数据统计MQ
+                    this.loginService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            }
+            //登录成功发送mq
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(1);
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(webViewUserVO.getUsername());
+            userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }
+            if (StringUtils.isNotBlank(env)) {
+                //登录成功之后风车理财的特殊标记，供后续出借使用
+                RedisUtils.del("loginFrom" + userVO.getUserId());
+                RedisUtils.set("loginFrom" + userVO.getUserId(), env, 1800);
+            }
+            // 登录完成返回值
+            result.setStatus(ResultEnum.SUCCESS.getStatus());
+            result.setStatusDesc("登录成功");
+
+            // Add by huanghui 用户开户区分企业用户或个人用户
+            result.setUserType(userVO.getUserType());
+            result.setSign(webViewUserVO.getToken());
+        } else {
+            logger.error("weChat端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
+        }
+        return result;
     }
 }

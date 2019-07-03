@@ -123,6 +123,20 @@ public class UnnormalRepayUtils {
 	}
 
 	/**
+	 * 计算3天罚息
+	 * 10000*0.085/360*3=7.08
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @return
+	 */
+	public static BigDecimal aheadEndRepayInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate) {
+		// 借款日利息 （10000*0.085/360）代入计算
+		BigDecimal advanceDays = new BigDecimal(3);
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).divide(new BigDecimal(36000),8,BigDecimal.ROUND_DOWN).multiply(advanceDays);
+		aheadInterest = aheadInterest.setScale(2,BigDecimal.ROUND_DOWN);
+		return aheadInterest;
+	}
+	/**
 	 * 	 **NEW**计算最后一期利息
 	 * （提前还款8日包含8日还款，利息按实际持有天数计算）
 	 * （10000*0.08/360）*3*（3-1）-6.66=6.6
@@ -257,6 +271,19 @@ public class UnnormalRepayUtils {
 		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(new BigDecimal("0.0006"));
 		overdueInterest = overdueInterest.setScale(2, BigDecimal.ROUND_DOWN);
 		return overdueInterest;
+	}
+
+	/**
+	 * 计算逾期还款利息
+	 * @param termShouldPrincipalInterest
+	 * @param repayLateDays
+	 * @param repayLateRate
+	 * @return
+	 */
+	public static BigDecimal repayLateInterest(BigDecimal termShouldPrincipalInterest, int repayLateDays, BigDecimal repayLateRate){
+		// 计算逾期还款利息
+		BigDecimal repayLateInterest = termShouldPrincipalInterest.multiply(repayLateRate).multiply(new BigDecimal(repayLateDays)).setScale(2, BigDecimal.ROUND_DOWN);
+		return repayLateInterest;
 	}
 
 	/**

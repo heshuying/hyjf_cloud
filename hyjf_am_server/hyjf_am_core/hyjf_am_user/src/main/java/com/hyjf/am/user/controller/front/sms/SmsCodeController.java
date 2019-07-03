@@ -3,6 +3,7 @@ package com.hyjf.am.user.controller.front.sms;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.user.SmsCodeResponse;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
@@ -116,4 +117,19 @@ public class SmsCodeController extends BaseController {
         }
         return response;
     }
+
+	/**
+	 * 筛选符合条件的用户
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/queryUserByBirthday")
+	public Response queryUserByBirthday(@RequestBody SmsCodeUserRequest request) {
+		Response response = new Response();
+		List<String> list = smsService.queryUserByBirthday(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			response.setResultList(list);
+		}
+		return response;
+	}
 }

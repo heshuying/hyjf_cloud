@@ -761,7 +761,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 										}
 
 										creditRepay.setUserId(userId);// 用户名称
+										creditRepay.setUserName(creditTender.getUserName());//用户名称
 										creditRepay.setCreditUserId(creditTender.getCreditUserId());// 出让人id
+										creditRepay.setCreditUserName(creditTender.getCreditUserName());//出让人名称
+										//creditRepay.setCreditUserId(creditTender.getCreditUserId());// 出让人id
 										creditRepay.setStatus(0);// 状态
 										creditRepay.setBidNid(creditTender.getBidNid());// 原标标号
 										creditRepay.setCreditNid(creditTender.getCreditNid());// 债转标号
@@ -829,6 +832,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					params.put("assignOrderId", creditTender.getAssignNid());
 					params.put("flag", "1");//1（散）2（智投）
 					params.put("status", "1"); //1承接（每笔）
+					// 应急中心二期，添加承接标示 add by nxl
+					params.put("isTender","1"); //1:承接，2：加入
 					// 推送数据到MQ 承接（每笔）散
 					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
 							MQConstant.HG_REPORT_DELAY_LEVEL);
@@ -1535,6 +1540,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		params.put("assignOrderId", creditTender.getAssignNid());
 		params.put("flag", "1");//1（散）2（智投）
 		params.put("status", "1"); //1承接（每笔）
+		// 应急中心二期，添加承接标示 add by nxl
+		params.put("isTender","1"); //1:承接，2：加入
 		// 推送数据到MQ 承接（每笔）散
 		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
 				MQConstant.HG_REPORT_DELAY_LEVEL);
@@ -1751,8 +1758,11 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							}
 							// 用户名称
 							creditRepay.setUserId(userId);
+							creditRepay.setUserName(creditTender.getUserName());//用户名称
 							// 出让人id
 							creditRepay.setCreditUserId(creditTender.getCreditUserId());
+							creditRepay.setCreditUserName(creditTender.getCreditUserName());//出让人名称
+
 							// 状态
 							creditRepay.setStatus(0);
 							// 原标标号

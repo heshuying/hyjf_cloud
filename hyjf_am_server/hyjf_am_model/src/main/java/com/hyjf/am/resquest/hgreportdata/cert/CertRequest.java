@@ -14,12 +14,15 @@ public class CertRequest implements Serializable {
 
     private List<String> tradeList;
     private String borrowNid;
+    private List<String> borrowNidList;
     private String nid;
     private Date repayYestime;
     private String transferId;
+    private String realTenderId;
     private String couponTenderId;
     private String repayOrdid;
     private String investOrderId;
+    private String trade;
     private Integer period;
 
     private Integer limitStart;
@@ -127,5 +130,29 @@ public class CertRequest implements Serializable {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getRealTenderId() {
+        return realTenderId;
+    }
+
+    public void setRealTenderId(String realTenderId) {
+        this.realTenderId = realTenderId;
+    }
+
+    public String getTrade() {
+        return trade;
+    }
+
+    public void setTrade(String trade) {
+        this.trade = trade;
+    }
+
+    public List<String> getBorrowNidList() {
+        return borrowNidList;
+    }
+
+    public void setBorrowNidList(List<String> borrowNidList) {
+        this.borrowNidList = borrowNidList;
     }
 }

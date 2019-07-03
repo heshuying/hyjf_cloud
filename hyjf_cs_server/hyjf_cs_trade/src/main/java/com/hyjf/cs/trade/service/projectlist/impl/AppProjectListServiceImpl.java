@@ -107,11 +107,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 初始化分页参数，并组合到请求参数
         // 所有产品列表只查2页之内的数据(app默认写死每页20条)
         int pageSizeCheck = 20;
-        Page page = Page.initPage(1, pageSizeCheck);
         JSONObject info = new JSONObject();
         AppProjectListRequest req = new AppProjectListRequest();
-        req.setLimitStart(page.getOffset());
-        req.setLimitEnd(page.getLimit());
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
         ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
 
@@ -132,34 +129,62 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         // 合规审批需求  add by huanghui 20181123 end
 
-        // ①查询count
+        // 查询定时发标+出借中的标的数量
+        params.setStatus("21");
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
-            logger.error("app端查询散标出借列表原子层count异常");
-            throw new RuntimeException("app端查询散标出借列表原子层count异常");
-        }
-        if (count > pageSizeCheck){
-            count = pageSizeCheck;
+            count = 0;
         }
 
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         info.put(ProjectConstant.APP_PROJECT_TOTAL, 0);
-        if (count > 0) {
+        if(count > pageSizeCheck){ //定时发标+出借中的标的数量大于20，全部查询出来返回
             info.put(ProjectConstant.APP_PROJECT_TOTAL,count);
             List<AppProjectListCsVO> result = new ArrayList<>();
+            // 只查询定时发标+出借中的标的
+            req.setStatus("21");
+            List<AppProjectListCustomizeVO> list = amTradeClient.searchAppProjectList(req);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            for (int i = 0; i < list.size(); i++) {
+            	AppProjectListCustomizeVO is = list.get(i);
+            	is.setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+            	is.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+            	list.set(i,is);
+			}
+            result = convertToAppProjectType(list);
+            CommonUtils.convertNullToEmptyString(result);
+            info.put(ProjectConstant.APP_PROJECT_LIST,result);
+        }else{ //定时发标+出借中的标的数量小于20，补全20条返回
+            info.put(ProjectConstant.APP_PROJECT_TOTAL,count);
+            List<AppProjectListCsVO> result = new ArrayList<>();
+            Page page = Page.initPage(1, pageSizeCheck);
+            // 状态不做设定
+            req.setStatus(null);
+            req.setLimitStart(page.getOffset());
+            req.setLimitEnd(page.getLimit());
             List<AppProjectListCustomizeVO> list = amTradeClient.searchAppProjectList(req);
             if (CollectionUtils.isEmpty(list)) {
                 logger.error("app端查询散标出借列表原子层List异常");
                 throw new RuntimeException("app端查询散标出借列表原子层list数据异常");
             }else {
+                for (int i = 0; i < list.size(); i++) {
+                	AppProjectListCustomizeVO is = list.get(i);
+                	is.setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+                	is.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+                	list.set(i,is);
+    			}
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
+
         }
+
         info.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(ProjectConstant.APP_PAGE,request.getPage());
@@ -290,7 +315,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setOnAccrual((borrow.getReverifyTime() == null ? "放款成功立即计息" : borrow.getReverifyTime()));
             borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
-            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
+            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权 8:逾期中
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
@@ -658,7 +683,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                                         } else if ("30000".equals(result.toString())) {
                                             detailBean.setVal("办事人员和有关人员");
                                         } else if ("40000".equals(result.toString())) {
-                                            detailBean.setVal("会生产服务和生活服务人员");
+                                            detailBean.setVal("是会生产服务和生活服务人员");
                                         } else if ("50000".equals(result.toString())) {
                                             detailBean.setVal("农、林、牧、渔业生产及辅助人员");
                                         } else if ("60000".equals(result.toString())) {
@@ -1209,11 +1234,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setBorrowNid(listCustomize.getBorrowNid());
             appProjectType.setBorrowName(listCustomize.getBorrowNid());
             appProjectType.setBorrowDesc(listCustomize.getBorrowDesc());
-            appProjectType.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            appProjectType.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             appProjectType.setBorrowTheFirstDesc("历史年回报率");
             String borrowNid = listCustomize.getBorrowNid();
             String creditNid = borrowNid.substring(3);
-            appProjectType.setBorrowTheSecond(String.valueOf(listCustomize.getCreditDiscount()) + "%");
+            appProjectType.setBorrowTheSecond(FormatRateUtil.formatBorrowApr(String.valueOf(listCustomize.getCreditDiscount())) + "%");
             appProjectType.setBorrowTheSecondDesc("折让率");
             appProjectType.setBorrowTheThird(listCustomize.getBorrowPeriod() + "天");
             appProjectType.setBorrowTheThirdDesc("项目期限");
@@ -1403,7 +1428,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         tenderCreditDetail.setOnTime(tenderCredit.getCreditTime());
         tenderCreditDetail.setTransferDiscount(tenderCredit.getCreditDiscount());
         tenderCreditDetail.setAccount(tenderCredit.getCreditCapital());
-        tenderCreditDetail.setBorrowApr(tenderCredit.getBidApr());
+        tenderCreditDetail.setBorrowApr(FormatRateUtil.formatBorrowApr(tenderCredit.getBidApr()));
         tenderCreditDetail.setBorrowId(tenderCredit.getBidNid());
         tenderCreditDetail.setTransferLeft(tenderCredit.getCreditTermHold());
         tenderCreditDetail.setStatus(tenderCredit.getStatus());
@@ -1541,7 +1566,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         }
 
         // 合规审批需求  add by huanghui 20181123 start
-        info.put("riskWarningHint", "智投服务是平台根据出借人授权，帮助出借人分散投标、循环出借的服务。到期后退出时效以实际债权转让完成用时为准 。");
+        info.put("riskWarningHint", "智投服务是平台根据出借人授权，帮助出借人分散投标、循环出借的服务。到期后退出时效以实际债权转让完成用时为准 。 ");
         info.put("riskWarningContent", " $智投介绍$ " +
                 "\n" +
                 "智投服务是汇盈金服为您提供的本金自动循环出借及到期自动转让退出的自动投标服务，自动投标授权服务期限自授权出借之日起至退出完成。出借范围仅限于平台发布的借款标的或服务中被转让债权，您可随时查看持有的债权标的列表及标的详情。" +
@@ -1595,7 +1620,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             for (HjhPlanCustomizeVO entity : planList) {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
-                appProjectListCustomize.setBorrowTheFirst(entity.getPlanApr() + "%");
+                appProjectListCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(entity.getPlanApr()) + "%");
                 // mod by nxl 智投服务修改历史年回报率->参考年回报率
 //                appProjectListCustomize.setBorrowTheFirstDesc("历史年回报率");
                 appProjectListCustomize.setBorrowTheFirstDesc("参考年回报率");
@@ -1774,7 +1799,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 HjhPlanBorrowResultBean.BorrowList borrow = null;
                 for (DebtPlanBorrowCustomizeVO entity : consumeList) {
                     borrow = new HjhPlanBorrowResultBean.BorrowList();
-                    borrow.setBorrowApr(entity.getBorrowApr());
+                    borrow.setBorrowApr(FormatRateUtil.formatBorrowApr(entity.getBorrowApr()));
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
                     borrow.setTureName(entity.getTrueName());

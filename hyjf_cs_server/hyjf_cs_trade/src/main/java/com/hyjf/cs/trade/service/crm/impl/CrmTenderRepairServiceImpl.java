@@ -76,4 +76,9 @@ public class CrmTenderRepairServiceImpl extends BaseServiceImpl implements CrmTe
             logger.error("发送CRM消息失败:" + e.getMessage());
         }
     }
+
+    @Override
+    public void repayDataRepair(String borrowNid) {
+        amTradeClient.repayDataRepair(borrowNid);
+    }
 }

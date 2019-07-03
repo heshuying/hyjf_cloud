@@ -60,6 +60,14 @@ public class SmsConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
                         logger.error("send sms error....");
                     }
                     break;
+                case MessageConstant.SMS_SEND_FOR_BIRTHDAY:
+                    try {
+                        smsHandler.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
+                                smsMessage.getServiceType(), null, smsMessage.getChannelType(), smsMessage.getIsDisplay());
+                    } catch (Exception e) {
+                        logger.error("send sms error....");
+                    }
+                    break;
                 default:
                     logger.error("error sms type...");
             }

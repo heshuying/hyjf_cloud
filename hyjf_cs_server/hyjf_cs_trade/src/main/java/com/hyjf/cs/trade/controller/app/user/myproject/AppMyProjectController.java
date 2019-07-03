@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -174,7 +175,8 @@ public class AppMyProjectController extends BaseTradeController {
             }
             // 加息收益
             if("4".equals(entity.getType())){
-                vo.setLabel(entity.getData());
+                // app4.0文案修改
+                vo.setLabel("项目加息");
                 investStatusDesc = "未回款";
                 vo.setCouponType("4");
             }
@@ -213,6 +215,7 @@ public class AppMyProjectController extends BaseTradeController {
                 vo.setIsDisplay("0");
             }
             CommonUtils.convertNullToEmptyString(vo);
+            vo.setLabel(FormatRateUtil.formatBorrowApr(vo.getLabel()));
             vos.add(vo);
         }
         return vos;
@@ -257,6 +260,7 @@ public class AppMyProjectController extends BaseTradeController {
                 borrowUrl += "&isIncrease=1&isCalendar=1";
                 vo.setCouponType("4");
             }
+            vo.setLabel(FormatRateUtil.formatBorrowApr(vo.getLabel()));
             vo.setBorrowUrl(borrowUrl);
             CommonUtils.convertNullToEmptyString(vo);
             vos.add(vo);

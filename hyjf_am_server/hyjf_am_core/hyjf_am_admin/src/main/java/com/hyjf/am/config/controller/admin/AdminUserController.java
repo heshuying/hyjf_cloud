@@ -6,6 +6,7 @@ import com.hyjf.am.config.service.AdminUserService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminUserResponse;
+import com.hyjf.am.resquest.admin.AdminUserWorkFlowRequest;
 import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.user.service.admin.adminuser.DepartmentService;
 import com.hyjf.am.vo.admin.AdminCustomizeVO;
@@ -339,6 +340,17 @@ public class AdminUserController {
 			AdminVO adminVO = new AdminVO();
 			BeanUtils.copyProperties(admin, adminVO);
 			response.setResult(adminVO);
+		}
+		return response;
+	}
+
+	@PostMapping("/getAdminUser")
+	public AdminResponse getAdminUser(@RequestBody AdminUserWorkFlowRequest request) {
+		AdminResponse response = new AdminResponse();
+		List<Admin> admin = adminService.getAdminUser(request.getAdminuserId());
+		if (admin != null) {
+			List<AdminVO> voList = CommonUtils.convertBeanList(admin, AdminVO.class);
+			response.setAdminVOList(voList);
 		}
 		return response;
 	}

@@ -59,6 +59,9 @@ public class AutoMapper {
     protected BorrowApicronMapper borrowApicronMapper;
 
     @Resource
+    protected BorrowApicronLogMapper borrowApicronLogMapper;
+
+    @Resource
     protected BorrowBailMapper borrowBailMapper;
 
     @Resource
@@ -480,5 +483,8 @@ public class AutoMapper {
 
     @Resource
     protected NifaReportLogMapper nifaReportLogMapper;
+
+    @Resource
+    protected TenderUtmChangeLogMapper tenderUtmChangeLogMapper;
 }
 

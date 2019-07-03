@@ -3,6 +3,7 @@ package com.hyjf.cs.message.controller.wechat.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
 import com.hyjf.cs.message.bean.ic.report.OperationReport;
@@ -20,10 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -33,7 +31,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-wechat/find/operationalData")
 public class OperationalDataWechatController {
-	
+
 	private Logger _log = LoggerFactory.getLogger(OperationalDataWechatController.class);
 
 	@Autowired
@@ -41,7 +39,7 @@ public class OperationalDataWechatController {
 
 	/**
 	 * 获取平台实时数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "wechat运营数据第一页面接口数据获取", notes = "wechat运营数据第一页面接口数据获取")
@@ -68,7 +66,7 @@ public class OperationalDataWechatController {
 			//加上统计月份
 			int staticMonth=oe.getStatisticsMonth();
 			info.put("CutOffDate", transferIntToDate(staticMonth));
-			
+
 			// 获取12个月的数据
 			List<OperationReport> list = platDataStatisticsService.findOperationReportEntityList();
 
@@ -93,8 +91,13 @@ public class OperationalDataWechatController {
 			detail.put("YAxis", ycountlist);
 			info.put("MonthlyTransactionNumList", detail);
 
+			//安全运营天数
+			Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
+			info.put("survivalYears",totalDays/365);
+			info.put("survivalDays",totalDays%365);
+
 			result.put("info", info);
-			
+
 		} catch (Exception e) {
 			_log.error(e.getMessage());
 			result.put("status", "99");
@@ -106,7 +109,7 @@ public class OperationalDataWechatController {
 
 	/**
 	 * 获取借款&&出借数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "wechat运营数据第二页面和第三页面数据统计", notes = "wechat运营数据第二页面和第三页面数据统计")
@@ -123,11 +126,11 @@ public class OperationalDataWechatController {
 			if(oe != null){
 				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
 				detail.put("LoanNum", oe.getLoanNum());
-				
+
 				detail.put("investorTotal", oe.getTenderCount());
 				detail.put("perInvestTotal", oe.getPerInvest());
 				float time = oe.getFullBillTimeCurrentMonth();
-				
+
 				detail.put("fullScaleHour", oe.getHour(time));
 				detail.put("fullScaleMinute", oe.getMinutes(time));
 				detail.put("fullScaleSecond", oe.getSeconds(time));
@@ -159,7 +162,7 @@ public class OperationalDataWechatController {
 
 	/**
 	 * 获取出借人地域分布数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "wechat运营数据第四页面数据统计", notes = "wechat运营数据第四页面数据统计")
@@ -193,7 +196,7 @@ public class OperationalDataWechatController {
 
 	/**
 	 * 获取出借人性别&&年龄数据
-	 * 
+	 *
 	 * @return
 	 */
 	@ApiOperation(value = "wechat运营数据第五页面数据统计", notes = "wechat运营数据第五页面数据统计")
@@ -208,12 +211,12 @@ public class OperationalDataWechatController {
 			OperationGroupReport oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			// 出借人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
-            int maleCount = 0;
-            int femaleCount = 0;
-            if (sexMap != null) {
-                maleCount = sexMap.get(OperationGroupReport.MALE);
-                femaleCount = sexMap.get(OperationGroupReport.FEMALE);
-            }
+			int maleCount = 0;
+			int femaleCount = 0;
+			if (sexMap != null) {
+				maleCount = sexMap.get(OperationGroupReport.MALE);
+				femaleCount = sexMap.get(OperationGroupReport.FEMALE);
+			}
 			float malePer = (float) maleCount * 100 / ((maleCount + femaleCount) <= 0 ? 1 : (maleCount + femaleCount)) ;
 			float femalePer = (float) femaleCount * 100 / ((maleCount + femaleCount) <= 0 ? 1 : (maleCount + femaleCount));
 			info.put("InvestorRegionMenRate", oe.formatDate(malePer) + "%");
@@ -260,15 +263,15 @@ public class OperationalDataWechatController {
 		String str=String.valueOf(date);
 		int year=Integer.valueOf(str.substring(0,4));
 		int month=Integer.valueOf(str.substring(4,6))-1;
-		
+
 		cl.set(Calendar.YEAR,year);
 		cl.set(Calendar.MONTH,month);
-		int lastDay = cl.getActualMaximum(Calendar.DAY_OF_MONTH);  
-        cl.set(Calendar.DAY_OF_MONTH, lastDay); 
+		int lastDay = cl.getActualMaximum(Calendar.DAY_OF_MONTH);
+		cl.set(Calendar.DAY_OF_MONTH, lastDay);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
 		return sdf.format(cl.getTime());
 	}
-	
+
 	public String trim(float input,int fenzi){
 		return new BigDecimal((float)input/fenzi).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 	}

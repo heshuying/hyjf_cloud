@@ -100,4 +100,6 @@ public interface AdminUserService  {
     Admin getAdminByName(String auditUser);
 
 	Integer selectAdminListCount(AdminCustomize adminCustomize);
+
+	List<Admin> getAdminUser(Integer[] userId);
 }

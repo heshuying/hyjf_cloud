@@ -219,6 +219,7 @@ public class BankRepayFreezeOrgController extends BaseController {
         Integer userId = form.getRepayUserId();
         String orderId = form.getOrderId();
         boolean isAllRepay = form.getAllRepayFlag() == 1;
+        int latePeriod = form.getLatePeriod();// 提交的逾期期数
         String planNid = form.getPlanNid();
         try {
             if (StringUtils.isNotBlank(planNid) && !"0".equals(planNid)) {
@@ -237,7 +238,7 @@ public class BankRepayFreezeOrgController extends BaseController {
                 }
             }
             // 担保机构的还款
-            RepayBean repay = bankRepayFreezeOrgService.getRepayBean(userId, "3", borrowNid, isAllRepay);
+            RepayBean repay = bankRepayFreezeOrgService.getRepayBean(userId, "3", borrowNid, isAllRepay, latePeriod);
             if (repay != null) {
                 BigDecimal repayTotal = repay.getRepayAccountAll();
                 if(repayTotal.compareTo(form.getAmountFreeze()) != 0){
@@ -252,9 +253,8 @@ public class BankRepayFreezeOrgController extends BaseController {
                 callApiBg.setTxDate(orderId.substring(0, 8));
                 callApiBg.setTxTime(orderId.substring(8, 14));
                 callApiBg.setSeqNo(orderId.substring(14));
-                boolean updateResult = this.bankRepayFreezeOrgService.updateForRepayRequest(repay, callApiBg, isAllRepay);
+                boolean updateResult = this.bankRepayFreezeOrgService.updateForRepayRequest(repay, callApiBg, isAllRepay, latePeriod);
                 if (updateResult) {
-                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                     // 如果有正在出让的债权,先去把出让状态停止
                     this.bankRepayFreezeOrgService.updateBorrowCreditStautus(borrowNid);
 

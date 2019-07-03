@@ -232,7 +232,7 @@ public class CreditRepay implements Serializable {
     private Integer chargeDays;
 
     /**
-     * 提前还款利息（负数）
+     * 提前还款利息（负数）(已加罚息)
      *
      * @mbggenerated
      */
@@ -286,6 +286,13 @@ public class CreditRepay implements Serializable {
      * @mbggenerated
      */
     private Date createTime;
+
+    /**
+     * 提前还款罚息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal chargePenaltyInterest;
 
     private static final long serialVersionUID = 1L;
 
@@ -615,5 +622,13 @@ public class CreditRepay implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public BigDecimal getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
     }
 }
