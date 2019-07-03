@@ -1156,9 +1156,6 @@
             </if>
             AND hydb.is_show <![CDATA[<>]]> 1
 
-            <if test="publishInstCode != null and publishInstCode != ''">
-                AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
-            </if>
         </where>
     </sql>
 
