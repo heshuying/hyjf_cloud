@@ -3,6 +3,7 @@ package com.hyjf.data.config.ds;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.data.config.ds.DynamicDataSourceContextHolder.DbType;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -12,6 +13,8 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +24,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-import com.hyjf.common.constants.CommonConstant;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +33,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @Configuration
 @MapperScan({"com.hyjf.data.*.mapper"})
-//@AutoConfigureAfter({ DataSourceAutoConfiguration.class})
+@AutoConfigureAfter({ DataSourceAutoConfiguration.class})
 public class MybatisConfig {
 	@Value("${datasource.type}")
 	private Class<? extends DataSource> dataSourceType;
