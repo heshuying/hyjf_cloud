@@ -100,8 +100,8 @@ public class RegistRecordController extends BaseController {
         if (null != registRecordResponse.getResultList() && registRecordResponse.getResultList().size() > 0) {
             if (!isShow) {
                 //如果没有查看脱敏权限,显示加星
-                for (RegistRecordVO registRecordVO : registRecordResponse.getResultList()) {
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                for (RegistRecordVO registRecordVO:registRecordResponse.getResultList()){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
                 }
             }
             registRecordCustomizeVO = CommonUtils.convertBeanList(registRecordResponse.getResultList(), RegistRecordCustomizeVO.class);
@@ -368,7 +368,7 @@ public class RegistRecordController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
 

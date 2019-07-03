@@ -873,6 +873,7 @@
         FROM
         ht_borrow hydb
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        LEFT JOIN ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
         <include refid="App_Where_Clause" />
     </select>
 
@@ -1055,12 +1056,23 @@
             </if>
             <if test="status == null or status == ''">
                 AND
-                (
+                (((
                 ( hydb.`status` = 1 AND hydb.verify_status = 3 )
                 OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 OR ( hydb.`status` = 3 )
                 OR ( hydb.`status` = 4 )
                 OR ( hydb.`status` = 8 )
+                )
+                <if test="publishInstCode != null and publishInstCode != ''">
+                    AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+                </if>
+                )
+                or (
+                ((hydb.`status` = 3)
+                OR ( hydb.`status` = 4)
+                OR ( hydb.`status` = 8))
+                AND hbi.publish_inst_code = #{wjtInstCode,jdbcType=VARCHAR}
+                )
                 )
             </if>
             <choose>
@@ -1071,18 +1083,30 @@
                 <!-- 获取 出借中 -->
                 <when test="status == '11'">
                     AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                    <if test="publishInstCode != null and publishInstCode != ''">
+                        AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+                    </if>
                 </when>
                 <!-- 获取 投标结束 -->
                 <when test="status == '12'">
                     AND (hydb.`status` = 3)
+                    <if test="publishInstCode != null and publishInstCode != ''">
+                        AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+                    </if>
                 </when>
                 <!-- 获取 还款中 3天内-->
                 <when test="status == '13'">
                     AND (hydb.`status` = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3))
+                    <if test="publishInstCode != null and publishInstCode != ''">
+                        AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+                    </if>
                 </when>
                 <!-- 新手汇 定时发标 -->
                 <when test="status == '14'">
                     AND ( hydb.`status` = 1 AND hydb.project_type = 4 AND hydb.verify_status = 3 )
+                    <if test="publishInstCode != null and publishInstCode != ''">
+                        AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+                    </if>
                 </when>
                 <!-- 新手汇 出借中 -->
                 <when test="status == '15'">
@@ -1102,6 +1126,9 @@
                     ( hydb.`status` = 1 AND hydb.verify_status = 3 )
                     OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                     )
+                    <if test="publishInstCode != null and publishInstCode != ''">
+                        AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+                    </if>
                 </when>
             </choose>
             <if test="termStart != null and termStart != ''">
@@ -1128,10 +1155,6 @@
                 AND hydbpt.borrow_cd = #{projectCd,jdbcType=INTEGER}
             </if>
             AND hydb.is_show <![CDATA[<>]]> 1
-
-            <if test="publishInstCode != null and publishInstCode != ''">
-                AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hi.publish_inst_code ='0')
-            </if>
 
         </where>
     </sql>
@@ -1488,6 +1511,9 @@
         AND hydb.project_type  <![CDATA[<>]]>  '11'
         AND hydb.is_show  <![CDATA[<>]]>  1
         AND ( (hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() )) OR  hydb.`status` = 8)
+        <if test="publishInstCode != null and publishInstCode != ''">
+            AND (borrowInfo.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR borrowInfo.publish_inst_code ='0')
+        </if>
         )
         UNION ALL
         (SELECT
@@ -1532,6 +1558,9 @@
         AND hydb.project_type  <![CDATA[<>]]>  '11'
         AND hydb.is_show  <![CDATA[<>]]>  1
         AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+        <if test="publishInstCode != null and publishInstCode != ''">
+            AND (borrowInfo.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR borrowInfo.publish_inst_code ='0')
+        </if>
 
         )
         ) t
