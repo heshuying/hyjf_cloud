@@ -1290,6 +1290,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setStatus(statusNewInvest);
         request.setType("4");
         request.setHost(host);
+        request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        request.setWjtInstCode(systemConfig.getWjtInstCode());
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewInvestTemp = amTradeClient.searchAppProjectList(request);
         List<AppProjectListCustomizeVO> listNewInvest = new ArrayList<>();
