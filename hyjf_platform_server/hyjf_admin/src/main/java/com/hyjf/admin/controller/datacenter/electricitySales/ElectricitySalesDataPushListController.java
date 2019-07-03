@@ -310,7 +310,7 @@ public class ElectricitySalesDataPushListController  extends BaseController {
 
 						HSSFRow hssfRow = hssfSheet.getRow(rowNum);
 						if (hssfRow == null || (hssfRow.getCell(0) == null && hssfRow.getCell(1) == null)) {
-							continue;
+							return new AdminResult<ElectricitySalesDataPushListResponse>(Response.ERROR,"坐席姓名或客户账号不能为空");
 						}
 						if(StringUtils.isEmpty(this.getValue(hssfRow.getCell(0)))){
 							continue;
