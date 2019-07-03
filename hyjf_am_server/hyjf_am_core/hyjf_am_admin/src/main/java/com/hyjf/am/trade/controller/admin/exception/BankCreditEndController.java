@@ -201,6 +201,24 @@ public class BankCreditEndController extends BaseController {
             return response;
         }
 
+        BankCreditEnd creditEnd = bankCreditEndService.getCreditEndByOrgOrderId(requestBean.getOrgOrderId());
+        if(creditEnd!=null && "S".equals(creditEnd.getState())){
+            logger.error("该债权已结束，requestBean:" + JSON.toJSONString(requestBean));
+            response.setRtn(Response.FAIL);
+            response.setMessage("该债权已结束");
+            return response;
+        }
+        if(creditEnd!=null && !"F".equals(creditEnd.getState())){
+            logger.error("结束债权已提交过，requestBean:" + JSON.toJSONString(requestBean));
+            response.setRtn(Response.FAIL);
+            response.setMessage("该债权已提交过");
+            return response;
+        }
+        // 处理失败的记录删除后再重新添加
+        if(creditEnd!=null && "F".equals(creditEnd.getState())){
+            bankCreditEndService.deleteCreditEndById(creditEnd.getId());
+        }
+
         // 查询封装请求参数
         String msg = bankCreditEndService.queryForCreditEnd(requestBean);
         if(StringUtils.isNotBlank(msg)){

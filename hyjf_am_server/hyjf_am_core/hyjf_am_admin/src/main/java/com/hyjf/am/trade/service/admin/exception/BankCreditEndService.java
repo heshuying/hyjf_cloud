@@ -80,4 +80,8 @@ public interface BankCreditEndService extends BaseService {
     int insertStartCreditEnd(StartCreditEndRequest requestBean);
 
     String queryForCreditEnd(StartCreditEndRequest requestBean);
+
+    BankCreditEnd getCreditEndByOrgOrderId(String orderId);
+
+    int deleteCreditEndById(Integer id);
 }
