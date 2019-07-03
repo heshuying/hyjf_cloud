@@ -1006,7 +1006,7 @@
 
     <sql id="App_Where_Clause">
         <where>
-            <if test="projectType == null or projectType == ''">
+            (<if test="projectType == null or projectType == ''">
                 (hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
             </if>
             <if test="projectType != null and projectType != ''">
@@ -1132,7 +1132,89 @@
 
             <if test="publishInstCode != null and publishInstCode != ''">
                 AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
+            </if>)
+
+            or(
+
+            <if test="projectType == null or projectType == ''">
+                (hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
             </if>
+            <if test="projectType != null and projectType != ''">
+                hydbpt.borrow_project_type = 'HZT'
+            </if>
+            <if test="type != null and type != ''">
+                AND hydb.project_type = #{type,jdbcType=VARCHAR}
+            </if>
+            <if test="(type == null or type == '') and projectType!='CFH' and projectType!='ZQ'">
+                AND hydb.project_type <![CDATA[<>]]> '4'
+                <if test="projectType == 'HZT'">
+                    AND CASE
+                    WHEN  ( hydb.`status` = 1 AND hydb.verify_status = 3)
+                    THEN
+                    hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                    ELSE
+                    hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                    END
+                </if>
+                AND hydb.project_type <![CDATA[<>]]> '11'
+                <!-- 融通宝过滤 -->
+                <if test="version != null and version != '' and '1.4.2' > version ">
+                    AND hydb.project_type <![CDATA[<>]]> '13'
+                </if>
+            </if>
+            <!-- 包含汇直投、尊享汇、新手汇  modify by cwyang 改版要求债权页面除新手汇项目其他出借项目 -->
+            <if test="(type == null or type == '') and projectType=='CFH' ">
+                AND hydb.project_type NOT IN (4,8)
+                AND CASE
+                WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ))
+                THEN
+                hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                ELSE
+                hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                END
+            </if>
+            <!-- 包含汇直投、尊享汇、融通宝 -->
+            <if test="(type == null or type == '') and projectType=='ZQ' ">
+                AND hydb.project_type NOT IN (4,8)
+                AND CASE
+                WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ))
+                THEN
+                hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                ELSE
+                hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                END
+            </if>
+
+            <if test="termStart != null and termStart != ''">
+                AND CASE
+                WHEN hydb.borrow_style = 'endday' THEN
+                hydb.borrow_period/30 <![CDATA[>=]]>#{termStart,jdbcType=INTEGER}
+                ELSE hydb.borrow_period <![CDATA[>=]]>#{termStart,jdbcType=INTEGER}
+                END
+            </if>
+            <if test="termEnd != null and termEnd != ''">
+                AND
+                CASE
+                WHEN hydb.borrow_style = 'endday' THEN hydb.borrow_period / 30 <![CDATA[<=]]> #{termEnd,jdbcType=INTEGER}
+                ELSE hydb.borrow_period <![CDATA[<=]]> #{termEnd,jdbcType=INTEGER}
+                END
+            </if>
+            <if test="interestStart != null and interestStart != ''">
+                AND hydb.borrow_apr <![CDATA[>=]]>#{interestStart,jdbcType=INTEGER}
+            </if>
+            <if test="interestEnd != null and interestEnd != ''">
+                AND hydb.borrow_apr <![CDATA[<=]]>#{interestEnd,jdbcType=INTEGER}
+            </if>
+            <if test="projectCd != null and projectCd != ''">
+                AND hydbpt.borrow_cd = #{projectCd,jdbcType=INTEGER}
+            </if>
+            AND ((htb.`status` = 3)
+            OR ( htb.`status` = 4)
+            OR ( htb.`status` = 8))
+
+            AND htb.is_show <![CDATA[<>]]> 1
+            AND hbi.publish_inst_code = #{wjtInstCode,jdbcType=VARCHAR}
+            )
 
         </where>
     </sql>
