@@ -45,10 +45,21 @@
             utm.source_type = 1
             AND utm.source_id IS NOT NULL
             AND utm.source_id <![CDATA[<>]]> ''
-            <if test="sourceIdSrch != null and sourceIdSrch != ''">
+            <if test="sourceId != null and sourceId != ''">
                 AND utm.source_id = #{sourceId}
             </if>
         </where>
+    </select>
+
+    <select id="selectUtmPlatByUtmId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+            plat.source_id,
+            plat.source_name
+        FROM
+            ht_utm_plat plat
+        INNER JOIN ht_utm utm ON plat.source_id = utm.source_id
+        WHERE
+            utm.utm_id = #{utmId};
     </select>
 
 

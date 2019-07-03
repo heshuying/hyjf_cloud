@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 
 import java.math.BigDecimal;
@@ -50,4 +51,6 @@ public interface RepayManageCustomizeMapper {
     /** 用户还款计划列表不分期*/
     List<RepayPlanListVO> selectRepayNotPlanList(Map<String,Object> paraMap);
 
+    Integer selectSponsorLogCount(Map<String,Object> paraMap);
+    List<SponsorLogCustomizeVO> selectSponsorLog(Map<String,Object> paraMap);
 }

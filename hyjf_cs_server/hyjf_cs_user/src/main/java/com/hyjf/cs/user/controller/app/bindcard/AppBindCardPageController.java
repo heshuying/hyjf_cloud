@@ -101,8 +101,7 @@ public class AppBindCardPageController extends BaseUserController {
             bean.setAccountId(webViewUserVO.getBankAccount());
             bean.setUserIP(GetCilentIP.getIpAddr(request));
             bean.setUserId(userId);
-            // 微官网 1
-            bean.setPlatform("1");
+            bean.setPlatform(platform);
             Map<String,Object> map = bindCardService.getCallbankMap(bean,sign,token,platform);
             if(map == null){
                 map = Collections.emptyMap();

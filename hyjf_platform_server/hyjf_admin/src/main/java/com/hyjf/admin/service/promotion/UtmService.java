@@ -63,4 +63,11 @@ public interface UtmService {
      * @return
      */
     int sourceIdIsExists(Integer sourceId);
+
+    /**
+     * 获取PC渠道列表
+     * @Author cui
+     * @return
+     */
+    UtmResultResponse getPcUtms();
 }
