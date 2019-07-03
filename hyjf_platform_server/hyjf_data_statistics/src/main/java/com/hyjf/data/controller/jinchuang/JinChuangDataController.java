@@ -1,13 +1,17 @@
 package com.hyjf.data.controller.jinchuang;
 
-import com.hyjf.data.service.db.DBService;
-import com.hyjf.data.service.sensors.SenSorsService;
+import com.hyjf.data.sensors.SenSorsService;
+import com.hyjf.data.trade.service.DBService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @Auther:yangchangwei
@@ -24,13 +28,12 @@ public class JinChuangDataController {
     @Autowired
     private SenSorsService senSorsService;
 
-    @Autowired
+    @Resource
     private DBService dbService;
 
     @ApiOperation(value = "神策", notes = "神策")
     @GetMapping(value = "/sensors/updatedata")
-    @ResponseBody
-    public String updateSensorsData(){
+    public void updateSensorsData(){
         logger.info("--------------金创展厅开始更新神策相关数据！-------");
 
         //更新（近30天包扣当天）用户转化
@@ -54,21 +57,17 @@ public class JinChuangDataController {
         //更新用户出借次数
         senSorsService.updateSixMonthTenderNumberDistributed();
 
-        return "true";
     }
 
     @ApiOperation(value = "每日数据更新", notes = "每日数据更新")
     @GetMapping(value = "/day/updatedata")
-    @ResponseBody
-    public String updateDataforDay(){
+    public void updateDataforDay(){
         logger.info("--------------金创展厅开始更新每日数据！-------");
 
         //更新每月用户收益
         dbService.getUserInterestMonth();
         //更新近6个月的性别分布
         dbService.getSixMonthSexDistributed();
-
-        return "true";
     }
 
 }

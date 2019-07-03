@@ -1,11 +1,11 @@
-package com.hyjf.data.service.sensors.impl;
+package com.hyjf.data.sensors.impl;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.data.bean.jinchuang.*;
 import com.hyjf.data.mongo.jinchuang.*;
-import com.hyjf.data.service.sensors.SenSorsService;
+import com.hyjf.data.sensors.SenSorsService;
 import com.hyjf.data.utils.constant.JcConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ import java.util.*;
  * @Description: 获取更新神策数据
  */
 @Service
-public class SenSorsServiceImpl implements SenSorsService{
+public class SenSorsServiceImpl implements SenSorsService {
 
     private static final Logger logger = LoggerFactory.getLogger(SenSorsServiceImpl.class);
 

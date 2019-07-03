@@ -1,4 +1,4 @@
-package com.hyjf.data.service.db;
+package com.hyjf.data.trade.service;
 
 /**
  * @Auther:yangchangwei

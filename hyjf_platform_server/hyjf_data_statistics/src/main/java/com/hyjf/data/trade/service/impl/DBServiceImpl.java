@@ -1,11 +1,11 @@
-package com.hyjf.data.service.db.impl;
+package com.hyjf.data.trade.service.impl;
 
 import com.hyjf.common.util.GetDate;
 import com.hyjf.data.bean.jinchuang.JcUserAnalysis;
 import com.hyjf.data.bean.jinchuang.JcUserInterest;
 import com.hyjf.data.mongo.jinchuang.JcUserAnalysisDao;
 import com.hyjf.data.mongo.jinchuang.JcUserInterestDao;
-import com.hyjf.data.service.db.DBService;
+import com.hyjf.data.trade.service.DBService;
 import com.hyjf.data.trade.entity.SexDistributedInfo;
 import com.hyjf.data.trade.mapper.JcDataStatisticsCustomerMapper;
 import org.slf4j.Logger;

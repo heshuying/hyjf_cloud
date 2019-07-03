@@ -1,4 +1,4 @@
-package com.hyjf.data.service.sensors;
+package com.hyjf.data.sensors;
 
 import java.util.Map;
 
