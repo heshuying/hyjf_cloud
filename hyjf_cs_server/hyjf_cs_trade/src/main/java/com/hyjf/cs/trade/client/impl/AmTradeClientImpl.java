@@ -1585,6 +1585,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     @Override
+    @Cached(name="allBorrowRepayList-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<BorrowRepayVO> selectBorrowRepayList(String borrowNid, Integer repaySmsReminder) {
         String url= "http://AM-TRADE/am-trade/borrowRepay/selectBorrowRepayList/" + borrowNid + "/";
         if (null == repaySmsReminder){
@@ -1595,10 +1597,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowRepayResponse response = restTemplate.getForEntity(
                 url,
                 BorrowRepayResponse.class).getBody();
-        if (response != null) {
+        if (Response.isSuccess(response)&&!CollectionUtils.isEmpty(response.getResultList())) {
             return response.getResultList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -2429,12 +2431,14 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/29 14:15
      */
     @Override
+    @Cached(name="hjhDebtCreditListByBorrowNidAndStatus-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<HjhDebtCreditVO> selectHjhDebtCreditListByBorrowNidAndStatus(DebtCreditRequest request) {
         HjhDebtCreditResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByBorrowNidAndStatus",request,HjhDebtCreditResponse.class).getBody();
-        if (Response.isSuccess(response)){
+        if (Response.isSuccess(response)&&!CollectionUtils.isEmpty(response.getResultList())){
             return response.getResultList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -3857,12 +3861,14 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="allDisplayNameDynamic-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<ProtocolTemplateVO> getNewInfo() {
         ResponseEntity<Response<ProtocolTemplateVO>> response =
                 restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo", HttpMethod.GET,
                         null, new ParameterizedTypeReference<Response<ProtocolTemplateVO>>() {});
 
-        List<ProtocolTemplateVO> vo = null;
+        List<ProtocolTemplateVO> vo = new ArrayList<>();
         if(response.getBody().getResultList().size() > 0){
 
             vo =  response.getBody().getResultList();
@@ -4249,10 +4255,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/8/10 15:21
      */
     @Override
+    @Cached(name="allBorrowInfoWithBLOBSVO-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH,cacheNullValue=true)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoBLOBByborrowNid/" + borrowNid;
         BorrowInfoWithBLOBResponse response = restTemplate.getForEntity(url,BorrowInfoWithBLOBResponse.class).getBody();
-        if (Response.isSuccess(response)){
+        if (Response.isSuccess(response)&&null!=response.getResult()){
             return response.getResult();
         }
         return null;
