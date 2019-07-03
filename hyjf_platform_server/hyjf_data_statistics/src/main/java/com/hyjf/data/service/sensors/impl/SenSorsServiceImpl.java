@@ -90,56 +90,63 @@ public class SenSorsServiceImpl implements SenSorsService{
      */
     @Override
     public boolean updateMonthUserConvert() {
-        Map param = new HashMap();
-        String interfaceName = JcConstant.INTERFACENAME_SENSORS;
-        String method = JcConstant.INTERFCE_SENSORS_METHOD_USERCONVERSION;
-        String url = getSenSorsUrl(interfaceName,method);
-        if(StringUtils.isBlank(url)){
-            logger.error("---------神策未获取到相关路径！-----");
-        }
-        Date startDate = GetDate.getSomeDayBeforeOrAfter(new Date(), -30);
-        String startDateStr = GetDate.formatDate(startDate);
-        param.put("from_date",startDateStr);
-        param.put("to_date",GetDate.formatDate(new Date()));
-        param.put("extend_over_end_date",true);
-        param.put("state","trends");
-        param.put("funnel_id","77");
-        param.put("use_cache",true);
-        Map result = this.getSenSorsData(param, url);
-        List<Map> funnelDetail = (List<Map>) result.get("funnel_detail");
-        if(funnelDetail != null){
-            Map map = funnelDetail.get(0);
-            List<Map> step = (List<Map>) map.get("steps");
-            JcUserConversion entity = new JcUserConversion();
-            for (Map info:step
-                 ) {
-                if(info.get("event_name") != null && "sign_up".equals(info.get("event_name"))){
-                    entity.setRegisterRate(info.get("converted_user").toString());
-                }
-                if(info.get("event_name") != null && "open_success".equals(info.get("event_name"))){
-                    entity.setOpenAccountRate(info.get("converted_user").toString());
-                }
-                if(info.get("event_name") != null && "recharge_result".equals(info.get("event_name"))){
-                    entity.setRechargeRate(info.get("converted_user").toString());
-                }
-                if(info.get("event_name") != null && "allTender".equals(info.get("event_name"))){
-                    entity.setInvestRate(info.get("converted_user").toString());
-                }
-                if(info.get("event_name") != null && "investagain".equals(info.get("event_name"))){
-                    entity.setReInvestRate(info.get("converted_user").toString());
-                }
+        try{
+            Map param = new HashMap();
+            String interfaceName = JcConstant.INTERFACENAME_SENSORS;
+            String method = JcConstant.INTERFCE_SENSORS_METHOD_USERCONVERSION;
+            String url = getSenSorsUrl(interfaceName,method);
+            if(StringUtils.isBlank(url)){
+                logger.error("---------神策未获取到相关路径！-----");
             }
-            entity.setUpdateTime(GetDate.formatTime());
-            JcUserConversion userConversion = jcUserConversionDao.getUserConversion();
-            if(userConversion != null){//变更数据
-                jcUserConversionDao.updateByParamInfoNotNull(userConversion.getId(),entity);
-            }else{
-                entity.setCreateTime(GetDate.formatTime());
-                jcUserConversionDao.save(entity);
+            Date startDate = GetDate.getSomeDayBeforeOrAfter(new Date(), -30);
+            String startDateStr = GetDate.formatDate(startDate);
+            param.put("from_date",startDateStr);
+            param.put("to_date",GetDate.formatDate(new Date()));
+            param.put("extend_over_end_date",true);
+            param.put("state","trends");
+            param.put("funnel_id","77");
+            param.put("use_cache",true);
+            Map result = this.getSenSorsData(param, url);
+            List<Map> funnelDetail = (List<Map>) result.get("funnel_detail");
+            if(funnelDetail != null){
+                Map map = funnelDetail.get(0);
+                List<Map> step = (List<Map>) map.get("steps");
+                JcUserConversion entity = new JcUserConversion();
+                for (Map info:step
+                        ) {
+                    if(info.get("event_name") != null && "sign_up".equals(info.get("event_name"))){
+                        entity.setRegisterRate(info.get("converted_user").toString());
+                    }
+                    if(info.get("event_name") != null && "open_success".equals(info.get("event_name"))){
+                        entity.setOpenAccountRate(info.get("converted_user").toString());
+                    }
+                    if(info.get("event_name") != null && "recharge_result".equals(info.get("event_name"))){
+                        entity.setRechargeRate(info.get("converted_user").toString());
+                    }
+                    if(info.get("event_name") != null && "allTender".equals(info.get("event_name"))){
+                        entity.setInvestRate(info.get("converted_user").toString());
+                    }
+                    if(info.get("event_name") != null && "investagain".equals(info.get("event_name"))){
+                        entity.setReInvestRate(info.get("converted_user").toString());
+                    }
+                }
+                entity.setUpdateTime(GetDate.formatTime());
+                JcUserConversion userConversion = jcUserConversionDao.getUserConversion();
+                if(userConversion != null){//变更数据
+                    jcUserConversionDao.updateByParamInfoNotNull(userConversion.getId(),entity);
+                }else{
+                    entity.setCreateTime(GetDate.formatTime());
+                    jcUserConversionDao.save(entity);
+                }
+                logger.info("----------金创更新神策数据：用户转化成功！--------");
             }
-            logger.info("----------金创更新神策数据：用户转化成功！--------");
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("----------金创更新神策数据：用户转化异常！--------");
+            return false;
         }
-        return true;
+
     }
 
 
@@ -161,83 +168,89 @@ public class SenSorsServiceImpl implements SenSorsService{
     @Override
     public void updateMonthUserBehavior() {
 
-        Map param = new HashMap();
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS, JcConstant.INTERFCE_SENSORS_METHOD_USERBEHAVIOR);
+        try {
 
-        param.put("source_type","initial_event");
-        Map sourceEventMap = new HashMap();
-        sourceEventMap.put("event_name","sign_up");
-        param.put("source_event",sourceEventMap);
-        List<String> events = new ArrayList<>();
-        events.add("receive_credit_assign");
-        events.add("submit_credit_assign");
-        events.add("open_success");
-        events.add("withdraw_result");
-        events.add("submit_tender");
-        events.add("submit_intelligent_invest");
-        events.add("sign_up");
-        param.put("event_names",events);
-        Date startDate = GetDate.getSomeDayBeforeOrAfter(new Date(), -30);
-        String startDateStr = GetDate.formatDate(startDate);
-        param.put("from_date",startDateStr);
-        param.put("to_date",GetDate.formatDate(new Date()));
-        param.put("session_interval",900);
-        param.put("use_cache",true);
-        Map senSorsData = this.getSenSorsData(param, url);
-        // 优化格式，最终存储为前端需要的格式
-        Map nodesMap = new HashMap();
-        List<Map> nodeMap = new ArrayList<>();
-        List<Map> linkMap = new ArrayList<>();
-        List<List<Map>> nodesList = (List<List<Map>>) senSorsData.get("nodes");
-        if(nodesList != null && nodesList.size() > 0){
+            Map param = new HashMap();
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS, JcConstant.INTERFCE_SENSORS_METHOD_USERBEHAVIOR);
 
-            int size = nodesList.size();
-            if(size > 4){
-                size = 4;
-            }
-            for (int i = 0; i < size; i++) {
-                List<Map> node = nodesList.get(i);
-                for (Map map:node
-                        ) {
-                    Map info = new HashMap();
-                    info.put("id",map.get("id"));
-                    info.put("name",getEventsName((String) map.get("event_name")));
-                    nodeMap.add(info);
+            param.put("source_type","initial_event");
+            Map sourceEventMap = new HashMap();
+            sourceEventMap.put("event_name","sign_up");
+            param.put("source_event",sourceEventMap);
+            List<String> events = new ArrayList<>();
+            events.add("receive_credit_assign");
+            events.add("submit_credit_assign");
+            events.add("open_success");
+            events.add("withdraw_result");
+            events.add("submit_tender");
+            events.add("submit_intelligent_invest");
+            events.add("sign_up");
+            param.put("event_names",events);
+            Date startDate = GetDate.getSomeDayBeforeOrAfter(new Date(), -30);
+            String startDateStr = GetDate.formatDate(startDate);
+            param.put("from_date",startDateStr);
+            param.put("to_date",GetDate.formatDate(new Date()));
+            param.put("session_interval",900);
+            param.put("use_cache",true);
+            Map senSorsData = this.getSenSorsData(param, url);
+            // 优化格式，最终存储为前端需要的格式
+            Map nodesMap = new HashMap();
+            List<Map> nodeMap = new ArrayList<>();
+            List<Map> linkMap = new ArrayList<>();
+            List<List<Map>> nodesList = (List<List<Map>>) senSorsData.get("nodes");
+            if(nodesList != null && nodesList.size() > 0){
+
+                int size = nodesList.size();
+                if(size > 4){
+                    size = 4;
                 }
-            }
-
-            List<List<Map>> linksList = (List<List<Map>>) senSorsData.get("links");
-            for (int i = 0; i < size-1; i++) {
-                List<Map> node = linksList.get(i);
-                for (Map map:node
-                        ) {
-                    if(map.get("is_wastage") != null && (boolean)map.get("is_wastage") == true){
-                        continue;
+                for (int i = 0; i < size; i++) {
+                    List<Map> node = nodesList.get(i);
+                    for (Map map:node
+                            ) {
+                        Map info = new HashMap();
+                        info.put("id",map.get("id"));
+                        info.put("name",getEventsName((String) map.get("event_name")));
+                        nodeMap.add(info);
                     }
-                    Map info = new HashMap();
-                    info.put("source",map.get("source"));
-                    info.put("target",map.get("target"));
-                    info.put("value",map.get("times"));
-                    linkMap.add(info);
                 }
-            }
 
-            nodesMap.put("nodes",nodeMap);
-            nodesMap.put("links",linkMap);
+                List<List<Map>> linksList = (List<List<Map>>) senSorsData.get("links");
+                for (int i = 0; i < size-1; i++) {
+                    List<Map> node = linksList.get(i);
+                    for (Map map:node
+                            ) {
+                        if(map.get("is_wastage") != null && (boolean)map.get("is_wastage") == true){
+                            continue;
+                        }
+                        Map info = new HashMap();
+                        info.put("source",map.get("source"));
+                        info.put("target",map.get("target"));
+                        info.put("value",map.get("times"));
+                        linkMap.add(info);
+                    }
+                }
 
-            JcUserPoint info = new JcUserPoint();
-            info.setJo(JSONUtils.toJSONString(nodesMap));
-            info.setUpdateTime(GetDate.formatTime());
-            JcUserPoint userPoint = jcUserPointDao.getUserPoint();
-            if(userPoint != null){
-                jcUserPointDao.updateByParamInfoNotNull(userPoint.getId(),info);
+                nodesMap.put("nodes",nodeMap);
+                nodesMap.put("links",linkMap);
+
+                JcUserPoint info = new JcUserPoint();
+                info.setJo(JSONUtils.toJSONString(nodesMap));
+                info.setUpdateTime(GetDate.formatTime());
+                JcUserPoint userPoint = jcUserPointDao.getUserPoint();
+                if(userPoint != null){
+                    jcUserPointDao.updateByParamInfoNotNull(userPoint.getId(),info);
+                }else{
+                    info.setCreateTime(GetDate.formatTime());
+                    jcUserPointDao.save(info);
+                }
+                logger.info("----------金创更新神策数据：用户行为 ，成功！--------");
             }else{
-                info.setCreateTime(GetDate.formatTime());
-                jcUserPointDao.save(info);
+                logger.info("----------金创更新神策数据：用户行为 ，无返回数据！--------");
             }
-            logger.info("----------金创更新神策数据：用户行为 ，成功！--------");
-        }else{
-            logger.info("----------金创更新神策数据：用户行为 ，无返回数据！--------");
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("------------金创更新神策数据：用户行为 ，异常");
         }
     }
 
@@ -267,57 +280,60 @@ public class SenSorsServiceImpl implements SenSorsService{
     @Override
     public void updateMonthTransTotal() {
 
-        Map param = new HashMap();
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
-        List<Map> measuresMap = new ArrayList<>();
-        Map meMap = new HashMap();
-        meMap.put("expression","sum(event.invest.tender_amount)+sum(event.receive_credit_assign.receive_credit_amount)|%d");
-        List<String> events = new ArrayList<>();
-        events.add("receive_credit_assign");
-        events.add("invest");
-        meMap.put("events",events);
-        meMap.put("name","交易规模");
-        meMap.put("format","%d");
-        measuresMap.add(meMap);
-        param.put("measures",measuresMap);
-        param.put("unit","month");
-        String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
-        JcRegisterTrade info = new JcRegisterTrade();
+        try {
 
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            Map param = new HashMap();
 
-            Map rows = rowsList.get(0);
-            List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-            Integer value = values.get(0).get(0);
-            info.setDealSize(new BigDecimal(value.toString()));
-            info.setUpdateTime(GetDate.formatTime());
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
+            List<Map> measuresMap = new ArrayList<>();
+            Map meMap = new HashMap();
+            meMap.put("expression","sum(event.invest.tender_amount)+sum(event.receive_credit_assign.receive_credit_amount)|%d");
+            List<String> events = new ArrayList<>();
+            events.add("receive_credit_assign");
+            events.add("invest");
+            meMap.put("events",events);
+            meMap.put("name","交易规模");
+            meMap.put("format","%d");
+            measuresMap.add(meMap);
+            param.put("measures",measuresMap);
+            param.put("unit","month");
+            String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
+            JcRegisterTrade info = new JcRegisterTrade();
 
-            //查询当月数据
-            JcRegisterTrade tradeInfo = jcRegisterTradeDao.getRegisterTradeByNowMonth(GetDate.formatTimeYYYYMM());
-            //更新数据
-            updateJcRegisterTrade(tradeInfo,info,fromDate,param,url,JCREGISTERTRADEFLAG_TRADE);
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
+
+                Map rows = rowsList.get(0);
+                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+                Integer value = values.get(0).get(0);
+                info.setDealSize(new BigDecimal(value.toString()));
+                info.setUpdateTime(GetDate.formatTime());
+
+                //查询当月数据
+                JcRegisterTrade tradeInfo = jcRegisterTradeDao.getRegisterTradeByNowMonth(GetDate.formatTimeYYYYMM());
+                //更新数据
+                updateJcRegisterTrade(tradeInfo,info,fromDate,param,url,JCREGISTERTRADEFLAG_TRADE);
 
 
 
-            logger.info("-------------金创数据，当月交易规模更新完成！----");
-        }else{
-            logger.info("-------------金创数据，当月交易规模无返回数据！----");
+                logger.info("-------------金创数据，当月交易规模更新完成！----");
+            }else{
+                logger.info("-------------金创数据，当月交易规模无返回数据！----");
 
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("-------------金创数据，当月交易规模异常！----");
         }
 
 
     }
 
-    private String getYYYYMMDDateStr(String updateTime) {
-        String substring = updateTime.substring(0, 10);
-        return substring;
-    }
 
     private String getYYYYMMDateStr(String newFromDate) {
         String[] split = newFromDate.split("-");
@@ -327,62 +343,60 @@ public class SenSorsServiceImpl implements SenSorsService{
 
 
 
-//    public static void main(String[] args) {
-//
-//        String s = GetDate.formatTimeYYYYMM();
-//
-//        System.out.println(s);
-//    }
-
-
     /**
      * 更新当月注册用户数量（包含当天）
      */
     @Override
     public void updateMonthRegisterNumber() {
 
-        Map param = new HashMap();
+        try {
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
-        List<Map> measuresMap = new ArrayList<>();
-        Map meMap = new HashMap();
-        meMap.put("event_name","sign_up");
-        meMap.put("aggregator","unique");
-        measuresMap.add(meMap);
-        param.put("measures",measuresMap);
+            Map param = new HashMap();
 
-        param.put("unit","month");
-        Map filterMap = new HashMap();
-        List<Map> conList = new ArrayList<>();
-        Map conMap = new HashMap();
-        conMap.put("field","event.sign_up.success");
-        conMap.put("function","isTrue");
-        conList.add(conMap);
-        filterMap.put("conditions",conList);
-        param.put("filter",filterMap);
-        String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
+            List<Map> measuresMap = new ArrayList<>();
+            Map meMap = new HashMap();
+            meMap.put("event_name","sign_up");
+            meMap.put("aggregator","unique");
+            measuresMap.add(meMap);
+            param.put("measures",measuresMap);
 
-        JcRegisterTrade info = new JcRegisterTrade();
+            param.put("unit","month");
+            Map filterMap = new HashMap();
+            List<Map> conList = new ArrayList<>();
+            Map conMap = new HashMap();
+            conMap.put("field","event.sign_up.success");
+            conMap.put("function","isTrue");
+            conList.add(conMap);
+            filterMap.put("conditions",conList);
+            param.put("filter",filterMap);
+            String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
 
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            JcRegisterTrade info = new JcRegisterTrade();
 
-            Map rows = rowsList.get(0);
-            List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-            Integer value = values.get(0).get(0);
-            info.setRegisterCount(value);
-            info.setUpdateTime(GetDate.formatTime());
-            JcRegisterTrade tradeInfo = jcRegisterTradeDao.getRegisterTradeByNowMonth(GetDate.formatTimeYYYYMM());
-            //更新数据
-            updateJcRegisterTrade(tradeInfo,info,fromDate,param,url,JCREGISTERTRADEFLAG_REGIS);
-            logger.info("-------------金创数据，当月注册用户更新完成！----");
-        }else{
-            logger.info("-------------金创数据，当月注册用户更新无返回数据！----");
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
 
+                Map rows = rowsList.get(0);
+                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+                Integer value = values.get(0).get(0);
+                info.setRegisterCount(value);
+                info.setUpdateTime(GetDate.formatTime());
+                JcRegisterTrade tradeInfo = jcRegisterTradeDao.getRegisterTradeByNowMonth(GetDate.formatTimeYYYYMM());
+                //更新数据
+                updateJcRegisterTrade(tradeInfo,info,fromDate,param,url,JCREGISTERTRADEFLAG_REGIS);
+                logger.info("-------------金创数据，当月注册用户更新完成！----");
+            }else{
+                logger.info("-------------金创数据，当月注册用户更新无返回数据！----");
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("-------------金创数据，当月注册用户更新异常！----");
         }
 
 
@@ -453,41 +467,46 @@ public class SenSorsServiceImpl implements SenSorsService{
      */
     @Override
     public void updateMonthTenderSumNumber() {
-        Map param = new HashMap();
+        try {
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
-        List<Map> measuresMap = new ArrayList<>();
-        Map meMap = new HashMap();
-        meMap.put("event_name","allTender");
-        meMap.put("aggregator","general");
-        measuresMap.add(meMap);
-        param.put("measures",measuresMap);
+            Map param = new HashMap();
 
-        param.put("unit","month");
-        String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
+            List<Map> measuresMap = new ArrayList<>();
+            Map meMap = new HashMap();
+            meMap.put("event_name","allTender");
+            meMap.put("aggregator","general");
+            measuresMap.add(meMap);
+            param.put("measures",measuresMap);
 
-        JcDataStatistics dinfo = new JcDataStatistics();
+            param.put("unit","month");
+            String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
 
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            JcDataStatistics dinfo = new JcDataStatistics();
 
-            Map rows = rowsList.get(0);
-            List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-            Integer value = values.get(0).get(0);
-            dinfo.setInvestCount(value);
-            dinfo.setUpdateTime(GetDate.formatTime());
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
 
-            JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
-            //更新数据
-            updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_TOTALNUM);
+                Map rows = rowsList.get(0);
+                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+                Integer value = values.get(0).get(0);
+                dinfo.setInvestCount(value);
+                dinfo.setUpdateTime(GetDate.formatTime());
 
-            logger.info("-------------金创数据，当月总出借笔数更新完成！----");
-        }else{
-            logger.info("-------------金创数据，当月总出借笔数更新无返回数据！----");
+                JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
+                //更新数据
+                updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_TOTALNUM);
+
+                logger.info("-------------金创数据，当月总出借笔数更新完成！----");
+            }else{
+                logger.info("-------------金创数据，当月总出借笔数更新无返回数据！----");
+            }
+        }catch (Exception e){
+            logger.info("-------------金创数据，当月总出借笔数更新error！----");
         }
 
     }
@@ -568,41 +587,47 @@ public class SenSorsServiceImpl implements SenSorsService{
      */
     @Override
     public void updateMonthTenderNumber() {
-        Map param = new HashMap();
+        try {
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
-        List<Map> measuresMap = new ArrayList<>();
-        Map meMap = new HashMap();
-        meMap.put("event_name","submit_tender");
-        meMap.put("aggregator","general");
-        measuresMap.add(meMap);
-        param.put("measures",measuresMap);
+            Map param = new HashMap();
 
-        param.put("unit","month");
-        String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
+            List<Map> measuresMap = new ArrayList<>();
+            Map meMap = new HashMap();
+            meMap.put("event_name","submit_tender");
+            meMap.put("aggregator","general");
+            measuresMap.add(meMap);
+            param.put("measures",measuresMap);
 
-        JcDataStatistics dinfo = new JcDataStatistics();
+            param.put("unit","month");
+            String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
 
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            JcDataStatistics dinfo = new JcDataStatistics();
 
-            Map rows = rowsList.get(0);
-            List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-            Integer value = values.get(0).get(0);
-            dinfo.setZtInvestCount(value);
-            dinfo.setUpdateTime(GetDate.formatTime());
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
 
-            JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
-            updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_TENDERNUM);
+                Map rows = rowsList.get(0);
+                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+                Integer value = values.get(0).get(0);
+                dinfo.setZtInvestCount(value);
+                dinfo.setUpdateTime(GetDate.formatTime());
 
-            logger.info("-------------金创数据，当月散标出借笔数更新完成！----");
-        }else{
-            logger.info("-------------金创数据，当月散标出借笔数更新无返回数据！----");
+                JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
+                updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_TENDERNUM);
 
+                logger.info("-------------金创数据，当月散标出借笔数更新完成！----");
+            }else{
+                logger.info("-------------金创数据，当月散标出借笔数更新无返回数据！----");
+
+            }
+        }catch (Exception e){
+            logger.info("-------------金创数据，当月散标出借笔数更新error！----");
+            e.printStackTrace();
         }
 
     }
@@ -613,40 +638,46 @@ public class SenSorsServiceImpl implements SenSorsService{
     @Override
     public void updateMonthHjhTenderNumber() {
 
-        Map param = new HashMap();
+        try {
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
-        List<Map> measuresMap = new ArrayList<>();
-        Map meMap = new HashMap();
-        meMap.put("event_name","submit_intelligent_invest");
-        meMap.put("aggregator","general");
-        measuresMap.add(meMap);
-        param.put("measures",measuresMap);
+            Map param = new HashMap();
 
-        param.put("unit","month");
-        String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
+            List<Map> measuresMap = new ArrayList<>();
+            Map meMap = new HashMap();
+            meMap.put("event_name","submit_intelligent_invest");
+            meMap.put("aggregator","general");
+            measuresMap.add(meMap);
+            param.put("measures",measuresMap);
 
-        JcDataStatistics dinfo = new JcDataStatistics();
+            param.put("unit","month");
+            String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
 
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            JcDataStatistics dinfo = new JcDataStatistics();
 
-            Map rows = rowsList.get(0);
-            List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-            Integer value = values.get(0).get(0);
-            dinfo.setJhInvestCount(value);
-            dinfo.setUpdateTime(GetDate.formatTime());
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
 
-            JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
-            updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_JHNUMBER);
+                Map rows = rowsList.get(0);
+                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+                Integer value = values.get(0).get(0);
+                dinfo.setJhInvestCount(value);
+                dinfo.setUpdateTime(GetDate.formatTime());
 
-            logger.info("-------------金创数据，当月智投出借笔数更新完成！----");
-        }else{
-            logger.info("-------------金创数据，当月智投出借笔数更新无返回数据！----");
+                JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
+                updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_JHNUMBER);
+
+                logger.info("-------------金创数据，当月智投出借笔数更新完成！----");
+            }else{
+                logger.info("-------------金创数据，当月智投出借笔数更新无返回数据！----");
+            }
+        }catch (Exception e){
+            logger.info("-------------金创数据，当月智投出借笔数更新error！----");
+            e.printStackTrace();
         }
     }
 
@@ -655,41 +686,47 @@ public class SenSorsServiceImpl implements SenSorsService{
      */
     @Override
     public void updateMonthCreditTenderNumber() {
-        Map param = new HashMap();
+        try {
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
-        List<Map> measuresMap = new ArrayList<>();
-        Map meMap = new HashMap();
-        meMap.put("event_name","receive_credit_assign");
-        meMap.put("aggregator","general");
-        measuresMap.add(meMap);
-        param.put("measures",measuresMap);
+            Map param = new HashMap();
 
-        param.put("unit","month");
-        String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
+            List<Map> measuresMap = new ArrayList<>();
+            Map meMap = new HashMap();
+            meMap.put("event_name","receive_credit_assign");
+            meMap.put("aggregator","general");
+            measuresMap.add(meMap);
+            param.put("measures",measuresMap);
 
-        JcDataStatistics dinfo = new JcDataStatistics();
+            param.put("unit","month");
+            String fromDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
 
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            JcDataStatistics dinfo = new JcDataStatistics();
 
-            Map rows = rowsList.get(0);
-            List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-            Integer value = values.get(0).get(0);
-            dinfo.setCreditCount(value);
-            dinfo.setUpdateTime(GetDate.formatTime());
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
 
-            JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
-            updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_CREDITNUM);
+                Map rows = rowsList.get(0);
+                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
+                Integer value = values.get(0).get(0);
+                dinfo.setCreditCount(value);
+                dinfo.setUpdateTime(GetDate.formatTime());
 
-            logger.info("-------------金创数据，当月承接债转出借笔数更新完成！----");
-        }else{
-            logger.info("-------------金创数据，当月承接债转出借笔数更新无数据返回！----");
+                JcDataStatistics tradeInfo = jcDataStatisticsDao.getDataStatisticsByNowMonth(GetDate.formatTimeYYYYMM());
+                updateJcDataStatis(tradeInfo,dinfo,fromDate,param,url,JCDATASTATSIC_CREDITNUM);
 
+                logger.info("-------------金创数据，当月承接债转出借笔数更新完成！----");
+            }else{
+                logger.info("-------------金创数据，当月承接债转出借笔数更新无数据返回！----");
+
+            }
+        }catch (Exception e){
+            logger.info("-------------金创数据，当月承接债转出借笔数更新error！----");
+            e.printStackTrace();
         }
     }
 
@@ -700,68 +737,74 @@ public class SenSorsServiceImpl implements SenSorsService{
      */
     @Override
     public void updateSixMonthTenderAmountDistributed() {
-        Map param = new HashMap();
+        try {
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_ADDICTIONS);
-        Map meMap = new HashMap();
-        meMap.put("event_name","invest");
-        meMap.put("aggregator","SUM");
-        meMap.put("field","event.$Anything.tender_amount");
-        param.put("measure",meMap);
+            Map param = new HashMap();
 
-        param.put("unit","day");
-        param.put("rollup_date",true);
-        param.put("event_name","invest");
-        param.put("measure_type","times");
-        List<Integer> list = new ArrayList<>();
-        list.add(5000);
-        list.add(10000);
-        list.add(50000);
-        param.put("result_bucket_param",list);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_ADDICTIONS);
+            Map meMap = new HashMap();
+            meMap.put("event_name","invest");
+            meMap.put("aggregator","SUM");
+            meMap.put("field","event.$Anything.tender_amount");
+            param.put("measure",meMap);
 
-        //获取当月的前5个月的第一天
-        String fromDate = GetDate.formatDate(GetDate.getFirstDayOnMonth(GetDate.stringToDate2(GetDate.getCountDate(2,-5))));
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            param.put("unit","day");
+            param.put("rollup_date",true);
+            param.put("event_name","invest");
+            param.put("measure_type","times");
+            List<Integer> list = new ArrayList<>();
+            list.add(5000);
+            list.add(10000);
+            list.add(50000);
+            param.put("result_bucket_param",list);
+
+            //获取当月的前5个月的第一天
+            String fromDate = GetDate.formatDate(GetDate.getFirstDayOnMonth(GetDate.stringToDate2(GetDate.getCountDate(2,-5))));
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
 
 
-        JcUserAnalysis info = new JcUserAnalysis();
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            JcUserAnalysis info = new JcUserAnalysis();
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
 
-            Map rows = rowsList.get(0);
-            List<Map> cellsList = (List<Map>) rows.get("cells");
-            for (Map map:cellsList
-                    ) {
-                if(map.get("bucket_end") != null && 5000 == (double)map.get("bucket_end")){
-                    info.setPrimaryInvest(map.get("percent").toString());
+                Map rows = rowsList.get(0);
+                List<Map> cellsList = (List<Map>) rows.get("cells");
+                for (Map map:cellsList
+                        ) {
+                    if(map.get("bucket_end") != null && 5000 == (double)map.get("bucket_end")){
+                        info.setPrimaryInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") != null && 10000 == (double)map.get("bucket_end")){
+                        info.setMiddleInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") != null && 50000 == (double)map.get("bucket_end")){
+                        info.setSeniorInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") == null && 50000 == (double)map.get("bucket_start")){
+                        info.setHighestInvest(map.get("percent").toString());
+                    }
                 }
-                if(map.get("bucket_end") != null && 10000 == (double)map.get("bucket_end")){
-                    info.setMiddleInvest(map.get("percent").toString());
-                }
-                if(map.get("bucket_end") != null && 50000 == (double)map.get("bucket_end")){
-                    info.setSeniorInvest(map.get("percent").toString());
-                }
-                if(map.get("bucket_end") == null && 50000 == (double)map.get("bucket_start")){
-                    info.setHighestInvest(map.get("percent").toString());
-                }
-            }
-            info.setUpdateTime(GetDate.formatTime());
-            info.setTime(GetDate.formatTimeYYYYMM());
+                info.setUpdateTime(GetDate.formatTime());
+                info.setTime(GetDate.formatTimeYYYYMM());
 
-            JcUserAnalysis userAnalysis = jcUserAnalysisDao.getUserAnalysis();
-            if(userAnalysis != null){
-                jcUserAnalysisDao.updateByParamInfoNotNull(userAnalysis.getId(),info);
+                JcUserAnalysis userAnalysis = jcUserAnalysisDao.getUserAnalysis();
+                if(userAnalysis != null){
+                    jcUserAnalysisDao.updateByParamInfoNotNull(userAnalysis.getId(),info);
+                }else{
+                    info.setCreateTime(GetDate.formatTime());
+                    jcUserAnalysisDao.save(info);
+                }
+                logger.info("-------------金创数据，最近6个月的出借金额分布更新完成！----");
             }else{
-                info.setCreateTime(GetDate.formatTime());
-                jcUserAnalysisDao.save(info);
-            }
-            logger.info("-------------金创数据，最近6个月的出借金额分布更新完成！----");
-        }else{
-            logger.info("-------------金创数据，最近6个月的出借金额分布更新无返回数据！----");
+                logger.info("-------------金创数据，最近6个月的出借金额分布更新无返回数据！----");
 
+            }
+        }catch (Exception e){
+            logger.info("-------------金创数据，最近6个月的出借金额分布更新error！----");
+            e.printStackTrace();
         }
     }
 
@@ -770,67 +813,74 @@ public class SenSorsServiceImpl implements SenSorsService{
      */
     @Override
     public void updateSixMonthTenderNumberDistributed() {
-        Map param = new HashMap();
 
-        String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_ADDICTIONS);
+        try {
 
+            Map param = new HashMap();
 
-        param.put("unit","day");
-        param.put("rollup_date",true);
-        param.put("event_name","invest");
-        param.put("measure_type","times");
-        List<Integer> list = new ArrayList<>();
-        list.add(2);
-        list.add(3);
-        list.add(6);
-        list.add(11);
-        param.put("result_bucket_param",list);
-
-        String fromDate = GetDate.formatDate(GetDate.getFirstDayOnMonth(GetDate.stringToDate2(GetDate.getCountDate(2,-5))));
-        param.put("from_date",fromDate);
-        param.put("to_date",GetDate.formatDate());
-        param.put("use_cache",true);
-        Map senSorsData = getSenSorsData(param, url);
+            String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_ADDICTIONS);
 
 
-        JcUserAnalysis info = new JcUserAnalysis();
-        List<Map> rowsList = (List<Map>) senSorsData.get("rows");
-        if(rowsList != null && rowsList.size() > 0){
+            param.put("unit","day");
+            param.put("rollup_date",true);
+            param.put("event_name","invest");
+            param.put("measure_type","times");
+            List<Integer> list = new ArrayList<>();
+            list.add(2);
+            list.add(3);
+            list.add(6);
+            list.add(11);
+            param.put("result_bucket_param",list);
 
-            Map rows = rowsList.get(0);
-            List<Map> cellsList = (List<Map>) rows.get("cells");
-            for (Map map:cellsList
-                    ) {
-                if(map.get("bucket_end") != null && 2 == (double)map.get("bucket_end")){
-                    info.setOneInvest(map.get("percent").toString());
+            String fromDate = GetDate.formatDate(GetDate.getFirstDayOnMonth(GetDate.stringToDate2(GetDate.getCountDate(2,-5))));
+            param.put("from_date",fromDate);
+            param.put("to_date",GetDate.formatDate());
+            param.put("use_cache",true);
+            Map senSorsData = getSenSorsData(param, url);
+
+
+            JcUserAnalysis info = new JcUserAnalysis();
+            List<Map> rowsList = (List<Map>) senSorsData.get("rows");
+            if(rowsList != null && rowsList.size() > 0){
+
+                Map rows = rowsList.get(0);
+                List<Map> cellsList = (List<Map>) rows.get("cells");
+                for (Map map:cellsList
+                        ) {
+                    if(map.get("bucket_end") != null && 2 == (double)map.get("bucket_end")){
+                        info.setOneInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") != null && 3 == (double)map.get("bucket_end")){
+                        info.setTwoInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") != null && 6 == (double)map.get("bucket_end")){
+                        info.setThreeInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") != null && 11 == (double)map.get("bucket_end")){
+                        info.setFourInvest(map.get("percent").toString());
+                    }
+                    if(map.get("bucket_end") == null && 11 == (double)map.get("bucket_start")){
+                        info.setFiveInvest(map.get("percent").toString());
+                    }
                 }
-                if(map.get("bucket_end") != null && 3 == (double)map.get("bucket_end")){
-                    info.setTwoInvest(map.get("percent").toString());
-                }
-                if(map.get("bucket_end") != null && 6 == (double)map.get("bucket_end")){
-                    info.setThreeInvest(map.get("percent").toString());
-                }
-                if(map.get("bucket_end") != null && 11 == (double)map.get("bucket_end")){
-                    info.setFourInvest(map.get("percent").toString());
-                }
-                if(map.get("bucket_end") == null && 11 == (double)map.get("bucket_start")){
-                    info.setFiveInvest(map.get("percent").toString());
-                }
-            }
-            info.setUpdateTime(GetDate.formatTime());
-            info.setTime(GetDate.formatTimeYYYYMM());
+                info.setUpdateTime(GetDate.formatTime());
+                info.setTime(GetDate.formatTimeYYYYMM());
 
-            JcUserAnalysis userAnalysis = jcUserAnalysisDao.getUserAnalysis();
-            if(userAnalysis != null){
-                jcUserAnalysisDao.updateByParamInfoNotNull(userAnalysis.getId(),info);
+                JcUserAnalysis userAnalysis = jcUserAnalysisDao.getUserAnalysis();
+                if(userAnalysis != null){
+                    jcUserAnalysisDao.updateByParamInfoNotNull(userAnalysis.getId(),info);
+                }else{
+                    info.setCreateTime(GetDate.formatTime());
+                    jcUserAnalysisDao.save(info);
+                }
+                logger.info("-------------金创数据，最近6个月的出借次数分布更新完成！----");
             }else{
-                info.setCreateTime(GetDate.formatTime());
-                jcUserAnalysisDao.save(info);
-            }
-            logger.info("-------------金创数据，最近6个月的出借次数分布更新完成！----");
-        }else{
-            logger.info("-------------金创数据，最近6个月的出借次数分布更新无数据返回！----");
+                logger.info("-------------金创数据，最近6个月的出借次数分布更新无数据返回！----");
 
+            }
+        }catch (Exception e){
+            logger.info("-------------金创数据，最近6个月的出借次数分布更新error！----");
+            e.printStackTrace();
         }
     }
 
