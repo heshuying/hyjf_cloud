@@ -79,7 +79,14 @@ public class CertificateAuthorityExceptionController extends BaseController {
                     vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
                     vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
                     vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
-                    vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                    if (vo.getIdType()==0){
+                        //0:身份证
+                        vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                    }else if (vo.getIdType()==1){
+                        //1:企业证件号码
+                        vo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(vo.getIdNo()));
+                    }
+
                 }
 
             }
@@ -120,7 +127,14 @@ public class CertificateAuthorityExceptionController extends BaseController {
                     vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
                     vo.setTrueName(AsteriskProcessUtil.getAsteriskedCnName(vo.getTrueName()));
                     vo.setEmail(AsteriskProcessUtil.getAsteriskedEmail(vo.getEmail()));
-                    vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                    if (vo.getIdType()==0){
+                        //0:身份证
+                        vo.setIdNo(AsteriskProcessUtil.getAsteriskedIdcard(vo.getIdNo()));
+                    }else if (vo.getIdType()==1){
+                        //1:企业证件号码
+                        vo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(vo.getIdNo()));
+                    }
+
                 }
 
             }
