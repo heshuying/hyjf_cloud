@@ -473,7 +473,7 @@
 		<where>
 			hba.status = 6
 			AND hba.api_type = 1
-			AND hbi.repay_org_user_id= #{userId}
+			AND hbrp.repay_user_id= #{userId}
 			AND (
 			(
 			hydb.borrow_style != 'endday'
