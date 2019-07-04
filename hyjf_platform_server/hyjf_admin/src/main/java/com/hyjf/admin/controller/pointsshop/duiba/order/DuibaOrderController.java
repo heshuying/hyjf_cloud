@@ -327,7 +327,7 @@ public class DuibaOrderController extends BaseController {
             @Override
             public String format(Object object) {
                 BigDecimal sellingPrice = (BigDecimal) object;
-                return sellingPrice + "";
+                return sellingPrice.intValue() + "";
             }
         };
         IValueFormatter markingPriceAdapter = new IValueFormatter() {
