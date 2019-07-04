@@ -180,12 +180,13 @@ public class SenSorsServiceImpl implements SenSorsService {
 
             param.put("source_type","initial_event");
             Map sourceEventMap = new HashMap();
-            sourceEventMap.put("event_name","open_success");
+            sourceEventMap.put("event_name","sign_up");
             param.put("source_event",sourceEventMap);
             List<String> events = new ArrayList<>();
             events.add("open_success");
             events.add("receive_credit_assign");
             events.add("recharge_result");
+            events.add("withdraw_result");
             events.add("submit_tender");
             events.add("submit_intelligent_invest");
             events.add("sign_up");
