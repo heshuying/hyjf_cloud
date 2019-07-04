@@ -74,6 +74,17 @@ public class CertReportLogController extends BaseController{
     @PostMapping("/batchReconciliation")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public AdminResult batchReconciliation(@RequestBody CertReportLogRequestBean requestBean){
+        CertReportLogResponse response = certReportLogService.selectCertReportLogList(requestBean);
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        int intTotle = response.getRecordTotal();
+        if(intTotle>1000){
+            return new AdminResult<>(FAIL, "筛选的条数需要小于1000条，请重新设置筛选条件！");
+        }
         int intFlg = certReportLogService.batchReconciliation(requestBean);
         if(intFlg<=0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
