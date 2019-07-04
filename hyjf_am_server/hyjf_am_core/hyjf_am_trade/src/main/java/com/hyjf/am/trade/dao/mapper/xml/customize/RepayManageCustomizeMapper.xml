@@ -670,7 +670,7 @@
 			sl.id
 		FROM
 			ht_sponsor_log sl
-			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid
+			INNER JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid
 		WHERE
 			sl.new_sponsor = #{userName}
 			AND sl.del_flag = 0
