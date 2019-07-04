@@ -7,11 +7,13 @@ package com.hyjf.admin.controller.repair.bindcardrepair;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.BindCardExceptionService;
 import com.hyjf.am.resquest.admin.BindCardExceptionRequest;
 import com.hyjf.am.vo.admin.BindCardExceptionCustomizeVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_MODIFY;
@@ -43,11 +46,19 @@ public class BindCardRepairController extends BaseController {
     @ApiOperation(value = "银行卡异常列表",notes = "银行卡异常列表")
     @PostMapping(value = "/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
-    public AdminResult<ListResult<BindCardExceptionCustomizeVO>> searchAction(@RequestBody BindCardExceptionRequest request){
+    public AdminResult<ListResult<BindCardExceptionCustomizeVO>> searchAction(@RequestBody BindCardExceptionRequest request,HttpServletRequest httpServletRequest){
         // 数据总数
         Integer count = bindCardExceptionService.getBindCardExceptionCount(request);
         // 异常列表list
         List<BindCardExceptionCustomizeVO> bindCardExceptionCustomizeVOList = bindCardExceptionService.searchBindCardExceptionList(request);
+        //获取查看脱敏数据的权限
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if(!isShow){
+            for (BindCardExceptionCustomizeVO vo : bindCardExceptionCustomizeVOList) {
+                vo.setCardNo(AsteriskProcessUtil.getAsteriskedBankCard(vo.getCardNo()));
+            }
+        }
+
         return new AdminResult<>(ListResult.build(bindCardExceptionCustomizeVOList,count));
     }
 

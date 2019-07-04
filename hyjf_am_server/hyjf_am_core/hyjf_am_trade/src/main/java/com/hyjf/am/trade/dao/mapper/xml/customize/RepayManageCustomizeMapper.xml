@@ -473,20 +473,17 @@
 		<where>
 			hba.status = 6
 			AND hba.api_type = 1
-			AND hbi.repay_org_user_id = #{userId}
-			<!-- 只显示垫付机构还款-->
+			AND hbrp.repay_user_id= #{userId}
 			AND (
 			(
 			hydb.borrow_style != 'endday'
 			AND hydb.borrow_style != 'end'
-			AND hbrp.repay_user_id = hbi.repay_org_user_id
 			)
 			OR (
 			(
 			hydb.borrow_style = 'endday'
 			OR hydb.borrow_style = 'end'
 			)
-			AND hydbr.repay_user_id = hbi.repay_org_user_id
 			)
 			)
 			<if test="startDate != null and startDate != ''">
@@ -666,7 +663,7 @@
 			bw.borrow_apr,
 			date_format( bw.create_time, '%Y-%c-%d' ) AS create_time,
 			CASE
-			WHEN ( bw.borrow_style = 'end' OR bw.borrow_style = 'endday' ) THEN
+			WHEN bw.borrow_style = 'endday'  THEN
 			'day' ELSE 'month'
 			END AS borrow_style,
 			sl.old_sponsor as oldBailAccountId,
