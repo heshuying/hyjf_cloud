@@ -104,7 +104,7 @@ public class SenSorsServiceImpl implements SenSorsService {
             param.put("to_date",GetDate.formatDate(new Date()));
             param.put("extend_over_end_date",true);
             param.put("state","trends");
-            param.put("funnel_id","77");
+            param.put("funnel_id",getfunnelseId(url));
             param.put("use_cache",true);
             Map result = this.getSenSorsData(param, url);
             List<Map> funnelDetail = (List<Map>) result.get("funnel_detail");
@@ -149,6 +149,11 @@ public class SenSorsServiceImpl implements SenSorsService {
 
     }
 
+    private Object getfunnelseId(String url) {
+        String[] split = url.split("/");
+        return split[6];
+    }
+
 
     private String getSenSorsUrl(String interfaceName, String method) {
 
@@ -175,13 +180,12 @@ public class SenSorsServiceImpl implements SenSorsService {
 
             param.put("source_type","initial_event");
             Map sourceEventMap = new HashMap();
-            sourceEventMap.put("event_name","sign_up");
+            sourceEventMap.put("event_name","open_success");
             param.put("source_event",sourceEventMap);
             List<String> events = new ArrayList<>();
-            events.add("receive_credit_assign");
-            events.add("submit_credit_assign");
             events.add("open_success");
-            events.add("withdraw_result");
+            events.add("receive_credit_assign");
+            events.add("recharge_result");
             events.add("submit_tender");
             events.add("submit_intelligent_invest");
             events.add("sign_up");
@@ -288,13 +292,13 @@ public class SenSorsServiceImpl implements SenSorsService {
             String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
             List<Map> measuresMap = new ArrayList<>();
             Map meMap = new HashMap();
-            meMap.put("expression","sum(event.invest.tender_amount)+sum(event.receive_credit_assign.receive_credit_amount)|%d");
+            meMap.put("expression","sum(event.invest.tender_amount)+sum(event.receive_credit_assign.receive_credit_amount)|%2f");
             List<String> events = new ArrayList<>();
             events.add("receive_credit_assign");
             events.add("invest");
             meMap.put("events",events);
             meMap.put("name","交易规模");
-            meMap.put("format","%d");
+            meMap.put("format","%2f");
             measuresMap.add(meMap);
             param.put("measures",measuresMap);
             param.put("unit","month");
@@ -474,7 +478,7 @@ public class SenSorsServiceImpl implements SenSorsService {
             String url = getSenSorsUrl(JcConstant.INTERFACENAME_SENSORS,JcConstant.INTERFCE_SENSORS_METHOD_EVENTS);
             List<Map> measuresMap = new ArrayList<>();
             Map meMap = new HashMap();
-            meMap.put("event_name","allTender");
+            meMap.put("event_name","investall");
             meMap.put("aggregator","general");
             measuresMap.add(meMap);
             param.put("measures",measuresMap);
