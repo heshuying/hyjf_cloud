@@ -6921,6 +6921,30 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult().intValue();
     }
 
+	@Override
+	public SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/sponsorLogList", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse deleteSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/deleteSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/insertSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/updateSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
 
     /**
      * 销户成功后,删除用户账户表
@@ -6946,6 +6970,64 @@ public class AmTradeClientImpl implements AmTradeClient {
     public IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow_invest/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
     }
+    /**
+     * 备案撤销成功后更新数据库
+     */
+    @Override
+    public AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request) {
+        String url = "http://AM-ADMIN/am-trade/borrow_regist/regist_cancel";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "备案撤销成功");
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
+    }
+
+    /**
+     * 备案撤销确认页面数据
+     */
+    @Override
+    public BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid) {
+        BorrowRegistCancelConfirmCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-trade/borrow_regist/registcancel_confirm/" + borrowNid,
+                        BorrowRegistCancelConfirmCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 标的删除确认页面数据
+     */
+    @Override
+    public BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid) {
+        BorrowDeleteConfirmCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-trade/borrow_delete/delete_confirm/" + borrowNid,
+                        BorrowDeleteConfirmCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 标的删除成功后更新数据库
+     */
+    @Override
+    public AdminResult deleteBorrow(BorrowRegistUpdateRequest request) {
+        String url = "http://AM-ADMIN/am-trade/borrow_delete/delete";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "标的删除成功");
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
+    }
+
 
     @Override
     public IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {

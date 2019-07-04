@@ -19,6 +19,11 @@ import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.SponsorLogRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -3154,6 +3159,18 @@ public interface AmTradeClient {
      */
     TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid);
 
+    /**
+     * 标的备案撤销
+     * @param request
+     * @return
+     */
+    AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request);
+
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
+
+    BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid);
+
+    AdminResult deleteBorrow(BorrowRegistUpdateRequest request);
 
     /** 加息接口开始*/
     /** 枚举类型 */
@@ -3404,6 +3421,11 @@ public interface AmTradeClient {
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
 
+    SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse deleteSponsorLog(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest);
+  //SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
     /**
      * 未开户用户销户成功后,删除用户Account表
      * @param userId

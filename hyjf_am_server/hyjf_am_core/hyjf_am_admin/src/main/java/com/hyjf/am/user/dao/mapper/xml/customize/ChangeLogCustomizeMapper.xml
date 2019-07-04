@@ -93,11 +93,7 @@
 		username,
 		real_name,
 		<!--mod by nxl 合规四期修改,手机号加密显示-->
-		REPLACE (
 		mobile,
-		SUBSTR(mobile, 4, 4),
-		'****'
-		) AS mobile,
 		idcard,
 		`role`,
 		`attribute`,

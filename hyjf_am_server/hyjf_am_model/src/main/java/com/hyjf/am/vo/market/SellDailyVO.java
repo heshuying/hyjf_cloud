@@ -104,6 +104,7 @@ public class SellDailyVO extends BaseVO {
 		this.setInvestGt3000MonthUserNum(0);
 		this.setInvestGt3000UserNum(0);
 		this.setRechargeGt3000UserNum(0);
+		this.setCreditAmount(BigDecimal.ZERO);
 	}
 
 	/**

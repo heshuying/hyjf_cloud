@@ -15,6 +15,7 @@ import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -35,6 +36,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -5426,5 +5428,68 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         form.setLatePeriod(latePeriod);// 提交的逾期期数
         form.setRepayPeriod(String.valueOf(nowPeriod));// 设置当期的还款期数
         form.setLateArray(lateArray);// 设置未还款逾期列表
+    }
+
+    @Override
+    public Integer selectSponsorLogCount(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userName", requestBean.getUserId());
+        Integer count = repayManageCustomizeMapper.selectSponsorLogCount(param);
+
+        return count;
+    }
+    @Override
+    public  List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userName", requestBean.getUserId());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        List<SponsorLogCustomizeVO> list = repayManageCustomizeMapper.selectSponsorLog(param);
+
+        return list;
+
+    }
+
+    @Override
+    public int updateSponsorLog(@Valid RepayListRequest requestBean) {
+
+
+        SponsorLog sl = sponsorLogMapper.selectByPrimaryKey(Integer.valueOf(requestBean.getId()));
+        RUserExample example2=new RUserExample();
+        example2.or().andUsernameEqualTo(sl.getNewSponsor());
+        RUser user = rUserMapper.selectByExample(example2).get(0);
+        sl.setStatus(Integer.valueOf(requestBean.getStatus()));
+        sl.setUpdateTime(new Date());
+        //sl.setUpdateUserName(user.getUsername());
+        sl.setNewSponsorId(user.getUserId());
+        sponsorLogMapper.updateByPrimaryKeySelective(sl);
+        if(requestBean.getStatus().equals("1")) {
+
+            BorrowInfoExample example=new BorrowInfoExample();
+            example.or().andBorrowNidEqualTo(sl.getBorrowNid());
+            BorrowInfoWithBLOBs borrowInfo = borrowInfoMapper.selectByExampleWithBLOBs(example).get(0);
+            borrowInfo.setRepayOrgName(sl.getNewSponsor());
+            borrowInfo.setIsRepayOrgFlag(1);
+            borrowInfo.setRepayOrgUserId(Integer.valueOf(user.getUserId()));
+            borrowInfoMapper.updateByPrimaryKeyWithBLOBs(borrowInfo);
+
+//			BorrowInfo record2=new BorrowInfo();
+//			BorrowInfoExample example2=new BorrowInfoExample();
+//			example2.or().andBorrowNidEqualTo(requestBean.getBorrowNid());
+//			record2.setRepayOrgName(user.getUsername());
+//			record2.setIsRepayOrgFlag(1);
+//			borrowInfoMapper.updateByExample(record2, example2);
+        }
+        return 0;
     }
 }

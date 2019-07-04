@@ -18,9 +18,7 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.user.UserManagerVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
@@ -91,14 +89,7 @@ public class UserParamRepairController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         // 获取该角色 权限列表
-        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-        //判断权限
-        boolean isShow = false;
-        for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
-            }
-        }
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         List<UserManagerVO> listUserManagetVO = userManagerResponse.getResultList();
         List<UserManagerCustomizeVO> userManagerCustomizeList = new ArrayList<UserManagerCustomizeVO>();
         if (null != listUserManagetVO && listUserManagetVO.size() > 0) {
@@ -106,7 +97,9 @@ public class UserParamRepairController extends BaseController {
                 if(!isShow){
                     //如果没有查看脱敏权限,显示加星
                     for(UserManagerVO userManagerVO:listUserManagetVO){
-                        userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+//                        userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+                        userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
+                        userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
                     }
                 }
                 userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);

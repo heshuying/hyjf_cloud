@@ -434,5 +434,11 @@ public interface SellDailyCustomizeMapper {
      */
     void batchUpdate(List<SellDailyVO> list);
 
-
+    /**
+     * 查询转让金额
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<SellDailyVO> countTotalRepayCredit(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }
