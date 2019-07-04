@@ -83,7 +83,7 @@ public class CertReportLogController extends BaseController{
         }
         int intTotle = response.getRecordTotal();
         if(intTotle>1000){
-            return new AdminResult<>(FAIL, "筛选的条数需要小于1000条，请重新设置筛选条件！");
+            return new AdminResult<>(FAIL, "对账数量大于1000条，请重新筛选！");
         }
         int intFlg = certReportLogService.batchReconciliation(requestBean);
         if(intFlg<=0) {
