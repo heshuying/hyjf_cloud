@@ -313,9 +313,9 @@ public class SenSorsServiceImpl implements SenSorsService {
             if(rowsList != null && rowsList.size() > 0){
 
                 Map rows = rowsList.get(0);
-                List<List<Integer>> values = (List<List<Integer>>) rows.get("values");
-                Integer value = values.get(0).get(0);
-                info.setDealSize(new BigDecimal(value.toString()));
+                List<List<Double>> values = (List<List<Double>>) rows.get("values");
+                double value = values.get(0).get(0);
+                info.setDealSize(new BigDecimal(String.valueOf(value)));
                 info.setUpdateTime(GetDate.formatTime());
 
                 //查询当月数据

@@ -66,7 +66,7 @@
                     FROM
                     hyjf_trade.ht_borrow_tender br
                     WHERE
-                    br.create_time <![CDATA[ <= ]]>  #{endDate)
+                    br.create_time <![CDATA[ <= ]]>  #{endDate}
                     AND br.create_time <![CDATA[ >= ]]> #{beginDate}
 		            AND br.accede_order_id is NULL
                 UNION
