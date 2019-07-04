@@ -322,9 +322,6 @@ public class SenSorsServiceImpl implements SenSorsService {
                 JcRegisterTrade tradeInfo = jcRegisterTradeDao.getRegisterTradeByNowMonth(GetDate.formatTimeYYYYMM());
                 //更新数据
                 updateJcRegisterTrade(tradeInfo,info,fromDate,param,url,JCREGISTERTRADEFLAG_TRADE);
-
-
-
                 logger.info("-------------金创数据，当月交易规模更新完成！----");
             }else{
                 logger.info("-------------金创数据，当月交易规模无返回数据！----");
