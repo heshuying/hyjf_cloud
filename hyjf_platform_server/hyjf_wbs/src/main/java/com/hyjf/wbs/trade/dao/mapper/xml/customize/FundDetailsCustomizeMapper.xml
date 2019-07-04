@@ -40,6 +40,7 @@
          withdraw.fee AS serviceCharge,
          withdraw.credited AS arriveAmount,
          3 AS STATUS,
+         withdraw.client+1 as operatePlatform,
          date_format(
             withdraw.create_time,
             '%Y-%c-%d %H:%i:%s'
@@ -80,12 +81,18 @@
             utm.user_id AS assetCustomerId,
             recharge.nid AS detailNo,
             '江西银行' AS investPlatform,
-            recharge.type AS investType,
+            CASE
+            WHEN recharge.type = 0 THEN
+            '线下充值'
+            WHEN recharge.type = 1 THEN
+            '网上充值'
+            END investType,
             recharge.payment AS bank,
             recharge.money AS operateAmount,
             recharge.fee AS serviceCharge,
             recharge.balance AS arriveAmount,
             3 AS STATUS,
+            recharge.client+1 as operatePlatform,
             recharge.create_time AS operateTime
         FROM
             hyjf_user.ht_utm_reg utm
