@@ -111,6 +111,8 @@ public class UserCenterController extends BaseController {
                     // 注册手机号
                     userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
                     userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
+                    // 银行预留手机号
+                    userManagerVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getBankMobile()));
                 }
             }
             userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
