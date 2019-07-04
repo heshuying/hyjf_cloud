@@ -177,16 +177,18 @@ public class AsteriskProcessUtil {
      * @param email
      */
     public static String getAsteriskedEmail(String email){
-        if (StringUtils.isEmpty(email)){
+        if (StringUtils.isEmpty(email) || email.indexOf("@")<1){
             return email;
         }
-        String subStr = email.substring(1,email.indexOf("@"));
+
+        if (email.indexOf("@")==1){
+            return email.substring(0,1)+"*"+email.substring(1);
+        }
         String stars="";
-        for (int i = 0; i < subStr.length(); i++) {
+        for (int i = 0; i < email.substring(1,email.indexOf("@")).length(); i++) {
             stars+="*";
         }
-        String suffix = email.substring(email.indexOf("@"));
-        return email.substring(0,1)+stars+suffix;
+        return email.substring(0,1)+stars+email.substring(email.indexOf("@"));
     }
 
 

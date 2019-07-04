@@ -111,6 +111,8 @@ public class UserCenterController extends BaseController {
                     // 注册手机号
                     userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
                     userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
+                    // 银行预留手机号
+                    userManagerVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getBankMobile()));
                 }
             }
             userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
@@ -156,7 +158,7 @@ public class UserCenterController extends BaseController {
                 //紧急联系人手机号加密显示
                 userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getEmPhone()));
                 // 银行预留手机号脱敏
-                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getBankMobile()));
+                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getBankMobile()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
@@ -201,10 +203,12 @@ public class UserCenterController extends BaseController {
         CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
         CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
         if(null!=companyInfo){
-            //企业证件号脱敏
-            companyInfo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(companyInfo.getIdNo()));
-            //企业银行卡号脱敏（按照银行卡号脱敏）
-            companyInfo.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(companyInfo.getAccount()));
+            if(!isShow){
+                //企业证件号脱敏
+                companyInfo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(companyInfo.getIdNo()));
+                //企业银行卡号脱敏（按照银行卡号脱敏）
+                companyInfo.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(companyInfo.getAccount()));
+            }
             BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
         userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);

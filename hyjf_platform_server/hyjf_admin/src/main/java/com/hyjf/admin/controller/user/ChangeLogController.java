@@ -320,16 +320,16 @@ public class ChangeLogController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapterLog() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter mobileAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                String mobile = (String) object;
-                if(mobile!=null) {
-                	return AsteriskProcessUtil.getAsteriskedValue(mobile, 3,4)+mobile.substring(mobile.length()- 4);
-                }
-                return "";
-            }
-        };
+//        IValueFormatter mobileAdapter = new IValueFormatter() {
+//            @Override
+//            public String format(Object object) {
+//                String mobile = (String) object;
+//                if(mobile!=null) {
+//                	return AsteriskProcessUtil.getAsteriskedValue(mobile, 3,4)+mobile.substring(mobile.length()- 4);
+//                }
+//                return "";
+//            }
+//        };
 
         IValueFormatter roleAdapter = new IValueFormatter() {
             @Override
@@ -354,7 +354,7 @@ public class ChangeLogController extends BaseController {
                 return status==null?"":status==0?"启用" : "禁用";
             }
         };
-        mapAdapter.put("mobile", mobileAdapter);
+//        mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("role", roleAdapter);
         mapAdapter.put("attribute", attributeAdapter);
         mapAdapter.put("status", statusAdapter);

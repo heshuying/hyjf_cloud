@@ -362,14 +362,14 @@ public class BankCardManagerController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter accountAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                String account = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(account,3,7);
-            }
-        };
-        mapAdapter.put("account", accountAdapter);
+//        IValueFormatter accountAdapter = new IValueFormatter() {
+//            @Override
+//            public String format(Object object) {
+//                String account = (String) object;
+//                return AsteriskProcessUtil.getAsteriskedValue(account,3,7);
+//            }
+//        };
+//        mapAdapter.put("account", accountAdapter);
         return mapAdapter;
     }
 
