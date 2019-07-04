@@ -269,7 +269,7 @@ public class SenSorsServiceImpl implements SenSorsService {
 
         Map map =  new HashMap();
         map.put("receive_credit_assign","承接债转");
-        map.put("submit_credit_assign","发起债转");
+        map.put("recharge_result","充值成功");
         map.put("open_success","开户成功");
         map.put("withdraw_result","提现成功");
         map.put("submit_tender","散标出借");
