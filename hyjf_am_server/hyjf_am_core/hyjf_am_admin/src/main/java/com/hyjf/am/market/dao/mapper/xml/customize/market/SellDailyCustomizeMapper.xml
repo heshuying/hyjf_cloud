@@ -425,12 +425,14 @@
     <sql id="countTotalCreditSql">
         #转让数据#
         SELECT
-            bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
-            CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
-            CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
-            CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
         hyjf_trade.ht_borrow_credit bc
+        INNER JOIN hyjf_trade.ht_borrow_recover r on bc.tender_nid = r.nid
+
         LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id = su.user_id
@@ -444,8 +446,38 @@
         LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
         LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
-        AND bc.create_time <![CDATA[>=]]> #{startTime}
-        AND bc.create_time <![CDATA[<=]]> #{endTime}
+        and r.recover_yestime <![CDATA[>=]]> unix_timestamp(#{startTime})
+        and r.recover_yestime <![CDATA[<=]]> unix_timestamp(#{endTime})
+        and r.recover_period = 1
+    </sql>
+
+    <sql id="countTotalCreditRepaySql">
+        #转让数据#
+        SELECT
+        bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        FROM
+        hyjf_trade.ht_borrow_credit bc
+        INNER JOIN hyjf_trade.ht_borrow_recover r on bc.tender_nid = r.nid
+
+        LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id = 1
+        and r.recover_time <![CDATA[>=]]> unix_timestamp(#{startTime})
+        and r.recover_time <![CDATA[<=]]> unix_timestamp(#{endTime})
+        and r.recover_period = 1
     </sql>
 
     <!-- 查询运营中心合计 -->
@@ -494,7 +526,7 @@
 
     <!-- 查询千乐当日待还 -->
     <select id="countNoneRepayTodayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
+        SELECT IFNULL(ROUND(SUM(none_repay)/10000),0) AS non_repayment_today,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -523,7 +555,7 @@
 
     <!-- 查询千乐本月份规模业绩 -->
     <select id="countTotalInvestOnMonthQl" resultMap="sumResultMap">
-        select ROUND(SUM(account)/10000) AS invest_total_month,
+        select IFNULL(ROUND(SUM(account)/10000),0) AS invest_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -552,7 +584,7 @@
 
     <!-- 查询千乐上月份规模业绩 -->
     <select id="countTotalInvestOnPreviousMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
+        SELECT IFNULL(ROUND(SUM(account)/10000),0) AS invest_total_previous_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -581,7 +613,7 @@
 
     <!-- 查询千乐昨日规模业绩 -->
     <select id="countTotalTenderYesterdayQl" resultMap="sumResultMap">
-       SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
+       SELECT IFNULL(ROUND(SUM(account)/10000),0) AS invest_total_yesterday,
        '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -607,7 +639,7 @@
 
     <!-- 查询千乐本月累计已还款 -->
     <select id="countTotalRepayOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_month,
+        SELECT IFNULL(ROUND(SUM(repay_amount)/10000),0) AS repayment_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -633,7 +665,7 @@
 
     <!-- 查询千乐昨日已还款 -->
     <select id="countTotalRepayYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(repay_amount)/10000),0) AS repayment_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -659,7 +691,7 @@
 
     <!-- 查询千乐本月累计提现 -->
     <select id="countTotalWithdrawOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_month,
+        SELECT IFNULL(ROUND(SUM(withdraw_amount)/10000),0) AS withdraw_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -685,7 +717,7 @@
 
     <!-- 查询千乐昨日提现 -->
     <select id="countTotalWithdrawYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(withdraw_amount)/10000),0) AS withdraw_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -711,7 +743,7 @@
 
     <!-- 查询千乐本月累计充值 -->
     <select id="countTotalRechargeOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_month,
+        SELECT IFNULL(ROUND(SUM(recharge_amount)/10000),0) AS recharge_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -737,7 +769,7 @@
 
     <!-- 查询千乐昨日充值 -->
     <select id="countTotalRechargeYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(recharge_amount)/10000),0) AS recharge_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -774,7 +806,7 @@
 
     <!-- 查询千乐本月累计年化业绩 -->
     <select id="countTotalAnnualInvestOnMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
+        SELECT IFNULL(ROUND(SUM(amount)/10000),0) AS invest_annual_total_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -818,7 +850,7 @@
 
     <!-- 查询千乐上月累计年化业绩 -->
     <select id="countTotalAnnualInvestOnPreviousMonthQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
+        SELECT IFNULL(ROUND(SUM(amount)/10000),0) AS invest_annual_total_previous_month,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -861,7 +893,7 @@
 
     <!-- 查询千乐昨日年化业绩 -->
     <select id="countTotalAnnualInvestYesterdayQl" resultMap="sumResultMap">
-        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
+        SELECT IFNULL(ROUND(SUM(amount)/10000),0) AS invest_annual_total_yesterday,
         '渠道' AS primary_division,
         '千乐' AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
@@ -1128,12 +1160,24 @@
 
     <!-- 查询转让数据 -->
     <select id="countTotalCredit" resultMap="sumResultMap">
-        SELECT ROUND(SUM(credit_amount)/10000) AS credit_amount,
+        SELECT IFNULL(ROUND(SUM(credit_amount)/10000),0) AS credit_amount,
         primary_division AS primary_division,
         two_division AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalCreditSql"/>
+        ) AS t
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询转让数据 -->
+    <select id="countTotalRepayCredit" resultMap="sumResultMap">
+        SELECT IFNULL(ROUND(SUM(credit_amount)/10000),0) AS credit_amount,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalCreditRepaySql"/>
         ) AS t
         GROUP BY t.primary_division, t.two_division
     </select>

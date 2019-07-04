@@ -55,6 +55,9 @@ public class BorrowRegistCustomizeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "添加时间")
     private String createTime;
 
+    @ApiModelProperty(value = "银行备案结果描述")
+    private String registBankmsg;
+
     public String getBorrowNid() {
         return borrowNid;
     }
@@ -157,5 +160,13 @@ public class BorrowRegistCustomizeVO extends BaseVO implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getRegistBankmsg() {
+        return registBankmsg;
+    }
+
+    public void setRegistBankmsg(String registBankmsg) {
+        this.registBankmsg = registBankmsg;
     }
 }

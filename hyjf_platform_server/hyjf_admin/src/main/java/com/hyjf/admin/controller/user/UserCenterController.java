@@ -109,9 +109,10 @@ public class UserCenterController extends BaseController {
                 //如果没有查看脱敏权限,显示加星
                 for(UserManagerVO userManagerVO:listUserManagetVO){
                     // 注册手机号
-                    userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+                    userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
+                    userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
                     // 银行预留手机号
-                    userManagerVO.setBankMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getBankMobile()));
+                    userManagerVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getBankMobile()));
                 }
             }
             userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
@@ -144,12 +145,20 @@ public class UserCenterController extends BaseController {
         if(null!=userManagerDetailVO){
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
-                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getIdCard()));
-                userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getMobile()));
+                //用户身份证号码
+                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(userManagerDetailVO.getIdCard()));
+                // 用户手机号
+                userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getMobile()));
+                //用户邮箱
+                userManagerDetailVO.setEmail(AsteriskProcessUtil.getAsteriskedEmail(userManagerDetailVO.getEmail()));
+                // 真实姓名
+                userManagerDetailVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerDetailVO.getRealName()));
+                // 紧急联系人姓名
+                userManagerDetailVO.setEmName(AsteriskProcessUtil.getAsteriskedCnName(userManagerDetailVO.getEmName()));
                 //紧急联系人手机号加密显示
-                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
+                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getEmPhone()));
                 // 银行预留手机号脱敏
-                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getBankMobile()));
+                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getBankMobile()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
@@ -181,6 +190,12 @@ public class UserCenterController extends BaseController {
         UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(userId);
         UserBankOpenAccountCustomizeVO userBankOpenAccountCustomizeVO = new UserBankOpenAccountCustomizeVO();
         if(null!=userBankOpenAccountVO){
+            if(!isShow){
+                // 银行卡号
+                userBankOpenAccountVO.setBankNo(AsteriskProcessUtil.getAsteriskedBankCard(userBankOpenAccountVO.getBankNo()));
+                // 预留手机号
+                userBankOpenAccountVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userBankOpenAccountVO.getMobile()));
+            }
             BeanUtils.copyProperties(userBankOpenAccountVO, userBankOpenAccountCustomizeVO);
         }
         userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountCustomizeVO);
@@ -188,6 +203,12 @@ public class UserCenterController extends BaseController {
         CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
         CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
         if(null!=companyInfo){
+            if(!isShow){
+                //企业证件号脱敏
+                companyInfo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(companyInfo.getIdNo()));
+                //企业银行卡号脱敏（按照银行卡号脱敏）
+                companyInfo.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(companyInfo.getAccount()));
+            }
             BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
         userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);
@@ -686,7 +707,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String idcard = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(idcard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idcard);
             }
         };
         IValueFormatter bankOpenAccounAdapter = new IValueFormatter() {
@@ -707,7 +728,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
         //户籍所在地
@@ -732,6 +753,16 @@ public class UserCenterController extends BaseController {
                 return  String.valueOf(Integer.parseInt(formatDate) - Integer.parseInt(age.substring(0, 4)));
             }
         };
+
+        // 真实姓名
+        IValueFormatter realNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String realName = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(realName);
+            }
+        };
+
         mapAdapter.put("sex", sexAdapter);
         mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("idcard", idcardAdapter);
@@ -739,6 +770,7 @@ public class UserCenterController extends BaseController {
         mapAdapter.put("openAccount", openAccounAdapter);
         mapAdapter.put("areaByIdCard", areaByIdCard);
         mapAdapter.put("age", age);
+        mapAdapter.put("realName", realNameAdapter);
         return mapAdapter;
     }
 
@@ -1416,13 +1448,6 @@ public class UserCenterController extends BaseController {
                     userRequest.setUserId(Integer.parseInt(userId));
                     userRequest.setRegIp(GetCilentIP.getIpAddr(request));
                     boolean isOk = this.userCenterService.syncUserMobile(userRequest);
-                    if(isOk){
-                        // 推送数据到MQ 用户信息修改（绑卡异步）
-                        JSONObject params = new JSONObject();
-                        params.put("userId", userId);
-                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
-                                MQConstant.HG_REPORT_DELAY_LEVEL);
-                    }
                    return  new AdminResult<>(SUCCESS, "同步用户手机号成功");
                 } else {
                     return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");

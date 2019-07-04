@@ -524,9 +524,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 BigDecimal borrowInterest = earnings.add(couponInterest);
 
                 //备注
-                resultVo.setDesc("历史年回报率:  "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报:  " + borrowInterest+"元");
-                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
-                resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
+                // app4.0需求修改 由“历史回报”改为“参考回报”
+                if("2".equals(platform) || "3".equals(platform)){
+                    resultVo.setDesc("参考年回报率:  "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      参考回报:  " + borrowInterest+"元");
+                    resultVo.setDesc0("参考年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
+                    resultVo.setDesc1("参考回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
+                } else {
+                    resultVo.setDesc("历史年回报率:  "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报:  " + borrowInterest+"元");
+                    resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
+                    resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
+                }
 
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null, borrowInterest) + "元");
                 resultVo.setInterest(CommonUtils.formatAmount(null, borrowInterest));
@@ -550,9 +557,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("无可用");
                 }
 
-                resultVo.setDesc("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报: " + earnings +"元");
-                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
-                resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
+                // app4.0需求修改 由“历史回报”改为“参考回报”
+                if("2".equals(platform) || "3".equals(platform)){
+                    resultVo.setDesc("参考年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      参考回报: " + earnings +"元");
+                    resultVo.setDesc0("参考年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
+                    resultVo.setDesc1("参考回报: " + CommonUtils.formatAmount(null,earnings) + "元");
+                } else {
+                    resultVo.setDesc("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报: " + earnings +"元");
+                    resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
+                    resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
+                }
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings) + "元");
             }
             // 可用优惠券数量

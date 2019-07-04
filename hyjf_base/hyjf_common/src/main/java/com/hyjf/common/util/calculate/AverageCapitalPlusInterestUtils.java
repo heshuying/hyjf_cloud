@@ -191,7 +191,7 @@ public class AverageCapitalPlusInterestUtils {
 	public static Map<Integer, BigDecimal> getPerMonthPrincipalInterestForMonth(BigDecimal invest, BigDecimal yearRate, int totalMonth, BigDecimal lastMonthPrincipal){
 		Map<Integer, BigDecimal> map = new LinkedHashMap<>();
 		//月利率
-		BigDecimal monthRate = yearRate.divide(new BigDecimal(totalMonth), 12, BigDecimal.ROUND_DOWN);
+		BigDecimal monthRate = yearRate.divide(new BigDecimal("12"), 12, BigDecimal.ROUND_DOWN);
 		//前n-1期的应还本息
 		BigDecimal monthIncome = invest
 				.multiply(monthRate
@@ -227,7 +227,7 @@ public class AverageCapitalPlusInterestUtils {
 	public static Map<Integer, BigDecimal> getPerMonthPrincipalForMonth(BigDecimal invest, BigDecimal yearRate, int totalMonth){
 		Map<Integer, BigDecimal> map = new LinkedHashMap<>();
 		//月利率
-		BigDecimal monthRate = yearRate.divide(new BigDecimal(totalMonth), 12, BigDecimal.ROUND_DOWN);
+		BigDecimal monthRate = yearRate.divide(new BigDecimal("12"), 12, BigDecimal.ROUND_DOWN);
 		//前n-1期的应还本金
 		BigDecimal sumPrincipalRemoveLast = BigDecimal.ZERO;
 		for(int i = 1; i < totalMonth; i++){
@@ -258,7 +258,7 @@ public class AverageCapitalPlusInterestUtils {
 	public static Map<Integer, BigDecimal> getPerMonthInterestForMonth(Map<Integer, BigDecimal> perMonthPrincipalInterestForMonth, Map<Integer, BigDecimal> perMonthPrincipalForMonth, BigDecimal invest, BigDecimal yearRate, int totalMonth){
 		Map<Integer, BigDecimal> map = new LinkedHashMap<>();
 		//月利率
-		BigDecimal monthRate = yearRate.divide(new BigDecimal(totalMonth), 12, BigDecimal.ROUND_DOWN);
+		BigDecimal monthRate = yearRate.divide(new BigDecimal("12"), 12, BigDecimal.ROUND_DOWN);
 		//前n-1期利息
 		for(int i = 1; i < totalMonth; i++){
 			map.put(i, perMonthPrincipalInterestForMonth.get(i).subtract(perMonthPrincipalForMonth.get(i)));

@@ -2043,6 +2043,11 @@
             <columnOverride column="customer_group" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+         <table tableName="ht_sponsor_log" domainObjectName="SponsorLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
         <table tableName="ht_workflow" domainObjectName="WorkFlow">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
@@ -2057,7 +2062,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2068,7 +2073,7 @@
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
@@ -2084,5 +2089,31 @@
         </table>
 
 
+
+
+        <table tableName="ht_customer_service_channel" domainObjectName="CustomerServiceChannel">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_electricity_sales_data_push_list" domainObjectName="ElectricitySalesDataPushList">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="channel" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="upload_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_customer_service_group_config" domainObjectName="CustomerServiceGroupConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_customer_service_representive_config" domainObjectName="CustomerServiceRepresentiveConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
     </context>
 </generatorConfiguration>

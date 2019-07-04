@@ -47,12 +47,27 @@ public class ZeroOneCaiJingController {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
-        //借款记录报送
-        zeroOneCaiJingService.borrowRecordSub(yesterday,yesterday);
-        // 出借记录报送
-        zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
-        // 提前还款报送
-        zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
+        try{
+            //借款记录报送
+            zeroOneCaiJingService.borrowRecordSub(yesterday,yesterday);
+        }catch (Exception e){
+            logger.error("推送昨日零壹财经借款记录报送错误 error:", e);
+        }
+
+        try{
+            // 出借记录报送
+            zeroOneCaiJingService.investRecordSub(yesterday,yesterday);
+        }catch (Exception e){
+            logger.error("推送昨日零壹财经出借记录报送错误 error:", e);
+        }
+
+        try{
+            // 提前还款报送
+            zeroOneCaiJingService.advancedRepay(yesterday,yesterday);
+        }catch (Exception e){
+            logger.error("推送昨日零壹财经提前还款报送错误 error:", e);
+        }
+
     }
 
     /**
@@ -108,8 +123,9 @@ public class ZeroOneCaiJingController {
         Integer time[] = {4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7};
         StringBuilder startDate = null;
         StringBuilder endDate = null;
-        try{
-            for (int i =0;i<time.length;i++) {
+
+        for (int i =0;i<time.length;i++) {
+            try{
                 startDate = new StringBuilder();
                 endDate = new StringBuilder();
 
@@ -127,11 +143,11 @@ public class ZeroOneCaiJingController {
                 zeroOneCaiJingService.investRecordSub(startDate.toString(),endDate.toString());
                 // 提前还款报送
                 zeroOneCaiJingService.advancedRepay(startDate.toString(),endDate.toString());
-            }
-        }catch (Exception e){
-            logger.error("历史数据记录报送错误 error:", e);
-        }
 
+            }catch (Exception e){
+                logger.error("历史数据记录报送错误 error:", e);
+            }
+        }
 
     }
 

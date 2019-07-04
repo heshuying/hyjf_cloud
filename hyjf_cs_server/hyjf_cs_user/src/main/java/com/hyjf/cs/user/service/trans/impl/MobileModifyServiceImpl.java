@@ -319,12 +319,6 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
         try {
-            // 推送数据到MQ 用户信息修改（修改手机号异步）
-            JSONObject params = new JSONObject();
-            params.put("userId", user.getUserId());
-            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
-                    MQConstant.HG_REPORT_DELAY_LEVEL);
-
             commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);

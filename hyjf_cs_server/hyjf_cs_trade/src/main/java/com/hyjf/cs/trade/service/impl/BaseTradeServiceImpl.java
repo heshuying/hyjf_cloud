@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -808,5 +810,26 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             logger.error("资金支出校验共通方法发生错误：-- " + e.getMessage());
         }
         return false;
+    }
+
+    public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
+
+
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            String token=request.getHeader("token");
+            return sysConfig.getFrontHost()+"/user/setTradePassword";
+        }
+        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            String sign=request.getParameter("sign");
+            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
+                    "&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
+                    "&platform="+request.getParameter("platform");
+        }
+        if (ClientConstants.WECHAT_CLIENT == client) {
+            String sign=request.getParameter("sign");
+            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
     }
 }

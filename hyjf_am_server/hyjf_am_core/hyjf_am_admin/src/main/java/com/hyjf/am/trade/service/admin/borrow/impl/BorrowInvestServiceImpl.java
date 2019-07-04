@@ -3,24 +3,31 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
+import com.hyjf.am.user.dao.model.auto.Utm;
+import com.hyjf.am.user.service.front.user.UtmPlatService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreementExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.user.dao.model.auto.UtmPlat;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeExtVO;
 import com.hyjf.common.cache.CacheUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -28,6 +35,9 @@ import java.util.Map;
  */
 @Service
 public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowInvestService {
+
+    @Autowired
+    private UtmPlatService utmPlatService;
 
     /**
      * 出借明细记录 总数COUNT
@@ -214,4 +224,73 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
         borrowRecover.setSendmail(1);
         return borrowRecoverMapper.updateByExampleSelective(borrowRecover, borrowRecoverExample);
     }
+
+    @Override
+    public BorrowInvestCustomizeExtVO selectBorrowInvestByNid(String nid) {
+        BorrowTenderExample example=new BorrowTenderExample();
+        example.or().andNidEqualTo(nid);
+        List<BorrowTender> lstBorrowTender=borrowTenderMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(lstBorrowTender)){
+            throw new IllegalArgumentException("nid="+nid+"订单为空！");
+        }
+        BorrowTender borrowTender=lstBorrowTender.get(0);
+        logger.debug("nid=【{}】tender info is 【{}】",nid,JSONObject.toJSONString(borrowTender));
+        BorrowInvestCustomizeExtVO vo=new BorrowInvestCustomizeExtVO();
+        BeanUtils.copyProperties(borrowTender,vo);
+        vo.setBorrowUserName(borrowTender.getInviteUserName());
+
+        build(vo);
+
+        return vo;
+    }
+
+    private void build(BorrowInvestCustomizeExtVO vo) {
+
+        if (vo.getCreateTime()!=null){
+            //格式化时间
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            vo.setCreateTimeStr(sdf.format(vo.getCreateTime()));
+        }
+
+        if(vo.getTenderUserAttribute()!=null && vo.getTenderUserAttribute().intValue()<userAttribute.length){
+                vo.setTenderUserAttributeStr(userAttribute[vo.getTenderUserAttribute()]);
+        }
+
+        if(vo.getInviteUserAttribute()!=null && vo.getTenderUserAttribute().intValue()<userAttribute.length){
+            vo.setInviteUserAttributeStr(userAttribute[vo.getInviteUserAttribute()]);
+        }
+
+        UtmPlat utmPlatt=utmPlatService.getUtmByUserId(vo.getUserId());
+        if(utmPlatt!=null){
+            vo.setUtmNameNow(utmPlatt.getSourceName());
+        }
+
+        if(vo.getTenderUserUtmId()!=null){
+            Integer tenderUserUtmId=vo.getTenderUserUtmId();
+            UtmPlat utmPlat =utmPlatService.getUtmByUtmId(tenderUserUtmId);
+
+            if(utmPlat!=null){
+                vo.setUtmName(utmPlat.getSourceName());
+            }else{
+                throw new IllegalArgumentException(String.format("不存在渠道utmId=【%s】",tenderUserUtmId));
+            }
+            vo.setTenderUserUtmId(utmPlatService.getSourceIdByUtmId(tenderUserUtmId));
+
+        }
+    }
+
+    @Override
+    public int updateTenderUtm(TenderUtmChangeLog log) {
+        BorrowTender borrowTender=new BorrowTender();
+        borrowTender.setTenderUserUtmId(log.getTenderUtmId());
+
+        BorrowTenderExample example=new BorrowTenderExample();
+        example.or().andNidEqualTo(log.getNid());
+
+        borrowTenderMapper.updateByExampleSelective(borrowTender,example);
+
+        return tenderUtmChangeLogMapper.insertSelective(log);
+    }
+
+    private String[] userAttribute={"无主单","有主单","线下员工","线上员工"};
 }

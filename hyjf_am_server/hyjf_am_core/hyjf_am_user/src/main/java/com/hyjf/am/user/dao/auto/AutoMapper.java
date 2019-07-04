@@ -2,6 +2,7 @@ package com.hyjf.am.user.dao.auto;
 
 
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -221,5 +222,12 @@ public class AutoMapper {
     protected MspBlackdataMapper mspBlackDataMapper;
     @Autowired
     protected BankMobileModifyMapper bankMobileModifyMapper;
+
+    @Autowired
+    protected AppUtmRegMapper appUtmRegMapper;
+
+    @Autowired
+    protected ElectricitySalesDataPushListMapper electricitySalesDataPushListMapper;
+
 }
 

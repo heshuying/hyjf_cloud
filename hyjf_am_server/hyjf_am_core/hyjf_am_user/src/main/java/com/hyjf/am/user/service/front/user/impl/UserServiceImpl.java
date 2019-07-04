@@ -1774,4 +1774,97 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         appUtmRegMapper.insertSelective(entity);
     }
 
+
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    @Override
+    public List<User> selectBeforeDayRegisterUserList() {
+        Date startDay = GetDate.getTodayBeforeOrAfter(-1);
+        String beforeDayStart = GetDate.getDayStart(startDay);
+        String beforeDayEnd = GetDate.getDayEnd(startDay);
+        UserExample example = new UserExample();
+        UserExample.Criteria cra = example.createCriteria();
+        cra.andRegTimeGreaterThanOrEqualTo(GetDate.str2Date(beforeDayStart, GetDate.datetimeFormat));
+        cra.andRegTimeLessThanOrEqualTo(GetDate.str2Date(beforeDayEnd, GetDate.datetimeFormat));
+        List<User> userList = this.userMapper.selectByExample(example);
+        return userList;
+    }
+
+
+    /**
+     * 根据用户ID查询PC推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmReg selectUtmRegByUserId(Integer userId) {
+        UtmRegExample example = new UtmRegExample();
+        UtmRegExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UtmReg> list = this.utmRegMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询App推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AppUtmReg selectAppUtmRegByUserId(Integer userId) {
+        AppUtmRegExample example = new AppUtmRegExample();
+        AppUtmRegExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<AppUtmReg> list = this.appUtmRegMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUser selectSpreadsUserByUserId(Integer userId) {
+        SpreadsUserExample example = new SpreadsUserExample();
+        SpreadsUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<SpreadsUser> list = this.spreadsUserMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPortrait selectUserPortraitByUserId(Integer userId) {
+        UserPortraitExample example = new UserPortraitExample();
+        UserPortraitExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UserPortrait> list = this.userPortraitMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }
