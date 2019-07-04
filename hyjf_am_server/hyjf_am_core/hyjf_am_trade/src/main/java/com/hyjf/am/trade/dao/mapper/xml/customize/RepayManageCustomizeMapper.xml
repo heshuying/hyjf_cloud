@@ -484,7 +484,6 @@
 			hydb.borrow_style = 'endday'
 			OR hydb.borrow_style = 'end'
 			)
-
 			)
 			)
 			<if test="startDate != null and startDate != ''">
