@@ -158,7 +158,7 @@ public class UserCenterController extends BaseController {
                 //紧急联系人手机号加密显示
                 userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getEmPhone()));
                 // 银行预留手机号脱敏
-                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getBankMobile()));
+                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getBankMobile()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
