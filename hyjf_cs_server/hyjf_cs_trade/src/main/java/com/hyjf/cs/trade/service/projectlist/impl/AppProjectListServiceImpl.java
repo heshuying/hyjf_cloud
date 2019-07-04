@@ -110,6 +110,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         JSONObject info = new JSONObject();
         AppProjectListRequest req = new AppProjectListRequest();
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
+        req.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        req.setWjtInstCode(systemConfig.getWjtInstCode());
         ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
 
         // 合规审批需求  add by huanghui 20181123 start
@@ -131,6 +133,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         // 查询定时发标+出借中的标的数量
         params.setStatus("21");
+        params.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        params.setWjtInstCode(systemConfig.getWjtInstCode());
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
         // 先抛错方式，避免代码看起来头重脚轻。

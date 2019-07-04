@@ -127,6 +127,11 @@ public class ElectricitySalesDataPushListController extends BaseController {
 		        response.setMessage("坐席用户名错误，请修改后重新上传");
 		        return response;
 			}
+			if(csrcs.getStatus()==2) {
+		        response.setRtn(Response.ERROR);
+		        response.setMessage("坐席:"+electricitySalesDataPushListVO.getOwnerUserName()+"为禁用状态，请修改后重新上传");
+		        return response;
+			}
 			User user = userService.findUserByUsernameOrMobile(electricitySalesDataPushListVO.getUserName());
 			if(user==null) {
 		        response.setRtn(Response.ERROR);

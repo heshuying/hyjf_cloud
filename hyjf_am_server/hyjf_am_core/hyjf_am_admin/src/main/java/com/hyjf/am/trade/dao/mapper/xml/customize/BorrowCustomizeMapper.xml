@@ -668,8 +668,8 @@ WHERE
 		  b.plan_nid,
 		  IFNULL( label.label_name, '--' ) AS labelName,
 		  bb.company_or_personal AS usertype,
-		  substr( hbm.NAME, 1, 1 ) AS truename,
-		  substr( hbu.username, 1, 1 ) AS businame,
+		  hbm.NAME AS truename,
+		  hbu.username AS businame,
 		  hic.inst_name,
 		  <!--ADD  BY  zhangyk   增加初审时间显示 START -->
 		  CASE WHEN b.verify_time <![CDATA[ <>]]> 0 AND b.verify_time IS NOT NULL THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS verify_time,

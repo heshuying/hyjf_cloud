@@ -51,6 +51,9 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 		record.setCreateUserName(sponsorLogRequest.getAdminUserName());
 		record.setUpdateUserName(sponsorLogRequest.getAdminUserName());
 		record.setCreateTime(new Date());
+		// 五菱说新增的时候不要修改时间
+		record.setUpdateTime(null);
+		
 		return sponsorLogMapper.insertSelective(record);
 	}
 

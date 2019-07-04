@@ -13,9 +13,10 @@ import com.hyjf.admin.beans.vo.BankcardManagerCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankCardManagerService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -32,11 +33,6 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +41,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +58,8 @@ public class BankCardManagerController extends BaseController {
     private BankCardManagerService bankCardManagerService;
     @Autowired
     private SystemConfig systemConfig;
+
+    public static final String PERMISSIONS = "bankcardlist";
 
     @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
@@ -91,10 +88,14 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "汇付银行开户銀行卡記錄查询", notes = "汇付银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
         BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(bankCardManagerRequest);
+
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         if (bankCardManagerResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -104,6 +105,13 @@ public class BankCardManagerController extends BaseController {
         List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
         List<BankcardManagerCustomizeVO> bankcardManagerCustomizeVOList = new ArrayList<BankcardManagerCustomizeVO>();
         if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
+            if (!isShow){
+                // 对未取到查看权限的用户查看数据加密
+                bankcardManagerVOList.forEach(item ->{
+                    // 银行卡号
+                    item.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(item.getAccount()));
+                });
+            }
             bankcardManagerCustomizeVOList = CommonUtils.convertBeanList(bankcardManagerVOList, BankcardManagerCustomizeVO.class);
         }
         return new AdminResult<ListResult<BankcardManagerCustomizeVO>>(ListResult.build(bankcardManagerCustomizeVOList, bankCardManagerResponse.getCount()));
@@ -112,10 +120,14 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "江西银行开户銀行卡記錄查询", notes = "江西银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordBankAccount(@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
+    public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordBankAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
+
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectNewBankCardList(bankCardManagerRequest);
         if (bankCardManagerResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -126,6 +138,21 @@ public class BankCardManagerController extends BaseController {
         List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
         List<BankcardManagerCustomizeVO> bankcardManagerCustomizeVOList = new ArrayList<BankcardManagerCustomizeVO>();
         if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
+            if (!isShow){
+                // 对未取到查看权限的用户查看数据加密
+                bankcardManagerVOList.forEach(item ->{
+                    // 银行卡号
+                    item.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(item.getAccount()));
+                    // 当前手机号码
+                    item.setMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getMobile()));
+                    // 预留手机号码
+                    item.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(item.getBankMobile()));
+                    // 身份证号码
+                    item.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(item.getIdcard()));
+                    // 姓名
+                    item.setRealName(AsteriskProcessUtil.getAsteriskedCnName(item.getRealName()));
+                });
+            }
             bankcardManagerCustomizeVOList = CommonUtils.convertBeanList(bankcardManagerVOList, BankcardManagerCustomizeVO.class);
         }
         return new AdminResult<ListResult<BankcardManagerCustomizeVO>>(ListResult.build(bankcardManagerCustomizeVOList, bankCardManagerResponse.getCount()));
@@ -269,7 +296,12 @@ public class BankCardManagerController extends BaseController {
      */
     @ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "銀行卡管理")
     @PostMapping(value = "/exportbankcard")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         // 封装查询条件
         BankCardManagerRequest requestBank =new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
@@ -291,7 +323,12 @@ public class BankCardManagerController extends BaseController {
         Integer totalCount = bankCardManager.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
+        // 具有查看权限
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (!isShow){
+            // 无脱敏数据查看权限
+            mapValueAdapter = buildValueAdapterNoPermissions();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -330,6 +367,23 @@ public class BankCardManagerController extends BaseController {
             public String format(Object object) {
                 String account = (String) object;
                 return AsteriskProcessUtil.getAsteriskedValue(account,3,7);
+            }
+        };
+        mapAdapter.put("account", accountAdapter);
+        return mapAdapter;
+    }
+
+    /**
+     * 不具有加密数据查看权限的用户导出数据转换规则
+     * @return
+     */
+    private Map<String, IValueFormatter> buildValueAdapterNoPermissions() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String account = (String) object;
+                return AsteriskProcessUtil.getAsteriskedBankCard(account);
             }
         };
         mapAdapter.put("account", accountAdapter);
@@ -418,7 +472,12 @@ public class BankCardManagerController extends BaseController {
      */
     @ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportnewbankcard")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcelTwo(HttpServletRequest request, HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+
+        // 是否具有脱敏数据查看权限
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         // 封装查询条件
         BankCardManagerRequest requestBank = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
@@ -441,6 +500,10 @@ public class BankCardManagerController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapTwo();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterTwo();
+        if (!isShow){
+            // 无脱敏数据查看权限
+            mapValueAdapter = buildValueAdapterTwoNoPermissions();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -474,6 +537,48 @@ public class BankCardManagerController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapterTwo() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterTwoNoPermissions() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String mobile = (String) object;
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
+            }
+        };
+
+        IValueFormatter realNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String realName = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(realName);
+            }
+        };
+
+        IValueFormatter idcardAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String idcard = (String) object;
+                return AsteriskProcessUtil.getAsteriskedIdcard(idcard);
+            }
+        };
+
+
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String account = (String) object;
+                return AsteriskProcessUtil.getAsteriskedBankCard(account);
+            }
+        };
+        mapAdapter.put("mobile", mobileAdapter);
+        mapAdapter.put("realName", realNameAdapter);
+        mapAdapter.put("idcard", idcardAdapter);
+        mapAdapter.put("account", accountAdapter);
         return mapAdapter;
     }
 
