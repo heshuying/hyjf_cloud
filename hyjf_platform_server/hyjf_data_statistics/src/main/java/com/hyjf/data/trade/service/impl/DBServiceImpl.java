@@ -43,6 +43,7 @@ public class DBServiceImpl implements DBService {
 
         String startDate = GetDate.getDateMyTimeInMillis(GetDate.getFirstDayOfMonth());
         String endDate = GetDate.formatDate();
+        endDate = endDate + " 23:59:59";
         if(startDate.equals(endDate)){//如果当天为月初，则统计上个整月的数据
             startDate = GetDate.countDateYYYYMMDDHHMMSS(startDate,2,-1);
         }
