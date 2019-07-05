@@ -176,6 +176,47 @@ public class SystemConfig {
     private String roleIsopen;
 
 
+
+    /**
+     * 温金投机构编号
+     */
+    @Value("${wjt.instCode}")
+    public String wjtInstCode;
+
+    /**
+     * 温金投渠道编号
+     */
+    @Value("${wjt.channel}")
+    public String wjtChannel;
+    /**
+     * wjt前端地址
+     */
+    @Value("${hyjf.front.wjt.host}")
+    public String wjtFrontHost;
+
+    /**
+     * wjt 微信前端地址
+     */
+    @Value("${hyjf.front.wjt.wei.host}")
+    public String wjtWeiFrontHost;
+
+    public String getWjtFrontHost() {
+        return wjtFrontHost;
+    }
+
+    public void setWjtFrontHost(String wjtFrontHost) {
+        this.wjtFrontHost = wjtFrontHost;
+    }
+
+    public String getWjtWeiFrontHost() {
+        return wjtWeiFrontHost;
+    }
+
+    public void setWjtWeiFrontHost(String wjtWeiFrontHost) {
+        this.wjtWeiFrontHost = wjtWeiFrontHost;
+    }
+
+
     /* 个人用户提现最大限额**/
     @Value("${hyjf.personal.withdraw.limit}")
     private String personalWithdrawLimit;
@@ -314,6 +355,12 @@ public class SystemConfig {
     @Value("${hyjf.cert.yibu.path}")
     public String certWebYibu;
     //国家应急中心配置文件添加 add by nxl end
+
+    /**
+     * 微信分享地址 add by wgx 2019/05/09
+     */
+    @Value("${hyjf.wechat.qrcode.url}")
+    private String wechatQrcodeUrl;
 
     public String getHyjfOnlineType() {
         return hyjfOnlineType;
@@ -975,5 +1022,29 @@ public class SystemConfig {
 
     public void setCompanyWithdrawLimit(String companyWithdrawLimit) {
         this.companyWithdrawLimit = companyWithdrawLimit;
+    }
+
+    public String getWechatQrcodeUrl() {
+        return wechatQrcodeUrl;
+    }
+
+    public void setWechatQrcodeUrl(String wechatQrcodeUrl) {
+        this.wechatQrcodeUrl = wechatQrcodeUrl;
+    }
+
+    public String getWjtInstCode() {
+        return wjtInstCode;
+    }
+
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
+    }
+
+    public String getWjtChannel() {
+        return wjtChannel;
+    }
+
+    public void setWjtChannel(String wjtChannel) {
+        this.wjtChannel = wjtChannel;
     }
 }

@@ -64,6 +64,29 @@ public class SystemConfig {
     public String appUpdateAndroidJsp;
 
     /**
+     * 合力亿捷-呼叫中心URL
+     */
+    @Value("${hyjf.call.centre.url}")
+    public String callCentreUrl;
+
+    /**
+     * 合力亿捷-呼叫中心appid
+     */
+    @Value("${hyjf.call.centre.appId}")
+    public String appId;
+
+    /**
+     * 合力亿捷-呼叫中心account
+     */
+    @Value("${hyjf.call.centre.account}")
+    public String account;
+
+    /**
+     * 合力亿捷-呼叫中心secret
+     */
+    @Value("${hyjf.call.centre.secret}")
+    public String secret;
+    /**
      * 获取文件url前缀
      *
      * @return
@@ -168,6 +191,31 @@ public class SystemConfig {
     // 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
     @Value("${hyjf.app.exit.label.show.flag}")
     private String exitLabelShowFlag;
+
+    /**
+     * 温金投机构编号
+     */
+    @Value("${wjt.instCode}")
+    public String wjtInstCode;
+
+    /**
+     * 温金投渠道编号
+     */
+    @Value("${wjt.channel}")
+    public String wjtChannel;
+
+    /**
+     * wjt前端地址
+     */
+    @Value("${hyjf.front.wjt.host}")
+    public String wjtFrontHost;
+
+    /**
+     * wjt 微信前端地址
+     */
+    @Value("${hyjf.front.wjt.wei.host}")
+    public String wjtWeiFrontHost;
+
 
     public String getAppFileUpload() {
         return appFileUpload;
@@ -471,5 +519,70 @@ public class SystemConfig {
 
     public void setAppUpdateAndroidJsp(String appUpdateAndroidJsp) {
         this.appUpdateAndroidJsp = appUpdateAndroidJsp;
+    }
+
+    public String getWjtInstCode() {
+        return wjtInstCode;
+    }
+
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
+    }
+
+    public String getWjtChannel() {
+        return wjtChannel;
+    }
+
+    public void setWjtChannel(String wjtChannel) {
+        this.wjtChannel = wjtChannel;
+    }
+
+    public String getWjtFrontHost() {
+        return wjtFrontHost;
+    }
+
+    public void setWjtFrontHost(String wjtFrontHost) {
+        this.wjtFrontHost = wjtFrontHost;
+    }
+
+    public String getWjtWeiFrontHost() {
+        return wjtWeiFrontHost;
+    }
+
+    public void setWjtWeiFrontHost(String wjtWeiFrontHost) {
+        this.wjtWeiFrontHost = wjtWeiFrontHost;
+    }
+
+
+    public String getCallCentreUrl() {
+        return callCentreUrl;
+    }
+
+    public void setCallCentreUrl(String callCentreUrl) {
+        this.callCentreUrl = callCentreUrl;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 }

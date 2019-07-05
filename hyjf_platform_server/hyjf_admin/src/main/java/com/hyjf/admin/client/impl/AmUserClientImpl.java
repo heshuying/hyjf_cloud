@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1023,6 +1024,41 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 查找注册记录列表（渠道修改列表专用）
+	 *
+	 * @author wx
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public RegistRecordResponse findRegistRecordOne(RegistRcordRequest request) {
+		RegistRecordResponse response = restTemplate.postForEntity(
+				"http://AM-ADMIN/am-user/registRecord/registRecordOne", request, RegistRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户id查询渠道类型
+	 *
+	 * @author wx
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public RegistRecordResponse selectByUserType(RegistRcordRequest request) {
+		RegistRecordResponse response = restTemplate.postForEntity(
+				"http://AM-ADMIN/am-user/registRecord/selectByUserType", request, RegistRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+
+	/**
 	 * 查找借款盖章用户信息
 	 *
 	 * @author nxl
@@ -1512,7 +1548,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UtmResponse getByPageList(Map<String, Object> map) {
-
 		ResponseEntity<UtmResponse<UtmVO>> response = restTemplate.exchange(
 				"http://AM-ADMIN/am-user/promotion/utm/getbypagelist", HttpMethod.POST, new HttpEntity<>(map),
 				new ParameterizedTypeReference<UtmResponse<UtmVO>>() {
@@ -1567,6 +1602,16 @@ public class AmUserClientImpl implements AmUserClient {
 	public UtmChannelVO getRecord(String utmId) {
 		UtmChannelResponse response = restTemplate
 				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UtmChannelVO getUtmBySourceId(String sourceId) {
+		UtmChannelResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getUtmBySourceId/"+sourceId, UtmChannelResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -2878,6 +2923,112 @@ public class AmUserClientImpl implements AmUserClient {
 		return response;
 	}
 
+	/**
+	 * 根据userId查询用户推广链接注册
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmRegVO findUtmRegByUserId(Integer userId) {
+		String url = "http://AM-ADMIN/am-user/user/findUtmRegByUserId/" + userId;
+		UtmRegResponse response = restTemplate.getForEntity(url, UtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 新增pc渠道信息
+	 *
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean insertPcUtmReg(UtmRegVO utmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/insertPcUtmReg", utmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 修改pc渠道信息
+	 *
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean updatePcUtmReg(UtmRegVO utmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/updatePcUtmReg", utmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 新增app渠道信息
+	 *
+	 * @param appUtmRegVO
+	 * @return
+	 */
+	@Override
+	public boolean insertAppUtmReg(AppUtmRegVO appUtmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/insertAppUtmReg", appUtmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 修改app渠道信息
+	 *
+	 * @param appUtmRegVO
+	 * @return
+	 */
+	@Override
+	public boolean updateAppUtmReg(AppUtmRegVO appUtmRegVO) {
+		boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/updateAppUtmReg", appUtmRegVO, Boolean.class)
+				.getBody();
+		return result;
+	}
+
+	/**
+	 * 修改渠道插入
+	 *
+	 * @param changeLogVO
+	 * @return
+	 */
+	@Override
+	public boolean insertChangeLogList(ChangeLogVO changeLogVO) {
+		boolean response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/changelog/insertChangeLogList",changeLogVO, Boolean.class)
+				.getBody();
+		return response;
+	}
+
+	/**
+	 * 根据Id删除app渠道信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteAppUtmReg(Long id) {
+		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteAppUtmReg/" + id;
+		return restTemplate.getForEntity(url, boolean.class).getBody();
+	}
+
+	/**
+	 * 根据Id删除pc渠道信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public boolean deleteUtmReg(Integer id) {
+		String url = "http://AM-ADMIN/am-admin/app_utm_reg/deleteUtmReg/" + id;
+		return restTemplate.getForEntity(url, boolean.class).getBody();
+	}
+
 	@Override
 	public List<SmsCountCustomizeVO>  getuserIdAnddepartmentName() {
 		SmsCountCustomizeResponse response = restTemplate
@@ -2958,5 +3109,39 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return result.getResultInt();
+	}
+
+	/**
+	 * 同步用户手机号
+	 *
+	 * @param userRequest
+	 * @return
+	 */
+	@Override
+	public boolean syncUserMobile(UserRequest userRequest) {
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/syncUserMobile", userRequest, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/electricitySales/electricitySalesDataPushList", request, ElectricitySalesDataPushListResponse.class)
+				.getBody();
+		return response;
+	}
+
+	@Override
+	public ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/electricitySales/insertAlectricitySalesDataPushList", request, ElectricitySalesDataPushListResponse.class)
+				.getBody();
+		return response;
 	}
 }

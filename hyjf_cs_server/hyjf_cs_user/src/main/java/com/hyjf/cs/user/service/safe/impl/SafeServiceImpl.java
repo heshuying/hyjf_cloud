@@ -120,6 +120,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }else {
             resultMap.put("mobile","");
         }
+
+        // web端返回银行预留手机号 add by liushouyi
+        if (user.getBankMobile() != null && user.getBankMobile().length() == 11) {
+            resultMap.put("bankMobile", user.getBankMobile().substring(0, 3) + "****" + user.getBankMobile().substring(user.getBankMobile().length() - 4));
+        }else {
+            resultMap.put("bankMobile","");
+        }
+
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
@@ -234,11 +242,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      *
      * @param userId
      * @param email
+     * @param wjtClient
      * @return
      * @throws MQException
      */
     @Override
-    public boolean sendEmailActive(Integer userId, String token, String email) throws MQException {
+    public boolean sendEmailActive(Integer userId, String token, String email, String wjtClient) throws MQException {
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         String activeCode = GetCode.getRandomCode(6);
@@ -255,7 +264,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         // 发送激活邮件
         activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
+
         String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            url = systemConfig.wjtFrontHost + "/user/bindEmail?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+        }
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("url_name", url);
         if (StringUtils.isNotBlank(userInfoVO.getNickname())) {

@@ -7,6 +7,8 @@ import com.hyjf.am.vo.BasePage;
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
 public class RegistRcordRequest extends BasePage{
+	//用户Id
+	private String userId;
 	//用户名
 	private String userName;
 	//手机号
@@ -21,6 +23,26 @@ public class RegistRcordRequest extends BasePage{
 	private String regTimeEnd;
 	//默认为true ,获取全部数据，为false时，获取部分数据
 	private boolean limitFlg = false;
+	//渠道ID
+	private String sourceId;
+	//渠道名称
+	private String sourceName;
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+	}
 
 	public String getUserName() {
 		return userName;
@@ -76,6 +98,14 @@ public class RegistRcordRequest extends BasePage{
 
 	public void setLimitFlg(boolean limitFlg) {
 		this.limitFlg = limitFlg;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }
 

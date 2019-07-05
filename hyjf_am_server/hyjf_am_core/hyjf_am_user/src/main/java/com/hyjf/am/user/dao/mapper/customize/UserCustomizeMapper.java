@@ -3,9 +3,11 @@ package com.hyjf.am.user.dao.mapper.customize;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
+import com.hyjf.am.vo.user.LoanSubjectCertificateAuthorityVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserCustomizeMapper {
 
@@ -31,4 +33,10 @@ public interface UserCustomizeMapper {
      * @return
      */
     UserUtmInfoCustomize getUserUtmInfo(@Param("userId") Integer userId);
+
+    /**
+     * 批量查询借款主体CA
+     * @return
+     */
+    List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(@Param("list")List<String> list,@Param("idType")Integer idType);
 }

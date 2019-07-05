@@ -4,17 +4,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -302,6 +307,54 @@ public class AmUserClientImpl implements AmUserClient {
 	public void unlockUser(Integer userId) {
 		String url = userService+"/user/unlockUser/"+userId;
 		restTemplate.postForEntity(url, null, BooleanResponse.class);
+	}
+
+	/**
+	 * 插入修改银行预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	@Override
+	public boolean insertBankMobileModify(BankMobileModifyVO vo) {
+		String url = userService + "/bankMobileModify/insertBankMobileModify";
+		BooleanResponse response = restTemplate.postForEntity(url,vo,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 更新用户银行预留手机号
+	 *
+	 * @param userId
+	 * @param newBankMobile
+	 */
+	@Override
+	public boolean updateBankMobileByUserId(int userId, String newBankMobile) {
+		String url = userService + "/bankMobileModify/updateBankMobileByUserId/" +userId + "/" + newBankMobile;
+		BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 更新用户修改预留手机号日志表
+	 *
+	 * @param vo
+	 * @return
+	 */
+	@Override
+	public boolean updateBankMobileModify(BankMobileModifyVO vo) {
+		String url = userService + "/bankMobileModify/updateBankMobileModify";
+		BooleanResponse response = restTemplate.postForEntity(url,vo,BooleanResponse.class).getBody();
+		if(response!= null && response.getResultBoolean()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1335,4 +1388,157 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
 		restTemplate.getForEntity(url, String.class).getBody();
 	}
+
+	/**
+	 * 获取前一天注册的用户
+	 *
+	 * @return
+	 */
+	@Override
+	public List<UserVO> selectBeforeDayRegisterUserList() {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectBeforeDayRegisterUserList", UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询PC推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmRegVO selectUtmRegByUserId(Integer userId) {
+		UtmRegResponse response = restTemplate
+				.getForEntity(userService + "/user/selectUtmRegByUserId/" + userId, UtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户Id查询APP推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public AppUtmRegVO selectAppUtmRegByUserId(Integer userId) {
+		AppUtmRegResponse response = restTemplate
+				.getForEntity(userService + "/user/selectAppUtmRegByUserId/" + userId, AppUtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public SpreadsUserVO selectSpreadsUserByUserId(Integer userId) {
+		SpreadsUserResponse response = restTemplate
+				.getForEntity(userService + "/user/selectSpreadsUserByUserId/" + userId, SpreadsUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserPortraitVO selectUserPortraitByUserId(Integer userId) {
+		UserPortraitResponse response = restTemplate
+				.getForEntity(userService + "/user/selectUserPortraitByUserId/" + userId, UserPortraitResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+	/**
+	 * 生成电销数据
+	 *
+	 * @param request
+	 */
+	@Override
+	public void generateElectricitySalesData(ElectricitySalesDataPushListRequest request) {
+		restTemplate
+				.postForEntity(userService + "/electricitySalesDataPushList/generateElectricitySalesData", request,IntegerResponse.class);
+	}
+
+	/**
+	 * 获取需要推送的电销数据
+	 *
+	 * @return
+	 */
+	@Override
+	public List<ElectricitySalesDataPushListVO> selectElectricitySalesDataPushDataList() {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.getForEntity(userService + "/electricitySalesDataPushList/selectElectricitySalesDataPushDataList", ElectricitySalesDataPushListResponse.class).getBody();
+		if (response != null && Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 上送数据成功后,更新电销数据状态
+	 *
+	 * @param request
+	 */
+	@Override
+	public void updateElectricitySalesDataPushList(ElectricitySalesDataPushListRequest request) {
+		restTemplate
+				.postForEntity(userService + "/electricitySalesDataPushList/updateElectricitySalesDataPushList", request, IntegerResponse.class);
+	}
+
+	/**
+	 * 根据用户Id查询用户是否已经存在
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public ElectricitySalesDataPushListVO selectElectricitySalesDataPushListByUserId(Integer userId) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.getForEntity(userService + "/electricitySalesDataPushList/selectElectricitySalesDataPushListByUserId/" + userId, ElectricitySalesDataPushListResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据UtmId查询推广渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	@Override
+	public UtmVO selectUtmByUtmId(Integer utmId) {
+		UtmRequest request = new UtmRequest();
+		request.setUtmId(utmId);
+		UtmVOResponse response = restTemplate
+				.postForEntity(userService + "/utm/selectUtmByUtmId", request, UtmVOResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }

@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 
 import java.util.List;
 
@@ -57,4 +58,8 @@ public interface BorrowRegistService extends BaseService {
      * @return
      */
     Response updateBorrowRegist(BorrowRegistUpdateRequest request);
+
+    Response updateForRegistCancel(BorrowRegistUpdateRequest requestBean);
+
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
 }

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlatformTransferService;
@@ -15,6 +16,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.resquest.admin.PlatformTransferRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -61,10 +63,16 @@ public class PlatformTransferController extends BaseController {
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
     @PostMapping(value = "/transferlist")
     @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
-    public AdminResult<ListResult<AccountRechargeVO>> transferList(@RequestBody PlatformTransferListRequest request){
+    public AdminResult<ListResult<AccountRechargeVO>> transferList(@RequestBody PlatformTransferListRequest request,HttpServletRequest httpServletRequest){
         Integer count = platformTransferService.getPlatformTransferCount(request);
         count = (count == null)?0:count;
         List<AccountRechargeVO> accountRechargeVOList = platformTransferService.searchPlatformTransferList(request);
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if (!isShow){
+            accountRechargeVOList.forEach(accountRechargeVO -> {
+                accountRechargeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(accountRechargeVO.getMobile()));
+            });
+        }
         return new AdminResult<>(ListResult.build(accountRechargeVOList,count));
     }
 
@@ -148,11 +156,17 @@ public class PlatformTransferController extends BaseController {
             String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         for (int i = 1; i <= sheetCount; i++) {
             platformTransferListRequest.setPageSize(defaultRowMaxCount);
             platformTransferListRequest.setCurrPage(i);
             List<AccountRechargeVO> accountRechargeVOList2 = platformTransferService.searchPlatformTransferList(platformTransferListRequest);
             if (accountRechargeVOList2 != null && accountRechargeVOList2.size()> 0) {
+                if (!isShow){
+                    accountRechargeVOList2.forEach(accountRechargeVO -> {
+                        accountRechargeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(accountRechargeVO.getMobile()));
+                    });
+                }
                 String sheetNameTmp = sheetName + "_第" + i + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  accountRechargeVOList2);
             } else {

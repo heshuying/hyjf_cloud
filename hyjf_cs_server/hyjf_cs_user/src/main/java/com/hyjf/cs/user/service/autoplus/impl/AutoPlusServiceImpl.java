@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -27,6 +28,7 @@ import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -220,8 +222,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String txcode = "";
         BankCallBean bean = new BankCallBean(users.getUserId(), txcode, client);
         // 同步地址 跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?channel=" + type + "&logOrdId=" + bean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticSuccess?channel=" + type;
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?channel=" + type + "&logOrdId=" + bean.getLogOrderId();
+        String successUrl = BankCommonUtil.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticSuccess?channel=" + type;
         // 异步调用路
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
@@ -944,17 +946,28 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     }
 
     @Override
-    public BankCallBean weChatGetCommonBankCallBean(UserVO users, int type, String srvAuthCode, String code, String sign) {
+    public BankCallBean weChatGetCommonBankCallBean(UserVO users, int type, String srvAuthCode, String code, String sign,String wjtClient) {
         String remark = "";
         String txcode = "";
 
         BankCallBean bean = new BankCallBean();
+        // 同步地址  是否跳转到前端页面
+        String host = BankCommonUtil.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT);
+        if(org.apache.commons.lang.StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,wjtClient);
+        }
         // 同步调用路径
-        String retUrl = systemConfig.getWeiFrontHost() + "/user/setting/authorization/result/failed?sign=" + sign + "&logOrdId=" + bean.getLogOrderId();
-        String success = systemConfig.getWeiFrontHost() + "/user/setting/authorization/result/success?sign=" + sign;
+        String retUrl = host + "/user/setting/authorization/result/failed?sign=" + sign + "&logOrdId=" + bean.getLogOrderId();
+        String success = host+ "/user/setting/authorization/result/success?sign=" + sign;
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-wechat/wx/user/autoplus/";
-        String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL + "?sign=" + sign;
+        // 忘记密码跳转链接
+        String forgotPwdUrl = BankCommonUtil.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT, null, systemConfig);
+        if(org.apache.commons.lang.StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = BankCommonUtil.getWjtForgotPwdUrl(wjtClient, null, systemConfig);
+        }
 
         if (type == 1) {
             // 2.4.4.出借人自动投标签约增强
@@ -981,7 +994,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setChannel(BankCallConstant.CHANNEL_WEI);
         bean.setAccountId(bankOpenAccount.getAccount());
         bean.setOrderId(orderId);
-        bean.setForgotPwdUrl(forgetPassworedUrl);
+        bean.setForgotPwdUrl(forgotPwdUrl);
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
         bean.setNotifyUrl(bgRetUrl);

@@ -5,12 +5,14 @@ package com.hyjf.cs.user.controller.wechat.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.base.Strings;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
@@ -33,10 +35,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -101,7 +100,7 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/registAction.do")
-    public UserRegistResult registAction(HttpServletRequest request) throws UnsupportedEncodingException {
+    public UserRegistResult registAction(@RequestHeader(value = "wjtClient",required = false) String wjtClient, HttpServletRequest request) throws UnsupportedEncodingException {
         UserRegistResult ret = new UserRegistResult();
         ret.setRequest("/registAction.do");
         // 手机号
@@ -130,6 +129,10 @@ public class WeChatRegistController extends BaseUserController {
         password = RSAJSPUtil.rsaToPassword(password);
         // 推荐人
         String reffer = request.getParameter("reffer");
+
+        // 温金投注册  新增字段  是否温金投注册
+        String isWjt = request.getParameter("isWjt");
+
         logger.info("当前注册手机号: {}", mobile);
         RegisterRequest register = new RegisterRequest();
         register.setMobile(mobile);
@@ -140,9 +143,13 @@ public class WeChatRegistController extends BaseUserController {
         if(null!=ret.getStatus()&&!ret.getStatus().equals("000")){
             return ret;
         }
+        if(wjtClient!=null){
+            logger.info("温金投用户注册开始");
+            isWjt="1";
+        }
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
-                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType);
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType,isWjt);
         //注册成功重新登录
         UserVO user = loginService.getUser(webViewUserVO.getUsername());
         WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
@@ -372,7 +379,7 @@ public class WeChatRegistController extends BaseUserController {
 
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
-        WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
+        WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType,null);
         UserVO user = loginService.getUser(webViewUserVO.getUsername());
         WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
         if(null!=userVO){
@@ -405,6 +412,24 @@ public class WeChatRegistController extends BaseUserController {
                         logger.error(e.getMessage());
                     }
                 }
+
+                // add by cuigq wbs客户信息回调 20190417 start
+                if(!(Strings.isNullOrEmpty(bean.getUtmId()) || Strings.isNullOrEmpty(bean.getCustomerId()))){
+
+                    WbsRegisterMqVO wbsRegisterMqVO=new WbsRegisterMqVO();
+                    wbsRegisterMqVO.setUtmId(bean.getUtmId());
+                    wbsRegisterMqVO.setCustomerId(bean.getCustomerId());
+                    wbsRegisterMqVO.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
+
+                    try {
+                        registService.sendWbsMQ(wbsRegisterMqVO);
+                    } catch (MQException e) {
+                        logger.info("用户【{}】注册后，发达MQ到Wbs失败！",webViewUserVO.getUsername());
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                // add by cuigq wbs客户信息回调 20190417 end
+
                 String statusDesc = "注册成功";
                 if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
                     BaseMapBean baseMapBean=new BaseMapBean();

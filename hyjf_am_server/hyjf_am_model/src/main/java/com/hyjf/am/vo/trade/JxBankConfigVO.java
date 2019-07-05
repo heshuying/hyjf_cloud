@@ -49,6 +49,20 @@ public class JxBankConfigVO implements Serializable {
     //导出专用
     private String monthCardQuotaStr;
 
+    /**
+     * 银行android应用市场链接
+     *
+     * @mbggenerated
+     */
+    private String androidMarket;
+
+    /**
+     * 银行ios应用市场链接
+     *
+     * @mbggenerated
+     */
+    private String iosMarket;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -211,6 +225,22 @@ public class JxBankConfigVO implements Serializable {
         this.monthCardQuotaStr = monthCardQuotaStr;
     }
 
+    public String getAndroidMarket() {
+        return androidMarket;
+    }
+
+    public void setAndroidMarket(String androidMarket) {
+        this.androidMarket = androidMarket;
+    }
+
+    public String getIosMarket() {
+        return iosMarket;
+    }
+
+    public void setIosMarket(String iosMarket) {
+        this.iosMarket = iosMarket;
+    }
+
     @Override
     public String toString() {
         return "JxBankConfigVO{" +
@@ -233,6 +263,9 @@ public class JxBankConfigVO implements Serializable {
                 ", updateTime=" + updateTime +
                 ", delFlag=" + delFlag +
                 ", monthCardQuota=" + monthCardQuota +
+                ", monthCardQuotaStr='" + monthCardQuotaStr + '\'' +
+                ", androidMarket='" + androidMarket + '\'' +
+                ", iosMarket='" + iosMarket + '\'' +
                 '}';
     }
 }

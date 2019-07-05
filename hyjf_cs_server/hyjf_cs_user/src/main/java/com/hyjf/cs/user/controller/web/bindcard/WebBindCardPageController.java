@@ -61,7 +61,9 @@ public class WebBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
     @ApiImplicitParam(name = "paraMap",value = "{urlstatus:该参数已废弃}", dataType = "Map")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param, HttpServletRequest request) {
+    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId,
+                                          @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                          @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<>();
 
         WebViewUserVO user = bindCardService.getUserFromCache(userId);
@@ -85,7 +87,7 @@ public class WebBindCardPageController extends BaseUserController{
         }
         // 请求银行接口
         try {
-            Map<String,Object> data = bindCardService.callBankBindCardPage(user, userIp, urlstatus);
+            Map<String,Object> data = bindCardService.callBankBindCardPage(user, userIp, urlstatus,wjtClient);
             result.setData(data);
         } catch (Exception e) {
             result.setStatus(WebResult.ERROR);

@@ -45,7 +45,7 @@
 		WHERE
 			hyd_id IS NOT NULL
 		AND ou.hyd_id = #{userId} 
-		AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21')
+		AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21', 'Q4', 'Q41')
 	</select>
 	
 	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.Integer">

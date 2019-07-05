@@ -6,18 +6,23 @@ package com.hyjf.admin.controller.repair.accountmobilesynch;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ModifyInfoService;
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -27,18 +32,34 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/exception/accountmobilesynch")
 @Api(value = "异常中心-线下修改信息同步",tags = "异常中心-线下修改信息同步")
-public class ModifyInfoSynchController {
+public class ModifyInfoSynchController extends BaseController {
 
     @Autowired
     private ModifyInfoService modifyInfoService;
 
+    private static final String PERMISSIONS = "accountmobilesynch";
+
     @ApiOperation(value = "修改信息列表查询",notes = "修改信息列表查询")
     @PostMapping(value = "/searchlist")
-    public AdminResult<ListResult<AccountMobileSynchVO>> mobileList(@RequestBody AccountMobileSynchRequest request){
+    public AdminResult<ListResult<AccountMobileSynchVO>> mobileList(@RequestBody AccountMobileSynchRequest request, HttpServletRequest httpServletRequest){
         // 数据总数
         Integer count = modifyInfoService.getModifyInfoCount(request);
         // 异常列表list
         List<AccountMobileSynchVO> accountMobileSynchVOList = modifyInfoService.searchModifyInfoList(request);
+
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if(!isShow){
+            if (CollectionUtils.isNotEmpty(accountMobileSynchVOList)){
+                for (AccountMobileSynchVO vo : accountMobileSynchVOList) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    vo.setNewMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getNewMobile()));
+                    vo.setName(AsteriskProcessUtil.getAsteriskedCnName(vo.getName()));
+                    vo.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(vo.getAccount()));
+                    vo.setNewAccount(AsteriskProcessUtil.getAsteriskedBankCard(vo.getNewAccount()));
+                }
+            }
+        }
+
         return new AdminResult<>(ListResult.build(accountMobileSynchVOList,count));
     }
 
