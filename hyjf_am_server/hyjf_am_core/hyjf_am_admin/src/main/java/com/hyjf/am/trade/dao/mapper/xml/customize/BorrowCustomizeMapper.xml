@@ -268,7 +268,7 @@ WHERE
 			ht_borrow hb
 		LEFT JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
-		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
+		LEFT JOIN ht_hjh_inst_config hic on hbi.inst_code = hic.inst_code
 		AND bs. STATUS = 0
 		WHERE
 		hb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
