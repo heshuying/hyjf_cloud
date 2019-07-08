@@ -86,6 +86,7 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
         if (countList > 0) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
+            example.setOrderByClause("`create_time`  desc ");
             templateConfigList = templateConfigMapper.selectByExample(example);
             if (CollectionUtils.isNotEmpty(templateConfigList)) {
                 templateConfigVOList = CommonUtils.convertBeanList(templateConfigList, TemplateConfigVO.class);
