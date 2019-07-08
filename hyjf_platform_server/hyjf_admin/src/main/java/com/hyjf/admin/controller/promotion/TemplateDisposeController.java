@@ -84,8 +84,8 @@ public class TemplateDisposeController extends BaseController{
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
         LandingManagerRequest landingManagerRequest=new LandingManagerRequest();
-        landingManagerRequest.setCurrPage(1000);
-        landingManagerRequest.setPageSize(1);
+        landingManagerRequest.setCurrPage(1);
+        landingManagerRequest.setPageSize(1000);
         landingManagerRequest.setStatus(1);
 		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
 		
