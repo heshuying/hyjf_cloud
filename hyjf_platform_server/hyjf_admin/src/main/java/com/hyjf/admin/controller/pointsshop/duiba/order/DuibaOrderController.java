@@ -139,6 +139,7 @@ public class DuibaOrderController extends BaseController {
     @ResponseBody
     @ApiImplicitParam(name = "id",value = "id:列表id",dataType = "Integer")
     @GetMapping(value = "/synchronization/{id}" , produces = "application/json; charset=utf-8")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult synchronization(@PathVariable Integer id){
         logger.info("调用同步接口start,id:{}", id);
         AdminResult adminResult = new AdminResult();
