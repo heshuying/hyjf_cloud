@@ -1071,24 +1071,6 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-    /**
-     * 查找借款盖章用户信息
-     *
-     * @param request
-     * @return
-     * @author nxl
-     */
-    @Override
-    public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request) {
-        LoanCoverUserResponse response = restTemplate
-                .postForEntity("http://AM-ADMIN/am-user/loanCoverUser/loanCoverUserRecord", request,
-                        LoanCoverUserResponse.class)
-                .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response;
-        }
-        return null;
-    }
 
     /**
      * 保存借款盖章用户信息

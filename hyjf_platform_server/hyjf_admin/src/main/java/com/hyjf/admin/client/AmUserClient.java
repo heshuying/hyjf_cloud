@@ -1608,8 +1608,6 @@ public interface AmUserClient {
      */
     boolean deleteUtmReg(Integer id);
 
-    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
-
     List<UserVO> selectUserListByMobile(ListRequest request);
 
     void insertBatchSmsCount(ListRequest request);
