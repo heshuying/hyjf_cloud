@@ -650,7 +650,7 @@ public class WeChatRegistController extends BaseUserController {
             return ret;
         }
         data.put("landingId", rt.getId());
-        data.put("title",rt.getTempName());
+        data.put("title",rt.getTempTitle());
         data.put("name",rt.getUtmName() );
         data.put("utmId", rt.getUtmId());
         data.put("btnText", rt.getButtonText());
