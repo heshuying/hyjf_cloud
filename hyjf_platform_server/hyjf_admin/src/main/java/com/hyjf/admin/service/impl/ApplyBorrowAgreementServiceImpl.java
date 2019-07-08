@@ -150,7 +150,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             //需要保存的协议下载申请
             ApplyBorrowAgreementVO applyBorrowAgreementVO =  new ApplyBorrowAgreementVO();
             applyBorrowAgreementVO.setBorrowNid(borrowVO.getBorrowNid());
-            applyBorrowAgreementVO.setRepayPeriod(borrowVO.getBorrowPeriod());
+            applyBorrowAgreementVO.setBorrowPeriod(borrowVO.getBorrowPeriod());
             applyBorrowAgreementVO.setBorrowProjectSource(borrowVO.getBorrowProjectSource());
             applyBorrowAgreementVO.setApplyUserName(currUser.getUsername());
             applyBorrowAgreementVO.setStatus(1);

@@ -20,8 +20,8 @@ public class ApplyBorrowAgreementVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "资产来源")
     private String borrowProjectSource;
 
-    @ApiModelProperty(value = "申请期数")
-    private String repayPeriod;
+    @ApiModelProperty(value = "标的期限")
+    private String borrowPeriod;
 
     @ApiModelProperty(value = "申请人id")
     private Integer applyUserId;
@@ -71,13 +71,6 @@ public class ApplyBorrowAgreementVO extends BaseVO implements Serializable {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public String getRepayPeriod() {
-        return repayPeriod;
-    }
-
-    public void setRepayPeriod(String repayPeriod) {
-        this.repayPeriod = repayPeriod;
-    }
 
     public Integer getApplyUserId() {
         return applyUserId;
@@ -89,6 +82,18 @@ public class ApplyBorrowAgreementVO extends BaseVO implements Serializable {
 
     public String getApplyUserName() {
         return applyUserName;
+    }
+
+    public String getBorrowPeriod() {
+        return borrowPeriod;
+    }
+
+    public void setBorrowPeriod(String borrowPeriod) {
+        this.borrowPeriod = borrowPeriod;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public void setApplyUserName(String applyUserName) {
