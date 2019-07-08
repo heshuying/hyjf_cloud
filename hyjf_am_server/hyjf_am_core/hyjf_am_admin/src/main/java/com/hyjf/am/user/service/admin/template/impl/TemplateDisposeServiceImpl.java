@@ -56,7 +56,7 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 		TemplateDisposeResponse tr=new TemplateDisposeResponse();
 		tr.setRecordTotal(count);
 		if(count>0) {
-			example.setOrderByClause("`create_time`  desc");
+			example.setOrderByClause("`create_time` Desc");
 			 Paginator paginator = new Paginator(templateDisposeRequest.getCurrPage(),count,templateDisposeRequest.getPageSize());
 			 List<TemplateDispose> list = templateDisposeMapper.selectByExample(example);
 			 tr.setResultList(CommonUtils.convertBeanList(list,TemplateDisposeVO.class));
