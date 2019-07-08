@@ -48,6 +48,14 @@ public class BatchCreditEndController extends BaseTradeController {
             }else{
                 logger.error("-----------------批次结束债权请求失败---------------");
             }
+
+            // 批次结束债权(失败的)
+            result = this.batchCreditEndService.batchCreditEndForFail();
+            if (result){
+                logger.info("-----------------批次结束债权请求成功（Fail）---------------");
+            }else{
+                logger.error("-----------------批次结束债权请求失败（Fail）---------------");
+            }
             return new BooleanResponse(true);
         } catch (Exception e) {
             logger.error(e.getMessage());

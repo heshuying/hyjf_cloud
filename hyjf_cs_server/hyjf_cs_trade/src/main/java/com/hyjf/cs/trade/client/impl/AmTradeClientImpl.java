@@ -715,6 +715,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResultInt().intValue();
     }
 
+    /**
+     * 批次结束债权用更新 结束债权任务表(失败的)
+     * @author liubin
+     */
+    @Override
+    public int updateCreditEndForBatchFail(BankCreditEndVO bankCreditEndVO) {
+        String url = urlBase + "bankCreditEndController/updateBankCreditEndForBatchFail";
+        BankCreditEndRequest request = new BankCreditEndRequest(bankCreditEndVO);
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
     @Override
     public CouponResponse getBorrowCoupon(MyCouponListRequest requestBean) {
         String url = urlBase + "coupon/getborrowcoupon";

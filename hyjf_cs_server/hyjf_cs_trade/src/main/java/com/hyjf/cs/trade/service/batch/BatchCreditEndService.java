@@ -20,6 +20,8 @@ public interface BatchCreditEndService extends BaseTradeService {
      */
     Boolean batchCreditEnd();
 
+    Boolean batchCreditEndForFail();
+
     /**
      * 合法性检查后，更新批次结束债权任务
      * @param bean

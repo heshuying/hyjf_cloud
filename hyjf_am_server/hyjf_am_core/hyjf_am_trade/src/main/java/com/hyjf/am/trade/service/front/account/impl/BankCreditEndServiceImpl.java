@@ -131,7 +131,33 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         int result = 0;
         BankCreditEndExample example = new BankCreditEndExample();
         example.createCriteria().andStatusEqualTo(0); // 初始
-        example.or(example.createCriteria().andStateEqualTo("F")); // 或者是失败的扫描出来再处理
+
+        example.setLimitStart(0);
+        example.setLimitEnd(500);// 记录数限制
+        example.setOrderByClause("id");
+        // update by wgx 2019/01/31 结束债权按照主键逐条更新
+        List<BankCreditEnd> bankCreditEndList = this.bankCreditEndMapper.selectByExample(example);
+        if(bankCreditEndList == null || bankCreditEndList.size() == 0){
+            return result;
+        }
+        for(BankCreditEnd creditEnd : bankCreditEndList){
+            bankCreditEnd.setId(creditEnd.getId());
+            this.bankCreditEndMapper.updateByPrimaryKeySelective(bankCreditEnd);
+            result++;
+        }
+        return result;
+    }
+
+    /**
+     * 批次结束债权用更新 结束债权任务表(只处理失败的)
+     * @param bankCreditEnd
+     * @return
+     */
+    @Override
+    public int updateBankCreditEndForBatchFail(BankCreditEnd bankCreditEnd) {
+        int result = 0;
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andStateEqualTo("F"); // 失败的
 
         example.setLimitStart(0);
         example.setLimitEnd(500);// 记录数限制

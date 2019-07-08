@@ -282,6 +282,8 @@ public interface AmTradeClient {
      */
     int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO);
 
+    int updateCreditEndForBatchFail(BankCreditEndVO bankCreditEndVO);
+
     /**
      * APP,PC,wechat散标出借获取优惠券列表
      * @param requestBean

@@ -66,6 +66,34 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
     }
 
     /**
+     * 批次结束债权(失败的)
+     * @return
+     */
+    @Override
+    public Boolean batchCreditEndForFail() {
+        // 筛选出一个批次更新（0-1）
+        BankCreditEndVO bankCreditEnd = new BankCreditEndVO();
+        bankCreditEnd.setBatchNo(GetOrderIdUtils.getBatchNo());
+        bankCreditEnd.setTxDate(GetOrderIdUtils.getTxDate());
+        bankCreditEnd.setTxTime(GetOrderIdUtils.getTxTime());
+        bankCreditEnd.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        bankCreditEnd.setStatus(1); // 待处理
+        bankCreditEnd.setUpdateTime(GetDate.getDate());
+        // 更新结束债权任务表为待处理
+        int count = this.amTradeClient.updateCreditEndForBatchFail(bankCreditEnd);
+        if (count == 0){
+            logger.info(bankCreditEnd.getBatchNo()+"--该批次无需要结束的债权Fail--");
+            return true;
+        }
+        bankCreditEnd.setTxCounts(count);
+        logger.info("--该批次债权数量为"+count+"--[批次号：" + bankCreditEnd.getBatchNo() + "],"
+                + "[日期：" + bankCreditEnd.getTxDate() + "]");
+        // 调用批次结束债权接口（1-2）
+        return this.creditEndApi(bankCreditEnd);
+    }
+
+
+    /**
      * 合法性检查后，更新批次结束债权任务
      * @param bean
      * @return

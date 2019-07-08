@@ -100,6 +100,19 @@ public class BankCreditEndController {
         BeanUtils.copyProperties(request.getBankCreditEndVO(), bankCreditEnd);
         return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForBatch(bankCreditEnd));
     }
+
+    /**
+     * 批次结束债权用更新 结束债权任务表(失败的)
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateBankCreditEndForBatchFail")
+    public IntegerResponse updateBankCreditEndForBatchFail(@RequestBody BankCreditEndRequest request){
+        BankCreditEnd bankCreditEnd = new BankCreditEnd();
+        BeanUtils.copyProperties(request.getBankCreditEndVO(), bankCreditEnd);
+        return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForBatchFail(bankCreditEnd));
+    }
+
     private Logger logger = LoggerFactory.getLogger(BankCreditEndController.class);
     /**
      * 据批次号和日期，取得结束债权任务列表

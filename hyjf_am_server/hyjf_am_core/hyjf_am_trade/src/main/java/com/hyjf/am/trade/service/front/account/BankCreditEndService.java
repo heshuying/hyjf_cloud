@@ -40,6 +40,8 @@ public interface BankCreditEndService extends BaseService {
      */
     int updateBankCreditEndForBatch(BankCreditEnd bankCreditEnd);
 
+    int updateBankCreditEndForBatchFail(BankCreditEnd bankCreditEnd);
+
     /**
      * 据批次号和日期，取得结束债权任务列表
      * @param batchNo
