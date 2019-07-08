@@ -145,7 +145,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             ApplyBorrowAgreementResponse response = baseClient.postExe(BORROW_AGREEMENT_COUNT_URL, applyBorrowAgreementRequest, ApplyBorrowAgreementResponse.class);
             Integer count = response.getCount();
             if (count > 0 ) {
-                return new AdminResult(BaseResult.FAIL, "相同的编号的标不能重复申请！");
+                return new AdminResult(BaseResult.FAIL, "协议已申请，请查询列表下载！");
             }
             //需要保存的协议下载申请
             ApplyBorrowAgreementVO applyBorrowAgreementVO =  new ApplyBorrowAgreementVO();

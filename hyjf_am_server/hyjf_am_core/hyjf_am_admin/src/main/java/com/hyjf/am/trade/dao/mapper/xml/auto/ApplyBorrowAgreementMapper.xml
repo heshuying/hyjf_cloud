@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreement" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_project_source" property="borrowProjectSource" jdbcType="VARCHAR" />
+    <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
     <result column="apply_user_id" property="applyUserId" jdbcType="INTEGER" />
     <result column="apply_user_name" property="applyUserName" jdbcType="VARCHAR" />
     <result column="order_number" property="orderNumber" jdbcType="INTEGER" />
@@ -74,8 +76,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, borrow_nid, apply_user_id, apply_user_name, order_number, agreement_number, `status`, 
-    del_flag, create_user_id, update_user_id, create_time, update_time
+    id, borrow_nid, borrow_project_source, borrow_period, apply_user_id, apply_user_name, 
+    order_number, agreement_number, `status`, del_flag, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreementExample" >
     select
@@ -114,14 +117,16 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_apply_borrow_agreement (borrow_nid, apply_user_id, apply_user_name, 
-      order_number, agreement_number, `status`, 
-      del_flag, create_user_id, update_user_id, 
-      create_time, update_time)
-    values (#{borrowNid,jdbcType=VARCHAR}, #{applyUserId,jdbcType=INTEGER}, #{applyUserName,jdbcType=VARCHAR}, 
-      #{orderNumber,jdbcType=INTEGER}, #{agreementNumber,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
-      #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_apply_borrow_agreement (borrow_nid, borrow_project_source, borrow_period, 
+      apply_user_id, apply_user_name, order_number, 
+      agreement_number, `status`, del_flag, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{borrowNid,jdbcType=VARCHAR}, #{borrowProjectSource,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=VARCHAR}, 
+      #{applyUserId,jdbcType=INTEGER}, #{applyUserName,jdbcType=VARCHAR}, #{orderNumber,jdbcType=INTEGER}, 
+      #{agreementNumber,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreement" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -131,6 +136,12 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="borrowNid != null" >
         borrow_nid,
+      </if>
+      <if test="borrowProjectSource != null" >
+        borrow_project_source,
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period,
       </if>
       <if test="applyUserId != null" >
         apply_user_id,
@@ -166,6 +177,12 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="borrowNid != null" >
         #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowProjectSource != null" >
+        #{borrowProjectSource,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        #{borrowPeriod,jdbcType=VARCHAR},
       </if>
       <if test="applyUserId != null" >
         #{applyUserId,jdbcType=INTEGER},
@@ -214,6 +231,12 @@
       <if test="record.borrowNid != null" >
         borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       </if>
+      <if test="record.borrowProjectSource != null" >
+        borrow_project_source = #{record.borrowProjectSource,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPeriod != null" >
+        borrow_period = #{record.borrowPeriod,jdbcType=VARCHAR},
+      </if>
       <if test="record.applyUserId != null" >
         apply_user_id = #{record.applyUserId,jdbcType=INTEGER},
       </if>
@@ -253,6 +276,8 @@
     update ht_apply_borrow_agreement
     set id = #{record.id,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_project_source = #{record.borrowProjectSource,jdbcType=VARCHAR},
+      borrow_period = #{record.borrowPeriod,jdbcType=VARCHAR},
       apply_user_id = #{record.applyUserId,jdbcType=INTEGER},
       apply_user_name = #{record.applyUserName,jdbcType=VARCHAR},
       order_number = #{record.orderNumber,jdbcType=INTEGER},
@@ -272,6 +297,12 @@
     <set >
       <if test="borrowNid != null" >
         borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowProjectSource != null" >
+        borrow_project_source = #{borrowProjectSource,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period = #{borrowPeriod,jdbcType=VARCHAR},
       </if>
       <if test="applyUserId != null" >
         apply_user_id = #{applyUserId,jdbcType=INTEGER},
@@ -309,6 +340,8 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreement" >
     update ht_apply_borrow_agreement
     set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_project_source = #{borrowProjectSource,jdbcType=VARCHAR},
+      borrow_period = #{borrowPeriod,jdbcType=VARCHAR},
       apply_user_id = #{applyUserId,jdbcType=INTEGER},
       apply_user_name = #{applyUserName,jdbcType=VARCHAR},
       order_number = #{orderNumber,jdbcType=INTEGER},

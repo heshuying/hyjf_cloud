@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
-import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyBorrowAgreementRequest;
 import com.hyjf.am.resquest.admin.ApplyBorrowAgreementSaveRequest;
 import com.hyjf.am.trade.dao.model.auto.ApplyAgreementInfo;
@@ -11,7 +10,6 @@ import com.hyjf.am.trade.service.admin.borrow.ApplyBorrowAgreementService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.ApplyBorrowAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyBorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;

@@ -255,6 +255,146 @@ public class ApplyBorrowAgreementExample {
             return (Criteria) this;
         }
 
+        public Criteria andBorrowProjectSourceIsNull() {
+            addCriterion("borrow_project_source is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceIsNotNull() {
+            addCriterion("borrow_project_source is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceEqualTo(String value) {
+            addCriterion("borrow_project_source =", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceNotEqualTo(String value) {
+            addCriterion("borrow_project_source <>", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceGreaterThan(String value) {
+            addCriterion("borrow_project_source >", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceGreaterThanOrEqualTo(String value) {
+            addCriterion("borrow_project_source >=", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceLessThan(String value) {
+            addCriterion("borrow_project_source <", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceLessThanOrEqualTo(String value) {
+            addCriterion("borrow_project_source <=", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceLike(String value) {
+            addCriterion("borrow_project_source like", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceNotLike(String value) {
+            addCriterion("borrow_project_source not like", value, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceIn(List<String> values) {
+            addCriterion("borrow_project_source in", values, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceNotIn(List<String> values) {
+            addCriterion("borrow_project_source not in", values, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceBetween(String value1, String value2) {
+            addCriterion("borrow_project_source between", value1, value2, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowProjectSourceNotBetween(String value1, String value2) {
+            addCriterion("borrow_project_source not between", value1, value2, "borrowProjectSource");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodIsNull() {
+            addCriterion("borrow_period is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodIsNotNull() {
+            addCriterion("borrow_period is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodEqualTo(String value) {
+            addCriterion("borrow_period =", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodNotEqualTo(String value) {
+            addCriterion("borrow_period <>", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodGreaterThan(String value) {
+            addCriterion("borrow_period >", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodGreaterThanOrEqualTo(String value) {
+            addCriterion("borrow_period >=", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodLessThan(String value) {
+            addCriterion("borrow_period <", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodLessThanOrEqualTo(String value) {
+            addCriterion("borrow_period <=", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodLike(String value) {
+            addCriterion("borrow_period like", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodNotLike(String value) {
+            addCriterion("borrow_period not like", value, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodIn(List<String> values) {
+            addCriterion("borrow_period in", values, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodNotIn(List<String> values) {
+            addCriterion("borrow_period not in", values, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodBetween(String value1, String value2) {
+            addCriterion("borrow_period between", value1, value2, "borrowPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowPeriodNotBetween(String value1, String value2) {
+            addCriterion("borrow_period not between", value1, value2, "borrowPeriod");
+            return (Criteria) this;
+        }
+
         public Criteria andApplyUserIdIsNull() {
             addCriterion("apply_user_id is null");
             return (Criteria) this;

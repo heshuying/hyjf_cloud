@@ -19,6 +19,20 @@ public class ApplyBorrowAgreement implements Serializable {
     private String borrowNid;
 
     /**
+     * 资产来源
+     *
+     * @mbggenerated
+     */
+    private String borrowProjectSource;
+
+    /**
+     * 标的期限(带单位,个月)
+     *
+     * @mbggenerated
+     */
+    private String borrowPeriod;
+
+    /**
      * 申请人id
      *
      * @mbggenerated
@@ -104,6 +118,22 @@ public class ApplyBorrowAgreement implements Serializable {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
+    }
+
+    public String getBorrowProjectSource() {
+        return borrowProjectSource;
+    }
+
+    public void setBorrowProjectSource(String borrowProjectSource) {
+        this.borrowProjectSource = borrowProjectSource == null ? null : borrowProjectSource.trim();
+    }
+
+    public String getBorrowPeriod() {
+        return borrowPeriod;
+    }
+
+    public void setBorrowPeriod(String borrowPeriod) {
+        this.borrowPeriod = borrowPeriod == null ? null : borrowPeriod.trim();
     }
 
     public Integer getApplyUserId() {
