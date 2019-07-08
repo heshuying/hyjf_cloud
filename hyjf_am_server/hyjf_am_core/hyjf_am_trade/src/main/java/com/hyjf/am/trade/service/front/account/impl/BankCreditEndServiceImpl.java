@@ -157,7 +157,8 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
     public int updateBankCreditEndForBatchFail(BankCreditEnd bankCreditEnd) {
         int result = 0;
         BankCreditEndExample example = new BankCreditEndExample();
-        example.createCriteria().andStateEqualTo("F"); // 失败的
+        example.createCriteria().andStateEqualTo("F")
+        .andFailTimesLessThanOrEqualTo(3); // 失败的并且失败次数小于3
 
         example.setLimitStart(0);
         example.setLimitEnd(500);// 记录数限制
@@ -169,6 +170,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         }
         for(BankCreditEnd creditEnd : bankCreditEndList){
             bankCreditEnd.setId(creditEnd.getId());
+            bankCreditEnd.setFailTimes(bankCreditEnd.getFailTimes()+1);
             this.bankCreditEndMapper.updateByPrimaryKeySelective(bankCreditEnd);
             result++;
         }
