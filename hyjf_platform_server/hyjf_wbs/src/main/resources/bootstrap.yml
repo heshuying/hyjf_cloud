@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: wbs
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
+
+  profiles:
+    active: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: @eureka.serviceUrl.default@
+  instance:
+    preferIpAddress: true
+
+server:
+  port: 9096
+
+# spring boot admin 监控的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+info:
+  name: wbs
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

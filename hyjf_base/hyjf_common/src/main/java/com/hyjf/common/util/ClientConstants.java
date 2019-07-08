@@ -46,6 +46,17 @@ public class ClientConstants implements Serializable {
 	public static final int API_CLIENT = 3;
 
 	/**
+	 * wjt端
+	 */
+	public static final int WJT_PC_CLIENT = 5;
+
+	/**
+	 * wjt 微信端
+	 */
+	public static final int WJT_WEI_CLIENT = 6;
+
+
+	/**
 	 * 用户授权自动债转
 	 */
 	public static final String CREDIT_AUTO_TYPE = "1";
@@ -323,5 +334,8 @@ public class ClientConstants implements Serializable {
 	public static final String FIND_REPORT = "/find/report";
 
 	/** 发现页 运营报告详情 */
-	public static final String FIND_REPORT_DETAIL ="/reportYear/{year}/{month}";
+	public static final String FIND_REPORT_YEAR_DETAIL ="/reportYear/{year}/{month}";
+	public static final String FIND_REPORT_HALF_DETAIL ="/reportHalf/{year}/{month}";
+	public static final String FIND_REPORT_QUARTER_DETAIL ="/reportQuarter/{year}/{month}";
+	public static final String FIND_REPORT_MONTH_DETAIL ="/reportMonth/{year}/{month}";
 }

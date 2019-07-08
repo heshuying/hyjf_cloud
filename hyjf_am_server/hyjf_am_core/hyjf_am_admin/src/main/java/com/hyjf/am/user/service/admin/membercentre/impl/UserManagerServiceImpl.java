@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
@@ -17,6 +18,7 @@ import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCilentIP;
@@ -31,12 +33,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -677,7 +677,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                     spreadsUserId = spreadsUserOld.getSpreadsUserId();
                 }
                 // 更新userInfo的主单与非主单信息
-                updateUserParam(user.getUserId(), spreadsUserId);
+                updateUserParam(user.getUserId(), userRecommendNew.getUserId());
 
                 SpreadsUser spreadsUser = this.selectSpreadsUsersByUserId(Integer.parseInt(userId));
                 Integer oldSpreadUserId = null;
@@ -758,6 +758,15 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 int deleteFlg = spreadsUserMapper.deleteByPrimaryKey(spreadsUserVO.getId());
                 if (deleteFlg > 0) {
                     logger.info("==================删除用户的推荐人成功!======");
+                    SpreadsUser rUser = new SpreadsUser();
+                    rUser.setUserId(Integer.parseInt(userId));
+                    rUser.setSpreadsUserId(0);
+                    try {
+                        commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, "ht_spreads_user", UUID.randomUUID().toString(), rUser));
+                        logger.info("【删除推荐人】am-admin发送用户信息同步,同步信息：{}", JSON.toJSON(rUser).toString());
+                    } catch (MQException e) {
+                        logger.error("【删除推荐人】am-admin发送用户信息同步失败！用户userId：{}", userId, e);
+                    }
                 } else {
                     throw new RuntimeException("============删除用户的推荐人失败!========");
                 }
@@ -973,7 +982,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user,String bankId) {
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user) {
         Response response = new Response();
         response.setRtn(Response.FAIL);
         String accountId = updCompanyRequest.getAccountId();
@@ -1025,9 +1034,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             //修改信息
             int flag = this.updateCorpOpenAccountRecord(record);
             if (flag > 0) {
-                logger.info(("==================ht_corp_open_account_record 企业用户信息变更保存成功!======"));
+                logger.info(("==================ht_corp_open_account_record 企业用户信息变更成功!======"));
             }else{
-                logger.info("============企业信息变更保存异常!========");
+                logger.info("============企业信息变更异常!========");
             }
         } else {
             // 保存信息
@@ -1081,7 +1090,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         //
         if(null!=bankCard){
-            bankCard = getBankCardValue(updCompanyRequest, user, bankId,bankCard);
+            bankCard = getBankCardValue(updCompanyRequest, user,bankCard);
             int updateflag = bankCardMapper.updateByPrimaryKeySelective(bankCard);
             if (updateflag > 0) {
                 logger.info("=============银行卡信息更新成功==================");
@@ -1090,7 +1099,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             }
         }else{
             bankCard = new BankCard();
-            bankCard = getBankCardValue(updCompanyRequest, user, bankId,bankCard);
+            bankCard = getBankCardValue(updCompanyRequest, user,bankCard);
             int insertcard = bankCardMapper.insertSelective(bankCard);
             if (insertcard > 0) {
                 logger.info("=============银行卡信息保存成功==================");
@@ -1553,7 +1562,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog) {
         if (null != bankCard && null != bankAccountLog) {
             //修改银行卡信息
-            bankCardMapper.updateByPrimaryKeySelective(bankCard);
+            bankCardMapper.updateByPrimaryKey(bankCard);
             bankCardLogMapper.insertSelective(bankAccountLog);
 
             // add 合规数据上报 埋点 liubin 20181122 start
@@ -1588,13 +1597,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * 设置银行卡信息
      * @param updCompanyRequest
      * @param user
-     * @param bankId
      * @param bankCard
      * @return
      */
-    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,User user,String bankId,BankCard bankCard){
-        if(StringUtils.isNotBlank(bankId)){
-            bankCard.setBankId(Integer.parseInt(bankId));
+    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,User user,BankCard bankCard){
+        if(StringUtils.isNotBlank(updCompanyRequest.getBankId())){
+            bankCard.setBankId(Integer.parseInt(updCompanyRequest.getBankId()));
         }else{
             bankCard.setBankId(0);
         }

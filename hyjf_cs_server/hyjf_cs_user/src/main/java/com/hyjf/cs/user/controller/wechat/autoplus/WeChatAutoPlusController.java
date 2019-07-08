@@ -109,7 +109,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
     @PostMapping(value = "userAuthCredit.page")
-    public WeChatResult userAuthCredit(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, HttpServletRequest request){
+    public WeChatResult userAuthCredit(@RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                       @RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, HttpServletRequest request){
         WeChatResult<Object> result = new WeChatResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -135,7 +136,7 @@ public class WeChatAutoPlusController extends BaseUserController {
             }
         }
         // 组装发往江西银行参数
-        BankCallBean bean = autoPlusService.weChatGetCommonBankCallBean(users, 2, srvAuthCode, code, sign);
+        BankCallBean bean = autoPlusService.weChatGetCommonBankCallBean(users, 2, srvAuthCode, code, sign,wjtClient);
         // 插入日志
         this.autoPlusService.insertUserAuthLog(users, bean, 1, BankCallConstant.QUERY_TYPE_2);
         Map<String, Object> map = new HashMap<>();
@@ -169,7 +170,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "自动出借授权接口")
     @PostMapping(value = "/userAuthInves.page")
-    public WeChatResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
+    public WeChatResult userAuthInves(@RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                      @RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         WeChatResult<Object> result = new WeChatResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -200,7 +202,7 @@ public class WeChatAutoPlusController extends BaseUserController {
             }
         }
         // 组装发往江西银行参数
-        BankCallBean bean = autoPlusService.weChatGetCommonBankCallBean(users, 1, srvAuthCode, code, sign);
+        BankCallBean bean = autoPlusService.weChatGetCommonBankCallBean(users, 1, srvAuthCode, code, sign,wjtClient);
         // 插入日志
         this.autoPlusService.insertUserAuthLog(users, bean, 1, BankCallConstant.QUERY_TYPE_1);
         Map<String, Object> map = new HashMap<>();

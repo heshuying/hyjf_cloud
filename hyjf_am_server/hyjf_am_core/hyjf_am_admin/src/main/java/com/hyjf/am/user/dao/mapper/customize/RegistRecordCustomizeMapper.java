@@ -20,6 +20,21 @@ public interface RegistRecordCustomizeMapper {
      * @return
      */
     List<RegistRecordCustomize> selectRegistList(Map<String, Object> userRequest);
+
+    /**
+     *  根据筛选条件查找会员信息
+     * @param userId 筛选条件
+     * @return
+     */
+    RegistRecordCustomize selectRegistOne(Integer userId);
+
+    /**
+     *  根据用户id查询用户渠道类型
+     * @param userId 筛选条件
+     * @return
+     */
+    RegistRecordCustomize selectByUserType(Integer userId);
+
     /**
      * 根据条件获取用户列表总数
      * @param userRequest

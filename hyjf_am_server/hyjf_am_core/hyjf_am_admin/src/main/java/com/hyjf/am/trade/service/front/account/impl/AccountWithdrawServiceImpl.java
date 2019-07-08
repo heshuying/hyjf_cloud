@@ -9,7 +9,6 @@ import com.hyjf.am.trade.service.front.account.AccountWithdrawService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +18,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -242,15 +240,7 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
      */
     @Override
     public List<WithdrawCustomize> getWithdrawRecordList(WithdrawBeanRequest request) {
-        Map<String, String> userPropertyMap = CacheUtil.getParamNameMap("USER_PROPERTY");
-        Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
-        Map<String, String> withdrawStatusMap = CacheUtil.getParamNameMap("WITHDRAW_STATUS");
         List<WithdrawCustomize> list = withdrawCustomizeMapper.selectWithdrawList(request);
-        for (WithdrawCustomize withdrawCustomize:list) {
-            withdrawCustomize.setUserProperty(userPropertyMap.getOrDefault(withdrawCustomize.getUserProperty(),null));
-            withdrawCustomize.setClientStr(clientMap.getOrDefault(withdrawCustomize.getClientStr(),null));
-            withdrawCustomize.setStatusStr(withdrawStatusMap.getOrDefault(withdrawCustomize.getStatusStr(),null));
-        }
         return list;
     }
 

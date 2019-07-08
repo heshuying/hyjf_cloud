@@ -62,6 +62,15 @@ public interface UtmRegCustomizeMapper {
     UtmChannelVO getUtmByUtmId(@Param("utmId") String utmId);
 
 	/**
+	 * @Author walter.limeng
+	 * @Description  根据source_id获取Utm对象
+	 * @Date 15:58 2018/7/14
+	 * @Param utmId
+	 * @return
+	 */
+	UtmChannelVO getUtmBySourceId(@Param("sourceId") String sourceId);
+
+	/**
 	 * 查询访问数
 	 * 
 	 * @param sourceId 账户推广平台
@@ -174,4 +183,18 @@ public interface UtmRegCustomizeMapper {
 	 * @return
 	 */
 	List<Integer> searchUserIdList(@Param("sourceType")int sourceType);
+
+	/**
+	 * 插入pc渠道信息
+	 * @param utmReg
+	 * @return
+	 */
+	void insertPcUtmReg(UtmReg utmReg);
+
+	/**
+	 * 修改pc渠道信息
+	 * @param utmReg
+	 * @return
+	 */
+	void updatePcUtmReg(UtmReg utmReg);
 }

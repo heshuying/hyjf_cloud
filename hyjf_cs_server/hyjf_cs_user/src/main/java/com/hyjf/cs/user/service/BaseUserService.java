@@ -7,6 +7,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.BaseBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -207,4 +208,6 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
 	BankCallBean getTermsAuthQuery(int userId, String channel);
+
+
 }

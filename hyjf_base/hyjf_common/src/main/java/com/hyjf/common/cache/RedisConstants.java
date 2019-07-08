@@ -587,6 +587,11 @@ public class RedisConstants {
      * app发现页默认图片列表
      */
     public static final String APP_FIND_IMAGE = "app_find_image:";
+    /**
+     * 老带新活动状态
+     *
+     */
+    public static final String  CUSTOMER_SERVICE_SWITCH ="CUSTOMER_SERVICE_SWITCH:";
 
     /** 积分商城开关*/
     public static final String POINTS_SHOP_SWITCH = "points_shop_switch";

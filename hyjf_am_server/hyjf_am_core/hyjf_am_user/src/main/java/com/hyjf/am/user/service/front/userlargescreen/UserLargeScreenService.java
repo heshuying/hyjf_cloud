@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.user.service.front.userlargescreen;
 
+import com.hyjf.am.response.trade.ScreenTransferResponse;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.MonthDataStatisticsVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 
 import java.util.List;
 
@@ -31,4 +33,13 @@ public interface UserLargeScreenService {
      * @return
      */
     List<MonthDataStatisticsVO> getCurrentOwnersAndUserIds();
+
+    /**
+     * @Author walter.limeng
+     * @Description //获取投屏采集的所有的用户信息
+     * @Date 16:17 2019-05-29
+     * @Param [userList]
+     * @return com.hyjf.am.response.trade.ScreenTransferResponse
+     **/
+    ScreenTransferResponse getScreenTransferData(List<ScreenTransferVO> userList);
 }

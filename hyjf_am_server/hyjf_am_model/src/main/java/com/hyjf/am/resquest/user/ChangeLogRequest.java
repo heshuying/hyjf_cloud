@@ -62,6 +62,9 @@ public class ChangeLogRequest extends BasePage {
     //合规四期(添加邮箱) add by nxl
     private String email;
 
+    //注册渠道
+    private String utmName;
+
 		// 分页区分
 		private boolean limitFlg =false;
 
@@ -242,6 +245,14 @@ public class ChangeLogRequest extends BasePage {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUtmName() {
+        return utmName;
+    }
+
+    public void setUtmName(String utmName) {
+        this.utmName = utmName;
     }
 }
 

@@ -15,8 +15,10 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -76,6 +78,7 @@ public class WebLoginController extends BaseUserController {
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
     public WebResult<WebViewUserVO> login(@RequestBody LoginRequestVO user,
+                                          @RequestHeader(value = "wjtClient",required = false) String wjtClient,
                                           HttpServletRequest request) {
         logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
         String loginUserName = user.getUsername();
@@ -92,6 +95,24 @@ public class WebLoginController extends BaseUserController {
         }
         //判断用户输入的密码错误次数---结束
         long start1 = System.currentTimeMillis();
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null ){
+            if(userVO.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
+        }
+
+
         WebViewUserVO webViewUserVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC,userVO);
         logger.info("web登录操作===================:"+(System.currentTimeMillis()-start1));
         if (webViewUserVO != null) {
@@ -218,6 +239,7 @@ public class WebLoginController extends BaseUserController {
     @ApiOperation(value = "短信验证码登录", notes = "短信验证码登录")
     @PostMapping(value = "/mobileCodeLogin", produces = "application/json; charset=utf-8")
     public WebResult<WebViewUserVO> mobileCodeLogin(@RequestBody LoginRequestVO user,
+                                                    @RequestHeader(value = "wjtClient",required = false) String wjtClient,
                                           HttpServletRequest request) {
         logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
         String loginUserName = user.getUsername();
@@ -243,6 +265,23 @@ public class WebLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(errorInfo.get("statusDesc"));
             return result;
+        }
+
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null ){
+            if(userVO.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
         }
 
         // 执行登录(登录时间，登录ip)

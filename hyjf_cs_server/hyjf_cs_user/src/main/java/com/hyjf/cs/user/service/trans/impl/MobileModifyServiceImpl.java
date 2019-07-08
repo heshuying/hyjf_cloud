@@ -29,6 +29,7 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -191,12 +192,12 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         // 该接口只有一个返回页面
         String successPath = "/user/bankMobileModify/result?logOrdId=" + mobileModifyBean.getLogOrderId();
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath;
+        String retUrl = BankCommonUtil.getFrontHost(systemConfig,bean.getPlatform())  + successPath;
         // 如果是移动端  返回别的url
         if ((ClientConstants.APP_CLIENT + "").equals(bean.getPlatform()) || (ClientConstants.APP_CLIENT_IOS + "").equals(bean.getPlatform()) || (ClientConstants.WECHAT_CLIENT + "").equals(bean.getPlatform())) {
             successPath = "/user/setting/mobile/jump";
             // 同步地址  是否跳转到前端页面
-            retUrl = super.getFrontHost(systemConfig, bean.getPlatform()) + successPath + "?status=000&statusDesc=";
+            retUrl = BankCommonUtil.getFrontHost(systemConfig, bean.getPlatform()) + successPath + "?status=000&statusDesc=";
             retUrl += "&token=1&sign=" + sign + "&logOrdId=" + mobileModifyBean.getLogOrderId();
         }
         String bgRetUrl = "http://CS-USER/hyjf-web/user/bankMobileModifyBgReturn?phone=" + bean.getBankMobile()+"&modifyclient="+bean.getPlatform()+"&logIp=" + bean.getIp();

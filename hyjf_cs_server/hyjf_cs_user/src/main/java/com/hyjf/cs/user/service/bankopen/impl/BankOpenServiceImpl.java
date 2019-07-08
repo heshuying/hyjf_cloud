@@ -33,6 +33,7 @@ import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import com.hyjf.cs.user.util.BankCommonUtil;
 import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -169,6 +170,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean, String sign) {
+        try {
         // 根据身份证号码获取性别
         String gender = "F";
         String idType = BankCallConstant.ID_TYPE_IDCARD;
@@ -189,15 +191,20 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 成功页面
         String successPath = "/user/openSuccess";
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
-        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
+        String host = BankCommonUtil.getFrontHost(systemConfig,openBean.getPlatform());
+        if(StringUtils.isNotBlank(openBean.getWjtClient())){
+            // 如果是温金投的  则跳转到温金投那边
+            host = BankCommonUtil.getWjtFrontHost(systemConfig,openBean.getWjtClient()+"");
+        }
+        String retUrl = host+ errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+        String successUrl = host + successPath;
         // 如果是移动端  返回别的url
         if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())||(ClientConstants.WECHAT_CLIENT+"").equals(openBean.getPlatform())){
             errorPath = "/user/open/result/failed";
             successPath = "/user/open/result/success";
             // 同步地址  是否跳转到前端页面
-            retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?status=99&statusDesc=&logOrdId="+openAccoutBean.getLogOrderId();
-            successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath+"?status=000&statusDesc=";
+            retUrl = host + errorPath +"?status=99&statusDesc=&logOrdId="+openAccoutBean.getLogOrderId();
+            successUrl = host + successPath+"?status=000&statusDesc=";
             retUrl += "&token=1&sign=" +sign;
             successUrl += "&token=1&sign=" +sign;
         }
@@ -209,10 +216,11 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
-        try {
+
             Map<String,Object> map = BankCallUtils.callApiMap(openAccoutBean);
             return map;
         } catch (Exception e) {
+            logger.info("e:::::",e);
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }
     }
@@ -659,8 +667,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 成功页面
             String successPath = "/user/openSuccess";
             // 同步地址  是否跳转到前端页面
-            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
-            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
+            String retUrl = BankCommonUtil.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+            String successUrl = BankCommonUtil.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
             // 异步调用路
             String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile() +"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
             openAccoutBean.setRetUrl(retUrl);
@@ -709,8 +717,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 成功页面
             String successPath = "/user/openSuccess";
             // 同步地址  是否跳转到前端页面
-            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
-            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
+            String retUrl = BankCommonUtil.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+            String successUrl = BankCommonUtil.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
             // 异步调用路
             String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile() +"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
             openAccoutBean.setRetUrl(retUrl);

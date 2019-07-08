@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
@@ -356,7 +357,7 @@ public class BorrowController extends BaseController {
 	 */
 	@PostMapping("/borrowTender")
 	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
-		logger.info("原子层  散标出借 开始操作数据库表");
+		logger.info("原子层  散标出借 开始操作数据库表tenderBg:{}", JSONObject.toJSONString(tenderBg));
 		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
