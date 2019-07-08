@@ -311,7 +311,14 @@ public class AdminUserServiceImpl implements AdminUserService {
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);
 	}
-
+	@Override
+	public List<AdminRole> getAdminRoleListNoStatus() {
+		AdminRoleExample example = new AdminRoleExample();
+		com.hyjf.am.config.dao.model.auto.AdminRoleExample.Criteria criteria = example.createCriteria();
+			criteria.andDelFlagEqualTo(0);
+		example.setOrderByClause(" sort ");
+		return adminRoleMapper.selectByExample(example);
+	}
     @Override
     public Admin getAdminByName(String auditUser) {
 		AdminExample example = new AdminExample();
