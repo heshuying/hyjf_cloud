@@ -269,7 +269,8 @@ public class CertificateAuthorityExceptionController extends BaseController {
     public void exportCAExceptionListExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response)throws Exception {
         // 封装查询条件
        /* CertificateAuthorityExceptionRequest certificateBean = new CertificateAuthorityExceptionRequest();
-        BeanUtils.copyProperties(certificateAuthorityExceptionBean,certificateBean); //sheet默认最大行数*/
+        BeanUtils.copyProperties(certificateAuthorityExceptionBean,certificateBean); */
+        //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "CA认证记录";
@@ -282,6 +283,9 @@ public class CertificateAuthorityExceptionController extends BaseController {
         //请求第一页5000条
         certificateBean.setPageSize(defaultRowMaxCount);
         certificateBean.setCurrPage(1);*/
+        //设置查询条数
+        certificateAuthorityExceptionBean.setPageSize(defaultRowMaxCount);
+        certificateAuthorityExceptionBean.setCurrPage(1);
         // 需要输出的结果列表
         CertificateAuthorityResponse recordList = certificateAuthorityExceptionService.getExceptionRecordList(certificateAuthorityExceptionBean);
         Integer totalCount = recordList.getRecordTotal();
