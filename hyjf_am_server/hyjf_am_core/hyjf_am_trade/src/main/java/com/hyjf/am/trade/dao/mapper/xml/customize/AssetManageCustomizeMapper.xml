@@ -2680,6 +2680,7 @@
 		SELECT t.* FROM (
 
 		SELECT
+		ten.id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
@@ -2735,6 +2736,7 @@
 
 		UNION ALL
 		SELECT
+		ten.id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
@@ -2766,6 +2768,7 @@
 
 		UNION ALL
 		SELECT
+		hbtc.id AS tid,
 		hb.borrow_nid AS project_name,
 		hb.borrow_nid AS borrow_nid,
 		CASE
@@ -2815,6 +2818,7 @@
 
 		UNION ALL
 		SELECT
+		hiii.id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(hiii.borrow_extra_yield, '%') borrow_apr,
@@ -2849,6 +2853,7 @@
 
 		UNION ALL
 		SELECT
+		hha.id AS tid,
 		hhp.plan_name,
 		<!-- hhp.plan_nid AS borrow_nid, -->
 		hhp.plan_name AS borrow_nid,
@@ -2879,6 +2884,7 @@
 
 		UNION ALL
 		SELECT
+		hbtc.id AS tid,
 		hhp.plan_name AS project_name,
 		hbtc.borrow_nid AS borrow_nid,
 		CASE
@@ -2926,7 +2932,7 @@
 		</if>
 
 		) t
-		ORDER BY t.invest_date ASC,t.order_id ASC
+		ORDER BY t.invest_date ASC,t.order_id ASC,t.tid ASC
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
