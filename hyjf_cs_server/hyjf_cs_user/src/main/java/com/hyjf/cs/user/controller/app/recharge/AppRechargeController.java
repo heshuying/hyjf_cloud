@@ -53,7 +53,7 @@ public class AppRechargeController extends BaseUserController {
 
 
     /** 充值描述 */
-    private final String CARD_DESC = "限额:{0}{1}{2}";
+    private final String CARD_DESC = "限额：{0}{1}{2}";
     private final String RECHARGE_KINDLY_REMINDER = "注：网银转账时，银行请选择（城市商业银行）江西银行或南昌银行。线下充值的到账时间一般为1-3天（具体到账时间以银行的实际到账时间为准）。";
     private final String RCV_ACCOUNT_NAME = "惠众商务顾问（北京）有限公司";
     private final String RCV_ACCOUNT = "791913149300306";
@@ -268,8 +268,9 @@ public class AppRechargeController extends BaseUserController {
                                 if (monthLimitAmount == null) {
                                     monthLimitAmount = BigDecimal.ZERO;
                                 }
-                                String symbol = ",";
-                                String symBol2 = ",";
+                                // modify by wj app4.0改成中文逗号 2019-06-21
+                                String symbol = "，";
+                                String symBol2 = "，";
                                 if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
                                     symbol = "";
                                 }

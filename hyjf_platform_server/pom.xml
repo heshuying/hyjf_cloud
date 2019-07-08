@@ -18,6 +18,7 @@
         <module>hyjf_pay</module>
         <module>hyjf_callcenter</module>
         <module>hyjf_signatures</module>
+        <module>hyjf_wbs</module>
     </modules>
     <dependencies>
 

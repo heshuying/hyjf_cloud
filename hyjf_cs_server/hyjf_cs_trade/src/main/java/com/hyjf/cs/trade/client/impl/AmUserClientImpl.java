@@ -6,10 +6,8 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.api.UserLargeScreenTwoResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.bifa.BifaIndexUserInfoBeanResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.BankCardResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
@@ -21,6 +19,7 @@ import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -1173,4 +1172,14 @@ public class AmUserClientImpl implements AmUserClient {
 		UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
 		return response.getResult();
 	}
+
+    @Override
+    public List<ScreenTransferVO> getScreenTransferData(List<ScreenTransferVO> userList) {
+		ScreenTransferResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/user_large_screen/getscreentransferdata", userList, ScreenTransferResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+        return null;
+    }
 }

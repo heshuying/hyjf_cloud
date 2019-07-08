@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.locked;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.locked.LockedUserService;
 import com.hyjf.am.response.Response;
@@ -12,8 +13,10 @@ import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +34,12 @@ public class LockedUserController extends BaseController {
     @Autowired
     private LockedUserService lockedUserService;
 
+    private static final String PERMISSIONS = "lockUserPermission";
+
     @ApiOperation(value = "前台锁定用户列表",notes = "前台账户锁定用户列表")
     @PostMapping(value = "/frontlist")
     @ResponseBody
-    public BaseResult<LockedUserMgrResponse> frontList(@RequestBody LockedeUserListRequest request){
+    public BaseResult<LockedUserMgrResponse> frontList(@RequestBody LockedeUserListRequest request,HttpServletRequest httpServletRequest){
 
         LockedUserMgrResponse response= lockedUserService.getLockedUserList(request,true);
 
@@ -42,20 +47,35 @@ public class LockedUserController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
 
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if(!isShow){
+            if(CollectionUtils.isNotEmpty(response.getResultList())){
+                for (LockedUserInfoVO vo : response.getResultList()) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                }
+            }
+        }
         return new BaseResult(response);
     }
 
     @ApiOperation(value = "后台锁定用户列表",notes = "后台锁定用户列表")
     @PostMapping(value = "/adminlist")
     @ResponseBody
-    public BaseResult<LockedUserMgrResponse> adminList(@RequestBody LockedeUserListRequest request){
+    public BaseResult<LockedUserMgrResponse> adminList(@RequestBody LockedeUserListRequest request,HttpServletRequest httpServletRequest){
 
         LockedUserMgrResponse response = lockedUserService.getLockedUserList(request,false);
 
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if(!isShow){
+            if(CollectionUtils.isNotEmpty(response.getResultList())){
+                for (LockedUserInfoVO vo : response.getResultList()) {
+                    vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                }
+            }
+        }
         return new BaseResult(response);
     }
 

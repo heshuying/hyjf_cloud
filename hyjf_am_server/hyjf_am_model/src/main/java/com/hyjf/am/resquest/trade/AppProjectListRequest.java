@@ -31,6 +31,10 @@ public class AppProjectListRequest extends BasePage {
      */
     private String isHome;
 
+    private String publishInstCode;
+
+    private String wjtInstCode;
+
     public String getProjectType() {
         return projectType;
     }
@@ -101,5 +105,21 @@ public class AppProjectListRequest extends BasePage {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public String getPublishInstCode() {
+        return publishInstCode;
+    }
+
+    public void setPublishInstCode(String publishInstCode) {
+        this.publishInstCode = publishInstCode;
+    }
+
+    public String getWjtInstCode() {
+        return wjtInstCode;
+    }
+
+    public void setWjtInstCode(String wjtInstCode) {
+        this.wjtInstCode = wjtInstCode;
     }
 }

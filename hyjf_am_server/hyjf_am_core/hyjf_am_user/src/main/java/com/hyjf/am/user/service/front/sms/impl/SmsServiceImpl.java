@@ -196,10 +196,10 @@ public class SmsServiceImpl extends BaseServiceImpl implements SmsService {
             params.put("open_account", request.getOpen_account());
         }
         if (StringUtils.isNotBlank(request.getRe_time_begin())) {
-            params.put("re_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getRe_time_begin())));
+            params.put("re_time_begin", GetDate.getDayStart(request.getRe_time_begin()));
         }
         if (StringUtils.isNotBlank(request.getRe_time_end())) {
-            params.put("re_time_end", GetDate.dateString2Timestamp(GetDate.getDayEnd(request.getRe_time_end())));
+            params.put("re_time_end", GetDate.getDayEnd(request.getRe_time_end()));
         }
         return smsCountCustomizeMapper.queryUser(params);
 	}

@@ -5,6 +5,7 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
@@ -20,10 +21,7 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVO;
-import com.hyjf.am.vo.admin.BindLogVO;
-import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -465,5 +463,65 @@ public class CsMessageClientImpl implements CsMessageClient {
         HjhInfoAccountBalanceResponse response  = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDay", request, HjhInfoAccountBalanceResponse.class).getBody();
         return response;
+    }
+
+    /**
+     * 获取汇计划--计划资金列表（预计）(从MongoDB读取数据)
+     *
+     * @param hjhPlanCapitalPredictionRequest
+     * @return
+     * @Author : wenxin
+     */
+    @Override
+    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest) {
+        HjhPlanCapitalPredictionResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjhPlanCapitalPrediction/getPlanCapitalPredictionList",
+                hjhPlanCapitalPredictionRequest, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（实际）(从MongoDB读取数据)
+     * @param hjhPlanCapitalActualRequest
+     * @return
+     * @Author : wenxin
+     */
+    @Override
+    public HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest){
+        HjhPlanCapitalActualResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjhPlanCapitalActual/getPlanCapitalActualList",
+                hjhPlanCapitalActualRequest, HjhPlanCapitalActualResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request) {
+        String url = "http://CS-MESSAGE/cs-message/dataCenter/caiJingLog";
+        CaiJingLogResponse response = restTemplate.postForEntity(url, request, CaiJingLogResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public BooleanResponse reQueryCaiJingLog(CaiJingLogRequest request) {
+        String logType = request.getLogType();
+        String startDate = request.getPresentationTimeStart();
+        String endDate = request.getPresentationTimeEnd();
+        if ("借款记录".equals(logType)) {
+            BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/borrowRecord/" + startDate + "/" + endDate, BooleanResponse.class);
+            return response;
+        }
+        if ("出借记录".equals(logType)) {
+            BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/investRecord/" + startDate + "/" + endDate, BooleanResponse.class);
+            return response;
+        }
+        if ("提前还款".equals(logType)) {
+            BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/advancedRepay/" + startDate + "/" + endDate, BooleanResponse.class);
+            return response;
+        }
+        return null;
     }
 }

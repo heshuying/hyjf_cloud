@@ -58,16 +58,7 @@
         hydu.user_id,
         hydu.username AS user_name,
         hydui.truename AS real_name,
-        <choose>
-        <when test='isShow == "0"'>
-            CASE
-            WHEN LENGTH(hydu.mobile) &lt;=7 THEN hydu.mobile
-            ELSE CONCAT(LEFT(hydu.mobile,3),'****',RIGHT(hydu.mobile,4)) END  mobile,
-        </when>
-        <when test='isShow == "1"'>
-            hydu.mobile,
-        </when>
-        </choose>
+        hydu.mobile,
         hydu.bank_open_account,
         hydui.attribute AS user_property,
         hydui.attribute AS user_property_id,

@@ -31,12 +31,10 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -118,8 +116,6 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 添加信息
 	 *
-	 * @param request
-	 * @param form
 	 * @return
 	 * @throws Exception
 	 */
@@ -157,8 +153,6 @@ public class BorrowCommonController extends BaseController {
 
 	/**
 	 * 用户是否存在
-	 *
-	 * @param request
 	 * @return
 	 */
 	@ApiOperation(value = "检查用户Id")
@@ -192,7 +186,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 项目申请人是否存在
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "项目申请人是否存在")
@@ -243,7 +237,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 担保机构用户名是否存在
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "担保机构用户名是否存在")
@@ -270,7 +264,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 获取最新的借款预编码
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = " 获取最新的借款预编码")
@@ -284,7 +278,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 获取现金贷的借款预编号
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = " 获取现金贷的借款预编号")
@@ -298,7 +292,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 借款预编码是否存在
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = " 借款预编码是否存在")
@@ -315,7 +309,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 获取放款服务费率 & 还款服务费率
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "获取放款服务费率 & 还款服务费率")
@@ -392,7 +386,7 @@ public class BorrowCommonController extends BaseController {
 	 * 
 	 * @param request
 	 * @param response
-	 * @param form
+	 * @param
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
@@ -512,7 +506,7 @@ public class BorrowCommonController extends BaseController {
 	 *
 	 * @param request
 	 * @param response
-	 * @param form
+	 * @param
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
@@ -616,7 +610,7 @@ public class BorrowCommonController extends BaseController {
 	 *
 	 * @param request
 	 * @param response
-	 * @param form
+	 * @param
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
@@ -1661,8 +1655,8 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 根据资产编号查询该资产下面的产品类型
 	 *
-	 * @param request
-	 * @param attr
+	 * @param
+	 * @param
 	 * @param instCode
 	 * @return
 	 */
@@ -1676,7 +1670,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 受托用户是否存在
 	 *
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = " 受托用户是否存在")
@@ -1716,7 +1710,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 借款主体CA认证check
 	 * 
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "根据借款主体,社会统一信用代码查询用户是否做过CA认证")
@@ -1731,7 +1725,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 社会信用代码或身份证号CA认证check
 	 * 
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "根据社会统一信用代码或身份证号查询用户是否做过CA认证")
@@ -1817,7 +1811,7 @@ public class BorrowCommonController extends BaseController {
 	@ApiOperation(value = "查询借款列表")
 	@PostMapping("/selectBorrowStyleList")
 	 @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<BorrowCustomizeResponse>  init(@RequestBody @Valid BorrowBeanRequest form) {
+    public AdminResult<BorrowCustomizeResponse>  init(@RequestBody @Valid BorrowBeanRequest form,HttpServletRequest request) {
 		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
 
 		if(bcr==null) {
@@ -1827,43 +1821,42 @@ public class BorrowCommonController extends BaseController {
 			return new AdminResult<>(FAIL, bcr.getMessage());
 
 		}
-		List<BorrowCustomizeVO> vo = bcr.getResultList();
-		List<BorrowCustomizeVO> vo2=new ArrayList<BorrowCustomizeVO>();
+		List<BorrowCustomizeVO> resultList = bcr.getResultList();
 		Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
-		bcr.setBs(map);
-		if(vo!=null) {
-			for (BorrowCustomizeVO borrowCustomizeVO : vo) {
-				BorrowCustomizeVO bvo=new BorrowCustomizeVO();
-				bvo=borrowCustomizeVO;
-				bvo.setDelFlag(bvo.getStatus());
-				bvo.setStatus(map.get(bvo.getStatus()));
-				vo2.add(bvo);
-			}
+		if(resultList!=null) {
+			boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+			resultList.forEach(borrowCustomizeVO -> {
+				borrowCustomizeVO.setDelFlag(borrowCustomizeVO.getStatus());
+				borrowCustomizeVO.setStatus(map.get(borrowCustomizeVO.getStatus()));
+				if (!isShow){
+					borrowCustomizeVO.setTruename(AsteriskProcessUtil.getAsteriskedCnName(borrowCustomizeVO.getTruename()));
+					borrowCustomizeVO.setBusiname(AsteriskProcessUtil.getAsteriskedCnName(borrowCustomizeVO.getBusiname()));
+				}
+			});
 		}
-
+		bcr.setBs(map);
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
-		bcr.setResultList(vo2);
+		bcr.setResultList(resultList);
 		bcr.setWebUrl(systemConfig.getWebPdfHost());
 		return new AdminResult<BorrowCustomizeResponse>(bcr);
     }
 	/**
      * 运营记录-原始标的
      *
-     * @param request
+     * @param
      * @param form
      * @return
      */
 	@ApiOperation(value = "查询借款列表")
 	@PostMapping("/optAction")
 	 @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<BorrowCustomizeResponse>  optAction(@RequestBody @Valid BorrowBeanRequest form) {
+    public AdminResult<BorrowCustomizeResponse> optAction(@RequestBody @Valid BorrowBeanRequest form) {
 		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
 		if(bcr==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
 		if (!Response.isSuccess(bcr)) {
 			return new AdminResult<>(FAIL, bcr.getMessage());
-
 		}
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
 		return new AdminResult<BorrowCustomizeResponse>(bcr);
@@ -2132,7 +2125,7 @@ public class BorrowCommonController extends BaseController {
 	 * 导出功能
 	 * 
 	 * @param request
-	 * @param modelAndView
+	 * @param
 	 * @param form
 	 */
 	@ApiOperation(value = "导出功能")
@@ -2154,6 +2147,16 @@ public class BorrowCommonController extends BaseController {
 
 		BorrowCustomizeResponse resultList = borrowCommonService.exportBorrowList(form);
 		List<BorrowCommonCustomizeVO> list = resultList.getBorrowCommonCustomizeList();
+
+		boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+		if(!isShow) {
+			if (CollectionUtils.isNotEmpty(list)){
+				list.forEach(borrowCommonCustomizeVO -> {
+					borrowCommonCustomizeVO.setBorrowerName(AsteriskProcessUtil.getAsteriskedCnName(borrowCommonCustomizeVO.getBorrowerName()));
+				});
+			}
+		}
+
 		Integer totalCount = 0;
 		if(!list.isEmpty()) {
 			totalCount = list.size();
@@ -2167,7 +2170,6 @@ public class BorrowCommonController extends BaseController {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
         for (int i = 1; i <= sheetCount; i++) {
-
         	form.setPageSize(defaultRowMaxCount);
         	form.setCurrPage(i);
 			List<BorrowCommonCustomizeVO> resultList2 = borrowCommonService.paging(form,list);
@@ -2215,7 +2217,7 @@ public class BorrowCommonController extends BaseController {
 	        map.put("registTime", "备案时间");
 	      //  map.put("reverifyUserName", "复审人员");
 	        map.put("location", "所在地区");
-	        map.put("borrowerName", "借款人姓名");
+	        map.put("borrowerName", "借款主体");
 	        map.put("attribute", "属性");
 	        map.put("entrustedFlg", "是否受托支付");
 	        map.put("entrustedUsername", "收款人用户名");

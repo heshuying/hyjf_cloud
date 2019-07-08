@@ -1250,6 +1250,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
         Map<String, Object> projectMap = new HashMap<String, Object>();
         // 汇盈金服app首页定向标过滤
         projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
+        projectMap.put("wjtInstCode", systemConfig.getWjtInstCode());
         int offSet = (currentPage - 1) * pageSize;
         if (offSet == 0 || offSet > 0) {
             projectMap.put("limitStart", offSet);

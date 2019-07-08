@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.trade.dao.mapper.auto.HjhPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.trade.dao.model.auto.HjhPlan" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="plan_name" property="planName" jdbcType="VARCHAR" />
+    <result column="lock_period" property="lockPeriod" jdbcType="TINYINT" />
+    <result column="is_month" property="isMonth" jdbcType="TINYINT" />
+    <result column="expect_apr" property="expectApr" jdbcType="DECIMAL" />
+    <result column="min_investment" property="minInvestment" jdbcType="DECIMAL" />
+    <result column="max_investment" property="maxInvestment" jdbcType="DECIMAL" />
+    <result column="investment_increment" property="investmentIncrement" jdbcType="DECIMAL" />
+    <result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
+    <result column="repay_wait_all" property="repayWaitAll" jdbcType="DECIMAL" />
+    <result column="plan_invest_status" property="planInvestStatus" jdbcType="TINYINT" />
+    <result column="plan_display_status" property="planDisplayStatus" jdbcType="TINYINT" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
+    <result column="join_total" property="joinTotal" jdbcType="DECIMAL" />
+    <result column="plan_wait_captical" property="planWaitCaptical" jdbcType="DECIMAL" />
+    <result column="plan_wait_interest" property="planWaitInterest" jdbcType="DECIMAL" />
+    <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
+    <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
+    <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
+    <result column="min_invest_counts" property="minInvestCounts" jdbcType="TINYINT" />
+    <result column="invest_level" property="investLevel" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plan_nid, plan_name, lock_period, is_month, expect_apr, min_investment, max_investment, 
+    investment_increment, available_invest_account, repay_wait_all, plan_invest_status, 
+    plan_display_status, add_time, borrow_style, coupon_config, join_total, plan_wait_captical, 
+    plan_wait_interest, repay_total, plan_repay_interest, plan_repay_capital, min_invest_counts, 
+    invest_level, del_flag, create_user, update_user, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    plan_concept, plan_principle, safeguard_measures, margin_measures, normal_questions
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.wbs.trade.dao.model.auto.HjhPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+
+</mapper>

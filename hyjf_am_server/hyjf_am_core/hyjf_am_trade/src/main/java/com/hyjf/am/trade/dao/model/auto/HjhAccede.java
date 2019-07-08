@@ -369,6 +369,13 @@ public class HjhAccede implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 出借人渠道来源（出借时）
+     *
+     * @mbggenerated
+     */
+    private Integer tenderUserUtmId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -785,5 +792,13 @@ public class HjhAccede implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getTenderUserUtmId() {
+        return tenderUserUtmId;
+    }
+
+    public void setTenderUserUtmId(Integer tenderUserUtmId) {
+        this.tenderUserUtmId = tenderUserUtmId;
     }
 }

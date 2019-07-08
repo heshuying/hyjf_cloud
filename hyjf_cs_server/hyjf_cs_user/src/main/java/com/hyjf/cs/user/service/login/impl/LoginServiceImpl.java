@@ -271,11 +271,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			// 开户了
 			if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
 				BigDecimal principal = new BigDecimal("0.00");
-				// 获取汇天利用户本金
 				result.setOpenAccount(CustomConstants.FLAG_OPENACCOUNT_YES);
-				ProductSearchForPageVO productSearchForPage = new ProductSearchForPageVO();
-				productSearchForPage.setUserId(userId);
-				productSearchForPage = selectUserPrincipal(productSearchForPage);
 				// 获取用户电话号码
 				if (user.getMobile() != null) {
 					result.setBindMobile(user.getMobile().substring(0, 3) + "****"
@@ -292,23 +288,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					}
 				}
 				result.setJiangxiAccount(account);
-				if (productSearchForPage != null) {
-					principal = productSearchForPage.getPrincipal();
-					if (principal == null) {
-						principal = new BigDecimal("0.00");
-					} else {
-						principal = principal.divide(BigDecimal.ONE, 2, BigDecimal.ROUND_DOWN);
-					}
-				} else {
-					principal = new BigDecimal("0.00");
-				}
-				if (request.getParameter("version").startsWith("1.1.0")) {
-					// 汇天利后边的描述文字
-					result.setHtlDescription(principal + "元");
-				} else {
-					// 汇天利后边的描述文字
-					result.setHtlDescription(DF_FOR_VIEW.format(principal) + "元");
-				}
 				// 银行已开户，江西银行账户描述
 				// 江西银行账户账号不需要脱敏
 				result.setJiangxiDesc(account);
@@ -537,12 +516,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					.add(planCapitalWait);
 			BigDecimal waitInterest = WaitInterest.add(couponInterestTotalWaitDec).add(CreditInterestWait)
 					.subtract(CreditInterestAmount).add(planInterestWait);
-
-			// 汇天利总收益
-			BigDecimal interestall = amTradeClient.queryHtlSumInterest(userId);
-			if (interestall == null) {
-				interestall = new BigDecimal(0);
-			}
 			// 优惠券总收益 add by hesy 优惠券相关 start
 			BigDecimal couponInterestTotalDec = BigDecimal.ZERO;
 			String couponInterestTotal = amTradeClient.selectCouponReceivedInterestTotal(userId);
@@ -557,12 +530,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			if (recoverYesInfo != null) {
 				CreditInterestAmountYes = recoverYesInfo.getCreditInterestAmount();
 			}
-			// 已回收的利息 (累计收益)
-			BigDecimal recoverInterest = RecoverInterest.add(interestall)
-					// +汇天利
-					.add(couponInterestTotalDec).add(CreditInterestYes)
-					// +债转
-					.subtract(CreditInterestAmountYes);
 			// -已债转
 			if (null != account) {
 				if (request.getParameter("version").startsWith("1.1.0")) {

@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
@@ -104,6 +105,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private CsMessageClient amMongoClient;
     @Autowired
     private CommonProducer commonProducer;
+    @Autowired
+    private AppCouponService appCouponService;
     /**
      * @param request
      * @Description 散标出借
@@ -116,7 +119,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "100"),
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests", value = "100"),
             @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
@@ -210,9 +214,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         return result;
     }
 
-    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request){
-        logger.info("==================已进入 散标出借(三端) fallBackTender 方法================");
-        throw new CheckException(MsgEnum.STATUS_CE999999);
+    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request, Throwable e){
+        logger.info("==已进入 散标出借(三端) fallBackTender ===熔断原因: "+e.getMessage());
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setStatus("CE999999");
+        result.setStatusDesc("系统异常");
+        return result;
     }
 
     /**
@@ -224,6 +231,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     private WebResult<Map<String, Object>> tender(TenderRequest request, BorrowAndInfoVO borrow, BankOpenAccountVO account, CouponUserVO cuc, Map<String, Object> resultEval) {
+        String wjtClient = request.getWjtClient();
         // 生成订单id
         Integer userId = request.getUser().getUserId();
         String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
@@ -261,10 +269,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             pageFailedName = "fal";
 
         }
+        // 同步地址  是否跳转到前端页面
+        String host = super.getFrontHost(systemConfig,request.getPlatform());
+        if(StringUtils.isNotBlank(request.getWjtClient())){
+            // 如果是温金投的  则跳转到温金投那边
+            host = super.getWjtFrontHost(systemConfig,request.getWjtClient());
+        }
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = host + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+        String successUrl = host + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
@@ -277,11 +291,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         //忘记密码url
-        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
+        String forgotPwdUrl = super.getForgotPwdUrl(request.getPlatform(),request.getToken(),request.getSign(), systemConfig);
+        if(StringUtils.isNotBlank(wjtClient)){
+            // 如果是温金投的  则跳转到温金投那边
+            forgotPwdUrl = super.getWjtForgotPwdUrl(wjtClient, systemConfig);
+        }
         callBean.setRetUrl(retUrl);
         callBean.setSuccessfulUrl(successUrl);
         callBean.setNotifyUrl(bgRetUrl);
-        callBean.setForgotPwdUrl(forgetPassWoredUrl);
+        callBean.setForgotPwdUrl(forgotPwdUrl);
         // 插入记录 tmp表
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
@@ -1121,6 +1139,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
             logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
+            // app4.0 bug-1300 之前是按照总条数判断，现在按照散标的优惠券判断
+            JSONObject userCoupon = appCouponService.getBorrowCoupon(tender.getUserId(),request.getBorrowNid(), money,
+                    request.getPlatform());
             investInfo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
@@ -1166,13 +1187,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCouponQuota("");
                 investInfo.setCouponId("-1");
 
-                if (couponAvailableCount > 0) {
+                // app4.0 bug-1300 之前是按照总条数判断，现在按照散标的优惠券判断
+                if(userCoupon!=null&& !"0".equals(userCoupon.getString("availableCouponListCount"))){
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("请选择");
-                } else if (recordTotal > 0 && couponAvailableCount == 0) {
+                }else if (userCoupon!=null&& "0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("暂无可用");
-                } else {
+                }else {
                     investInfo.setIsThereCoupon("0");
                     investInfo.setCouponDescribe("无可用");
                 }
@@ -1971,6 +1993,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             vo.setDurationUnit("月");
         }
         // add by liuyang 神策数据统计 20180820 end
+
+        // 是否绑卡
+        if (tender.getUserId() != null) {
+            BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(tender.getUserId());
+            if (bankCard!=null &&bankCard.getId()!=null) {
+                vo.setIsBindCard(true);
+            } else {
+                vo.setIsBindCard(false);
+            }
+        }
         return vo;
     }
 
@@ -2004,6 +2036,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_BIND_PLAN_ERROR);
             }
         }
+
         borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
         borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
         borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
@@ -2015,6 +2048,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserVO user = amUserClient.findUserById(request.getUserId());
         request.setUser(user);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+
+        // 检查温金投的标的只能温金投用户投资
+        if(StringUtils.isNotBlank(borrowInfoVO.getPublishInstCode())&&
+                (!borrowInfoVO.getPublishInstCode().equals("0") && !borrowInfoVO.getPublishInstCode().equals("10000000"))){
+            // 是定向标
+            if(!borrowInfoVO.getPublishInstCode().equals(user.getInstCode())){
+                // 机构编号不相等 不让投资
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_WJT_ERROR);
+            }
+        }
         // 检查用户状态  角色  授权状态等  是否允许出借
         checkUser(user, userInfo);
         //校验用户测评
@@ -2556,6 +2599,19 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        // 获取PC 渠道
+        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
+        AppUtmRegVO appUtmRegVO = null;
+        if(utmRegVO!=null){
+            tenderBg.setTenderUserUtmId(utmRegVO.getUtmId());
+        }else{
+            // 获取app渠道
+            appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));
+            if(appUtmRegVO!=null) {
+            	//tenderBg.setTenderUserUtmId(appUtmRegVO.getSourceId());
+            }
+        }
+
         // 开始调用原子层操作主表
         logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
@@ -2564,7 +2620,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 投资成功后往redis里面放一个值
             RedisUtils.set(RedisConstants.BORROW_TENDER_ORDER_CHECK+bean.getLogOrderId(),bean.getLogOrderId(),12 * 60 * 60);
 
-            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
+            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow,utmRegVO,appUtmRegVO);
             // 网站累计出借追加
             // 出借、收益统计表
             JSONObject params = new JSONObject();
@@ -2685,7 +2741,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
     }
 
-    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
+    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow ,UtmRegVO utmRegVO,AppUtmRegVO appUtmRegVO) {
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计出借
         // 出借人信息
@@ -2707,8 +2763,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("investProjectPeriod", investProjectPeriod);
         params.put("investFlag", checkAppUtmInvestFlag(userId));
-        // 获取PC 渠道
-        UtmRegVO utmRegVO = this.amUserClient.findUtmRegByUserId(userId);
+
         if (utmRegVO != null ){
             // PC渠道用户
             try {
@@ -2718,8 +2773,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.error("PC渠道统计用户累计出借推送消息队列失败！！！");
             }
         }
-        // 获取app渠道
-        AppUtmRegVO appUtmRegVO = this.amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+
         if (appUtmRegVO != null){
             //压入消息队列
             try {

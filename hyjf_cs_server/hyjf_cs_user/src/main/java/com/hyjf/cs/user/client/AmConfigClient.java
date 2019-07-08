@@ -171,4 +171,40 @@ public interface AmConfigClient {
      * @date 2019/05/09
      */
     ShareNewsBeanVO queryShareNews();
+
+    /**
+     * 获取客组配置
+     *
+     * @return
+     */
+    List<CustomerServiceGroupConfigVO> selectCustomerServiceGroupConfigList();
+
+    /**
+     * 获取客组类型为新客组的坐席配置
+     *
+     * @return
+     */
+    List<CustomerServiceRepresentiveConfigVO> selectCustomerServiceRepresentiveConfig();
+
+    /**
+     * 根据sourceId查询该渠道是否被禁用
+     *
+     * @param sourceId
+     * @return
+     */
+    CustomerServiceChannelVO selectCustomerServiceChannelBySourceId(Integer sourceId);
+
+    /**
+     * 根据当前拥有人姓名查询坐席配置
+     *
+     * @param currentOwner
+     * @return
+     */
+    CustomerServiceRepresentiveConfigVO selectCustomerServiceRepresentiveConfigByUserName(String currentOwner);
+
+    /**
+     * 获取状态为开启的坐席配置
+     * @return
+     */
+    List<CustomerServiceRepresentiveConfigVO> selectRepresentiveConfig();
 }

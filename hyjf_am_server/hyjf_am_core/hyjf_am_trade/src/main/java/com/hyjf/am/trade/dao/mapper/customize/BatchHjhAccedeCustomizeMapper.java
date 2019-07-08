@@ -42,4 +42,10 @@ public interface BatchHjhAccedeCustomizeMapper {
 	// 计算匹配期处理 潜在问题修复 huanghui start
 	int updateMatchDatesTwo(@Param("startTime") String startTime, @Param("endTime") String endTime);
     // 计算匹配期处理 潜在问题修复 huanghui end
+
+	/**
+	 * 查询汇计划加入明细的退出时间
+	 * @return
+	 */
+	List<HjhAccedeCustomize> selectHjhAccedeList(Map<String,Object> paramMap);
 }
