@@ -334,5 +334,8 @@ public class ClientConstants implements Serializable {
 	public static final String FIND_REPORT = "/find/report";
 
 	/** 发现页 运营报告详情 */
-	public static final String FIND_REPORT_DETAIL ="/reportYear/{year}/{month}";
+	public static final String FIND_REPORT_YEAR_DETAIL ="/reportYear/{year}/{month}";
+	public static final String FIND_REPORT_HALF_DETAIL ="/reportHalf/{year}/{month}";
+	public static final String FIND_REPORT_QUARTER_DETAIL ="/reportQuarter/{year}/{month}";
+	public static final String FIND_REPORT_MONTH_DETAIL ="/reportMonth/{year}/{month}";
 }
