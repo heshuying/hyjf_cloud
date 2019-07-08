@@ -93,7 +93,10 @@
             recharge.balance AS arriveAmount,
             3 AS STATUS,
             recharge.client+1 as operatePlatform,
-            recharge.create_time AS operateTime
+            date_format(
+              recharge.create_time,
+              '%Y-%c-%d %H:%i:%s'
+            ) AS operateTime
         FROM
             hyjf_user.ht_utm_reg utm
         LEFT JOIN ht_account_recharge recharge ON utm.user_id = recharge.user_id
