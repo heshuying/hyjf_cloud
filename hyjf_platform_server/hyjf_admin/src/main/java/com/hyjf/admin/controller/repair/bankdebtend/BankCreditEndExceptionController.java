@@ -69,6 +69,11 @@ public class BankCreditEndExceptionController extends BaseController {
         Map<String,Object> resultMap = new HashMap<>();
         //债权结束状态
         List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
+        for(DropDownVO vo : creditendStateList){
+            if(vo.getKey().equals("W")){
+                creditendStateList.remove(vo);
+            }
+        }
         resultMap.put("creditendStateList",creditendStateList);
         //结束债权类型
         List<DropDownVO> creditendTypeList = adminCommonService.getParamNameList("CREDITEND_TYPE");
