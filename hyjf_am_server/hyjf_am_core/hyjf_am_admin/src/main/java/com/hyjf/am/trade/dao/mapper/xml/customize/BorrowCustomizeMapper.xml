@@ -258,11 +258,11 @@ WHERE
 					END borrowPeriod,
 			FROM_UNIXTIME(
 				hb.repay_last_time,
-				'%Y-%c-%d %h:%i:%s'
+				'%Y-%m-%d %H:%i:%s'
 			) AS repayLastTime,
 			FROM_UNIXTIME(
 				hb.recover_last_time,
-				'%Y-%c-%d %h:%i:%s'
+				'%Y-%m-%d %H:%i:%s'
 			) AS recoverLastTime
 		FROM
 			ht_borrow hb
