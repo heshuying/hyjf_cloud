@@ -35,6 +35,8 @@ public class FundDetailsServiceImpl implements FundDetailsService {
 	// 1.充值 2.提现
 	private static final Integer[] ARRAY_BUSINESSTYPE={1,2};
 
+	private final Integer ASSET_ID_HYJF=1;
+
 	@Autowired
     private FundDetailsCustomizeMapper detailsCustomizeMapper;
 
@@ -59,7 +61,7 @@ public class FundDetailsServiceImpl implements FundDetailsService {
         //回写请求参数
         lstDetailsVO.forEach(detail->{
             detail.setBusinessType(fundDetailsQO.getBusinessType());
-            detail.setAssetId(fundDetailsQO.getAssetId());
+            detail.setAssetId(fundDetailsQO.getAssetId()==null?ASSET_ID_HYJF:fundDetailsQO.getAssetId());
             detail.setEntId(fundDetailsQO.getEntId());
             detail.setStartTime(fundDetailsQO.getStartTime());
             detail.setEndTime(fundDetailsQO.getEndTime());

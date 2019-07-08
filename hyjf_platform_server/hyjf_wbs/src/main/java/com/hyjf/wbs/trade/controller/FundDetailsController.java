@@ -85,10 +85,7 @@ public class FundDetailsController {
         qo.setAccess_token("");
 
         String json=JSON.toJSONString(parameterMap);
-        System.out.println(json);
         json=URLEncoder.encode(json,"utf-8");
-        System.out.println(json);
-
         qo.setData(json);
 
         String sign=WbsSignUtil.encrypt(qo,wbsConfig.getAppSecret());
