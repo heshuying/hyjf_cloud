@@ -5,8 +5,14 @@ package com.hyjf.wbs.trade.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +47,6 @@ public class FundDetailsController {
 
     @RequestMapping("/batchsync")
     @PostMapping
-    @ResponseBody
     public WbsCommonVO batchSync(@RequestBody WbsCommonExQO qo){
         WbsCommonVO response=new WbsCommonVO();
 
@@ -70,6 +75,29 @@ public class FundDetailsController {
         return response;
     }
 
+    @RequestMapping(value = "/generateReqeust")
+    public WbsCommonExQO generateRequest(@RequestParam Map<String,Object> parameterMap){
+        WbsCommonQO wbsCommonQO = new WbsCommonExQO();
+        wbsCommonQO.setApp_key(wbsConfig.getAppKey());
 
+        String dataJson=JSON.toJSONString(parameterMap);
+        try {
+            wbsCommonQO.setData(URLEncoder.encode(dataJson, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("为数据【{}】UTF-8编码出错", dataJson);
+            throw new CheckException("999", "编码出错！" + e.getMessage());
+        }
+        wbsCommonQO.setAccess_token("");
+        wbsCommonQO.setVersion("");
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(new Date());
+        wbsCommonQO.setTimestamp(nowTime);
+
+        WbsCommonExQO commonExQO = new WbsCommonExQO();
+        BeanUtils.copyProperties(wbsCommonQO, commonExQO);
+        commonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO, wbsConfig.getAppSecret()));
+
+        return commonExQO;
+    }
 }
