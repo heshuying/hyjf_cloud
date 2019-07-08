@@ -76,28 +76,28 @@ public class FundDetailsController {
     }
 
     @RequestMapping(value = "/generateReqeust")
-    public WbsCommonExQO generateRequest(@RequestParam Map<String,Object> parameterMap){
-        WbsCommonQO wbsCommonQO = new WbsCommonExQO();
-        wbsCommonQO.setApp_key(wbsConfig.getAppKey());
+    public WbsCommonExQO generateRequest(@RequestBody Map<String,Object> parameterMap) throws UnsupportedEncodingException {
+        WbsCommonQO qo=new WbsCommonQO();
+        qo.setApp_key(wbsConfig.getAppKey());
+        qo.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        qo.setName("hyjf.funddetail.batchsync");
+        qo.setVersion("");
+        qo.setAccess_token("");
 
-        String dataJson=JSON.toJSONString(parameterMap);
-        try {
-            wbsCommonQO.setData(URLEncoder.encode(dataJson, "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            logger.error("为数据【{}】UTF-8编码出错", dataJson);
-            throw new CheckException("999", "编码出错！" + e.getMessage());
-        }
-        wbsCommonQO.setAccess_token("");
-        wbsCommonQO.setVersion("");
+        String json=JSON.toJSONString(parameterMap);
+        System.out.println(json);
+        json=URLEncoder.encode(json,"utf-8");
+        System.out.println(json);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String nowTime = sdf.format(new Date());
-        wbsCommonQO.setTimestamp(nowTime);
+        qo.setData(json);
 
-        WbsCommonExQO commonExQO = new WbsCommonExQO();
-        BeanUtils.copyProperties(wbsCommonQO, commonExQO);
-        commonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO, wbsConfig.getAppSecret()));
+        String sign=WbsSignUtil.encrypt(qo,wbsConfig.getAppSecret());
 
-        return commonExQO;
+        WbsCommonExQO exQO=new WbsCommonExQO();
+        BeanUtils.copyProperties(qo,exQO);
+        exQO.setSign(sign);
+
+        return exQO;
+
     }
 }

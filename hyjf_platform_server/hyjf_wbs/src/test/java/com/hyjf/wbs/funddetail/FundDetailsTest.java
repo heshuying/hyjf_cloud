@@ -74,9 +74,12 @@ public class FundDetailsTest {
         detailsQO.setBusinessType(1);
 
         String json=JSON.toJSONString(detailsQO);
+        System.out.println(json);
         json=URLEncoder.encode(json,"utf-8");
+        System.out.println(json);
 
         qo.setData(json);
+        qo.setTimestamp("2019-07-08 11:32:46");
 
         String sign=WbsSignUtil.encrypt(qo,wbsConfig.getAppSecret());
 
