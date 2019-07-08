@@ -84,6 +84,7 @@ public class ApplyBorrowAgreementServiceImpl extends BaseServiceImpl implements 
             agreementExample.setLimitEnd(request.getLimitEnd());
             agreementExample.setLimitStart(request.getLimitStart());
         }
+        agreementExample.setOrderByClause("create_time Desc");
         List<ApplyBorrowAgreement>  applyBorrowAgreementList = this.applyBorrowAgreementMapper.selectByExample(agreementExample);
         List<ApplyBorrowAgreementVO> listVo = new ArrayList<ApplyBorrowAgreementVO>();
         if (applyBorrowAgreementList != null && applyBorrowAgreementList.size() > 0) {
