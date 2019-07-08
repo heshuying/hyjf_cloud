@@ -40,8 +40,8 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
     @Override
     public TemplateConfigResponse selectTempList(LandingManagerRequest request) {
         TemplateConfigResponse response = new TemplateConfigResponse();
-        response.setMessage(Response.FAIL_MSG);
-        response.setRtn(Response.FAIL);
+        response.setMessage(Response.SUCCESS_MSG);
+        response.setRtn(Response.SUCCESS);
         List<TemplateConfig> templateConfigList = new ArrayList<TemplateConfig>();
         List<TemplateConfigVO> templateConfigVOList = new ArrayList<TemplateConfigVO>();
         TemplateConfigExample example = new TemplateConfigExample();
@@ -84,15 +84,16 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
         int limitStart = paginator.getOffset();
         int limitEnd = paginator.getLimit();
         if (countList > 0) {
+            example.setOrderByClause("`create_time` Desc");
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
-            example.setOrderByClause("`create_time`  desc ");
             templateConfigList = templateConfigMapper.selectByExample(example);
-            if (CollectionUtils.isNotEmpty(templateConfigList)) {
-                templateConfigVOList = CommonUtils.convertBeanList(templateConfigList, TemplateConfigVO.class);
-                response.setMessage(Response.SUCCESS_MSG);
-                response.setRtn(Response.SUCCESS);
+            if (CollectionUtils.isEmpty(templateConfigList)) {
+                response.setMessage(Response.FAIL_MSG);
+                response.setRtn(Response.FAIL);
+                return response;
             }
+            templateConfigVOList = CommonUtils.convertBeanList(templateConfigList, TemplateConfigVO.class);
         }
         //
         response.setCount(countList);
