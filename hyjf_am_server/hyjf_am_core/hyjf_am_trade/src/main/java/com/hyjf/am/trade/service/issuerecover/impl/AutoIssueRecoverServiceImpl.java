@@ -149,7 +149,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	 * @param assetAccount
 	 * @return
 	 */
-	private Integer updateForSend(String instCode, BigDecimal assetAccount) {
+	@Override
+    public Integer updateForSend(String instCode, BigDecimal assetAccount) {
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("amount", assetAccount);
 		paraMap.put("instCode", instCode);
@@ -1121,7 +1122,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	 * @param hjhPlanAsset
 	 * @return
 	 */
-	public Integer updateAndCheckAssetCanSend(HjhPlanAsset hjhPlanAsset) {
+	@Override
+    public Integer updateAndCheckAssetCanSend(HjhPlanAsset hjhPlanAsset) {
 		String instCode = hjhPlanAsset.getInstCode();
 		HjhBailConfig bailConfig = this.getBailConfig(instCode);
 		if (bailConfig == null) {
@@ -1196,7 +1198,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	 *
 	 * @return
 	 */
-	public boolean updateAndCheckNewCredit(String instCode, BigDecimal account) {
+	@Override
+    public boolean updateAndCheckNewCredit(String instCode, BigDecimal account) {
+	    logger.info("updateAndCheckNewCredit instCode:{}, account:{}", instCode, account);
 		// 更新额度
 		int uptResult = updateForSend(instCode, account);
 		if(uptResult > 0){
