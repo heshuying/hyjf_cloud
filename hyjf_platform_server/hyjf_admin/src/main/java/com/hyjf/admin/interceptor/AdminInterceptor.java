@@ -43,14 +43,12 @@ public class AdminInterceptor implements HandlerInterceptor {
 		try {
 			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
 			String val = RedisUtils.get(RedisConstants.ADMIN_UNIQUE_ID + username);
-			logger.info("cook:"+request.getHeader("Cookies"));
-			logger.info("user:"+ ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername());
 			if (val != null && !val.equals(request.getHeader("Cookies"))) {
 				request.getSession().removeAttribute("user");
 				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 			} else {
 				if(val!=null) {
-					RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, val, 10);
+					RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, val, 3600);
 				}
 			}
 
