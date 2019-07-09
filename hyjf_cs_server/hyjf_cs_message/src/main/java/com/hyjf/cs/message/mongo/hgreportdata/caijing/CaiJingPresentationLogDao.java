@@ -57,9 +57,10 @@ public class CaiJingPresentationLogDao extends BaseMongoDao<CaiJingPresentationL
             obj.put("status",request.getStatus());
         }
 
+        DBObject object2 = new BasicDBObject();
         //2019-6-29 之前的数据都不做展示
-        object.put("$gte", 1561737600);
-        obj.put("createTime",object);
+        object2.put("$gte", 1561737600);
+        obj.put("createTime",object2);
 
         //排除字段不展示
         Document fieldsObject = new Document();
