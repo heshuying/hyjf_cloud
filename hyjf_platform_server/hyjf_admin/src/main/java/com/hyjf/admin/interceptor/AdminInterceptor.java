@@ -48,7 +48,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 			} else {
 				if(val!=null) {
-					RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, val, 3600);
+					RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, val, 10);
 				}
 			}
 
