@@ -29,17 +29,17 @@
             utm.user_id AS assetCustomerId,
             withdraw.nid AS detailNo,
             '江西银行' AS investPlatform,
-            CASE
-        WHEN withdraw.withdraw_type = 0 THEN
-            '主动提现'
-        WHEN withdraw.withdraw_type = 1 THEN
-            '代提现'
-        END investType,
          withdraw.bank AS bank,
          withdraw.total AS operateAmount,
          withdraw.fee AS serviceCharge,
          withdraw.credited AS arriveAmount,
          3 AS STATUS,
+        CASE
+        WHEN withdraw.withdraw_type = 0 THEN
+        '主动提现'
+        WHEN withdraw.withdraw_type = 1 THEN
+        '代提现'
+        END cashWay,
          withdraw.client+1 as operatePlatform,
          date_format(
             withdraw.create_time,
@@ -82,10 +82,14 @@
             recharge.nid AS detailNo,
             '江西银行' AS investPlatform,
             CASE
-            WHEN recharge.type = 0 THEN
+            WHEN recharge.gate_type = 'B2C' THEN
+            '个人网银充值'
+            WHEN recharge.gate_type = 'B2B' THEN
+            '企业网银充值'
+            WHEN recharge.gate_type = 'QP' THEN
+            '快捷充值'
+            WHEN recharge.gate_type = 'OFFLINE' THEN
             '线下充值'
-            WHEN recharge.type = 1 THEN
-            '网上充值'
             END investType,
             recharge.payment AS bank,
             recharge.money AS operateAmount,
