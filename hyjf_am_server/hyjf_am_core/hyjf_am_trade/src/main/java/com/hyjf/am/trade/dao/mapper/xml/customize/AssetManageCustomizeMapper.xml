@@ -2739,7 +2739,7 @@
 
 		UNION ALL
 		SELECT
-		ten.id AS tid,
+		ten.assign_id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
