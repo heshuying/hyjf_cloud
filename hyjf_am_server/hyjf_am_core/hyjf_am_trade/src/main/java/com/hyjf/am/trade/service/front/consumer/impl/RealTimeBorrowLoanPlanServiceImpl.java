@@ -209,10 +209,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			apicron.setTxTime(Integer.parseInt(txTime));
 			apicron.setSeqNo(Integer.parseInt(seqNo));
 			apicron.setBankSeqNo(txDate + txTime + seqNo);
-			//只保留原始订单号用于查询
-			if (apicron.getOrdid() == null || "".equals(apicron.getOrdid())) {
-				apicron.setOrdid(logOrderId);
-			}
+			//只有在实时放款返回成功时才更新订单号
+//			if (apicron.getOrdid() == null || "".equals(apicron.getOrdid())) {
+//				apicron.setOrdid(logOrderId);
+//			}
 			String accountId = (String) map.get("accountId");
 			String txAmount = (String) map.get("txAmountSum");
 			String feeAmount = (String) map.get("serviceFeeSum");
@@ -242,6 +242,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				logger.info(borrowNid+" 实时放款请求银行返回: " + retCode);
 				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
 						|| "CA110629".equals(retCode)) {//放款成功
+					// 只有放款成功时更新订单号
+					if(BankCallConstant.RESPCODE_SUCCESS.equals(retCode)){
+						apicron.setOrdid(logOrderId);
+					}
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
 					if (apicronResultFlag) {

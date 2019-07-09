@@ -61,8 +61,9 @@ public class BestCouponListVO  extends CouponConfigVO {
         this.couponUserCode = couponUserCode;
     }
     public String getCouponQuotaStr() {
-        NumberFormat nf = NumberFormat.getInstance();
-        return nf.format(getCouponQuota());
+        return getCouponQuota().toString();
+//        NumberFormat nf = NumberFormat.getInstance();
+//        return nf.format(getCouponQuota());
     }
     public void setCouponQuotaStr(String couponQuotaStr) {
         this.couponQuotaStr = couponQuotaStr;

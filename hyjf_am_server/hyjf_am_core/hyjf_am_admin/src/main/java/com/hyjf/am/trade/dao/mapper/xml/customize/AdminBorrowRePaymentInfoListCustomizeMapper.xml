@@ -51,6 +51,9 @@
 			<if test="recoverTimeEndSrch != null and recoverTimeEndSrch != ''">
 				AND brp.recover_time <![CDATA[<=]]> unix_timestamp(#{recoverTimeEndSrch})+86399
 			</if>
+			<if test="repayOrderId != null and repayOrderId != ''">
+				AND brp.repay_order_id = #{repayOrderId}
+			</if>
 		</where>
 	</sql>
 	<resultMap id="searchBorrowRepaymentInfoListListResultMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentInfoListCustomize">

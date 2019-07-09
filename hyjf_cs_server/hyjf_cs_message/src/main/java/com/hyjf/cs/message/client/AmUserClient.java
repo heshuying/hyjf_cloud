@@ -2,16 +2,19 @@ package com.hyjf.cs.message.client;
 
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.resquest.message.CACustomerRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.user.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiasq
@@ -167,4 +170,17 @@ public interface AmUserClient {
 	 * @return
 	 */
 	AppUtmRegResponse getAppUtmRegResponse(AppChannelStatisticsRequest request);
+
+	List<String> queryUserByBirthday(SmsCodeUserRequest request);
+
+	/**
+	 * 通过用户id查询 ca客户编号
+	 * @param request
+	 * @return
+	 */
+	List<CertificateAuthorityVO> queryCustomerId(Set<Integer> request);
+
+    List<LoanSubjectCertificateAuthorityVO> getSubjectCertificateAuthorityList(CACustomerRequest request1);
+
+	List<CertificateAuthorityVO> queryCustomerId(List<Integer> userIds);
 }

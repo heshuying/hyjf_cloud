@@ -54,7 +54,10 @@ public class MobileSynchronizeController extends BaseController {
         boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         if(!isShow){
             for(MobileSynchronizeCustomizeVO mobileSynchronizeCustomizeVO:mobileSynchronizeCustomizeVOList){
-                mobileSynchronizeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(mobileSynchronizeCustomizeVO.getMobile()));
+//                mobileSynchronizeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(mobileSynchronizeCustomizeVO.getMobile()));
+                //update by jijun 20190621 运用新的手机号脱敏规则
+                mobileSynchronizeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(mobileSynchronizeCustomizeVO.getMobile()));
+
             }
         }
         return new AdminResult<>(ListResult.build(mobileSynchronizeCustomizeVOList,count));

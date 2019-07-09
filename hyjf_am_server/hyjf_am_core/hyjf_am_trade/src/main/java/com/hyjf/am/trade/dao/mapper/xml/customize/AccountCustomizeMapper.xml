@@ -38,4 +38,35 @@
 		AND bank_balance - #{bankBalance,jdbcType=DECIMAL} >= 0
 	</update>
 
+	<resultMap id="accountMapResult" type="com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize">
+		<result column="user_id" property="userId" /> <!-- 用户id -->
+		<result column="bankTotal" property="bankTotal" /> <!-- 资产总额-->
+		<result column="bank_balance" property="bankBalance" /> <!-- 可用金额-->
+		<result column="bank_frost" property="bankFrost" /><!-- 银行冻结金额 -->
+		<result column="bank_wait_repay" property="bankWaitRepay" /><!-- 银行待还金额 -->
+		<result column="bank_await" property="bankAwait"/><!-- 银行待收 -->
+		<result column="bank_balance_cash" property="bankBalanceCash"/><!-- 江西银行可提现金额(银行电子账户余额) -->
+		<result column="bank_frost_cash" property="bankFrostCash"/><!-- 江西银行冻结金额(银行电子账户冻结金额) -->
+		<result column="plan_balance" property="planBalance" /> <!-- 汇计划真实可用金额  -->
+		<result column="plan_frost" property="planFrost" /> <!-- 汇计划冻结金额  -->
+		<result column="plan_account_wait" property="planAccountWait" /> <!-- 汇计划代收金额  -->
+	</resultMap>
+	<select id="queryAccountUserMoney" resultMap="accountMapResult" parameterType="java.lang.Integer">
+        SELECT
+         a.user_id,
+         a.bank_total,
+         a.account_id,
+         a.bank_balance,
+         a.bank_frost,
+         a.bank_await,
+         a.bank_wait_repay,
+         a.bank_balance_cash,
+         a.bank_frost_cash,
+         a.plan_balance,
+         a.plan_frost,
+         a.plan_account_wait
+        FROM
+         ht_account a
+        WHERE a.user_id = #{user_id}
+    </select>
 </mapper>

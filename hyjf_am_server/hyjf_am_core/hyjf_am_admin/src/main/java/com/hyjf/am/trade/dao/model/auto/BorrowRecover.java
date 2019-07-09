@@ -78,7 +78,7 @@ public class BorrowRecover implements Serializable {
     private String accedeOrderId;
 
     /**
-     * 还款状态(0:未还款,1:已还款)
+     * 还款状态(只用于处理还款,展示请关联ht_borrow.status)(0:未还款,1:已还款,2:还款失败)
      *
      * @mbggenerated
      */
@@ -260,7 +260,7 @@ public class BorrowRecover implements Serializable {
     private Integer chargeDays;
 
     /**
-     * 提前减息
+     * 提前减息(已加罚息)
      *
      * @mbggenerated
      */
@@ -447,6 +447,20 @@ public class BorrowRecover implements Serializable {
      * @mbggenerated
      */
     private Date createTime;
+
+    /**
+     * 提前还款罚息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal chargePenaltyInterest;
+
+    /**
+     * 已还提前还款罚息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal repayChargePenaltyInterest;
 
     private static final long serialVersionUID = 1L;
 
@@ -960,5 +974,21 @@ public class BorrowRecover implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public BigDecimal getChargePenaltyInterest() {
+        return chargePenaltyInterest;
+    }
+
+    public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
+        this.chargePenaltyInterest = chargePenaltyInterest;
+    }
+
+    public BigDecimal getRepayChargePenaltyInterest() {
+        return repayChargePenaltyInterest;
+    }
+
+    public void setRepayChargePenaltyInterest(BigDecimal repayChargePenaltyInterest) {
+        this.repayChargePenaltyInterest = repayChargePenaltyInterest;
     }
 }

@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,9 +56,11 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("status", request.getStatus());
         params.put("limitStart", limitStart);
         params.put("limitEnd", limitEnd);
         params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
+        params.put("wjtInstCode", request.getWjtInstCode());
         return webProjectListCustomizeMapper.searchProjectList(params);
     }
 
@@ -80,6 +83,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("status", request.getStatus());
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
         params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
@@ -237,6 +241,8 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("host",request.getHost());
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
+        params.put("status",request.getStatus());
+        params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
         return webProjectListCustomizeMapper.countAppProject(params);
     }
 
@@ -264,6 +270,8 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
         params.put("status",request.getStatus());
+        params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
+        params.put("wjtInstCode", request.getWjtInstCode());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 
@@ -558,4 +566,5 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
 
         return appProjectListCustomizeMapper.selectHomeRepayProjectList(map);
     }
+
 }

@@ -21,11 +21,12 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.PdfGenerator;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.BorrowInvestCustomizeExtResponse;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
-import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
-import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
-import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -543,7 +544,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                             amTradeClient.selectUserInvestList(borrowInvestRequest);
                     if (tzList != null && tzList.size() > 0) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
-                        userInvest.setIdCard(borrowerUserinfo.getIdcard());
+                        userInvest.setIdCard(usersInfo.getIdcard());
                         contents.put("userInvest", userInvest);
                     } else {
                         logger.error("标的出借信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
@@ -691,5 +692,31 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             return "用户ID不是数字！";
         }
         return OK;
+    }
+
+    @Override
+    public BorrowInvestCustomizeExtVO getBorrowInvestInfo(String nid) {
+        BorrowInvestCustomizeExtResponse response=amTradeClient.getBorrowInvestInfo(nid);
+        if(response!=null && response.getResult()!=null){
+            return response.getResult();
+        }else{
+            logger.error("nid=【{}】订单明细查询失败！");
+            throw new IllegalArgumentException("订单查询失败！");
+        }
+    }
+
+    @Override
+    public AdminResult updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        IntegerResponse response=amTradeClient.updateTenderUtm(updateTenderUtmRequest);
+        if(response.getResultInt()!=null && response.getResultInt() >0){
+            return new AdminResult();
+        }else{
+            return new AdminResult(BaseResult.FAIL);
+        }
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid) {
+        return amTradeClient.getTenderUtmChangeLog(nid);
     }
 }

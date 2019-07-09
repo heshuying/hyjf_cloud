@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
@@ -352,7 +353,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         }
 
         projectIntr.setPlanName(appCouponCustomize.getPlanName());
-        projectIntr.setBorrowApr(appCouponCustomize.getPlanApr());
+        projectIntr.setBorrowApr(FormatRateUtil.formatBorrowApr(appCouponCustomize.getPlanApr()));
         // mod by nxl 智投服务 修改优惠券锁定期显示 start
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
       /*  SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
@@ -518,7 +519,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());*/
         // mod by nxl 智投服务 修改锁定期显示 end
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
-        projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :customize.getPlanApr().replace("%",""));
+        projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :FormatRateUtil.formatBorrowApr(customize.getPlanApr()).replace("%",""));
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());
         projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(customize.getRepayStyle()));
         projectIntr.setRepayStyle(customize.getRepayMethod());

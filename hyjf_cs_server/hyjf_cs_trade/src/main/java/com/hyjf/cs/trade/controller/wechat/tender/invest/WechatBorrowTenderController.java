@@ -56,13 +56,14 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "散标出借", notes = "散标出借")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WeChatResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WeChatResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId,  @RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-请求出借接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         tender.setUserId(userId);
         tender.setSign(request.getParameter("sign"));
+        tender.setWjtClient(wjtClient);
         logger.info("sign:{}",request.getParameter("sign"));
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
@@ -115,7 +116,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         }catch (CheckException e){
             throw e;
         }finally {
-            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + tender.getUser().getUserId());
+            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + userId);
         }
         return weChatResult;
     }

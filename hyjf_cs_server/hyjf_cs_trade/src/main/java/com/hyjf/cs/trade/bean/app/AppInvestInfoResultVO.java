@@ -181,6 +181,9 @@ public class AppInvestInfoResultVO implements Serializable {
 
     // 期限单位
     private String creditDurationUnit;
+
+    //是否绑卡
+    private boolean isBindCard;
     // add by liuyang 神策数据统计 20180820 end
 
 //    static class ProtocolBean{
@@ -691,5 +694,13 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setCreditDurationUnit(String creditDurationUnit) {
         this.creditDurationUnit = creditDurationUnit;
+    }
+
+    public boolean getIsBindCard() {
+        return isBindCard;
+    }
+
+    public void setIsBindCard(boolean isBindCard) {
+        this.isBindCard = isBindCard;
     }
 }

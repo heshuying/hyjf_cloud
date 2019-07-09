@@ -18,8 +18,17 @@ public class BatchBorrowRepayBankInfoVO extends BaseVO {
     private String forAccountId;// 借款人银行账户
     private String productId;// 标的号
     private String fileMsg;//错误描述
+    private String txMsg ;// 交易信息
+    
+    public String getTxMsg() {
+		return txMsg;
+	}
 
-    public String getAuthCode() {
+	public void setTxMsg(String txMsg) {
+		this.txMsg = txMsg;
+	}
+
+	public String getAuthCode() {
         return authCode;
     }
 

@@ -24,6 +24,9 @@ public class MessageConstant {
 	/** 根据电话号码和消息内容给某电话发短信 */
 	public static final String SMS_SEND_FOR_USERS_NO_TPL = "手动群发";
 
+	/** 根据电话号码和消息内容给某电话发短信 */
+	public static final String SMS_SEND_FOR_BIRTHDAY = "生日祝福";
+
 	/** 根据电话号码和模板号给某电话推送app消息 */
 	public static final String APP_MS_SEND_FOR_MOBILE = "app_ms_send_for_mobile";
 

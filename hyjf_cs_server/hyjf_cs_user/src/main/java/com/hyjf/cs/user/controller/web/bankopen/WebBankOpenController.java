@@ -29,6 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,7 @@ public class WebBankOpenController extends BaseUserController {
     @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public WebResult<Object> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WebResult<Object> openBankAccount(@RequestHeader(value = "wjtClient",required = false) String wjtClient,@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.bankOpenService.getUsersById(userId);
@@ -128,13 +129,16 @@ public class WebBankOpenController extends BaseUserController {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+        openBean.setPlatform(ClientConstants.WEB_CLIENT + "");
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
-        openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
+
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
         // 开户角色
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
+        // 是否温金投
+        openBean.setWjtClient(wjtClient);
         // 组装参数
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean, null);
         result.setData(data);

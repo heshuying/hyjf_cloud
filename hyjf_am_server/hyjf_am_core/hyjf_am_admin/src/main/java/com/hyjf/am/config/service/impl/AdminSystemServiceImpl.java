@@ -270,4 +270,15 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 		return configApplicantMapper.countByExample(example);
 
 	}
+
+	/**
+	 * 根据手机号查询用户
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public AdminSystem getUserInfoByMobile(String mobile) {
+		return adminSystemMapper.getUserInfoByMobile(mobile);
+	}
 }

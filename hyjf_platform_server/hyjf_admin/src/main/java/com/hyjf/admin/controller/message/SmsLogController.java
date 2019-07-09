@@ -18,8 +18,8 @@ import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,9 +73,13 @@ public class SmsLogController extends BaseController {
         return new AdminResult<>(ListResult.build(list, response.getLogCount()));
     }
 
-    List<String> types = Arrays.asList("提现成功", "还款成功", "投标成功", "充值成功", "平台转账-收到推广提成", "平台转账-收到活动奖励", "平台转账-收到手续费返现", "资金相关-充值成功", "资金相关-提现成功", "债转部分转让成功", "债转全部转让成功", "优惠券收益到账", "优惠券出借成功", "红包短信提醒", "智投订单进入服务回报期限", "智投订单已退出", "加息还款", "计划已还款", "优惠券还款成功");
-    List<String> types2 = Arrays.asList("资金相关-投资成功", "提现失败", "分期出借成功", "加息放款", "资金相关-收到还款", "收到借款", "计划自动投标完成", "资金相关收到还款", "资金相关-出借成功");
-    List<String> types3 = Arrays.asList("用户注册验证码", "找回密码验证码", "绑定手机验证码", "解绑手机验证码", "注册", "找回密码", "更换手机号-验证原手机号", "更换手机号-绑定新手机号", "一键注册", "定向转账", "静默注册密码", "第三方用户注册密码发送", "微官网注册", "微官网找回密码");
+    List<String> types = Arrays.asList("提现成功", "还款成功", "投标成功", "充值成功", "平台转账-收到推广提成", "平台转账-收到活动奖励", "平台转账-收到手续费返现",
+            "资金相关-充值成功", "资金相关-提现成功", "债转部分转让成功", "债转全部转让成功", "优惠券收益到账", "优惠券出借成功", "红包短信提醒", "智投订单进入服务回报期限",
+            "智投订单已退出", "加息还款", "计划已还款", "优惠券还款成功");
+    List<String> types2 = Arrays.asList("资金相关-投资成功", "提现失败", "分期出借成功", "加息放款", "资金相关-收到还款", "收到借款", "计划自动投标完成",
+            "资金相关收到还款", "资金相关-出借成功", "还款成功-提前还款");
+    List<String> types3 = Arrays.asList("用户注册验证码", "找回密码验证码", "绑定手机验证码", "解绑手机验证码", "注册", "找回密码", "更换手机号-验证原手机号",
+            "更换手机号-绑定新手机号", "一键注册", "定向转账", "静默注册密码", "第三方用户注册密码发送", "微官网注册", "微官网找回密码", "短信登录");
 
     private String displayContent(SmsLogVO vo) {
         String content = null;
@@ -116,15 +120,9 @@ public class SmsLogController extends BaseController {
     @PostMapping("/findSmsLog")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<SmsLogVO>> findSmsLog(@RequestBody SmsLogRequest request, HttpServletRequest servletRequest) {
-        // 获取该角色 权限列表
-        List<String> perm = (List<String>) servletRequest.getSession().getAttribute("permission");
         //判断权限
-        boolean isShow = false;
-        for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow = true;
-            }
-        }
+        boolean isShow = this.havePermission(servletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+
         SmsLogResponse response = smsLogService.findSmsLog(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -142,14 +140,14 @@ public class SmsLogController extends BaseController {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < mobiles.length; i++) {
                             if (i != mobiles.length - 1) {
-                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedValue(mobiles[i])).append(",");
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i])).append(",");
                             } else {
-                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedValue(mobiles[i]));
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i]));
                             }
                         }
                         vo.setMobile(stringBuilder.toString());
                     } else {
-                        vo.setMobile(AsteriskProcessUtil.getAsteriskedValue(vo.getMobile()));
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
                     }
                 }
                 vo.setContent(displayContent(vo));
@@ -160,7 +158,7 @@ public class SmsLogController extends BaseController {
 
     @ApiOperation(value = "查询定时发送短信列表", notes = "查询定时发送短信列表")
     @PostMapping("/timeinit")
-    public AdminResult<ListResult<SmsOntimeVO>> timeinit(@RequestBody SmsLogRequest request) {
+    public AdminResult<ListResult<SmsOntimeVO>> timeinit(@RequestBody SmsLogRequest request,HttpServletRequest httpServletRequest) {
         SmsOntimeResponse response = smsLogService.queryTime(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -168,6 +166,32 @@ public class SmsLogController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+        //判断权限
+        boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if (!isShow) {
+            if (CollectionUtils.isNotEmpty(response.getResultList())){
+                for (SmsOntimeVO vo : response.getResultList()) {
+                    if (vo.getMobile().contains(",")) {
+                        String[] mobiles = vo.getMobile().split(",");
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < mobiles.length; i++) {
+                            if (i != mobiles.length - 1) {
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i])).append(",");
+                            } else {
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedMobile(mobiles[i]));
+                            }
+                        }
+                        vo.setMobile(stringBuilder.toString());
+                    } else {
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+                    }
+                }
+
+            }
+        }
+
+
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
+
 }

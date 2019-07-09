@@ -14,14 +14,9 @@ public class UserCouponBean implements Serializable {
     private static final long serialVersionUID = 2569482809922162226L;
 
     /**
-     * mq每条消息的编号
-     */
-    private String mqMsgId;
-
-    /**
      * 用户id
      */
-    private String userId;
+    private Integer userId;
 
     /**
      * 发放优惠券的类别标识
@@ -71,19 +66,22 @@ public class UserCouponBean implements Serializable {
      */
     private String remark;
 
-    public String getMqMsgId() {
-        return mqMsgId;
+    public UserCouponBean(){
+
     }
 
-    public void setMqMsgId(String mqMsgId) {
-        this.mqMsgId = mqMsgId;
+    public UserCouponBean(Integer userId, Integer sendFlg, String couponCode, Integer activityId) {
+        this.userId = userId;
+        this.sendFlg = sendFlg;
+        this.couponCode = couponCode;
+        this.activityId = activityId;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

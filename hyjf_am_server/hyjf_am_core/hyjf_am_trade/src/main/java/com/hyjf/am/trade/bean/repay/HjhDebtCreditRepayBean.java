@@ -12,6 +12,8 @@ public class HjhDebtCreditRepayBean extends DebtCreditRepayVO implements Seriali
 	 */
 	private static final long serialVersionUID = -6191363977885745665L;
 	private BigDecimal assignTotal;
+	// 原始提前还款利息
+	public BigDecimal chargeOriginalInterest;
 
 	public BigDecimal getAssignTotal() {
 		return assignTotal;
@@ -20,7 +22,12 @@ public class HjhDebtCreditRepayBean extends DebtCreditRepayVO implements Seriali
 	public void setAssignTotal(BigDecimal assignTotal) {
 		this.assignTotal = assignTotal;
 	}
-	
 
+	public BigDecimal getChargeOriginalInterest() {
+		return chargeOriginalInterest;
+	}
 
+	public void setChargeOriginalInterest(BigDecimal chargeOriginalInterest) {
+		this.chargeOriginalInterest = chargeOriginalInterest;
+	}
 }

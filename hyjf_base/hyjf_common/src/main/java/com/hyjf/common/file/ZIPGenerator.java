@@ -1,5 +1,6 @@
 package com.hyjf.common.file;
 
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ public class ZIPGenerator {
     public static void generateZip(HttpServletResponse response, List<File> files, String fileName){
         response.setContentType("APPLICATION/OCTET-STREAM");  
         response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");
+        logger.info("Download................"+JSONObject.toJSONString(files));
+        logger.info("fileName................"+fileName);
         System.out.println("Download................");
         ZipOutputStream zos = null;
         try {

@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen;
 
-import com.hyjf.am.vo.api.MonthDataStatisticsVO;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
+import com.hyjf.am.vo.screen.ScreenTransferVO;
 
 import java.util.List;
 
@@ -61,11 +61,57 @@ public interface UserLargeScreenService {
      * 屏幕二本月数据统计(新客组、老客组)
      * @return
      */
-    UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds);
+    UserLargeScreenTwoVO getMonthDataStatistics();
 
     /**
      * 屏幕二运营部月度业绩数据
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+
+    /**
+     * @Author walter.limeng
+     * @Description //获取投屏采集到的所有的数据
+     * @Date 15:42 2019-05-29
+     * @Param [start, sizes]
+     * @return java.util.List<com.hyjf.am.vo.screen.ScreenTransferVO>
+     **/
+    List<ScreenTransferVO> getAllScreenUser(int start, int sizes);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏划转对ht_user_operate_list表执行更新操作
+     * @Date 17:25 2019-05-29
+     * @Param [updateList]
+     * @return java.util.List<com.hyjf.am.vo.screen.ScreenTransferVO>
+     **/
+    void updateOperatieList(List<ScreenTransferVO> updateList);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏划转对ht_user_operate_list表执行删除操作
+     * @Date 17:48 2019-05-29
+     * @Param [deleteList]
+     * @return void
+     **/
+    void deleteOperatieList(List<ScreenTransferVO> deleteList);
+
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏划转对ht_repayment_plan表执行更新操作
+     * @Date 17:25 2019-05-29
+     * @Param [updateList]
+     * @return java.util.List<com.hyjf.am.vo.screen.ScreenTransferVO>
+     **/
+    void updateRepaymentPlan(List<ScreenTransferVO> updateList);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏划转对ht_repayment_plan表执行删除操作
+     * @Date 17:48 2019-05-29
+     * @Param [deleteList]
+     * @return void
+     **/
+    void deleteRepaymentPlan(List<ScreenTransferVO> deleteList);
 }

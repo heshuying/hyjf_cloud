@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
@@ -292,6 +293,24 @@ public class HjhPlanController extends BaseController {
         IntegerResponse response = new IntegerResponse();
         Integer countPlanAccedeRecord = hjhPlanService.countPlanAccedeRecord(planNid);
         response.setResultInt(countPlanAccedeRecord);
+        return response;
+    }
+
+
+    /**
+     * 获取所有智投信息
+     * @return
+     */
+    @PostMapping("/selectAllPlan")
+    public HjhPlanVoResponse selectAllPlan(){
+        HjhPlanVoResponse response = new HjhPlanVoResponse();
+        response.setRtn(Response.FAIL);
+        List<HjhPlan> hjhPlanList = hjhPlanService.selectHjhPlanList();
+        if(CollectionUtils.isNotEmpty(hjhPlanList)){
+            response.setRtn(Response.SUCCESS);
+            List<HjhPlanVO> hjhPlanVOList = CommonUtils.convertBeanList(hjhPlanList,HjhPlanVO.class);
+            response.setResultList(hjhPlanVOList);
+        }
         return response;
     }
 

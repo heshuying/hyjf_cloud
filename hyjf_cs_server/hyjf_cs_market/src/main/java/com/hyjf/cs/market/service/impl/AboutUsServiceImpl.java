@@ -78,6 +78,9 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     public ContentArticleVO getNoticeInfo(Integer id) {
         ContentArticleVO contentArticle = amConfigClient.getContentArticleById(id);
         String cdnUrl = CdnUrlUtil.getCdnUrl();
+        if(null == contentArticle){
+            return null;
+        }
         String content = contentArticle.getContent();
         if (StringUtils.isNotBlank(content)) {
             if (StringUtils.isNotBlank(content)) {

@@ -134,6 +134,7 @@ public class BaseResult<T> implements Serializable {
 		this.data = data;
 	}
 
+
 	/**
 	 * @return
 	 */

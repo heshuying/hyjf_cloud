@@ -15,8 +15,11 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -24,6 +27,7 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -61,6 +65,9 @@ public class WebLoginController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
+    @Autowired
+    private PassWordService passWordService;
+
     /**
      * 登录
      *
@@ -71,6 +78,7 @@ public class WebLoginController extends BaseUserController {
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
     public WebResult<WebViewUserVO> login(@RequestBody LoginRequestVO user,
+                                          @RequestHeader(value = "wjtClient",required = false) String wjtClient,
                                           HttpServletRequest request) {
         logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
         String loginUserName = user.getUsername();
@@ -87,6 +95,24 @@ public class WebLoginController extends BaseUserController {
         }
         //判断用户输入的密码错误次数---结束
         long start1 = System.currentTimeMillis();
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null ){
+            if(userVO.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
+        }
+
+
         WebViewUserVO webViewUserVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC,userVO);
         logger.info("web登录操作===================:"+(System.currentTimeMillis()-start1));
         if (webViewUserVO != null) {
@@ -204,4 +230,106 @@ public class WebLoginController extends BaseUserController {
     }
 
 
+    /**
+     * 短信验证码登录
+     * @param user
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "短信验证码登录", notes = "短信验证码登录")
+    @PostMapping(value = "/mobileCodeLogin", produces = "application/json; charset=utf-8")
+    public WebResult<WebViewUserVO> mobileCodeLogin(@RequestBody LoginRequestVO user,
+                                                    @RequestHeader(value = "wjtClient",required = false) String wjtClient,
+                                          HttpServletRequest request) {
+        logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
+        String loginUserName = user.getUsername();
+        String smsCode = user.getSmsCode();
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
+        if(Validator.isNull(loginUserName) || Validator.isNull(smsCode)){
+            logger.error("web端登录失败...请求参数错误");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc("请求参数错误");
+            return result;
+        }
+        // 判断是否是手机号
+        if(!Validator.isMobile(loginUserName)){
+            logger.error("web端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc("请输入正确的手机号");
+            return result;
+        }
+        UserVO userVO = loginService.getUsersByMobile(loginUserName);
+        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,"0",userVO);
+        if (!errorInfo.isEmpty()){
+            logger.error("web端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(errorInfo.get("statusDesc"));
+            return result;
+        }
+
+        // 汇盈的用户不能登录温金投
+        if(wjtClient!=null ){
+            if(userVO.getInstCode()!=null){
+                if((wjtClient.equals(ClientConstants.WJT_PC_CLIENT+"") || wjtClient.equals(ClientConstants.WJT_WEI_CLIENT+""))
+                        && !userVO.getInstCode().equals(systemConfig.getWjtInstCode())){
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+                UserInfoVO userInfoVO = loginService.getUserInfo(userVO.getUserId());
+                if(userInfoVO!=null && !(userInfoVO.getRoleId()-1==0)){
+                    //借款人不让登录
+                    throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+                }
+            }else{
+                throw new CheckException(MsgEnum.ERR_USER_WJT_LOGIN_ERR);
+            }
+        }
+
+        // 执行登录(登录时间，登录ip)
+        WebViewUserVO webViewUserVO = loginService.loginByCode(loginUserName, GetCilentIP.getIpAddr(request), "0",userVO);
+
+        if (webViewUserVO != null) {
+            logger.info("web端登录成功 userId is :{}", webViewUserVO.getUserId());
+            // add by liuyang 神策数据统计追加 20181029 start
+            if (user != null && StringUtils.isNotBlank(user.getPresetProps())) {
+                logger.info("Web登录事件,神策预置属性:" + user.getPresetProps());
+                try {
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(user.getPresetProps(), new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                    // 发送神策数据统计MQ
+                    this.loginService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            }
+            // add by liuyang 神策数据统计追加 20181029 end
+            //登录成功发送mq
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(0);
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(webViewUserVO.getUsername());
+            userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
+            logger.info("userOperationLogEntity发送数据==="+JSONObject.toJSONString(userOperationLogEntity));
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败" , e);
+            }
+            result.setData(webViewUserVO);
+
+            // pc1.1.3 新增 如果短信登录成功 就解锁帐号锁定
+            passWordService.unlockUser(userVO.getUserId());
+        } else {
+            logger.error("web端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
+        }
+        return result;
+    }
 }

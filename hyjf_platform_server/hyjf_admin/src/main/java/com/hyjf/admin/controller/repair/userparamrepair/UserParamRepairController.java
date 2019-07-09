@@ -18,10 +18,9 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.user.UserManagerVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
@@ -30,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,17 +81,29 @@ public class UserParamRepairController extends BaseController {
     @ApiOperation(value = "用户属性异常列表查询", notes = "用户属性异常列表查询")
     @PostMapping(value = "/userparamlist")
     @ResponseBody
-    public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean) {
+    public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean, HttpServletRequest request) {
         UserManagerRequest managerRequest = new UserManagerRequest();
         BeanUtils.copyProperties(userManagerRequestBean, managerRequest);
         UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
         if (userManagerResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        // 获取该角色 权限列表
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
         List<UserManagerVO> listUserManagetVO = userManagerResponse.getResultList();
         List<UserManagerCustomizeVO> userManagerCustomizeList = new ArrayList<UserManagerCustomizeVO>();
         if (null != listUserManagetVO && listUserManagetVO.size() > 0) {
-            userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
+            if(null!=listUserManagetVO&&listUserManagetVO.size()>0){
+                if(!isShow){
+                    //如果没有查看脱敏权限,显示加星
+                    for(UserManagerVO userManagerVO:listUserManagetVO){
+//                        userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+                        userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
+                        userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
+                    }
+                }
+                userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
+            }
         }
         if (!Response.isSuccess(userManagerResponse)) {
             return new AdminResult<>(FAIL, userManagerResponse.getMessage());

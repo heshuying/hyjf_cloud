@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -104,6 +105,9 @@ public class BorrowAuthController extends BaseTradeController {
             requestBean.setLimitStart(page.getOffset());
             requestBean.setLimitEnd(page.getLimit());
             List<BorrowAuthCustomizeVO> resultList = borrowAuthService.selectAuthedList(requestBean);
+            for (BorrowAuthCustomizeVO borrowAuthCustomizeVO : resultList) {
+            	borrowAuthCustomizeVO.setBorrowApr(FormatRateUtil.formatBorrowApr(borrowAuthCustomizeVO.getBorrowApr()));
+			}
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取已授权列表异常", e);

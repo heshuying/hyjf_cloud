@@ -10,11 +10,15 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
+import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.SponsorLogBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -38,18 +42,26 @@ public interface RepayManageService extends BaseTradeService {
      * @return
      */
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getUserLateInterestWaitTotal(Integer userId);
+
+    BigDecimal getUserBorrowAccountTotal(Integer userId);
+
     /**
      * 担保机构管理费总待还
      * @param userId
      * @return
      */
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgLateInterestWaitTotal(Integer userId);
+
     /**
      * 担保机构待还
      * @param userId
      * @return
      */
-    BigDecimal getOrgRepayWaitTotal(Integer userId);
+    RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId);
     /**
      * 请求参数校验
      *
@@ -63,6 +75,9 @@ public interface RepayManageService extends BaseTradeService {
      * @return
      */
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);
+
+    List<RepayPlanListVO> selectRepayPlanList(String borrowNid);
+
     /**
      * 垫付机构待还款列表
      *
@@ -110,13 +125,13 @@ public interface RepayManageService extends BaseTradeService {
 
     void checkForBankBalance(WebViewUserVO user, RepayBean repayBean);
 
-    RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay);
+    RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay, int latePeriod);
     /**
      * 还款申请回调数据更新
      * @auther: hesy
      * @date: 2018/7/10
      */
-    Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay);
+    Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay, int latePeriod);
     /**
      * 如果有正在出让的债权,先去把出让状态停止
      * @param borrowNid
@@ -178,7 +193,7 @@ public interface RepayManageService extends BaseTradeService {
      * @date 2018/10/11
      */
     Integer insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay,
-                                 String userName, boolean isAllRepay);
+                                 String userName, boolean isAllRepay, int latePeriod);
     /**
      * 根据条件查询垫付机构冻结日志
      * @author wgx
@@ -205,7 +220,7 @@ public interface RepayManageService extends BaseTradeService {
      * @auther: wgx
      * @date: 2018/10/16
      */
-    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult,  boolean isAllRepay);
+    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult,  boolean isAllRepay, int latePeriod);
     /**
      * 代偿冻结（合规要求）
      * @auther: wgx
@@ -255,4 +270,9 @@ public interface RepayManageService extends BaseTradeService {
      * @date 2019/03/04
      */
    boolean getFailCredit(String borrowNid);
+	Integer selectSponsorLogCount(RepayListRequest requestBean);
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+	Map<String, Object> getSponsorLogMV(SponsorLogBean openBean, String string, String string2);
+	int updateSponsorLog(RepayListRequest requestBean);
+	List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
 }

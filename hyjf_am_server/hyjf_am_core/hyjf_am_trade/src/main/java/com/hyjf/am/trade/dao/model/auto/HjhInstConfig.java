@@ -41,6 +41,13 @@ public class HjhInstConfig implements Serializable {
     private BigDecimal capitalToplimit;
 
     /**
+     * 担保公司
+     *
+     * @mbggenerated
+     */
+    private String cooperativeAgency;
+
+    /**
      * 提现手续费
      *
      * @mbggenerated
@@ -136,6 +143,14 @@ public class HjhInstConfig implements Serializable {
 
     public void setCapitalToplimit(BigDecimal capitalToplimit) {
         this.capitalToplimit = capitalToplimit;
+    }
+
+    public String getCooperativeAgency() {
+        return cooperativeAgency;
+    }
+
+    public void setCooperativeAgency(String cooperativeAgency) {
+        this.cooperativeAgency = cooperativeAgency == null ? null : cooperativeAgency.trim();
     }
 
     public BigDecimal getCommissionFee() {

@@ -1,6 +1,5 @@
 package com.hyjf.am.config.controller.admin;
 
-import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.auto.AdminAndRole;
@@ -10,7 +9,6 @@ import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.config.service.AdminSystemService;
-import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -80,8 +78,14 @@ public class AdminSystemController extends BaseConfigController {
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
+			AdminRole role = adminRoleService.getRecord(adminSystemr.getRoleId());
+			if(role.getRoleName()!=null&&role.getRoleName().startsWith("wjt")){
+				asr.setRtn(Response.ERROR);
+				asr.setMessage("该用户角色状态异常");
+				return asr;
+			}
 			// 如果状态不可用
-			if ("1".equals(adminSystem.getState())) {
+			if ("1".equals(adminSystemr.getState())) {
 				asr.setMessage("该用户已禁用");
 				asr.setRtn(Response.ERROR);
 				return asr;
@@ -108,9 +112,15 @@ public class AdminSystemController extends BaseConfigController {
 			if (admin!=null){
 				Integer id = admin.getId();
 				AdminAndRole adminAndRole = adminRoleService.getRole(id);
+				// 是否禁用
+				if ("1".equals(adminSystem.getState())) {
+					asr.setMessage("该用户已禁用");
+					asr.setRtn(Response.ERROR);
+					return asr;
+				}
 				if (adminAndRole != null) {
 					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
-					if(role.getStatus()!=0) {
+					if(role.getStatus()!=0||(role.getRoleName()!=null&&role.getRoleName().startsWith("wjt"))) {
 						asr.setRtn(Response.ERROR);
 						asr.setMessage("该用户角色状态异常");
 						return asr;
@@ -124,15 +134,11 @@ public class AdminSystemController extends BaseConfigController {
 					return asr;
 				}
 				//判断用户输入的密码错误次数---结束
-
-
 			}
-
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;
 		}
-
 	}
 	/**
 	 * 获取该用户权限
@@ -300,5 +306,32 @@ public class AdminSystemController extends BaseConfigController {
 			response.setResult(CommonUtils.convertBean(configApplicant, ConfigApplicantVO.class));
 		}
 		return response;
+	}
+
+	/**
+	 * 根据手机号查询用户
+	 * @param adminSystemR
+	 * @return
+	 */
+	@RequestMapping("/getUserInfoByMobile")
+	public AdminSystemResponse getUserInfoByMobile(@RequestBody AdminSystemRequest adminSystemR) {
+		AdminSystemResponse asr = new AdminSystemResponse();
+		AdminSystem adminSystemr = adminSystemService.getUserInfoByMobile(adminSystemR.getMobile());
+		if (adminSystemr != null) {
+			AdminSystemVO asv = new AdminSystemVO();
+			// 如果状态不可用
+			if ("1".equals(adminSystemr.getState())) {
+				asr.setMessage("该用户已被禁用");
+				asr.setRtn(Response.ERROR);
+				return asr;
+			}
+
+			BeanUtils.copyProperties(adminSystemr, asv);
+			asr.setResult(asv);
+			return asr;
+		}
+		asr.setRtn(Response.ERROR);
+		asr.setMessage("用户不存在");
+		return asr;
 	}
 }

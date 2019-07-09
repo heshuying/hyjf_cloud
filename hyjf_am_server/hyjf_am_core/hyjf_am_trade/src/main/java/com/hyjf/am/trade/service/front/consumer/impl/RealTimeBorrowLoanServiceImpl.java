@@ -237,10 +237,10 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			apicron.setTxTime(Integer.parseInt(txTime));
 			apicron.setSeqNo(Integer.parseInt(seqNo));
 			apicron.setBankSeqNo(txDate + txTime + seqNo);
-			//只保留原始订单号用于查询
-			if (apicron.getOrdid() == null || "".equals(apicron.getOrdid())) {
-				apicron.setOrdid(logOrderId);
-			}
+			//只有在实时放款返回成功时才更新订单号
+//			if (apicron.getOrdid() == null || "".equals(apicron.getOrdid())) {
+//				apicron.setOrdid(logOrderId);
+//			}
 			String accountId = (String) map.get("accountId");
 			String txAmount = (String) map.get("txAmountSum");
 			String feeAmount = (String) map.get("serviceFeeSum");
@@ -271,6 +271,10 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				// CA110629  不能重复放款 JX900780  该标的已经做过满标自动放款
 				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
 						|| "CA110629".equals(retCode)) {//放款成功或放款重复
+					// 只有放款成功时更新订单号
+					if(BankCallConstant.RESPCODE_SUCCESS.equals(retCode)){
+						apicron.setOrdid(logOrderId);
+					}
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
 					if (apicronResultFlag) {

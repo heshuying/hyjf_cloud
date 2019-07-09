@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -93,6 +94,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             //法大大协议信息
             if(recordList!=null && recordList.size()>0){
                 for (CurrentHoldObligatoryRightListCustomizeVO currentHoldObligatoryRightListCustomize : recordList) {
+                	currentHoldObligatoryRightListCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(currentHoldObligatoryRightListCustomize.getBorrowApr()));
                     //法大大居间服务协议（type=2时候，为债转协议）
                     String nid = currentHoldObligatoryRightListCustomize.getNid();//出借订单号
                     if("2".equals(currentHoldObligatoryRightListCustomize.getType())){
@@ -164,6 +166,9 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             request.setLimitEnd( page.getLimit());
             // 获取用户已回款债权列表
             List<RepayMentListCustomizeVO> recordList = amTradeClient.selectRepaymentList(request);
+            for (RepayMentListCustomizeVO repayMentListCustomizeVO : recordList) {
+            	repayMentListCustomizeVO.setBorrowApr(FormatRateUtil.formatBorrowApr(repayMentListCustomizeVO.getBorrowApr()));
+			}
             result.setRepayMentList(recordList);
             result.setRepayMentCount(recordTotal);
         } else {
@@ -189,6 +194,10 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         request.setLimitEnd(page.getLimit());
         if (recordTotal > 0) {
             List<TenderCreditDetailCustomizeVO> recordList = amTradeClient.selectCreditRecordList(request);
+            for (TenderCreditDetailCustomizeVO tenderCreditDetailCustomizeVO : recordList) {
+            	tenderCreditDetailCustomizeVO.setBidApr(FormatRateUtil.formatBorrowApr(tenderCreditDetailCustomizeVO.getBidApr()));
+            	tenderCreditDetailCustomizeVO.setCreditDiscount(FormatRateUtil.formatBorrowApr(tenderCreditDetailCustomizeVO.getCreditDiscount()));
+			}
             result.setCreditRecordList(recordList);
             result.setTenderCreditDetailCount(recordTotal);
         } else {
@@ -217,6 +226,9 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         if (recordTotal > 0) {
             // 获取用户当前持有计划记录列表
             List<CurrentHoldPlanListCustomizeVO> recordList = amTradeClient.selectCurrentHoldPlanList(request);
+            for (CurrentHoldPlanListCustomizeVO currentHoldPlanListCustomizeVO : recordList) {
+            	currentHoldPlanListCustomizeVO.setExpectApr(FormatRateUtil.formatBorrowApr(currentHoldPlanListCustomizeVO.getExpectApr()));
+			}
             result.setCurrentHoldPlanList(recordList);
             result.setCurrentHoldPlanCount(recordTotal);
         } else {
@@ -251,6 +263,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             if(recordList!=null && recordList.size()>0) {
                 //计算实际收益
                 for (int i = 0; i < recordList.size(); i++) {
+                	recordList.get(i).setExpectApr(FormatRateUtil.formatBorrowApr(recordList.get(i).getExpectApr()));
                     if (!"2".equals(recordList.get(i).getType()) && recordList.get(i).getRepayAccountYes() != null && recordList.get(i).getAccedeAccount() != null) {
                         BigDecimal receivedTotal = new BigDecimal(recordList.get(i).getRepayAccountYes().replaceAll(",", "").trim());
                         BigDecimal accedeAccount = new BigDecimal(recordList.get(i).getAccedeAccount().replaceAll(",", "").trim());
@@ -337,6 +350,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         params.put("userId", userId);
         UserHjhInvistDetailCustomizeVO hjhInvistDetailVO = amTradeClient.selectUserHjhInvistDetail(params);
         if (null != hjhInvistDetailVO){
+        	hjhInvistDetailVO.setPlanApr(FormatRateUtil.formatBorrowApr(hjhInvistDetailVO.getPlanApr()));
             // add by nxl 智投服务：格式化参考回报和授权时间格式化Start
             if(hjhInvistDetailVO.getWaitInterest().equals("0.00")){
                 hjhInvistDetailVO.setWaitInterest("--");

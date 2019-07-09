@@ -14,83 +14,113 @@ public class ProjectBean extends BaseVO implements Serializable {
 	private static final long serialVersionUID = -2142812516666739413L;
 
 	// 是否是汇添金项目
-	public String tType;
+	private String tType;
 
 	// 还款人id
-	public String userId;
+	private String userId;
 
 	//角色
-	public String roleId;
+	private String roleId;
 
 	// 项目编号
-	public String borrowNid;
+	private String borrowNid;
 
 	// 项目名称
-	public String borrowName;
+	private String borrowName;
 
 	// 项目还款方式
-	public String borrowStyle;
+	private String borrowStyle;
 
 	// 项目还款总额 加管理费
-	public String repayTotal;
+	private String repayTotal;
 
 	// 项目还款本息和
-	public String repayAccount;
+	private String repayAccount;
 
 	// 项目还款本金
-	public String repayCapital;
+	private String repayCapital;
 
 	// 当前的利息
-	public String repayInterest;
+	private String repayInterest;
 
 	//应还利息
-	public String shouldInterest;
+	private String shouldInterest;
 
 	// 当前管理费
-	public String manageFee;
+	private String manageFee;
 
-	// 当前还款期数
-	public String repayPeriod;
+	// 当期的还款期数
+	private String repayPeriod;
 
 	// 当前还款状态(是否完成 0未还款1还款中)
-	public String repayStatus;
+	private String repayStatus;
 
 	// 当前还款方式（0正常还款1提前还款2延期还款3逾期还款）
-	public String advanceStatus;
+	private String advanceStatus;
+
+	// 当前还款方式（1逾期还款0其他）
+	private String lateStatus;
 
 	// 提前天数
-	public String chargeDays;
+	private String chargeDays;
 
-	public String advanceDays;
+	private String advanceDays;
 
 	// 提前还款利息
-	public String chargeInterest;
+	private String chargeInterest;
 
-	public String advanceInterest;
+	private String advanceInterest;
 
 	// 延期天数
-	public String delayDays;
+	private String delayDays;
 
 	// 延期利息
-	public String delayInterest;
+	private String delayInterest;
 
 	// 逾期天数
-	public String lateDays;
+	private String lateDays;
 
 	// 逾期罚息
-	public String lateInterest;
+	private String lateInterest;
 
-	public String username;
+	private String username;
+
 	//本期应还笔数
-	public String repayNum;
+	private String repayNum;
 
 	// 看正在还款的是否 全部结清（1为全部结清的还款中，以外则全否）
 	private String allRepay;
 
-	// 看正在还款的是否  只能全部结清（1为 是，以外则全否）
+	// 看正在还款的是否  只能全部结清（1为 是，2为 全部逾期(只能按期还)，0为正常）
 	private String onlyAllRepay;
 
 	private boolean isAllRepay;
+
+	/**
+	 * 逾期期数列表
+	 */
+	private List<Integer> lateArray;
+
+	/**
+	 * 用户选择的逾期期数，为空或0，默认未选择单期或多期还逾期的方式
+	 */
+	private Integer latePeriod;
+
+	/**
+	 * 当前还款期数
+	 * 全部还款：当前还款期数：第1至5期，全部结清
+	 * 其他的：当前还款期数：第1至5期
+	 */
+	private String allPeriodStr;
+
+	// 原始提前还款利息
+	private String chargeOriginalInterest;
+
+	// 提前还款罚息
+	private String chargePenaltyInterest;
+
+	// 标的期数
+	private String borrowPeriod;
 
 	public boolean isAllRepay() {
 		return isAllRepay;
@@ -235,6 +265,14 @@ public class ProjectBean extends BaseVO implements Serializable {
 		this.advanceStatus = advanceStatus;
 	}
 
+	public String getLateStatus() {
+		return lateStatus;
+	}
+
+	public void setLateStatus(String lateStatus) {
+		this.lateStatus = lateStatus;
+	}
+
 	public String getChargeDays() {
 		return chargeDays;
 	}
@@ -329,5 +367,53 @@ public class ProjectBean extends BaseVO implements Serializable {
 
 	public void setOnlyAllRepay(String onlyAllRepay) {
 		this.onlyAllRepay = onlyAllRepay;
+	}
+
+	public List<Integer> getLateArray() {
+		return lateArray;
+	}
+
+	public void setLateArray(List<Integer> lateArray) {
+		this.lateArray = lateArray;
+	}
+
+	public Integer getLatePeriod() {
+		return latePeriod;
+	}
+
+	public void setLatePeriod(Integer latePeriod) {
+		this.latePeriod = latePeriod;
+	}
+
+	public String getAllPeriodStr() {
+		return allPeriodStr;
+	}
+
+	public void setAllPeriodStr(String allPeriodStr) {
+		this.allPeriodStr = allPeriodStr;
+	}
+
+	public String getChargeOriginalInterest() {
+		return chargeOriginalInterest;
+	}
+
+	public void setChargeOriginalInterest(String chargeOriginalInterest) {
+		this.chargeOriginalInterest = chargeOriginalInterest;
+	}
+
+	public String getChargePenaltyInterest() {
+		return chargePenaltyInterest;
+	}
+
+	public void setChargePenaltyInterest(String chargePenaltyInterest) {
+		this.chargePenaltyInterest = chargePenaltyInterest;
+	}
+
+	public String getBorrowPeriod() {
+		return borrowPeriod;
+	}
+
+	public void setBorrowPeriod(String borrowPeriod) {
+		this.borrowPeriod = borrowPeriod;
 	}
 }

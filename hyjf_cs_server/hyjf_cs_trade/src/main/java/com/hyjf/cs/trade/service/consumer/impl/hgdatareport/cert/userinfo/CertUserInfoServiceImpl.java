@@ -93,7 +93,8 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             // 如果已经上报过了  就上报修改
             if(hashUser!=null){
                 // 用户状态编码  1-新增／2-变更／3-失效
-                param.put("userStatus", CertCallConstant.CERT_PARAM_USER_STATUS_UPD);
+                // 二期改为  不上报了
+                //param.put("userStatus", CertCallConstant.CERT_PARAM_USER_STATUS_UPD);
             }
 
             result.add(param);
@@ -123,18 +124,20 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
 
         CorpOpenAccountRecordVO accountRecord = null;
         String userIdcard = "";
+        // 是否企业
+        boolean isCompany = false;
         String userLawperson = "-1";
         String userFund = "-1";
         String userProvince = "-1";
         String userAddress = "-1";
         String registerDate = "-1";
         String userAscription = "-1";
-        String userAge = "-1";
+        //String userAge = "-1";
         String userSex = "-1";
-        String phoneAscription = "-1";
+        //String phoneAscription = "-1";
         // 出借人类型对应关系 保守型-A 稳健型-I 成长型-Q 进取型-Z
-        String riskRating = "-1";
-        String userPayAccount = CertCallUtil.convertUserPayAccount(item.getUserPayAccount());
+        //String riskRating = "-1";
+        //String userPayAccount = CertCallUtil.convertUserPayAccount(item.getUserPayAccount());
         String userBank = "";
         String userBankAccount = "";
         String username = "";
@@ -151,11 +154,11 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             // 投资人
             userIdcard = usersInfo.getIdcard();
             // 用户所属地
-            userAscription = tool.getIdcardAscription(userIdcard);
-            userAge = tool.getAge(userIdcard);
+           // userAscription = tool.getIdcardAscription(userIdcard);
+            //userAge = tool.getAge(userIdcard);
             userSex = tool.getSex(userIdcard);
-            phoneAscription = tool.getPhoneAscription(item.getMobile());
-            riskRating = CertCallUtil.convertRiskRating(item.getEvalType());
+            //phoneAscription = tool.getPhoneAscription(item.getMobile());
+            //riskRating = CertCallUtil.convertRiskRating(item.getEvalType());
         }
         // 初始化为个人
         item.setUserType(0);
@@ -163,6 +166,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             if ("1".equals(borrow.getCompanyOrPersonal())) {
                 // 公司
                 BorrowUserVO borrowUsers = getBorrowUsers(borrow.getBorrowNid());
+                //isCompany = true;
                 // 统一社会信用代码
                 userIdcard = borrowUsers.getSocialCreditCode();
                 if (borrowUsers.getSocialCreditCode() == null || "".equals(borrowUsers.getSocialCreditCode())) {
@@ -192,10 +196,10 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
                 // 身份证号
                 userIdcard = borrowManinfo.getCardNo();
                 // 用户所属地
-                userAscription = tool.getIdcardAscription(userIdcard);
-                userAge = tool.getAge(userIdcard);
+                //userAscription = tool.getIdcardAscription(userIdcard);
+               // userAge = tool.getAge(userIdcard);
                 userSex = tool.getSex(userIdcard);
-                phoneAscription = tool.getPhoneAscription(item.getMobile());
+                //phoneAscription = tool.getPhoneAscription(item.getMobile());
                 username = CertCallUtil.desUserName(borrowManinfo.getName());
                 // 设置为个人用户
                 item.setUserType(0);
@@ -218,7 +222,8 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 平台编号
         param.put("sourceCode", systemConfig.getCertSourceCode());
         // 用户状态编码  1-新增／2-变更／3-失效
-        param.put("userStatus", userStatus);
+        // 二期改为  不上报了
+        // param.put("userStatus", userStatus);
         // 用户类型  1-自然人／2-企业
         param.put("userType", CertCallUtil.convertUserType(item.getUserType()));
         // 用户属性  1-投资／2-借贷／3-投资＋借贷  垫付机构不报送
@@ -238,7 +243,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 用户标识编码  身份证号(个人) 工商注册号(企业) 三证合一号(企业)
         //说明：允许脱敏处理,但只能脱敏后4位
         // 个人报送身份证号加密 企业报送统一社会信用代码加密值  无社会信用代码 报送注册号加密值    借款人报送借款主体的证件编码
-        param.put("userIdcard", CertCallUtil.desUserIdcard(userIdcard));
+        param.put("userIdcard", CertCallUtil.desUserIdcard(userIdcard,isCompany));
         // 用户标示哈希
         // 身份证号／工商注册号／三证合一号hash值（64位随机数字和字母）
         //使用工具包中idCardHash方法生成的hash值 此字段是散标接口、交易流水接口、还款计划、债权信息、转让项目、承接项目的关联字段
@@ -282,26 +287,25 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 注册人邮箱 userMail  不报送
         //param.put("userMail", "-");
         // 用户所属地 自然人属性用户类型（userType）=1必填 使用SDK工具包中getIdcardAscription方法生成的行政区号，6位数字。如：110112表示北京东城区。用户类型（userType）=2填写-1
-        param.put("userAscription", userAscription);
+        //param.put("userAscription", userAscription);
         // 用户年龄  自然人属性 用户类型（userType）=1必填 使用工具包中getAge方法生成的值。用户类型（userType）=2填写-1
-        param.put("userAge", userAge);
+        // param.put("userAge", userAge);
         // 用户性别 自然人属性 用户类型（userType）=1必填 使用工具包中getSex方法生成的值，1：男；0：女。 用户类型（userType）=2,填写-1
         param.put("userSex", userSex);
         // 手机归属地 自然人属性 用户类型（userType）=1必填 使用工具包中getPhoneAscription方法生成6位的行政区号，如：110112表示北京东城区。 用户类型（userType）=2填写-1
-        param.put("phoneAscription", phoneAscription);
+        // param.put("phoneAscription", phoneAscription);
         // 风险评级 用户属于投资人则必填 用于描述投资人(出借人)的风险承受能力。风险评级采用字符串的方式提交，使用大写字母A～Z来表示由低到高的风险评级。如果企业本身用数字或者其他方式表示风险评级，请转换成用字母表示的风险评级。如果机构没有评级，填写-1。
         // .借款人报送-1 出借人类型对应关系 保守型-A 稳健型-I 成长型-Q 进取型-Z
-        param.put("riskRating", riskRating);
+        //param.put("riskRating", riskRating);
 
         List<Map<String, String>> tlist = new ArrayList<Map<String, String>>();
         Map<String, String> tmp1 = new LinkedHashMap<String, String>();
-        if(StringUtils.isNotEmpty(userBank)&&StringUtils.isNotEmpty(userBankAccount)&&
-            StringUtils.isNotEmpty(userPayAccount) ){
+        if(StringUtils.isNotEmpty(userBankAccount)){
             //  用户的第三方支付平台名称／用户的存管银行名称
-            tmp1.put("userPay", "江西银行");
+            //tmp1.put("userPay", "江西银行");
             // 用户的第三方支付账号／用户的存管银行账号
-            tmp1.put("userPayAccount", userPayAccount);
-            tmp1.put("userBank", userBank);
+            //tmp1.put("userPayAccount", userPayAccount);
+            //tmp1.put("userBank", userBank);
             tmp1.put("userBankAccount", userBankAccount);
             tlist.add(tmp1);
         }

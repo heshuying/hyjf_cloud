@@ -2,6 +2,7 @@ package com.hyjf.cs.user.service.invite.impl;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -89,7 +90,7 @@ public class InviteServiceImpl extends BaseUserServiceImpl implements InviteServ
         MyCouponListRequest requestBeanCoupon = new MyCouponListRequest();
         requestBeanCoupon.setUserId(userId);
         requestBeanCoupon.setUsedFlag("0");
-        couponCount = amTradeClient.selectMyCouponCount(requestBeanCoupon);
+//        couponCount = amTradeClient.selectMyCouponCount(requestBeanCoupon);
         // 累计邀请数
         MyInviteListRequest requestBeanReward = new MyInviteListRequest();
         requestBeanReward.setUserId(userId);
@@ -100,6 +101,16 @@ public class InviteServiceImpl extends BaseUserServiceImpl implements InviteServ
         resultMap.put("rewardRecordsSum", String.valueOf(rewardTotal));
         resultMap.put("userId", userId);
         return resultMap;
+    }
+
+    /**
+     * 获取分享信息
+     * @author wgx
+     * @date 2019/05/09
+     */
+    @Override
+    public ShareNewsBeanVO queryShareNews() {
+        return amConfigClient.queryShareNews();
     }
 
 }

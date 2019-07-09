@@ -54,6 +54,8 @@ public class BankRepayOrgFreezeLogVO extends BaseVO {
     private Integer allRepayFlag;
     @ApiModelProperty(value = "是否有效 0有效 1无效记录")
     private Integer delFlag;
+    @ApiModelProperty(value = "提交的逾期期数(一期或多期的最后一期)")
+    private Integer latePeriod;
 
     private Date createTime;
 
@@ -291,5 +293,13 @@ public class BankRepayOrgFreezeLogVO extends BaseVO {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Integer getLatePeriod() {
+        return latePeriod;
+    }
+
+    public void setLatePeriod(Integer latePeriod) {
+        this.latePeriod = latePeriod;
     }
 }

@@ -32,6 +32,9 @@ public class AppRepayCalendarCustomize implements Serializable {
 	//订单状态
 	private Integer orderStatus;
 
+	/** 标的状态值，计划类是空字符串*/
+	private String borrowStatus;
+
 	public Integer getOrderStatus() {
 		return orderStatus;
 	}
@@ -118,5 +121,13 @@ public class AppRepayCalendarCustomize implements Serializable {
 
 	public void setRepayTime(String repayTime) {
 		this.repayTime = repayTime;
+	}
+
+	public String getBorrowStatus() {
+		return borrowStatus;
+	}
+
+	public void setBorrowStatus(String borrowStatus) {
+		this.borrowStatus = borrowStatus;
 	}
 }

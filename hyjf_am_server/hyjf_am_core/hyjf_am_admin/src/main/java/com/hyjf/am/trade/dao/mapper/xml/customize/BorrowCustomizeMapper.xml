@@ -522,7 +522,7 @@ WHERE
 	<sql id="Where_Clause">
 		  <where>
 		   <if test="borrowNidSrch != null and borrowNidSrch != ''">
-		    AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
+		    AND b.borrow_nid LIKE CONCAT( '%',#{borrowNidSrch}, '%')
 		   </if>
 		   <if test="borrowNameSrch != null and borrowNameSrch != ''">
 		    AND b.`name` LIKE CONCAT( #{borrowNameSrch}, '%')
@@ -716,21 +716,29 @@ WHERE
 		  b.plan_nid,
 		  IFNULL( label.label_name, '--' ) AS labelName,
 		  bb.company_or_personal AS usertype,
-		  substr( hbm.NAME, 1, 1 ) AS truename,
-		  substr( hbu.username, 1, 1 ) AS businame,
+		  hbm.NAME AS truename,
+		  hbu.username AS businame,
 		  hic.inst_name,
 		  <!--ADD  BY  zhangyk   增加初审时间显示 START -->
 		  CASE WHEN b.verify_time <![CDATA[ <>]]> 0 AND b.verify_time IS NOT NULL THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS verify_time,
 		  <!--ADD  BY  zhangyk   增加初审时间显示 END -->
 		  b.create_time as addtime,
-		  b.borrow_account_scale
-		  FROM
+		  b.borrow_account_scale,
+		  <!--增加是否可以备案撤销状态 add by hesy -->
+		 CASE
+		 WHEN b.plan_nid IS NULL THEN
+			 IF(b.`status`=1 OR (b.`status` = 2 AND (b.tender_times=0 OR b.borrow_account_yes=0)),1,0)
+		 ELSE
+			 IF(b.`status`=1,1,0)
+		 END AS registCancelEnable,
+		  <!--增加是否可以删标状态 add by hesy -->
+		  IF(b.`status`=0 OR b.`status` = 1,1,0) AS borrowDeleteEnable
+			 FROM
 		  ht_borrow b
 		  LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 		  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 		  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style and bs.status=0
-		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
-		  b.project_type AS CHAR )
+		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  LEFT JOIN ht_borrow_maninfo hbm ON b.borrow_nid = hbm.borrow_nid
 		  LEFT JOIN ht_borrow_user hbu ON b.borrow_nid = hbu.borrow_nid
@@ -752,8 +760,7 @@ WHERE
 		   LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 		   LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 		   LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		   LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
-		   b.project_type AS CHAR )
+		   LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd =b.project_type 
 		   LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  <include refid="Where_Clause" />
 		 </select>
@@ -765,8 +772,7 @@ WHERE
 			  LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 			  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 			  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style and bs.status=0
-			  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
-			  b.project_type AS CHAR )
+			  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd =b.project_type
 			  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 			  LEFT JOIN ht_borrow_maninfo hbm ON b.borrow_nid = hbm.borrow_nid
 			  LEFT JOIN ht_borrow_user hbu ON b.borrow_nid = hbu.borrow_nid
@@ -924,7 +930,7 @@ WHERE
 		  bb.borrow_extra_yield,
 		  bb.remark,
 		  IFNULL(label.label_name, '--') AS labelName,
-		  DATE_FORMAT(b.regist_time,'%Y-%c-%d %h:%i:%s') AS regist_time,
+		  DATE_FORMAT(b.regist_time,'%Y-%m-%d %H:%i:%s') AS regist_time ,
 		  CONCAT(b.borrow_account_scale, '%') borrow_account_scale,
 		  b.`status` AS `status`,
 		  b.create_time as addtime,
