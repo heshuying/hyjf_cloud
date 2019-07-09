@@ -98,8 +98,8 @@ public class ApplyBorrowAgreementController extends BaseController {
     public ApplyBorrowInfoResponse getTotalTenderCountByBorrowNid( @PathVariable(value = "borrowNid") String borrowNid){
         logger.info("协议申请标的详情页:::::::[{}]", borrowNid);
         ApplyBorrowInfoResponse reponse = new ApplyBorrowInfoResponse();
-        ApplyBorrowInfoVO vo =  applyAgreementService.getApplyBorrowInfoDetail(borrowNid);
-        reponse.setResult(vo);
+        Integer counts =  applyAgreementService.getTotalTenderCountByBorrowNid(borrowNid);
+        reponse.setCount(counts);
         reponse.setRtn(Response.SUCCESS);
         return reponse;
     }
