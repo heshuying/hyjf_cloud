@@ -6165,6 +6165,17 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    public Integer getTotalTenderCountByBorrowNid(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/getTotalTenderCountByBorrowNid/" + borrowNid;
+        ApplyBorrowInfoResponse response = restTemplate.getForEntity(url, ApplyBorrowInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+
+    }
+
+    @Override
     public List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request) {
         ProtocolLogResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/getProtocolLogVOAll",
                 request, ProtocolLogResponse.class);

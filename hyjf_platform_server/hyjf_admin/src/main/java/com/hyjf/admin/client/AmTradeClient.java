@@ -2995,6 +2995,15 @@ public interface AmTradeClient {
     List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId);
 
     /**
+     * 订单数量：最新的标的订单数量=原始标投资+承接总数
+     * @author Zha Daojian
+     * @date 2019/7/9 10:33
+     * @param borrowNid
+     * @return java.lang.Integer
+     **/
+    Integer getTotalTenderCountByBorrowNid(String borrowNid);
+
+    /**
      * 保存协议申请
     * @author Zha Daojian
     * @date 2019/5/8 17:56

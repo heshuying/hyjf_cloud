@@ -93,6 +93,17 @@ public class ApplyBorrowAgreementController extends BaseController {
         return reponse;
     }
 
+    @ApiOperation(value = "协议订单数")
+    @RequestMapping("/getTotalTenderCountByBorrowNid/{borrowNid}")
+    public ApplyBorrowInfoResponse getTotalTenderCountByBorrowNid( @PathVariable(value = "borrowNid") String borrowNid){
+        logger.info("协议申请标的详情页:::::::[{}]", borrowNid);
+        ApplyBorrowInfoResponse reponse = new ApplyBorrowInfoResponse();
+        ApplyBorrowInfoVO vo =  applyAgreementService.getApplyBorrowInfoDetail(borrowNid);
+        reponse.setResult(vo);
+        reponse.setRtn(Response.SUCCESS);
+        return reponse;
+    }
+
 
 
 

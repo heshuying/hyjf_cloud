@@ -52,6 +52,15 @@ public interface BorrowCustomizeMapper {
      * @return com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO
      **/
     ApplyBorrowInfoVO getApplyBorrowInfoDetail(String borrowNid);
+
+    /**
+     * 订单数量：最新的标的订单数量=原始标投资+承接总数
+    * @author Zha Daojian
+    * @date 2019/7/9 10:33
+    * @param borrowNid
+    * @return java.lang.Integer
+    **/
+    Integer getTotalTenderCountByBorrowNid(String borrowNid);
     /**
      * 集成borrow、 boorow_info表的自定义查询
      * @param borrowNid

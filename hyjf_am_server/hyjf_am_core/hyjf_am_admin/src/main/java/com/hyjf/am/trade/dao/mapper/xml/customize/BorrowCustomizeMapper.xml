@@ -334,6 +334,18 @@ WHERE
 		total
 	</select>
 
+	<!-- 根据borrowNid统计订单数（原始标投资和承接总数）By Zha Ddaojian 2019-07-09 根据标的号下载所有协议  特殊场景处理:订单数量：最新的标的订单数量=最新申请时订单数量，协议数量=最新申请时协议数量 -->
+	<select id="getTotalTenderCountByBorrowNid" resultType="int"
+			parameterType="String">
+		SELECT SUM(cnt) AS total FROM (
+		SELECT COUNT(hbt.id) AS cnt FROM ht_borrow_tender hbt  WHERE hbt.borrow_nid = #{borrowNid}
+		UNION ALL
+		SELECT COUNT(hct.assign_id) AS cnt FROM ht_credit_tender hct  WHERE hct.bid_nid = #{borrowNid}
+		UNION ALL
+		SELECT COUNT(hdt.id) AS cnt FROM ht_hjh_debt_credit_tender hdt WHERE hdt.borrow_nid = #{borrowNid}
+		) AS countdata
+	</select>
+
 	<resultMap id="borrowCustomizeMap"
 		type="com.hyjf.am.trade.dao.model.customize.BorrowCustomize">
 		<id column="id" property="id" jdbcType="INTEGER" />

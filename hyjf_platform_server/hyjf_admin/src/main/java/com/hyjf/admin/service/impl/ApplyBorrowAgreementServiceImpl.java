@@ -144,9 +144,6 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             applyBorrowAgreementRequest.setBorrowNid(borrowId);
             ApplyBorrowAgreementResponse response = baseClient.postExe(BORROW_AGREEMENT_COUNT_URL, applyBorrowAgreementRequest, ApplyBorrowAgreementResponse.class);
             Integer count = response.getCount();
-            if (count > 0 ) {
-                return new AdminResult(BaseResult.FAIL, "协议已申请，请查询列表下载！");
-            }
             //需要保存的协议下载申请
             ApplyBorrowAgreementVO applyBorrowAgreementVO =  new ApplyBorrowAgreementVO();
             applyBorrowAgreementVO.setBorrowNid(borrowVO.getBorrowNid());
@@ -159,7 +156,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             //协议份数(出借订单数+承接订单数,下载成功状态的协议份数)
             int agreementNumber = 0;
             //订单份数(应下载协议数量=出借订单数+承接订单数)
-            int orderNumber = 0;
+            int orderNumber = amTradeClient.getTotalTenderCountByBorrowNid(borrowId);
             //对应的编号的标生成协议记录
             List<TenderAgreementVO>  applyAgreementlist = amTradeClient.getTenderAgreementByBorrowNid(borrowId);
             if(applyAgreementlist!=null && applyAgreementlist.size()>0){
@@ -168,8 +165,6 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                     if(tenderAgreementVO.getStatus()==3){
                         agreementNumber = agreementNumber +1 ;
                     }
-                    //应下载协议数量
-                    orderNumber = orderNumber +1;
                 }
                 if(agreementNumber==0){
                     return new AdminResult(BaseResult.FAIL, "对应的编号的标没有下载成功状态协议");
@@ -180,6 +175,9 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                 }
             }else{
                 return new AdminResult(BaseResult.FAIL, "对应的编号的标没有生成协议记录");
+            }
+            if (count > 0 ) {
+                return new AdminResult(BaseResult.FAIL, "协议已申请，请查询列表下载！");
             }
 
             result.setData(applyBorrowAgreementVO);

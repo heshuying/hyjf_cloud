@@ -46,4 +46,11 @@ public interface ApplyBorrowAgreementService extends BaseService{
      */
    int saveApplyBorrowAgreement(ApplyBorrowAgreementSaveRequest request);
 
+    /**
+     * 订单数
+     * @param borrowNid
+     * @return
+     */
+   Integer getTotalTenderCountByBorrowNid(String borrowNid);
+
 }

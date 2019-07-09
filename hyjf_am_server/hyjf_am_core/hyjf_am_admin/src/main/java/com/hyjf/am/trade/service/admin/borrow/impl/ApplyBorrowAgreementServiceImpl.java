@@ -2,8 +2,6 @@ package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.hyjf.am.resquest.admin.ApplyBorrowAgreementRequest;
 import com.hyjf.am.resquest.admin.ApplyBorrowAgreementSaveRequest;
-import com.hyjf.am.trade.dao.model.auto.ApplyAgreementInfo;
-import com.hyjf.am.trade.dao.model.auto.ApplyAgreementInfoExample;
 import com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreement;
 import com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreementExample;
 import com.hyjf.am.trade.service.admin.borrow.ApplyBorrowAgreementService;

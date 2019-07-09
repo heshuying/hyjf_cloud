@@ -14,4 +14,14 @@ import com.hyjf.am.vo.trade.borrow.ApplyBorrowInfoVO;
  * @return
  **/
 public class ApplyBorrowInfoResponse extends Response<ApplyBorrowInfoVO> {
+
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }
