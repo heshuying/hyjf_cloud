@@ -1142,11 +1142,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			// 今日已用额度
 			RedisUtils.add(dayUsedKey, String.valueOf(hjhPlanAsset.getAccount()));
 			BigDecimal dayUsed = getValueInRedis(dayUsedKey, new Long(60 * 60 * 24 * 2));
-			logger.info("自动录标校验保证金：dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
 			// 累积可用额度
 			String accumulateKey = RedisConstants.DAY_MARK_ACCUMULATE + instCode;
 			BigDecimal accumulate = getValueInRedis(accumulateKey, null);
-			logger.info("自动录标校验保证金：accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
 			dayAvailable = dayAvailable.add(bailConfig.getDayMarkLine()).subtract(dayUsed);
 			if (bailConfig.getIsAccumulate() == 1) {
 				dayAvailable = dayAvailable.add(accumulate);
@@ -1170,7 +1168,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			BigDecimal monthAvailable = BigDecimal.ZERO;
 			RedisUtils.add(monthKey, String.valueOf(hjhPlanAsset.getAccount()));
 			BigDecimal monthUsed = getValueInRedis(monthKey, new Long(60 * 60 * 24 * 31 * 2));
-			logger.info("自动录标校验保证金：monthKey: " + monthKey + " month userd in redis: " + monthUsed);
 			monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
 			logger.info("自动录标校验保证金，monthAvailable：" + monthAvailable);
 			if (monthAvailable.compareTo(BigDecimal.ZERO) < 0) {
