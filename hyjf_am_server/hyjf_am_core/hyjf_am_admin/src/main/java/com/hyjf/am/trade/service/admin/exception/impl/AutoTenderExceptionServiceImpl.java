@@ -1985,6 +1985,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     private void planCreditGenerateContractByMQ(String assignNid,String borrowNid) {
         try {
+            logger.info("-----------------生成计划债权转让协议开始，assignNid:" + assignNid + ",borrowNid：" + borrowNid);
             FddGenerateContractBeanVO bean = new FddGenerateContractBeanVO();
             bean.setTransType(4);
             bean.setTenderType(3);
