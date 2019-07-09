@@ -104,7 +104,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	@Override
 	public boolean insertSendBorrow(HjhPlanAsset hjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType) {
 		// 验证资产风险保证金是否足够（redis）
-		Integer checkResult = checkAssetCanSend(hjhPlanAsset);
+		Integer checkResult = updateAndCheckAssetCanSend(hjhPlanAsset);
 		if (checkResult == -1) {
 			return false;
 		}
@@ -138,15 +138,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败");
 			return false;
 		}
-
-		// 更新额度
-		updateForSend(hjhPlanAsset.getInstCode(), new BigDecimal(hjhPlanAsset.getAccount()));
-		// 累加日已用额度
-		String dayUsedKey = RedisConstants.DAY_USED + hjhPlanAsset.getInstCode() + "_" + GetDate.getDate("yyyyMMdd");
-		RedisUtils.add(dayUsedKey, String.valueOf(hjhPlanAsset.getAccount()));
-		// 累加月已用额度
-		String monthKey = RedisConstants.MONTH_USED + hjhPlanAsset.getInstCode() + "_" + GetDate.getDate("yyyyMM");
-		RedisUtils.add(monthKey, String.valueOf(hjhPlanAsset.getAccount()));
 
 		return true;
 	}
@@ -1130,7 +1121,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	 * @param hjhPlanAsset
 	 * @return
 	 */
-	private Integer checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
+	public Integer updateAndCheckAssetCanSend(HjhPlanAsset hjhPlanAsset) {
 		String instCode = hjhPlanAsset.getInstCode();
 		HjhBailConfig bailConfig = this.getBailConfig(instCode);
 		if (bailConfig == null) {
@@ -1193,7 +1184,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 		}
 
 		// 合作额度校验
-		if (!checkNewCredit(instCode, assetAcount)) {
+		if (!updateAndCheckNewCredit(instCode, assetAcount)) {
 			return 21;
 		}
 
@@ -1205,7 +1196,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	 *
 	 * @return
 	 */
-	private boolean checkNewCredit(String instCode, BigDecimal account) {
+	public boolean updateAndCheckNewCredit(String instCode, BigDecimal account) {
 		// 更新额度
 		int uptResult = updateForSend(instCode, account);
 		if(uptResult > 0){
