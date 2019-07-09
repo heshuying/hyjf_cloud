@@ -82,7 +82,7 @@ public class ApplyBorrowAgreementServiceImpl extends BaseServiceImpl implements 
             agreementExample.setLimitEnd(request.getLimitEnd());
             agreementExample.setLimitStart(request.getLimitStart());
         }
-        agreementExample.setOrderByClause("create_time Desc");
+        agreementExample.setOrderByClause("update_time Desc");
         List<ApplyBorrowAgreement>  applyBorrowAgreementList = this.applyBorrowAgreementMapper.selectByExample(agreementExample);
         List<ApplyBorrowAgreementVO> listVo = new ArrayList<ApplyBorrowAgreementVO>();
         if (applyBorrowAgreementList != null && applyBorrowAgreementList.size() > 0) {
@@ -108,6 +108,18 @@ public class ApplyBorrowAgreementServiceImpl extends BaseServiceImpl implements 
     }
 
     /**
+     * 订单数量：最新的标的订单数量=原始标投资+承接总数
+     * @author Zha Daojian
+     * @date 2019/7/9 10:33
+     * @param borrowNid
+     * @return java.lang.Integer
+     **/
+    @Override
+    public Integer getTotalTenderCountByBorrowNid(String borrowNid){
+        return this.borrowCustomizeMapper.getTotalTenderCountByBorrowNid(borrowNid);
+    }
+
+    /**
      * 协议申请标
      * @author Zha Daojian
      * @date 2019/5/9 10:14
@@ -118,13 +130,13 @@ public class ApplyBorrowAgreementServiceImpl extends BaseServiceImpl implements 
     public int saveApplyBorrowAgreement(ApplyBorrowAgreementSaveRequest request) {
         ApplyBorrowAgreement applyBorrowAgreement = new ApplyBorrowAgreement();
         BeanUtils.copyProperties(request,applyBorrowAgreement);
-        ApplyAgreementInfoExample example = new ApplyAgreementInfoExample();
-        example.createCriteria().andContractIdEqualTo(applyBorrowAgreement.getBorrowNid());
-        List<ApplyAgreementInfo> openAccountRecords = this.applyAgreementInfoMapper.selectByExample(example);
-        if(openAccountRecords != null && openAccountRecords.size() > 0){
-            applyBorrowAgreement.setId(openAccountRecords.get(0).getId());
+        ApplyBorrowAgreementExample example = new ApplyBorrowAgreementExample();
+        example.createCriteria().andBorrowNidEqualTo(applyBorrowAgreement.getBorrowNid());
+        List<ApplyBorrowAgreement> applyBorrowAgreements = this.applyBorrowAgreementMapper.selectByExample(example);
+        if(applyBorrowAgreements != null && applyBorrowAgreements.size() > 0){
+            applyBorrowAgreement.setId(applyBorrowAgreements.get(0).getId());
             applyBorrowAgreement.setUpdateTime(new Date());
-            applyBorrowAgreement.setCreateTime(openAccountRecords.get(0).getCreateTime());
+            applyBorrowAgreement.setCreateTime(applyBorrowAgreements.get(0).getCreateTime());
             return this.applyBorrowAgreementMapper.updateByPrimaryKey(applyBorrowAgreement);
 
         }else {
