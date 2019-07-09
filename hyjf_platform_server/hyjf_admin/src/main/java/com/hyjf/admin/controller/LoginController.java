@@ -97,7 +97,7 @@ public class LoginController extends BaseController {
 			// 生产环境   单点登录
 
 		}
-		RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID+username, uuid, 3600);
+		RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID+username, uuid, 10);
 		this.setUser(request, prs.getResult());
 		Map<String,Object> result =new HashMap<String, Object>();;
 		result.put("uuid", uuid);
