@@ -1199,8 +1199,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     public boolean updateAndCheckNewCredit(String instCode, BigDecimal account) {
 	    logger.info("updateAndCheckNewCredit instCode:{}, account:{}", instCode, account);
 		// 更新额度
-		int uptResult = updateForSend(instCode, account);
-		if(uptResult > 0){
+		Integer uptResult = updateForSend(instCode, account);
+		if(uptResult != null && uptResult > 0){
 			HjhBailConfig bailConfig = this.getBailConfig(instCode);
 			// 新增授信额度
 			BigDecimal newCreditLine = bailConfig.getNewCreditLine();
@@ -1215,6 +1215,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			}
 			return true;
 		}else{
+			logger.error("更新失败");
 			return false;
 		}
 	}
