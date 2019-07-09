@@ -2535,7 +2535,6 @@
 
 	<select id="countRepaymentCalendar" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT count(1) FROM (
-
 		SELECT
 		ten.nid
 		FROM
@@ -2603,6 +2602,7 @@
 			AND FROM_UNIXTIME(hcr.recover_time,'%m')  = #{tradeMonth,jdbcType=INTEGER}
 		</if>
 
+
 		UNION ALL
 		SELECT
 		hiii.tender_nid AS nid
@@ -2627,7 +2627,8 @@
 		SELECT
 		hha.accede_order_id AS nid
 		FROM ht_hjh_accede hha
-		LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
+		LEFT JOIN ht_hjh_plan hhp
+		ON hha.plan_nid=hhp.plan_nid
 		WHERE hha.order_status in (3,5)
 		AND hha.user_id=#{userId}
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2643,6 +2644,8 @@
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
+		left join ht_coupon_real_tender hcrt on hbtc.nid = hcrt.coupon_tender_id
+		left join ht_hjh_accede hha ON hcrt.real_tender_id = hha.accede_order_id
 		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
