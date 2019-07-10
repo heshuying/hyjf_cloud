@@ -1205,25 +1205,20 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     public boolean updateAndCheckNewCredit(String instCode, BigDecimal account) {
 	    logger.info("updateAndCheckNewCredit instCode:{}, account:{}", instCode, account);
 		// 更新额度
-		Integer uptResult = updateForSend(instCode, account);
-		if(uptResult != null && uptResult > 0){
-			HjhBailConfig bailConfig = this.getBailConfig(instCode);
-			// 新增授信额度
-			BigDecimal newCreditLine = bailConfig.getNewCreditLine();
-			// 周期内发标已发额度
-			BigDecimal cycLoanTotal = bailConfig.getCycLoanTotal();
-			logger.info("周期内发标已发额度+本次推标额度：" + cycLoanTotal);
+		updateForSend(instCode, account);
+		HjhBailConfig bailConfig = this.getBailConfig(instCode);
+		// 新增授信额度
+		BigDecimal newCreditLine = bailConfig.getNewCreditLine();
+		// 周期内发标已发额度
+		BigDecimal cycLoanTotal = bailConfig.getCycLoanTotal();
+		logger.info("周期内发标已发额度+本次推标额度：" + cycLoanTotal);
 
-			if (newCreditLine.compareTo(cycLoanTotal) < 0) {
-				updateForSend(instCode, account.negate());
-				logger.info("周期内发标已发额度超过授信额度");
-				return false;
-			}
-			return true;
-		}else{
-			logger.error("更新失败");
+		if (newCreditLine.compareTo(cycLoanTotal) < 0) {
+			updateForSend(instCode, account.negate());
+			logger.info("周期内发标已发额度超过授信额度");
 			return false;
 		}
+		return true;
 	}
 
 	/**
