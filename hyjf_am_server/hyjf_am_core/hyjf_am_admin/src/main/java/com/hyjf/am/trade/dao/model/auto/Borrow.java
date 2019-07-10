@@ -484,6 +484,13 @@ public class Borrow implements Serializable {
      */
     private String investLevel;
 
+    /**
+     * 备案/撤销备案银行回值描述信息
+     *
+     * @mbggenerated
+     */
+    private String registBankmsg;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -1060,5 +1067,13 @@ public class Borrow implements Serializable {
 
     public void setInvestLevel(String investLevel) {
         this.investLevel = investLevel == null ? null : investLevel.trim();
+    }
+
+    public String getRegistBankmsg() {
+        return registBankmsg;
+    }
+
+    public void setRegistBankmsg(String registBankmsg) {
+        this.registBankmsg = registBankmsg == null ? null : registBankmsg.trim();
     }
 }

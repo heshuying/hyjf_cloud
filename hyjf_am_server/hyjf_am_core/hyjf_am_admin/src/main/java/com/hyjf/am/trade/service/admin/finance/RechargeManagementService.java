@@ -69,4 +69,6 @@ public interface RechargeManagementService {
      * @return
      */
     AccountRecharge getAccountRechargeByNid(String nid);
+
+	AccountRecharge selectAccountRechargeByUserId(Integer userId);
 }

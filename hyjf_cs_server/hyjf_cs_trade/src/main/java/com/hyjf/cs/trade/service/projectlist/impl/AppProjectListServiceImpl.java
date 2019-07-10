@@ -110,6 +110,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         JSONObject info = new JSONObject();
         AppProjectListRequest req = new AppProjectListRequest();
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
+        req.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        req.setWjtInstCode(systemConfig.getWjtInstCode());
         ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
 
         // 合规审批需求  add by huanghui 20181123 start
@@ -131,6 +133,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         // 查询定时发标+出借中的标的数量
         params.setStatus("21");
+        params.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        params.setWjtInstCode(systemConfig.getWjtInstCode());
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
         // 先抛错方式，避免代码看起来头重脚轻。
@@ -1566,7 +1570,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         }
 
         // 合规审批需求  add by huanghui 20181123 start
-        info.put("riskWarningHint", "智投服务是平台根据出借人授权，帮助出借人分散投标、循环出借的服务。到期后退出时效以实际债权转让完成用时为准 。");
+        info.put("riskWarningHint", "智投服务是平台根据出借人授权，帮助出借人分散投标、循环出借的服务。到期后退出时效以实际债权转让完成用时为准 。 ");
         info.put("riskWarningContent", " $智投介绍$ " +
                 "\n" +
                 "智投服务是汇盈金服为您提供的本金自动循环出借及到期自动转让退出的自动投标服务，自动投标授权服务期限自授权出借之日起至退出完成。出借范围仅限于平台发布的借款标的或服务中被转让债权，您可随时查看持有的债权标的列表及标的详情。" +

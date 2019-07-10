@@ -10,8 +10,11 @@ import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingPresentationLog;
 import com.hyjf.cs.message.bean.hgreportdata.caijing.CaiJingRepotDataLog;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.Document;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -32,20 +35,39 @@ public class CaiJingPresentationLogDao extends BaseMongoDao<CaiJingPresentationL
     }
 
     public List<CaiJingPresentationLog> queryCaiJingLog(CaiJingLogRequest request) {
-        Query query = new Query();
+        Document obj = new Document();
+//        DBObject obj = new BasicDBObject();
+        DBObject object = new BasicDBObject();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(request.getPresentationTimeStart()) && StringUtils.isNotBlank(request.getPresentationTimeEnd())) {
             Date startDate = GetDate.stringToDate2(request.getPresentationTimeStart());
             Date endDate = GetDate.stringToDate2(request.getPresentationTimeEnd());
-            criteria.and("presentationTime").gte(GetDate.getSearchStartTime(startDate))
-                    .lte(GetDate.getSearchEndTime(endDate));
+
+            object.put("$gte", GetDate.getSearchStartTime(startDate));
+            obj.put("presentationTime",object);
+
+            object.put("$lte", GetDate.getSearchEndTime(endDate));
+            obj.put("presentationTime",object);
+
         }
         if (StringUtils.isNotBlank(request.getLogType())) {
-            criteria.and("logType").is(request.getLogType());
+            obj.put("logType",request.getLogType());
         }
         if (request.getStatus() != null) {
-            criteria.and("status").is(request.getStatus());
+            obj.put("status",request.getStatus());
         }
+
+        DBObject object2 = new BasicDBObject();
+        //2019-6-29 之前的数据都不做展示
+        object2.put("$gte", 1561737600);
+        obj.put("createTime",object2);
+
+        //排除字段不展示
+        Document fieldsObject = new Document();
+        fieldsObject.put("json", false);
+
+        Query query = new BasicQuery(obj,fieldsObject);
+
         query.with(new Sort(Sort.Direction.DESC, "presentationTime"));
         query.addCriteria(criteria);
         if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
@@ -54,6 +76,7 @@ public class CaiJingPresentationLogDao extends BaseMongoDao<CaiJingPresentationL
             int limitStart = (currPage - 1) * pageSize;
             query.skip(limitStart).limit(pageSize);
         }
+
 
         List<CaiJingRepotDataLog> list = mongoTemplate.find(query, CaiJingRepotDataLog.class);
         List<CaiJingPresentationLog> logVOS = CommonUtils.convertBeanList(list, CaiJingPresentationLog.class);

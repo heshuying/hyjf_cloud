@@ -152,14 +152,9 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
         // 判断异常标的中是否存在
         BorrowDelete borrowDelete = this.borrowDeleteMapper.selectByPrimaryKey(id);
         if (null != borrowDelete) {
-            // 获取标的编号
-            String borrowNid = borrowDelete.getBorrowNid();
-            // 获取借款详情
-            Borrow borrow = getBorrow(borrowNid);
-            BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
             // 获取标的资产来源和借款金额
-            String instCode = borrowInfo.getInstCode();
-            BigDecimal account = borrow.getAccount();
+            String instCode = borrowDelete.getInstCode();
+            BigDecimal account = borrowDelete.getAccount();
             // 获取该机构保证金配置
             HjhBailConfig hjhBailConfig = this.selectHjhBailConfigByInstCode(instCode);
             if (null != hjhBailConfig) {

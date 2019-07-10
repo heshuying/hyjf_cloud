@@ -21,12 +21,10 @@ import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -170,6 +168,26 @@ public class AssetListController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			Map<String, String> assetStatusMap = CacheUtil.getParamNameMap("ASSET_STATUS");
+			Map<String, String> assetApplyStatusMap = CacheUtil.getParamNameMap("ASSET_APPLY_STATUS");
+			Map<String, String> accountStatusMap = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+			Map<String, String> userTypeMap = CacheUtil.getParamNameMap("USER_TYPE");
+			//脱敏权限
+			boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+			response.getResultList().forEach(assetListCustomizeVO -> {
+				//
+				assetListCustomizeVO.setStatus(assetStatusMap.getOrDefault(assetListCustomizeVO.getStatus(),null));
+				assetListCustomizeVO.setVerifyStatus(assetApplyStatusMap.getOrDefault(assetListCustomizeVO.getVerifyStatus(),null));
+				assetListCustomizeVO.setBankOpenAccount(accountStatusMap.getOrDefault(assetListCustomizeVO.getBankOpenAccount(),null));
+				assetListCustomizeVO.setUserType(userTypeMap.getOrDefault(assetListCustomizeVO.getUserType(),null));
+				//脱敏
+				if(!isShow){
+					assetListCustomizeVO.setTruename(AsteriskProcessUtil.getAsteriskedCnName(assetListCustomizeVO.getTruename()));
+					assetListCustomizeVO.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(assetListCustomizeVO.getIdcard()));
+					assetListCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(assetListCustomizeVO.getMobile()));
+				}
+			});
+
 			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
 			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAssetListCustomizeVO.class);
 			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, response.getCount()));
@@ -236,6 +254,14 @@ public class AssetListController extends BaseController {
             if (StringUtils.isNotBlank(useageName)){
                 assetDetailCustomizeVO.setUseage(useageName);
             }
+
+            boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+            //脱敏
+			if(!isShow){
+				assetDetailCustomizeVO.setTruename(AsteriskProcessUtil.getAsteriskedCnName(assetDetailCustomizeVO.getTruename()));
+				assetDetailCustomizeVO.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(assetDetailCustomizeVO.getIdcard()));
+			}
+
             // 将原子层查询的VO转型为组合层VO
 			/*BeanUtils.copyProperties(assetDetailCustomizeVO,vo);*/
 			jsonObject.put("返回实体类", "assetDetailCustomizeVO");
@@ -393,13 +419,46 @@ public class AssetListController extends BaseController {
 	        if(totalCount==0) {
 	        	 helper.export(workbook, "第1页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 	        }else {
-		        for (int i = 1; i <= sheetCount; i++) {
+				boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+				Map<String, String> assetStatusMap = CacheUtil.getParamNameMap("ASSET_STATUS");
+				Map<String, String> assetApplyStatusMap = CacheUtil.getParamNameMap("ASSET_APPLY_STATUS");
+				Map<String, String> accountStatusMap = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+				Map<String, String> userTypeMap = CacheUtil.getParamNameMap("USER_TYPE");
+
+				for (int i = 1; i <= sheetCount; i++) {
 		        	sheetNameTmp = sheetName + "_第" + (i) + "页";
 		        	if(sheetCount==1) {
+						res.getResultList().forEach(assetListCustomizeVO -> {
+							assetListCustomizeVO.setStatus(assetStatusMap.getOrDefault(assetListCustomizeVO.getStatus(),null));
+							assetListCustomizeVO.setVerifyStatus(assetApplyStatusMap.getOrDefault(assetListCustomizeVO.getVerifyStatus(),null));
+							assetListCustomizeVO.setBankOpenAccount(accountStatusMap.getOrDefault(assetListCustomizeVO.getBankOpenAccount(),null));
+							assetListCustomizeVO.setUserType(userTypeMap.getOrDefault(assetListCustomizeVO.getUserType(),null));
+							//脱敏
+							if(!isShow){
+								assetListCustomizeVO.setTruename(AsteriskProcessUtil.getAsteriskedCnName(assetListCustomizeVO.getTruename()));
+								assetListCustomizeVO.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(assetListCustomizeVO.getIdcard()));
+								assetListCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(assetListCustomizeVO.getMobile()));
+							}
+						});
+
 		        		helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res.getResultList());
 		        	}else {
 		        		form.setCurrPage(sheetCount);
-		        		helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  assetListService.findAssetListWithoutPage(form).getResultList());
+						AssetListCustomizeResponse response2=assetListService.findAssetListWithoutPage(form);
+							response2.getResultList().forEach(assetListCustomizeVO -> {
+								assetListCustomizeVO.setStatus(assetStatusMap.getOrDefault(assetListCustomizeVO.getStatus(),null));
+								assetListCustomizeVO.setVerifyStatus(assetApplyStatusMap.getOrDefault(assetListCustomizeVO.getVerifyStatus(),null));
+								assetListCustomizeVO.setBankOpenAccount(accountStatusMap.getOrDefault(assetListCustomizeVO.getBankOpenAccount(),null));
+								assetListCustomizeVO.setUserType(userTypeMap.getOrDefault(assetListCustomizeVO.getUserType(),null));
+								//脱敏
+								if(!isShow){
+									assetListCustomizeVO.setTruename(AsteriskProcessUtil.getAsteriskedCnName(assetListCustomizeVO.getTruename()));
+									assetListCustomizeVO.setIdcard(AsteriskProcessUtil.getAsteriskedIdcard(assetListCustomizeVO.getIdcard()));
+									assetListCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(assetListCustomizeVO.getMobile()));
+								}
+							});
+
+		        		helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  response2.getResultList());
 		        	}
 		        }
 	        }
