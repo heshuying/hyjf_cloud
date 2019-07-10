@@ -227,6 +227,20 @@ public class User implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 用户总获取积分
+     *
+     * @mbggenerated
+     */
+    private Integer pointsTotal;
+
+    /**
+     * 用户当前积分
+     *
+     * @mbggenerated
+     */
+    private Integer pointsCurrent;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getUserId() {
@@ -499,5 +513,21 @@ public class User implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getPointsTotal() {
+        return pointsTotal;
+    }
+
+    public void setPointsTotal(Integer pointsTotal) {
+        this.pointsTotal = pointsTotal;
+    }
+
+    public Integer getPointsCurrent() {
+        return pointsCurrent;
+    }
+
+    public void setPointsCurrent(Integer pointsCurrent) {
+        this.pointsCurrent = pointsCurrent;
     }
 }

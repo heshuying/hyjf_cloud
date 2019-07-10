@@ -143,5 +143,4 @@ public class CouponUserServiceImpl implements CouponUserService {
 
         return couponUserList == null || couponUserList.size() == 0 ? true : false;
     }
-
 }

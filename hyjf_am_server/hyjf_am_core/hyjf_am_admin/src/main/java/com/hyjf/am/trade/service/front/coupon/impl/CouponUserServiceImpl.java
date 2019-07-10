@@ -264,6 +264,22 @@ public class CouponUserServiceImpl implements CouponUserService {
     }
 
     /**
+     * 根据id删除一条优惠券（兑吧）
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int delDuibaCouponUserById(CouponUserBeanRequest request) {
+        CouponUser couponUser = new CouponUser();
+        couponUser.setId(request.getId());
+        couponUser.setDeleteContent(request.getContent());
+        couponUser.setDelFlag(Integer.parseInt(CustomConstants.FLAG_DELETE));
+        int count = couponUserMapper.updateByPrimaryKeySelective(couponUser);
+        return count;
+    }
+
+    /**
      * 发放一条优惠券
      * @param request
      * @return
@@ -390,4 +406,45 @@ public class CouponUserServiceImpl implements CouponUserService {
         couponOperationHistoryMapper.insert(co);
     }
 
+    /**
+     * 发放一条优惠券（来自兑吧的插入优惠卷用户信息并返回插入生成的主键id）
+     * @param request
+     * @return
+     */
+    @Override
+    public CouponUser insertByDuibaOrder(CouponUserRequest request) {
+        CouponUser couponUser = new CouponUser();
+        couponUser.setCouponCode(request.getCouponCode());
+        couponUser.setActivityId(request.getActivityId());
+        couponUser.setContent(request.getContent());
+        couponUser.setEndTime(request.getEndTime());
+        couponUser.setUserId(request.getUserId());
+        couponUser.setCouponUserCode(request.getCouponUserCode());
+        couponUser.setCreateUserId(request.getCreateUserId());
+        couponUser.setCreateTime(request.getCreateTime());
+        couponUser.setUpdateUserId(request.getUpdateUserId());
+        couponUser.setUpdateTime(request.getUpdateTime());
+        couponUser.setDelFlag(request.getDelFlag());
+        couponUser.setUsedFlag(request.getUsedFlag());
+        couponUser.setReadFlag(request.getReadFlag());
+        couponUser.setCouponSource(request.getCouponSource());
+        couponUser.setAttribute(request.getAttribute());
+        couponUser.setChannel(request.getChannel());
+        couponUserMapper.insertByDuibaOrder(couponUser);
+        this.operationLog(couponUser,CustomConstants.OPERATION_CODE_INSERT,String.valueOf(request.getCreateUserId()));
+        return couponUser;
+    }
+
+    /**
+     * 更新一条优惠券（更新优惠卷用户信息为有效状态）
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateCouponUserDelFlag(CouponUserRequest request) {
+        CouponUser couponUser = new CouponUser();
+        couponUser.setId(request.getId());
+        couponUser.setDelFlag(CustomConstants.FALG_NOR);
+        return couponUserMapper.updateByPrimaryKeySelective(couponUser);
+    }
 }
