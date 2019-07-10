@@ -422,18 +422,13 @@ public class FileUtil {
      * @throws IOException
      */
     public static File getFile(String strUrl, String fileName) throws IOException{
-        int count = 0;
-		if (count == 1) {
-			int interval = 1000;
-			try {
-				Thread.sleep(interval);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		int interval = 5000;
+		try {
+			Thread.sleep(interval);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		if (count == 0) {
-			count = 1;
-		}
+
         File file = new File(fileName);
         URL url = new URL(strUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
