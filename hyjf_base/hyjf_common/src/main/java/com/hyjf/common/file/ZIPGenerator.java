@@ -12,60 +12,6 @@ import java.util.zip.ZipOutputStream;
 
 public class ZIPGenerator {
     private static Logger logger = LoggerFactory.getLogger(ZIPGenerator.class);
-
-
-    public static boolean writeZip(List<File> files, String zipName) {
-        OutputStream os = null;
-        ZipOutputStream zos = null;
-        BufferedInputStream bis = null;
-        try {
-            os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
-            zos = new ZipOutputStream(os);
-            byte[] buf = new byte[8192];
-            int len;
-            for (int i = 0; i < files.size(); i++) {
-                File file = files.get(i);
-                if (!file.isFile()) {
-                    continue;
-                }
-                ZipEntry ze = new ZipEntry(file.getName());
-                zos.putNextEntry(ze);
-                bis = new BufferedInputStream(new FileInputStream(file));
-                while ((len = bis.read(buf)) > 0) {
-                    zos.write(buf, 0, len);
-                }
-                zos.closeEntry();
-            }
-            zos.closeEntry();
-            zos.close();
-            return true;
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            return false;
-        } finally {
-            if (bis != null){
-                try {
-                    bis.close();
-                } catch (IOException e) {
-                    logger.error("io流关闭错误");
-                }
-            }
-            if (zos != null){
-                try {
-                    zos.close();
-                } catch (IOException e) {
-                    logger.error("io流关闭错误");
-                }
-            }
-            if (os != null){
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    logger.error("io流关闭错误");
-                }
-            }
-        }
-    }
     /**
      * 生成并下载ZIP文件
      * 
@@ -100,6 +46,9 @@ public class ZIPGenerator {
                     zos.write(buf, 0, len);
                 }
                 zos.closeEntry();
+                if(i>4){
+                    break;
+                }
             }
             zos.closeEntry();
             zos.close();
