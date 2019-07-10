@@ -13,10 +13,15 @@ import com.hyjf.am.config.service.cert.CertService;
 import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
 import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +33,8 @@ public class CertServiceImpl implements CertService {
     protected CertLogMapper certLogMapper;
     @Autowired
     protected CertErrLogMapper certErrLogMapper;
+
+    Logger logger = LoggerFactory.getLogger(CertServiceImpl.class);
 
     /**
      * 上报日志数量
@@ -100,8 +107,13 @@ public class CertServiceImpl implements CertService {
         }else {
             form = new CertReportLogRequestBean();
         }
-        example.setLimitStart(form.getPaginator().getOffset());
-        example.setLimitEnd(form.getPaginator().getLimit());
+        if(null!=form.getPaginator()){
+            example.setLimitStart(form.getPaginator().getOffset());
+            example.setLimitEnd(form.getPaginator().getLimit());
+        }else{
+            example.setLimitStart(0);
+            example.setLimitEnd(1000);
+        }
         example.setOrderByClause(" send_time DESC");
         return certLogMapper.selectByExample(example);
     }
@@ -186,5 +198,61 @@ public class CertServiceImpl implements CertService {
         certErrLog.setSendCount(3);
         certErrLog.setId(id);
         certErrLogMapper.updateByPrimaryKeySelective(certErrLog);
+    }
+
+    /**
+     * 根据id修改对账状态
+     * @param id
+     * @return
+     */
+    @Override
+    public int updateCertLogById(Integer id){
+        CertLog certLog = certLogMapper.selectByPrimaryKey(id);
+        certLog.setQueryResult(0);
+        int intFlg = certLogMapper.updateByPrimaryKeySelective(certLog);
+        if(intFlg<=0){
+           throw new RuntimeException("============对账状态修改失败！！========");
+        }
+        return intFlg;
+    }
+
+    /**
+     * 批量修改对账状态
+     * @param ids
+     * @param certLog
+     * @return
+     */
+    @Override
+    public int batchUpdateCertLogByIds(List<Integer> ids,CertLog certLog) {
+        CertLogExample example = new CertLogExample();
+        CertLogExample.Criteria creteria = example.createCriteria();
+        creteria.andIdIn(ids);
+        int intupd = certLogMapper.updateByExampleSelective(certLog, example);
+        return intupd;
+    }
+
+    /**
+     * 重新上报数据
+     * @param logOrderId
+     * @return
+     */
+    @Override
+    public int insertCertErrorLogByLogOrderId(String logOrderId){
+        CertErrLogExample example = new CertErrLogExample();
+        CertErrLogExample.Criteria criteria = example.createCriteria();
+        criteria.andLogOrdIdEqualTo(logOrderId);
+        List<CertErrLog> certErrLogList = certErrLogMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(certErrLogList)){
+            return 2;
+        }
+        CertErrLog certErrLog = new CertErrLog();
+        CertReportLogRequestBean certReportLogRequestBean = new CertReportLogRequestBean();
+        certReportLogRequestBean.setLogOrdId(logOrderId);
+        List<CertLog> certLogs =selectCertReportLogList(certReportLogRequestBean);
+        CertLog certLog = certLogs.get(0);
+        BeanUtils.copyProperties(certLog, certErrLog);
+        certErrLog.setId(null);
+        certErrLog.setUpdateTime(new Date());
+        return certErrLogMapper.insertSelective(certErrLog);
     }
 }
