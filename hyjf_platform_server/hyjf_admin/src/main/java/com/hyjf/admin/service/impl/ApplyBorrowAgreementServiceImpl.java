@@ -232,7 +232,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
            String filesName =  DateUtils.getNowDateOfDay()+"-"+requestBean.getBorrowNid();
             //ZIPGenerator.generateZip(response, files, filesName);
-            ZIPGenerator.createZipFile(files, filesName);
+            ZIPGenerator.createZipFile(files, filesName,response);
             logger.info("searchTenderToCreditDetail下载成功");
         }else{
             logger.error("searchTenderToCreditDetail下载失败，请稍后重试。。。。");
