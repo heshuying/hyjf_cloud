@@ -14,6 +14,8 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -21,6 +23,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -67,6 +70,28 @@ public class AdminBorrowCreditTenderController extends BaseController {
         return result;
     }
 
+    @ApiOperation(value = "结束债权", notes = "结束债权")
+    @GetMapping("/creditEnd/{orderId}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+    @ResponseBody
+    public Object creditEnd(@PathVariable String orderId){
+        AdminResult result = new AdminResult();
+        logger.info("【结束债权】orderId:" + orderId);
+        if(StringUtils.isBlank(orderId)){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc("请求参数错误");
+            return result;
+        }
+
+        Response saveResponse = borrowCreditTenderService.doCreditEnd(orderId);
+        if(saveResponse == null || !"0".equals(saveResponse.getRtn())){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc(saveResponse.getMessage());
+            return result;
+        }
+
+        return result;
+    }
 
     @ApiOperation(value = "承接信息导出", notes = "承接信息导出")
     @PostMapping("/exportData")
@@ -120,13 +145,13 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队",
                     "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性", "承接人当前的推荐人的分公司", "承接人当前的推荐人的部门", "承接人当前的推荐人的团队",
                     "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队",
-                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间","债权结束状态"};
         }else {
             titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "出让人当前的推荐人的用户名", "出让人当前的推荐人的用户属性",
                     "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性",
                     "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性",
                     "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性",
-                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间","债权结束状态"};
         }
         // 生成一个表格
         SXSSFSheet sheet = workbook.createSheet(sheetNameTmp);
@@ -332,6 +357,8 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     // 承接时间
                     else if (celLength == 33) {
                         cell.setCellValue(borrowCommonCustomize.getAddTime());
+                    }else if (celLength == 34) {
+                        cell.setCellValue(borrowCommonCustomize.getStateDesc());
                     }
                 }else {
                     if (celLength == 0) {
@@ -452,6 +479,8 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     // 承接时间
                     else if (celLength == 21) {
                         cell.setCellValue(borrowCommonCustomize.getAddTime());
+                    }else if (celLength == 22) {
+                        cell.setCellValue(borrowCommonCustomize.getStateDesc());
                     }
                 }
             }
@@ -493,9 +522,5 @@ public class AdminBorrowCreditTenderController extends BaseController {
         AdminResult result = borrowCreditTenderService.pdfPreview(req);
         return result;
     }
-
-
-
-
 
 }

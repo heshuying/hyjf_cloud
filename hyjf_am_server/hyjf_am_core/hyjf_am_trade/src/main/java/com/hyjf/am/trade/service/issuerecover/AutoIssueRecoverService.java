@@ -4,6 +4,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -12,6 +13,8 @@ import java.util.List;
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 10:30
  */
 public interface AutoIssueRecoverService extends BaseService {
+
+    Integer updateForSend(String instCode, BigDecimal assetAccount);
 
     /**
      * 匹配标签
@@ -68,4 +71,8 @@ public interface AutoIssueRecoverService extends BaseService {
      * @return
      */
     boolean insertSendBorrow(HjhPlanAsset mqHjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType);
+
+    Integer updateAndCheckAssetCanSend(HjhPlanAsset hjhPlanAsset);
+
+    boolean updateAndCheckNewCredit(String instCode, BigDecimal account);
 }
