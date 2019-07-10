@@ -1,23 +1,17 @@
 package com.hyjf.common.file;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZIPGenerator {
     private static Logger logger = LoggerFactory.getLogger(ZIPGenerator.class);
-    
     /**
      * 生成并下载ZIP文件
      * 
@@ -33,18 +27,50 @@ public class ZIPGenerator {
         logger.info("fileName................"+fileName);
         System.out.println("Download................");
         ZipOutputStream zos = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
         try {
-            zos = new ZipOutputStream(response.getOutputStream());
-            zipFile(files, "", zos);     
-            zos.flush();     
+            os = response.getOutputStream();
+            zos = new ZipOutputStream(os);
+            byte[] buf = new byte[8192];
+            int len;
+            for (int i = 0; i < files.size(); i++) {
+                File file = files.get(i);
+                if (!file.isFile()) {
+                    continue;
+                }
+                ZipEntry ze = new ZipEntry(file.getName());
+                zos.putNextEntry(ze);
+                bis = new BufferedInputStream(new FileInputStream(file));
+                while ((len = bis.read(buf)) > 0) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+            }
+            zos.closeEntry();
+            zos.close();
         } catch (IOException e) {
-            logger.error("生成zip文件失败:", e);
-        }finally {
+            logger.error(e.getMessage());
+        } finally {
+            if (bis != null){
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
+                }
+            }
             if (zos != null){
                 try {
                     zos.close();
                 } catch (IOException e) {
-                    logger.error("zos流关闭失败", e);
+                    logger.error("io流关闭错误");
+                }
+            }
+            if (os != null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
                 }
             }
         }
@@ -123,56 +149,4 @@ public class ZIPGenerator {
          f.delete();
         }  
    }
-    public static String createZipFile(List<File> fileList, String zipFileName,HttpServletResponse response) {
-        logger.info("fileName...===================............."+zipFileName);
-        response.setContentType("APPLICATION/OCTET-STREAM");
-        response.setHeader("Content-Disposition","attachment; filename="+zipFileName+".zip");
-        if(fileList == null || fileList.size() == 0 || StringUtils.isEmpty(zipFileName)){
-            return null;
-        }
-        //初期化ZIP流
-        ZipOutputStream out = null;
-        try{
-            //构建ZIP流对象
-            out = new ZipOutputStream(response.getOutputStream());
-            //循环处理传过来的集合
-            for(int i = 0 ; i< fileList.size(); i++){
-                //获取目标文件
-                File inFile = fileList.get(i);
-                if(inFile.exists()){
-                    //定义ZipEntry对象
-                    ZipEntry entry = new ZipEntry(inFile.getName());
-                    //赋予ZIP流对象属性
-                    out.putNextEntry(entry);
-                    int len = 0 ;
-                    //缓冲
-                    byte[] buffer = new byte[1024];
-                    //构建FileInputStream流对象
-                    FileInputStream fis;
-                    fis = new FileInputStream(inFile);
-                    while ((len = fis.read(buffer))< 0) {
-                        out.write(buffer, 0, len);
-                        out.flush();
-                    }
-                    //关闭closeEntry
-                    out.closeEntry();
-                    //关闭FileInputStream
-                    fis.close();
-                }
-            }
-        }catch (IOException e) {
-            e.printStackTrace();
-        }finally{
-            try {
-                //最后关闭ZIP流
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        return zipFileName;
-
-    }
 }
