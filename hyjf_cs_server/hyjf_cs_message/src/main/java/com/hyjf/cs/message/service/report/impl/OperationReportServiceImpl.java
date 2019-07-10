@@ -908,7 +908,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (StringUtils.isBlank(operationId)) {
 			//运营报告插入
 			operationId = insertOperationReport(operationReport, createTime, createUserId);
-			if (StringUtils.isNotBlank(operationId)) {
+			if (StringUtils.isBlank(operationId)) {
 				response.setRtn("1");
 				response.setMessage("失败");
 				return response;

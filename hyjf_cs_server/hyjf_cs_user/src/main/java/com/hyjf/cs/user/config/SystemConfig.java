@@ -217,6 +217,14 @@ public class SystemConfig {
     public String wjtWeiFrontHost;
 
 
+    /**
+     * 兑吧相关
+     */
+    @Value("${hyjf.duiba.appkey}")
+    public String duiBaAppKey;
+    @Value("${hyjf.duiba.appsecret}")
+    public String duiBaAppSecret;
+
     public String getAppFileUpload() {
         return appFileUpload;
     }
@@ -584,5 +592,21 @@ public class SystemConfig {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public String getDuiBaAppKey() {
+        return duiBaAppKey;
+    }
+
+    public void setDuiBaAppKey(String duiBaAppKey) {
+        this.duiBaAppKey = duiBaAppKey;
+    }
+
+    public String getDuiBaAppSecret() {
+        return duiBaAppSecret;
+    }
+
+    public void setDuiBaAppSecret(String duiBaAppSecret) {
+        this.duiBaAppSecret = duiBaAppSecret;
     }
 }

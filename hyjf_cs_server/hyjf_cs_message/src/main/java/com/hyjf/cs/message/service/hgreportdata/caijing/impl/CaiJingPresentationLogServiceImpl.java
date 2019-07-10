@@ -64,6 +64,9 @@ public class CaiJingPresentationLogServiceImpl implements CaiJingPresentationLog
         if (request.getStatus() != null) {
             criteria.and("status").is(request.getStatus());
         }
+        //2019-6-29 之前的数据都不做展示
+        criteria.and("createTime").gte(1561737600);
+
         query.addCriteria(criteria);
         return presentationLogDao.count(query).intValue();
     }
