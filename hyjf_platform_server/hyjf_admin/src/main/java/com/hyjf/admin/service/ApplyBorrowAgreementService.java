@@ -42,7 +42,7 @@ public interface ApplyBorrowAgreementService {
      * @author Zha Daojian
      * @date 2018/7/12 10:52
      */
-    void downloadAction(DownloadAgreementRequest requestBean, HttpServletResponse response);
+    void downloadAction(DownloadAgreementRequest requestBean, HttpServletResponse response) throws Exception;
 
 
 }
