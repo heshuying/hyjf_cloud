@@ -102,6 +102,7 @@ public class LandingManageController extends BaseController {
     public AdminResult<TemplateConfigCustomizeVO> selectTemplateById(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
         TemplateConfigCustomizeVO templateConfigCustomizeVO = new TemplateConfigCustomizeVO();
         //设置默认结果页图片和跳转路径
+        templateConfigCustomizeVO.setLayerImg("https://wechat.hyjf.com/static/images/modal-success-default.png");
         templateConfigCustomizeVO.setJumtUrl("/user/open");
         if (null != landingManagerRequestBean.getId()) {
             TemplateConfigResponse templateConfigResponse = landingManagerService.selectTemplateById(landingManagerRequestBean.getId());
