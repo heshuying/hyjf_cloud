@@ -107,7 +107,7 @@ public class BankCreditEnd implements Serializable {
     private String authCode;
 
     /**
-     * 结束债权类型（1:还款，2:散标债转，3:计划债转）
+     * 结束债权类型（1:还款，2:散标债转，3:计划债转，5：后台发起）
      *
      * @mbggenerated
      */
@@ -182,6 +182,13 @@ public class BankCreditEnd implements Serializable {
      * @mbggenerated
      */
     private String failmsg;
+
+    /**
+     * 失败次数
+     *
+     * @mbggenerated
+     */
+    private Integer failTimes;
 
     /**
      * 添加人
@@ -427,6 +434,14 @@ public class BankCreditEnd implements Serializable {
 
     public void setFailmsg(String failmsg) {
         this.failmsg = failmsg == null ? null : failmsg.trim();
+    }
+
+    public Integer getFailTimes() {
+        return failTimes;
+    }
+
+    public void setFailTimes(Integer failTimes) {
+        this.failTimes = failTimes;
     }
 
     public Integer getCreateUser() {

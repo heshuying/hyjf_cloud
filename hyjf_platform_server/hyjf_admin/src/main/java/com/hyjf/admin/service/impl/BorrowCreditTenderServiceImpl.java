@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -15,9 +16,12 @@ import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
@@ -25,6 +29,7 @@ import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.CountResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -77,6 +82,9 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     @Autowired
     CommonProducer commonProducer;
 
+    @Autowired
+    private AdminCommonService adminCommonService;
+
     public static final String HZR_PREFIX = "HZR";
 
     public static final String BASE_URL = "http://AM-ADMIN/am-trade";
@@ -107,6 +115,9 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public static final String BORROW_URL = BASE_URL + "/borrow/getBorrow/";
 
     public static final String PDFSIGN_CREDIT_TENDER_COUNT_URL = BASE_URL + "/creditTender/getBorrowCreditTender4Admin";
+
+    /*结束债权*/
+    public static final String CREDITEND_URL = BASE_URL + "/bankCreditEndController/startCreditEnd";
     /**
      * 查询还款信息列表
      *
@@ -175,6 +186,10 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public AdminResult getCreditTenderList(BorrowCreditTenderRequest request) {
         AdminResult result = new AdminResult();
         BorrowCreditTenderResultBean bean = new BorrowCreditTenderResultBean();
+        //债权结束状态
+        List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
+        bean.setCreditendStateList(creditendStateList);
+
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
         AdminCreditTenderResponse response = baseClient.postExe(TENDER_COUNT_URL, req, AdminCreditTenderResponse.class);
@@ -366,6 +381,21 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         return baseClient.postExe(TENDER_LIST_URL, request, AdminCreditTenderResponse.class);
+    }
+
+    /**
+     * 结束债权
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Response doCreditEnd(String orderId){
+        StartCreditEndRequest requestBean = new StartCreditEndRequest();
+        requestBean.setOrgOrderId(orderId);
+        requestBean.setCreditEndType(5);
+        requestBean.setStartFrom(2); //散标债转信息
+
+        return baseClient.postExeNoException(CREDITEND_URL, requestBean, IntegerResponse.class);
     }
 
     /**

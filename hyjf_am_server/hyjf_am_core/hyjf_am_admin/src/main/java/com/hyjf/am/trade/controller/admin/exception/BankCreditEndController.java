@@ -6,7 +6,9 @@ package com.hyjf.am.trade.controller.admin.exception;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankCreditEndResponse;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
@@ -19,6 +21,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -49,9 +52,9 @@ public class BankCreditEndController extends BaseController {
     @RequestMapping("/getlist")
     public BankCreditEndResponse getCreditEndList(@RequestBody BankCreditEndListRequest requestBean){
         BankCreditEndResponse response = new BankCreditEndResponse();
-        List<BankCreditEnd> recordList = bankCreditEndService.getCreditEndList(requestBean);
+        List<BankCreditEndVO> recordList = bankCreditEndService.getCreditEndList(requestBean);
         if (Validator.isNotNull(recordList)){
-            response.setResultList(CommonUtils.convertBeanList(recordList,BankCreditEndVO.class));
+            response.setResultList(recordList);
         }
         return response;
     }
@@ -177,5 +180,62 @@ public class BankCreditEndController extends BaseController {
     @RequestMapping("/updateBatchCreditEndFinish")
     public IntegerResponse updateBatchCreditEndFinish(@RequestBody BankCallBeanVO request){
         return new IntegerResponse(this.bankCreditEndService.updateBatchCreditEndFinish(request));
+    }
+
+    /***
+     * 发起结束债权
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping("/startCreditEnd")
+    public Response startCreditEnd(@RequestBody StartCreditEndRequest requestBean){
+        logger.info("【发起结束债权】requestBean：" + JSON.toJSONString(requestBean));
+        Response response = new Response();
+        if(requestBean.getCreditEndType() == null){
+            requestBean.setCreditEndType(5); // 初始化为后台发起
+        }
+        if(StringUtils.isBlank(requestBean.getOrgOrderId()) || (requestBean.getCreditEndType()==5 && requestBean.getStartFrom()==null)){
+            logger.error("【发起结束债权】请求参数错误");
+            response.setRtn(Response.FAIL);
+            response.setMessage("请求参数错误");
+            return response;
+        }
+
+        BankCreditEnd creditEnd = bankCreditEndService.getCreditEndByOrgOrderId(requestBean.getOrgOrderId());
+        if(creditEnd!=null && "S".equals(creditEnd.getState())){
+            logger.error("该债权已结束，requestBean:" + JSON.toJSONString(requestBean));
+            response.setRtn(Response.FAIL);
+            response.setMessage("该债权已结束");
+            return response;
+        }
+        if(creditEnd!=null && !"F".equals(creditEnd.getState())){
+            logger.error("结束债权已提交过，requestBean:" + JSON.toJSONString(requestBean));
+            response.setRtn(Response.FAIL);
+            response.setMessage("该债权已提交过");
+            return response;
+        }
+        // 处理失败的记录删除后再重新添加
+        if(creditEnd!=null && "F".equals(creditEnd.getState())){
+            bankCreditEndService.deleteCreditEndById(creditEnd.getId());
+        }
+
+        // 查询封装请求参数
+        String msg = bankCreditEndService.queryForCreditEnd(requestBean);
+        if(StringUtils.isNotBlank(msg)){
+            logger.error("【发起结束债权】msg:" + msg);
+            response.setRtn(Response.FAIL);
+            response.setMessage(msg);
+            return response;
+        }
+
+        int udpCount = bankCreditEndService.insertStartCreditEnd(requestBean);
+        if(udpCount<=0){
+            logger.error("【发起结束债权】保存到数据库异常");
+            response.setRtn(Response.FAIL);
+            response.setMessage("保存到数据库异常");
+            return response;
+        }
+
+        return response;
     }
 }
