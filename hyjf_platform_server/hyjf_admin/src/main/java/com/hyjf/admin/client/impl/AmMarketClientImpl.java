@@ -5,12 +5,11 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.resquest.admin.ContentAdsRequest;
-import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
-import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
-import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.admin.DuibaPointsVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -271,5 +270,92 @@ public class AmMarketClientImpl implements AmMarketClient {
     	BooleanResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/updateStatus", request, BooleanResponse.class);
         return response;
     }
+
+	/**
+	 * 查询兑吧积分明细
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public DuibaPointsResponse selectDuibaPointsList(DuibaPointsRequest requestBean) {
+		DuibaPointsResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/duibapoints/selectDuibaPointsList",requestBean,DuibaPointsResponse.class).getBody();
+		return response;
+	}
+
+	/**
+	 * 兑吧积分账户修改明细
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public DuibaPointsModifyResponse selectDuibaPointsModifyList(DuibaPointsRequest requestBean) {
+		DuibaPointsModifyResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/duibapointsmodify/selectDuibaPointsModifyList",requestBean,DuibaPointsModifyResponse.class).getBody();
+		return response;
+	}
+
+	/**
+	 * 插入积分审批表
+	 *
+	 * @param duibaPointsModifyVO
+	 * @return
+	 */
+	@Override
+	public boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO) {
+		String url = "http://AM-ADMIN/am-admin/duibapointsmodify/insertPointsModifyList";
+		BooleanResponse response = restTemplate.postForEntity(url, duibaPointsModifyVO, BooleanResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+
+	/**
+	 * 更新兑吧积分调整审批状态
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public boolean updatePointsModifyStatus(DuibaPointsRequest requestBean) {
+		String url = "http://AM-ADMIN/am-admin/duibapointsmodify/updatePointsModifyStatus";
+		BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+
+	/**
+	 * 插入兑吧交易明细表
+	 *
+	 * @param duibaPointsVO
+	 * @return
+	 */
+	@Override
+	public boolean insertDuibaPoints(DuibaPointsVO duibaPointsVO) {
+		String url = "http://AM-ADMIN/am-admin/duibapoints/insertDuibaPoints";
+		BooleanResponse response = restTemplate.postForEntity(url, duibaPointsVO, BooleanResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+
+	/**
+	 * 根据订单号获取订单详情
+	 *
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public DuibaPointsModifyVO selectDuibaPointsModifyByOrdid(String orderId) {
+		DuibaPointsModifyResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/duibapointsmodify/selectDuibaPointsModifyByOrdid/" + orderId,DuibaPointsModifyResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 
 }

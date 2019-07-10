@@ -28,6 +28,9 @@ public class UserRegistResult extends BaseResultBean {
 	// 注册成功后,返回前端用户ID
 	private Integer userId;
 
+	/** 积分商城用：用户当前积分 */
+	private Integer pointsCurrent;
+
 	public UserRegistResult() {
 	}
 
@@ -72,5 +75,17 @@ public class UserRegistResult extends BaseResultBean {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public Integer getPointsCurrent() {
+		return pointsCurrent;
+	}
+
+	public void setPointsCurrent(Integer pointsCurrent) {
+		this.pointsCurrent = pointsCurrent;
 	}
 }

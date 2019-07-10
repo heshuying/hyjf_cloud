@@ -122,7 +122,6 @@ public class CouponUserController extends BaseController {
         return new AdminResult<>(response);
     }
 
-
     @ApiOperation(value = "发放优惠券", notes = "发放优惠券")
     @PostMapping("/distributeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
@@ -473,7 +472,7 @@ public class CouponUserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "编辑保存", notes = "编辑保存")
+    @ApiOperation(value = "审核优惠卷", notes = "审核优惠卷")
     @RequestMapping(value = "/auditAction", method = RequestMethod.POST)
     public AdminResult auditAction(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeVO customizeVO = new CouponUserCustomizeVO();
