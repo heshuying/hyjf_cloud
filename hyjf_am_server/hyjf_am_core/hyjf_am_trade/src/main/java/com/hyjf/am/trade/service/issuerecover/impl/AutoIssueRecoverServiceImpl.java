@@ -1173,12 +1173,14 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
 			logger.info("自动录标校验保证金，monthAvailable：" + monthAvailable);
 			if (monthAvailable.compareTo(BigDecimal.ZERO) < 0) {
+				RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
 				RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
 				logger.info("自动录标校验保证金：月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
 				return 24;
 			}
 
 		}catch (Exception e) {
+			RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
 			RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
 			logger.error("月推标额度校验异常", e);
 			return 24;
@@ -1186,6 +1188,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
 		// 合作额度校验
 		if (!updateAndCheckNewCredit(instCode, assetAcount)) {
+			RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+			RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
 			return 21;
 		}
 
