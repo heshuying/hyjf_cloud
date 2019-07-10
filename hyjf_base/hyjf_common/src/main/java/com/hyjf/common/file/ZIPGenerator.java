@@ -123,18 +123,18 @@ public class ZIPGenerator {
          f.delete();
         }  
    }
-    public static String createZipFile(List<File> fileList, String zipFileName) {
+    public static String createZipFile(List<File> fileList, String zipFileName,HttpServletResponse response) {
         logger.info("fileName...===================............."+zipFileName);
+        response.setContentType("APPLICATION/OCTET-STREAM");
+        response.setHeader("Content-Disposition","attachment; filename="+zipFileName+".zip");
         if(fileList == null || fileList.size() == 0 || StringUtils.isEmpty(zipFileName)){
             return null;
         }
-        //构建压缩文件File
-        File zipFile = new File(zipFileName);
         //初期化ZIP流
         ZipOutputStream out = null;
         try{
             //构建ZIP流对象
-            out = new ZipOutputStream(new FileOutputStream(zipFile));
+            out = new ZipOutputStream(response.getOutputStream());
             //循环处理传过来的集合
             for(int i = 0 ; i< fileList.size(); i++){
                 //获取目标文件
