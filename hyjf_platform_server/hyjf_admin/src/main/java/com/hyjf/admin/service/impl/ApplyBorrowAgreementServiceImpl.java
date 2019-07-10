@@ -213,7 +213,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                         if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             try {
                                 File filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
-                                Thread.sleep(5000);
+                                Thread.sleep(50000);
                                 logger.info("--------------------下载文件签署，原始filePdf大小:"+filePdf.length());
                                 if(filePdf!=null){
                                     files.add(filePdf);
