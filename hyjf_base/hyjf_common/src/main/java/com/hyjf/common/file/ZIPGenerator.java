@@ -124,7 +124,7 @@ public class ZIPGenerator {
         }  
    }
     public static String createZipFile(List<File> fileList, String zipFileName) {
-
+        logger.info("fileName...===================............."+zipFileName);
         if(fileList == null || fileList.size() == 0 || StringUtils.isEmpty(zipFileName)){
             return null;
         }
