@@ -30,6 +30,7 @@ import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -1541,4 +1542,19 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+
+	/**
+	 * 积分商城，兑吧扣积分接口回调
+	 * @param consumeParams
+	 * @return
+	 */
+	@Override
+	public CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams){
+		String url = "http://AM-USER/am-user/pointsshop/duiba/deductpoints";
+		CreditConsumeResultResponse response = restTemplate.postForEntity(url, consumeParams, CreditConsumeResultResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
 }

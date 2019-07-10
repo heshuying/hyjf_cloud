@@ -19,6 +19,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -86,6 +88,8 @@ public class AppHomeServiceImpl implements AppHomeService {
     @Override
     public JSONObject getAppHomeData(HttpServletRequest request, String userId) {
         JSONObject info = new JSONObject();
+        // 积分商城，积分显示开关，0:不显示，1:显示
+        info.put("pointsShopSwitch", RedisUtils.get(RedisConstants.POINTS_SHOP_SWITCH));
         String platform = request.getParameter("realPlatform");
         String version = request.getParameter("version");
         String uniqueIdentifier = request.getParameter("UniqueIdentifier");

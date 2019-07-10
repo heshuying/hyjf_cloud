@@ -52,5 +52,4 @@ public interface CouponUserService {
      */
     boolean getSendRepeat(CouponUserSearchRequest couponUserSearchRequest);
 
-
 }

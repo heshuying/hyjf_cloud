@@ -8,7 +8,6 @@ import com.hyjf.admin.controller.productcenter.plancenter.AccedeListController;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.CertErrorReportLogResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
 import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
@@ -61,5 +60,32 @@ public class CertReportLogServiceImpl extends BaseAdminServiceImpl implements Ce
 	@Override
 	public void updateErrorCount(Integer id) {
 		configClient.updateCertErrorCount(id);
+	}
+	/**
+	 * 修改对账状态（重新对账）add by nxl
+	 * @param certLogId
+	 * @return
+	 */
+	@Override
+	public int againReconciliation(Integer certLogId){
+		return amConfigClient.againReconciliation(certLogId);
+	}
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public int batchReconciliation(CertReportLogRequestBean request){
+		return amConfigClient.batchReconciliation(request);
+	}
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param logOrderId
+	 * @return
+	 */
+	@Override
+	public int insertCertErrorLogByLogOrderId(String logOrderId){
+		return amConfigClient.insertCertErrorLogByLogOrderId(logOrderId);
 	}
 }
