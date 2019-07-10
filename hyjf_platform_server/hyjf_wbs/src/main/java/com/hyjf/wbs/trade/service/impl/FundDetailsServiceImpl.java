@@ -124,7 +124,7 @@ public class FundDetailsServiceImpl implements FundDetailsService {
 		LocalDateTime end = LocalDateTime.parse(endTime, dtf);
 
 		Duration result = Duration.between(start, end);
-		if (result.toDays() > 1) {
+		if (result.toDays() >= 1) {
 			throw new WbsFundDetailsException("查询时间间隔大于一天,起始时间【" + startTime + "】结束时间【" + endTime + "】");
 		}
 	}
