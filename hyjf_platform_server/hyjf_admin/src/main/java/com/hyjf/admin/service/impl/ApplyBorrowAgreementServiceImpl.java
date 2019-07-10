@@ -190,7 +190,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
      * @param response
      * @return
      */
-    public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) throws Exception {
+    public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
         logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
         String status = requestBean.getStatus();//1:脱敏，0：原始
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(requestBean);//债转协议
@@ -213,7 +213,6 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                         if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             try {
                                 File filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
-                                Thread.sleep(50000);
                                 logger.info("--------------------下载文件签署，原始filePdf大小:"+filePdf.length());
                                 if(filePdf!=null){
                                     files.add(filePdf);
