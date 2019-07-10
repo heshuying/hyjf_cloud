@@ -120,7 +120,7 @@ public class AdminUserController {
 		bean.setDepartmentList(
 				CommonUtils.convertBeanList(this.baseService.getDepartmentList(), ROaDepartmentVO.class));
 		// 设置角色列表
-		bean.setAdminRoleList(CommonUtils.convertBeanList(this.adminService.getAdminRoleList(), AdminRoleVO.class));
+		bean.setAdminRoleList(CommonUtils.convertBeanList(this.adminService.getAdminRoleListNoStatus(), AdminRoleVO.class));
 
 		return bean;
 	}

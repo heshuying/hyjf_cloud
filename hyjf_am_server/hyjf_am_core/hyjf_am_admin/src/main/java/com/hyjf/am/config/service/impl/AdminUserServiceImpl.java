@@ -192,16 +192,17 @@ public class AdminUserServiceImpl implements AdminUserService {
 	public void deleteRecord(List<Integer> ids,int adminId) {
 //		String nowTime = GetDate.getServerDateTime(9, new Date());
 //		String userId = ShiroUtil.getLoginUserId();
-		Admin record = new Admin();
-		record.setState("1");
-		record.setDelFlag(1);
-		record.setUpdateTime(new Date());
-		record.setUpdateUserId(adminId);
+//		Admin record = new Admin();
+//		record.setState("1");
+//		record.setDelFlag(1);
+//		record.setUpdateTime(new Date());
+//		record.setUpdateUserId(adminId);
 
 		AdminExample example = new AdminExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andIdIn(ids);
-		adminMapper.updateByExampleSelective(record, example);
+	//	adminMapper.updateByExampleSelective(record, example);
+		adminMapper.deleteByExample(example);
 	}
 
 	/**
@@ -310,7 +311,14 @@ public class AdminUserServiceImpl implements AdminUserService {
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);
 	}
-
+	@Override
+	public List<AdminRole> getAdminRoleListNoStatus() {
+		AdminRoleExample example = new AdminRoleExample();
+		com.hyjf.am.config.dao.model.auto.AdminRoleExample.Criteria criteria = example.createCriteria();
+			criteria.andDelFlagEqualTo(0);
+		example.setOrderByClause(" sort ");
+		return adminRoleMapper.selectByExample(example);
+	}
     @Override
     public Admin getAdminByName(String auditUser) {
 		AdminExample example = new AdminExample();
