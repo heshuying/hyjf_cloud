@@ -90,7 +90,7 @@ public class ZIPGenerator {
          File f=subs.get(i);  
          zos.putNextEntry(new ZipEntry(baseName + f.getName()));     
          FileInputStream fis = new FileInputStream(f);     
-         byte[] buffer = new byte[1024];     
+         byte[] buffer = new byte[20 * 1024];
          int r = 0;     
          while ((r = fis.read(buffer)) != -1) {     
              zos.write(buffer, 0, r);     
@@ -111,7 +111,7 @@ public class ZIPGenerator {
          File f=subs.get(i);  
          zos.putNextEntry(new ZipEntry(baseName + f.getName()));     
          FileInputStream fis = new FileInputStream(f);     
-         byte[] buffer = new byte[1024];     
+         byte[] buffer = new byte[20 *1024];
          int r = 0;     
          while ((r = fis.read(buffer)) != -1) {     
              zos.write(buffer, 0, r);     
