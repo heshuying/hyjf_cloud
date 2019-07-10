@@ -66,7 +66,8 @@ public class AutoTenderController extends BaseTradeController {
         logger.info(logHeader + "取得智投订单数:" + hjhAccedes.size());
 
         // ********循环每笔加入智投订单，进行智投出借
-        for (HjhAccedeVO hjhAccede : hjhAccedes) {
+        for (int i = 0; i < hjhAccedes.size(); i++) {
+            HjhAccedeVO hjhAccede = hjhAccedes.get(i);
             String logMsgHeader = logHeader + "====智投：" + hjhAccede.getPlanNid()
                     + "的智投订单号：" + hjhAccede.getAccedeOrderId();
 
@@ -101,6 +102,7 @@ public class AutoTenderController extends BaseTradeController {
                 logger.error(logMsgHeader + " 智投出借异常！", e);
             }
         }
+
         logger.info(logHeader + "end...");
         return new BooleanResponse(true);
     }
