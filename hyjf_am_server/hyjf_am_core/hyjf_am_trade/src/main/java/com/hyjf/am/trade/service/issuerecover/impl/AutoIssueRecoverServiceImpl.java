@@ -154,7 +154,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("amount", assetAccount);
 		paraMap.put("instCode", instCode);
-		return apiBailConfigInfoCustomizeMapper.updateForSendBorrow(paraMap);
+		Integer result =  apiBailConfigInfoCustomizeMapper.updateForSendBorrow(paraMap);
+		logger.info("updateForSend result:" + result);
+		return result;
 	}
 
 	/**
