@@ -649,6 +649,11 @@ public class WeChatRegistController extends BaseUserController {
             ret.put("statusDesc", "id无效");
             return ret;
         }
+        if(rt.getStatus()==0){
+            ret.put("status", "99");
+            ret.put("statusDesc", "活动已结束");
+            return ret;
+        }
         data.put("landingId", rt.getId());
         data.put("title",rt.getTempTitle());
         data.put("name",rt.getUtmName() );
