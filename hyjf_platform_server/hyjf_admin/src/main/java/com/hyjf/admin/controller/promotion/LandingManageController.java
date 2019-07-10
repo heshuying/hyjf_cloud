@@ -101,6 +101,9 @@ public class LandingManageController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<TemplateConfigCustomizeVO> selectTemplateById(HttpServletRequest request, HttpServletResponse response, @RequestBody LandingManagerRequestBean landingManagerRequestBean) {
         TemplateConfigCustomizeVO templateConfigCustomizeVO = new TemplateConfigCustomizeVO();
+        //设置默认结果页图片和跳转路径
+        templateConfigCustomizeVO.setLayerImg("");
+        templateConfigCustomizeVO.setJumtUrl("/user/open");
         if (null != landingManagerRequestBean.getId()) {
             TemplateConfigResponse templateConfigResponse = landingManagerService.selectTemplateById(landingManagerRequestBean.getId());
             if (!Response.isSuccess(templateConfigResponse)) {
