@@ -7,6 +7,7 @@ import com.hyjf.am.vo.app.reward.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -232,7 +233,7 @@ public class AppRewardController {
             String inviteCount = pageData.get("inviteCount");
             String total = pageData.get("rewardRecordsSum");
             users = rewardService.getUserFromCache(userId);
-            appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" : total);
+            appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" : CommonUtils.formatAmount(total));
             appRewardDetailVO.setFriendCount(inviteCount);
             appRewardDetailVO.setCouponCount("0");
             appRewardDetailVO.setCouponTag("邀请好友获得");
