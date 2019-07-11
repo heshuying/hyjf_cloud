@@ -12,6 +12,7 @@ import com.hyjf.admin.beans.vo.AdminBorrowInvestCustomizeVO;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.config.SystemConfig;
@@ -21,11 +22,19 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.PdfGenerator;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.BorrowInvestCustomizeExtResponse;
+import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -73,6 +82,15 @@ import java.util.regex.Pattern;
 @Service
 public class BorrowInvestServiceImpl implements BorrowInvestService {
     Logger logger = LoggerFactory.getLogger(BorrowInvestServiceImpl.class);
+
+    public static final String BASE_URL = "http://AM-ADMIN/am-trade";
+
+    /*结束债权*/
+    public static final String CREDITEND_URL = BASE_URL + "/bankCreditEndController/startCreditEnd";
+
+    @Autowired
+    private BaseClient baseClient;
+
     @Autowired
     AmTradeClient amTradeClient;
 
@@ -691,5 +709,46 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             return "用户ID不是数字！";
         }
         return OK;
+    }
+
+    /**
+     * 结束债权
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Response doCreditEnd(String orderId){
+        StartCreditEndRequest requestBean = new StartCreditEndRequest();
+        requestBean.setOrgOrderId(orderId);
+        requestBean.setCreditEndType(5);
+        requestBean.setStartFrom(1); //出借明细
+
+        return baseClient.postExeNoException(CREDITEND_URL, requestBean, IntegerResponse.class);
+    }
+
+    @Override
+    public BorrowInvestCustomizeExtVO getBorrowInvestInfo(String nid) {
+        BorrowInvestCustomizeExtResponse response=amTradeClient.getBorrowInvestInfo(nid);
+        if(response!=null && response.getResult()!=null){
+            return response.getResult();
+        }else{
+            logger.error("nid=【{}】订单明细查询失败！");
+            throw new IllegalArgumentException("订单查询失败！");
+        }
+    }
+
+    @Override
+    public AdminResult updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        IntegerResponse response=amTradeClient.updateTenderUtm(updateTenderUtmRequest);
+        if(response.getResultInt()!=null && response.getResultInt() >0){
+            return new AdminResult();
+        }else{
+            return new AdminResult(BaseResult.FAIL);
+        }
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid) {
+        return amTradeClient.getTenderUtmChangeLog(nid);
     }
 }

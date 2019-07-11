@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.repay;
 
-import com.hyjf.am.resquest.trade.BatchRepayTotalRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -11,6 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+
+import javax.validation.Valid;
 
 /**
  * 还款管理
@@ -114,6 +116,12 @@ public interface RepayManageService extends BaseService {
     String usernameEncryption(String name);
 
     boolean getFailCredit(String borrowNid);
+
+	Integer selectSponsorLogCount(RepayListRequest requestBean);
+
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+
+	int updateSponsorLog(@Valid RepayListRequest requestBean);
 
     RepayBean searchRepayPlanPart(int userId, Borrow borrow, int latePeriod) throws Exception;
 }

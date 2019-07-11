@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -25,7 +26,9 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.ZIPGenerator;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
@@ -34,6 +37,7 @@ import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.SponsorLogBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -47,16 +51,19 @@ import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.File;
 import java.math.BigDecimal;
@@ -305,7 +312,6 @@ public class RepayManageController extends BaseTradeController {
         String verificationFlag = null;
         if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
             WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
-
             // 单纯的作为验证标识.
             if (borrowInfo.getPlanNid() != null) {
                 verificationFlag = borrowInfo.getPlanNid();
@@ -353,8 +359,11 @@ public class RepayManageController extends BaseTradeController {
             } else {
                 borrowInfo.setSucSmount(new BigDecimal(0));
             }
+            WebUserTransferBorrowInfoCustomizeVO2 b2=new WebUserTransferBorrowInfoCustomizeVO2();
+            BeanUtils.copyProperties(borrowInfo,b2);
+            b2.setBorrowApr(FormatRateUtil.formatBorrowApr(borrowInfo.getBorrowApr().toString()));
             resultMap.put("verificationFlag", verificationFlag);
-            resultMap.put("borrowInfo", borrowInfo);
+            resultMap.put("borrowInfo", b2);
             resultMap.put("fddStatus", fddStatus);
             result.setData(resultMap);
         }
@@ -1208,6 +1217,108 @@ public class RepayManageController extends BaseTradeController {
             logger.error("【代偿冻结异步回调】担保机构还款未冻结！订单号：{}", orderId);
         }
         result.setStatus(true);
+        return result;
+    }
+    /**
+     * 用户待还款列表
+     * @auther: dzs
+     * @date: 2018/6/23
+     */
+    @ApiOperation(value = "担保授权", notes = "担保授权")
+    @PostMapping(value = "/sponsorLog", produces = "application/json; charset=utf-8")
+    public WebResult<List<SponsorLogCustomizeVO>> sponsorLog(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
+        WebResult<List<SponsorLogCustomizeVO>> result = new WebResult<>();
+        result.setData(Collections.emptyList());
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        logger.info("担保授权列表开始，userId:{}", userVO.getUserId());
+        requestBean.setUserId(userVO.getUsername());
+        repayManageService.checkForRepayList(requestBean);
+        // 分页信息
+        Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
+        Integer count = repayManageService.selectSponsorLogCount(requestBean);
+        page.setTotal(count);
+        requestBean.setLimitStart(page.getOffset());
+        requestBean.setLimitEnd(page.getLimit());
+        try {
+            List<SponsorLogCustomizeVO> resultList = repayManageService.selectSponsorLog(requestBean);
+//            for (SponsorLogCustomizeVO sponsorLogCustomizeVO : resultList) {
+//				if(sponsorLogCustomizeVO.getStatus().equals("0")) {
+//					if(repayManageService.selectBorrowApicronListByBorrowNid(sponsorLogCustomizeVO.getBorrowNid())!=null) {
+//						sponsorLogCustomizeVO.setStatus("3");
+//					}
+//				}
+//			}
+            result.setData(resultList);
+        } catch (Exception e) {
+            logger.error("获取担保授权列表异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
+        }
+        result.setPage(page);
+        return result;
+    }
+    @ApiOperation(value = "修改担保人", notes = "修改担保人")
+    @PostMapping(value = "/updateSponsorLog")
+    @ResponseBody
+    public WebResult<Object> updateSponsorLog(@RequestHeader(value = "userId") int userId,@RequestBody RepayListRequest requestBean, HttpServletRequest request) {
+        WebResult<Object> result = new WebResult<Object>();
+       List<BorrowApicronVO> ret = repayManageService.selectBorrowApicronListByBorrowNid(requestBean.getBorrowNid());
+        if(ret!=null&&!ret.isEmpty()) {
+        	 Map<String,String> data2 =new HashMap<String, String>();
+        	 data2.put("status", "911");
+        	 result.setData(data2);
+        	 return result;
+		}
+
+
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        SponsorLogBean openBean = new SponsorLogBean();
+        openBean.setChannel(BankCallConstant.CHANNEL_PC);
+        openBean.setUserId(userVO.getUserId());
+        openBean.setIp(CustomUtil.getIpAddr(request));
+        openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
+        openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
+        openBean.setBorrowNid(requestBean.getBorrowNid());
+        openBean.setCardNo(userVO.getBankAccount());
+        // 组装参数
+        Map<String,Object> data = repayManageService.getSponsorLogMV(openBean,requestBean.getOldBailAccountId(),requestBean.getId());
+        result.setData(data);
+        //修改担保人
+        logger.info("修改担保人end");
+        return result;
+    }
+    /**
+     * web页面开户异步处理
+     *
+     * @param bean
+     * @return
+     */
+    @ApiOperation(value = "修改担保人异步处理", notes = "修改担保人异步处理")
+    @PostMapping("/bgReturn")
+    @ResponseBody
+    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("sid")String id) {
+        logger.info("web端修改担保人异步处理start,userId:{}", bean.getLogUserId());
+        // 银行返回响应代码
+        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
+        RepayListRequest requestBean=new RepayListRequest();
+        requestBean.setId(id);
+        if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
+        	requestBean.setStatus("1");
+        }else {
+        	requestBean.setStatus("2");
+        }
+        int i=repayManageService.updateSponsorLog(requestBean);
+        BankCallResult result=new BankCallResult();
+        if(i==0) {
+            result.setStatus(true);
+            result.setMessage("修改担保人保存成功");
+            logger.info("修改担保人成功end,UserId:{}修改担保人成功平台为：{}", bean.getLogUserId(),bean.getLogClient());
+        }else {
+            result.setStatus(true);
+            result.setMessage("修改担保人保存失败");
+            logger.info("修改担保人保存失败end,UserId:{}修改担保人成功平台为：{}", bean.getLogUserId(),bean.getLogClient());
+        }
+
         return result;
     }
 }

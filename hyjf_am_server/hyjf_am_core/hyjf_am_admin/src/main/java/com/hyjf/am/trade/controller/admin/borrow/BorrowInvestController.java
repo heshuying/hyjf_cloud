@@ -3,35 +3,33 @@
  */
 package com.hyjf.am.trade.controller.admin.borrow;
 
-import com.hyjf.am.response.admin.BorrowInvestCustomizeResponse;
-import com.hyjf.am.response.admin.BorrowListCustomizeResponse;
-import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
-import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.resquest.trade.UpdateTenderUtmExtRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.auto.TenderUtmChangeLog;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
-import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
-import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
-import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.trade.service.admin.borrow.TenderUtmChangeLogService;
+import com.hyjf.am.user.dao.model.auto.Utm;
+import com.hyjf.am.user.service.front.user.UtmPlatService;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.TenderUpdateUtmHistoryVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -45,6 +43,12 @@ import java.util.List;
 public class BorrowInvestController extends BaseController {
     @Autowired
     BorrowInvestService borrowInvestService;
+
+    @Autowired
+    private TenderUtmChangeLogService tenderUtmChangeLogService;
+
+    @Autowired
+    private UtmPlatService utmPlatService;
 
     /**
      * 出借明细记录 总数COUNT
@@ -209,6 +213,43 @@ public class BorrowInvestController extends BaseController {
         BorrowInvestCustomizeResponse response = new BorrowInvestCustomizeResponse();
         int count = borrowInvestService.updateBorrowRecover(borrowInvestRequest);
         response.setTotal(count);
+        return response;
+    }
+
+    /**
+     * 订单id查询出借明细
+     *
+     * @return
+     */
+    @RequestMapping("/select_borrow_invest/{nid}")
+    public BorrowInvestCustomizeExtResponse selectBorrowInvestList(@PathVariable(name = "nid") String nid) {
+        BorrowInvestCustomizeExtResponse response = new BorrowInvestCustomizeExtResponse();
+        BorrowInvestCustomizeExtVO vo = borrowInvestService.selectBorrowInvestByNid(nid);
+        response.setResult(vo);
+        return response;
+    }
+
+    @RequestMapping("/updateTenderUtm")
+    public IntegerResponse updateTenderUtm(@RequestBody UpdateTenderUtmExtRequest extRequest){
+        TenderUtmChangeLog log=new TenderUtmChangeLog();
+        BeanUtils.copyProperties(extRequest,log);
+
+        Utm utm=utmPlatService.getUtmBySourceId(log.getTenderUtmId());
+        if(utm!=null){
+            log.setTenderUtmId(utm.getUtmId());
+        }else{
+            throw  new IllegalArgumentException("sourceId=【"+log.getTenderUtmId()+"】的UTM为空！");
+        }
+
+        int rt=borrowInvestService.updateTenderUtm(log);
+        return new IntegerResponse(rt);
+    }
+
+    @RequestMapping("/update_tender_utm_history/{nid}")
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(@PathVariable(name = "nid") String nid){
+        TenderUpdateUtmHistoryResponse response=new TenderUpdateUtmHistoryResponse();
+        List<TenderUpdateUtmHistoryVO> lstVO=tenderUtmChangeLogService.getChangeLog(nid);
+        response.setResultList(lstVO);
         return response;
     }
 }

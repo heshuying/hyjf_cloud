@@ -39,4 +39,6 @@ public interface CrmTenderRepairService extends BaseService {
 
 
     void sendCrmHjhInfoMQ(HjhAccedeVO hjhAccedeVO);
+
+    void repayDataRepair(String borrowNid);
 }

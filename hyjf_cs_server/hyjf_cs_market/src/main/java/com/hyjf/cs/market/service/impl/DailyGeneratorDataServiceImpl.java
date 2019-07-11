@@ -244,7 +244,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
 			commonProducer.messageSend(new MessageContent(MQConstant.SELL_DAILY_TOPIC,
 					MQConstant.SELL_DAILY_SELECT_TAG, UUID.randomUUID().toString(), params));
 		} catch (MQException e) {
-			logger.error("销日报发送消息失败......", e);
+			logger.error("销售日报发送消息失败......", e);
 		}
     }
 

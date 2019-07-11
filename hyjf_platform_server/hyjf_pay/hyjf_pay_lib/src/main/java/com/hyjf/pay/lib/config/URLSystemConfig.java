@@ -20,7 +20,7 @@ public class URLSystemConfig {
     // 安融接口调用地址hyjf.pay.anrong.url
     @Value("${hyjf.pay.anrong.url}")
     public String anrongUrl;
-    
+
 //    @Value("${hyjf.chinapnr.return.url}")
 //    public  String chinapnrReturnUril;
 //

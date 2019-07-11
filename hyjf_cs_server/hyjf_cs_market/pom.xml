@@ -65,7 +65,11 @@
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-spring-boot-starter</artifactId>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.alicp.jetcache</groupId>
+			<artifactId>jetcache-starter-redis</artifactId>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<finalName>hyjf-cs-market</finalName>

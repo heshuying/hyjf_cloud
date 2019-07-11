@@ -33,6 +33,23 @@ public class BankCardUtil {
     }
 
     /**
+     * app4.0显示，多个空格，为不影响其他端，改用新方法
+     * @param cardNo
+     * @return
+     */
+    public static String getCardNoNew(String cardNo){
+        String str = "";
+        if(Validator.isNotNull(cardNo)&&cardNo.length()>10){
+            str = "****  ****  ****  " + cardNo.substring(cardNo.length() - 4, cardNo.length());
+        }
+        // add by nxl 银行卡号是短号的情况下,对银行进行脱敏显示
+        if(Validator.isNotNull(cardNo)&&cardNo.length()<10){
+            str = "*****" + cardNo.substring(cardNo.length() - 4, cardNo.length());
+        }
+        return str;
+    }
+
+    /**
      * 获取格式化后的银行卡，充值页面使用
      * add by cwyang
      * @param cardNo

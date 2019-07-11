@@ -5,6 +5,7 @@ import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.response.trade.RepayPlanListResponse;
 import com.hyjf.am.response.trade.RepayWaitOrgResponse;
+import com.hyjf.am.response.trade.SponsorLogListResponse;
 import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
 import com.hyjf.am.resquest.trade.*;
@@ -20,6 +21,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
@@ -619,5 +621,43 @@ public class RepayManageController extends BaseController {
         repayTransferCustomizeResponse.setResultList(voList);
 
         return repayTransferCustomizeResponse;
+    }
+    /**
+     * 查询修改担保人
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/selectSponsorLog")
+    public SponsorLogListResponse selectSponsorLog(@RequestBody @Valid RepayListRequest requestBean) {
+    	SponsorLogListResponse responseBean = new SponsorLogListResponse();
+          List<SponsorLogCustomizeVO> resultList = repayManageService.selectSponsorLog(requestBean);
+        responseBean.setResultList(resultList);
+
+        return responseBean;
+    }
+
+    /**
+     * 查询修改担保人总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/selectSponsorLogCount")
+    public IntegerResponse selectSponsorLogCount(@RequestBody @Valid RepayListRequest requestBean) {
+        IntegerResponse responseBean = new IntegerResponse();
+        Integer result = repayManageService.selectSponsorLogCount(requestBean);
+        responseBean.setResultInt(result);
+        return responseBean;
+    }
+    /**
+     * 修改修改担保人
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/updateSponsorLog")
+    public IntegerResponse updateSponsorLog(@RequestBody @Valid RepayListRequest requestBean) {
+    	IntegerResponse responseBean = new IntegerResponse();
+    	int result = repayManageService.updateSponsorLog(requestBean);
+    	 responseBean.setResultInt(result);
+        return responseBean;
     }
 }

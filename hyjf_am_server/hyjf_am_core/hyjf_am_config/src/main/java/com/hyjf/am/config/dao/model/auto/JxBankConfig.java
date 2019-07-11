@@ -138,6 +138,20 @@ public class JxBankConfig implements Serializable {
      */
     private BigDecimal monthCardQuota;
 
+    /**
+     * 银行android应用市场链接
+     *
+     * @mbggenerated
+     */
+    private String androidMarket;
+
+    /**
+     * 银行ios应用市场链接
+     *
+     * @mbggenerated
+     */
+    private String iosMarket;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -290,5 +304,21 @@ public class JxBankConfig implements Serializable {
 
     public void setMonthCardQuota(BigDecimal monthCardQuota) {
         this.monthCardQuota = monthCardQuota;
+    }
+
+    public String getAndroidMarket() {
+        return androidMarket;
+    }
+
+    public void setAndroidMarket(String androidMarket) {
+        this.androidMarket = androidMarket == null ? null : androidMarket.trim();
+    }
+
+    public String getIosMarket() {
+        return iosMarket;
+    }
+
+    public void setIosMarket(String iosMarket) {
+        this.iosMarket = iosMarket == null ? null : iosMarket.trim();
     }
 }

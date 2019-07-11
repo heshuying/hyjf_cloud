@@ -109,4 +109,6 @@ public class CustomizeMapper extends AutoMapper {
     protected MobileSynchronizeCustomizeMapper mobileSynchronizeCustomizeMapper;
     @Autowired
     protected TemplateConfigMapper templateConfigMapper;
+    @Autowired
+    protected  DuibaPointsCustomizeMapper duibaPointsCustomizeMapper;
 }

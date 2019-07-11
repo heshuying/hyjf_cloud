@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.RegistRcordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
@@ -13,6 +15,8 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -22,9 +26,11 @@ import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,20 +39,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author nxl
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-注册记录",tags = "会员中心-注册记录")
+@Api(value = "会员中心-注册记录", tags = "会员中心-注册记录")
 @RestController
 @RequestMapping("/hyjf-admin/registRecord")
 public class RegistRecordController extends BaseController {
+    @Autowired
+    private CommonProducer commonProducer;
     @Autowired
     private RegistRecordService registRecordService;
     public static final String PERMISSIONS = "registlist";
@@ -54,7 +59,7 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "注册记录页面初始化", notes = "注册记录页面初始化")
     @PostMapping(value = "/userRegistInit")
     @ResponseBody
-    public AdminResult<UserManagerInitResponseBean>  userRegistInit() {
+    public AdminResult<UserManagerInitResponseBean> userRegistInit() {
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
         // 注册平台
         Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
@@ -79,50 +84,50 @@ public class RegistRecordController extends BaseController {
         boolean isShow = false;
         for (String string : perm) {
             if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
+                isShow = true;
             }
         }
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
-        BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
+        BeanUtils.copyProperties(registRcordRequestBean, registerRcordeRequest);
         RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordList(registerRcordeRequest);
-        if(registRecordResponse==null) {
+        if (registRecordResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(registRecordResponse)) {
             return new AdminResult<>(FAIL, registRecordResponse.getMessage());
         }
         List<RegistRecordCustomizeVO> registRecordCustomizeVO = new ArrayList<RegistRecordCustomizeVO>();
-        if(null!=registRecordResponse.getResultList()&&registRecordResponse.getResultList().size()>0){
-            if(!isShow){
+        if (null != registRecordResponse.getResultList() && registRecordResponse.getResultList().size() > 0) {
+            if (!isShow) {
                 //如果没有查看脱敏权限,显示加星
                 for (RegistRecordVO registRecordVO:registRecordResponse.getResultList()){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
                 }
             }
-            registRecordCustomizeVO = CommonUtils.convertBeanList(registRecordResponse.getResultList(),RegistRecordCustomizeVO.class);
+            registRecordCustomizeVO = CommonUtils.convertBeanList(registRecordResponse.getResultList(), RegistRecordCustomizeVO.class);
         }
-        return new AdminResult<ListResult<RegistRecordCustomizeVO>>(ListResult.build(registRecordCustomizeVO, registRecordResponse.getCount())) ;
+        return new AdminResult<ListResult<RegistRecordCustomizeVO>>(ListResult.build(registRecordCustomizeVO, registRecordResponse.getCount()));
     }
 
     /**
      * 修改注册用户渠道信息： 加载渠道修改页面详细信息
      * 规则说明：
-     *
+     * <p>
      * 1、用户名、用户类型、用户属性、注册时间、注册平台：系统带出，不可修改
-     *
+     * <p>
      * 2、注册渠道：下拉框，默认显示当前渠道名称（无可不显示），可以输入渠道名称修改，输入名称必须在推广中心-渠道列表中存在。
      *
      * @param userId
-     *
      */
     @ApiOperation(value = "渠道详细信息", notes = "渠道详细信息")
-    @GetMapping(value = "/registRecordUtmEditStr/{userId}" , produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/registRecordUtmEditStr/{userId}", produces = "application/json; charset=utf-8")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(@PathVariable String userId) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         registerRcordeRequest.setUserId(userId);
         RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordOne(registerRcordeRequest);
-        if(registRecordResponse==null) {
+        if (registRecordResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(registRecordResponse)) {
@@ -130,10 +135,10 @@ public class RegistRecordController extends BaseController {
         }
         // 详细信息 注册渠道（source_id）
         RegistRecordCustomizeVO registRecordCustomizeVO = new RegistRecordCustomizeVO();
-        if(null!=registRecordResponse.getResult()){
-                RegistRecordVO registRecordVO = registRecordResponse.getResult();
-                registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
-            registRecordCustomizeVO = CommonUtils.convertBean(registRecordResponse.getResult(),RegistRecordCustomizeVO.class);
+        if (null != registRecordResponse.getResult()) {
+            RegistRecordVO registRecordVO = registRecordResponse.getResult();
+            registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+            registRecordCustomizeVO = CommonUtils.convertBean(registRecordResponse.getResult(), RegistRecordCustomizeVO.class);
         }
         // 注册渠道（source_id）
         RegistRecordResponse registRecordResponseUtmAll = registRecordService.findUtmAllSourcePc(registerRcordeRequest);
@@ -143,14 +148,16 @@ public class RegistRecordController extends BaseController {
 
     /**
      * 修改渠道信息
-     *  3、注册渠道和修改原因必填
-     *  4、点击确定：
-     *     1）校验渠道值是否正确，校验成功后，修改用户注册渠道，更新为修改值，并且新增一条操作记录。
-     *  @param registRcordRequestBean
+     * 3、注册渠道和修改原因必填
+     * 4、点击确定：
+     * 1）校验渠道值是否正确，校验成功后，修改用户注册渠道，更新为修改值，并且新增一条操作记录。
+     *
+     * @param registRcordRequestBean
      */
     @ApiOperation(value = "渠道修改确认", notes = "渠道修改确认")
     @PostMapping(value = "/registRecordUtmEdit")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY})
     public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -163,6 +170,35 @@ public class RegistRecordController extends BaseController {
         return new AdminResult<>();
     }
 
+    /**
+     * 同步客户信息到wbs财富系统
+     * 客户修改完渠道信息，点击同步按钮，推送客户信息到mq，有wbs模块消费 推送到wbs系统
+     *
+     * @author wangxd
+     * @date 2019/6/14 15:18
+     */
+    @ApiOperation(value = "推送客户信息到wbs", notes = "推送客户信息到wbs")
+    @PostMapping(value = "/syncAccountWbs")
+    @ResponseBody
+    public AdminResult syncAccountWbs(@RequestParam(value = "userId") String userId) {
+
+        if (StringUtils.isNotBlank(userId)) {
+            String jsonStr = "";
+            try {
+                JSONObject jsonData = new JSONObject();
+                jsonData.put("userId", userId);
+                jsonStr = JSON.toJSONString(jsonData);
+                commonProducer.messageSend(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(), jsonStr));
+                logger.info("=====手动发送账户信息到[{}]到mq——wbs [成功]=====", jsonStr);
+            } catch (Exception e) {
+                logger.error("=====手动发送账户信息[{}]到mq－wbs [失败!!]=====", jsonStr);
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            return new AdminResult<>();
+        } else {
+            return new AdminResult<>(FAIL, "用户id不能为空！");
+        }
+    }
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷：
@@ -263,10 +299,10 @@ public class RegistRecordController extends BaseController {
         boolean isShow = false;
         for (String string : perm) {
             if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
+                isShow = true;
             }
         }
-        BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
+        BeanUtils.copyProperties(registRcordRequestBean, registerRcordeRequest);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -285,23 +321,23 @@ public class RegistRecordController extends BaseController {
         Integer totalCount = registRecordResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
-        Map<String, IValueFormatter> mapValueAdapter =  buildValueAdapter();
-        if(!isShow){
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (!isShow) {
             mapValueAdapter = buildValueAdaptertAsterisked();
         }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else{
+        } else {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, registRecordResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             registerRcordeRequest.setPageSize(defaultRowMaxCount);
-            registerRcordeRequest.setCurrPage(i+1);
+            registerRcordeRequest.setCurrPage(i + 1);
             RegistRecordResponse registRecordResponse2 = registRecordService.findRegistRecordList(registerRcordeRequest);
-            if (registRecordResponse2 != null && registRecordResponse2.getResultList().size()> 0) {
+            if (registRecordResponse2 != null && registRecordResponse2.getResultList().size() > 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  registRecordResponse2.getResultList());
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, registRecordResponse2.getResultList());
             } else {
                 break;
             }
@@ -325,13 +361,14 @@ public class RegistRecordController extends BaseController {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         return mapAdapter;
     }
+
     private Map<String, IValueFormatter> buildValueAdaptertAsterisked() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         IValueFormatter mobileAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
 

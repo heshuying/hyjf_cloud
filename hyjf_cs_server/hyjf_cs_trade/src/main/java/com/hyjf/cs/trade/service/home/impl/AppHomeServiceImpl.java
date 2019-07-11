@@ -19,6 +19,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -86,12 +88,15 @@ public class AppHomeServiceImpl implements AppHomeService {
     @Override
     public JSONObject getAppHomeData(HttpServletRequest request, String userId) {
         JSONObject info = new JSONObject();
+        // 积分商城，积分显示开关，0:不显示，1:显示
+        info.put("pointsShopSwitch", RedisUtils.get(RedisConstants.POINTS_SHOP_SWITCH));
         String platform = request.getParameter("realPlatform");
         String version = request.getParameter("version");
         String uniqueIdentifier = request.getParameter("UniqueIdentifier");
         // 是否需要查询新手标的标志
         Boolean getNewProjectFlag = false;
-
+        // 为4.0.0加的判断
+        boolean isApp4 = isApp4(version);
 
         if (StringUtils.isBlank(platform)) {
             platform = request.getParameter("platform");
@@ -148,7 +153,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("coupons", "0");
 
             //创建首页广告
-            createAdPic(info, platform, type, HOST);
+            createAdPic(info, platform, type, HOST, isApp4);
             info.put("adDesc", "立即注册");
             //新手标标志
             getNewProjectFlag = Boolean.TRUE;
@@ -170,7 +175,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("accumulatedEarnings", "0.00");
                 info.put("coupons", "0");
                 String type = "1";//未开户
-                createAdPic(info, platform, type, HOST);
+                createAdPic(info, platform, type, HOST, isApp4);// 创建首页广告
                 info.put("adDesc", "立即开户");
                 //获取新手标
                 getNewProjectFlag = Boolean.TRUE;
@@ -241,21 +246,31 @@ public class AppHomeServiceImpl implements AppHomeService {
         List<AppModuleBean> moduleList = new ArrayList<>();
 
         //platform 2.安卓 3.ios
-
-        //添加首页module
-        //资金存管
-        createModule(moduleList, platform, "android_module1", "ios_module1", HOST);
-        //美国上市
-        createModule(moduleList, platform, "android_module2", "ios_module2", HOST);
-        //运营数据
-//        AppAdsCustomizeVO appAdsCustomize = getOperationalDataUrl(platform, "android_module3", "ios_module3", HOST);
-//        String url = "";
-//        if(appAdsCustomize != null){
-//            url = appAdsCustomize.getUrl();
-//        }
-        info.put("operationalDataURL",HOST + "/operationalData");
-        //关于我们
-        createModule(moduleList, platform, "android_module4", "ios_module4", HOST);
+        if (isApp4) {// app4.0后启用新广告位 update by wgx 2019/06/20
+            //添加首页module
+            // icon-1
+            createModule(moduleList, platform, "android_new_module1", "ios_new_module1", HOST);
+            // icon-2
+            createModule(moduleList, platform, "android_new_module2", "ios_new_module2", HOST);
+            info.put("operationalDataURL", HOST + "/operationalData");
+            // icon-3
+            createModule(moduleList, platform, "android_new_module3", "ios_new_module3", HOST);
+        } else {
+            //添加首页module
+            //资金存管
+            createModule(moduleList, platform, "android_module1", "ios_module1", HOST);
+            //美国上市
+            createModule(moduleList, platform, "android_module2", "ios_module2", HOST);
+            //运营数据
+            //        AppAdsCustomizeVO appAdsCustomize = getOperationalDataUrl(platform, "android_module3", "ios_module3", HOST);
+            //        String url = "";
+            //        if(appAdsCustomize != null){
+            //            url = appAdsCustomize.getUrl();
+            //        }
+            info.put("operationalDataURL", HOST + "/operationalData");
+            //关于我们
+            createModule(moduleList, platform, "android_module4", "ios_module4", HOST);
+        }
 
         // 为3.1.0加的判断
         String verson3 = "";
@@ -284,8 +299,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("survivalDays",days);//安全运营天数
         //end
         //添加顶部活动图片总数和顶部活动图片数组
-        this.createBannerPage(info, platform, request, HOST);//加缓存
-        this.createBannerlittlePage(info,getNewProjectFlag);
+        this.createBannerPage(info, platform, request, HOST, isApp4);//加缓存
+        this.createBannerlittlePage(info, getNewProjectFlag);
         this.createPopImgPage(info, uniqueIdentifier);
         // IOS强制更新
         this.createForceUpdateInfo(info, platform, version, HOST);
@@ -311,6 +326,25 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         CommonUtils.convertNullToEmptyString(info);
         return info;
+    }
+
+    /**
+     * 判断是否是app4.0以后的版本
+     * @param version
+     */
+    private boolean isApp4(String version) {
+        String version4 = "0";
+        if (version != null && version.length() >= 1) {
+            version4 = version.split("\\.")[0];
+        }
+        try {
+            if (Integer.parseInt(version4) >= 4) {
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("判断是否4.0以后版本失败！", e);
+        }
+        return false;
     }
 
     /**
@@ -617,7 +651,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (! CollectionUtils.isEmpty(homePageCustomizes)){
             AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
             pageCustomize.setTitle("新手专享");
-            pageCustomize.setTag("新手限投1次");
+            pageCustomize.setTag("限投一次");
             pageCustomize.setBorrowDesc("100起投，最高出借5000");
             CommonUtils.convertNullToEmptyString(pageCustomize);
             AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(pageCustomize);
@@ -980,8 +1014,9 @@ public class AppHomeServiceImpl implements AppHomeService {
      * 查询首页banner图
      *
      * @param info
+     * @param isApp4 app4.0后启用新广告位 add by wgx 2019/06/20
      */
-    private void createBannerPage(JSONObject info, String platform, HttpServletRequest request, String HOST) {
+    private void createBannerPage(JSONObject info, String platform, HttpServletRequest request, String HOST, boolean isApp4) {
 
         AdsRequest adsRequest = new AdsRequest();
         adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
@@ -994,10 +1029,10 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         String code = "";
         if ("2".equals(platform)) {
-            code = "android_banner";
+            code = isApp4 ? "android_new_banner" : "android_banner";
             adsRequest.setPlatformType("1");
         } else if ("3".equals(platform)) {
-            code = "ios_banner";
+            code = isApp4 ? "ios_new_banner" : "ios_banner";
             adsRequest.setPlatformType("2");
         }
         adsRequest.setCode(code);
@@ -1027,7 +1062,7 @@ public class AppHomeServiceImpl implements AppHomeService {
      * 首页横幅广告
      * @param info
      */
-    private void createBannerlittlePage(JSONObject info,Boolean isNewFlag) {
+    private void createBannerlittlePage(JSONObject info, Boolean isNewFlag) {
         AdsRequest request = new AdsRequest();
         request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
@@ -1259,6 +1294,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setStatus(statusNewInvest);
         request.setType("4");
         request.setHost(host);
+        request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        request.setWjtInstCode(systemConfig.getWjtInstCode());
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewInvestTemp = amTradeClient.searchAppProjectList(request);
         List<AppProjectListCustomizeVO> listNewInvest = new ArrayList<>();
@@ -1280,6 +1317,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         String statusNewOnTime = "14";
         AppProjectListRequest request2= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request2.setStatus(statusNewOnTime);
+
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewOnTimeTemp = amTradeClient.searchAppProjectList(request2);
         List<AppProjectListCustomizeVO> listNewOnTime = new ArrayList<>();
@@ -1301,6 +1339,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         String status = "16";
         AppProjectListRequest request3= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request3.setStatus(status);
+        request3.setPublishInstCode(null);
+        request3.setWjtInstCode(null);
         List<AppProjectListCustomizeVO> reviewListTemp = amTradeClient.searchAppProjectList(request3);
         List<AppProjectListCustomizeVO> reviewList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(reviewListTemp)){
@@ -1320,6 +1360,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         status = "17";
         AppProjectListRequest request4= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request4.setStatus(status);
+        request4.setPublishInstCode(null);
+        request4.setWjtInstCode(null);
         List<AppProjectListCustomizeVO> repaymentListTemp = amTradeClient.searchAppProjectList(request4);
         List<AppProjectListCustomizeVO> repaymentList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(repaymentListTemp)){
@@ -1341,11 +1383,11 @@ public class AppHomeServiceImpl implements AppHomeService {
 
     /**
      * 创建首页广告
-     *
-     * @param info
+     *  @param info
      * @param platform
+     * @param isApp4 app4.0后启用新广告位 update by wgx 2019/06/20
      */
-    private void createAdPic(JSONObject info, String platform, String type, String HOST) {
+    private void createAdPic(JSONObject info, String platform, String type, String HOST, boolean isApp4) {
         AdsRequest adsRequest = new AdsRequest();
         adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         adsRequest.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
@@ -1353,15 +1395,15 @@ public class AppHomeServiceImpl implements AppHomeService {
         String code = "";
         if ("2".equals(platform)) {
             if ("0".equals(type)) {//未注册
-                code = "android_regist_888";
+                code = isApp4 ? "android_new_register" : "android_regist_888";
             } else if ("1".equals(type)) {
-                code = "android_open_888";
+                code = isApp4 ? "android_new_open" : "android_open_888";
             }
         } else if ("3".equals(platform)) {
             if ("0".equals(type)) {//未注册
-                code = "ios_regist_888";
+                code = isApp4 ? "ios_new_register" : "ios_regist_888";
             } else if ("1".equals(type)) {
-                code = "ios_open_888";
+                code = isApp4 ? "ios_new_open" : "ios_open_888";
             }
         }
         adsRequest.setCode(code);

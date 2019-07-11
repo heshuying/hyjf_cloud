@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
@@ -1660,4 +1661,92 @@ public interface AmConfigClient {
 	 * @return
 	 */
     AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
+
+	/**
+	 * 获取客组配置列表
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceGroupConfigResponse getCustomerServiceGroupConfigList(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 添加客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse insertCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 修改客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse updateCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 删除客组配置
+	 * @param request
+	 */
+	CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 校验客组配置
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request);
+
+	/**
+	 * 获取坐席配置列表
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceRepresentiveConfigResponse getCustomerServiceRepresentiveConfigList(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 添加坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse insertCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 修改坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse updateCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 删除坐席配置
+	 * @param request
+	 */
+	CustomerServiceRepresentiveConfigResponse deleteCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	/**
+	 * 校验坐席配置
+	 * @param request
+	 * @return
+	 */
+	CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request);
+
+	CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request);
+
+	CustomerChannelResponse insetCustomerChannel(CustomerChannelRequest request);
+
+	CustomerChannelResponse updateCustomerChannel(CustomerChannelRequest request);
+	/**
+	 * 修改对账状态（重新对账）add by nxl
+	 * @param certLogId
+	 * @return
+	 */
+	int againReconciliation(Integer certLogId);
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param request
+	 * @return
+	 */
+	int batchReconciliation(CertReportLogRequestBean request);
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param logOrderId
+	 * @return
+	 */
+	int insertCertErrorLogByLogOrderId(String logOrderId);
 }

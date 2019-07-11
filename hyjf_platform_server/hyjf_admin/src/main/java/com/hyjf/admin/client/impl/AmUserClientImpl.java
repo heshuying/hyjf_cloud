@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -3090,7 +3091,51 @@ public class AmUserClientImpl implements AmUserClient {
 			throw new RuntimeException("发送验证码失败...");
 		}
 	}
+	 /**
+     * 兑吧积分账户查询列表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/selectDuibaPointsUser";
+        return restTemplate.postForEntity(url, requestBean, DuibaPointsUserResponse.class).getBody();
+    }
 
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean selectRemainPoints(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/selectRemainPoints";
+        BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return false;
+        }
+        return response.getResultBoolean().booleanValue();
+    }
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean updateDuibaPoints(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/updateDuibaPoints";
+        BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return false;
+        }
+        return response.getResultBoolean().booleanValue();
+    }
+
+    
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 							   Integer searchStatus, Integer updateStatus,boolean isUpdate) {
@@ -3217,5 +3262,38 @@ public class AmUserClientImpl implements AmUserClient {
 			return response;
 		}
 		return null;
+	}
+	/**
+	 * 同步用户手机号
+	 *
+	 * @param userRequest
+	 * @return
+	 */
+	@Override
+	public boolean syncUserMobile(UserRequest userRequest) {
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/syncUserMobile", userRequest, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/electricitySales/electricitySalesDataPushList", request, ElectricitySalesDataPushListResponse.class)
+				.getBody();
+		return response;
+	}
+
+	@Override
+	public ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request) {
+		ElectricitySalesDataPushListResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/electricitySales/insertAlectricitySalesDataPushList", request, ElectricitySalesDataPushListResponse.class)
+				.getBody();
+		return response;
 	}
 }

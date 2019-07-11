@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
@@ -458,6 +459,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         user.setIsInstFlag(0);
         user.setUsername(userName);
         user.setMobile(mobile);
+        // 该方法两个地方调用均为注册插入用户信息、注册时用户平台手机号与银行预留手机号相同 add by liushouyi
+        user.setBankMobile(mobile);
         user.setRechargeSms(0);
         user.setWithdrawSms(0);
         user.setInvestSms(0);
@@ -1275,22 +1278,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 借款主体CA认证记录表
-     * @param request
-     * @return
-     */
-    @Override
-    public List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request) {
-        LoanSubjectCertificateAuthorityExample loanSubjectCertificateAuthorityExample = new LoanSubjectCertificateAuthorityExample();
-        LoanSubjectCertificateAuthorityExample.Criteria  loanSubjectCra = loanSubjectCertificateAuthorityExample.createCriteria();
-        loanSubjectCra.andNameEqualTo(request.getName());
-        loanSubjectCra.andIdTypeEqualTo(request.getIdType());
-        loanSubjectCra.andIdNoEqualTo(request.getIdNo());
-        return this.loanSubjectCertificateAuthorityMapper.selectByExample(loanSubjectCertificateAuthorityExample);
-
-    }
-
-    /**
      * 通过userID获得CA认证的客户ID
      * @param userId
      * @param code
@@ -1670,6 +1657,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if (StringUtils.isNotBlank(user.getMobile())) {
             result.setMobile(user.getMobile());
         }
+        // 获取用户信息时增加银行预留手机号获取
+        if (StringUtils.isNotBlank(user.getBankMobile())) {
+            result.setBankMobile(user.getBankMobile());
+        }
         if (StringUtils.isNotBlank(user.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
@@ -1761,16 +1752,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String taskTime = formatter.format(currentTime);
         return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
     }
-    /**
-     * 获取现在时间
-     *
-     * @return 返回时间类型 yyyyMM
-     */
-    private  String getNowDateOfDay() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
-        String dateString = formatter.format(currentTime);
-        return dateString;
+
+
+    @Override
+    public List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list) {
+        return userCustomizeMapper.getbatchAuthorityList(list.getIdNoList(),list.getIdType());
     }
 
     @Override
@@ -1789,7 +1775,98 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void insertAppUtmReg(AppUtmReg entity) {
         appUtmRegMapper.insertSelective(entity);
     }
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    @Override
+    public List<User> selectBeforeDayRegisterUserList() {
+        Date startDay = GetDate.getTodayBeforeOrAfter(-1);
+        String beforeDayStart = GetDate.getDayStart(startDay);
+        String beforeDayEnd = GetDate.getDayEnd(startDay);
+        UserExample example = new UserExample();
+        UserExample.Criteria cra = example.createCriteria();
+        cra.andRegTimeGreaterThanOrEqualTo(GetDate.str2Date(beforeDayStart, GetDate.datetimeFormat));
+        cra.andRegTimeLessThanOrEqualTo(GetDate.str2Date(beforeDayEnd, GetDate.datetimeFormat));
+        List<User> userList = this.userMapper.selectByExample(example);
+        return userList;
+    }
 
+
+    /**
+     * 根据用户ID查询PC推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmReg selectUtmRegByUserId(Integer userId) {
+        UtmRegExample example = new UtmRegExample();
+        UtmRegExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UtmReg> list = this.utmRegMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询App推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AppUtmReg selectAppUtmRegByUserId(Integer userId) {
+        AppUtmRegExample example = new AppUtmRegExample();
+        AppUtmRegExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<AppUtmReg> list = this.appUtmRegMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUser selectSpreadsUserByUserId(Integer userId) {
+        SpreadsUserExample example = new SpreadsUserExample();
+        SpreadsUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<SpreadsUser> list = this.spreadsUserMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPortrait selectUserPortraitByUserId(Integer userId) {
+        UserPortraitExample example = new UserPortraitExample();
+        UserPortraitExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UserPortrait> list = this.userPortraitMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 	@Override
 	public TemplateDisposeVO getTemplateDispose(String templateId) {
 		TemplateDisposeVO vo=new TemplateDisposeVO();

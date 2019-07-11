@@ -64,6 +64,29 @@ public class SystemConfig {
     public String appUpdateAndroidJsp;
 
     /**
+     * 合力亿捷-呼叫中心URL
+     */
+    @Value("${hyjf.call.centre.url}")
+    public String callCentreUrl;
+
+    /**
+     * 合力亿捷-呼叫中心appid
+     */
+    @Value("${hyjf.call.centre.appId}")
+    public String appId;
+
+    /**
+     * 合力亿捷-呼叫中心account
+     */
+    @Value("${hyjf.call.centre.account}")
+    public String account;
+
+    /**
+     * 合力亿捷-呼叫中心secret
+     */
+    @Value("${hyjf.call.centre.secret}")
+    public String secret;
+    /**
      * 获取文件url前缀
      *
      * @return
@@ -193,6 +216,14 @@ public class SystemConfig {
     @Value("${hyjf.front.wjt.wei.host}")
     public String wjtWeiFrontHost;
 
+
+    /**
+     * 兑吧相关
+     */
+    @Value("${hyjf.duiba.appkey}")
+    public String duiBaAppKey;
+    @Value("${hyjf.duiba.appsecret}")
+    public String duiBaAppSecret;
 
     public String getAppFileUpload() {
         return appFileUpload;
@@ -528,5 +559,54 @@ public class SystemConfig {
 
     public void setWjtWeiFrontHost(String wjtWeiFrontHost) {
         this.wjtWeiFrontHost = wjtWeiFrontHost;
+    }
+
+
+    public String getCallCentreUrl() {
+        return callCentreUrl;
+    }
+
+    public void setCallCentreUrl(String callCentreUrl) {
+        this.callCentreUrl = callCentreUrl;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getDuiBaAppKey() {
+        return duiBaAppKey;
+    }
+
+    public void setDuiBaAppKey(String duiBaAppKey) {
+        this.duiBaAppKey = duiBaAppKey;
+    }
+
+    public String getDuiBaAppSecret() {
+        return duiBaAppSecret;
+    }
+
+    public void setDuiBaAppSecret(String duiBaAppSecret) {
+        this.duiBaAppSecret = duiBaAppSecret;
     }
 }

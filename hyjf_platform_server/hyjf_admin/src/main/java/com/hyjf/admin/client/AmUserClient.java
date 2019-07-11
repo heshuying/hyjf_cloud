@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1529,6 +1529,43 @@ public interface AmUserClient {
     void insertBatchSmsCount(ListRequest request);
 
     void updateOrDelectRepeatData();
+    /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    boolean syncUserMobile(UserRequest userRequest);
+
+    /**
+     * 兑吧积分账户查询列表
+     *
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean);
+
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean selectRemainPoints(DuibaPointsRequest requestBean);
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean updateDuibaPoints(DuibaPointsRequest requestBean);
+
+	ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
+
+	ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
     /**
      * 获取着陆页列表 add by nxl
      * @param request

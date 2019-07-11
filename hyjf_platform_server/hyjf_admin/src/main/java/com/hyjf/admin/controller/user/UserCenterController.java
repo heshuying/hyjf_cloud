@@ -15,6 +15,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -27,6 +29,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -45,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -64,6 +68,8 @@ public class UserCenterController extends BaseController {
     private UserCenterService userCenterService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CommonProducer commonProducer;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
@@ -102,7 +108,11 @@ public class UserCenterController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for(UserManagerVO userManagerVO:listUserManagetVO){
-                    userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+                    // 注册手机号
+                    userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getMobile()));
+                    userManagerVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerVO.getRealName()));
+                    // 银行预留手机号
+                    userManagerVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerVO.getBankMobile()));
                 }
             }
             userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
@@ -135,10 +145,20 @@ public class UserCenterController extends BaseController {
         if(null!=userManagerDetailVO){
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
-                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getIdCard()));
-                userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getMobile()));
+                //用户身份证号码
+                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedIdcard(userManagerDetailVO.getIdCard()));
+                // 用户手机号
+                userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getMobile()));
+                //用户邮箱
+                userManagerDetailVO.setEmail(AsteriskProcessUtil.getAsteriskedEmail(userManagerDetailVO.getEmail()));
+                // 真实姓名
+                userManagerDetailVO.setRealName(AsteriskProcessUtil.getAsteriskedCnName(userManagerDetailVO.getRealName()));
+                // 紧急联系人姓名
+                userManagerDetailVO.setEmName(AsteriskProcessUtil.getAsteriskedCnName(userManagerDetailVO.getEmName()));
                 //紧急联系人手机号加密显示
-                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
+                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getEmPhone()));
+                // 银行预留手机号脱敏
+                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedMobile(userManagerDetailVO.getBankMobile()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
@@ -170,6 +190,12 @@ public class UserCenterController extends BaseController {
         UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(userId);
         UserBankOpenAccountCustomizeVO userBankOpenAccountCustomizeVO = new UserBankOpenAccountCustomizeVO();
         if(null!=userBankOpenAccountVO){
+            if(!isShow){
+                // 银行卡号
+                userBankOpenAccountVO.setBankNo(AsteriskProcessUtil.getAsteriskedBankCard(userBankOpenAccountVO.getBankNo()));
+                // 预留手机号
+                userBankOpenAccountVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(userBankOpenAccountVO.getMobile()));
+            }
             BeanUtils.copyProperties(userBankOpenAccountVO, userBankOpenAccountCustomizeVO);
         }
         userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountCustomizeVO);
@@ -177,6 +203,12 @@ public class UserCenterController extends BaseController {
         CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
         CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
         if(null!=companyInfo){
+            if(!isShow){
+                //企业证件号脱敏
+                companyInfo.setIdNo(AsteriskProcessUtil.getAsteriskedEnterpriseIdNo(companyInfo.getIdNo()));
+                //企业银行卡号脱敏（按照银行卡号脱敏）
+                companyInfo.setAccount(AsteriskProcessUtil.getAsteriskedBankCard(companyInfo.getAccount()));
+            }
             BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
         userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);
@@ -675,7 +707,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String idcard = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(idcard);
+                return AsteriskProcessUtil.getAsteriskedIdcard(idcard);
             }
         };
         IValueFormatter bankOpenAccounAdapter = new IValueFormatter() {
@@ -696,7 +728,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
         //户籍所在地
@@ -721,6 +753,16 @@ public class UserCenterController extends BaseController {
                 return  String.valueOf(Integer.parseInt(formatDate) - Integer.parseInt(age.substring(0, 4)));
             }
         };
+
+        // 真实姓名
+        IValueFormatter realNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String realName = (String) object;
+                return AsteriskProcessUtil.getAsteriskedCnName(realName);
+            }
+        };
+
         mapAdapter.put("sex", sexAdapter);
         mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("idcard", idcardAdapter);
@@ -728,6 +770,7 @@ public class UserCenterController extends BaseController {
         mapAdapter.put("openAccount", openAccounAdapter);
         mapAdapter.put("areaByIdCard", areaByIdCard);
         mapAdapter.put("age", age);
+        mapAdapter.put("realName", realNameAdapter);
         return mapAdapter;
     }
 
@@ -1152,7 +1195,8 @@ public class UserCenterController extends BaseController {
 
         //非共同参数封装start
         selectbean.setTxCode(BankCallMethodConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
-        selectbean.setMobile(user.getMobile());
+        // 调用银行接口传递银行预留手机号字段 update by liushouyi
+        selectbean.setMobile(user.getBankMobile());
         //非共同参数封装end
 
         BankCallBean retBean;
@@ -1353,4 +1397,66 @@ public class UserCenterController extends BaseController {
         return new AdminResult<JxBankConfigCustomizeVO>(jxBankConfigVO);
     }*/
 
+
+    @GetMapping(value = "/syncUserMobileAction/{userId}")
+    @ApiOperation(value = "同步用户手机号", notes = "同步用户手机号")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SYNC_USER_MOBILE)
+    public AdminResult<Response> syncUserMobileAction(HttpServletRequest request,@PathVariable String userId) {
+        AdminResult<Response> result = new AdminResult<Response>();
+        if (StringUtils.isBlank(userId)) {
+            return new AdminResult<>(FAIL, "获取用户userId失败!");
+        }
+        // 根据用户ID查询用户信息
+        UserVO userVO = this.userCenterService.selectUserByUserId(userId);
+        if (userVO == null) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户信息失败");
+        }
+        // 根据用户ID查询用户详情信息
+        UserInfoVO userInfoVO = this.userCenterService.selectUserInfoByUserId(userId);
+        if (userInfoVO == null) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户详情信息失败");
+        }
+
+        // 判断用户是否开户
+        Integer bankOpenAccount = userVO.getBankOpenAccount();
+        if (bankOpenAccount == 0) {
+            // 用户未开户
+            return new AdminResult<>(FAIL, "用户未开户");
+        }
+        // 根据用户ID查询用户开户信息
+        BankOpenAccountVO bankOpenAccountVO = this.userCenterService.queryBankOpenAccountByUserId(Integer.parseInt(userId));
+        if (bankOpenAccountVO == null || StringUtils.isEmpty(bankOpenAccountVO.getAccount())) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户开户信息失败");
+        }
+        // 调用银行接口
+        BankCallBean bankCallBean = new BankCallBean(BankCallConstant.VERSION_10, BankCallConstant.TXCODE_MOBILE_QUERY_BY_ACCOUNT, Integer.parseInt(userId));
+        bankCallBean.setAccountId(bankOpenAccountVO.getAccount());
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bankCallBean);
+            if (resultBean == null) {
+                return new AdminResult<>(FAIL, "调用银行接口失败");
+            }
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                // 银行预留手机号
+                String bankMobile = resultBean.getMobile();
+                // 本地保存手机号与银行的预留手机号不一致,更新本地银行预留手机号
+                if (!bankMobile.equals(userVO.getBankMobile())) {
+                    logger.info("银行预留手机号:[" + bankMobile + "],本地保存的预留手机号:[" + userVO.getBankMobile() + "].");
+                    // 更新用户银行预留手机号,插入操作记录
+                    UserRequest userRequest = new UserRequest();
+                    userRequest.setBankMobile(bankMobile);
+                    userRequest.setUserId(Integer.parseInt(userId));
+                    userRequest.setRegIp(GetCilentIP.getIpAddr(request));
+                    boolean isOk = this.userCenterService.syncUserMobile(userRequest);
+                   return  new AdminResult<>(SUCCESS, "同步用户手机号成功");
+                } else {
+                    return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");
+                }
+            } else {
+                return new AdminResult<>(FAIL, "调用银行接口失败");
+            }
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, "调用银行接口失败");
+        }
+    }
 }

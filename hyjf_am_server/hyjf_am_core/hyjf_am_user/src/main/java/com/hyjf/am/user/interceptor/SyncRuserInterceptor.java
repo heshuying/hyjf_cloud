@@ -1,5 +1,10 @@
 package com.hyjf.am.user.interceptor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
+
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -16,10 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
 
 /**
  * 同步用户信息的mybaitis 拦截器
@@ -120,6 +121,10 @@ public class SyncRuserInterceptor implements Interceptor {
 
                 sendToMq(paramObj, methodName, "up_ht_user");
 
+            } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.deleteByPrimaryKey")) {
+                Map<String,Object> userMap = new HashMap<>();
+                userMap.put("userId",paramObj);
+                sendToMq(userMap, methodName, "del_ht_user");// 未开户用户销户
             } else if (StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user")) {
                 sendToMq(paramObj, methodName, "ht_spreads_user");
             } else if (StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {

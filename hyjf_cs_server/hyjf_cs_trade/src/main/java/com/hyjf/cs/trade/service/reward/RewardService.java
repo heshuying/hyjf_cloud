@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.reward;
 
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
@@ -16,4 +17,11 @@ public interface RewardService extends BaseTradeService {
     List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd);
 
     Integer selectMyRewardCount(String userId);
+
+    /**
+     * 获取分享信息
+     * @author wgx
+     * @date 2019/05/09
+     */
+    public ShareNewsBeanVO queryShareNews();
 }

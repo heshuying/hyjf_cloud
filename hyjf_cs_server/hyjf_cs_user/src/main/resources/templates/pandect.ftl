@@ -3,6 +3,7 @@
   "status": "${datas.status!''}",
   "statusDesc": "${datas.statusDesc!''}",
   "data": {
+        "pointsShopSwitch":${(datas.data.pointsShopSwitch)!'0'},
         "bankCard":${(datas.data.bankCard)!'0'},
         "isVip":${(datas.data.isVip)?string('true', 'false')},
         "vipName":"${(datas.data.vipName)!''}",
@@ -31,7 +32,8 @@
                         <#assign user = datas.data.user >
                     </#if>
                   "iconUrl": "${user.iconUrl!''}",
-                  "isSetPassword": "${user.isSetPassword!'0'}"
+                  "isSetPassword": "${user.isSetPassword!'0'}",
+                  "pointsCurrent": "${user.pointsCurrent!'0'}"
         },
          "account": {
                     <#if datas.data.account??>
