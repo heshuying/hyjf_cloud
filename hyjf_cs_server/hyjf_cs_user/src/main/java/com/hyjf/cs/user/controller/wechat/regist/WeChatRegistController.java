@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -378,7 +379,29 @@ public class WeChatRegistController extends BaseUserController {
         logger.info("verificationCode: {}", bean.getVerificationCode());
 
         registService.checkReffer(refferUserId);
-
+        // 着陆页配置代码修改 20190621 add by nxl start
+        // 着陆页id
+        String landingId = bean.getLandingId();
+        logger.info("landingId: {}", bean.getLandingId());
+        if(StringUtils.isNotBlank(landingId)&&StringUtils.isNotBlank(bean.getUtmId())){
+            Integer intLandingId = Integer.parseInt(landingId);
+            // 根据着陆页id获取推荐渠道id
+            TemplateDisposeVO templateDisposeVO = registService.selectTemplateDisposeById(intLandingId);
+            if(null==templateDisposeVO){
+                logger.info("------根据着陆页id："+landingId+" 未能查找到该着陆页配置信息!------");
+                ret.put("status", "99");
+                ret.put("statusDesc", "未能查找到着陆页配置信息!");
+                return ret;
+            }
+            String templateLanding = templateDisposeVO.getUtmId().toString();
+            if(!bean.getUtmId().equals(templateLanding)){
+                logger.info("------渠道id传入参数为："+bean.getUtmId()+" 与着陆页配置渠道id"+templateLanding+"不相同!------");
+                ret.put("status", "99");
+                ret.put("statusDesc", "渠道编码与着陆页配置渠道不相同!");
+                return ret;
+            }
+        }
+        // 着陆页配置代码修改  20190621 add by nxl  end
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
         WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType,null);
@@ -601,5 +624,56 @@ public class WeChatRegistController extends BaseUserController {
             logger.error(e.getMessage());
             return "";
         }
+    }
+    
+    /**
+     * 点击下一步验证
+     * @param request
+     * @param response
+     * @return
+     */
+    @ApiOperation(value = "-移动端着陆页配置",notes = "移动端着陆页配置")
+    @PostMapping(value = "/templateDispose.do")
+    public JSONObject templateDispose(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+
+        ret.put("status", "000");
+        ret.put("statusDesc", "成功");
+
+        String templateId = request.getParameter("templateId");
+        if (Validator.isNull(templateId)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "templateId不能为空");
+            return ret;
+        }
+        JSONObject data = new JSONObject();
+        TemplateDisposeVO rt = registService.getTemplateDispose(templateId);
+        if (rt==null) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "id无效");
+            return ret;
+        }
+        if(rt.getStatus()==0){
+            ret.put("status", "99");
+            ret.put("statusDesc", "活动已结束");
+            return ret;
+        }
+        data.put("landingId", rt.getId());
+        data.put("title",rt.getTempTitle());
+        data.put("name",rt.getUtmName() );
+        data.put("utmId", rt.getUtmId());
+        data.put("btnText", rt.getButtonText());
+        data.put("topImg",rt.getTopImg());
+        data.put("bottomImg", rt.getBottomImg());
+        data.put("midColor", rt.getBackgroundColor());
+        data.put("mainColor",rt.getDominantColor());
+        data.put("subColor",rt.getSecondaryColor());
+        data.put("alertTitle", rt.getLayerName());
+        data.put("alertImg", rt.getLayerImg());
+        data.put("alertOpen", rt.getIsJumt());
+        data.put("alertUrl", rt.getJumtUrl());
+        ret.put("data", data);
+        return ret;
+
     }
 }

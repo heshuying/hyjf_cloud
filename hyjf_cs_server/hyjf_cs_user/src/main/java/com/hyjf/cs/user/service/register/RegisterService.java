@@ -6,6 +6,7 @@ package com.hyjf.cs.user.service.register;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -166,4 +167,19 @@ public interface RegisterService extends BaseUserService {
      * @throws MQException
      */
     void sendWbsMQ(WbsRegisterMqVO wbsRegisterMqVO) throws MQException;
+    /**
+     * 登录操作
+     *
+     * @param
+     * @return
+     * @auth dongzeshan
+     */
+    TemplateDisposeVO getTemplateDispose(String templateId);
+
+    /**
+     * 根据着陆页id查找移动端着陆页配置 add by nxl
+     * @param landingId
+     * @return
+     */
+    TemplateDisposeVO selectTemplateDisposeById(Integer landingId);
 }
