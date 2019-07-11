@@ -44,7 +44,7 @@ public class DuiBaController {
                 resultVO = duiBaService.updateUserPoints(consumeParams);
             } catch (Exception e){
                 resultVO.setSuccess(false);
-                resultVO.setErrorMessage("兑换失败，请联系相关人员查看。");
+                resultVO.setErrorMessage("请联系相关人员查看。");
                 response.setResult(resultVO);
             }
             response.setResult(resultVO);
