@@ -46,9 +46,6 @@ public class ZIPGenerator {
                     zos.write(buf, 0, len);
                 }
                 zos.closeEntry();
-                if(i>2){
-                    break;
-                }
             }
             zos.closeEntry();
             zos.close();
