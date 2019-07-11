@@ -5,7 +5,7 @@
 
     <!-- 引入配置文件 -->
 
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -2062,7 +2062,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        
         <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2073,7 +2073,7 @@
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        
         <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
@@ -2082,7 +2082,11 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <table tableName="ht_template_dispose" domainObjectName="TemplateDispose">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_jumt" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
         <table tableName="ht_bank_mobile_modify" domainObjectName="BankMobileModify">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2113,6 +2117,25 @@
         <table tableName="ht_customer_service_representive_config" domainObjectName="CustomerServiceRepresentiveConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_duiba_orders" domainObjectName="DuibaOrders">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="order_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="delivery_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="processing_state" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="activation_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_duiba_points" domainObjectName="DuibaPoints">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="business_name" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_duiba_points_modify" domainObjectName="DuibaPointsModify">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="points_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
     </context>

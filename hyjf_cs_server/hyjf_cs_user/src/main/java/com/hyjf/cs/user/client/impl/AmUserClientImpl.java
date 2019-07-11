@@ -6,6 +6,7 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
+import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -16,6 +17,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
@@ -30,6 +32,7 @@ import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -1388,7 +1391,6 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
 		restTemplate.getForEntity(url, String.class).getBody();
 	}
-
 	/**
 	 * 获取前一天注册的用户
 	 *
@@ -1541,4 +1543,42 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+
+	/**
+	 * 积分商城，兑吧扣积分接口回调
+	 * @param consumeParams
+	 * @return
+	 */
+	@Override
+	public CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams){
+		String url = "http://AM-USER/am-user/pointsshop/duiba/deductpoints";
+		CreditConsumeResultResponse response = restTemplate.postForEntity(url, consumeParams, CreditConsumeResultResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+	@Override
+	public TemplateDisposeVO getTemplateDispose(String templateId) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/getTemplateDispose/"+ templateId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getTemplateDispose();
+		}
+		return null;
+	}
+	/**
+	 * 根据着陆页id查找移动端着陆页配置 add by nxl
+	 * @param landingId
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeVO selectTemplateDisposeById(Integer landingId) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/selectTemplateDisposeById/"+landingId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getTemplateDispose();
+		}
+		return null;
+	}
 }

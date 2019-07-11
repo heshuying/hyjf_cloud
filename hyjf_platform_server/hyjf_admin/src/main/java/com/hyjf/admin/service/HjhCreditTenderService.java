@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -65,4 +66,6 @@ public interface HjhCreditTenderService {
 	 * @return
 	 */
 	List<HjhCreditTenderCustomizeVO> paging(HjhCreditTenderRequest request, List<HjhCreditTenderCustomizeVO> result);
+
+    Response doCreditEnd(String orderId);
 }

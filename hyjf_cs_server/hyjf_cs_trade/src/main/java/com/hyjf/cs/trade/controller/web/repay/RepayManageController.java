@@ -56,6 +56,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -311,7 +312,6 @@ public class RepayManageController extends BaseTradeController {
         String verificationFlag = null;
         if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
             WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
-
             // 单纯的作为验证标识.
             if (borrowInfo.getPlanNid() != null) {
                 verificationFlag = borrowInfo.getPlanNid();
@@ -359,8 +359,11 @@ public class RepayManageController extends BaseTradeController {
             } else {
                 borrowInfo.setSucSmount(new BigDecimal(0));
             }
+            WebUserTransferBorrowInfoCustomizeVO2 b2=new WebUserTransferBorrowInfoCustomizeVO2();
+            BeanUtils.copyProperties(borrowInfo,b2);
+            b2.setBorrowApr(FormatRateUtil.formatBorrowApr(borrowInfo.getBorrowApr().toString()));
             resultMap.put("verificationFlag", verificationFlag);
-            resultMap.put("borrowInfo", borrowInfo);
+            resultMap.put("borrowInfo", b2);
             resultMap.put("fddStatus", fddStatus);
             result.setData(resultMap);
         }

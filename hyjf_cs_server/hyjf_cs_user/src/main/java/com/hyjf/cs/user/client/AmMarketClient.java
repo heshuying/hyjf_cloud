@@ -1,9 +1,11 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.market.DuiBaPointsDetailRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.market.DuiBaPointsDetailVO;
 
 import java.util.List;
 
@@ -24,4 +26,6 @@ public interface AmMarketClient {
     AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
 
     List<ActivityListVO> getActivityList();
+
+    DuiBaPointsDetailVO getPointsDetail(DuiBaPointsDetailRequest request);
 }
