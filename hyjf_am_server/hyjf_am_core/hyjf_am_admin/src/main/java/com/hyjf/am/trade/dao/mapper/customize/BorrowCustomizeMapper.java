@@ -7,6 +7,7 @@ import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.borrow.ApplyBorrowInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -43,6 +44,23 @@ public interface BorrowCustomizeMapper {
 
     Integer getTotalInverestCount(Integer userId);
 
+    /***
+     * 协议申请标的信息明细
+     * @author Zha Daojian
+     * @date 2019/5/6 15:43
+     * @param borrowNid
+     * @return com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO
+     **/
+    ApplyBorrowInfoVO getApplyBorrowInfoDetail(String borrowNid);
+
+    /**
+     * 订单数量：最新的标的订单数量=原始标投资+承接总数
+    * @author Zha Daojian
+    * @date 2019/7/9 10:33
+    * @param borrowNid
+    * @return java.lang.Integer
+    **/
+    Integer getTotalTenderCountByBorrowNid(String borrowNid);
     /**
      * 集成borrow、 boorow_info表的自定义查询
      * @param borrowNid

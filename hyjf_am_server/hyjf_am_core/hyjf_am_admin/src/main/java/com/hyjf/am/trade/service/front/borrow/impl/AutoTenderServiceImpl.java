@@ -678,7 +678,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
 
         // 调用MQ,生成计划债权转让协议
-        planCreditGenerateContractByMQ(bean.getOrderId());
+        planCreditGenerateContractByMQ(credit.getBorrowNid(),bean.getOrderId());
         result = true;
         return result;
     }
@@ -2384,13 +2384,14 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      *
      * @param assignNid
      */
-    private void planCreditGenerateContractByMQ(String assignNid) {
+    private void planCreditGenerateContractByMQ(String borrowNid,String assignNid) {
         try {
             FddGenerateContractBeanVO bean = new FddGenerateContractBeanVO();
             bean.setTransType(4);
             bean.setTenderType(3);
             bean.setAssignNid(assignNid);
             bean.setOrdid(assignNid);
+            bean.setBorrowNid(borrowNid);
             commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
                     MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
         } catch (Exception e) {

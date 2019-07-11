@@ -377,6 +377,7 @@ public class FddHandle {
      */
 	private void updateSaveDownUrl(DzqzCallBean dzqzCallBean, FddGenerateContractBean bean) {
 
+		logger.info("--------------存储下载地址和观看地址bean：" + JSONObject.toJSONString(bean));
         TenderAgreementVO info = new TenderAgreementVO();
         int nowTime = GetDate.getNowTime10();
         info.setUserId(bean.getTenderUserId());
@@ -394,7 +395,7 @@ public class FddHandle {
         info.setCreateUserName(bean.getTenderUserName());
         int flag = this.amTradeClient.saveTenderAgreement(info);
         if (flag == 0) {
-            logger.info("--------------存储居间协议失败-订单号：" + bean.getOrdid());
+            logger.info("--------------存储下载地址和观看地址失败-订单号：" + bean.getOrdid());
         }
 
     }

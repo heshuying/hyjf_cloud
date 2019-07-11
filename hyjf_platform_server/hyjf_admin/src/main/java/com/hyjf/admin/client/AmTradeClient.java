@@ -861,6 +861,15 @@ public interface AmTradeClient {
     BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid);
 
     /**
+     * 协议申请明细列表页
+    * @author Zha Daojian
+    * @date 2019/5/8 15:35
+    * @param borrowNid
+    * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
+    **/
+    ApplyBorrowInfoVO selectApplyBorrowInfoDetail(String borrowNid);
+
+    /**
      * 标的放款记录列表
      *
      * @param borrowNid
@@ -2984,6 +2993,26 @@ public interface AmTradeClient {
     FddTempletCustomizeResponse getRecordInfoById(Integer id);
 
     List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
+
+    List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId);
+
+    /**
+     * 订单数量：最新的标的订单数量=原始标投资+承接总数
+     * @author Zha Daojian
+     * @date 2019/7/9 10:33
+     * @param borrowNid
+     * @return java.lang.Integer
+     **/
+    Integer getTotalTenderCountByBorrowNid(String borrowNid);
+
+    /**
+     * 保存协议申请
+    * @author Zha Daojian
+    * @date 2019/5/8 17:56
+    * @param applyBorrowAgreementVO
+    * @return com.hyjf.am.response.trade.ApplyBorrowAgreementResponse
+    **/
+    ApplyBorrowAgreementResponse saveApplyBorrowAgreement( ApplyBorrowAgreementVO applyBorrowAgreementVO);
 
     Integer countRecordLog(ProtocolLogRequest request);
 
