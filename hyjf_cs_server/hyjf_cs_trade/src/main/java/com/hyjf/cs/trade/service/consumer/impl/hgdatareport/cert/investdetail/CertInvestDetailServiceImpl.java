@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -333,7 +334,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             }
             creditInterest=hjhDebtCreditRepays.get(0).getReceiveInterestYes();
             creditCapital=hjhDebtCreditRepays.get(0).getReceiveCapitalYes();
-            sourceFinancingCode=hjhDebtCreditRepays.get(0).getAssignPlanNid();
+            HjhDebtCreditVO hjhDebtCreditVO=amTradeClient.selectHjhDebtCreditByCreditNid(hjhDebtCreditRepays.get(0).getCreditNid());
+            sourceFinancingCode=hjhDebtCreditVO.getPlanNid();
         }else{
             //散标
             CertRequest certRequest=new CertRequest();
