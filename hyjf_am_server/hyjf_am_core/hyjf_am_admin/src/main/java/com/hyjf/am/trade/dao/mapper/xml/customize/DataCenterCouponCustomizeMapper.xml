@@ -23,6 +23,8 @@
 						'手动发放'
 					WHEN 3 THEN
 						'会员礼包'
+					WHEN 4 THEN
+						'积分兑换'
 					ELSE
 						''
 					END

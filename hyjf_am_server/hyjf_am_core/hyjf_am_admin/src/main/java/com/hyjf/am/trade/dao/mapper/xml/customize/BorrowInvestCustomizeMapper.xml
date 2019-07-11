@@ -63,6 +63,13 @@
 			<if test="productType != null and productType != ''">
 				AND  b.project_type = #{productType}
 			</if>
+			<if test='stateSrch != null and stateSrch != "" and stateSrch != "W"'>
+				AND bce.state = #{stateSrch}
+			</if>
+			<!-- 查询未开始 -->
+			<if test='stateSrch != null and stateSrch != "" and stateSrch == "W"'>
+				AND bce.id is null
+			</if>
 		</where>
 	</sql>
 	
@@ -73,6 +80,7 @@
 		    ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -83,6 +91,7 @@
 		    ht_borrow_tender bt
 		  INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
           INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
+		  LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -116,6 +125,8 @@
         <result column="viewpdf_url" property="viewpdfUrl"  />
         <!--脱敏后合同查看地址-->
         <result column="img_url" property="imgUrl"  />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="stateDesc" property="stateDesc" jdbcType="VARCHAR" />
 		<!--是否复投投标-->
 		<result column="tender_type" property="tenderType"/>
 	</resultMap>
@@ -149,11 +160,23 @@
 			hta.download_url AS download_url,
 			hta.viewpdf_url AS viewpdf_url,
 			hta.img_url AS img_url,
+			bce.`state`,
+			CASE bce.`state`
+			WHEN 'A' THEN
+			'初始'
+			WHEN 'S' THEN
+			'成功'
+			WHEN 'F' THEN
+			'失败'
+			ELSE
+			'未开始'
+			END stateDesc,
 			CASE WHEN bt.tender_type = 1 THEN '是' ELSE '否' END  AS  tender_type
 		FROM
 			ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 		INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
@@ -249,6 +272,8 @@
 		<result column="contractCreateTime" property="contractCreateTime" jdbcType="VARCHAR" />
 		<!--合同签署时间-->
 		<result column="contractSignTime" property="contractSignTime" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="stateDesc" property="stateDesc" jdbcType="VARCHAR" />
 		<!--是否复投投标-->
 		<result column="tender_type" property="tenderType" jdbcType="VARCHAR"/>
 		<!--当时渠道来源-->
@@ -304,6 +329,17 @@
 			CASE WHEN hta.contract_sign_time IS NOT NULL AND hta.contract_sign_time!=0 THEN
 			FROM_UNIXTIME(hta.contract_sign_time, '%Y-%m-%d %H:%i:%s' )
 			ELSE '' END AS contractSignTime,
+			bce.`state`,
+			CASE bce.`state`
+			WHEN 'A' THEN
+			'初始'
+			WHEN 'S' THEN
+			'成功'
+			WHEN 'F' THEN
+			'失败'
+			ELSE
+			'未开始'
+			END stateDesc,
 			CASE WHEN bt.tender_type = 1 THEN '是' ELSE '否' END  AS  tender_type,
 			if(bt.create_time<![CDATA[<]]>'2019-5-31 0:0:0',utm2.utm_source,utm.utm_source) as utmSource1,
 			utm2.utm_source utmSource2
@@ -311,6 +347,7 @@
 			ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 		INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_r_user u ON u.user_id = bt.user_id
@@ -341,6 +378,7 @@
 		FROM
 			ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_bank_credit_end bce ON bce.org_order_id = bt.nid
 	    <include refid="Where_Clause" />
 	</select>
 

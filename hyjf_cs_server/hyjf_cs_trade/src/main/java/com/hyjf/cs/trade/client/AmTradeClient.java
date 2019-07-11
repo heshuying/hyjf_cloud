@@ -282,6 +282,8 @@ public interface AmTradeClient {
      */
     int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO);
 
+    int updateCreditEndForBatchFail(BankCreditEndVO bankCreditEndVO);
+
     /**
      * APP,PC,wechat散标出借获取优惠券列表
      * @param requestBean
@@ -302,6 +304,8 @@ public interface AmTradeClient {
      * @return
      */
     List<BankCreditEndVO> getBankCreditEndListByBatchnoTxdate(BankCreditEndVO bankCreditEndVO);
+
+    List<BankCreditEndVO> getCreditEndListForCallBackFail(BankCreditEndListRequest requestBean);
 
     /**
      * 根据条件(批次号和日期)，更新结束债权任务状态
@@ -324,6 +328,8 @@ public interface AmTradeClient {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO);
+
+    int updateForCallBackFail(BankCallBeanVO bankCallBeanVO);
 
     /**
      * 根据borrowNid获取BorrowInfoVO对象

@@ -233,4 +233,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminBorrowRepayInfoCurrentCustomizeMapper adminBorrowRepayInfoCurrentCustomizeMapper;
+
+	@Autowired
+	protected BankCreditEndCustomizeMapper bankCreditEndCustomizeMapper;
 }

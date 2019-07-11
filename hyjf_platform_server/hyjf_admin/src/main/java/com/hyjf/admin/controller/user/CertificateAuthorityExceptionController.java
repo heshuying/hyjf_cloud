@@ -268,8 +268,8 @@ public class CertificateAuthorityExceptionController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportCAExceptionListExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response)throws Exception {
         // 封装查询条件
-        CertificateAuthorityExceptionRequest certificateBean = new CertificateAuthorityExceptionRequest();
-        BeanUtils.copyProperties(certificateAuthorityExceptionBean,certificateBean);
+       /* CertificateAuthorityExceptionRequest certificateBean = new CertificateAuthorityExceptionRequest();
+        BeanUtils.copyProperties(certificateAuthorityExceptionBean,certificateBean); */
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -279,10 +279,13 @@ public class CertificateAuthorityExceptionController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        certificateBean.setLimitFlg(true);
+        /*certificateBean.setLimitFlg(true);
         //请求第一页5000条
         certificateBean.setPageSize(defaultRowMaxCount);
-        certificateBean.setCurrPage(1);
+        certificateBean.setCurrPage(1);*/
+        //设置查询条数
+        certificateAuthorityExceptionBean.setPageSize(defaultRowMaxCount);
+        certificateAuthorityExceptionBean.setCurrPage(1);
         // 需要输出的结果列表
         CertificateAuthorityResponse recordList = certificateAuthorityExceptionService.getExceptionRecordList(certificateAuthorityExceptionBean);
         Integer totalCount = recordList.getRecordTotal();
@@ -313,8 +316,8 @@ public class CertificateAuthorityExceptionController extends BaseController {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
-            certificateBean.setPageSize(defaultRowMaxCount);
-            certificateBean.setCurrPage(i+1);
+            certificateAuthorityExceptionBean.setPageSize(defaultRowMaxCount);
+            certificateAuthorityExceptionBean.setCurrPage(i+1);
             CertificateAuthorityResponse recordList2 = certificateAuthorityExceptionService.getExceptionRecordList(certificateAuthorityExceptionBean);
             if (recordList2 != null && recordList2.getResultList().size()> 0) {
                 if(!isShow){

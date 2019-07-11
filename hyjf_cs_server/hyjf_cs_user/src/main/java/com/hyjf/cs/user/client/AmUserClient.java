@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
@@ -16,6 +17,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.duiba.sdk.CreditConsumeParams;
 
 import java.util.List;
 
@@ -749,4 +751,19 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UtmVO selectUtmByUtmId(Integer utmId);
+
+	/**
+	 * 积分商城 兑吧扣积分接口回调
+	 * @param consumeParams
+	 * @return
+	 */
+	CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams);
+	
+	TemplateDisposeVO getTemplateDispose(String templateId);
+	/**
+	 * 根据着陆页id查找移动端着陆页配置 add by nxl
+	 * @param landingId
+	 * @return
+	 */
+	TemplateDisposeVO selectTemplateDisposeById(Integer landingId);
 }

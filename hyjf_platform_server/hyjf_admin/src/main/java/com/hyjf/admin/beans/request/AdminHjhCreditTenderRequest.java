@@ -147,6 +147,9 @@ public class AdminHjhCreditTenderRequest extends BaseRequest implements Serializ
 	@ApiModelProperty(value = "出让人智投订单号")
 	private String sellOrderId;
 
+	@ApiModelProperty(value = "债权结束状态 S-成功;F-失败;A-初始:W-未开始")
+	private String stateSrch;
+
 	/**
 	 * 构造方法
 	 */
@@ -496,5 +499,13 @@ public class AdminHjhCreditTenderRequest extends BaseRequest implements Serializ
 
 	public void setSellOrderId(String sellOrderId) {
 		this.sellOrderId = sellOrderId;
+	}
+
+	public String getStateSrch() {
+		return stateSrch;
+	}
+
+	public void setStateSrch(String stateSrch) {
+		this.stateSrch = stateSrch;
 	}
 }
