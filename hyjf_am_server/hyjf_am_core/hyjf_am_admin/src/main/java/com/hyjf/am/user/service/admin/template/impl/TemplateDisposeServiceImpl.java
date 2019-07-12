@@ -58,7 +58,6 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 		if(count>0) {
 			example.setOrderByClause("`create_time` Desc");
 			 Paginator paginator = new Paginator(templateDisposeRequest.getCurrPage(),count,templateDisposeRequest.getPageSize());
-
 		        example.setLimitStart(paginator.getOffset());
 		         example.setLimitEnd(paginator.getLimit());
 			 List<TemplateDispose> list = templateDisposeMapper.selectByExample(example);
