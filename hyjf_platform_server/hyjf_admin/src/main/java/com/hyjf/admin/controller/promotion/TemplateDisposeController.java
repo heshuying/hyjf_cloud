@@ -118,10 +118,10 @@ public class TemplateDisposeController extends BaseController{
  	 */
 	@PostMapping("/updateTemplateDispose")
 	public AdminResult updateTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
-		String[] temp = templateDisposeRequest.getTempName().split("\\|");
+//		String[] temp = templateDisposeRequest.getTempName().split("\\|");
 		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
-		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
-		templateDisposeRequest.setTempName(temp[1]);
+//		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
+//		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUpdateTime(new Date());
@@ -140,10 +140,10 @@ public class TemplateDisposeController extends BaseController{
  	 */
 	@PostMapping("/insertTemplateDispose")
 	public AdminResult insertTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
-		String[] temp = templateDisposeRequest.getTempName().split("\\|");
+//		String[] temp = templateDisposeRequest.getTempName().split("\\|");
 		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
-		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
-		templateDisposeRequest.setTempName(temp[1]);
+//		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
+//		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUrl(systemConfig.getWechatHost()+"/landingPage?utm_id="+templateDisposeRequest.getUtmId()+"&tId=");
