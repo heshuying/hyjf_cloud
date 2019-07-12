@@ -75,6 +75,8 @@ public class LandingManageController extends BaseController {
         Map<String, String> tempType = CacheUtil.getParamNameMap("TEMP_TYPE");
         LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
         BeanUtils.copyProperties(landingManagerRequestBean, landingManagerRequest);
+        //模板名称模糊查找
+        landingManagerRequest.setVague(true);
         TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
         if (null==templateConfigResponse||!Response.isSuccess(templateConfigResponse)) {
             return new AdminResult<>(FAIL, templateConfigResponse.getMessage());
@@ -196,6 +198,7 @@ public class LandingManageController extends BaseController {
         LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
         BeanUtils.copyProperties(landingManagerRequestBean, landingManagerRequest);
         //根据名字查询
+        landingManagerRequest.setVague(false);
         TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
         if (null==templateConfigResponse||!Response.isSuccess(templateConfigResponse)) {
             return new AdminResult<>(FAIL, templateConfigResponse.getMessage());

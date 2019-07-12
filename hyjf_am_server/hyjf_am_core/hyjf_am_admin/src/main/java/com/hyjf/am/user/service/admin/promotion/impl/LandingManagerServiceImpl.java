@@ -56,7 +56,13 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
         }
         //模板名称
         if (StringUtils.isNotBlank(request.getTempName())) {
-            criteria.andTempNameLike(request.getTempName() + "%");
+            if(!request.getVague()){
+                //如果此值为false，则完全查找
+                criteria.andTempNameEqualTo(request.getTempName());
+            }else{
+                //模板名称模糊查找
+                criteria.andTempNameLike(request.getTempName() + "%");
+            }
         }
         //模板类型
         if (request.getTempType() != null) {
