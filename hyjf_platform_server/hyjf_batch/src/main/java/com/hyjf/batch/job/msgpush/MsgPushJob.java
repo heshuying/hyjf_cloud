@@ -23,8 +23,8 @@ public class MsgPushJob extends BaseJob implements Job {
 
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-		logger.info("MsgPushJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/appMessage/pushAll", Object.class);
-		logger.info("MsgPushJob execute end...");
+//		logger.info("MsgPushJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
+//		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/appMessage/pushAll", Object.class);
+//		logger.info("MsgPushJob execute end...");
 	}
 }
