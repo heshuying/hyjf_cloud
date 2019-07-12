@@ -163,6 +163,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             if(applyAgreementlist!=null && applyAgreementlist.size()>0){
                 for (TenderAgreementVO tenderAgreementVO:applyAgreementlist) {
                     //下载成功状态的协议份数
+                    logger.info("--------------------下载成功状态的协议getStatus:"+tenderAgreementVO.getStatus());
                     if(tenderAgreementVO.getStatus()==3){
                         agreementNumber = agreementNumber +1 ;
                         logger.info("--------------------下载成功状态的协议份数:"+agreementNumber);
