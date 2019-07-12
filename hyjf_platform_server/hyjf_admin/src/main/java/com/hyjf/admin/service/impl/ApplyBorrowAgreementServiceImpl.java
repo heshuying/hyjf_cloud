@@ -204,7 +204,8 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
             for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
-                if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+                //下载状态是成功的协议
+                if(tenderAgreement.getStatus()==3){
                     if("1".equals(status)){
                         logger.info("--------------------下载文件签署,脱敏");
                         File file = createFaddPDFImgFile(tenderAgreement);
