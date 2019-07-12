@@ -1596,7 +1596,7 @@ public interface AmUserClient {
      * @param tempId
      * @return
      */
-    Boolean deleteTemplate(int tempId);
+   TemplateConfigResponse deleteTemplate(int tempId);
 
 	TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest);
 

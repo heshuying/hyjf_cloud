@@ -75,7 +75,7 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
      * @return
      */
     @Override
-    public Boolean deleteTemplate(int tempId) {
+    public TemplateConfigResponse deleteTemplate(int tempId) {
         return amUserClient.deleteTemplate(tempId);
     }
 }

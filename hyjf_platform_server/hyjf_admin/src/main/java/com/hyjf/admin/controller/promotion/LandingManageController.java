@@ -160,10 +160,10 @@ public class LandingManageController extends BaseController {
                     return new AdminResult<>(FAIL, FAIL_DESC);
                 }
             } else {
-                boolean flag = landingManagerService.deleteTemplate(landingManagerRequestBean.getId());
-                if (!flag) {
+                 TemplateConfigResponse flag = landingManagerService.deleteTemplate(landingManagerRequestBean.getId());
+                if (!Response.isSuccess(flag)) {
                     adminResult.setStatus(AdminResult.FAIL);
-                    adminResult.setStatusDesc("系统异常，请联系管理员!");
+                    adminResult.setStatusDesc(flag.getMessage());
                 }
             }
         } else {
