@@ -231,14 +231,12 @@ public class DuibaPointsModifyController extends BaseController {
         IValueFormatter createTimeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                Integer createTime = (Integer) object;
+                Date data = (Date) object;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                if(createTime != null){
-                    Date data = new Date(createTime*1000L);
+                if(data!=null) {
                     return sdf.format(data);
-                }else {
-                    return "";
                 }
+                return "";
             }
         };
         mapAdapter.put("createTime", createTimeAdapter);
