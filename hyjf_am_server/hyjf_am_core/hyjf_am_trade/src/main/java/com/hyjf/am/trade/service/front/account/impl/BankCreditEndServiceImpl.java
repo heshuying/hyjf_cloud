@@ -170,7 +170,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         }
         for(BankCreditEnd creditEnd : bankCreditEndList){
             bankCreditEnd.setId(creditEnd.getId());
-            bankCreditEnd.setFailTimes(bankCreditEnd.getFailTimes()+1);
+            bankCreditEnd.setFailTimes(creditEnd.getFailTimes()+1);
             this.bankCreditEndMapper.updateByPrimaryKeySelective(bankCreditEnd);
             result++;
         }
