@@ -19,6 +19,7 @@ public class BigDecimalToDecimal128Converter implements Converter<BigDecimal, De
     public Decimal128 convert(BigDecimal bigDecimal) {
         Decimal128 decimal128 = null;
         try {
+            //MongoDB专用
             decimal128 = new Decimal128(bigDecimal);
         } catch (NumberFormatException e) {
             logger.error("传入的bigDecimal参数值不正确，使用了非准确的值，请使用new BigDecimal(String)构造函数...", e);
