@@ -173,6 +173,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                 }else {
                     applyBorrowAgreementVO.setOrderNumber(orderNumber);
                     applyBorrowAgreementVO.setAgreementNumber(agreementNumber);
+                    logger.info("--------------------执行更新协议记录操作:"+JSONObject.toJSON(applyBorrowAgreementVO));
                     amTradeClient.saveApplyBorrowAgreement(applyBorrowAgreementVO);
                 }
             }else{
