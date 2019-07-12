@@ -359,7 +359,6 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             //计划承接债权
             HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
             if (null == hjhAccedeVO) {
-                logger.info("【产品配置信息历史数据推送】债权编码：" + borrowTenderVO.getNid() + " ,查询智投计入明细为空！！");
                 logger.info("【产品配置信息历史数据推送】根据智投加入订单号：" + borrowTenderVO.getAccedeOrderId() + " ,查询智投计入明细为空！！");
                 return null;
             }
