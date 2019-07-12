@@ -398,7 +398,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         newEnd.setRetmsg(bean.getRetMsg());
         newEnd.setSucCounts(Integer.valueOf(bean.getSucCounts()));
         int failCnt = 0;
-        if(bean.getFailCounts() != null) {
+        if(StringUtils.isNotBlank(bean.getFailCounts())) {
             failCnt = Integer.valueOf(bean.getFailCounts());
         }
         newEnd.setFailCounts(failCnt);
