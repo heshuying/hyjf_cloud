@@ -44,11 +44,14 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		logger.info("定时发标项目标的:[" + borrowNid + "]");
 		// 标的自动发标
 		boolean flag = this.updateOntimeSendBorrow(borrowCustomize);
+		if (borrowNid.equals("SDK19070010")) {
+			flag = false;
+		}
 		if (!flag) {
 			// 如果更新失败 删除redis
 			// 标的定时独占锁key
-			String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + CustomConstants.COLON + borrowNid;
-			RedisUtils.del(onTimeLockKey);
+//			String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + CustomConstants.COLON + borrowNid;
+//			RedisUtils.del(onTimeLockKey);
 			throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 		}
 		// 散标自动发标成功发送mq到合规上报数据
