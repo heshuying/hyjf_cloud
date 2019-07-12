@@ -13,4 +13,13 @@ import com.hyjf.am.vo.trade.cert.CertClaimVO;
  * @Date
  */
 public class CertClaimResponse extends Response<CertClaimVO> {
+    private  Integer  count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 }

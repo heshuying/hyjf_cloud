@@ -229,15 +229,29 @@ public class CertController extends BaseController {
     public CertClaimResponse selectCertBorrowByFlg(){
         CertClaimResponse response = new CertClaimResponse();
         response.setRtn(Response.FAIL);
-        List<CertClaim> certBorrowList =certService.insertCertBorrowConfig();
-        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
+        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig();
+        if(!CollectionUtils.isEmpty(certBorrowList)){
             List<CertClaimVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertClaimVO.class);
             response.setResultList(borrowVOList);
             response.setRtn(Response.SUCCESS);
         }
         return response;
     }
-
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @return
+     */
+    @GetMapping("/countCertBorrowByFlg")
+    public CertClaimResponse countCertBorrowByFlg(){
+        CertClaimResponse response = new CertClaimResponse();
+        response.setRtn(Response.FAIL);
+        int intConfig = certService.countCertBorrowConfig();
+        if(intConfig>0){
+            response.setRtn(Response.SUCCESS);
+            response.setCount(intConfig);
+        }
+        return response;
+    }
     /**
      * 批量更新
      * @param updateVO
