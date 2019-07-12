@@ -37,4 +37,10 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
      * @return
      */
     Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO);
+    /**
+     * 查询产品配置未上报历史数据数量
+     *
+     * @return
+     */
+    Integer countCertBorrowByFlg();
 }
