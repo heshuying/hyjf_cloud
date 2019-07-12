@@ -241,6 +241,7 @@ public class DuibaPointsModifyController extends BaseController {
                 }
             }
         };
+        mapAdapter.put("createTime", createTimeAdapter);
         return mapAdapter;
     }
 }

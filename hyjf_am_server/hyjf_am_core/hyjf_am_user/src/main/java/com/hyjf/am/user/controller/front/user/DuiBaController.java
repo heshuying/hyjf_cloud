@@ -45,7 +45,6 @@ public class DuiBaController {
             } catch (Exception e){
                 resultVO.setSuccess(false);
                 resultVO.setErrorMessage("请联系相关人员查看。");
-                response.setResult(resultVO);
             }
             response.setResult(resultVO);
         }
