@@ -159,11 +159,13 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             int orderNumber = amTradeClient.getTotalTenderCountByBorrowNid(borrowId);
             //对应的编号的标生成协议记录
             List<TenderAgreementVO>  applyAgreementlist = amTradeClient.getTenderAgreementByBorrowNid(borrowId);
+            logger.info("--------------------下载文件签署下载成功状态的协议:"+JSONObject.toJSON(applyAgreementlist));
             if(applyAgreementlist!=null && applyAgreementlist.size()>0){
                 for (TenderAgreementVO tenderAgreementVO:applyAgreementlist) {
                     //下载成功状态的协议份数
                     if(tenderAgreementVO.getStatus()==3){
                         agreementNumber = agreementNumber +1 ;
+                        logger.info("--------------------下载成功状态的协议份数:"+agreementNumber);
                     }
                 }
                 if(agreementNumber==0){
