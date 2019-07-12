@@ -163,7 +163,9 @@ public class AppInviteController {
             String inviteCount = pageData.get("inviteCount");
             String total = pageData.get("rewardRecordsSum");
             users = inviteService.getUserFromCache(userId);
-            appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" : CommonUtils.formatAmount(total));
+            String formatTotal = CommonUtils.formatAmount(total);
+            total = StringUtils.isBlank(formatTotal) || "0.00".equals(formatTotal) ? "0" : formatTotal;
+            appRewardDetailVO.setTotal(total);
             appRewardDetailVO.setFriendCount(inviteCount);
             appRewardDetailVO.setCouponCount("0");
             appRewardDetailVO.setCouponTag("邀请好友获得");
