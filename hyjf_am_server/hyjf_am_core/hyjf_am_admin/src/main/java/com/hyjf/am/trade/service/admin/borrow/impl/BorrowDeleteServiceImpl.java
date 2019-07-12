@@ -11,6 +11,8 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.borrow.BorrowDeleteService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowDeleteConfirmCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -135,6 +137,9 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
 
         }
 
+        // 清除标总额的缓存
+        RedisUtils.del(RedisConstants.BORROW_NID+requestBean.getBorrowNid());
+
         return new Response();
     }
 
@@ -169,6 +174,12 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
                 break;
             case 6:
                 statusName = "流标";
+                break;
+            case 7:
+                statusName = "待授权";
+                break;
+            case 8:
+                statusName = "逾期中";
                 break;
             default:
                 statusName = "";

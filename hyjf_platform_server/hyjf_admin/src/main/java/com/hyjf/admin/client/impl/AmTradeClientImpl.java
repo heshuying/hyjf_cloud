@@ -1939,6 +1939,24 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 标的放款记录
+     *
+     * @param userId
+     * @param borrowNid
+     * @param nid
+     * @return
+     */
+    @Override
+    public ApplyBorrowInfoVO selectApplyBorrowInfoDetail(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/getApplyBorrowInfoDetail/" + borrowNid;
+        ApplyBorrowInfoResponse response = restTemplate.getForEntity(url, ApplyBorrowInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 标的放款记录列表
      *
      * @param borrowNid
@@ -5981,6 +5999,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 保存协议申请
+     * @author Zha Daojian
+     * @date 2019/5/8 17:56
+     * @param applyBorrowAgreementVO
+     * @return com.hyjf.am.response.trade.ApplyBorrowAgreementResponse
+     **/
+    @Override
+    public ApplyBorrowAgreementResponse saveApplyBorrowAgreement(ApplyBorrowAgreementVO applyBorrowAgreementVO) {
+        ApplyBorrowAgreementSaveRequest request = new ApplyBorrowAgreementSaveRequest();
+        BeanUtils.copyProperties(applyBorrowAgreementVO, request);
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/saveApplyBorrowAgreement";
+        return restTemplate.postForEntity(url, applyBorrowAgreementVO, ApplyBorrowAgreementResponse.class)
+                .getBody();
+    }
+
+    /**
      * 保存垫付协议申请-协议生成详情
      *
      * @param applyAgreementVO
@@ -6131,10 +6165,28 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    public Integer getTotalTenderCountByBorrowNid(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/getTotalTenderCountByBorrowNid/" + borrowNid;
+        ApplyBorrowInfoResponse response = restTemplate.getForEntity(url, ApplyBorrowInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+
+    }
+
+    @Override
     public List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request) {
         ProtocolLogResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/getProtocolLogVOAll",
                 request, ProtocolLogResponse.class);
 
+        return response.getResultList();
+    }
+
+    @Override
+    public List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId) {
+        String url = "http://AM-ADMIN/am-trade/tenderagreement/getTenderAgreementByBorrowNid/" + borrowId;
+        TenderAgreementResponse response = restTemplate.getForObject(url, TenderAgreementResponse.class);
         return response.getResultList();
     }
 

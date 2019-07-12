@@ -2,6 +2,7 @@ package com.hyjf.am.user.dao.customize;
 
 import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.auto.AutoMapper;
+import com.hyjf.am.user.dao.mapper.auto.TemplateConfigMapper;
 import com.hyjf.am.user.dao.mapper.customize.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,7 +107,8 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected MobileSynchronizeCustomizeMapper mobileSynchronizeCustomizeMapper;
-
+    @Autowired
+    protected TemplateConfigMapper templateConfigMapper;
     @Autowired
     protected  DuibaPointsCustomizeMapper duibaPointsCustomizeMapper;
 }

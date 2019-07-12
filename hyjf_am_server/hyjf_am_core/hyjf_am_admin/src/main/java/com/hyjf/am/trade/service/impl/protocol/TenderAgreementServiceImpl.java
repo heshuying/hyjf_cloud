@@ -36,6 +36,13 @@ public class TenderAgreementServiceImpl implements TenderAgreementService {
         return tenderAgreement;
     }
 
+    @Override
+    public List<TenderAgreement> getTenderAgreementByBorrowNid(String borrowNid) {
+        TenderAgreementExample example = new TenderAgreementExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        return this.tenderAgreementMapper.selectByExample(example);
+    }
+
 
     @Override
     public List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid) {

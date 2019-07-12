@@ -72,8 +72,8 @@ public class BorrowDeleteServiceImpl implements BorrowDeleteService {
             return new AdminResult(BaseResult.FAIL,"未查询到借款人开户信息！");
         }
 
-        // 已备案 先撤销备案再删除
-        if(borrow.getStatus() == 1){
+        // 已备案/受托支付 先撤销备案再删除
+        if(borrow.getStatus() == 1 || borrow.getStatus() == 7){
             // 调用银行接口订单号，订单日期
             String orderId = GetOrderIdUtils.getOrderId2(userId);
             String orderDate = GetOrderIdUtils.getOrderDate();
