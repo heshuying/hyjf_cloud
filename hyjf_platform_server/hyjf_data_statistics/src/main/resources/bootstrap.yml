@@ -19,7 +19,7 @@ eureka:
     preferIpAddress: true
 
 server:
-  port: 9097
+  port: 9099
 
 # spring boot admin 监控的端点
 management:
