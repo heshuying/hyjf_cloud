@@ -137,7 +137,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
         }else{
             //判断是否已还款
             if(borrowVO.getReverifyStatus()!=6){
-                return new AdminResult(BaseResult.FAIL, "未放款状态，不能能申请！");
+                return new AdminResult(BaseResult.FAIL, "未放款状态，不能申请！");
             }
             //判断是否已经申请
             ApplyBorrowAgreementRequest applyBorrowAgreementRequest =  new ApplyBorrowAgreementRequest();
