@@ -68,8 +68,8 @@ public class JinChuangDataServiceImpl implements JinChuangDataService {
             Integer maleCount = Integer.parseInt(analysis.getMaleCount());
             Integer femaleCount = Integer.parseInt(analysis.getFemaleCount());
             Integer count = maleCount + femaleCount;
-            analysis.setMaleCount(String.format("%.2f",(double)maleCount / count * 100).concat("%"));
-            analysis.setFemaleCount(String.format("%.2f", (double)femaleCount / count * 100).concat("%"));
+            analysis.setMaleCount(String.format("%.2f",(double)maleCount / count * 100));
+            analysis.setFemaleCount(String.format("%.2f", (double)femaleCount / count * 100));
             return analysis;
         }
         return new JcUserAnalysis();
