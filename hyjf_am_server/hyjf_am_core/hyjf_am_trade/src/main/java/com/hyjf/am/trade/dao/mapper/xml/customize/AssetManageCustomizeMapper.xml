@@ -2535,7 +2535,6 @@
 
 	<select id="countRepaymentCalendar" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT count(1) FROM (
-
 		SELECT
 		ten.nid
 		FROM
@@ -2603,6 +2602,7 @@
 			AND FROM_UNIXTIME(hcr.recover_time,'%m')  = #{tradeMonth,jdbcType=INTEGER}
 		</if>
 
+
 		UNION ALL
 		SELECT
 		hiii.tender_nid AS nid
@@ -2627,7 +2627,8 @@
 		SELECT
 		hha.accede_order_id AS nid
 		FROM ht_hjh_accede hha
-		LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
+		LEFT JOIN ht_hjh_plan hhp
+		ON hha.plan_nid=hhp.plan_nid
 		WHERE hha.order_status in (3,5)
 		AND hha.user_id=#{userId}
 		<if test="tradeYear != null and tradeYear != '' ">
@@ -2643,6 +2644,8 @@
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
+		left join ht_coupon_real_tender hcrt on hbtc.nid = hcrt.coupon_tender_id
+		left join ht_hjh_accede hha ON hcrt.real_tender_id = hha.accede_order_id
 		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -2680,6 +2683,7 @@
 		SELECT t.* FROM (
 
 		SELECT
+		ten.id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
@@ -2735,6 +2739,7 @@
 
 		UNION ALL
 		SELECT
+		ten.assign_id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
@@ -2766,6 +2771,7 @@
 
 		UNION ALL
 		SELECT
+		hbtc.id AS tid,
 		hb.borrow_nid AS project_name,
 		hb.borrow_nid AS borrow_nid,
 		CASE
@@ -2815,6 +2821,7 @@
 
 		UNION ALL
 		SELECT
+		hiii.id AS tid,
 		borrow.borrow_nid AS project_name,
 		borrow.borrow_nid AS borrow_nid,
 		CONCAT(hiii.borrow_extra_yield, '%') borrow_apr,
@@ -2823,7 +2830,7 @@
 		4 AS type,
 		0 coupon_type,
 		hiii.repay_interest_wait AS total_wait,
-		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%'	) AS coupon_name,
+		'项目加息' AS coupon_name,
 		CASE WHEN borrow.borrow_style = 'endday' THEN CONCAT(borrow.borrow_period, '天')
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		hiii.tender_nid as order_id,
@@ -2849,6 +2856,7 @@
 
 		UNION ALL
 		SELECT
+		hha.id AS tid,
 		hhp.plan_name,
 		<!-- hhp.plan_nid AS borrow_nid, -->
 		hhp.plan_name AS borrow_nid,
@@ -2879,6 +2887,7 @@
 
 		UNION ALL
 		SELECT
+		hbtc.id AS tid,
 		hhp.plan_name AS project_name,
 		hbtc.borrow_nid AS borrow_nid,
 		CASE
@@ -2926,7 +2935,7 @@
 		</if>
 
 		) t
-		ORDER BY t.invest_date ASC,t.order_id ASC
+		ORDER BY t.invest_date ASC,t.order_id ASC,t.tid ASC
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>

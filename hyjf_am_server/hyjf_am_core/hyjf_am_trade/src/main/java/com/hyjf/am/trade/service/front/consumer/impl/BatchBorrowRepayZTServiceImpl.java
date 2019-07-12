@@ -1598,8 +1598,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			record.setOrderId(logOrderId);
 			record.setBorrowNid(productId);
 			record.setAuthCode(authCode);
-			record.setCreditEndType(1); // 结束债权类型（1:还款，2:散标债转，3:计划债转）'
+			record.setCreditEndType(1); // 结束债权类型（1:还款，2:散标债转，3:计划债转，5：后台发起）
 			record.setStatus(0);
+			record.setState("A"); // 初始化为A：待处理状态
 			record.setOrgOrderId(orgOrderId);
 			record.setCreateUser(userId);
 			record.setUpdateUser(userId);
@@ -2525,7 +2526,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowNid, borrowRecover.getRecoverAccountWait());
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
-			List<BorrowCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1);
+			List<BorrowCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1, isAllRepay, lastPeriod);
 			if (borrowCredits != null && borrowCredits.size() > 0) {
 				for (int i = 0; i < borrowCredits.size(); i++) {
 					// 获取相应的债转记录
@@ -2540,8 +2541,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						// 债转最后还款时间
 						borrowCredit.setCreditRepayYesTime(isMonth ? 0 : nowTime);
 					}
-					// 债转还款期
-					borrowCredit.setRecoverPeriod(periodNow);
+					// 债转还款期  update by wgx 2019/05/10 一次性还款更新为borrowPeriod，多期还款更新为提交的最后一期
+					borrowCredit.setRecoverPeriod(isAllRepay ? borrowPeriod : lastPeriod == 0 ? periodNow : lastPeriod);
 					// 债转最近还款时间
 					borrowCredit.setCreditRepayLastTime(nowTime);
 					// 更新债转标的表
@@ -2830,7 +2831,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			recoverTime = borrowRecover.getRecoverTime();
 		}
 		boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;// 是否是一次性还款
-		Integer lastPeriod = apicron.getLastPeriod() == null ? 0 :apicron.getLastPeriod();// 同时提交还款的最后一期
+		Integer lastPeriod = apicron.getLastPeriod() == null ? 0 : apicron.getLastPeriod();// 同时提交还款的最后一期
 		isAllRepay = isAllRepay || lastPeriod == borrowPeriod;// 多期还款的最后一期是标的的最后一期，是一次性还款
 		// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/28
 		boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, tenderUserId, tenderOrderId, isAllRepay);
@@ -2874,7 +2875,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		}
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
-			List<BorrowCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1);
+			List<BorrowCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1, isAllRepay, lastPeriod);
 			boolean isLastUpdate2 = isLastAllRepay(borrowNid, periodNow, tenderUserId, tenderOrderId, isAllRepay);
 			if(isLastUpdate2 && !isLastUpdate){
 				logger.error("【直投还款/出借人】借款编号：{}，一次性还款重新更新放款记录总表(ht_borrow_recover)状态为成功", apicron.getBorrowNid());
@@ -2898,8 +2899,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						// 债转最后还款时间
 						borrowCredit.setCreditRepayYesTime(isMonth ? 0 : nowTime);
 					}
-					// 债转还款期
-					borrowCredit.setRecoverPeriod(periodNow);
+					// 债转还款期  update by wgx 2019/05/10 一次性还款更新为borrowPeriod，多期还款更新为提交的最后一期
+					borrowCredit.setRecoverPeriod(isAllRepay ? borrowPeriod : lastPeriod == 0 ? periodNow : lastPeriod);
 					// 债转最近还款时间
 					borrowCredit.setCreditRepayLastTime(nowTime);
 					// 更新债转标的表
@@ -2944,11 +2945,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		return true;
 	}
 
-	private List<BorrowCredit> getBorrowCredit(String tenderOrderId, Integer periodNow) {
+	private List<BorrowCredit> getBorrowCredit(String tenderOrderId, Integer periodNow, boolean isAllRepay, int lastPeriod) {
 		BorrowCreditExample example = new BorrowCreditExample();
 		BorrowCreditExample.Criteria crt = example.createCriteria();
 		crt.andTenderNidEqualTo(tenderOrderId);
-		crt.andRecoverPeriodEqualTo(periodNow);
+		if (!isAllRepay && lastPeriod == 0) { // 非一次性/非多期还款根据还款期数更新
+			crt.andRecoverPeriodEqualTo(periodNow);
+		} else if (lastPeriod > 0) { // 多期还款按照提交的最后期数确定条件
+			crt.andRecoverPeriodLessThanOrEqualTo(lastPeriod);
+		}
 		List<BorrowCredit> borrowCredits = this.borrowCreditMapper.selectByExample(example);
 		return borrowCredits;
 	}

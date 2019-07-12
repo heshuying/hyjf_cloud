@@ -145,7 +145,8 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         }
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
-        bean.setMobile(user.getMobile());
+        // 调用银行传送手机号改为银行预留手机号 update by liushouyi
+        bean.setMobile(user.getBankMobile());
         logger.info("交易密码回调参数:" + bean.getLogOrderId());
         //channel=0：设置交易密码/1：重置交易密码
         // 同步地址  是否跳转到前端页面
@@ -199,7 +200,8 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         }
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
-        bean.setMobile(user.getMobile());
+        // 调用银行传送手机号改为银行预留手机号 update by liushouyi
+        bean.setMobile(user.getBankMobile());
         // 同步地址  是否跳转到前端页面
         String host = BankCommonUtil.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT));
         if(StringUtils.isNotBlank(wjtClient)){

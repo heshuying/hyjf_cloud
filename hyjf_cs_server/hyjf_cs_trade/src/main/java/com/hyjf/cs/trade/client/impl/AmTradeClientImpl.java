@@ -30,6 +30,7 @@ import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
@@ -692,7 +693,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean) {
         String url = urlBase + "coupon/getmycouponbypage";
-        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        CouponResponseForCoupon response = restTemplate.postForEntity(url, requestBean, CouponResponseForCoupon.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -706,6 +707,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO) {
         String url = urlBase + "bankCreditEndController/updateBankCreditEndForBatch";
+        BankCreditEndRequest request = new BankCreditEndRequest(bankCreditEndVO);
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 批次结束债权用更新 结束债权任务表(失败的)
+     * @author liubin
+     */
+    @Override
+    public int updateCreditEndForBatchFail(BankCreditEndVO bankCreditEndVO) {
+        String url = urlBase + "bankCreditEndController/updateBankCreditEndForBatchFail";
         BankCreditEndRequest request = new BankCreditEndRequest(bankCreditEndVO);
         IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
@@ -746,6 +762,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "bankCreditEndController/getBankCreditEndListByBatchnoTxdate/" + bankCreditEndVO.getBatchNo() + "/" + bankCreditEndVO.getTxDate();
         BankCreditEndResponse response = restTemplate.getForEntity(url, BankCreditEndResponse.class).getBody();
         if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 批次结束债权未收到回调记录查询
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<BankCreditEndVO> getCreditEndListForCallBackFail(BankCreditEndListRequest requestBean) {
+        String url = urlBase + "bankCreditEndController/queryCreditEndCallBackFail";
+        BankCreditEndResponse response = restTemplate.postForEntity(url, requestBean, BankCreditEndResponse.class).getBody();
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;
@@ -794,6 +825,19 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO) {
         String url = urlBase + "bankCreditEndController/updateBatchCreditEndFinish";
+        IntegerResponse response = restTemplate.postForEntity(url, bankCallBeanVO, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 批次结束债权状态查询回调更新
+     */
+    @Override
+    public int updateForCallBackFail(BankCallBeanVO bankCallBeanVO) {
+        String url = urlBase + "bankCreditEndController/updateForCallBackFail";
         IntegerResponse response = restTemplate.postForEntity(url, bankCallBeanVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -1584,6 +1628,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     @Override
+    @Cached(name="allBorrowRepayList-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<BorrowRepayVO> selectBorrowRepayList(String borrowNid, Integer repaySmsReminder) {
         String url= "http://AM-TRADE/am-trade/borrowRepay/selectBorrowRepayList/" + borrowNid + "/";
         if (null == repaySmsReminder){
@@ -1594,10 +1640,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowRepayResponse response = restTemplate.getForEntity(
                 url,
                 BorrowRepayResponse.class).getBody();
-        if (response != null) {
+        if (Response.isSuccess(response)&&!CollectionUtils.isEmpty(response.getResultList())) {
             return response.getResultList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -2428,12 +2474,14 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/29 14:15
      */
     @Override
+    @Cached(name="hjhDebtCreditListByBorrowNidAndStatus-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<HjhDebtCreditVO> selectHjhDebtCreditListByBorrowNidAndStatus(DebtCreditRequest request) {
         HjhDebtCreditResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByBorrowNidAndStatus",request,HjhDebtCreditResponse.class).getBody();
-        if (Response.isSuccess(response)){
+        if (Response.isSuccess(response)&&!CollectionUtils.isEmpty(response.getResultList())){
             return response.getResultList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -3856,12 +3904,14 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="allDisplayNameDynamic-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<ProtocolTemplateVO> getNewInfo() {
         ResponseEntity<Response<ProtocolTemplateVO>> response =
                 restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo", HttpMethod.GET,
                         null, new ParameterizedTypeReference<Response<ProtocolTemplateVO>>() {});
 
-        List<ProtocolTemplateVO> vo = null;
+        List<ProtocolTemplateVO> vo = new ArrayList<>();
         if(response.getBody().getResultList().size() > 0){
 
             vo =  response.getBody().getResultList();
@@ -4248,10 +4298,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/8/10 15:21
      */
     @Override
+    @Cached(name="allBorrowInfoWithBLOBSVO-", expire = CustomConstants.PROJECT_DETAIL_CACHE_TIME, cacheType = CacheType.BOTH,cacheNullValue=true)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoBLOBByborrowNid/" + borrowNid;
         BorrowInfoWithBLOBResponse response = restTemplate.getForEntity(url,BorrowInfoWithBLOBResponse.class).getBody();
-        if (Response.isSuccess(response)){
+        if (Response.isSuccess(response)&&null!=response.getResult()){
             return response.getResult();
         }
         return null;
@@ -7593,6 +7645,12 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public void repayDataRepair(String borrowNid) {
+        restTemplate.getForEntity(urlBase + "crm/repayDataRepair/" + borrowNid, String.class).getBody();
+    }
+
     @Override
     @Cached(name="webWjtHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
@@ -7606,4 +7664,62 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
 
+    /**
+     * 用户待授权列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean) {
+    	SponsorLogListResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/repay/selectSponsorLog",requestBean,
+                SponsorLogListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 用户待授权列表count
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int selectSponsorLogCount(RepayListRequest requestBean) {
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/selectSponsorLogCount", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+	@Override
+	public int updateSponsorLog(RepayListRequest requestBean) {
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/updateSponsorLog", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 1;
+	}
+    /**
+     * 计划退出查询判断标的是否还款
+     * BorrowNidEqualTo(borrowNid)
+     * ApiTypeEqualTo(1)
+     * StatusNotEqualTo(6);
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid) {
+        BorrowApicronResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrowApicron/selectBorrowApicronListByBorrowNid/" + borrowNid,
+                BorrowApicronResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

@@ -96,6 +96,8 @@ public class HjhCreditTenderController extends BaseController{
         List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         // 承接方式
 		List<DropDownVO> clientList = adminCommonService.getParamNameList("PLAN_ASSIGN_TYPE");
+		//债权结束状态
+		List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
         if(CollectionUtils.isEmpty(borrowStyleList) &&  clientList.isEmpty()){
         	jsonObject.put("status", FAIL);
         } else {
@@ -103,6 +105,8 @@ public class HjhCreditTenderController extends BaseController{
         	jsonObject.put("还款方式下拉菜单", "borrowStyleList");
         	jsonObject.put("clientList", clientList);
         	jsonObject.put("承接方式下拉菜单", "clientList");
+        	jsonObject.put("creditendStateList", creditendStateList);
+        	jsonObject.put("债权结束状态下拉菜单", "creditendStateList");
         	jsonObject.put("status", SUCCESS);
         }
 		return jsonObject;
@@ -179,6 +183,29 @@ public class HjhCreditTenderController extends BaseController{
 			jsonObject.put("status", SUCCESS);
 		}
     	return jsonObject;
+	}
+
+	@ApiOperation(value = "结束债权", notes = "结束债权")
+	@GetMapping("/creditEnd/{orderId}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+	@ResponseBody
+	public Object creditEnd(@PathVariable String orderId){
+		AdminResult result = new AdminResult();
+		logger.info("【结束债权】orderId:" + orderId);
+		if(org.apache.commons.lang.StringUtils.isBlank(orderId)){
+			result.setStatus(AdminResult.FAIL);
+			result.setStatusDesc("请求参数错误");
+			return result;
+		}
+
+		Response saveResponse = hjhCreditTenderService.doCreditEnd(orderId);
+		if(saveResponse == null || !"0".equals(saveResponse.getRtn())){
+			result.setStatus(AdminResult.FAIL);
+			result.setStatusDesc(saveResponse.getMessage());
+			return result;
+		}
+
+		return result;
 	}
     
     /**
@@ -377,6 +404,7 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignServiceFee","债转服务费(元)");
 		map.put("tenderType", "复投承接(是/否)");
 		map.put("periodView", "项目期数");
+		map.put("stateDesc", "债权结束状态");
 
 		return map;
 	}
@@ -492,6 +520,7 @@ public class HjhCreditTenderController extends BaseController{
             bean.setTenderType(3);
             bean.setAssignNid(assignNid);
             bean.setOrdid(assignNid);
+            bean.setBorrowNid(tenderAgreement.getBorrowNid());
             /*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
 			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
         }

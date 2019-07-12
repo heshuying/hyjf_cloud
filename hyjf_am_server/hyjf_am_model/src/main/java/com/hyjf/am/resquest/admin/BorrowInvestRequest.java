@@ -108,6 +108,9 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
      */
     private String nid;
 
+    /** 债权结束状态*/
+    private String stateSrch;
+
     public int getLimitStart() {
         return limitStart;
     }
@@ -274,5 +277,13 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
 
     public void setNid(String nid) {
         this.nid = nid;
+    }
+
+    public String getStateSrch() {
+        return stateSrch;
+    }
+
+    public void setStateSrch(String stateSrch) {
+        this.stateSrch = stateSrch;
     }
 }

@@ -5,10 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
@@ -18,7 +22,10 @@ import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
@@ -830,16 +837,19 @@ public class UserController extends BaseController {
         return response;
     }
 
-
     /**
-     *
+     * 查询借款主体CA
+     * @return
      */
-    @PostMapping("/getLoanSubjectCertificateAuthorityList")
-    public LoanSubjectCertificateAuthorityResponse getLoanSubjectCertificateAuthorityList(@RequestBody LoanSubjectCertificateAuthorityRequest request) {
+    @PostMapping("/getSubjectCertificateAuthorityList")
+    public LoanSubjectCertificateAuthorityResponse getSubjectCertificateAuthorityList(@RequestBody CACustomerRequest list) {
         LoanSubjectCertificateAuthorityResponse response = new LoanSubjectCertificateAuthorityResponse();
-        List<LoanSubjectCertificateAuthority> resultList = userService.getLoanSubjectCertificateAuthorityList(request);
+        if(list == null){
+            return response;
+        }
+        List<LoanSubjectCertificateAuthorityVO> resultList = userService.getbatchAuthorityList(list);
         if (CollectionUtils.isNotEmpty(resultList)) {
-            response.setResultList(CommonUtils.convertBeanList(resultList, LoanSubjectCertificateAuthorityVO.class));
+            response.setResultList(resultList);
         }
         return response;
     }
@@ -1136,5 +1146,145 @@ public class UserController extends BaseController {
 
         return response;
     }
+    /**
+     * 获取前一天注册的用户
+     *
+     * @return
+     */
+    @RequestMapping("/selectBeforeDayRegisterUserList")
+    public UserResponse selectBeforeDayRegisterUserList() {
+        UserResponse response = new UserResponse();
+        List<User> userList = userService.selectBeforeDayRegisterUserList();
+        if (!CollectionUtils.isEmpty(userList)) {
+            List<UserVO> resultList = CommonUtils.convertBeanList(userList, UserVO.class);
+            response.setResultList(resultList);
+        }
+        return response;
+    }
 
+
+    /**
+     * 根据用户ID查询用户PC推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectUtmRegByUserId/{userId}")
+    public UtmRegResponse selectUtmRegByUserId(@PathVariable Integer userId) {
+        UtmRegResponse response = new UtmRegResponse();
+        if (userId != null) {
+            UtmReg utmReg = userService.selectUtmRegByUserId(userId);
+            if (utmReg != null) {
+                UtmRegVO umRegVO = new UtmRegVO();
+                BeanUtils.copyProperties(utmReg, umRegVO);
+                response.setResult(umRegVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户APP推广渠道
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectAppUtmRegByUserId/{userId}")
+    public AppUtmRegResponse selectAppUtmRegByUserId(@PathVariable Integer userId) {
+        AppUtmRegResponse response = new AppUtmRegResponse();
+        if (userId != null) {
+            AppUtmReg appUtmReg = userService.selectAppUtmRegByUserId(userId);
+            if (appUtmReg != null) {
+                AppUtmRegVO appUtmRegVO = new AppUtmRegVO();
+                BeanUtils.copyProperties(appUtmReg, appUtmRegVO);
+                response.setResult(appUtmRegVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据用户ID查询用户推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectSpreadsUserByUserId/{userId}")
+    public SpreadsUserResponse selectSpreadsUserByUserId(@PathVariable Integer userId) {
+        SpreadsUserResponse response = new SpreadsUserResponse();
+        if (userId != null) {
+            SpreadsUser spreadsUser = userService.selectSpreadsUserByUserId(userId);
+            if (spreadsUser != null) {
+                SpreadsUserVO spreadsUserVO = new SpreadsUserVO();
+                BeanUtils.copyProperties(spreadsUser, spreadsUserVO);
+                response.setResult(spreadsUserVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户画像
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/selectUserPortraitByUserId/{userId}")
+    public UserPortraitResponse selectUserPortraitByUserId(@PathVariable Integer userId) {
+        UserPortraitResponse response = new UserPortraitResponse();
+        if (userId != null) {
+            UserPortrait userPortrait = userService.selectUserPortraitByUserId(userId);
+            if (userPortrait != null) {
+                UserPortraitVO userPortraitVO = new UserPortraitVO();
+                BeanUtils.copyProperties(userPortrait, userPortraitVO);
+                response.setResult(userPortraitVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 根据渠道号检索渠道是否存在
+     *
+     * @param utmId
+     * @return
+     */
+    @RequestMapping("/getTemplateDispose/{templateId}")
+    public UserResponse getTemplateDispose(@PathVariable String templateId) {
+    	UserResponse ur=new UserResponse();
+    	TemplateDisposeVO td=userService.getTemplateDispose(templateId);
+    	ur.setTemplateDispose(td);
+        return ur;
+    }
+
+    /**
+     * 根据着陆页id查找移动端着陆页配置 add by nxl
+     * @param landingId
+     * @return
+     */
+    @GetMapping("/selectTemplateDisposeById/{landingId}")
+    public UserResponse selectTemplateDisposeById(@PathVariable Integer landingId){
+        UserResponse response = new UserResponse();
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        TemplateDisposeVO templateDisposeVO = new TemplateDisposeVO();
+        TemplateDispose templateDispose =userService.selectTemplateDisposeById(landingId);
+        if(null!=templateDispose){
+            BeanUtils.copyProperties(templateDispose, templateDisposeVO);
+//            response.setResult(templateDisposeVO);
+            response.setTemplateDispose(templateDisposeVO);
+            response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
+        }
+        return response;
+    }
 }

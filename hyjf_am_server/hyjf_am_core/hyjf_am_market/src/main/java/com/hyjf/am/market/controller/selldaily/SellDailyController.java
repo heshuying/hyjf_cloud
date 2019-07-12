@@ -81,7 +81,7 @@ public class SellDailyController {
     }
 
     /**
-     * 当前日期是否已经生成销售日报
+     * 当前日期是否已经生成
      * @return
      */
 	@RequestMapping("/has_generator_data_today")

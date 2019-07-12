@@ -668,6 +668,23 @@ public class AccedeListController extends BaseController{
 			}
 		};
 
+		IValueFormatter recommendAttrAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if ("0".equals(value)) {
+					return "无主单";
+				} else if ("1".equals(value)) {
+					return "有主单";
+				} else if ("2".equals(value)) {
+					return "线下员工";
+				} else if ("3".equals(value)) {
+					return "线上员工";
+				}else {
+					return value;
+				}
+			}
+		};
 		IValueFormatter expectAprAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
@@ -1141,7 +1158,8 @@ public class AccedeListController extends BaseController{
 		}
 		//modify by cwyang 2019-1-9 没有协议的情况下去生成协议而不是报错返回
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
-		if(CollectionUtils.isEmpty(tenderAgreementList)){
+		tenderAgreement = tenderAgreementList.get(0);
+		if(CollectionUtils.isEmpty(tenderAgreementList) || tenderAgreement.getStatus() == MQConstant.FDD_STATUS_CREATE){
 			FddGenerateContractBeanVO bean = new FddGenerateContractBeanVO();
 			bean.setOrdid(planOrderId);
 			bean.setTenderUserId(users.getUserId());
@@ -1151,6 +1169,7 @@ public class AccedeListController extends BaseController{
 			bean.setSignDate(accede.getCountInterestTime());
 			bean.setPlanStartDate(accede.getCountInterestTime());
 			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(Integer.valueOf(accede.getQuitTime())));
+			bean.setBorrowNid(tenderAgreement.getBorrowNid());
 			bean.setTenderInterestFmt(String.valueOf(accede.getWaitTotal()));
 			// 法大大生成合同接口
 			/*this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
@@ -1160,8 +1179,9 @@ public class AccedeListController extends BaseController{
 			ret.put("status", SUCCESS);
 			return ret;
 		}
-		tenderAgreement = tenderAgreementList.get(0);
-		if(tenderAgreement != null && tenderAgreement.getStatus() == 2){
+
+		// /modify by Zhadaojian 2019-6-19 协议状态是1（生成成功）时，需要重新签署(修复线上汇计划-计划订单PDF签署，协议状态为“生成成功”时，不能签署的问题)
+		if(tenderAgreement != null && tenderAgreement.getStatus() ==2 ){
 			// PDF下载加脱敏
 			_log.info("==========汇计划-计划订单PDF签署发送法大大MQ(PDF下载脱敏)=========");
 			this.accedeListService.updateSaveSignInfo(tenderAgreement, "", FddGenerateContractConstant.PROTOCOL_TYPE_PLAN, accede.getDebtPlanNid());

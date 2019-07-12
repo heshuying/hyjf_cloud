@@ -25,7 +25,7 @@ public interface UserLargeScreenCustomizeMapper {
 
     List<EchartsResultVO> getMonthReceivedPayments();
 
-    List<UserCapitalDetailsVO> getUserCapitalDetails();
+    List<UserCapitalDetailsVO> getUserCapitalDetails(Map<String, Object> param);
 
     List<EchartsResultVO> getDayScalePerformanceList();
 

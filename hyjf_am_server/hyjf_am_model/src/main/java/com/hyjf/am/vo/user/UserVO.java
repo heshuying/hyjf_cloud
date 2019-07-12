@@ -17,6 +17,8 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private String mobile;
 
+	private String bankMobile;
+
 	private String email;
 
 	private String password;
@@ -80,6 +82,16 @@ public class UserVO extends BaseVO implements Serializable {
 	private Date updateTime;
 
 	private Integer referrer;
+
+	/**
+	 * 用户总获取积分
+	 */
+	private Integer pointsTotal;
+
+	/**
+	 * 用户当前积分
+	 */
+	private Integer pointsCurrent;
 
 	public String getIconUrl() {
 		return iconUrl;
@@ -361,12 +373,29 @@ public class UserVO extends BaseVO implements Serializable {
 		this.referrer = referrer;
 	}
 
+	public Integer getPointsTotal() {
+		return pointsTotal;
+	}
+
+	public void setPointsTotal(Integer pointsTotal) {
+		this.pointsTotal = pointsTotal;
+	}
+
+	public Integer getPointsCurrent() {
+		return pointsCurrent;
+	}
+
+	public void setPointsCurrent(Integer pointsCurrent) {
+		this.pointsCurrent = pointsCurrent;
+	}
+
 	@Override
 	public String toString() {
 		return "UserVO{" +
 				"userId=" + userId +
 				", username='" + username + '\'' +
 				", mobile='" + mobile + '\'' +
+				", bankMobile'" + bankMobile + '\'' +
 				", email='" + email + '\'' +
 				", status=" + status +
 				", openAccount=" + openAccount +
@@ -390,5 +419,13 @@ public class UserVO extends BaseVO implements Serializable {
 				", isCaFlag=" + isCaFlag +
 				", isSmtp=" + isSmtp +
 				'}';
+	}
+
+	public String getBankMobile() {
+		return bankMobile;
+	}
+
+	public void setBankMobile(String bankMobile) {
+		this.bankMobile = bankMobile;
 	}
 }

@@ -21,6 +21,13 @@ public class RUser implements Serializable {
     private String mobile;
 
     /**
+     * 银行预留手机号
+     *
+     * @mbggenerated
+     */
+    private String bankMobile;
+
+    /**
      * 用户角色1投资人2借款人3担保机构
      *
      * @mbggenerated
@@ -88,6 +95,14 @@ public class RUser implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile == null ? null : mobile.trim();
+    }
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile == null ? null : bankMobile.trim();
     }
 
     public Integer getRoleId() {

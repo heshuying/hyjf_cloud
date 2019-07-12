@@ -325,6 +325,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andBankMobileIsNull() {
+            addCriterion("bank_mobile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileIsNotNull() {
+            addCriterion("bank_mobile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileEqualTo(String value) {
+            addCriterion("bank_mobile =", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotEqualTo(String value) {
+            addCriterion("bank_mobile <>", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileGreaterThan(String value) {
+            addCriterion("bank_mobile >", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileGreaterThanOrEqualTo(String value) {
+            addCriterion("bank_mobile >=", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileLessThan(String value) {
+            addCriterion("bank_mobile <", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileLessThanOrEqualTo(String value) {
+            addCriterion("bank_mobile <=", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileLike(String value) {
+            addCriterion("bank_mobile like", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotLike(String value) {
+            addCriterion("bank_mobile not like", value, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileIn(List<String> values) {
+            addCriterion("bank_mobile in", values, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotIn(List<String> values) {
+            addCriterion("bank_mobile not in", values, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileBetween(String value1, String value2) {
+            addCriterion("bank_mobile between", value1, value2, "bankMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankMobileNotBetween(String value1, String value2) {
+            addCriterion("bank_mobile not between", value1, value2, "bankMobile");
+            return (Criteria) this;
+        }
+
         public Criteria andEmailIsNull() {
             addCriterion("email is null");
             return (Criteria) this;
@@ -2192,6 +2262,126 @@ public class UserExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalIsNull() {
+            addCriterion("points_total is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalIsNotNull() {
+            addCriterion("points_total is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalEqualTo(Integer value) {
+            addCriterion("points_total =", value, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalNotEqualTo(Integer value) {
+            addCriterion("points_total <>", value, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalGreaterThan(Integer value) {
+            addCriterion("points_total >", value, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalGreaterThanOrEqualTo(Integer value) {
+            addCriterion("points_total >=", value, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalLessThan(Integer value) {
+            addCriterion("points_total <", value, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalLessThanOrEqualTo(Integer value) {
+            addCriterion("points_total <=", value, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalIn(List<Integer> values) {
+            addCriterion("points_total in", values, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalNotIn(List<Integer> values) {
+            addCriterion("points_total not in", values, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalBetween(Integer value1, Integer value2) {
+            addCriterion("points_total between", value1, value2, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsTotalNotBetween(Integer value1, Integer value2) {
+            addCriterion("points_total not between", value1, value2, "pointsTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentIsNull() {
+            addCriterion("points_current is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentIsNotNull() {
+            addCriterion("points_current is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentEqualTo(Integer value) {
+            addCriterion("points_current =", value, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentNotEqualTo(Integer value) {
+            addCriterion("points_current <>", value, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentGreaterThan(Integer value) {
+            addCriterion("points_current >", value, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentGreaterThanOrEqualTo(Integer value) {
+            addCriterion("points_current >=", value, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentLessThan(Integer value) {
+            addCriterion("points_current <", value, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentLessThanOrEqualTo(Integer value) {
+            addCriterion("points_current <=", value, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentIn(List<Integer> values) {
+            addCriterion("points_current in", values, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentNotIn(List<Integer> values) {
+            addCriterion("points_current not in", values, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentBetween(Integer value1, Integer value2) {
+            addCriterion("points_current between", value1, value2, "pointsCurrent");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointsCurrentNotBetween(Integer value1, Integer value2) {
+            addCriterion("points_current not between", value1, value2, "pointsCurrent");
             return (Criteria) this;
         }
     }

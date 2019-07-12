@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.promotion;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
@@ -83,5 +84,24 @@ public class UtmServiceImpl implements UtmService {
     @Override
     public int sourceIdIsExists(Integer sourceId) {
         return amUserClient.sourceIdIsExists(sourceId);
+    }
+
+    @Override
+    public UtmResultResponse getPcUtms() {
+        UtmResultResponse<UtmVO> response=new UtmResultResponse<>();
+
+        Map<String,Object> map= Maps.newHashMap();
+        map.put("sourceType",0);
+        UtmResponse utmResponse = amUserClient.getCountByParam(map);
+        if(null != utmResponse){
+            int recodeTotal = utmResponse.getRecordTotal();
+            map.put("limitStart",0);
+            map.put("limitEnd", recodeTotal);
+            UtmResponse utmResponsee = amUserClient.getByPageList(map);
+            List<UtmVO> lstUtmVo=utmResponsee.getResultListS();
+
+            response.setResultList(lstUtmVo);
+        }
+        return response;
     }
 }

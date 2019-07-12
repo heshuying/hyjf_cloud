@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 
 import java.util.List;
 
@@ -26,10 +27,6 @@ public interface BankCreditEndService extends BaseService {
      */
     int insertBankCreditEndForCreditEnd(HjhDebtCredit hjhDebtCredit, String tenderAccountId, String tenderAuthCode);
 
-    List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean);
-
-    Integer getCreditEndCount(BankCreditEndListRequest requestBean);
-
     int updateBankCreditEnd(BankCreditEnd bankCreditEnd);
 
     BankCreditEnd selectByOrderId(String orderId);
@@ -42,6 +39,8 @@ public interface BankCreditEndService extends BaseService {
      * @return
      */
     int updateBankCreditEndForBatch(BankCreditEnd bankCreditEnd);
+
+    int updateBankCreditEndForBatchFail(BankCreditEnd bankCreditEnd);
 
     /**
      * 据批次号和日期，取得结束债权任务列表
@@ -74,4 +73,8 @@ public interface BankCreditEndService extends BaseService {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bean);
+
+    int updateForCallBackFail(BankCallBeanVO bean);
+
+    List<BankCreditEndVO> queryCreditEndCallBackFail();
 }

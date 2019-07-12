@@ -4,12 +4,11 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.resquest.admin.ContentAdsRequest;
-import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
-import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
-import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.admin.DuibaPointsModifyVO;
+import com.hyjf.am.vo.admin.DuibaPointsVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 
 import java.util.List;
@@ -162,4 +161,51 @@ public interface AmMarketClient {
      * @return
      */
     BooleanResponse updateStatus(NewYearNineteenRequestBean request);
+
+    /**
+     * 查询兑吧积分明细
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsResponse selectDuibaPointsList(DuibaPointsRequest requestBean);
+
+    /**
+     * 兑吧积分账户修改明细
+     *
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsModifyResponse selectDuibaPointsModifyList(DuibaPointsRequest requestBean);
+
+    /**
+     * 插入积分审批表
+     *
+     * @param duibaPointsModifyVO
+     * @return
+     */
+    boolean insertPointsModifyList(DuibaPointsModifyVO duibaPointsModifyVO);
+
+    /**
+     * 更新兑吧积分调整审批状态
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean updatePointsModifyStatus(DuibaPointsRequest requestBean);
+
+    /**
+     * 插入兑吧交易明细表
+     *
+     * @param duibaPointsVO
+     * @return
+     */
+    boolean insertDuibaPoints(DuibaPointsVO duibaPointsVO);
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    DuibaPointsModifyVO selectDuibaPointsModifyByOrdid(String orderId);
 }

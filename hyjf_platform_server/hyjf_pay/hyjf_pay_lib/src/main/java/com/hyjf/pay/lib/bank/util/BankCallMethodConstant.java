@@ -388,4 +388,7 @@ public class BankCallMethodConstant implements Serializable {
 	public static final String TXCODE_BIND_CARD_PAGE = "bindCardPage";
 	/**解绑银行卡*/
 	public  static final String TXCODE_ACCOUNT_UNBINDCARD_PAGE = "unbindCardPage";
+
+	/** 2.6.23.	按存管子账户查询手机号 */
+	public static final String TXCODE_MOBILE_QUERY_BY_ACCOUNT = "mobileQueryByAccount";
 }

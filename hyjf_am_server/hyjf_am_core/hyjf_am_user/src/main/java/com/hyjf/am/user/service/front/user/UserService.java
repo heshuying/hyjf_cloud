@@ -1,16 +1,15 @@
 package com.hyjf.am.user.service.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.message.CACustomerRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -181,13 +180,6 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request);
-
-	/**
-	 * 借款主体CA认证记录表
-	 * @param request
-	 * @return
-	 */
-	List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
 
 	/**
 	 * 通过userID获得CA认证的客户ID
@@ -402,4 +394,56 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	void insertUtmReg(int userId, String utmId);
+	/**
+	 * 查询借款主体CA
+	 * @return
+	 */
+	List<LoanSubjectCertificateAuthorityVO> getbatchAuthorityList(CACustomerRequest list);
+
+	/**
+	 * 获取前一天注册的用户
+	 *
+	 * @return
+	 */
+	List<User> selectBeforeDayRegisterUserList();
+
+	/**
+	 * 根据用户ID查询PC推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UtmReg selectUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询App推广渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppUtmReg selectAppUtmRegByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户推荐人信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUser selectSpreadsUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID获取用户画像
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserPortrait selectUserPortraitByUserId(Integer userId);
+
+	TemplateDisposeVO getTemplateDispose(String templateId);
+	/**
+	 * 根据着陆页id查找移动端着陆页配置 add by nxl
+	 * @param landingId
+	 * @return
+	 */
+	TemplateDispose selectTemplateDisposeById(Integer landingId);
 }

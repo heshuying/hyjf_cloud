@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
@@ -104,6 +105,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private CsMessageClient amMongoClient;
     @Autowired
     private CommonProducer commonProducer;
+    @Autowired
+    private AppCouponService appCouponService;
     /**
      * @param request
      * @Description 散标出借
@@ -1136,6 +1139,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
             logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
+            // app4.0 bug-1300 之前是按照总条数判断，现在按照散标的优惠券判断
+            JSONObject userCoupon = appCouponService.getBorrowCoupon(tender.getUserId(),request.getBorrowNid(), money,
+                    request.getPlatform());
             investInfo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
@@ -1181,13 +1187,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCouponQuota("");
                 investInfo.setCouponId("-1");
 
-                if (couponAvailableCount > 0) {
+                // app4.0 bug-1300 之前是按照总条数判断，现在按照散标的优惠券判断
+                if(userCoupon!=null&& !"0".equals(userCoupon.getString("availableCouponListCount"))){
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("请选择");
-                } else if (recordTotal > 0 && couponAvailableCount == 0) {
+                }else if (userCoupon!=null&& "0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("暂无可用");
-                } else {
+                }else {
                     investInfo.setIsThereCoupon("0");
                     investInfo.setCouponDescribe("无可用");
                 }

@@ -2641,6 +2641,181 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
+    /**
+     * 获取客组配置列表
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse getCustomerServiceGroupConfigList(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/getCustomerServiceGroupConfigList";
+        CustomerServiceGroupConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return response;
+    }
 
+    /**
+     * 添加客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse insertCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/insertCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return reponse;
+    }
 
+    /**
+     * 修改客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse updateCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/updateCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 删除客组配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse deleteCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/deleteCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 校验客组配置
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceGroupConfigResponse checkCustomerServiceGroupConfig(CustomerServiceGroupConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceGroupConfig/checkCustomerServiceGroupConfig";
+        CustomerServiceGroupConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceGroupConfigResponse.class);
+        return response;
+    }
+
+    /**
+     * 获取坐席配置列表
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse getCustomerServiceRepresentiveConfigList(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/getCustomerServiceRepresentiveConfigList";
+        CustomerServiceRepresentiveConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return response;
+    }
+
+    /**
+     * 添加坐席配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse insertCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/insertCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 修改坐席配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse updateCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/updateCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 删除坐席配置
+     * @param request
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse deleteCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/deleteCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse reponse = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return reponse;
+    }
+
+    /**
+     * 校验坐席配置
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerServiceRepresentiveConfigResponse checkCustomerServiceRepresentiveConfig(CustomerServiceRepresentiveConfigRequest request) {
+        String url = "http://AM-ADMIN/am-admin/customerServiceRepresentiveConfig/checkCustomerServiceRepresentiveConfig";
+        CustomerServiceRepresentiveConfigResponse response = restTemplate.postForObject(url, request, CustomerServiceRepresentiveConfigResponse.class);
+        return response;
+    }
+
+	@Override
+	public CustomerChannelResponse getCustomerChannelList(CustomerChannelRequest request) {
+        String url = "http://AM-ADMIN/am-config/channel/getCustomerChannelList";
+        CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
+        return reponse;
+	}
+	@Override
+	public CustomerChannelResponse insetCustomerChannel(CustomerChannelRequest request) {
+        String url = "http://AM-ADMIN/am-config/channel/insetCustomerChannel";
+        CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
+        return reponse;
+	}
+	@Override
+	public CustomerChannelResponse updateCustomerChannel(CustomerChannelRequest request) {
+        String url = "http://AM-ADMIN/am-config/channel/updateCustomerChannel";
+        CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
+        return reponse;
+	}
+    /**
+     * 修改对账状态（重新对账）add by nxl
+     * @param certLogId
+     * @return
+     */
+    @Override
+    public int againReconciliation(Integer certLogId) {
+        String url = "http://AM-ADMIN/am-config/cert/againReconciliation/"+certLogId;
+        IntegerResponse response = restTemplate
+                .getForEntity(url,IntegerResponse.class).getBody();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
+        }
+        return response.getResultInt();
+    }
+    /**
+     * 批量修改对账状态 add by nxl
+     * @param request
+     * @return
+     */
+    @Override
+    public int batchReconciliation(CertReportLogRequestBean request) {
+        String url = "http://AM-ADMIN/am-config/cert/batchReconciliation";
+        IntegerResponse response = restTemplate
+                .postForEntity(url,request,IntegerResponse.class).getBody();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
+        }
+        return response.getResultInt();
+    }
+    /**
+     * 批量修改对账状态 add by nxl
+     * @param logOrderId
+     * @return
+     */
+    @Override
+    public int insertCertErrorLogByLogOrderId(String logOrderId) {
+        String url = "http://AM-ADMIN/am-config/cert/insertCertErrorLogByLogOrderId/"+logOrderId;
+        IntegerResponse response = restTemplate
+                .getForEntity(url,IntegerResponse.class).getBody();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
+        }
+        return response.getResultInt();
+    }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -281,6 +282,8 @@ public interface AmTradeClient {
      */
     int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO);
 
+    int updateCreditEndForBatchFail(BankCreditEndVO bankCreditEndVO);
+
     /**
      * APP,PC,wechat散标出借获取优惠券列表
      * @param requestBean
@@ -301,6 +304,8 @@ public interface AmTradeClient {
      * @return
      */
     List<BankCreditEndVO> getBankCreditEndListByBatchnoTxdate(BankCreditEndVO bankCreditEndVO);
+
+    List<BankCreditEndVO> getCreditEndListForCallBackFail(BankCreditEndListRequest requestBean);
 
     /**
      * 根据条件(批次号和日期)，更新结束债权任务状态
@@ -323,6 +328,8 @@ public interface AmTradeClient {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO);
+
+    int updateForCallBackFail(BankCallBeanVO bankCallBeanVO);
 
     /**
      * 根据borrowNid获取BorrowInfoVO对象
@@ -3140,5 +3147,23 @@ public interface AmTradeClient {
     List<WebProjectListCustomizeVO> searchWjtWebProjectList(ProjectListRequest request);
 
     List<WechatHomeProjectListVO> getWjtWechatProjectList(Map<String,Object> projectMap);
+
+    void repayDataRepair(String borrowNid);
+
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+
+	int selectSponsorLogCount(RepayListRequest requestBean);
+
+	int updateSponsorLog(RepayListRequest requestBean);
+	   /**
+     * 计划退出查询判断标的是否还款
+     * BorrowNidEqualTo(borrowNid)
+     * ApiTypeEqualTo(1)
+     * StatusNotEqualTo(6);
+     *
+     * @param borrowNid
+     * @return
+     */
+	List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
 }
 

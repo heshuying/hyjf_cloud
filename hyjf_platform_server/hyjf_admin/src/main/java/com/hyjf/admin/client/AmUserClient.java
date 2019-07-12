@@ -10,6 +10,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.ElectricitySalesDataPushListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1528,4 +1529,80 @@ public interface AmUserClient {
     void insertBatchSmsCount(ListRequest request);
 
     void updateOrDelectRepeatData();
+    /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    boolean syncUserMobile(UserRequest userRequest);
+
+    /**
+     * 兑吧积分账户查询列表
+     *
+     * @param requestBean
+     * @return
+     */
+    DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean);
+
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean selectRemainPoints(DuibaPointsRequest requestBean);
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    boolean updateDuibaPoints(DuibaPointsRequest requestBean);
+
+	ElectricitySalesDataPushListResponse searchElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
+
+	ElectricitySalesDataPushListResponse insertElectricitySalesDataPushList(
+			ElectricitySalesDataPushListRequest request);
+    /**
+     * 获取着陆页列表 add by nxl
+     * @param request
+     * @return
+     */
+    TemplateConfigResponse selectTempConfigList(LandingManagerRequest request);
+    /**
+     * 根据id查找着陆页配置 add by nxl
+     * @param tempId
+     * @return
+     */
+    TemplateConfigResponse selectTemplateById(Integer tempId);
+    /**
+     * 保存着陆页模板配置 add by nxl
+     * @param request
+     * @return
+     */
+    //Integer insertTemplate(LandingManagerRequest request);
+
+    /**
+     * 修改着陆页模板配置 add by nxl
+     * @param request
+     * @return
+     */
+   Integer updateOrInsertTemplate(LandingManagerRequest request);
+    /**
+     * 删除陆页模板配置 add by nxl
+     * @param tempId
+     * @return
+     */
+    Boolean deleteTemplate(int tempId);
+
+	TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest);
+
+	TemplateDisposeResponse updateTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
+
+	TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
+
+	TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
 }

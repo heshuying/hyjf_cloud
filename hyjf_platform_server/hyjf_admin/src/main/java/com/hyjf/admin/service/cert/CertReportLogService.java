@@ -33,4 +33,22 @@ public interface CertReportLogService extends BaseAdminService{
 	 * @param id
 	 */
 	void updateErrorCount(Integer id);
+	/**
+	 * 修改对账状态（重新对账）add by nxl
+	 * @param certLogId
+	 * @return
+	 */
+	int againReconciliation(Integer certLogId);
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param request
+	 * @return
+	 */
+	int batchReconciliation(CertReportLogRequestBean request);
+	/**
+	 * 批量修改对账状态 add by nxl
+	 * @param logOrderId
+	 * @return
+	 */
+	int insertCertErrorLogByLogOrderId(String logOrderId);
 }

@@ -227,6 +227,10 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
     private Date createTime;
     private Date updatetime;
     private Boolean increaseInterestFlag;
+	// 备案撤销状态 0 不可用 1 可用
+    private String registCancelEnable;
+    // 标的可删除状态 0 不可用 1 可用
+    private String borrowDeleteEnable;
 
     /**
 	 * recoverLastTime
@@ -1239,4 +1243,20 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
     public void setIncreaseInterestFlag(Boolean increaseInterestFlag) {
         this.increaseInterestFlag = increaseInterestFlag;
     }
+
+	public String getRegistCancelEnable() {
+		return registCancelEnable;
+	}
+
+	public void setRegistCancelEnable(String registCancelEnable) {
+		this.registCancelEnable = registCancelEnable;
+	}
+
+	public String getBorrowDeleteEnable() {
+		return borrowDeleteEnable;
+	}
+
+	public void setBorrowDeleteEnable(String borrowDeleteEnable) {
+		this.borrowDeleteEnable = borrowDeleteEnable;
+	}
 }

@@ -60,6 +60,7 @@ import java.util.*;
 public class LoginServiceImpl extends BaseUserServiceImpl implements LoginService {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
+	private static final String POINTS_DETAIL_URL = "/mine/credits";
 	@Value("${am.user.service.name}")
 	private String userService;
 
@@ -252,6 +253,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					+ (user.getRechargeSms() == null ? 0 : user.getRechargeSms())
 					+ (user.getRecieveSms() == null ? 0 : user.getRecieveSms());
 			result.setUserId(String.valueOf(userId));
+			// 积分商城，返回用户当前积分
+			result.setPointsCurrent(user.getPointsCurrent());
+			// 积分商城，返回前端积分明细H5 rul
+			result.setPointsDetailUrl(systemConfig.getAppServerHost().concat(POINTS_DETAIL_URL));
 			if (smsOpenStatus == 4) {
 				result.setSmsOpenStatus("0");
 			} else {
@@ -266,11 +271,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			// 开户了
 			if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
 				BigDecimal principal = new BigDecimal("0.00");
-				// 获取汇天利用户本金
 				result.setOpenAccount(CustomConstants.FLAG_OPENACCOUNT_YES);
-				ProductSearchForPageVO productSearchForPage = new ProductSearchForPageVO();
-				productSearchForPage.setUserId(userId);
-				productSearchForPage = selectUserPrincipal(productSearchForPage);
 				// 获取用户电话号码
 				if (user.getMobile() != null) {
 					result.setBindMobile(user.getMobile().substring(0, 3) + "****"
@@ -287,23 +288,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					}
 				}
 				result.setJiangxiAccount(account);
-				if (productSearchForPage != null) {
-					principal = productSearchForPage.getPrincipal();
-					if (principal == null) {
-						principal = new BigDecimal("0.00");
-					} else {
-						principal = principal.divide(BigDecimal.ONE, 2, BigDecimal.ROUND_DOWN);
-					}
-				} else {
-					principal = new BigDecimal("0.00");
-				}
-				if (request.getParameter("version").startsWith("1.1.0")) {
-					// 汇天利后边的描述文字
-					result.setHtlDescription(principal + "元");
-				} else {
-					// 汇天利后边的描述文字
-					result.setHtlDescription(DF_FOR_VIEW.format(principal) + "元");
-				}
 				// 银行已开户，江西银行账户描述
 				// 江西银行账户账号不需要脱敏
 				result.setJiangxiDesc(account);
@@ -357,6 +341,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 			result.setUsername(user.getUsername());
 			result.setMobile(user.getMobile());
+			// 返回银行预留手机号 add by Liushouyi
+			result.setBankMobile(user.getBankMobile());
 			result.setReffer(user.getUserId() + "");
 			result.setSetupPassword(String.valueOf(user.getIsSetPassword()));
 			result.setUserType(String.valueOf(user.getUserType()));
@@ -530,12 +516,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					.add(planCapitalWait);
 			BigDecimal waitInterest = WaitInterest.add(couponInterestTotalWaitDec).add(CreditInterestWait)
 					.subtract(CreditInterestAmount).add(planInterestWait);
-
-			// 汇天利总收益
-			BigDecimal interestall = amTradeClient.queryHtlSumInterest(userId);
-			if (interestall == null) {
-				interestall = new BigDecimal(0);
-			}
 			// 优惠券总收益 add by hesy 优惠券相关 start
 			BigDecimal couponInterestTotalDec = BigDecimal.ZERO;
 			String couponInterestTotal = amTradeClient.selectCouponReceivedInterestTotal(userId);
@@ -550,12 +530,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			if (recoverYesInfo != null) {
 				CreditInterestAmountYes = recoverYesInfo.getCreditInterestAmount();
 			}
-			// 已回收的利息 (累计收益)
-			BigDecimal recoverInterest = RecoverInterest.add(interestall)
-					// +汇天利
-					.add(couponInterestTotalDec).add(CreditInterestYes)
-					// +债转
-					.subtract(CreditInterestAmountYes);
 			// -已债转
 			if (null != account) {
 				if (request.getParameter("version").startsWith("1.1.0")) {
@@ -713,6 +687,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 风险测评结果
 			UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(userId);
+			// app4.0添加测评结果页 update by wgx 2019/05/06
+			int evaluation = 0;// 是否已经测评 0未测评 1已测评
 			if (userEvalationResult != null) {
 				//从user表获取用户测评到期日
 				UserVO user = amUserClient.findUserById(userId);
@@ -733,6 +709,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setFengxianDesc(userEvalationResult.getEvalType());
 					result.setEvalationSummary(userEvalationResult.getSummary());
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
+					evaluation = 1;// 已测评
 				}
 			} else {
 				result.setAnswerStatus("0");
@@ -749,7 +726,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			result.setAnswerUrl(
-					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST));
+					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST + evaluation));
 		}
 
 		{
@@ -882,6 +859,20 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		result.setExitLabelShowFlag(systemConfig.getExitLabelShowFlag());
 		// add by pcc app3.1.1追加 20180823 end
 		result.setInvitationCode(userId);
+		// add by liushouyi 修改银行预留手机号
+		result.setBankMobileModifyUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_MOBILE_MODIFY + packageStrForm(request));
+		// 从redis获取是否可修改银行预留手机号
+		String isBankMobileModify = RedisConstants.BANK_MOBILE_MODIFY_FLAG;
+		result.setBankMobileModifyFlag("0");
+		try{
+			String flag = RedisUtils.get(isBankMobileModify);
+			if(StringUtils.isNotBlank(flag)) {
+				result.setBankMobileModifyFlag(flag);
+			}
+		} catch(Exception e) {
+			logger.error("获取银行预留手机号修改按钮展示flag失败！");
+		}
+
 		return result;
 	}
 

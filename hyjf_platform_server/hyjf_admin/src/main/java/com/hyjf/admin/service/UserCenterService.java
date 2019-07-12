@@ -298,6 +298,14 @@ public interface UserCenterService {
      * @return
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     * 同步用户银行预留手机号
+     *
+     * @param userRequest
+     * @return
+     */
+    boolean syncUserMobile(UserRequest userRequest);
     /**
      * 根据银行卡号获取bankId
      *

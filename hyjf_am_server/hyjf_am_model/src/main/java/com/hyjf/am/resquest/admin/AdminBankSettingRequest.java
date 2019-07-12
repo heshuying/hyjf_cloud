@@ -89,6 +89,12 @@ public class AdminBankSettingRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "单月限额")
     private BigDecimal monthCardQuota;
 
+    @ApiModelProperty(value = "银行android应用市场链接")
+    private String androidMarket;
+
+    @ApiModelProperty(value = "银行ios应用市场链接")
+    private String iosMarket;
+
     public Integer getId() {
         return id;
     }
@@ -265,6 +271,22 @@ public class AdminBankSettingRequest extends BasePage implements Serializable {
         this.endCreate = endCreate;
     }
 
+    public String getAndroidMarket() {
+        return androidMarket;
+    }
+
+    public void setAndroidMarket(String androidMarket) {
+        this.androidMarket = androidMarket;
+    }
+
+    public String getIosMarket() {
+        return iosMarket;
+    }
+
+    public void setIosMarket(String iosMarket) {
+        this.iosMarket = iosMarket;
+    }
+
     /**
      * 翻页机能用的隐藏变量
      */
@@ -319,6 +341,8 @@ public class AdminBankSettingRequest extends BasePage implements Serializable {
                 ", updateTime=" + updateTime +
                 ", delFlg=" + delFlg +
                 ", monthCardQuota=" + monthCardQuota +
+                ", androidMarket='" + androidMarket + '\'' +
+                ", iosMarket='" + iosMarket + '\'' +
                 ", paginatorPage=" + paginatorPage +
                 ", paginator=" + paginator +
                 '}';

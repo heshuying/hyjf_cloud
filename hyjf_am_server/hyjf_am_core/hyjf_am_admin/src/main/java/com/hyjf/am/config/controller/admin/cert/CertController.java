@@ -16,12 +16,10 @@ import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,6 +107,73 @@ public class CertController extends BaseConfigController {
         }catch (Exception e){
             response.setRtn(Response.FAIL);
             response.setResultInt(0);
+        }
+        return response;
+    }
+
+    /**
+     * 修改对账状态（重新对账）add by nxl
+     * @param certLogId
+     * @return
+     */
+    @GetMapping("/againReconciliation/{certLogId}")
+    public IntegerResponse againReconciliation(@PathVariable Integer certLogId) {
+        IntegerResponse response =new IntegerResponse();
+        try{
+            certService.updateCertLogById(certLogId);
+            response.setRtn(Response.SUCCESS);
+            response.setResultInt(1);
+        }catch (Exception e){
+            response.setRtn(Response.FAIL);
+            response.setResultInt(0);
+        }
+        return response;
+    }
+
+    /**
+     * 批量修改对账状态 add by nxl
+     * @param request
+     * @return
+     */
+    @PostMapping("/batchReconciliation")
+    public IntegerResponse batchReconciliation(@RequestBody @Valid CertReportLogRequestBean request) {
+        IntegerResponse response =new IntegerResponse();
+        response.setResultInt(0);
+        response.setRtn(Response.FAIL);
+        request.setPaginator(null);
+        List<CertLog> recordList = certService.selectCertReportLogList(request);
+        List<Integer> ids = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(recordList)){
+            for(CertLog certLog:recordList){
+                ids.add(certLog.getId());
+            }
+        }
+        if(CollectionUtils.isNotEmpty(ids)){
+            CertLog certLogs = new CertLog();
+            // 设置为初始状态
+            certLogs.setQueryResult(0);
+            int updFlg =certService.batchUpdateCertLogByIds(ids,certLogs);
+            if(updFlg>0){
+                response.setResultInt(1);
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+        return response;
+    }
+    /**
+     * 批量修改对账状态 add by nxl
+     * @param logOrderId
+     * @return
+     */
+    @GetMapping("/insertCertErrorLogByLogOrderId/{logOrderId}")
+    public IntegerResponse insertCertErrorLogByLogOrderId(@PathVariable String logOrderId){
+        IntegerResponse response =new IntegerResponse();
+        response.setResultInt(0);
+        response.setRtn(Response.FAIL);
+        int intflg =certService.insertCertErrorLogByLogOrderId(logOrderId);
+        if(intflg>0){
+            response.setResultInt(intflg);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }

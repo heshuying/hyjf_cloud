@@ -18,12 +18,7 @@ import java.util.List;
 @Service
 public class AppCouponServiceImpl extends BaseTradeServiceImpl implements AppCouponService {
     @Override
-    public List<CouponUserForAppCustomizeVO> getMyCoupon(Integer userId, Integer page, Integer pageSize, String couponStatus) {
-        MyCouponListRequest requestBean = new MyCouponListRequest();
-        requestBean.setUserId(userId+"");
-        requestBean.setUsedFlag(couponStatus);
-        requestBean.setLimitStart((page-1) * pageSize);
-        requestBean.setLimitEnd(page * pageSize);
+    public List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean) {
         return amTradeClient.getMyCoupon(requestBean);
     }
 

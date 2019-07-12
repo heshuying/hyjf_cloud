@@ -282,6 +282,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         criteria1.andNidEqualTo(tenderBg.getOrderId());
         criteria1.andUserIdEqualTo(tenderBg.getUserId());
         criteria1.andBorrowNidEqualTo(tenderBg.getBorrowNid());
+        // 先查找临时表
+        List<BorrowTenderTmp> tmps = borrowTenderTmpMapper.selectByExample(borrowTenderTmpExample);
+        String add_ip = "";
+        if(tmps!=null&&tmps.size()>0){
+            add_ip = tmps.get(0).getAddIp();
+        }
         boolean tenderTempFlag = borrowTenderTmpMapper.deleteByExample(borrowTenderTmpExample) > 0 ? true : false;
         if (!tenderTempFlag) {
             logger.error("删除borrowTenderTmp表失败 borrowNid:{}  logOrdId:{} userId:{} ",tenderBg.getBorrowNid(),tenderBg.getOrderId(),tenderBg.getUserId());
@@ -355,6 +361,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         
         // 主干是 tender_user_name 迁移到微服务后是 username
         borrowTender.setUserName(tenderBg.getUserName());
+        borrowTender.setAddIp(add_ip);
         
         
         logger.info("开始插入borrowTender表...borrowTender:{}",JSONObject.toJSONString(borrowTender));

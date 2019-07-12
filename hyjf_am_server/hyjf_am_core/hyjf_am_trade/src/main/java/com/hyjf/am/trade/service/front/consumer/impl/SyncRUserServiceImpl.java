@@ -66,6 +66,7 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
         String userId = jsonObj.getString("userId");
         String userName = jsonObj.getString("username");
         String mobile = jsonObj.getString("mobile");
+        String bankMobile = jsonObj.getString("bankMobile");
         String userType = jsonObj.getString("userType");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userName)) {
@@ -76,6 +77,10 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
             record.setUsername(userName);
             if(StringUtils.isNotBlank(mobile)) {
                 record.setMobile(mobile);
+            }
+            // 注册新增用户时同步银行预留手机号到冗余表 add by liushouyi
+            if(StringUtils.isNotBlank(bankMobile)) {
+                record.setBankMobile(bankMobile);
             }
             if(StringUtils.isNotBlank(userType)){
                 int userTypeInt = Integer.parseInt(userType);
@@ -97,12 +102,17 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
         String userId = jsonObj.getString("userId");
         String userType = jsonObj.getString("userType");
         String mobile = jsonObj.getString("mobile");
+        String bankMobile = jsonObj.getString("bankMobile");
         if (StringUtils.isNotBlank(userId) && (StringUtils.isNotBlank(userType) || StringUtils.isNotBlank(mobile))) {
             RUser record = new RUser();
             int userIdInt = Integer.parseInt(userId);
             record.setUserId(userIdInt);
             if(StringUtils.isNotBlank(mobile)) {
                 record.setMobile(mobile);
+            }
+            // 注册新增用户时同步银行预留手机号到冗余表 add by liushouyi
+            if(StringUtils.isNotBlank(bankMobile)) {
+                record.setBankMobile(bankMobile);
             }
             if(StringUtils.isNotBlank(userType)){
                 int userTypeInt = Integer.parseInt(userType);
@@ -159,6 +169,22 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
             rUser.setAttribute(attributeInt);
             int upRet = rUserMapper.updateByExampleSelective(rUser, example);
             logger.info("rid:{},am_trade.ht_r_user更新ht_user_info完毕。成功条数：{}", referrerInt, upRet);
+        }
+    }
+
+    /**
+     * 删除用户(未开户销户)
+     * @param jsonObj
+     * @author wgx
+     * @date 2019/05/31
+     */
+    @Override
+    public void deleteRUser(JSONObject jsonObj) {
+        String userId = jsonObj.getString("userId");
+        if (StringUtils.isNotBlank(userId)) {
+            int userIdInt = Integer.parseInt(userId);
+            int upRet = rUserMapper.deleteByPrimaryKey(userIdInt);
+            logger.info("uid:{},am_trade.ht_r_user删除{}", userIdInt, upRet > 0 ? "成功" : "失败");
         }
     }
 }

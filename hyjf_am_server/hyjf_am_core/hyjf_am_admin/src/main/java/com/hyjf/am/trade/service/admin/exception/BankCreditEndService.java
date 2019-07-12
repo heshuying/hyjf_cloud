@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.trade.service.admin.exception;
 
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public interface BankCreditEndService extends BaseService {
      */
     int insertBankCreditEndForCreditEnd(HjhDebtCredit hjhDebtCredit, String tenderAccountId, String tenderAuthCode);
 
-    List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean);
+    List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean);
 
     Integer getCreditEndCount(BankCreditEndListRequest requestBean);
 
@@ -74,4 +76,12 @@ public interface BankCreditEndService extends BaseService {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bean);
+
+    int insertStartCreditEnd(StartCreditEndRequest requestBean);
+
+    String queryForCreditEnd(StartCreditEndRequest requestBean);
+
+    BankCreditEnd getCreditEndByOrgOrderId(String orderId);
+
+    int deleteCreditEndById(Integer id);
 }

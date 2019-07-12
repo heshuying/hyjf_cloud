@@ -222,6 +222,8 @@ public class WebHomeServiceImpl implements WebHomeService {
         ProjectListRequest request = new ProjectListRequest();
         request.setProjectType("HZT");
         request.setBorrowClass("NEW");
+        request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        request.setWjtInstCode(systemConfig.getWjtInstCode());
         request.setLimitStart(0);
         request.setLimitEnd(1);
         List<WebProjectListCustomizeVO> newProjectList = amTradeClient.searchProjectList(request);//加缓存
@@ -231,6 +233,8 @@ public class WebHomeServiceImpl implements WebHomeService {
         ProjectListRequest request2 = new ProjectListRequest();
         request2.setProjectType("HZT");
         request2.setBorrowClass("");
+        request2.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        request2.setWjtInstCode(systemConfig.getWjtInstCode());
         request2.setLimitStart(0);
         request2.setLimitEnd(4);
         List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request2);//加缓存

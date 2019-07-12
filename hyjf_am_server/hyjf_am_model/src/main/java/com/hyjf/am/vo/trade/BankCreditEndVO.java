@@ -73,6 +73,10 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     private Date createTime;
     private Integer updateUser;
     private Date updateTime;
+    @ApiModelProperty(value = "债权结束状态描述")
+    private String stateDesc;
+    @ApiModelProperty(value = "提交时间")
+    private String commitTime;
 
     public Integer getId() {
         return id;
@@ -320,5 +324,21 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getStateDesc() {
+        return stateDesc;
+    }
+
+    public void setStateDesc(String stateDesc) {
+        this.stateDesc = stateDesc;
+    }
+
+    public String getCommitTime() {
+        return commitTime;
+    }
+
+    public void setCommitTime(String commitTime) {
+        this.commitTime = commitTime;
     }
 }

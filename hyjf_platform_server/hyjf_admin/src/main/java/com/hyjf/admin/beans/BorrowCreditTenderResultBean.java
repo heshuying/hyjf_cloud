@@ -1,6 +1,8 @@
 package com.hyjf.admin.beans;
 
 
+import com.hyjf.admin.beans.vo.DropDownVO;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,8 @@ public class BorrowCreditTenderResultBean implements Serializable {
     private List<BorrowCreditTenderBean> recordList;
 
     private Map<String,Object> sumData;
+
+    List<DropDownVO> creditendStateList;
 
     private Integer total;
 
@@ -41,5 +45,13 @@ public class BorrowCreditTenderResultBean implements Serializable {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public List<DropDownVO> getCreditendStateList() {
+        return creditendStateList;
+    }
+
+    public void setCreditendStateList(List<DropDownVO> creditendStateList) {
+        this.creditendStateList = creditendStateList;
     }
 }

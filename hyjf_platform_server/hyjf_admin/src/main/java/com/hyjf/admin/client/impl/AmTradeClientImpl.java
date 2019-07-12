@@ -1939,6 +1939,24 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 标的放款记录
+     *
+     * @param userId
+     * @param borrowNid
+     * @param nid
+     * @return
+     */
+    @Override
+    public ApplyBorrowInfoVO selectApplyBorrowInfoDetail(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/getApplyBorrowInfoDetail/" + borrowNid;
+        ApplyBorrowInfoResponse response = restTemplate.getForEntity(url, ApplyBorrowInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 标的放款记录列表
      *
      * @param borrowNid
@@ -5981,6 +5999,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 保存协议申请
+     * @author Zha Daojian
+     * @date 2019/5/8 17:56
+     * @param applyBorrowAgreementVO
+     * @return com.hyjf.am.response.trade.ApplyBorrowAgreementResponse
+     **/
+    @Override
+    public ApplyBorrowAgreementResponse saveApplyBorrowAgreement(ApplyBorrowAgreementVO applyBorrowAgreementVO) {
+        ApplyBorrowAgreementSaveRequest request = new ApplyBorrowAgreementSaveRequest();
+        BeanUtils.copyProperties(applyBorrowAgreementVO, request);
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/saveApplyBorrowAgreement";
+        return restTemplate.postForEntity(url, applyBorrowAgreementVO, ApplyBorrowAgreementResponse.class)
+                .getBody();
+    }
+
+    /**
      * 保存垫付协议申请-协议生成详情
      *
      * @param applyAgreementVO
@@ -6131,10 +6165,28 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    public Integer getTotalTenderCountByBorrowNid(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/getTotalTenderCountByBorrowNid/" + borrowNid;
+        ApplyBorrowInfoResponse response = restTemplate.getForEntity(url, ApplyBorrowInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+
+    }
+
+    @Override
     public List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request) {
         ProtocolLogResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/getProtocolLogVOAll",
                 request, ProtocolLogResponse.class);
 
+        return response.getResultList();
+    }
+
+    @Override
+    public List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId) {
+        String url = "http://AM-ADMIN/am-trade/tenderagreement/getTenderAgreementByBorrowNid/" + borrowId;
+        TenderAgreementResponse response = restTemplate.getForObject(url, TenderAgreementResponse.class);
         return response.getResultList();
     }
 
@@ -6921,6 +6973,30 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult().intValue();
     }
 
+	@Override
+	public SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/sponsorLogList", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse deleteSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/deleteSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/insertSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/updateSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
 
     /**
      * 销户成功后,删除用户账户表
@@ -6937,6 +7013,92 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
 
+    @Override
+    public BorrowInvestCustomizeExtResponse getBorrowInvestInfo(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/borrow_invest/select_borrow_invest/" + nid, BorrowInvestCustomizeExtResponse.class).getBody();
+    }
+
+    @Override
+    public IntegerResponse updateTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow_invest/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+    }
+    /**
+     * 备案撤销成功后更新数据库
+     */
+    @Override
+    public AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request) {
+        String url = "http://AM-ADMIN/am-trade/borrow_regist/regist_cancel";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "备案撤销成功");
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
+    }
+
+    /**
+     * 备案撤销确认页面数据
+     */
+    @Override
+    public BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid) {
+        BorrowRegistCancelConfirmCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-trade/borrow_regist/registcancel_confirm/" + borrowNid,
+                        BorrowRegistCancelConfirmCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 标的删除确认页面数据
+     */
+    @Override
+    public BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid) {
+        BorrowDeleteConfirmCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-trade/borrow_delete/delete_confirm/" + borrowNid,
+                        BorrowDeleteConfirmCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 标的删除成功后更新数据库
+     */
+    @Override
+    public AdminResult deleteBorrow(BorrowRegistUpdateRequest request) {
+        String url = "http://AM-ADMIN/am-trade/borrow_delete/delete";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "标的删除成功");
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
+    }
 
 
+    @Override
+    public IntegerResponse updatePlanTenderUtm(UpdateTenderUtmExtRequest updateTenderUtmRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/planutm/updateTenderUtm/",updateTenderUtmRequest,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getTenderUtmChangeLog(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/borrow_invest/update_tender_utm_history/" + nid,TenderUpdateUtmHistoryResponse.class).getBody();
+    }
+
+    @Override
+    public HjhPlanAccedeCustomizeVO getPlanTenderInfo(String planOrderId) {
+        HjhPlanAccedeCustomizeResponse response= restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/plan_tender_info/" + planOrderId,HjhPlanAccedeCustomizeResponse.class).getBody();
+        return response.getResult();
+    }
+
+    @Override
+    public TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid) {
+        return restTemplate.getForEntity("http://AM-ADMIN/am-trade/planutm/update_tender_utm_history/" + nid,TenderUpdateUtmHistoryResponse.class).getBody();
+    }
 }
