@@ -176,7 +176,6 @@
 		ELSE '其他' END AS attribute1
 		FROM ht_borrow b
 		LEFT JOIN ht_borrow_info i ON i.borrow_nid = b.borrow_nid
-		LEFT JOIN ht_borrow_project_type t ON t.borrow_cd = b.project_type
 		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
 		WHERE b.reverify_status = 6
 		AND b.reverify_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{dateStart},' 00:00:00'))
