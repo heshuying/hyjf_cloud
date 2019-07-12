@@ -687,6 +687,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accedeExample.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
         List<HjhAccede> accedeList = this.hjhAccedeMapper.selectByExample(accedeExample);
         boolean isLastBorrow = true;
+        String lastBorrowNid= "";
         HjhAccede hjhAccede = null;
         //汇计划最小出借额
         BigDecimal tenderMin = CustomConstants.HJH_RETENDER_MIN_ACCOUNT;
@@ -714,6 +715,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 Integer status = borrow.getStatus();
                 if (4 > status) {
                     isLastBorrow = false;
+                    lastBorrowNid = borrow.getBorrowNid();
                     logger.info("================= 订单号:" + hjhAccede.getAccedeOrderId() + "出借标的未放款，标的号："+ borrowNid );
                 }
             }
@@ -747,7 +749,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             }
             try {
                 //生成并签署加入计划出借服务协议
-                sendPlanContract(hjhAccede.getUserId(), hjhAccede.getAccedeOrderId(), hjhAccede.getQuitTime(), hjhAccede.getCountInterestTime(), hjhAccede.getWaitTotal());
+                sendPlanContract(lastBorrowNid,hjhAccede.getUserId(), hjhAccede.getAccedeOrderId(), hjhAccede.getQuitTime(), hjhAccede.getCountInterestTime(), hjhAccede.getWaitTotal());
                 //优惠券放款
                 couponLoan(hjhAccede);
                 // 双十二活动删除
@@ -1087,9 +1089,9 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      * @param accedeOrderId
      * @param waitTotal
      */
-    private void sendPlanContract(Integer userId, String accedeOrderId, Integer quitTime, Integer countInterestTime, BigDecimal waitTotal) {
+    private void sendPlanContract(String lastBorrowNid,Integer userId, String accedeOrderId, Integer quitTime, Integer countInterestTime, BigDecimal waitTotal) {
 
-        logger.info("-------------加入订单号:" + accedeOrderId + ",开始生成计划加入协议！----------");
+        logger.info("-------------加入订单号:" + accedeOrderId + ",开始生成计划加入协议！----------lastBorrowNid:"+lastBorrowNid);
         try {
             FddGenerateContractBean bean = new FddGenerateContractBean();
             bean.setOrdid(accedeOrderId);
@@ -1100,6 +1102,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             bean.setPlanStartDate(GetDate.getDateMyTimeInMillis(countInterestTime));
             bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(quitTime));
             bean.setTenderInterestFmt(waitTotal.toString());
+            bean.setBorrowNid(lastBorrowNid);
             // 法大大生成合同MQ
             commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
                     MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));

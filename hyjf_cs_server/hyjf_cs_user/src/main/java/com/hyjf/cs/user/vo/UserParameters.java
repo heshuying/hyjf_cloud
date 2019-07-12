@@ -180,6 +180,11 @@ public class UserParameters {
 
 	private String bankMobile;
 
+	/** 积分商城用：用户当前积分 */
+	private Integer pointsCurrent;
+	/** 积分商城用：前端积分明细H5url */
+	private String pointsDetailUrl;
+
 	public String getHuifuOpenAccount() {
 		return huifuOpenAccount;
 	}
@@ -967,5 +972,21 @@ public class UserParameters {
 
 	public void setBankMobile(String bankMobile) {
 		this.bankMobile = bankMobile;
+	}
+
+	public Integer getPointsCurrent() {
+		return pointsCurrent;
+	}
+
+	public void setPointsCurrent(Integer pointsCurrent) {
+		this.pointsCurrent = pointsCurrent;
+	}
+
+	public String getPointsDetailUrl() {
+		return pointsDetailUrl;
+	}
+
+	public void setPointsDetailUrl(String pointsDetailUrl) {
+		this.pointsDetailUrl = pointsDetailUrl;
 	}
 }

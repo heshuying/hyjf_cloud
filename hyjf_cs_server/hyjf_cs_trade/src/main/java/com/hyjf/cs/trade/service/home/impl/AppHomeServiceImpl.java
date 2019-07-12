@@ -88,6 +88,8 @@ public class AppHomeServiceImpl implements AppHomeService {
     @Override
     public JSONObject getAppHomeData(HttpServletRequest request, String userId) {
         JSONObject info = new JSONObject();
+        // 积分商城，积分显示开关，0:不显示，1:显示
+        info.put("pointsShopSwitch", RedisUtils.get(RedisConstants.POINTS_SHOP_SWITCH));
         String platform = request.getParameter("realPlatform");
         String version = request.getParameter("version");
         String uniqueIdentifier = request.getParameter("UniqueIdentifier");

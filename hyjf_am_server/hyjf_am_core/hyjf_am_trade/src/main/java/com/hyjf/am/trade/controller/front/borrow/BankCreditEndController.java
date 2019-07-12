@@ -42,31 +42,6 @@ public class BankCreditEndController {
     private BankCreditEndService bankCreditEndService;
 
     /**
-     * 结束债权列表
-     * @auther: hesy
-     * @date: 2018/7/12
-     */
-    @RequestMapping("/getlist")
-    public BankCreditEndResponse getCreditEndList(@RequestBody BankCreditEndListRequest requestBean){
-        BankCreditEndResponse response = new BankCreditEndResponse();
-        List<BankCreditEnd> recordList = bankCreditEndService.getCreditEndList(requestBean);
-        if (Validator.isNotNull(recordList)){
-            response.setResultList(CommonUtils.convertBeanList(recordList,BankCreditEndVO.class));
-        }
-        return response;
-    }
-
-    /**
-     * 结束债权总记录数
-     * @auther: hesy
-     * @date: 2018/7/12
-     */
-    @RequestMapping("/getcount")
-    public Integer getCreditEndCount(@RequestBody BankCreditEndListRequest requestBean){
-        return bankCreditEndService.getCreditEndCount(requestBean);
-    }
-
-    /**
      * 根据orderId获取
      * @auther: hesy
      * @date: 2018/7/12
@@ -125,6 +100,19 @@ public class BankCreditEndController {
         BeanUtils.copyProperties(request.getBankCreditEndVO(), bankCreditEnd);
         return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForBatch(bankCreditEnd));
     }
+
+    /**
+     * 批次结束债权用更新 结束债权任务表(失败的)
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateBankCreditEndForBatchFail")
+    public IntegerResponse updateBankCreditEndForBatchFail(@RequestBody BankCreditEndRequest request){
+        BankCreditEnd bankCreditEnd = new BankCreditEnd();
+        BeanUtils.copyProperties(request.getBankCreditEndVO(), bankCreditEnd);
+        return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForBatchFail(bankCreditEnd));
+    }
+
     private Logger logger = LoggerFactory.getLogger(BankCreditEndController.class);
     /**
      * 据批次号和日期，取得结束债权任务列表
@@ -177,5 +165,29 @@ public class BankCreditEndController {
     @RequestMapping("/updateBatchCreditEndFinish")
     public IntegerResponse updateBatchCreditEndFinish(@RequestBody BankCallBeanVO request){
         return new IntegerResponse(this.bankCreditEndService.updateBatchCreditEndFinish(request));
+    }
+
+    /**
+     * 批次结束债权状态查询回调更新
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateForCallBackFail")
+    public IntegerResponse updateForCallBackFail(@RequestBody BankCallBeanVO request){
+        return new IntegerResponse(this.bankCreditEndService.updateForCallBackFail(request));
+    }
+
+    /**
+     * 批次结束债权未收到回调记录查询
+     * @return
+     */
+    @RequestMapping("/queryCreditEndCallBackFail")
+    public BankCreditEndResponse queryCreditEndCallBackFail(){
+        BankCreditEndResponse response = new BankCreditEndResponse();
+        List<BankCreditEndVO> recordList = bankCreditEndService.queryCreditEndCallBackFail();
+        if (Validator.isNotNull(recordList)){
+            response.setResultList(recordList);
+        }
+        return response;
     }
 }

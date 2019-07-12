@@ -185,6 +185,8 @@
         '活动发放'
         WHEN hcu.coupon_source = 3 THEN
         '会员礼包'
+        WHEN hcu.coupon_source = 4 THEN
+        '积分兑换'
         ELSE
         ''
         END AS coupon_from,
@@ -426,6 +428,8 @@
         '活动发放'
         WHEN hcu.coupon_source = 3 THEN
         '会员礼包'
+        WHEN hcu.coupon_source = 4 THEN
+        '积分兑换'
         ELSE
         ''
         END AS coupon_from,
@@ -657,6 +661,8 @@
         '活动发放'
         WHEN hcu.coupon_source = 3 THEN
         '会员礼包'
+        WHEN hcu.coupon_source = 4 THEN
+        '积分兑换'
         ELSE
         ''
         END coupon_source,
@@ -867,6 +873,8 @@
         '活动发放'
         WHEN hcu.coupon_source = 3 THEN
         '会员礼包'
+        WHEN hcu.coupon_source = 4 THEN
+        '积分兑换'
         ELSE
         ''
         END AS coupon_from,

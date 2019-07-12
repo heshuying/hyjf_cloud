@@ -421,8 +421,7 @@ public class FileUtil {
      * @return file
      * @throws IOException
      */
-    public static File getFile(String strUrl, String fileName) throws IOException {
-
+    public static File getFile(String strUrl, String fileName) throws IOException{
         File file = new File(fileName);
         URL url = new URL(strUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
