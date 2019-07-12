@@ -20,6 +20,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -74,6 +75,8 @@ public class LandingManageController extends BaseController {
         Map<String, String> tempType = CacheUtil.getParamNameMap("TEMP_TYPE");
         LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
         BeanUtils.copyProperties(landingManagerRequestBean, landingManagerRequest);
+        //模板名称模糊查找
+        landingManagerRequest.setVague(true);
         TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
         if (null==templateConfigResponse||!Response.isSuccess(templateConfigResponse)) {
             return new AdminResult<>(FAIL, templateConfigResponse.getMessage());
@@ -189,4 +192,22 @@ public class LandingManageController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "模板名称校验", notes = "模板名称校验")
+    @PostMapping("/checkTempName")
+    public AdminResult checkTempName(@RequestBody LandingManagerRequestBean landingManagerRequestBean){
+        LandingManagerRequest landingManagerRequest = new LandingManagerRequest();
+        BeanUtils.copyProperties(landingManagerRequestBean, landingManagerRequest);
+        //根据名字查询
+        landingManagerRequest.setVague(false);
+        TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
+        if (null==templateConfigResponse||!Response.isSuccess(templateConfigResponse)) {
+            return new AdminResult<>(FAIL, templateConfigResponse.getMessage());
+        }
+        List<TemplateConfigVO> templateConfigVOList = templateConfigResponse.getResultList();
+        if(CollectionUtils.isNotEmpty(templateConfigVOList)){
+            //如果存在，返回信息
+            return new AdminResult<>(FAIL, "模板名称不能重复");
+        }
+        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+    }
 }
