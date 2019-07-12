@@ -29,20 +29,20 @@ public class IssueBorrowOfTimingController extends BaseController {
      */
     @RequestMapping("/none_split_borrow")
     public String issueBorrowOfTiming() {
-        try {
-            // 获取定时发标列表
-            List<BorrowCustomize> borrowList = this.issueBorrowOfTimingService.queryOntimeTenderList();
-            if (CollectionUtils.isNotEmpty(borrowList)) {
-                // 如果不为空,循环更新标的状态
-                for (BorrowCustomize borrowCustomize : borrowList) {
+        // 获取定时发标列表
+        List<BorrowCustomize> borrowList = this.issueBorrowOfTimingService.queryOntimeTenderList();
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            // 如果不为空,循环更新标的状态
+            for (BorrowCustomize borrowCustomize : borrowList) {
+                try {
                     issueBorrowOfTimingService.issueBorrowOfTiming(borrowCustomize);
+                } catch (Exception e) {
+                    logger.error("不拆分标的定时发标失败....", e);
+                    // 如果发生异常,继续跑下一个标的
+                    continue;
                 }
             }
-        } catch (Exception e) {
-            logger.error("不拆分标的定时发标失败....", e);
-            return "fail";
         }
-
         return "success";
     }
 
