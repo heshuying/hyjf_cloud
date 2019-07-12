@@ -269,7 +269,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public int updateBatchCreditEndFinish(BankCallBeanVO bean) {
-
+        logger.info("批次结束债权updateBatchCreditEndFinish，callBackBean:{}", JSON.toJSONString(bean));
         BankCreditEndExample example = new BankCreditEndExample();
         BankCreditEndExample.Criteria cra = example.createCriteria();
 
@@ -338,6 +338,10 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
                             String txState = obj.getString("txState");
                             String failMsg = obj.getString("failMsg");
                             logger.info("结束债权批次号batchNO:{}，txState:{} failMsg:" + failMsg, bean.getBatchNo(), txState);
+                            if(StringUtils.isBlank(txState) || (!"S".equals(txState) && !"F".equals(txState))){
+                                logger.info("结束债权批次号batchNO:{}，txState:{}, 跳过不更新", bean.getBatchNo(), txState);
+                                continue;
+                            }
                             // 更新对应债权状态及失败描述
                             example = new BankCreditEndExample();
                             example.createCriteria().andBatchNoEqualTo(bean.getBatchNo()).andOrderIdEqualTo(obj.getString("orderId"));
@@ -364,7 +368,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public int updateForCallBackFail(BankCallBeanVO bean) {
-
+        logger.info("批次结束债权updateForCallBackFail，callBackBean:{}", JSON.toJSONString(bean));
         BankCreditEndExample example = new BankCreditEndExample();
         BankCreditEndExample.Criteria cra = example.createCriteria();
 
@@ -430,6 +434,10 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
                             String txState = obj.getString("txState");
                             String failMsg = obj.getString("failMsg");
                             logger.info("结束债权批次号batchNO:{}，txState:{} failMsg:" + failMsg, bean.getBatchNo(), txState);
+                            if(StringUtils.isBlank(txState) || (!"S".equals(txState) && !"F".equals(txState))){
+                                logger.info("结束债权批次号batchNO:{}，txState:{}, 跳过不更新", bean.getBatchNo(), txState);
+                                continue;
+                            }
                             // 更新对应债权状态及失败描述
                             example = new BankCreditEndExample();
                             example.createCriteria().andBatchNoEqualTo(bean.getBatchNo()).andOrderIdEqualTo(obj.getString("orderId"));
