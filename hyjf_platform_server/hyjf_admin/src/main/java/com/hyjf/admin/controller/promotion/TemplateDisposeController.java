@@ -103,10 +103,10 @@ public class TemplateDisposeController extends BaseController{
 			TemplateDisposeResponse templateDisposeResponse=templateDisposeService.templateDisposeList(templateDisposeRequest);
 			tdr.setResult(templateDisposeResponse.getResultList().get(0));
 			TemplateDisposeVO tr = (TemplateDisposeVO) templateDisposeResponse.getResultList().get(0);
-			tdr.setStatus(0);
+			tdr.setFlag(0);
 			for (TemplateConfigVO templateConfigVO : templateConfigResponse.getResultList()) {
 				if(tr.getTempName().equals(templateConfigVO.getTempName())) {
-					tdr.setStatus(1);
+					tdr.setFlag(1);
 				}
 			}
 			

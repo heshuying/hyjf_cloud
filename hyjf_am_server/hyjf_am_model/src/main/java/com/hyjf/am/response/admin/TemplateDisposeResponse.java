@@ -25,15 +25,15 @@ public class TemplateDisposeResponse<T> extends AdminResponse<TemplateDisposeVO>
      *
      * @mbggenerated
      */
-    private Integer status;
+    private Integer flag;
 	
     
-	public Integer getStatus() {
-		return status;
+	public Integer getFlag() {
+		return flag;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 
 	public TemplateConfigVO getTemplateConfig() {
