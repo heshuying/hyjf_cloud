@@ -25,8 +25,6 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.xhtmlrenderer.css.constants.IdentValue.SEPARATE;
-
 /**
  * @author xiasq
  * @version IssueBorrowOfTimingServiceImpl, v0.1 2018/7/10 14:04
@@ -52,6 +50,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			// 标的定时独占锁key
 //			String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + CustomConstants.COLON + borrowNid;
 //			RedisUtils.del(onTimeLockKey);
+//			 // 标的状态key
+//			String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS +  CustomConstants.COLON+ borrowNid;
+//			RedisUtils.del(onTimeStatusKey);
 			throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 		}
 		// 散标自动发标成功发送mq到合规上报数据
