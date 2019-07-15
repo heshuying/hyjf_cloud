@@ -20,8 +20,22 @@ public class TemplateDisposeResponse<T> extends AdminResponse<TemplateDisposeVO>
 	private List<TemplateConfigVO>	templateConfigList;
 	private List<T> listUserRoles;
 	private TemplateConfigVO templateConfig;
+    /**
+     * 状态，1启用，0禁用
+     *
+     * @mbggenerated
+     */
+    private Integer status;
 	
-	
+    
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public TemplateConfigVO getTemplateConfig() {
 		return templateConfig;
 	}

@@ -33,6 +33,8 @@ import com.hyjf.am.response.user.TemplateConfigResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
 import com.hyjf.am.resquest.user.LandingManagerRequest;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
+import com.hyjf.am.vo.user.TemplateConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 
 import io.swagger.annotations.Api;
@@ -100,6 +102,14 @@ public class TemplateDisposeController extends BaseController{
 			templateDisposeRequest.setPageSize(1);
 			TemplateDisposeResponse templateDisposeResponse=templateDisposeService.templateDisposeList(templateDisposeRequest);
 			tdr.setResult(templateDisposeResponse.getResultList().get(0));
+			TemplateDisposeVO tr = (TemplateDisposeVO) templateDisposeResponse.getResultList().get(0);
+			tdr.setStatus(0);
+			for (TemplateConfigVO templateConfigVO : templateConfigResponse.getResultList()) {
+				if(tr.getTempName().equals(templateConfigVO.getTempName())) {
+					tdr.setStatus(1);
+				}
+			}
+			
 		}
 
         return new AdminResult(tdr);

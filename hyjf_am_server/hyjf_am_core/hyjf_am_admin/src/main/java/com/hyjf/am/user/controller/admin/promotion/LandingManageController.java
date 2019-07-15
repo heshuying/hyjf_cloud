@@ -111,12 +111,12 @@ public class LandingManageController extends BaseController {
     public TemplateConfigResponse deleteTemplate(@PathVariable Integer id) {
         logger.info("---deleteTemplate by param---  " + JSONObject.toJSON(id));
         TemplateConfigResponse response = new TemplateConfigResponse();
-        int count=landingManagerService.deleteTemplateCount(id);
-        if(count>0) {
-        	response.setRtn(UtmResponse.FAIL);
-        	response.setMessage("该模板已关联渠道，暂不可删除");
-        	return response;
-        }
+//        int count=landingManagerService.deleteTemplateCount(id);
+//        if(count>0) {
+//        	response.setRtn(UtmResponse.FAIL);
+//        	response.setMessage("该模板已关联渠道，暂不可删除");
+//        	return response;
+//        }
         try {
             int intDelete = landingManagerService.deleteTemplate(id);
             response.setRtn(UtmResponse.SUCCESS);
