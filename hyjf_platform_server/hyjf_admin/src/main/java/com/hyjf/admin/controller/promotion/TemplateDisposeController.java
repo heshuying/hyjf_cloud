@@ -120,7 +120,7 @@ public class TemplateDisposeController extends BaseController{
 	public AdminResult updateTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
 //		String[] temp = templateDisposeRequest.getTempName().split("\\|");
 		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
-//		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
+		templateDisposeRequest.setTempId(1);
 //		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
@@ -142,7 +142,7 @@ public class TemplateDisposeController extends BaseController{
 	public AdminResult insertTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
 //		String[] temp = templateDisposeRequest.getTempName().split("\\|");
 		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
-//		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
+		templateDisposeRequest.setTempId(1);
 //		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
