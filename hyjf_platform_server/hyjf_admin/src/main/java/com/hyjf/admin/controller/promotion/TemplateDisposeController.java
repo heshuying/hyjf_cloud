@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.promotion;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,15 +89,26 @@ public class TemplateDisposeController extends BaseController{
         LandingManagerRequest landingManagerRequest=new LandingManagerRequest();
         landingManagerRequest.setCurrPage(1);
         landingManagerRequest.setPageSize(1000);
-        landingManagerRequest.setStatus(1);
+        //landingManagerRequest.setStatus(1);
 		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
-		
-		tdr.setTemplateConfigList(templateConfigResponse.getResultList());
 		tdr.setUserRoles( registRecordResponse.getUtmPlatVOList());
         Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
         List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
         tdr.setListUserRoles(listUserRoles);
-		
+		List<TemplateConfigVO> configList=new ArrayList<TemplateConfigVO>();
+		if(templateConfigResponse!=null) {
+			configList = templateConfigResponse.getResultList();
+			List<TemplateConfigVO> configList2=new ArrayList<TemplateConfigVO>();
+			for (TemplateConfigVO templateConfigVO : configList) {
+				if(templateConfigVO.getStatus()==1) {
+					configList2.add(templateConfigVO);
+				}
+			}
+			tdr.setTemplateConfigList(configList2);
+		}else {
+			return new AdminResult(tdr);
+		}
+				
 		if(templateDisposeRequest.getId()!=null) {
 			templateDisposeRequest.setCurrPage(1);
 			templateDisposeRequest.setPageSize(1);
@@ -104,7 +116,7 @@ public class TemplateDisposeController extends BaseController{
 			tdr.setResult(templateDisposeResponse.getResultList().get(0));
 			TemplateDisposeVO tr = (TemplateDisposeVO) templateDisposeResponse.getResultList().get(0);
 			tdr.setFlag(0);
-			for (TemplateConfigVO templateConfigVO : templateConfigResponse.getResultList()) {
+			for (TemplateConfigVO templateConfigVO : configList) {
 				if(tr.getTempName().equals(templateConfigVO.getTempName())) {
 					tdr.setFlag(1);
 				}
