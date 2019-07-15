@@ -38,8 +38,6 @@ public class IssueBorrowOfTimingController extends BaseController {
                     issueBorrowOfTimingService.issueBorrowOfTiming(borrowCustomize);
                 } catch (Exception e) {
                     logger.error("不拆分标的定时发标失败....", e);
-                    // 如果发生异常,继续跑下一个标的
-                    continue;
                 }
             }
         }
