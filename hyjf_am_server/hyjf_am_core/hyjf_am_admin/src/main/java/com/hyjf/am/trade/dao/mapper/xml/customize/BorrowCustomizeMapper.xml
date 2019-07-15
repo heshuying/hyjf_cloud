@@ -257,10 +257,10 @@ WHERE
 				CONCAT(hb.borrow_period, '个月')
 			END borrowPeriod,
 			 CASE
-			WHEN hb.repay_last_time != 0
-			AND hb.repay_last_time IS NOT NULL THEN
+			WHEN re.repay_yestime != 0
+			AND re.repay_yestime IS NOT NULL THEN
 				FROM_UNIXTIME(
-					hb.repay_last_time,
+					re.repay_yestime,
 					'%Y-%m-%d %H:%i:%s'
 				)
 			ELSE
@@ -279,11 +279,12 @@ WHERE
 			FROM
 				ht_borrow hb
 			LEFT JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+			LEFT JOIN ht_borrow_repay re ON hb.borrow_nid = re.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
 			LEFT JOIN ht_hjh_inst_config hic ON hbi.inst_code = hic.inst_code
 			AND bs. STATUS = 0
-		WHERE
-		hb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+			WHERE
+			hb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
 
 	<select id="getProjectPsersonDetail" resultType="com.hyjf.am.vo.trade.WebProjectPersonDetailVO"
