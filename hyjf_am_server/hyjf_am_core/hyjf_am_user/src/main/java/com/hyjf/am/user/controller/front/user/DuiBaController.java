@@ -40,7 +40,12 @@ public class DuiBaController {
             response.setResult(resultVO);
         } else {
             // 扣减用户积分并返回结果
-            resultVO =  duiBaService.updateUserPoints(consumeParams);
+            try {
+                resultVO = duiBaService.updateUserPoints(consumeParams);
+            } catch (Exception e){
+                resultVO.setSuccess(false);
+                resultVO.setErrorMessage("请联系相关人员查看。");
+            }
             response.setResult(resultVO);
         }
         return response;

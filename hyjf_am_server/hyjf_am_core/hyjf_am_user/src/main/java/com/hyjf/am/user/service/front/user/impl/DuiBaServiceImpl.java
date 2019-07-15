@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
@@ -98,7 +97,8 @@ public class DuiBaServiceImpl extends BaseServiceImpl implements DuiBaService {
 		try {
 			commonProducer.messageSend(new MessageContent(MQConstant.DUIBA_ORDER_TOPIC, UUID.randomUUID().toString(), consumeParams));
 		} catch (MQException e) {
-			logger.error("兑吧生成订单MQ发送异常，请及时处理，兑吧返回结果：{}", JSONObject.toJSONString(consumeParams), e);
+			logger.error("兑吧生成订单MQ发送异常", e);
+			throw new RuntimeException("兑吧生成订单MQ发送异常");
 		}
 		// 设置返回参数
 		resultVO.setSuccess(true);

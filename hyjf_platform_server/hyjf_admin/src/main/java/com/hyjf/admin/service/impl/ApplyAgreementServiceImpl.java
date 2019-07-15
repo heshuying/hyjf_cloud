@@ -1318,23 +1318,23 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
                 if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
                     if("1".equals(status)){
-                        //logger.info("--------------------下载文件签署,脱敏");
+                        logger.info("--------------------下载文件签署,脱敏");
                         File file = createFaddPDFImgFile(tenderAgreement);
-                        //logger.info("--------------------下载文件签署,脱敏file:"+file);
+                        logger.info("--------------------下载文件签署,脱敏file:"+file);
                         if(file!=null){
                             files.add(file);
                         }
                     }else {
-                        //logger.info("--------------------下载文件签署，原始");
+                        logger.info("--------------------下载文件签署，原始："+tenderAgreement.getDownloadUrl());
                         if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             try {
                                 File filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
-                                //logger.info("--------------------下载文件签署，原始filePdf:"+filePdf);
+                                logger.info("--------------------下载文件签署，原始filePdf:"+filePdf);
                                 if(filePdf!=null){
                                     files.add(filePdf);
                                 }
                             } catch (IOException e) {
-                                //logger.info("--------------------下载文件签署，原始filePdf失败");
+                                logger.info("--------------------下载文件签署，原始filePdf失败");
                             }//债转协议
                         }
                     }

@@ -176,7 +176,18 @@ public class SystemConfig {
     @Value("${evefile.name}")
     public String eveFileName;
 
-    public String getFileDomainUrl() {
+    @Value("${hyjf.wechat.host}")
+    private String wechatHost;
+    
+    public String getWechatHost() {
+		return wechatHost;
+	}
+
+	public void setWechatHost(String wechatHost) {
+		this.wechatHost = wechatHost;
+	}
+
+	public String getFileDomainUrl() {
         return fileDomainUrl;
     }
 

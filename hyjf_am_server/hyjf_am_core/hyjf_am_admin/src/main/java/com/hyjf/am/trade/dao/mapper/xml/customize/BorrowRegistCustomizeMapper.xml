@@ -154,6 +154,10 @@
 			'还款中'
 		WHEN b.`status` = 5 THEN
 			'已还款'
+		WHEN b.`status` = 6 THEN
+			'流标'
+		WHEN b.`status` = 7 THEN
+			'待授权'
 		WHEN b.`status` = 8 THEN
 			'逾期中'
 		ELSE
