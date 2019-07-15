@@ -2474,7 +2474,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
-
     @Override
     public Integer insertBusinessName(BusinessNameMgRequest request) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/insert";
@@ -2774,4 +2773,49 @@ public class AmConfigClientImpl implements AmConfigClient {
         CustomerChannelResponse reponse = restTemplate.postForObject(url, request, CustomerChannelResponse.class);
         return reponse;
 	}
+    /**
+     * 修改对账状态（重新对账）add by nxl
+     * @param certLogId
+     * @return
+     */
+    @Override
+    public int againReconciliation(Integer certLogId) {
+        String url = "http://AM-ADMIN/am-config/cert/againReconciliation/"+certLogId;
+        IntegerResponse response = restTemplate
+                .getForEntity(url,IntegerResponse.class).getBody();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
+        }
+        return response.getResultInt();
+    }
+    /**
+     * 批量修改对账状态 add by nxl
+     * @param request
+     * @return
+     */
+    @Override
+    public int batchReconciliation(CertReportLogRequestBean request) {
+        String url = "http://AM-ADMIN/am-config/cert/batchReconciliation";
+        IntegerResponse response = restTemplate
+                .postForEntity(url,request,IntegerResponse.class).getBody();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
+        }
+        return response.getResultInt();
+    }
+    /**
+     * 批量修改对账状态 add by nxl
+     * @param logOrderId
+     * @return
+     */
+    @Override
+    public int insertCertErrorLogByLogOrderId(String logOrderId) {
+        String url = "http://AM-ADMIN/am-config/cert/insertCertErrorLogByLogOrderId/"+logOrderId;
+        IntegerResponse response = restTemplate
+                .getForEntity(url,IntegerResponse.class).getBody();
+        if(response == null || !Response.isSuccess(response)){
+            return 0;
+        }
+        return response.getResultInt();
+    }
 }

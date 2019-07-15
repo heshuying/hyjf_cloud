@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -212,6 +213,9 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	 * 出让人智投订单号
 	 */
 	private String sellOrderId;
+
+	/** 债权结束状态 S-成功;F-失败;A-初始:W-未开始*/
+	private String stateSrch;
 
 	/**
 	 * 构造方法
@@ -562,5 +566,13 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 
 	public void setSellOrderId(String sellOrderId) {
 		this.sellOrderId = sellOrderId;
+	}
+
+	public String getStateSrch() {
+		return stateSrch;
+	}
+
+	public void setStateSrch(String stateSrch) {
+		this.stateSrch = stateSrch;
 	}
 }

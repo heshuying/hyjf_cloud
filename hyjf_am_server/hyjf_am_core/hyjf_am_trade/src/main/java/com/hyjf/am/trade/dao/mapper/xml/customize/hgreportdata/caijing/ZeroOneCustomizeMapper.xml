@@ -149,7 +149,10 @@
 		WHEN i.asset_attributes = 2 THEN '质押标'
 		ELSE '信用标'
 		END AS asset_type,
-		t.borrow_name as borrow_type,
+		CASE WHEN i.asset_attributes = 1 THEN '抵押标'
+		WHEN i.asset_attributes = 2 THEN '质押标'
+		ELSE '信用标'
+		END AS borrow_type,
 		CASE WHEN b.plan_nid is not NULL THEN '智投'
 		ELSE '散标' END AS product_type,
 		CASE WHEN s.`name` = '先息后本' THEN '月付息到期还本'
@@ -173,7 +176,6 @@
 		ELSE '其他' END AS attribute1
 		FROM ht_borrow b
 		LEFT JOIN ht_borrow_info i ON i.borrow_nid = b.borrow_nid
-		LEFT JOIN ht_borrow_project_type t ON t.borrow_cd = b.project_type
 		LEFT JOIN ht_borrow_style s ON s.nid = b.borrow_style
 		WHERE b.reverify_status = 6
 		AND b.reverify_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{dateStart},' 00:00:00'))

@@ -60,6 +60,7 @@ import java.util.*;
 public class LoginServiceImpl extends BaseUserServiceImpl implements LoginService {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
+	private static final String POINTS_DETAIL_URL = "/mine/credits";
 	@Value("${am.user.service.name}")
 	private String userService;
 
@@ -252,6 +253,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					+ (user.getRechargeSms() == null ? 0 : user.getRechargeSms())
 					+ (user.getRecieveSms() == null ? 0 : user.getRecieveSms());
 			result.setUserId(String.valueOf(userId));
+			// 积分商城，返回用户当前积分
+			result.setPointsCurrent(user.getPointsCurrent());
+			// 积分商城，返回前端积分明细H5 rul
+			result.setPointsDetailUrl(systemConfig.getAppServerHost().concat(POINTS_DETAIL_URL));
 			if (smsOpenStatus == 4) {
 				result.setSmsOpenStatus("0");
 			} else {

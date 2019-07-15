@@ -6,11 +6,15 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.HjhCreditTenderService;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.vo.fdd.FddDessenesitizationBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
@@ -34,7 +38,15 @@ import java.util.UUID;
  */
 @Service
 public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
-	
+
+	public static final String BASE_URL = "http://AM-ADMIN/am-trade";
+
+	/*结束债权*/
+	public static final String CREDITEND_URL = BASE_URL + "/bankCreditEndController/startCreditEnd";
+
+	@Autowired
+	private BaseClient baseClient;
+
     @Autowired
     private AmTradeClient amTradeClient;
     
@@ -100,9 +112,6 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 
 	/**
 	 * 传参查询承接债转表列总计
-	 * 
-	 * @param DebtCreditCustomize
-	 * @return
 	 */
 	@Override
 	public HjhCreditTenderSumVO getCalcSumByParam(HjhCreditTenderRequest form) {
@@ -130,5 +139,20 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 		}
 
 		return result;
+	}
+
+	/**
+	 * 结束债权
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public Response doCreditEnd(String orderId){
+		StartCreditEndRequest requestBean = new StartCreditEndRequest();
+		requestBean.setOrgOrderId(orderId);
+		requestBean.setCreditEndType(5);
+		requestBean.setStartFrom(3); //计划债转信息
+
+		return baseClient.postExeNoException(CREDITEND_URL, requestBean, IntegerResponse.class);
 	}
 }

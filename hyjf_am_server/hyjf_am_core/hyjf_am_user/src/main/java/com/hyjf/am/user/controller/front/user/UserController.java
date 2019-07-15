@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.TemplateDisposeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.CustomerServiceGroupConfigResponse;
@@ -21,6 +22,7 @@ import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.CustomerServiceGroupConfigVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
@@ -1144,9 +1146,6 @@ public class UserController extends BaseController {
 
         return response;
     }
-
-
-
     /**
      * 获取前一天注册的用户
      *
@@ -1252,5 +1251,40 @@ public class UserController extends BaseController {
             return response;
         }
         return null;
+    }
+    /**
+     * 根据渠道号检索渠道是否存在
+     *
+     * @param utmId
+     * @return
+     */
+    @RequestMapping("/getTemplateDispose/{templateId}")
+    public UserResponse getTemplateDispose(@PathVariable String templateId) {
+    	UserResponse ur=new UserResponse();
+    	TemplateDisposeVO td=userService.getTemplateDispose(templateId);
+    	ur.setTemplateDispose(td);
+        return ur;
+    }
+
+    /**
+     * 根据着陆页id查找移动端着陆页配置 add by nxl
+     * @param landingId
+     * @return
+     */
+    @GetMapping("/selectTemplateDisposeById/{landingId}")
+    public UserResponse selectTemplateDisposeById(@PathVariable Integer landingId){
+        UserResponse response = new UserResponse();
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        TemplateDisposeVO templateDisposeVO = new TemplateDisposeVO();
+        TemplateDispose templateDispose =userService.selectTemplateDisposeById(landingId);
+        if(null!=templateDispose){
+            BeanUtils.copyProperties(templateDispose, templateDisposeVO);
+//            response.setResult(templateDisposeVO);
+            response.setTemplateDispose(templateDisposeVO);
+            response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
+        }
+        return response;
     }
 }

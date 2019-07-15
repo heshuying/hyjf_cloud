@@ -335,6 +335,18 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     }
 
     @Override
+    public BorrowRecover getBorrowRecoverByNid(String nid) {
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria crt = example.createCriteria();
+        crt.andNidEqualTo(nid);
+        List<BorrowRecover> borrowRecovers = borrowRecoverMapper.selectByExample(example);
+        if(borrowRecovers!=null && !borrowRecovers.isEmpty()){
+            return borrowRecovers.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public List<BorrowRecoverPlan> getBorrowRecoverPlan(String nid, int period) {
         BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
         BorrowRecoverPlanExample.Criteria crt = example.createCriteria();
