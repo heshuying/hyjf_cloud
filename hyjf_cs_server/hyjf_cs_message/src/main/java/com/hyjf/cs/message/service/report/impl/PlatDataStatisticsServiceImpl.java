@@ -40,6 +40,7 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
         if (entity != null) {
             return entity.getTotalInvestAmount();
         }
+
         return BigDecimal.ZERO;
     }
 

@@ -3,10 +3,11 @@ package com.hyjf.common.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.TabularData;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Auther:yangchangwei
@@ -61,6 +62,116 @@ public  class ConvertUtils {
         }catch (Exception e){
             logger.error(e.getMessage());
         }
+        return mapParam;
+    }
+
+    public static List<Object> getAllFiledList(Class T){
+        Field[] fs = T.getDeclaredFields();
+        ArrayList fileList = new ArrayList(Arrays.asList(fs));
+        Class tempClass = T;
+        while (tempClass != null){
+            Class superClass = tempClass.getSuperclass();
+            if(superClass != null){
+                Field[] declaredFields = superClass.getDeclaredFields();
+                ArrayList fList = new ArrayList(Arrays.asList(declaredFields));
+                fileList.addAll(fList);
+            }
+            tempClass = superClass;
+        }
+        return fileList;
+    }
+
+    /**
+     * 将实体类转换成对应的基本类型的jsonMap
+     * 增加对参数类中包含其他类的处理
+     * add by cwyang
+     * @param bean
+     * @return
+     */
+    public static Map convertObjectToJsonMap(Object bean){
+
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        try {
+            Class beanClass = bean.getClass();
+            Field[] fs = beanClass.getDeclaredFields();
+            for(int i = 0 ; i < fs.length; i++){
+                try{
+                    Field f = fs[i];
+                    f.setAccessible(true); //设置些属性是可以访问的
+                    Class<?> fType = f.getType();
+                    boolean flag = isNotSurperType(fType);
+                    if(flag){//处理不支持的类型
+                        Map map = convertObjectToJsonMap(f.get(bean));
+                        mapParam.put(f.getName(),map);
+                    }else{
+                        if(String.class.isAssignableFrom(fType)){
+                            mapParam.put(f.getName(),f.get(bean)==null?"":f.get(bean));
+                        }else if(Number.class.isAssignableFrom(fType)){
+                            mapParam.put(f.getName(),f.get(bean)==null?0:f.get(bean));
+                        }else{
+                            mapParam.put(f.getName(),f.get(bean));
+                        }
+                    }
+                }catch (Exception e){
+                    logger.error(e.getMessage());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+
+        return mapParam;
+    }
+
+    /**
+     * 判断是否为JsonUtils不支持的类型
+     * @param fType
+     * @return
+     */
+    private static boolean isNotSurperType(Class fType) {
+        if(String.class.isAssignableFrom(fType) || Number.class.isAssignableFrom(fType) || Boolean.class.isAssignableFrom(fType)
+                || Date.class.isAssignableFrom(fType)|| Collection.class.isAssignableFrom(fType) || Throwable.class.isAssignableFrom(fType)
+                || int[].class.isAssignableFrom(fType) || long[].class.isAssignableFrom(fType) || TabularData.class.isAssignableFrom(fType)
+                || CompositeData.class.isAssignableFrom(fType) || Map.class.isAssignableFrom(fType)){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 只转换非空字段
+     * @param bean
+     * @return
+     */
+    public static Map convertNonNullObjectToJsonMap(Object bean){
+
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        try {
+            List<Object> fileList = getAllFiledList(bean.getClass());
+            for(int i = 0 ; i < fileList.size(); i++){
+                try{
+                    Field f = (Field) fileList.get(i);
+                    f.setAccessible(true); //设置些属性是可以访问的
+                    Class<?> fType = f.getType();
+                    boolean flag = isNotSurperType(fType);
+                    if(flag){//处理不支持的类型
+                        Map map = convertObjectToJsonMap(f.get(bean));
+                        mapParam.put(f.getName(),map);
+                    }else{
+                        if (f.get(bean) != null){
+                            mapParam.put(f.getName(),f.get(bean));
+                        }
+                    }
+                }catch (Exception e){
+                    logger.error(e.getMessage());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+
         return mapParam;
     }
 
