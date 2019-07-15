@@ -137,7 +137,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
         }else{
             //判断是否已还款
             if(borrowVO.getReverifyStatus()!=6){
-                return new AdminResult(BaseResult.FAIL, "未方放款状态，不能能申请！");
+                return new AdminResult(BaseResult.FAIL, "标的未放款,无法下载协议");
             }
             //判断是否已经申请
             ApplyBorrowAgreementRequest applyBorrowAgreementRequest =  new ApplyBorrowAgreementRequest();
@@ -159,11 +159,14 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             int orderNumber = amTradeClient.getTotalTenderCountByBorrowNid(borrowId);
             //对应的编号的标生成协议记录
             List<TenderAgreementVO>  applyAgreementlist = amTradeClient.getTenderAgreementByBorrowNid(borrowId);
+            logger.info("--------------------下载文件签署下载成功状态的协议:"+JSONObject.toJSON(applyAgreementlist));
             if(applyAgreementlist!=null && applyAgreementlist.size()>0){
                 for (TenderAgreementVO tenderAgreementVO:applyAgreementlist) {
                     //下载成功状态的协议份数
+                    logger.info("--------------------下载成功状态的协议getStatus:"+tenderAgreementVO.getStatus());
                     if(tenderAgreementVO.getStatus()==3){
                         agreementNumber = agreementNumber +1 ;
+                        logger.info("--------------------下载成功状态的协议份数:"+agreementNumber);
                     }
                 }
                 if(agreementNumber==0){
@@ -171,6 +174,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                 }else {
                     applyBorrowAgreementVO.setOrderNumber(orderNumber);
                     applyBorrowAgreementVO.setAgreementNumber(agreementNumber);
+                    logger.info("--------------------执行更新协议记录操作:"+JSONObject.toJSON(applyBorrowAgreementVO));
                     amTradeClient.saveApplyBorrowAgreement(applyBorrowAgreementVO);
                 }
             }else{
@@ -200,7 +204,8 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
             for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
-                if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+                //下载状态是成功的协议
+                if(tenderAgreement.getStatus()==3){
                     if("1".equals(status)){
                         logger.info("--------------------下载文件签署,脱敏");
                         File file = createFaddPDFImgFile(tenderAgreement);
