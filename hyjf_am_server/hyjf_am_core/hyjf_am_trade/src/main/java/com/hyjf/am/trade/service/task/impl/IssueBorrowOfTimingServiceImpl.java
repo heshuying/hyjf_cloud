@@ -42,9 +42,6 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		logger.info("定时发标项目标的:[" + borrowNid + "]");
 		// 标的自动发标
 		boolean flag = this.updateOntimeSendBorrow(borrowCustomize);
-		if (borrowNid.equals("SDK19070024")) {
-			flag = false;
-		}
 		if (!flag) {
 			// 如果更新失败 删除redis
 			// 标的定时独占锁key
