@@ -30,6 +30,9 @@ public class RegistLandingPageCommitRequestBean extends BaseRequestBean {
     private String newRegVerifyCode;
     @ApiModelProperty(value = "验证码")
     private String verificationType;
+    // 着陆页id add by nxl
+    @ApiModelProperty(value = "着陆页id")
+    private String landingId;
 
     public String getMobile() {
         return mobile;
@@ -101,5 +104,13 @@ public class RegistLandingPageCommitRequestBean extends BaseRequestBean {
 
     public void setVerificationType(String verificationType) {
         this.verificationType = verificationType;
+    }
+
+    public String getLandingId() {
+        return landingId;
+    }
+
+    public void setLandingId(String landingId) {
+        this.landingId = landingId;
     }
 }

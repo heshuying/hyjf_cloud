@@ -14,10 +14,7 @@ import com.hyjf.am.response.message.UserOperationLogResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
-import com.hyjf.am.resquest.message.MessagePushMsgRequest;
-import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.am.resquest.message.OperationReportRequest;
-import com.hyjf.am.resquest.message.SmsLogRequest;
+import com.hyjf.am.resquest.message.*;
 import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
@@ -328,4 +325,32 @@ public interface CsMessageClient {
     CaiJingLogResponse queryCaiJingLog(CaiJingLogRequest request);
 
     BooleanResponse reQueryCaiJingLog(CaiJingLogRequest request);
+
+    /**
+     * 获取客户服务列表
+     * @param request
+     * @return
+     */
+    CustomerServerResponse getServerList(JcCustomerServerRequest request);
+
+    /**
+     * 添加客户服务
+     * @param request
+     * @return
+     */
+    CustomerServerResponse addCustomerServer(JcCustomerServerRequest request);
+
+    /**
+     * 根据id查询客户服务
+     * @param id
+     * @return
+     */
+    CustomerServerResponse getCustomerServer(String id);
+
+    /**
+     * 修改客户服务信息
+     * @param request
+     * @return
+     */
+    CustomerServerResponse updateCustomerServer(JcCustomerServerRequest request);
 }

@@ -515,6 +515,12 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             case 6:
                 statusName = "流标";
                 break;
+            case 7:
+                statusName = "待授权";
+                break;
+            case 8:
+                statusName = "逾期中";
+                break;
             default:
                 statusName = "";
         }

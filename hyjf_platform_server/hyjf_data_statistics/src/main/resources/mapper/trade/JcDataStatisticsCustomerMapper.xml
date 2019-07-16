@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyjf.data.trade.mapper.JcDataStatisticsCustomerMapper">
+
+
+    <select id="getUserMonthInterest" resultType="java.math.BigDecimal">
+        SELECT
+            ifnull(
+                (
+                    SELECT
+                    SUM(hbr.recover_interest_yes)
+                    FROM
+                    ht_borrow_recover hbr
+                    INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+                    WHERE
+                    hbr.recover_yestime  <![CDATA[ >= ]]> UNIX_TIMESTAMP(#{beginDate})
+                    AND hbr.accede_order_id IS NULL
+                    AND hbr.recover_yestime <![CDATA[ <  ]]> UNIX_TIMESTAMP(#{endDate})
+
+                    AND(
+                    hb.borrow_style = 'endday'
+                    OR hb.borrow_style = 'end'
+                    )
+                ) ,
+                0
+            ) + ifnull(
+                (
+                    SELECT
+                    SUM(hbrp.recover_interest_yes)
+                    FROM
+                    ht_borrow_recover_plan hbrp
+                    INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+                    WHERE
+                    hbrp.recover_yestime  <![CDATA[ >= ]]>  UNIX_TIMESTAMP(#{beginDate})
+                    AND hbrp.accede_order_id IS NULL
+                    AND hbrp.recover_yestime  <![CDATA[ <  ]]> UNIX_TIMESTAMP(#{endDate})
+                    AND(
+                    hb.borrow_style = 'month'
+                    OR hb.borrow_style = 'endmonth'
+                    )
+                ) ,
+                0
+            ) + ifnull(
+                (
+                    SELECT
+                    sum(received_interest)
+                    FROM
+                    ht_hjh_accede
+                    WHERE
+                    acctual_payment_time  <![CDATA[ >= ]]> UNIX_TIMESTAMP(#{beginDate})
+                    AND acctual_payment_time  <![CDATA[ <  ]]> UNIX_TIMESTAMP(#{endDate})
+                ) ,
+                0
+            ) AS sumAccount
+    </select>
+
+    <select id="getSexDistributed" resultType="com.hyjf.data.trade.entity.SexDistributedInfo">
+
+        SELECT
+            ui.sex AS sex ,
+            count(1) AS count
+            FROM
+                (
+                SELECT
+                    br.user_id
+                    FROM
+                    hyjf_trade.ht_borrow_tender br
+                    WHERE
+                    br.create_time <![CDATA[ <= ]]>  #{endDate}
+                    AND br.create_time <![CDATA[ >= ]]> #{beginDate}
+		            AND br.accede_order_id is NULL
+                UNION
+                SELECT
+                    user_id
+                    FROM
+                    hyjf_trade.ht_credit_tender
+                    WHERE
+                    create_time <![CDATA[ <= ]]> #{endDate}
+                    AND create_time <![CDATA[ >= ]]> #{beginDate}
+                UNION
+                SELECT
+                user_id
+                FROM
+                hyjf_trade.ht_hjh_accede
+                WHERE
+                    create_time <![CDATA[ <= ]]> #{endDate}
+                    AND create_time <![CDATA[ >= ]]> #{beginDate}
+                ) t
+            LEFT JOIN hyjf_user.ht_user u ON t.user_id = u.user_id
+            LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+            WHERE
+            ui.sex = 2
+            OR ui.sex = 1
+        GROUP BY
+        ui.sex;
+
+    </select>
+</mapper>
