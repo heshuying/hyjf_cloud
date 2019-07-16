@@ -2446,7 +2446,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UtmPlatResponse getAllUtmPlat2(Map<String, Object> map) {
+		UtmPlatResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat2", map, UtmPlatResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 	@Override
 	public void insertUtmList(List<ChannelCustomizeVO> voList) {
 		ChannelRequest request = new ChannelRequest();
@@ -3199,13 +3207,13 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public Boolean deleteTemplate(int tempId) {
+	public TemplateConfigResponse deleteTemplate(int tempId) {
 		String url = "http://AM-ADMIN/am-user/landing/deleteTemplate/"+tempId ;
-		IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
-		if (response != null && Response.isSuccess(response)) {
-			return true;
+		TemplateConfigResponse response = restTemplate.getForEntity(url,TemplateConfigResponse.class).getBody();
+		if (response != null) {
+			return response;
 		}
-		return false;
+		return null;
 	}
 	/**
 	 * 查询着陆页配置

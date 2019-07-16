@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.promotion;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,8 @@ import com.hyjf.am.response.user.TemplateConfigResponse;
 import com.hyjf.am.resquest.admin.TemplateDisposeRequest;
 import com.hyjf.am.resquest.user.LandingManagerRequest;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
+import com.hyjf.am.vo.user.TemplateConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 
 import io.swagger.annotations.Api;
@@ -83,23 +86,44 @@ public class TemplateDisposeController extends BaseController{
         // 注册渠道
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
+        RegistRecordResponse registRecordResponse2 = registRecordService.findUtmAll2(registerRcordeRequest);
         LandingManagerRequest landingManagerRequest=new LandingManagerRequest();
         landingManagerRequest.setCurrPage(1);
         landingManagerRequest.setPageSize(1000);
-        landingManagerRequest.setStatus(1);
+        //landingManagerRequest.setStatus(1);
 		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
-		
-		tdr.setTemplateConfigList(templateConfigResponse.getResultList());
 		tdr.setUserRoles( registRecordResponse.getUtmPlatVOList());
+		tdr.setUserRoles2( registRecordResponse2.getUtmPlatVOList());
         Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
         List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
         tdr.setListUserRoles(listUserRoles);
-		
+		List<TemplateConfigVO> configList=new ArrayList<TemplateConfigVO>();
+		if(templateConfigResponse!=null) {
+			configList = templateConfigResponse.getResultList();
+			List<TemplateConfigVO> configList2=new ArrayList<TemplateConfigVO>();
+			for (TemplateConfigVO templateConfigVO : configList) {
+				if(templateConfigVO.getStatus()==1) {
+					configList2.add(templateConfigVO);
+				}
+			}
+			tdr.setTemplateConfigList(configList2);
+		}else {
+			return new AdminResult(tdr);
+		}
+				
 		if(templateDisposeRequest.getId()!=null) {
 			templateDisposeRequest.setCurrPage(1);
 			templateDisposeRequest.setPageSize(1);
 			TemplateDisposeResponse templateDisposeResponse=templateDisposeService.templateDisposeList(templateDisposeRequest);
 			tdr.setResult(templateDisposeResponse.getResultList().get(0));
+			TemplateDisposeVO tr = (TemplateDisposeVO) templateDisposeResponse.getResultList().get(0);
+			tdr.setFlag(0);
+			for (TemplateConfigVO templateConfigVO : configList) {
+				if(tr.getTempName().equals(templateConfigVO.getTempName())) {
+					tdr.setFlag(1);
+				}
+			}
+			
 		}
 
         return new AdminResult(tdr);
@@ -118,10 +142,10 @@ public class TemplateDisposeController extends BaseController{
  	 */
 	@PostMapping("/updateTemplateDispose")
 	public AdminResult updateTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
-		String[] temp = templateDisposeRequest.getTempName().split("\\|");
+//		String[] temp = templateDisposeRequest.getTempName().split("\\|");
 		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
-		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
-		templateDisposeRequest.setTempName(temp[1]);
+		templateDisposeRequest.setTempId(1);
+//		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUpdateTime(new Date());
@@ -140,10 +164,10 @@ public class TemplateDisposeController extends BaseController{
  	 */
 	@PostMapping("/insertTemplateDispose")
 	public AdminResult insertTemplateDispose(@RequestBody  TemplateDisposeRequest templateDisposeRequest, HttpServletRequest request) {
-		String[] temp = templateDisposeRequest.getTempName().split("\\|");
+//		String[] temp = templateDisposeRequest.getTempName().split("\\|");
 		String[] utm = templateDisposeRequest.getUtmName().split("\\|");
-		templateDisposeRequest.setTempId(Integer.valueOf(temp[0]));
-		templateDisposeRequest.setTempName(temp[1]);
+		templateDisposeRequest.setTempId(1);
+//		templateDisposeRequest.setTempName(temp[1]);
 		templateDisposeRequest.setUtmId(Integer.valueOf(utm[0]));
 		templateDisposeRequest.setUtmName(utm[1]);
 		templateDisposeRequest.setUrl(systemConfig.getWechatHost()+"/landingPage?utm_id="+templateDisposeRequest.getUtmId()+"&tId=");

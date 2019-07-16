@@ -130,6 +130,9 @@ public class LandingManagerRequest extends BasePage {
     //当前登录用户
     private String loginUserId;
 
+    //模板名称是否模糊查找
+    private Boolean isVague;
+
     public String getStartTime() {
         return startTime;
     }
@@ -280,5 +283,13 @@ public class LandingManagerRequest extends BasePage {
 
     public void setIsJumt(Integer isJumt) {
         this.isJumt = isJumt;
+    }
+
+    public Boolean getVague() {
+        return isVague;
+    }
+
+    public void setVague(Boolean vague) {
+        isVague = vague;
     }
 }

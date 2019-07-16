@@ -63,7 +63,26 @@ public class RegistRecordServiceImpl implements RegistRecordService {
         registRecordResponse.setUtmPlatVOList(utmPlatVOList);
         return registRecordResponse;
     }
-
+    /**
+     * 获取所有渠道（有效）
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public RegistRecordResponse findUtmAll2(RegistRcordRequest request) {
+        RegistRecordResponse registRecordResponse = new RegistRecordResponse();
+        Map<String, Object> map = new HashMap<>();
+        // 只查询有效数据
+        map.put("delFlag", 0);
+        UtmPlatResponse utmPlatResponse = registRecordClient.getAllUtmPlat2(map);
+        List<UtmPlatVO> utmPlatVOList = new ArrayList<UtmPlatVO>();
+        if (null != utmPlatResponse) {
+            utmPlatVOList = utmPlatResponse.getResultList();
+        }
+        registRecordResponse.setUtmPlatVOList(utmPlatVOList);
+        return registRecordResponse;
+    }
     /**
      * 获取所有渠道（只查询有效数据且为pc的数据）
      *
