@@ -61,7 +61,7 @@
         WHERE
             utm.utm_id = #{utmId};
     </select>
- 	<select id="selectUtmPlat" parameterType="int" resultType="">
+ 	<select id="selectUtmPlat" parameterType="int" resultMap="BaseResultMap">
 		SELECT
 			utm_id AS source_id,
 			up.source_name 
