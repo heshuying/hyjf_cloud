@@ -319,12 +319,20 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("staticHjhIssueTime","智投服务更新时间  10:00");
         // add by liushouyi 新增固定发标时间提醒 end
 
+
+        // add by pcc 首页预留一个悬浮广告按钮  start
+        info.put("floatADSwitch",RedisUtils.get(RedisConstants.FLOATADSWITCH)!=null?RedisUtils.get(RedisConstants.FLOATADSWITCH):Boolean.FALSE);//浮动广告开关 bool型
+        info.put("floatADUrl",RedisUtils.get(RedisConstants.FLOATADURL)!=null?RedisUtils.get(RedisConstants.FLOATADURL):"");//浮动广告跳转地址 string
+        info.put("floatADPicUrl",RedisUtils.get(RedisConstants.FLOATADPICURL)!=null?RedisUtils.get(RedisConstants.FLOATADPICURL):"");//浮动广告图片地址 string
+        // add by pcc 首页预留一个悬浮广告按钮  end
+
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(CustomConstants.APP_REQUEST,
                 ProjectConstant.REQUEST_HOME + HomePageDefine.REQUEST_MAPPING + HomePageDefine.PROJECT_LIST_ACTION);
 
         CommonUtils.convertNullToEmptyString(info);
+
         return info;
     }
 

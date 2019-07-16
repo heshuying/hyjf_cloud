@@ -2062,7 +2062,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2073,7 +2073,7 @@
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
+
         <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
@@ -2138,5 +2138,12 @@
             <columnOverride column="points_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+
+        <table tableName="ht_apply_borrow_agreement" domainObjectName="ApplyBorrowAgreement">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>

@@ -22,6 +22,11 @@ import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.resquest.message.*;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
+import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -520,6 +525,42 @@ public class CsMessageClientImpl implements CsMessageClient {
         }
         if ("提前还款".equals(logType)) {
             BooleanResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/zeroOneCaiJingController/advancedRepay/" + startDate + "/" + endDate, BooleanResponse.class);
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CustomerServerResponse getServerList(JcCustomerServerRequest request) {
+        CustomerServerResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/customerServer/serverList", request, CustomerServerResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CustomerServerResponse addCustomerServer(JcCustomerServerRequest request) {
+        CustomerServerResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/customerServer/addCustomerServer", request, CustomerServerResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CustomerServerResponse getCustomerServer(String id) {
+        CustomerServerResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/customerServer/getCustomerServer/" + id, CustomerServerResponse.class);
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CustomerServerResponse updateCustomerServer(JcCustomerServerRequest request) {
+        CustomerServerResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/customerServer/updateCustomerServer", request, CustomerServerResponse.class).getBody();
+        if (response != null) {
             return response;
         }
         return null;

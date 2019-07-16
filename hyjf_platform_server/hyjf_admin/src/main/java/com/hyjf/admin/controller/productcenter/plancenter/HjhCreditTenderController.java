@@ -520,6 +520,7 @@ public class HjhCreditTenderController extends BaseController{
             bean.setTenderType(3);
             bean.setAssignNid(assignNid);
             bean.setOrdid(assignNid);
+            bean.setBorrowNid(tenderAgreement.getBorrowNid());
             /*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
 			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
         }

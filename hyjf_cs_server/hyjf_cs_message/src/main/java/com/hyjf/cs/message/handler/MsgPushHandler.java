@@ -382,7 +382,7 @@ public class MsgPushHandler {
 						errorMsg = "该用户设备不存在";
 					} else {
 						// 别名发送
-						logger.debug("alias is :{}, packageCode is :{}, client is: {}", alias, packageCode, userAliasVO.getClient());
+						logger.info("alias is :{}, packageCode is :{}, client is: {}", alias, packageCode, userAliasVO.getClient());
 						customizePushResult = sendMessageToAlias(msg, alias, userAliasVO.getClient(), packageCode);
 					}
 				} else {
