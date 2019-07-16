@@ -34,8 +34,8 @@ public class TemplateDisposeServiceImpl implements TemplateDisposeService {
 		if(templateDisposeRequest.getId()!=null) {
 			cr.andIdEqualTo(templateDisposeRequest.getId());
 		}
-		if(templateDisposeRequest.getUtmId()!=null) {
-			cr.andUtmIdEqualTo(templateDisposeRequest.getUtmId());
+		if(templateDisposeRequest.getUtmName()!=null) {
+			cr.andUtmNameEqualTo(templateDisposeRequest.getUtmName());
 		}
 		if(templateDisposeRequest.getStatus()!=null) {
 			cr.andStatusEqualTo(templateDisposeRequest.getStatus());
