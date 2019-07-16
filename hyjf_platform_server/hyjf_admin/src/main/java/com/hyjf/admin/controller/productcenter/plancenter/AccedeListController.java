@@ -1169,7 +1169,6 @@ public class AccedeListController extends BaseController{
 			bean.setSignDate(accede.getCountInterestTime());
 			bean.setPlanStartDate(accede.getCountInterestTime());
 			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(Integer.valueOf(accede.getQuitTime())));
-			bean.setBorrowNid(tenderAgreement.getBorrowNid());
 			bean.setTenderInterestFmt(String.valueOf(accede.getWaitTotal()));
 			// 法大大生成合同接口
 			/*this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
