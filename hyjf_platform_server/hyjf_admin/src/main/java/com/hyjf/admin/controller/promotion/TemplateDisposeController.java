@@ -86,12 +86,14 @@ public class TemplateDisposeController extends BaseController{
         // 注册渠道
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
+        RegistRecordResponse registRecordResponse2 = registRecordService.findUtmAll2(registerRcordeRequest);
         LandingManagerRequest landingManagerRequest=new LandingManagerRequest();
         landingManagerRequest.setCurrPage(1);
         landingManagerRequest.setPageSize(1000);
         //landingManagerRequest.setStatus(1);
 		TemplateConfigResponse templateConfigResponse = landingManagerService.selectTempConfigList(landingManagerRequest);
 		tdr.setUserRoles( registRecordResponse.getUtmPlatVOList());
+		tdr.setUserRoles2( registRecordResponse2.getUtmPlatVOList());
         Map<String, String> userRoles = CacheUtil.getParamNameMap("TEMP_TYPE");
         List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
         tdr.setListUserRoles(listUserRoles);

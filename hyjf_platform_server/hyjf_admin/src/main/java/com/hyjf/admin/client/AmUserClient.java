@@ -1605,4 +1605,6 @@ public interface AmUserClient {
 	TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
 
 	TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
+
+	UtmPlatResponse getAllUtmPlat2(Map<String, Object> map);
 }

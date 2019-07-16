@@ -2446,7 +2446,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UtmPlatResponse getAllUtmPlat2(Map<String, Object> map) {
+		UtmPlatResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat2", map, UtmPlatResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 	@Override
 	public void insertUtmList(List<ChannelCustomizeVO> voList) {
 		ChannelRequest request = new ChannelRequest();

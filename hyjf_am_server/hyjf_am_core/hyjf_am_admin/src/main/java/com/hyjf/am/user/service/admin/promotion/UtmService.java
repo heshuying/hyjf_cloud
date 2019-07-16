@@ -233,4 +233,6 @@ public interface UtmService extends BaseService {
      * @return
      */
     List<Integer> searchUserIdList(int sourceType);
+
+	List<UtmPlatVO> getUtmPlatByParam2(Map<String, Object> map);
 }

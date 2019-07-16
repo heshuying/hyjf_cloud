@@ -16,7 +16,7 @@ public class TemplateDisposeResponse<T> extends AdminResponse<TemplateDisposeVO>
 	
 	
 	private List<UtmPlatVO> userRoles;
-	
+	private List<UtmPlatVO> userRoles2;
 	private List<TemplateConfigVO>	templateConfigList;
 	private List<T> listUserRoles;
 	private TemplateConfigVO templateConfig;
@@ -28,6 +28,15 @@ public class TemplateDisposeResponse<T> extends AdminResponse<TemplateDisposeVO>
     private Integer flag;
 	
     
+    
+	public List<UtmPlatVO> getUserRoles2() {
+		return userRoles2;
+	}
+
+	public void setUserRoles2(List<UtmPlatVO> userRoles2) {
+		this.userRoles2 = userRoles2;
+	}
+
 	public Integer getFlag() {
 		return flag;
 	}
