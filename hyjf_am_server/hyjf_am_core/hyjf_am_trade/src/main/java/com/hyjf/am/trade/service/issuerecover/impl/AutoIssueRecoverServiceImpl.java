@@ -103,6 +103,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
 	@Override
 	public boolean insertSendBorrow(HjhPlanAsset hjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType) {
+		String dayUsedKey = RedisConstants.DAY_USED + hjhPlanAsset.getInstCode() + "_" + GetDate.getDate("yyyyMMdd");
+		String monthKey = RedisConstants.MONTH_USED + hjhPlanAsset.getInstCode() + "_" + GetDate.getDate("yyyyMM");
 		// 验证资产风险保证金是否足够（redis）
 		Integer checkResult = updateAndCheckAssetCanSend(hjhPlanAsset);
 		if (checkResult == -1) {
@@ -119,7 +121,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			// end
 			return false;
 		}
-
+		BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
 		// 获取管理费率，服务费率，自动发标费率
 		// 项目类型(code):从hyjf_hjh_asset_borrowtype 取code 现金贷
 		String projectCd = hjhAssetBorrowType.getBorrowCd() + "";
@@ -130,12 +132,18 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 				hjhPlanAsset.getAssetType(), borrowStyle, hjhPlanAsset.getBorrowPeriod());
 		if (borrowFinmanNewCharge == null || borrowFinmanNewCharge.getAutoBorrowApr() == null) {
 			logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败 ,没有取到项目费率");
+			RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+			RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
+			this.updateForSend(hjhPlanAsset.getInstCode(),assetAcount.negate());
 			return false;
 		}
 
 		// 录标 a. 根据表配置判断发标项目类型
 		if (!insertRecord(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge)) {
 			logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败");
+			RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+			RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
+			this.updateForSend(hjhPlanAsset.getInstCode(),assetAcount.negate());
 			return false;
 		}
 
