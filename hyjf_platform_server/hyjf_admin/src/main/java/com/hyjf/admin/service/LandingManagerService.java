@@ -37,5 +37,5 @@ public interface LandingManagerService {
      * @param tempId
      * @return
      */
-    Boolean deleteTemplate(int tempId);
+    TemplateConfigResponse deleteTemplate(int tempId);
    }

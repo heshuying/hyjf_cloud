@@ -3,8 +3,10 @@ package com.hyjf.am.user.service.admin.promotion.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.TemplateConfigResponse;
 import com.hyjf.am.resquest.user.LandingManagerRequest;
+import com.hyjf.am.user.dao.mapper.auto.TemplateDisposeMapper;
 import com.hyjf.am.user.dao.model.auto.TemplateConfig;
 import com.hyjf.am.user.dao.model.auto.TemplateConfigExample;
+import com.hyjf.am.user.dao.model.auto.TemplateDisposeExample;
 import com.hyjf.am.user.service.admin.promotion.LandingManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.TemplateConfigVO;
@@ -14,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -30,7 +33,8 @@ import java.util.List;
 public class LandingManagerServiceImpl extends BaseServiceImpl implements LandingManagerService {
 
     private static final Logger logger = LoggerFactory.getLogger(LandingManagerServiceImpl.class);
-
+	@Autowired
+	TemplateDisposeMapper templateDisposeMapper;
     /**
      * 根据查询条件查询着陆页列表
      *
@@ -52,7 +56,13 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
         }
         //模板名称
         if (StringUtils.isNotBlank(request.getTempName())) {
-            criteria.andTempNameLike(request.getTempName() + "%");
+            if(!request.getVague()){
+                //如果此值为false，则完全查找
+                criteria.andTempNameEqualTo(request.getTempName());
+            }else{
+                //模板名称模糊查找
+                criteria.andTempNameLike(request.getTempName() + "%");
+            }
         }
         //模板类型
         if (request.getTempType() != null) {
@@ -164,4 +174,11 @@ public class LandingManagerServiceImpl extends BaseServiceImpl implements Landin
         templateConfigMapper.deleteByPrimaryKey(temId);
         return 1;
     }
+    @Override
+    public int deleteTemplateCount(int temId){
+        TemplateDisposeExample example=new TemplateDisposeExample();
+        example.or().andTempIdEqualTo(temId);
+		return templateDisposeMapper.countByExample(example);
+    }
+    
 }
