@@ -61,7 +61,7 @@
         WHERE
             utm.utm_id = #{utmId};
     </select>
- 	<select id="selectUtmPlat" parameterType="int" resultMap="BaseResultMap">
+ 	<select id="selectUtmPlat" parameterType="int" resultType="">
 		SELECT
 			utm_id AS source_id,
 			up.source_name 
@@ -69,7 +69,7 @@
 			ht_utm ut
 			LEFT JOIN ht_utm_plat up ON ut.source_id = up.source_id 
 		WHERE
-			ut.STATUS = 1 
+			ut.STATUS = 0 
 			AND up.del_flag =0
 	 </select>
 </mapper>
