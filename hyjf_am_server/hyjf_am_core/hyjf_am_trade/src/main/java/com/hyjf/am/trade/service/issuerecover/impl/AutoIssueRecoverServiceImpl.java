@@ -138,14 +138,22 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			return false;
 		}
 
-		// 录标 a. 根据表配置判断发标项目类型
-		if (!insertRecord(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge)) {
-			logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败");
-			RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
-			RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
-			this.updateForSend(hjhPlanAsset.getInstCode(),assetAcount.negate());
-			return false;
-		}
+		try {
+            // 录标 a. 根据表配置判断发标项目类型
+            if (!insertRecord(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge)) {
+                logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败");
+                RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+                RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
+                this.updateForSend(hjhPlanAsset.getInstCode(),assetAcount.negate());
+                return false;
+            }
+        }catch (Exception e){
+            logger.error("资产编号：" + hjhPlanAsset.getAssetId() + " 录标异常", e);
+            RedisUtils.add(dayUsedKey, "-" + hjhPlanAsset.getAccount());
+            RedisUtils.add(monthKey, "-" + hjhPlanAsset.getAccount());
+            this.updateForSend(hjhPlanAsset.getInstCode(),assetAcount.negate());
+            return false;
+        }
 
 		return true;
 	}
