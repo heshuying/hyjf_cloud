@@ -51,8 +51,8 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + CustomConstants.COLON + borrowNid;
 			RedisUtils.del(onTimeStatusKey);
 			// 删除标的金额redis
-			String borrowRedisKey = RedisConstants.BORROW_NID + borrowNid;
-			RedisUtils.del(borrowRedisKey);
+			//String borrowRedisKey = RedisConstants.BORROW_NID + borrowNid;
+			//RedisUtils.del(borrowRedisKey);
 			throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 		}
 		// 散标自动发标成功发送mq到合规上报数据
