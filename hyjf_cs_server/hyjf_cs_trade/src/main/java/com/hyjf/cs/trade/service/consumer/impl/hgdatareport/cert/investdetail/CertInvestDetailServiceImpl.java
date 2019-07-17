@@ -334,8 +334,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             }
             creditInterest=hjhDebtCreditRepays.get(0).getReceiveInterestYes();
             creditCapital=hjhDebtCreditRepays.get(0).getReceiveCapitalYes();
-            HjhDebtCreditVO hjhDebtCreditVO=amTradeClient.selectHjhDebtCreditByCreditNid(hjhDebtCreditRepays.get(0).getCreditNid());
-            sourceFinancingCode=hjhDebtCreditVO.getPlanNid();
+            sourceFinancingCode=hjhDebtCreditRepays.get(0).getAssignPlanNid();
         }else{
             //散标
             CertRequest certRequest=new CertRequest();
