@@ -3,6 +3,8 @@ package com.hyjf.wbs.exceptions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.wbs.qvo.WbsCommonVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,6 +55,17 @@ public class WbsGlobalExceptionHandler {
 		result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
 		logger.warn("catch chech exception, result is: {}", result);
 		return result;
+	}
+
+	@ExceptionHandler(WbsFundDetailsException.class)
+	@ResponseBody
+	public WbsCommonVO fundDetailsExceptionHandler(HttpServletRequest request,WbsFundDetailsException ex){
+		logger.error("资金明细接口异常！", ex);
+		WbsCommonVO vo=new WbsCommonVO();
+		vo.setCode(Response.ERROR);
+		vo.setMsg(ex.getMessage());
+		vo.setData("");
+		return vo;
 	}
 
 }

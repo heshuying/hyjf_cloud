@@ -10,9 +10,17 @@ package com.hyjf.wbs.qvo;
  */
 public class WbsCommonVO {
 
+    public static final String SUCCESS = "0";
+    public static final String SUCCESS_MSG = "成功";
+
     private  String code;
     private String msg;
     private Object data;
+
+    public WbsCommonVO() {
+        this.code=SUCCESS;
+        this.msg=SUCCESS_MSG;
+    }
 
     public String getCode() {
         return code;
