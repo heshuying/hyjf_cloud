@@ -48,4 +48,23 @@ public interface CertService {
      * @param id
      */
     void updateCertErrorCount(Integer id);
+    /**
+     * 根据id修改对账状态
+     * @param id
+     * @return
+     */
+    int updateCertLogById(Integer id);
+    /**
+     * 批量修改对账状态
+     * @param ids
+     * @param certLog
+     * @return
+     */
+    int batchUpdateCertLogByIds(List<Integer> ids,CertLog certLog);
+    /**
+     * 重新上报数据
+     * @param logOrderId
+     * @return
+     */
+    int insertCertErrorLogByLogOrderId(String logOrderId);
 }

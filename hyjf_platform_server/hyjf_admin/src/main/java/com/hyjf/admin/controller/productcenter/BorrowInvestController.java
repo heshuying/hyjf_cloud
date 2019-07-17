@@ -23,6 +23,7 @@ import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.TenderUpdateUtmHistoryResponse;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
@@ -100,6 +101,9 @@ public class BorrowInvestController extends BaseController {
         //产品类型
         List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
         responseBean.setBorrowProjectTypeList(ConvertUtils.convertListToDropDown(borrowProjectTypeList,"borrowCd","borrowName"));
+        //债权结束状态
+        List<DropDownVO> creditendStateList = adminCommonService.getParamNameList("CREDITEND_STATE");
+        responseBean.setCreditendStateList(creditendStateList);
         return new AdminResult(responseBean);
     }
 
@@ -118,6 +122,29 @@ public class BorrowInvestController extends BaseController {
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
+    }
+
+    @ApiOperation(value = "结束债权", notes = "结束债权")
+    @GetMapping("/creditEnd/{orderId}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CHULI)
+    @ResponseBody
+    public Object creditEnd(@PathVariable String orderId){
+        AdminResult result = new AdminResult();
+        logger.info("【结束债权】orderId:" + orderId);
+        if(org.apache.commons.lang.StringUtils.isBlank(orderId)){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc("请求参数错误");
+            return result;
+        }
+
+        Response saveResponse = borrowInvestService.doCreditEnd(orderId);
+        if(saveResponse == null || !"0".equals(saveResponse.getRtn())){
+            result.setStatus(AdminResult.FAIL);
+            result.setStatusDesc(saveResponse.getMessage());
+            return result;
+        }
+
+        return result;
     }
 
     /**
@@ -484,6 +511,7 @@ public class BorrowInvestController extends BaseController {
         map.put("tenderType", "循环出借");
         map.put("utmSource1", "出借人渠道来源（出借时）");
         map.put("utmSource2", "出借人渠道来源（当前）");
+        map.put("stateDesc", "债权结束状态");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {

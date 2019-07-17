@@ -284,9 +284,28 @@ public class AppFindController extends BaseMarketController {
 			reportVO.setId(report.get("id").toString());
 			reportVO.setTitle(report.get("typeRealName") + "运营报告");
 			reportVO.setDate(report.get("year") + "年" + report.get("sortMonth") + "月" + report.get("sortDay") + "日");
-			reportVO.setUrl(CommonUtils.concatReturnUrl(request, appHost + ClientConstants.FIND_REPORT + ClientConstants.FIND_REPORT_DETAIL
-					.replace("{year}", report.get("year") + "").replace("{month}", report.get("sortMonth") + "")
-			+ "?id=" +report.get("id")));
+			StringBuilder url = new StringBuilder(appHost);
+			url.append(ClientConstants.FIND_REPORT);
+			String operationReportType = String.valueOf(report.get("operationReportType"));
+			switch (operationReportType) {
+				case "4":
+					url.append(ClientConstants.FIND_REPORT_YEAR_DETAIL.replace("{year}", report.get("year") + "")
+							.replace("{month}", report.get("sortMonth") + ""));
+					break;
+				case "3":
+					url.append(ClientConstants.FIND_REPORT_HALF_DETAIL.replace("{year}", report.get("year") + "")
+							.replace("{month}", report.get("sortMonth") + ""));
+					break;
+				case "2":
+					url.append(ClientConstants.FIND_REPORT_QUARTER_DETAIL.replace("{year}", report.get("year") + "")
+							.replace("{month}", report.get("sortMonth") + ""));
+					break;
+				default:
+					url.append(ClientConstants.FIND_REPORT_MONTH_DETAIL.replace("{year}", report.get("year") + "")
+							.replace("{month}", report.get("sortMonth") + ""));
+			}
+			url.append("?id=").append(report.get("id"));
+			reportVO.setUrl(CommonUtils.concatReturnUrl(request, url.toString()));
 			appFindReportList.add(reportVO);
 		});
 		AppFindVO appFindVO = new AppFindVO();

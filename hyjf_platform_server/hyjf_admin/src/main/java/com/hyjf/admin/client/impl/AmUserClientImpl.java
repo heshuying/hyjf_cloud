@@ -2446,7 +2446,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UtmPlatResponse getAllUtmPlat2(Map<String, Object> map) {
+		UtmPlatResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat2", map, UtmPlatResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 	@Override
 	public void insertUtmList(List<ChannelCustomizeVO> voList) {
 		ChannelRequest request = new ChannelRequest();
@@ -3091,7 +3099,51 @@ public class AmUserClientImpl implements AmUserClient {
 			throw new RuntimeException("发送验证码失败...");
 		}
 	}
+	 /**
+     * 兑吧积分账户查询列表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public DuibaPointsUserResponse selectDuibaPointsUser(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/selectDuibaPointsUser";
+        return restTemplate.postForEntity(url, requestBean, DuibaPointsUserResponse.class).getBody();
+    }
 
+    /**
+     * 批量查询用户剩余积分是否足够
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean selectRemainPoints(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/selectRemainPoints";
+        BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return false;
+        }
+        return response.getResultBoolean().booleanValue();
+    }
+
+    /**
+     * 审核后更新用户积分表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public boolean updateDuibaPoints(DuibaPointsRequest requestBean) {
+        String url = "http://AM-ADMIN/am-user/duiba/updateDuibaPoints";
+        BooleanResponse response = restTemplate.postForEntity(url, requestBean, BooleanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return false;
+        }
+        return response.getResultBoolean().booleanValue();
+    }
+
+    
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 							   Integer searchStatus, Integer updateStatus,boolean isUpdate) {
@@ -3111,6 +3163,114 @@ public class AmUserClientImpl implements AmUserClient {
 		return result.getResultInt();
 	}
 
+	/**
+	 * 获取着陆页列表 add by nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public TemplateConfigResponse selectTempConfigList(LandingManagerRequest request) {
+		String url = "http://AM-ADMIN/am-user/landing/selectTempConfigList" ;
+		TemplateConfigResponse response = restTemplate.postForEntity(url,request,TemplateConfigResponse.class).getBody();
+		return response;
+	}
+	/**
+	 * 根据id查找着陆页配置 add by nxl
+	 * @param tempId
+	 * @return
+	 */
+	@Override
+	public TemplateConfigResponse selectTemplateById(Integer tempId) {
+		String url = "http://AM-ADMIN/am-user/landing/selectTemplateById/"+tempId ;
+		TemplateConfigResponse response = restTemplate.getForEntity(url,TemplateConfigResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 修改着陆页模板配置 add by nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public Integer updateOrInsertTemplate(LandingManagerRequest request) {
+		String url = "http://AM-ADMIN/am-user/landing/updateOrInsertTemplate" ;
+		IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        return response.getResultInt().intValue();
+	}
+
+	/**
+	 * 删除陆页模板配置 add by nxl
+	 * @param tempId
+	 * @return
+	 */
+	@Override
+	public TemplateConfigResponse deleteTemplate(int tempId) {
+		String url = "http://AM-ADMIN/am-user/landing/deleteTemplate/"+tempId ;
+		TemplateConfigResponse response = restTemplate.getForEntity(url,TemplateConfigResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 查询着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN/am-user/templateDispose/templateDisposeList" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 修改着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse updateTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN/am-user/templateDispose/updateTemplateDispose" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 插入着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN/am-user/templateDispose/insertTemplateDispose" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 删除或禁用着陆页配置
+	 * @param 
+	 * @return
+	 */
+	@Override
+	public TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest) {
+		String url = "http://AM-ADMIN/am-user/templateDispose/deleteTemplateDispose" ;
+		TemplateDisposeResponse response = restTemplate.postForEntity(url,templateDisposeRequest,TemplateDisposeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response;
+		}
+		return null;
+	}
 	/**
 	 * 同步用户手机号
 	 *

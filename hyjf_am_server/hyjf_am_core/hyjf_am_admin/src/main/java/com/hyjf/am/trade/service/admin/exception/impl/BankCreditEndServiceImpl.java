@@ -3,17 +3,22 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.admin.StartCreditEndRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.exception.BankCreditEndService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.ref.ReferenceQueue;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,8 +56,9 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         record.setOrderId(orderId);
         record.setBorrowNid(borrowNid);
         record.setAuthCode(tenderAuthCode);
-        record.setCreditEndType(2); // 结束债权类型（1:还款，2:散标债转，3:计划债转）
+        record.setCreditEndType(2); // 结束债权类型（1:还款，2:散标债转，3:计划债转，5：后台发起）
         record.setStatus(0);
+        record.setState("A"); // 初始化为A：待处理状态
         record.setOrgOrderId(hjhDebtCredit.getSellOrderId());
 
         Date nowDate = GetDate.getDate();
@@ -70,34 +76,11 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      * @date: 2018/7/12
      */
     @Override
-    public List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean){
-        BankCreditEndExample example = new BankCreditEndExample();
-        BankCreditEndExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
-            criteria.andUserIdEqualTo(Integer.parseInt(requestBean.getUserIdSrch()));
+    public List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean){
+        if(requestBean == null){
+            return new ArrayList<>();
         }
-        if(StringUtils.isNotBlank(requestBean.getTenderUserIdSrch())){
-            criteria.andTenderUserIdEqualTo(Integer.parseInt(requestBean.getTenderUserIdSrch()));
-        }
-        if(StringUtils.isNotBlank(requestBean.getBatchNoSrch())){
-            criteria.andBatchNoEqualTo(requestBean.getBatchNoSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getOrderIdSrch())){
-            criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
-            criteria.andStatusEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
-        }
-        if(requestBean.getLimitStart() != null && requestBean.getLimitStart() >=0){
-            example.setLimitStart(requestBean.getLimitStart());
-        }
-        if(requestBean.getLimitEnd() != null && requestBean.getLimitEnd() >=0){
-            example.setLimitEnd(requestBean.getLimitEnd());
-        }
-
-        example.setOrderByClause("tx_date desc");
-
-        return bankCreditEndMapper.selectByExample(example);
+        return bankCreditEndCustomizeMapper.selectCreditEndList(requestBean);
     }
 
     /**
@@ -107,25 +90,10 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public Integer getCreditEndCount(BankCreditEndListRequest requestBean){
-        BankCreditEndExample example = new BankCreditEndExample();
-        BankCreditEndExample.Criteria criteria = example.createCriteria();
-        if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
-            criteria.andUserIdEqualTo(Integer.parseInt(requestBean.getUserIdSrch()));
+        if(requestBean == null){
+            return 0;
         }
-        if(StringUtils.isNotBlank(requestBean.getTenderUserIdSrch())){
-            criteria.andTenderUserIdEqualTo(Integer.parseInt(requestBean.getTenderUserIdSrch()));
-        }
-        if(StringUtils.isNotBlank(requestBean.getBatchNoSrch())){
-            criteria.andBatchNoEqualTo(requestBean.getBatchNoSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getOrderIdSrch())){
-            criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
-        }
-        if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
-            criteria.andStatusEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
-        }
-
-        return bankCreditEndMapper.countByExample(example);
+        return bankCreditEndCustomizeMapper.selectCreditEndCount(requestBean);
     }
 
     /**
@@ -317,5 +285,144 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         newEnd.setUpdateTime(GetDate.getDate());
 
         return this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+    }
+
+    /**
+     * 保存结束债权记录
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int insertStartCreditEnd(StartCreditEndRequest requestBean) {
+        logger.info("【结束债权】保存到db，requestBean：" + JSON.toJSONString(requestBean));
+
+        Borrow borrow = this.getBorrow(requestBean.getBorrowNid());
+        if (borrow == null) {
+            throw new RuntimeException("结束债券接口：标的"+requestBean.getBorrowNid()+"不存在");
+        }
+        Account account = this.getAccount(requestBean.getUserId());
+        if (account == null) {
+            throw new RuntimeException("结束债券接口：借款人"+requestBean.getUserId()+"银行未开户");
+        }
+        Account accountTender = this.getAccount(requestBean.getTenderUserId());
+        if (accountTender == null) {
+            throw new RuntimeException("结束债券接口：出借人"+requestBean.getTenderUserId()+"银行未开户");
+        }
+        String orderId = GetOrderIdUtils.getOrderId2(requestBean.getTenderUserId());
+
+        BankCreditEnd record = new BankCreditEnd();
+        record.setUserId(requestBean.getUserId());
+        record.setTenderUserId(requestBean.getTenderUserId());
+        record.setAccountId(account.getAccountId());
+        record.setTenderAccountId(accountTender.getAccountId());
+        record.setOrderId(orderId);
+        record.setBorrowNid(requestBean.getBorrowNid());
+        record.setAuthCode(requestBean.getTenderAuthCode());
+        record.setCreditEndType(requestBean.getCreditEndType()); // 结束债权类型（1:还款，2:散标债转，3:计划债转，5：后台发起）
+        record.setStatus(0);
+        record.setState("A"); // 初始化为A：待处理状态
+        record.setOrgOrderId(requestBean.getOrgOrderId());
+
+        Date nowDate = GetDate.getDate();
+        record.setCreateUser(1);
+        record.setCreateTime(nowDate);
+        record.setUpdateUser(1);
+        record.setUpdateTime(nowDate);
+
+        return this.bankCreditEndMapper.insertSelective(record);
+    }
+
+    /**
+     * 结束债权查询必要信息
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public String queryForCreditEnd(StartCreditEndRequest requestBean){
+        // 出借明细
+        if(requestBean.getStartFrom() == 1){
+            BorrowRecover recover = getBorrowRecoverByNid(requestBean.getOrgOrderId());
+            if(recover == null){
+                logger.error("出借记录不存在，nid:" + requestBean.getOrgOrderId());
+                throw new RuntimeException("出借记录不存在，nid:" + requestBean.getOrgOrderId());
+            }
+            if(recover.getRecoverStatus()!= 1){
+                logger.error("该债权未结束, requestBean:{}", JSON.toJSONString(requestBean));
+                return "该债权未结束";
+            }
+            requestBean.setTenderUserId(recover.getUserId());
+            requestBean.setUserId(recover.getBorrowUserid());
+            requestBean.setBorrowNid(recover.getBorrowNid());
+            requestBean.setTenderAuthCode(recover.getAuthCode());
+        }
+
+        // 承接明细
+        if(requestBean.getStartFrom() == 2){
+            CreditTender creditTender = getCreditTender(requestBean.getOrgOrderId());
+            if(creditTender == null){
+                logger.error("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+                throw new RuntimeException("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+            }
+            if(creditTender.getStatus() != 1){
+                logger.error("该债权未结束, requestBean:{}", JSON.toJSONString(requestBean));
+                return "该债权未结束";
+            }
+
+            requestBean.setTenderUserId(creditTender.getUserId());
+            requestBean.setUserId(creditTender.getBorrowUserId());
+            requestBean.setBorrowNid(creditTender.getBidNid());
+            requestBean.setTenderAuthCode(creditTender.getAuthCode());
+        }
+
+        // 智投承接明细
+        if(requestBean.getStartFrom() == 3){
+            HjhDebtCreditTender creditTender =getHjhDebtCreditTender(requestBean.getOrgOrderId());
+            if(creditTender == null){
+                logger.error("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+                throw new RuntimeException("债转记录不存在，assignNid:" + requestBean.getOrgOrderId());
+            }
+            if(creditTender.getStatus() != 1){
+                logger.error("该债权未结束, requestBean:{}", JSON.toJSONString(requestBean));
+                return "该债权未结束";
+            }
+
+            Borrow borrow = getBorrow(creditTender.getBorrowNid());
+            requestBean.setTenderUserId(creditTender.getUserId());
+            requestBean.setUserId(borrow.getUserId());
+            requestBean.setBorrowNid(creditTender.getBorrowNid());
+            requestBean.setTenderAuthCode(creditTender.getAuthCode());
+        }
+
+        return null;
+    }
+
+    /**
+     * 根据订单号检索
+     * @param orderId
+     * @return
+     */
+    @Override
+    public BankCreditEnd getCreditEndByOrgOrderId(String orderId){
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andOrgOrderIdEqualTo(orderId);
+        List<BankCreditEnd> creditEnds = bankCreditEndMapper.selectByExample(example);
+        if(creditEnds!=null && !creditEnds.isEmpty()){
+            return creditEnds.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteCreditEndById(Integer id){
+        if(id == null){
+            return  0;
+        }
+
+        return bankCreditEndMapper.deleteByPrimaryKey(id);
     }
 }

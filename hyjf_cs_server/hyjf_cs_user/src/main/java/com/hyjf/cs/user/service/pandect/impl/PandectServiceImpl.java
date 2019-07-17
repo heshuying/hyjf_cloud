@@ -6,6 +6,8 @@ package com.hyjf.cs.user.service.pandect.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.ClientConstants;
@@ -198,6 +200,9 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
 
         Integer validCount = amTradeClient.countCouponValid(userId);
         result.put("couponValidCount", validCount);
+
+        // 积分商城显示开关 0:不显示，1:显示
+        result.put("pointsShopSwitch", RedisUtils.get(RedisConstants.POINTS_SHOP_SWITCH));
         return result;
     }
 

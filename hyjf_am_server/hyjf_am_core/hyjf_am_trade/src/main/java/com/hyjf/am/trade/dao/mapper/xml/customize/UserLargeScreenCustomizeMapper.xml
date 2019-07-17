@@ -98,7 +98,7 @@
 
       select  user_name userName,current_owner currentOwner,operating operating,IFNULL(money,0) money,IFNULL(year_money,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
       from  ht_user_operate_list where status = 1 and operating &lt;&gt; 3 and current_owner is not null
-      and create_time &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d 00:00:00') AND create_time &lt; DATE_FORMAT(#{endTime}),'%Y-%m-%d 00:00:00')
+      and create_time &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s') AND create_time &lt; DATE_FORMAT(#{endTime},'%Y-%m-%d %H:%i:%s')
       ORDER  BY create_time DESC
     </select>
 
@@ -138,7 +138,8 @@
             FROM
                 ht_user_operate_list
             WHERE
-                operating = 1
+                status = 1
+            and operating = 1
             AND customer_group = 2
             AND create_time BETWEEN str_to_date(
                 DATE_FORMAT(NOW(), '%Y-%m-%d'),
@@ -175,7 +176,8 @@
                     FROM
                         ht_user_operate_list t1
                     WHERE
-                        t1.operating = 3
+                        t1.status = 1
+                     and t1.operating = 3
                     AND t1.customer_group = 1
 
                     AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
@@ -191,6 +193,7 @@
                     FROM
                         ht_repayment_plan
                     WHERE
+                        status = 1 and
                         customer_name IS NOT NULL
                     AND customer_group = 1
                     AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
@@ -215,7 +218,8 @@
                         FROM
                             ht_user_operate_list t1
                         WHERE
-                            t1.operating = 3
+                            t1.status = 1
+                        and t1.operating = 3
                         AND t1.customer_group = 1
                         AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
 
@@ -231,6 +235,7 @@
                         FROM
                             ht_repayment_plan
                         WHERE
+                            status = 1 and
                             customer_name IS NOT NULL
                         AND customer_group = 1
 
@@ -256,6 +261,7 @@
                             FROM
                                 ht_user_operate_list t1
                             WHERE
+                                t1.status = 1 and
                                 t1.operating = 3
                             AND t1.customer_group = 2
                             AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
@@ -270,6 +276,7 @@
                             FROM
                                 ht_repayment_plan
                             WHERE
+                                status = 1 and
                                 customer_name IS NOT NULL
                             AND customer_group = 2
                             AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
@@ -294,6 +301,7 @@
                                 FROM
                                     ht_user_operate_list t1
                                 WHERE
+                                    t1.status = 1 and
                                     t1.operating = 3
                                 AND t1.customer_group = 2
                                 AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
@@ -308,6 +316,7 @@
                                 FROM
                                     ht_repayment_plan
                                 WHERE
+                                    status = 1 and
                                     customer_name IS NOT NULL
                                 AND customer_group = 2
                                AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
@@ -332,6 +341,7 @@
                 FROM
                     ht_user_operate_list
                 WHERE
+                    status = 1 and
                     operating = 2
                 AND customer_group = 1
                 AND create_time BETWEEN DATE_FORMAT(
@@ -349,7 +359,7 @@
                         t2.current_owner AS currentOwner,
                         t2.customer_group AS customerGroup
 										from (
-									select DISTINCT user_id,current_owner,customer_group FROM ht_user_operate_list WHERE  operating = 2
+									select DISTINCT user_id,current_owner,customer_group FROM ht_user_operate_list WHERE status = 1 and operating = 2
                     AND customer_group = 1
                     AND create_time BETWEEN DATE_FORMAT(
                         CURDATE(),
@@ -389,6 +399,7 @@
                 FROM
                     ht_user_operate_list
                 WHERE
+                    status = 1 and
                     operating = 2
                 AND customer_group = 2
                 AND create_time BETWEEN DATE_FORMAT(
@@ -406,7 +417,7 @@
                         t2.current_owner AS currentOwner,
                         t2.customer_group AS customerGroup
 										from (
-									select DISTINCT user_id,current_owner,customer_group FROM ht_user_operate_list WHERE  operating = 2
+									select DISTINCT user_id,current_owner,customer_group FROM ht_user_operate_list WHERE status = 1 and operating = 2
                     AND customer_group = 2
                     AND create_time BETWEEN DATE_FORMAT(
                         CURDATE(),
@@ -440,6 +451,7 @@
         FROM
             ht_user_operate_list
         WHERE
+            status = 1 and
             operating = 4
         AND customer_group = 1
         AND create_time BETWEEN DATE_FORMAT(
@@ -460,6 +472,7 @@
             FROM
                 ht_user_operate_list
             WHERE
+                status = 1 and
                 operating = 4
             AND customer_group = 2
             AND create_time BETWEEN DATE_FORMAT(
@@ -483,6 +496,7 @@
         FROM
             ht_user_operate_list
         WHERE
+            status = 1 and
             operating = 1
         AND customer_group = 1
         AND create_time BETWEEN DATE_FORMAT(
@@ -503,6 +517,7 @@
             FROM
                 ht_user_operate_list
             WHERE
+                status = 1 and
                 operating = 1
             AND customer_group = 2
             AND create_time BETWEEN DATE_FORMAT(
@@ -528,6 +543,7 @@
 		FROM
 			ht_user_operate_list
 		WHERE
+            status = 1 and
 			operating = 2
 		AND create_time BETWEEN DATE_FORMAT(
 			CURDATE(),
@@ -540,7 +556,7 @@
 		UNION ALL
 	    SELECT  IFNULL(SUM(t1.money), 0) AS recharge
         from (
-			select DISTINCT user_id FROM ht_user_operate_list WHERE operating = 2 and create_time BETWEEN DATE_FORMAT(
+			select DISTINCT user_id FROM ht_user_operate_list WHERE status = 1 and operating = 2 and create_time BETWEEN DATE_FORMAT(
 				CURDATE(),
 				'%Y-%m-01 00:00:00'
 			)
@@ -567,6 +583,7 @@
         FROM
             ht_user_operate_list
         WHERE
+            status = 1 and
             operating = 4
         AND create_time BETWEEN DATE_FORMAT(
             CURDATE(),
@@ -585,6 +602,7 @@
         FROM
             ht_user_operate_list
         WHERE
+            status = 1 and
             operating = 1
         AND create_time BETWEEN DATE_FORMAT(
             CURDATE(),
@@ -603,6 +621,7 @@
         FROM
             ht_user_operate_list
         WHERE
+            status = 1 and
             operating = 3
         AND create_time BETWEEN DATE_FORMAT(
             CURDATE(),
@@ -621,6 +640,7 @@
         FROM
             ht_repayment_plan
         WHERE
+            status = 1 and
             create_time BETWEEN DATE_FORMAT(
                 CURDATE(),
                 '%Y-%m-01 00:00:00'
@@ -638,6 +658,7 @@
         FROM
             ht_user_operate_list
         WHERE
+            status = 1 and
             operating = 1
         AND create_time BETWEEN DATE_FORMAT(
             CURDATE(),
@@ -652,9 +673,9 @@
     <!-- 获取投屏采集到的所有的用户 -->
     <select id="getAllScreenUser" resultType="com.hyjf.am.vo.screen.ScreenTransferVO">
         SELECT r.userId userId from (
-                    SELECT DISTINCT user_id userId FROM ht_user_operate_list
+                    SELECT DISTINCT user_id userId FROM ht_user_operate_list where status = 1
                     union all
-                    SELECT DISTINCT user_id userId from ht_repayment_plan
+                    SELECT DISTINCT user_id userId from ht_repayment_plan where status = 1
             ) r
             limit #{start},#{sizes}
     </select>
@@ -683,13 +704,13 @@
         </foreach>
     </update>
 
-    <delete id="deleteOperatieList">
-        DELETE FROM ht_user_operate_list WHERE user_id IN
+    <update id="deleteOperatieList" parameterType="java.util.List">
+        update ht_user_operate_list set status = 2 WHERE user_id IN
         <foreach collection="list" item="item" open="("
                  separator="," close=")">
             #{item.userId}
         </foreach>
-    </delete>
+    </update>
 
     <update id="updateRepaymentPlan" parameterType="java.util.List">
         UPDATE ht_repayment_plan
@@ -714,13 +735,13 @@
         </foreach>
     </update>
 
-    <delete id="deleteRepaymentPlan">
-        DELETE FROM ht_repayment_plan WHERE user_id IN
+    <update id="deleteRepaymentPlan" parameterType="java.util.List">
+        update  ht_repayment_plan set status = 2 WHERE user_id IN
         <foreach collection="list" item="item" open="("
                  separator="," close=")">
             #{item.userId}
         </foreach>
-    </delete>
+    </update>
 
 
 </mapper>

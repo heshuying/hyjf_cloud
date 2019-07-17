@@ -102,4 +102,6 @@ public interface AdminUserService  {
 	Integer selectAdminListCount(AdminCustomize adminCustomize);
 
 	List<Admin> getAdminUser(Integer[] userId);
+
+	List<AdminRole> getAdminRoleListNoStatus();
 }

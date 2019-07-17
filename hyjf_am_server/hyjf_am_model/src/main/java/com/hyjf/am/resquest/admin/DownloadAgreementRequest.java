@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version BorrowRepayAgreementRequest, v0.1 2018/8/10 15:05
  * @Author: Zha Daojian
  */
-public class DownloadAgreementRequest extends BasePage {
+public class DownloadAgreementRequest{
 
     @ApiModelProperty(value = "期数")
     private String repayPeriod;

@@ -843,4 +843,8 @@ public interface MQConstant {
 	int FDD_STATUS_SIGN = 2;
 	int FDD_STATUS_DOWNLOAD = 3;
 	/**--------------------------------- 法大大合同状态 0:初始,1:生成成功,2,签署成功,3,下载成功end  -------------------------------------*/
+	/** 兑吧扣积分后生成订单 */
+	String DUIBA_ORDER_GROUP = "DUIBA_ORDER_GROUP";
+	String DUIBA_ORDER_TOPIC = "DUIBA_ORDER_TOPIC";
+
 }

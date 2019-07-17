@@ -62,7 +62,11 @@ public interface CouponUserService {
 
     int deleteCouponUserById(CouponUserBeanRequest couponUserBeanRequest);
 
+    int delDuibaCouponUserById(CouponUserBeanRequest request);
+
     int insertCouponUser(CouponUserRequest request);
+
+    CouponUser insertByDuibaOrder(CouponUserRequest request);
 
     List<CouponUser> getCouponUserByCouponCode(String couponCode);
 
@@ -70,4 +74,5 @@ public interface CouponUserService {
 
     Integer auditRecord(AdminCouponUserRequestBean couponUserRequestBean);
 
+    int updateCouponUserDelFlag(CouponUserRequest request);
 }

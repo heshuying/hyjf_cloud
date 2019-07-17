@@ -19,6 +19,11 @@ import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.SponsorLogRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -854,6 +859,15 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid);
+
+    /**
+     * 协议申请明细列表页
+    * @author Zha Daojian
+    * @date 2019/5/8 15:35
+    * @param borrowNid
+    * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
+    **/
+    ApplyBorrowInfoVO selectApplyBorrowInfoDetail(String borrowNid);
 
     /**
      * 标的放款记录列表
@@ -2980,6 +2994,26 @@ public interface AmTradeClient {
 
     List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
 
+    List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId);
+
+    /**
+     * 订单数量：最新的标的订单数量=原始标投资+承接总数
+     * @author Zha Daojian
+     * @date 2019/7/9 10:33
+     * @param borrowNid
+     * @return java.lang.Integer
+     **/
+    Integer getTotalTenderCountByBorrowNid(String borrowNid);
+
+    /**
+     * 保存协议申请
+    * @author Zha Daojian
+    * @date 2019/5/8 17:56
+    * @param applyBorrowAgreementVO
+    * @return com.hyjf.am.response.trade.ApplyBorrowAgreementResponse
+    **/
+    ApplyBorrowAgreementResponse saveApplyBorrowAgreement( ApplyBorrowAgreementVO applyBorrowAgreementVO);
+
     Integer countRecordLog(ProtocolLogRequest request);
 
     /**
@@ -3154,6 +3188,18 @@ public interface AmTradeClient {
      */
     TenderUpdateUtmHistoryResponse getPlanTenderUtmChangeLog(String nid);
 
+    /**
+     * 标的备案撤销
+     * @param request
+     * @return
+     */
+    AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request);
+
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
+
+    BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid);
+
+    AdminResult deleteBorrow(BorrowRegistUpdateRequest request);
 
     /** 加息接口开始*/
     /** 枚举类型 */
@@ -3404,6 +3450,11 @@ public interface AmTradeClient {
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
 
+    SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse deleteSponsorLog(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest);
+  //SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
     /**
      * 未开户用户销户成功后,删除用户Account表
      * @param userId

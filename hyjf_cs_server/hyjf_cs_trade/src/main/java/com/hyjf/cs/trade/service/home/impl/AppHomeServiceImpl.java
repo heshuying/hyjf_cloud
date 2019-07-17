@@ -19,6 +19,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -86,6 +88,8 @@ public class AppHomeServiceImpl implements AppHomeService {
     @Override
     public JSONObject getAppHomeData(HttpServletRequest request, String userId) {
         JSONObject info = new JSONObject();
+        // 积分商城，积分显示开关，0:不显示，1:显示
+        info.put("pointsShopSwitch", RedisUtils.get(RedisConstants.POINTS_SHOP_SWITCH));
         String platform = request.getParameter("realPlatform");
         String version = request.getParameter("version");
         String uniqueIdentifier = request.getParameter("UniqueIdentifier");
@@ -315,12 +319,20 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("staticHjhIssueTime","智投服务更新时间  10:00");
         // add by liushouyi 新增固定发标时间提醒 end
 
+
+        // add by pcc 首页预留一个悬浮广告按钮  start
+        info.put("floatADSwitch",RedisUtils.get(RedisConstants.FLOATADSWITCH)!=null?RedisUtils.get(RedisConstants.FLOATADSWITCH):Boolean.FALSE);//浮动广告开关 bool型
+        info.put("floatADUrl",RedisUtils.get(RedisConstants.FLOATADURL)!=null?RedisUtils.get(RedisConstants.FLOATADURL):"");//浮动广告跳转地址 string
+        info.put("floatADPicUrl",RedisUtils.get(RedisConstants.FLOATADPICURL)!=null?RedisUtils.get(RedisConstants.FLOATADPICURL):"");//浮动广告图片地址 string
+        // add by pcc 首页预留一个悬浮广告按钮  end
+
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(CustomConstants.APP_REQUEST,
                 ProjectConstant.REQUEST_HOME + HomePageDefine.REQUEST_MAPPING + HomePageDefine.PROJECT_LIST_ACTION);
 
         CommonUtils.convertNullToEmptyString(info);
+
         return info;
     }
 
@@ -1290,6 +1302,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setStatus(statusNewInvest);
         request.setType("4");
         request.setHost(host);
+        request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+        request.setWjtInstCode(systemConfig.getWjtInstCode());
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewInvestTemp = amTradeClient.searchAppProjectList(request);
         List<AppProjectListCustomizeVO> listNewInvest = new ArrayList<>();
@@ -1311,6 +1325,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         String statusNewOnTime = "14";
         AppProjectListRequest request2= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request2.setStatus(statusNewOnTime);
+
         // 查询首页定时发标的项目
         List<AppProjectListCustomizeVO> listNewOnTimeTemp = amTradeClient.searchAppProjectList(request2);
         List<AppProjectListCustomizeVO> listNewOnTime = new ArrayList<>();
@@ -1332,6 +1347,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         String status = "16";
         AppProjectListRequest request3= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request3.setStatus(status);
+        request3.setPublishInstCode(null);
+        request3.setWjtInstCode(null);
         List<AppProjectListCustomizeVO> reviewListTemp = amTradeClient.searchAppProjectList(request3);
         List<AppProjectListCustomizeVO> reviewList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(reviewListTemp)){
@@ -1351,6 +1368,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         status = "17";
         AppProjectListRequest request4= CommonUtils.convertBean(request,AppProjectListRequest.class);
         request4.setStatus(status);
+        request4.setPublishInstCode(null);
+        request4.setWjtInstCode(null);
         List<AppProjectListCustomizeVO> repaymentListTemp = amTradeClient.searchAppProjectList(request4);
         List<AppProjectListCustomizeVO> repaymentList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(repaymentListTemp)){

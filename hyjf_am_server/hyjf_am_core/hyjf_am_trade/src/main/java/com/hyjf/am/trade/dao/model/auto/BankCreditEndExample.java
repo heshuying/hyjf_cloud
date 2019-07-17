@@ -1925,6 +1925,66 @@ public class BankCreditEndExample {
             return (Criteria) this;
         }
 
+        public Criteria andFailTimesIsNull() {
+            addCriterion("fail_times is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesIsNotNull() {
+            addCriterion("fail_times is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesEqualTo(Integer value) {
+            addCriterion("fail_times =", value, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesNotEqualTo(Integer value) {
+            addCriterion("fail_times <>", value, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesGreaterThan(Integer value) {
+            addCriterion("fail_times >", value, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("fail_times >=", value, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesLessThan(Integer value) {
+            addCriterion("fail_times <", value, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesLessThanOrEqualTo(Integer value) {
+            addCriterion("fail_times <=", value, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesIn(List<Integer> values) {
+            addCriterion("fail_times in", values, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesNotIn(List<Integer> values) {
+            addCriterion("fail_times not in", values, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesBetween(Integer value1, Integer value2) {
+            addCriterion("fail_times between", value1, value2, "failTimes");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailTimesNotBetween(Integer value1, Integer value2) {
+            addCriterion("fail_times not between", value1, value2, "failTimes");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateUserIsNull() {
             addCriterion("create_user is null");
             return (Criteria) this;

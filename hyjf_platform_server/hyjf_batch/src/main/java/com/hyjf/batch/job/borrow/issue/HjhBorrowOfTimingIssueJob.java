@@ -18,10 +18,10 @@ public class HjhBorrowOfTimingIssueJob extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-		logger.info("HjhBorrowOfTimingIssueJob: {} execute...", context.getJobDetail().getKey().getName());
-
-		restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/hjhBorrow", String.class).getBody();
-
-		logger.info("HjhBorrowOfTimingIssueJob execute end...");
+//		logger.info("HjhBorrowOfTimingIssueJob: {} execute...", context.getJobDetail().getKey().getName());
+//
+//		restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/hjhBorrow", String.class).getBody();
+//
+//		logger.info("HjhBorrowOfTimingIssueJob execute end...");
     }
 }

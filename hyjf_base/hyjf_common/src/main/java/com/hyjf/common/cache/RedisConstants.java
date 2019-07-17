@@ -539,6 +539,11 @@ public class RedisConstants {
     public static final String CERT_TRANSACT_OTHER_MAXID= "certTransactOtherMaxId";
     /**合规数据上报 CERT 已上报投资明细最大Id*/
     public static final String CERT_INVEST_DETAIL_MAXID= "certInvestDetailMaxId";
+    /**add by pcc 首页预留一个悬浮广告按钮  start*/
+    public static final String FLOATADSWITCH= "floatADSwitch";
+    public static final String FLOATADURL= "floatADUrl";
+    public static final String FLOATADPICURL= "floatADPicUrl";
+    /**add by pcc 首页预留一个悬浮广告按钮  end*/
 
     /**
      * 推送表的消息唯一标识
@@ -592,6 +597,11 @@ public class RedisConstants {
      *
      */
     public static final String  CUSTOMER_SERVICE_SWITCH ="CUSTOMER_SERVICE_SWITCH:";
+
+    /** 积分商城开关*/
+    public static final String POINTS_SHOP_SWITCH = "points_shop_switch";
+    /** 兑吧汇率*/
+    public static final String DUIBA_EXCHANGE_RATE = "hyjf_duiba_exchange_rate";
 
     /**
      * redis配置是否可修改手机号

@@ -100,8 +100,8 @@ public class RegistRecordController extends BaseController {
         if (null != registRecordResponse.getResultList() && registRecordResponse.getResultList().size() > 0) {
             if (!isShow) {
                 //如果没有查看脱敏权限,显示加星
-                for (RegistRecordVO registRecordVO : registRecordResponse.getResultList()) {
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                for (RegistRecordVO registRecordVO:registRecordResponse.getResultList()){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedMobile(registRecordVO.getMobile()));
                 }
             }
             registRecordCustomizeVO = CommonUtils.convertBeanList(registRecordResponse.getResultList(), RegistRecordCustomizeVO.class);
@@ -122,7 +122,7 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "渠道详细信息", notes = "渠道详细信息")
     @GetMapping(value = "/registRecordUtmEditStr/{userId}", produces = "application/json; charset=utf-8")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_UPDATE})
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(@PathVariable String userId) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         registerRcordeRequest.setUserId(userId);
@@ -157,7 +157,7 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "渠道修改确认", notes = "渠道修改确认")
     @PostMapping(value = "/registRecordUtmEdit")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_UPDATE})
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY})
     public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -368,7 +368,7 @@ public class RegistRecordController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+                return AsteriskProcessUtil.getAsteriskedMobile(mobile);
             }
         };
 

@@ -37,40 +37,43 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void issueBorrowOfTiming() throws Exception {
-		// 待发标的列表(status=1 VerifyStatus=3 is_engine_used=0)
-		List<BorrowCustomize> list = this.ontimeTenderCustomizeMapper.queryOntimeTenderList(GetDate.getNowTime10());
-		if (!CollectionUtils.isEmpty(list)) {
-			for (BorrowCustomize borrowCustomize : list) {
-
-				String borrowNid = borrowCustomize.getBorrowNid();
-				logger.info("定时发标项目标的:[" + borrowNid + "]");
-
-				// 标的自动发标
-				boolean flag = this.updateOntimeSendBorrow(borrowCustomize);
-				if (!flag) {
-					throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
-				}
-				// 散标自动发标成功发送mq到合规上报数据
-				// 3.自动发标batch 散标
-				JSONObject params = new JSONObject();
-				params.put("borrowNid", borrowCustomize.getBorrowNid());
-				params.put("userId", borrowCustomize.getUserId());
-				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
-						MQConstant.HG_REPORT_DELAY_LEVEL);
-				// add by liuyang 20190415 wbs系统标的信息 start
-				try {
-					BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowCustomize.getBorrowNid());
-					if("10000000".equals(borrowInfo.getPublishInstCode())) {
-						sendWbsBorrowInfo(borrowCustomize.getBorrowNid(), "2", 0);
-					}
-				} catch (Exception e) {
-					logger.error("WBS系统标的信息发送MQ失败,[" + e + "].");
-				}
-				// add by liuyang 20190415 web系统标的信息 end
-				logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
-			}
+	public void issueBorrowOfTiming(BorrowCustomize borrowCustomize) throws Exception {
+		String borrowNid = borrowCustomize.getBorrowNid();
+		logger.info("定时发标项目标的:[" + borrowNid + "]");
+		// 标的自动发标
+		boolean flag = this.updateOntimeSendBorrow(borrowCustomize);
+		if (!flag) {
+			// 如果更新失败 删除redis
+			// 标的定时独占锁key
+			String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + CustomConstants.COLON + borrowNid;
+			RedisUtils.del(onTimeLockKey);
+			// 标的状态key
+			String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + CustomConstants.COLON + borrowNid;
+			RedisUtils.del(onTimeStatusKey);
+			// 删除标的金额redis
+			//String borrowRedisKey = RedisConstants.BORROW_NID + borrowNid;
+			//RedisUtils.del(borrowRedisKey);
+			throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 		}
+		// 散标自动发标成功发送mq到合规上报数据
+		// 3.自动发标batch 散标
+		JSONObject params = new JSONObject();
+		params.put("borrowNid", borrowCustomize.getBorrowNid());
+		params.put("userId", borrowCustomize.getUserId());
+		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+				MQConstant.HG_REPORT_DELAY_LEVEL);
+		// add by liuyang 20190415 wbs系统标的信息 start
+		try {
+			BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowCustomize.getBorrowNid());
+			if("10000000".equals(borrowInfo.getPublishInstCode())) {
+				sendWbsBorrowInfo(borrowCustomize.getBorrowNid(), "2", 0);
+			}
+		} catch (Exception e) {
+			logger.error("WBS系统标的信息发送MQ失败,[" + e + "].");
+		}
+		// add by liuyang 20190415 web系统标的信息 end
+		logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
+
 	}
 
 
@@ -504,4 +507,14 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, smsMessage));
 	}
 
+
+	/**
+	 * 获取定时发标列表
+	 *
+	 * @return
+	 */
+	@Override
+	public List<BorrowCustomize> queryOntimeTenderList() {
+		return this.ontimeTenderCustomizeMapper.queryOntimeTenderList(GetDate.getNowTime10());
+	}
 }

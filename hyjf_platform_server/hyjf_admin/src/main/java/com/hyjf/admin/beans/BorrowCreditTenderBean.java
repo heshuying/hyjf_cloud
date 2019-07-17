@@ -68,6 +68,10 @@ public class BorrowCreditTenderBean extends BaseVO implements Serializable {
     /*原来承接订单号*/
     private String creditTenderNid;
 
+    /** 银行交易状态（S-成功;F-失败;A-初始;W:未开始）*/
+    private String state;
+    /** 债权结束状态描述*/
+    private String stateDesc;
 
     public String getUserId() {
         return userId;
@@ -219,5 +223,21 @@ public class BorrowCreditTenderBean extends BaseVO implements Serializable {
 
     public void setCreditTenderNid(String creditTenderNid) {
         this.creditTenderNid = creditTenderNid;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getStateDesc() {
+        return stateDesc;
+    }
+
+    public void setStateDesc(String stateDesc) {
+        this.stateDesc = stateDesc;
     }
 }
