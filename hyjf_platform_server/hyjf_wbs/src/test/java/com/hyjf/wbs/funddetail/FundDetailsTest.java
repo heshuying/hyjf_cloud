@@ -58,7 +58,7 @@ public class FundDetailsTest {
         System.out.println("**************"+lst);
     }
 
-    @Test
+//    @Test
     public void testCreateSign() throws UnsupportedEncodingException {
         WbsCommonQO qo=new WbsCommonQO();
         qo.setApp_key(wbsConfig.getAppKey());
