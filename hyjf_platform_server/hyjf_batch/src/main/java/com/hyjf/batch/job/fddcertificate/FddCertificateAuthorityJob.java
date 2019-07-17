@@ -23,8 +23,8 @@ public class FddCertificateAuthorityJob  extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("CouponExpiredJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("FddCertificateAuthorityJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-USER/cs-user/batch/fddCertificate", String.class);
-        logger.info("CouponExpiredJob execute end...");
+        logger.info("FddCertificateAuthorityJob execute end...");
     }
 }
