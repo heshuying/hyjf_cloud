@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hyjf.wbs.common.EntUtmIds;
 import com.hyjf.wbs.qvo.csuser.ResultEnum;
 import com.hyjf.wbs.user.dao.model.customize.BankOpenAccountRecordCustomize;
 import com.hyjf.wbs.user.service.BankOpenRecordService;
@@ -87,26 +88,12 @@ public class SyncCustomerBaseServiceImpl implements SyncCustomerBaseService {
         }
     }
 
-    // thirdPropertyIds有顺序
     private String parse(String utmId) {
-        Integer utmIdInt = Integer.parseInt(utmId);
-        String thirdIds = wbsConfig.getThridPropertyIds();
-        logger.debug("传入的utmId【{}】配置的财富端ID信息【{}】", utmId, thirdIds);
-        logger.debug("配置纳觅【{}】裕峰瑞【{}】大唐【{}】千乐【{}】", wbsConfig.getUtmNami(), wbsConfig.getUtmYufengrui(),
-                wbsConfig.getUtmDatang(), wbsConfig.getUtmQianle());
-        String[] thirdIdsArr = thirdIds.split(",");
-
-        String thirdUtmId = thirdIdsArr[0];
-
-        if (utmIdInt.equals(wbsConfig.getUtmNami()) || utmIdInt.equals(wbsConfig.getUtmYufengrui())) {
-            thirdUtmId = thirdIdsArr[0];
-        } else if (utmIdInt.equals(wbsConfig.getUtmDatang())) {
-            thirdUtmId = thirdIdsArr[1];
-        } else if (utmIdInt.equals(wbsConfig.getUtmQianle())) {
-            thirdUtmId = thirdIdsArr[2];
+        String entId=EntUtmIds.getEntId(utmId);
+        if(Strings.isNullOrEmpty(entId)){
+            throw new CheckException("未找到UTMID【"+utmId+"】对应的entId");
         }
-        logger.debug("解析返回utmId【{}】", thirdUtmId);
-        return thirdUtmId;
+        return entId;
     }
 
     private void buildData(User userVO, CustomerSyncQO customerSyncQO) {

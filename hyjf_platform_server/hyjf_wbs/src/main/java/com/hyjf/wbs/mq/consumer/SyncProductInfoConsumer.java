@@ -36,7 +36,7 @@ import java.text.SimpleDateFormat;
 @RocketMQMessageListener(topic = MQConstant.WBS_BORROW_INFO_TOPIC, selectorExpression = MQConstant.WBS_BORROW_INFO_TAG, consumerGroup = MqConstants.WBS_SYNC_Product_Info_GROUP)
 public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(SyncWbsAccountConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SyncProductInfoConsumer.class);
 
     public static final String CONSUMER_NAME = "<<产品信息及状态同步到WBS财富管理系统>>: ";
 
@@ -67,114 +67,111 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             MessageExt msg = messageExt;
             String tagName = msg.getTags();
             String jsonMsg = new String(msg.getBody());
-            logger.info("====" + CONSUMER_NAME + "收到消息[{}],消费开始=====", jsonMsg);
-            JSONObject jsonObj = JSON.parseObject(jsonMsg);
-            if (jsonObj == null) {
-                logger.error("=====" + CONSUMER_NAME + "消息实体转换异常=====");
-                return;
-            }
-
-
-            // 产品编号
-            String productNo = jsonObj.getString("productNo");
-            // 产品状态 2,5
-            String productStatus = jsonObj.getString("productStatus");
-            // 产品类型 0 散标类, 1 计划类
-            String productType = jsonObj.getString("productType");
-            //产品发布状态
-            Integer publishStatus = 1;
-            String productName = "";
-            String linkUrl = "";
-            String H5linkUrl = "";
-            Integer productTpyeInt = 2;
-            ProductInfoQO productInfoQO = new ProductInfoQO();
-            if (productType.equals("0")) {
-                productName = "散标";
-                if (productNo.substring(0, 3).equals("NEW")) {
-                    productTpyeInt = 4;
-                } else {
-                    productTpyeInt = 2;
-                }
-
-
-                linkUrl = PC_SANBIAO_URL + productNo;
-                H5linkUrl = H5_SANBIAO_URL + productNo;
-                if (productStatus.equals("3") || productStatus.equals("5") || productStatus.equals("6")) {
-                    publishStatus = 3;
-                }
-                //查询标的信息
-                BorrowCustomize borrowCustomize = borrowInfoService.selectByNid(productNo);
-                productInfoQO.setProductName("散标");
-                if (borrowCustomize != null) {
-                    /**
-                     * 散标判断是否加入计划，如果加入计划，则不推送
-                     */
-                    if (borrowCustomize.getPlanNid() == null || borrowCustomize.getPlanNid().isEmpty()) {
-                        productInfoQO.setDeadlineNum(borrowCustomize.getDeadlineNum());
-                        productInfoQO.setDeadlineUnit(borrowCustomize.getDeadlineUnit());
-                        productInfoQO.setInvestAmount(Double.valueOf(borrowCustomize.getInvestAmount()));
-                        productInfoQO.setReferenceIncome(String.valueOf(borrowCustomize.getReferenceIncome()));
-                        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        String publishDate = sf.format(borrowCustomize.getPublishTime());
-                        productInfoQO.setPublishTime(publishDate);
-                    } else {
-                        logger.info("====" + CONSUMER_NAME + "散标已加入计划，不符合推送范围，不消费，标的编号[{}]=====", productNo);
-                        return;
-                    }
-                }
-
-            } else if (productType.equals("1")) {
-                productName = "智投";
-                productTpyeInt = 3;
-                linkUrl = PC_ZHITOU_URL + productNo;
-                H5linkUrl = H5_ZHITOU_URL + productNo;
-                //智投项目 还款中的状态8改为对应的募集结束3
-                if (productStatus.equals("8")) {
-                    publishStatus = 3;
-                }
-
-
-                //查询标的信息
-                HjhPlan hjhPlan = hjhPlanInfoService.selectHjhPlanInfo(productNo);
-                if (hjhPlan != null) {
-                    Integer isMonth = 1;
-                    if (hjhPlan.getIsMonth() == 0) {
-                        isMonth = 1;
-                    } else if (hjhPlan.getIsMonth() == 1) {
-                        isMonth = 2;
-                    }
-                    productInfoQO.setDeadlineNum(hjhPlan.getLockPeriod());
-                    productInfoQO.setDeadlineUnit(isMonth);
-                    productInfoQO.setInvestAmount(hjhPlan.getMinInvestment().doubleValue());
-                    productInfoQO.setReferenceIncome(String.valueOf(hjhPlan.getExpectApr()));
-                    productInfoQO.setProductName(hjhPlan.getPlanName());
-                    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String publishDate = sf.format(hjhPlan.getCreateTime());
-                    productInfoQO.setPublishTime(publishDate);
-                }
-            } else {
-                logger.info("====" + CONSUMER_NAME + "产品类型传值不符合要求，消息内容[{}]=====", jsonObj);
-                return;
-            }
-
-
-            productInfoQO.setProductType(productTpyeInt);
-            productInfoQO.setPublishStatus(publishStatus);
-            productInfoQO.setH5linkUrl(H5linkUrl);
-            productInfoQO.setLinkUrl(linkUrl);
-
-
-            productInfoQO.setProductNo(productNo);
-            productInfoQO.setProductStatus(Integer.valueOf(productStatus));
-
             //读取配置文件，0:不推送数据  1:推送数据
-            if (wbsConfig.getPushDataFlag().equals(1)) {
+            if (wbsConfig.getPushDataFlag() != null && !"".equals(wbsConfig.getPushDataFlag()) && wbsConfig.getPushDataFlag().equals(1)) {
+                logger.info("====" + CONSUMER_NAME + "收到消息[{}],消费开始=====", jsonMsg);
+
+                JSONObject jsonObj = JSON.parseObject(jsonMsg);
+
+
+                if (jsonObj == null) {
+                    logger.error("=====" + CONSUMER_NAME + "消息实体转换异常=====");
+                    return;
+                }
+
+
+                // 产品编号
+                String productNo = jsonObj.getString("productNo");
+                // 产品状态 2,5
+                String productStatus = jsonObj.getString("productStatus");
+                // 产品类型 0 散标类, 1 计划类
+                String productType = jsonObj.getString("productType");
+                //产品发布状态
+                Integer publishStatus = 1;
+                String productName = "";
+                String linkUrl = "";
+                String H5linkUrl = "";
+                Integer productTpyeInt = 2;
+                ProductInfoQO productInfoQO = new ProductInfoQO();
+                if (productType.equals("0")) {
+                    productName = "散标";
+                    if (productNo.substring(0, 3).equals("NEW")) {
+                        productTpyeInt = 4;
+                    } else {
+                        productTpyeInt = 2;
+                    }
+
+
+                    linkUrl = PC_SANBIAO_URL + productNo;
+                    H5linkUrl = H5_SANBIAO_URL + productNo;
+                    if (productStatus.equals("3") || productStatus.equals("5") || productStatus.equals("6")) {
+                        publishStatus = 3;
+                    }
+                    //查询标的信息
+                    BorrowCustomize borrowCustomize = borrowInfoService.selectByNid(productNo);
+                    productInfoQO.setProductName("散标");
+                    if (borrowCustomize != null) {
+                        /**
+                         * 散标判断是否加入计划，如果加入计划，则不推送
+                         */
+                        if (borrowCustomize.getPlanNid() == null || borrowCustomize.getPlanNid().isEmpty()) {
+                            productInfoQO.setDeadlineNum(borrowCustomize.getDeadlineNum());
+                            productInfoQO.setDeadlineUnit(borrowCustomize.getDeadlineUnit());
+                            productInfoQO.setInvestAmount(Double.valueOf(borrowCustomize.getInvestAmount()));
+                            productInfoQO.setReferenceIncome(String.valueOf(borrowCustomize.getReferenceIncome()));
+                            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String publishDate = sf.format(borrowCustomize.getPublishTime());
+                            productInfoQO.setPublishTime(publishDate);
+                        } else {
+                            logger.info("====" + CONSUMER_NAME + "散标已加入计划，不符合推送范围，不消费，标的编号[{}]=====", productNo);
+                            return;
+                        }
+                    }
+
+                } else if (productType.equals("1")) {
+                    productName = "智投";
+                    productTpyeInt = 3;
+                    linkUrl = PC_ZHITOU_URL + productNo;
+                    H5linkUrl = H5_ZHITOU_URL + productNo;
+                    //智投项目 还款中的状态8改为对应的募集结束3
+                    if (productStatus.equals("8")) {
+                        publishStatus = 3;
+                    }
+
+
+                    //查询标的信息
+                    HjhPlan hjhPlan = hjhPlanInfoService.selectHjhPlanInfo(productNo);
+                    if (hjhPlan != null) {
+                        Integer isMonth = 1;
+                        if (hjhPlan.getIsMonth() == 0) {
+                            isMonth = 1;
+                        } else if (hjhPlan.getIsMonth() == 1) {
+                            isMonth = 2;
+                        }
+                        productInfoQO.setDeadlineNum(hjhPlan.getLockPeriod());
+                        productInfoQO.setDeadlineUnit(isMonth);
+                        productInfoQO.setInvestAmount(hjhPlan.getMinInvestment().doubleValue());
+                        productInfoQO.setReferenceIncome(String.valueOf(hjhPlan.getExpectApr()));
+                        productInfoQO.setProductName(hjhPlan.getPlanName());
+                        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String publishDate = sf.format(hjhPlan.getCreateTime());
+                        productInfoQO.setPublishTime(publishDate);
+                    }
+                } else {
+                    logger.info("====" + CONSUMER_NAME + "产品类型传值不符合要求，消息内容[{}]=====", jsonObj);
+                    return;
+                }
+
+
+                productInfoQO.setProductType(productTpyeInt);
+                productInfoQO.setPublishStatus(publishStatus);
+                productInfoQO.setH5linkUrl(H5linkUrl);
+                productInfoQO.setLinkUrl(linkUrl);
+                productInfoQO.setProductNo(productNo);
+                productInfoQO.setProductStatus(Integer.valueOf(productStatus));
+                //推送数据
                 synProductInfoService.sync(productInfoQO);
-            } else {
-                logger.info("====" + CONSUMER_NAME + "不推送数据,推送属性：" + wbsConfig.getPushDataFlag());
             }
-
-
         } catch (Exception e1) {
             logger.error("=====" + CONSUMER_NAME + "异常=====");
             logger.error(e1.getMessage());

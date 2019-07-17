@@ -1,12 +1,16 @@
 package com.hyjf.wbs.trade.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.StringUtil;
+import com.hyjf.wbs.common.EntUtmIds;
 import com.hyjf.wbs.configs.WbsConfig;
+import com.hyjf.wbs.exceptions.WbsFundDetailsException;
 import com.hyjf.wbs.qvo.*;
 import com.hyjf.wbs.sign.WbsSignUtil;
 import com.hyjf.wbs.trade.service.recover.RecoverService;
@@ -16,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.applet.Main;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -109,38 +114,17 @@ public class RecoverInfoController extends BaseController {
         }
         return wbsRecoverVO;
     }
-    public String getUtmId(Integer entIds) {
-        String entId=entIds.toString();
-        String thirdIds = wbsConfig.getThridPropertyIds();
-        String[] thirdIdsArr = thirdIds.split(",");
-        if (entId.equals(thirdIdsArr[0])){
-            return wbsConfig.getUtmNami()+","+wbsConfig.getUtmYufengrui();
-        }else if (entId.equals(thirdIdsArr[1])){
-            return wbsConfig.getUtmDatang()+"";
-        }else if (entId.equals(thirdIdsArr[2])){
-            return wbsConfig.getUtmQianle()+"";
-        }else {
-            return null;
+    public static List<Integer> getUtmIdList(Integer entIds) {
+        List<Integer> utmIds = new ArrayList<Integer>();
+        //转换成平台的渠道号8001=>11200009
+        String utmId=EntUtmIds.getUtmId(String.valueOf(entIds));
+        if(Strings.isNullOrEmpty(utmId)){
+            throw new WbsFundDetailsException("未找到entId【"+entIds+"】对应的UTMID");
         }
-    }
-    public List<Integer> getUtmIdList(Integer entIds) {
-        String entId=entIds.toString();
-        String thirdIds = wbsConfig.getThridPropertyIds();
-        String[] thirdIdsArr = thirdIds.split(",");
-        List<Integer> utmId = new ArrayList<Integer>();
-        if (entId.equals(thirdIdsArr[0])){
-            utmId.add(wbsConfig.getUtmNami());
-            utmId.add(wbsConfig.getUtmYufengrui());
-            return  utmId;
-//            return wbsConfig.getUtmNami()+","+wbsConfig.getUtmYufengrui();
-        }else if (entId.equals(thirdIdsArr[1])){
-            utmId.add(wbsConfig.getUtmDatang());
-            return  utmId;
-        }else if (entId.equals(thirdIdsArr[2])){
-            utmId.add(wbsConfig.getUtmQianle());
-            return  utmId;
-        }else {
-            return null;
+        List<String> lstUtm= Splitter.on(",").trimResults().splitToList(utmId);
+        for (int i = 0; i < lstUtm.size(); i++) {
+            utmIds.add(new Integer(lstUtm.get(i)));
         }
+        return utmIds;
     }
 }
