@@ -50,4 +50,6 @@ public interface LandingManagerService extends BaseService {
      * @return
      */
     int deleteTemplate(int temId);
+
+	int deleteTemplateCount(int temId);
 }

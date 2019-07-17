@@ -47,6 +47,8 @@ public class CustomerServerController extends BaseController {
             }
             response.setResultList(serverList);
             response.setCount((int) count);
+        } else {
+            response.setCount(0);
         }
         return response;
     }

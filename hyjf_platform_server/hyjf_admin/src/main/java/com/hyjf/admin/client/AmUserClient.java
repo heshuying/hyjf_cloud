@@ -1596,7 +1596,7 @@ public interface AmUserClient {
      * @param tempId
      * @return
      */
-    Boolean deleteTemplate(int tempId);
+   TemplateConfigResponse deleteTemplate(int tempId);
 
 	TemplateDisposeResponse templateDisposeList(TemplateDisposeRequest templateDisposeRequest);
 
@@ -1605,4 +1605,6 @@ public interface AmUserClient {
 	TemplateDisposeResponse insertTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
 
 	TemplateDisposeResponse deleteTemplateDispose(TemplateDisposeRequest templateDisposeRequest);
+
+	UtmPlatResponse getAllUtmPlat2(Map<String, Object> map);
 }
