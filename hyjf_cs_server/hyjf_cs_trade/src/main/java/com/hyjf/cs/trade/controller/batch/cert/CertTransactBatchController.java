@@ -94,6 +94,8 @@ public class CertTransactBatchController {
 
 
         logger.info(logHeader + "CertInvestDetailBatchController execute start...");
+        String certInvestDetailRun = RedisUtils.get(RedisConstants.CERT_INVEST_DETAIL_RUN);
+        if(!"1".equals(certInvestDetailRun)){
         CertAccountListIdCustomizeVO certInvestDetailCustomize=new CertAccountListIdCustomizeVO();
         Integer investDetailPage=1;
         do {
@@ -129,8 +131,10 @@ public class CertTransactBatchController {
             RedisUtils.set(RedisConstants.CERT_INVEST_DETAIL_MAXID, maxId);
             investDetailPage=investDetailPage+1;
         } while (certInvestDetailCustomize.getMaxId()>certInvestDetailCustomize.getLimitMaxId());
-        logger.info(logHeader + "CertInvestDetailBatchController execute end...");
-
+            logger.info(logHeader + "CertInvestDetailBatchController execute end...");
+        }else{
+            logger.info(logHeader + "CertInvestDetailBatchController redis不允许上报！");
+        }
 
         return new StringResponse("success");
     }
