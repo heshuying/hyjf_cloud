@@ -1787,6 +1787,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String beforeDayEnd = GetDate.getDayEnd(startDay);
         UserExample example = new UserExample();
         UserExample.Criteria cra = example.createCriteria();
+        cra.andUserTypeEqualTo(0);
         cra.andRegTimeGreaterThanOrEqualTo(GetDate.str2Date(beforeDayStart, GetDate.datetimeFormat));
         cra.andRegTimeLessThanOrEqualTo(GetDate.str2Date(beforeDayEnd, GetDate.datetimeFormat));
         List<User> userList = this.userMapper.selectByExample(example);
