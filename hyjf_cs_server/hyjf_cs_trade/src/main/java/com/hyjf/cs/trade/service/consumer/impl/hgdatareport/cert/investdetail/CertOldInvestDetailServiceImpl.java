@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -270,7 +271,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getAssignPlanNid());
+		param.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getLiquidatesPlanNid());
 		//交易类型
 		param.put("transType", "8");
 		//交易金额
@@ -288,7 +289,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param1.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getAssignPlanNid());
+		param1.put("sourceFinancingCode",hjhDebtCreditTenders.get(0).getLiquidatesPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
