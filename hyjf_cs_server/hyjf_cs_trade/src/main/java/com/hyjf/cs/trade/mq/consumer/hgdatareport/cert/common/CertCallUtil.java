@@ -535,10 +535,12 @@ public class CertCallUtil implements Serializable {
         });
         for (Map.Entry<String, JSONArray> item : jsonMap.entrySet()) {
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, type, null, item.getValue());
-            // 设置交易时间为当前月份的一号
-            entity.setTradeDate(item.getKey().replace("-","")+"01");
-            // 查询这个月有多少天
-            entity.setDateNum(GetDate.getDaysOfMonth(item.getKey()+"-01"));
+            if(StringUtils.isNotBlank(item.getKey())){
+                // 设置交易时间为当前月份的一号
+                entity.setTradeDate(item.getKey().replace("-","")+"01");
+                // 查询这个月有多少天
+                entity.setDateNum(GetDate.getDaysOfMonth(item.getKey()+"-01"));
+            }
             entitys.add(entity);
         }
         return entitys;

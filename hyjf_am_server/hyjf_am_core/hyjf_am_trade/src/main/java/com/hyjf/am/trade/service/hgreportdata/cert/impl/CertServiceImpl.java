@@ -209,7 +209,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
      * @return
      */
     @Override
-    public List<CertClaim> insertCertBorrowConfig(){
+    public List<CertClaim> selectCertBorrowConfig(){
         CertClaimExample example = new CertClaimExample();
         CertClaimExample.Criteria criteria = example.createCriteria();
         /*if(StringUtils.isNotBlank(isTender)){
@@ -222,6 +222,18 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         return certClaimMapper.selectByExample(example);
     }
 
+    /**
+     * 查询产品配置未上报历史数据数量
+     * @return
+     */
+    @Override
+    public int countCertBorrowConfig(){
+        CertClaimExample example = new CertClaimExample();
+        CertClaimExample.Criteria criteria = example.createCriteria();
+        //配置信息未上报
+        criteria.andIsConfigEqualTo(0);
+        return certClaimMapper.countByExample(example);
+    }
     /**
      * 批量更新
      * @param update

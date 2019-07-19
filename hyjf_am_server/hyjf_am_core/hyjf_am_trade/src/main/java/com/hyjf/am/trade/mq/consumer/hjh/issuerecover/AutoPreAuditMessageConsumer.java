@@ -148,6 +148,10 @@ public class AutoPreAuditMessageConsumer
 		JSONObject params = new JSONObject();
 		params.put("borrowNid", borrow.getBorrowNid());
 		params.put("userId", borrow.getUserId());
+        //应急中心二期，散标发标时，报送数据 start
+        params.put("planNid", borrow.getBorrowNid());
+        params.put("isPlan","0");
+        //应急中心二期，散标发标时，报送数据 end
 		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 				MQConstant.HG_REPORT_DELAY_LEVEL);
 
@@ -208,6 +212,10 @@ public class AutoPreAuditMessageConsumer
 		JSONObject params = new JSONObject();
 		params.put("borrowNid", borrow.getBorrowNid());
 		params.put("userId", borrow.getUserId());
+        //应急中心二期，散标发标时，报送数据 start
+        params.put("planNid", borrow.getBorrowNid());
+        params.put("isPlan","0");
+        //应急中心二期，散标发标时，报送数据 end
 		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 				MQConstant.HG_REPORT_DELAY_LEVEL);
 
