@@ -140,6 +140,7 @@ public class BatchCreditEndController extends BaseTradeController {
                 return response;
             }
             for (BankCreditEndVO vo : failList){
+                logger.info("batchNo:{}, orgOrderId:{}", vo.getBatchNo(), vo.getOrgOrderId());
                 BankCallBean bankCallBean = batchCreditEndService.batchQuery(vo);
                 if (bankCallBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())) {
                     logger.info("批次查询接口请求失败");

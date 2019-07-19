@@ -23,7 +23,7 @@ public class IncreaseInterestRepayJob extends BaseJob implements Job {
         logger.info("IncreaseInterestRepayJob: {} execute...", context.getJobDetail().getKey().getName());
 
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/increaseinterest/taskAssignRepay", String.class);
-        
+
         logger.info("IncreaseInterestRepayJob execute end...");
     }
 }

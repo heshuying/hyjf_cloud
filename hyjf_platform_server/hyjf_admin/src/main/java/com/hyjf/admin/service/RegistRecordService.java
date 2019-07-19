@@ -43,4 +43,6 @@ public interface RegistRecordService {
      *
      */
     RegistRecordResponse findUtmAllSourcePc(RegistRcordRequest request);
+
+	RegistRecordResponse findUtmAll2(RegistRcordRequest request);
 }

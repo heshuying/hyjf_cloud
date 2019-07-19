@@ -73,14 +73,16 @@ public class StzfWhiteConfigController extends BaseController {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		if (requestBean.getId() != null) {
 			response = stzfWhiteConfigService.selectSTZHWhiteById(requestBean.getId());
-			//脱敏权限
-			boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
-			if(!isShow){
-				STZHWhiteListVO vo=response.getResult();
-				//手机号脱敏
-				vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
-				//收款人手机号脱敏
-				vo.setStMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getStMobile()));
+			if(requestBean.getId() != 0){
+				//脱敏权限
+				boolean isShow = this.havePermission(httpServletRequest,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+				if(!isShow){
+					STZHWhiteListVO vo=response.getResult();
+					//手机号脱敏
+					vo.setMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getMobile()));
+					//收款人手机号脱敏
+					vo.setStMobile(AsteriskProcessUtil.getAsteriskedMobile(vo.getStMobile()));
+				}
 			}
 			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
 			response.setRegionList(regionList);

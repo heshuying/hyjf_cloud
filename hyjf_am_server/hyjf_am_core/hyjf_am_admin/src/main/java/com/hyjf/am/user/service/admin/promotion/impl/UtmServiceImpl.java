@@ -389,6 +389,15 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         }
         return CommonUtils.convertBeanList(list, UtmPlatVO.class);
     }
+    @Override
+    public List<UtmPlatVO> getUtmPlatByParam2(Map<String, Object> map) {
+        
+        List<UtmPlat> list = utmPlatCustomizeMapper.selectUtmPlat(0);
+        if(list == null){
+            list = new ArrayList<UtmPlat>();
+        }
+        return CommonUtils.convertBeanList(list, UtmPlatVO.class);
+    }
 
     @Override
     public void insertUtmList(ChannelRequest request) {

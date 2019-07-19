@@ -1089,7 +1089,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      */
     private void sendPlanContract(Integer userId, String accedeOrderId, Integer quitTime, Integer countInterestTime, BigDecimal waitTotal) {
 
-        logger.info("-------------加入订单号:" + accedeOrderId + ",开始生成计划加入协议！----------");
+        logger.info("-------------加入订单号:" + accedeOrderId);
         try {
             FddGenerateContractBean bean = new FddGenerateContractBean();
             bean.setOrdid(accedeOrderId);

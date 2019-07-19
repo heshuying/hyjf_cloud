@@ -80,7 +80,18 @@ public class UtmController extends BaseController {
         response.setResultList(list);
         return response;
     }
-
+    /**
+     * 获取所有的UtmPlat
+     * @param map 查s询参数
+     * @return UtmPlatResponse
+     */
+    @RequestMapping("/getutmplat2")
+    public UtmPlatResponse getUtmPlat2(@RequestBody @Valid Map<String, Object> map) {
+        UtmPlatResponse response = new UtmPlatResponse();
+        List<UtmPlatVO> list = utmService.getUtmPlatByParam2(map);
+        response.setResultList(list);
+        return response;
+    }
     /**
      *  取pc渠道
      * @param sourceId
