@@ -88,7 +88,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
         try {
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
             Integer intCountConfig = certLendProductConfigService.countCertBorrowByFlg();
-            if (null != intCountConfig && intCountConfig > 0) {
+            if (null != intCountConfig && intCountConfig <= 0) {
                 logger.error(logHeader + "暂无未上报的产品配置信息！！！");
                 return;
             }
