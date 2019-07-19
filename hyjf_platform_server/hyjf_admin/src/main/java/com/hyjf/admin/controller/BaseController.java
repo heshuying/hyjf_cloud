@@ -4,7 +4,6 @@
 package com.hyjf.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.enums.MsgEnum;

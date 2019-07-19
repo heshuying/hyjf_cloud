@@ -537,10 +537,16 @@ public class RedisConstants {
 
     /**合规数据上报 CERT 投资明细上报开关*/
     public static final String CERT_INVEST_DETAIL_RUN= "certInvestDetailRun";
+
     /**合规数据上报 CERT 已上报交易流水最大Id*/
     public static final String CERT_TRANSACT_OTHER_MAXID= "certTransactOtherMaxId";
     /**合规数据上报 CERT 已上报投资明细最大Id*/
     public static final String CERT_INVEST_DETAIL_MAXID= "certInvestDetailMaxId";
+    /**add by pcc 首页预留一个悬浮广告按钮  start*/
+    public static final String FLOATADSWITCH= "floatADSwitch";
+    public static final String FLOATADURL= "floatADUrl";
+    public static final String FLOATADPICURL= "floatADPicUrl";
+    /**add by pcc 首页预留一个悬浮广告按钮  end*/
 
     /**
      * 推送表的消息唯一标识

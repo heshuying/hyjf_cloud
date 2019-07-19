@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.TemplateDisposeVO;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ElectricitySalesDataPushListVO;
@@ -757,4 +758,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	CreditConsumeResultVO deductPoints(CreditConsumeParams consumeParams);
+	
+	TemplateDisposeVO getTemplateDispose(String templateId);
+	/**
+	 * 根据着陆页id查找移动端着陆页配置 add by nxl
+	 * @param landingId
+	 * @return
+	 */
+	TemplateDisposeVO selectTemplateDisposeById(Integer landingId);
 }

@@ -258,7 +258,7 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
         BankCallBean queryResult = BankCallUtils.callApiBg(bankCallBean);
         if (queryResult != null && StringUtils.isNotBlank(queryResult.getRetCode())) {
             String retCode = queryResult.getRetCode();
-            logger.info("【批次结束债权未收到回调批次状态查询】批次号：{}，批次状态查询处理状态：{}", creditEndVO.getBatchNo(), retCode);
+            logger.info("【批次结束债权未收到回调批次状态查询】批次号：{}，批次状态查询处理状态：{}", creditEndVO.getBatchNo(), JSON.toJSONString(queryResult));
             if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
                 return queryResult;
             }

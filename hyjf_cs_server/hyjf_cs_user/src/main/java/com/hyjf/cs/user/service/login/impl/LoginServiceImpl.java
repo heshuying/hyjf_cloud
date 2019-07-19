@@ -159,7 +159,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 * @return
 	 */
 	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel,UserVO userVO) {
-		logger.info("登陆获取loginUserName:"+loginUserName+";userVO:"+(userVO==null));
+		logger.info("登陆获取loginUserName:"+loginUserName+";userVO是否为空:"+(userVO==null));
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
 		String codeSalt = userVO.getSalt();
@@ -172,7 +172,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}else {
 			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 		}
-		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		logger.info("密码是否匹配:[{}]",password.equals(passwordDb));
 		if (password.equals(passwordDb)) {
 			webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {

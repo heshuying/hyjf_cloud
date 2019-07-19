@@ -14,5 +14,7 @@ public interface TenderAgreementService {
 
     TenderAgreement getTenderAgreementInfo(String tenderAgreementID);
 
+    List<TenderAgreement> getTenderAgreementByBorrowNid(String borrowNid);
+
     List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 }
