@@ -98,6 +98,15 @@ public class BorrowDeleteServiceImpl extends BaseServiceImpl implements BorrowDe
         borrowLog.setCreateUserName(requestBean.getCurrUserName());
         borrowLogMapper.insertSelective(borrowLog);
 
+        // 更新资产状态为已流标
+        HjhPlanAssetExample exampleAsset = new HjhPlanAssetExample();
+        exampleAsset.createCriteria().andBorrowNidEqualTo(requestBean.getBorrowNid());
+        List<HjhPlanAsset> assets = hjhPlanAssetMapper.selectByExample(exampleAsset);
+        if(assets !=null && !assets.isEmpty()){
+            assets.get(0).setStatus(15); // 已流标
+            hjhPlanAssetMapper.updateByPrimaryKeySelective(assets.get(0));
+        }
+
         // 更新保证金相关
         if(StringUtils.isNotBlank(borrowInfo.getInstCode())){
             // 获取该机构保证金配置
