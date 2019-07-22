@@ -148,7 +148,9 @@ public class BatchCreditEndController extends BaseTradeController {
                     return response;
                 }
 
-                batchCreditEndService.updateForCallBackFail(bankCallBean);
+                if(!"A".equals(bankCallBean.getBatchState()) && !"D".equals(bankCallBean.getBatchState())){
+                    batchCreditEndService.updateForCallBackFail(bankCallBean);
+                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

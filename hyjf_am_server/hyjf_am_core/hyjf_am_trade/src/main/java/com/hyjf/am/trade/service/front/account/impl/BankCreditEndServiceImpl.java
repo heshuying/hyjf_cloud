@@ -300,7 +300,11 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         BankCreditEnd newEnd = new BankCreditEnd();
         newEnd.setRetcode(bean.getRetCode());
         newEnd.setRetmsg(bean.getRetMsg());
-        newEnd.setSucCounts(Integer.valueOf(bean.getSucCounts()));
+        int succCnt = 0;
+        if(StringUtils.isNotBlank(bean.getSucCounts())) {
+            succCnt = Integer.valueOf(bean.getSucCounts());
+        }
+        newEnd.setSucCounts(succCnt);
         int failCnt = 0;
         if(bean.getFailCounts() != null) {
             failCnt = Integer.valueOf(bean.getFailCounts());
@@ -396,7 +400,11 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         BankCreditEnd newEnd = new BankCreditEnd();
         newEnd.setRetcode(bean.getRetCode());
         newEnd.setRetmsg(bean.getRetMsg());
-        newEnd.setSucCounts(Integer.valueOf(bean.getSucCounts()));
+        int succCnt = 0;
+        if(StringUtils.isNotBlank(bean.getSucCounts())) {
+            succCnt = Integer.valueOf(bean.getSucCounts());
+        }
+        newEnd.setSucCounts(succCnt);
         int failCnt = 0;
         if(StringUtils.isNotBlank(bean.getFailCounts())) {
             failCnt = Integer.valueOf(bean.getFailCounts());
