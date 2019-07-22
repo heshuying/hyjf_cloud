@@ -7493,6 +7493,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 查询产品配置未上报历史数据数量
+     * @return
+     */
+    @Override
+    public Integer countCertBorrowByFlg(){
+        String url = urlBase+"cert/countCertBorrowByFlg";
+        CertClaimResponse response = restTemplate.getForEntity(url,CertClaimResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return null;
+    }
     @Override
     public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest request) {
         String url = urlBase + "cert/getCertAccountListCustomizeVO";
