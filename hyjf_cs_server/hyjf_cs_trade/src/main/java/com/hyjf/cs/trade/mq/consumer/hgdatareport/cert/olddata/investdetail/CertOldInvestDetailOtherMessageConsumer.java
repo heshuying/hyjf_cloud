@@ -50,6 +50,7 @@ public class CertOldInvestDetailOtherMessageConsumer implements RocketMQListener
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        defaultMQPushConsumer.setConsumeTimeout(600);
         logger.info("====CertOldInvestDetailOtherMessageConsumer start=====");
     }
 
