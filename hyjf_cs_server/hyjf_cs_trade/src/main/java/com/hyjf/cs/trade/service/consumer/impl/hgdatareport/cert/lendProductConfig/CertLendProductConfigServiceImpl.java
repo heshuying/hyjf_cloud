@@ -64,6 +64,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             String finClaimID = "";
             //借款人id
             Integer userId = 0;
+            //20190711 add 散标编码
+            String borrowNid="";
             // isTender  1:承接债权，2：原始债权
             Map<String,Object> mapParam = new HashMap<String,Object>();
             if (isTender.equals("2")) {
@@ -89,11 +91,15 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                             userId = hjhAccedeVO.getUserId();
                             sourceFinancingcode = hjhAccedeVO.getPlanNid();
                             finClaimID = borrowTenderVO.getNid();
+                            //散标信息编号字段 add by nxl 20190711
+                            borrowNid = borrowTenderVO.getBorrowNid();
                         } else {
                             //散标债权信息
                             userId = borrowTenderVO.getUserId();
                             sourceFinancingcode = borrowTenderVO.getBorrowNid();
                             finClaimID = borrowTenderVO.getNid();
+                            //散标信息编号字段 add by nxl 20190711
+                            borrowNid = borrowTenderVO.getBorrowNid();
                         }
                         String idCardHash = getIdCard(userId);
                         mapParam.put("sourceFinancingcode",sourceFinancingcode);
@@ -101,6 +107,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                         mapParam.put("idCardHash",idCardHash);
                         mapParam.put("strDate",null);
                         mapParam.put("isOld","false");
+                        //散标信息编号字段 add by nxl 20190711
+                        mapParam.put("sourceProductCode",borrowNid);
                         json = putParamMap(mapParam, json);
                     }
                 }
@@ -120,6 +128,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     finClaimID = creditTenderVO.getAssignNid();
                     //承接用户id
                     userId = creditTenderVO.getUserId();
+                    //散标信息编号字段 add by nxl 20190711
+                    borrowNid =creditTenderVO.getBidNid();
                 } else if (flag.equals("2")) {
                     //计划承接
                     logger.info(logHeader + "智投承接后推送数据，承接单号为：" + orderId);
@@ -134,6 +144,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                     //承接用户id
                     userId = hjhDebtCreditTenderVO.getUserId();
+                    //散标信息编号字段 add by nxl 20190711
+                    borrowNid = hjhDebtCreditTenderVO.getBorrowNid();
                 }
                 String idCardHash = getIdCard(userId);
                 mapParam.put("sourceFinancingcode",sourceFinancingcode);
@@ -141,6 +153,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 mapParam.put("idCardHash",idCardHash);
                 mapParam.put("strDate",null);
                 mapParam.put("isOld","false");
+                //散标信息编号字段 add by nxl 20190711
+                mapParam.put("sourceProductCode",borrowNid);
                 json = putParamMap(mapParam,json);
             }
 
@@ -165,11 +179,13 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             param.put("configId", mapParam.get("finClaimID"));
             //智投出借人哈希
             param.put("userIdcardHash", mapParam.get("idCardHash"));
-            String isOld = mapParam.get("isOld").toString();
+            //散标信息编号字段 add by nxl 20190711
+            param.put("sourceProductCode",mapParam.get("sourceProductCode"));
+           /* String isOld = mapParam.get("isOld").toString();
             if (isOld.equals("true")) {
                 String date = mapParam.get("strDate").toString();
                 param.put("groupByDate", date);
-            }
+            }*/
             json.add(param);
             return json;
         }
@@ -249,6 +265,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         Integer userId = 0;
         String strDate ="";
         String idCardHash="";
+        //20190711 add 散标信息编号字段
+        String borrowNid="";
         Map<String,Object> mapParam = new HashMap<String,Object>();
         if (certClaimVO.getIsPlan() == 0) {
             //散标承接债权
@@ -262,6 +280,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             userId = creditTenderVO.getUserId();
             strDate = fromatDate(creditTenderVO.getCreateTime());
             idCardHash = getIdCard(userId);
+            //散标信息编号字段 add by nxl 20190711
+            borrowNid = creditTenderVO.getBidNid();
         }
         if (certClaimVO.getIsPlan() == 1) {
             //智投承接债权
@@ -286,11 +306,15 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             userId = hjhDebtCreditTenderVO.getUserId();
             strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
             idCardHash = getIdCard(userId);
+            //散标信息编号字段 add by nxl 20190711
+            borrowNid = hjhDebtCreditTenderVO.getBorrowNid();
         }
         mapParam.put("sourceFinancingcode",sourceFinancingcode);
         mapParam.put("finClaimID", finClaimID);
         mapParam.put("idCardHash",idCardHash);
         mapParam.put("strDate",strDate);
+        //散标信息编号字段 add by nxl 20190711
+        mapParam.put("sourceProductCode",borrowNid);
         mapParam.put("isOld","true");
         return mapParam;
     }
@@ -311,6 +335,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         Integer userId = 0;
         String idCardHash="";
         String strDate ="";
+        //散标信息编号字段 add by nxl 20190711
+        String borrowNid="";
         Map<String,Object> mapParam = new HashMap<String,Object>();
         //初始债券
         List<BorrowTenderVO> borrowTenderVOList = amTradeClient.getBorrowTenderListByNid(nid);
@@ -326,12 +352,13 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             userId = borrowTenderVO.getUserId();
             strDate = fromatDate(borrowTenderVO.getCreateTime());
             idCardHash = getIdCard(userId);
+            //散标信息编号字段 add by nxl 20190711
+            borrowNid=borrowTenderVO.getBorrowNid();
         }
         if (certClaimVO.getIsPlan() == 1) {
             //计划承接债权
             HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
             if (null == hjhAccedeVO) {
-                logger.info("【产品配置信息历史数据推送】债权编码：" + borrowTenderVO.getNid() + " ,查询智投计入明细为空！！");
                 logger.info("【产品配置信息历史数据推送】根据智投加入订单号：" + borrowTenderVO.getAccedeOrderId() + " ,查询智投计入明细为空！！");
                 return null;
             }
@@ -350,11 +377,15 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             userId = hjhAccedeVO.getUserId();
             idCardHash = getIdCard(userId);
             strDate = fromatDate(borrowTenderVO.getCreateTime());
+            //散标信息编号字段 add by nxl 20190711
+            borrowNid=borrowTenderVO.getBorrowNid();
         }
         mapParam.put("sourceFinancingcode",sourceFinancingcode);
         mapParam.put("finClaimID", finClaimID);
         mapParam.put("idCardHash",idCardHash);
         mapParam.put("strDate",strDate);
+        //散标信息编号字段 add by nxl 20190711
+        mapParam.put("sourceProductCode",borrowNid);
         mapParam.put("isOld","true");
         return mapParam;
     }
@@ -375,7 +406,15 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         List<CertClaimVO> listCredit = amTradeClient.selectCertBorrowByFlg();
         return listCredit;
     }
-
+    /**
+     * 查询产品配置未上报历史数据数量
+     *
+     * @return
+     */
+    @Override
+    public Integer countCertBorrowByFlg() {
+        return amTradeClient.countCertBorrowByFlg();
+    }
     /**
      * 批量更新
      *

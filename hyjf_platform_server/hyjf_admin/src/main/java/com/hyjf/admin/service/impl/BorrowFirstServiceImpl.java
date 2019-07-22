@@ -211,6 +211,10 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 JSONObject params = new JSONObject();
                 params.put("borrowNid", borrowVO.getBorrowNid());
                 params.put("userId", borrowVO.getUserId());
+                //应急中心二期，散标发标时，报送数据 start
+                params.put("planNid", borrowVO.getBorrowNid());
+                params.put("isPlan","0");
+                //应急中心二期，散标发标时，报送数据 end
                 commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
                         MQConstant.HG_REPORT_DELAY_LEVEL);
                 logger.info("标的编号：" + borrowNid + "-----已发送至合规上送发标数据MQ");

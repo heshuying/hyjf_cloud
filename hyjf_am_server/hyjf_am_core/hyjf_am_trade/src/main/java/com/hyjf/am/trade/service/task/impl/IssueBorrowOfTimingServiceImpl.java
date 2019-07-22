@@ -60,6 +60,10 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		JSONObject params = new JSONObject();
 		params.put("borrowNid", borrowCustomize.getBorrowNid());
 		params.put("userId", borrowCustomize.getUserId());
+        //应急中心二期，散标发标时，报送数据 start
+        params.put("planNid", borrowCustomize.getBorrowNid());
+        params.put("isPlan","0");
+        //应急中心二期，散标发标时，报送数据 end
 		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 				MQConstant.HG_REPORT_DELAY_LEVEL);
 		// add by liuyang 20190415 wbs系统标的信息 start
@@ -165,6 +169,10 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				JSONObject params = new JSONObject();
 				params.put("borrowNid", borrowCustomize.getBorrowNid());
 				params.put("userId", borrowCustomize.getUserId());
+                //应急中心二期，散标发标时，报送数据 start
+                params.put("planNid", borrowCustomize.getBorrowNid());
+                params.put("isPlan","0");
+                //应急中心二期，散标发标时，报送数据 end
 				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 						MQConstant.HG_REPORT_DELAY_LEVEL);
 
@@ -321,17 +329,6 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean result = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if(result){
-			//应急中心二期，散标发标时，报送数据 start
-			try {
-				JSONObject param = new JSONObject();
-				param.put("planNid", borrow.getBorrowNid());
-				param.put("isPlan","0");
-				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.BORROW_MODIFY_TAG, UUID.randomUUID().toString(), param),
-						MQConstant.HG_REPORT_DELAY_LEVEL);
-			} catch (Exception e) {
-				logger.error("散标发标时，应急中心上报失败！borrowNid : " + borrow.getBorrowNid() ,e);
-			}
-			//应急中心二期，散标发标时，报送数据 end
 			RedisUtils.set(onTimeStatusKey, "0", 300);
 		}
 		return result ;

@@ -48,7 +48,12 @@ public interface CertService extends BaseService {
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
      * @return
      */
-    List<CertClaim> insertCertBorrowConfig();
+    List<CertClaim> selectCertBorrowConfig();
+    /**
+     * 查询产品配置未上报历史数据数量
+     * @return
+     */
+    int countCertBorrowConfig();
     /**
      * 批量更新
      * @param update

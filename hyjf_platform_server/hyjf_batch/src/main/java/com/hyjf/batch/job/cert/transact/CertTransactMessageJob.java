@@ -22,8 +22,8 @@ public class CertTransactMessageJob extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-//        logger.info(logHeader + "CertTransactMessageJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-//        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/certTransactMessage/certTransact", Object.class);
-//        logger.info(logHeader + "CertTransactMessageJob execute end...");
+        logger.info(logHeader + "CertTransactMessageJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/certTransactMessage/certTransact", Object.class);
+        logger.info(logHeader + "CertTransactMessageJob execute end...");
     }
 }
