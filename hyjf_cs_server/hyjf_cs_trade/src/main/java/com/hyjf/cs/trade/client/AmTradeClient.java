@@ -3060,6 +3060,12 @@ public interface AmTradeClient {
      * @return
      */
     List<CertClaimVO> selectCertBorrowByFlg();
+    /**
+     * 查询产品配置未上报历史数据数量
+     * @return
+     */
+    Integer countCertBorrowByFlg();
+
     List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
     /**
      * 批量更新
