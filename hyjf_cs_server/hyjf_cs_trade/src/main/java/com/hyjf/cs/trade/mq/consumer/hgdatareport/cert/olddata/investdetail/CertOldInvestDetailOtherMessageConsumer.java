@@ -107,7 +107,7 @@ public class CertOldInvestDetailOtherMessageConsumer implements RocketMQListener
                     RedisUtils.set("CREDIT_TENDER_OTHER_RUN","1");
                     return;
                 }
-                minId = maxId + 1;
+                minId = new Integer(maxId)+1+"";
                 maxId = new Integer(maxId)+1000+"";
             }
         } catch (Exception e) {
