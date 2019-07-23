@@ -88,7 +88,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
         try {
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
             Integer intCountConfig = certLendProductConfigService.countCertBorrowByFlg();
-            if (null != intCountConfig && intCountConfig <= 0) {
+            if (null == intCountConfig || intCountConfig <= 0) {
                 logger.error(logHeader + "暂无未上报的产品配置信息！！！");
                 return;
             }
@@ -99,6 +99,10 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
                 logger.info(logHeader + "第 ：" + disCount + " 次查询未上报产品配置");
                 //一次查询2000条数据
                 List<CertClaimVO> certBorrowEntityList = certLendProductConfigService.getCertBorrowNoConfig();
+                if(CollectionUtils.isEmpty(certBorrowEntityList)){
+                    logger.error(logHeader + "未查询到要上报的产品配置信息！！！");
+                    return;
+                }
                 logger.info(logHeader + "查询的未上报的产品配置历史数据共: " + certBorrowEntityList.size() + "条,当前时间为:" + GetDate.getNowTime10());
                 // --> 调用service组装数据
                 JSONArray listRepay = certLendProductConfigService.getHistoryDate();
