@@ -86,6 +86,11 @@ public class CertOldInvestDetailOtherMessageConsumer implements RocketMQListener
                 // --> 调用service组装数据
                 JSONArray data =CertInvestDetailService.createDate(minId,maxId);
                 if(data==null){
+                    if(new Integer(maxId)<maxOldId){
+                        minId = new Integer(maxId)+1+"";
+                        maxId = new Integer(maxId)+1000+"";
+                        continue;
+                    }
                     logger.info(logHeader + "生成完成！");
                     RedisUtils.set("CREDIT_TENDER_OTHER_RUN","1");
                     return;
@@ -107,7 +112,7 @@ public class CertOldInvestDetailOtherMessageConsumer implements RocketMQListener
                     RedisUtils.set("CREDIT_TENDER_OTHER_RUN","1");
                     return;
                 }
-                minId = maxId;
+                minId = new Integer(maxId)+1+"";
                 maxId = new Integer(maxId)+1000+"";
             }
         } catch (Exception e) {
