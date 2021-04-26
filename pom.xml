@@ -48,7 +48,7 @@
 		<common.pool2.version>2.4.2</common.pool2.version>
 		<commons.lang.version>2.4</commons.lang.version>
 		<commons.lang3.version>3.7</commons.lang3.version>
-		<commons.io.version>2.6</commons.io.version>
+		<commons.io.version>2.7</commons.io.version>
 		<commons.validator.version>1.6</commons.validator.version>
 		<httpclient.version>4.5.5</httpclient.version>
 		<httpmime.version>4.5</httpmime.version>
